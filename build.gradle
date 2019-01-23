@@ -2,28 +2,16 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
+            name 'prok'
+            url 'https://repo.prok.pw/'
+        }
+        maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            name 'minecraft'
-            url 'https://libraries.minecraft.net/'
-        }
-        maven {
-            name 'spigot'
-            url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-        }
-        maven {
-            name 'maven'
-            url 'https://mvnrepository.com/artifact/'
-        }
-        maven {
-            name 'prok'
-            url 'https://repo.prok.pw/'
         }
     }
     dependencies {
@@ -37,6 +25,35 @@ apply plugin: 'net.minecraftforge.gradle.launch4j'
 
 group = 'cn.pfcraft'
 version = '0.0.1'
+
+repositories {
+    clear()
+    maven {
+        name = "forge"
+        url = "http://files.minecraftforge.net/maven"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    maven {
+        name 'minecraft'
+        url 'https://libraries.minecraft.net/'
+    }
+    maven {
+        name 'spigot'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name 'maven'
+        url 'https://mvnrepository.com/artifact/'
+    }
+    maven {
+        name 'prok'
+        url 'https://repo.prok.pw/'
+    }
+    mavenCentral()
+}
 
 configurations{
     compile.extendsFrom libraries
