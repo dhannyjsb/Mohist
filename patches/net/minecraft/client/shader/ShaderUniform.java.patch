@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/client/shader/ShaderUniform.java
++++ ../src-work/minecraft/net/minecraft/client/shader/ShaderUniform.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.client.shader;
+ 
+-import java.nio.FloatBuffer;
+-import java.nio.IntBuffer;
+ import net.minecraft.client.renderer.OpenGlHelper;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+@@ -10,6 +8,9 @@
+ import org.lwjgl.BufferUtils;
+ import org.lwjgl.util.vector.Matrix4f;
+ 
++import java.nio.FloatBuffer;
++import java.nio.IntBuffer;
++
+ @SideOnly(Side.CLIENT)
+ public class ShaderUniform
+ {

@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/WorldVertexBufferUploader.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/WorldVertexBufferUploader.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.client.renderer;
+ 
+-import java.nio.ByteBuffer;
+-import java.util.List;
+ import net.minecraft.client.renderer.vertex.VertexFormat;
+ import net.minecraft.client.renderer.vertex.VertexFormatElement;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.nio.ByteBuffer;
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class WorldVertexBufferUploader
+ {

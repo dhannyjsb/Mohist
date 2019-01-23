@@ -1,0 +1,35 @@
+--- ../src-base/minecraft/net/minecraft/command/server/CommandTeleport.java
++++ ../src-work/minecraft/net/minecraft/command/server/CommandTeleport.java
+@@ -1,10 +1,5 @@
+ package net.minecraft.command.server;
+ 
+-import java.util.Collections;
+-import java.util.EnumSet;
+-import java.util.List;
+-import java.util.Set;
+-import javax.annotation.Nullable;
+ import net.minecraft.command.CommandBase;
+ import net.minecraft.command.CommandException;
+ import net.minecraft.command.ICommandSender;
+@@ -18,6 +13,12 @@
+ import net.minecraft.util.math.MathHelper;
+ import net.minecraft.util.math.Vec3d;
+ 
++import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.EnumSet;
++import java.util.List;
++import java.util.Set;
++
+ public class CommandTeleport extends CommandBase
+ {
+     public String getName()
+@@ -91,7 +92,7 @@
+             }
+ 
+             teleportingEntity.dismountRidingEntity();
+-            ((EntityPlayerMP)teleportingEntity).connection.setPlayerLocation(argX.getResult(), argY.getResult(), argZ.getResult(), f, f1, set);
++            ((EntityPlayerMP)teleportingEntity).connection.setPlayerLocation(argX.getResult(), argY.getResult(), argZ.getResult(), f, f1, set, org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.COMMAND);
+             teleportingEntity.setRotationYawHead(f);
+         }
+         else

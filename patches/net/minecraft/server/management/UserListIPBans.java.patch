@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/server/management/UserListIPBans.java
++++ ../src-work/minecraft/net/minecraft/server/management/UserListIPBans.java
+@@ -1,6 +1,7 @@
+ package net.minecraft.server.management;
+ 
+ import com.google.gson.JsonObject;
++
+ import java.io.File;
+ import java.net.SocketAddress;
+ 

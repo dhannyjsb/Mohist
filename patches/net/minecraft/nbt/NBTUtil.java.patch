@@ -1,0 +1,23 @@
+--- ../src-base/minecraft/net/minecraft/nbt/NBTUtil.java
++++ ../src-work/minecraft/net/minecraft/nbt/NBTUtil.java
+@@ -5,9 +5,6 @@
+ import com.google.common.collect.UnmodifiableIterator;
+ import com.mojang.authlib.GameProfile;
+ import com.mojang.authlib.properties.Property;
+-import java.util.UUID;
+-import java.util.Map.Entry;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.properties.IProperty;
+ import net.minecraft.block.state.BlockStateContainer;
+@@ -19,6 +16,10 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import javax.annotation.Nullable;
++import java.util.Map.Entry;
++import java.util.UUID;
++
+ public final class NBTUtil
+ {
+     private static final Logger LOGGER = LogManager.getLogger();

@@ -1,0 +1,43 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/texture/TextureAtlasSprite.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/texture/TextureAtlasSprite.java
+@@ -1,10 +1,6 @@
+ package net.minecraft.client.renderer.texture;
+ 
+ import com.google.common.collect.Lists;
+-import java.awt.image.BufferedImage;
+-import java.io.IOException;
+-import java.util.Iterator;
+-import java.util.List;
+ import net.minecraft.client.resources.IResource;
+ import net.minecraft.client.resources.data.AnimationFrame;
+ import net.minecraft.client.resources.data.AnimationMetadataSection;
+@@ -16,6 +12,11 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.awt.image.BufferedImage;
++import java.io.IOException;
++import java.util.Iterator;
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class TextureAtlasSprite
+ {
+@@ -405,7 +406,7 @@
+      * @param location File resource location
+      * @return True to use your own custom load code and bypass vanilla loading.
+      */
+-    public boolean hasCustomLoader(net.minecraft.client.resources.IResourceManager manager, net.minecraft.util.ResourceLocation location)
++    public boolean hasCustomLoader(net.minecraft.client.resources.IResourceManager manager, ResourceLocation location)
+     {
+         return false;
+     }
+@@ -418,7 +419,7 @@
+      * @param textureGetter accessor for dependencies. All of them will be loaded before this one
+      * @return False to prevent this Icon from being stitched
+      */
+-    public boolean load(net.minecraft.client.resources.IResourceManager manager, net.minecraft.util.ResourceLocation location, java.util.function.Function<ResourceLocation, TextureAtlasSprite> textureGetter)
++    public boolean load(net.minecraft.client.resources.IResourceManager manager, ResourceLocation location, java.util.function.Function<ResourceLocation, TextureAtlasSprite> textureGetter)
+     {
+         return true;
+     }

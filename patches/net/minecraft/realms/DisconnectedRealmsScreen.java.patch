@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/realms/DisconnectedRealmsScreen.java
++++ ../src-work/minecraft/net/minecraft/realms/DisconnectedRealmsScreen.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.realms;
+ 
+-import java.util.List;
+ import net.minecraft.util.text.ITextComponent;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class DisconnectedRealmsScreen extends RealmsScreen
+ {

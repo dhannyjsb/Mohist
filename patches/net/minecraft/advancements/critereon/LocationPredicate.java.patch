@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/advancements/critereon/LocationPredicate.java
++++ ../src-work/minecraft/net/minecraft/advancements/critereon/LocationPredicate.java
+@@ -3,7 +3,6 @@
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonObject;
+ import com.google.gson.JsonSyntaxException;
+-import javax.annotation.Nullable;
+ import net.minecraft.util.JsonUtils;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.util.math.BlockPos;
+@@ -11,6 +10,8 @@
+ import net.minecraft.world.WorldServer;
+ import net.minecraft.world.biome.Biome;
+ 
++import javax.annotation.Nullable;
++
+ public class LocationPredicate
+ {
+     public static LocationPredicate ANY = new LocationPredicate(MinMaxBounds.UNBOUNDED, MinMaxBounds.UNBOUNDED, MinMaxBounds.UNBOUNDED, (Biome)null, (String)null, (DimensionType)null);

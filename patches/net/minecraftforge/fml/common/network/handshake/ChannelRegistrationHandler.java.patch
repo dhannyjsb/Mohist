@@ -1,0 +1,59 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,19 +19,17 @@
+ 
+ package net.minecraftforge.fml.common.network.handshake;
+ 
++import cn.pfcraft.server.Mohist;
++import com.google.common.collect.ImmutableSet;
+ import io.netty.channel.ChannelHandlerContext;
+ import io.netty.channel.SimpleChannelInboundHandler;
+-
+-import java.nio.charset.StandardCharsets;
+-import java.util.Set;
+-
+ import net.minecraft.network.NetworkManager;
+ import net.minecraftforge.fml.common.FMLCommonHandler;
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
+ import net.minecraftforge.fml.relauncher.Side;
+ 
+-import com.google.common.collect.ImmutableSet;
++import java.nio.charset.StandardCharsets;
++import java.util.Set;
+ 
+ public class ChannelRegistrationHandler extends SimpleChannelInboundHandler<FMLProxyPacket> {
+     @Override
+@@ -48,6 +46,15 @@
+             Set<String> channelSet = ImmutableSet.copyOf(split);
+             FMLCommonHandler.instance().fireNetRegistrationEvent(manager, channelSet, msg.channel(), side);
+             msg.payload().release();
++            // handle REGISTER/UNREGISTER channel in Bukkit
++            org.bukkit.craftbukkit.entity.CraftPlayer player = ((net.minecraft.network.NetHandlerPlayServer) ctx.attr(NetworkDispatcher.FML_DISPATCHER).get().getNetHandler()).getPlayer();
++            if (msg.channel().equals("REGISTER")) {
++                for (String channel : channelSet)
++                    player.addChannel(channel);
++            } else {
++                for (String channel : channelSet)
++                    player.removeChannel(channel);
++            }
+         }
+         else
+         {
+@@ -58,7 +65,7 @@
+     @Override
+     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
+     {
+-        FMLLog.log.error("ChannelRegistrationHandler exception", cause);
++        Mohist.LOGGER.error("ChannelRegistrationHandler exception", cause);
+         super.exceptionCaught(ctx, cause);
+     }
+ }

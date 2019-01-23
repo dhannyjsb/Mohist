@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/command/ICommandManager.java
++++ ../src-work/minecraft/net/minecraft/command/ICommandManager.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.command;
+ 
++import net.minecraft.util.math.BlockPos;
++
++import javax.annotation.Nullable;
+ import java.util.List;
+ import java.util.Map;
+-import javax.annotation.Nullable;
+-import net.minecraft.util.math.BlockPos;
+ 
+ public interface ICommandManager
+ {

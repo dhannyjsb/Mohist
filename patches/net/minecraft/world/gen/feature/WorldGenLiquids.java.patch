@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/world/gen/feature/WorldGenLiquids.java
++++ ../src-work/minecraft/net/minecraft/world/gen/feature/WorldGenLiquids.java
+@@ -1,13 +1,13 @@
+ package net.minecraft.world.gen.feature;
+ 
+-import java.util.Random;
+ import net.minecraft.block.Block;
+-import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.init.Blocks;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.World;
+ 
++import java.util.Random;
++
+ public class WorldGenLiquids extends WorldGenerator
+ {
+     private final Block block;

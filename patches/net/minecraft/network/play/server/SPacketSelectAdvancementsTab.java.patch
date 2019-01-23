@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/network/play/server/SPacketSelectAdvancementsTab.java
++++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketSelectAdvancementsTab.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.network.play.server;
+ 
+-import java.io.IOException;
+-import javax.annotation.Nullable;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.network.play.INetHandlerPlayClient;
+@@ -9,6 +7,9 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.io.IOException;
++
+ public class SPacketSelectAdvancementsTab implements Packet<INetHandlerPlayClient>
+ {
+     @Nullable

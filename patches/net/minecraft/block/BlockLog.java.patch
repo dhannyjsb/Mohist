@@ -1,0 +1,45 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockLog.java
++++ ../src-work/minecraft/net/minecraft/block/BlockLog.java
+@@ -13,7 +13,7 @@
+ 
+ public abstract class BlockLog extends BlockRotatedPillar
+ {
+-    public static final PropertyEnum<BlockLog.EnumAxis> LOG_AXIS = PropertyEnum.<BlockLog.EnumAxis>create("axis", BlockLog.EnumAxis.class);
++    public static final PropertyEnum<EnumAxis> LOG_AXIS = PropertyEnum.<EnumAxis>create("axis", EnumAxis.class);
+ 
+     public BlockLog()
+     {
+@@ -44,7 +44,7 @@
+ 
+     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+     {
+-        return this.getStateFromMeta(meta).withProperty(LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(facing.getAxis()));
++        return this.getStateFromMeta(meta).withProperty(LOG_AXIS, EnumAxis.fromFacingAxis(facing.getAxis()));
+     }
+ 
+     public IBlockState withRotation(IBlockState state, Rotation rot)
+@@ -54,12 +54,12 @@
+             case COUNTERCLOCKWISE_90:
+             case CLOCKWISE_90:
+ 
+-                switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
++                switch ((EnumAxis)state.getValue(LOG_AXIS))
+                 {
+                     case X:
+-                        return state.withProperty(LOG_AXIS, BlockLog.EnumAxis.Z);
++                        return state.withProperty(LOG_AXIS, EnumAxis.Z);
+                     case Z:
+-                        return state.withProperty(LOG_AXIS, BlockLog.EnumAxis.X);
++                        return state.withProperty(LOG_AXIS, EnumAxis.X);
+                     default:
+                         return state;
+                 }
+@@ -91,7 +91,7 @@
+             return this.name;
+         }
+ 
+-        public static BlockLog.EnumAxis fromFacingAxis(EnumFacing.Axis axis)
++        public static EnumAxis fromFacingAxis(EnumFacing.Axis axis)
+         {
+             switch (axis)
+             {

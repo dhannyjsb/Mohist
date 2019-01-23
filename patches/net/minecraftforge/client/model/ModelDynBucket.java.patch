@@ -1,0 +1,129 @@
+--- ../src-base/minecraft/net/minecraftforge/client/model/ModelDynBucket.java
++++ ../src-work/minecraft/net/minecraftforge/client/model/ModelDynBucket.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,14 +19,11 @@
+ 
+ package net.minecraftforge.client.model;
+ 
+-import java.io.IOException;
+-import java.util.Collection;
+-import java.util.Map;
+-
+-import javax.annotation.Nonnull;
+-import javax.annotation.Nullable;
+-import javax.vecmath.Quat4f;
+-
++import cn.pfcraft.server.Mohist;
++import com.google.common.collect.ImmutableList;
++import com.google.common.collect.ImmutableMap;
++import com.google.common.collect.ImmutableSet;
++import com.google.common.collect.Maps;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.renderer.block.model.BakedQuad;
+ import net.minecraft.client.renderer.block.model.IBakedModel;
+@@ -51,19 +48,18 @@
+ import net.minecraftforge.fluids.FluidStack;
+ import net.minecraftforge.fluids.FluidUtil;
+ 
++import javax.annotation.Nonnull;
++import javax.annotation.Nullable;
++import javax.vecmath.Quat4f;
++import java.io.IOException;
++import java.util.Collection;
++import java.util.Map;
+ import java.util.Objects;
+-import java.util.function.Function;
+ import java.util.Optional;
++import java.util.function.Function;
+ 
+ import static net.minecraftforge.client.model.ModelDynBucket.LoaderDynBucket.getResource;
+ 
+-import com.google.common.collect.ImmutableList;
+-import com.google.common.collect.ImmutableMap;
+-import com.google.common.collect.ImmutableSet;
+-import com.google.common.collect.Maps;
+-import net.minecraftforge.fml.common.FMLLog;
+-import org.apache.commons.io.IOUtils;
+-
+ public final class ModelDynBucket implements IModel
+ {
+     public static final ModelResourceLocation LOCATION = new ModelResourceLocation(new ResourceLocation(ForgeVersion.MOD_ID, "dynbucket"), "inventory");
+@@ -90,11 +86,9 @@
+ 
+     public ModelDynBucket()
+     {
+-        this(null, null, null, null, false, true);
++        this(null, null, null, null, false);
+     }
+ 
+-    /** @deprecated use {@link #ModelDynBucket(ResourceLocation, ResourceLocation, ResourceLocation, Fluid, boolean, boolean)} */
+-    @Deprecated // TODO: remove
+     public ModelDynBucket(@Nullable ResourceLocation baseLocation, @Nullable ResourceLocation liquidLocation, @Nullable ResourceLocation coverLocation, @Nullable Fluid fluid, boolean flipGas)
+     {
+         this(baseLocation, liquidLocation, coverLocation, fluid, flipGas, true);
+@@ -114,7 +108,6 @@
+     public Collection<ResourceLocation> getTextures()
+     {
+         ImmutableSet.Builder<ResourceLocation> builder = ImmutableSet.builder();
+-
+         if (baseLocation != null)
+             builder.add(baseLocation);
+         if (liquidLocation != null)
+@@ -134,7 +127,7 @@
+ 
+         ImmutableMap<TransformType, TRSRTransformation> transformMap = PerspectiveMapWrapper.getTransforms(state);
+ 
+-        // if the fluid is lighter than air, will manipulate the initial state to be rotated 180° to turn it upside down
++        // if the fluid is lighter than air, will manipulate the initial state to be rotated 180�� to turn it upside down
+         if (flipGas && fluid != null && fluid.isLighterThanAir())
+         {
+             state = new ModelStateComposition(state, TRSRTransformation.blockCenterToCorner(new TRSRTransformation(null, new Quat4f(0, 0, 1, 0), null, null)));
+@@ -181,9 +174,8 @@
+ 
+     /**
+      * Sets the fluid in the model.
+-     * "fluid" - Name of the fluid in the fluid registry.
+-     * "flipGas" - If "true" the model will be flipped upside down if the fluid is lighter than air. If "false" it won't.
+-     * "applyTint" - If "true" the model will tint the fluid quads according to the fluid's base color.
++     * fluid - Name of the fluid in the Fluid registry
++     * flipGas - If "true" the model will be flipped upside down if the liquid is a gas. If "false" it wont
+      * <p/>
+      * If the fluid can't be found, water is used.
+      */
+@@ -397,7 +389,7 @@
+             }
+             catch (IOException e)
+             {
+-                FMLLog.log.error("Failed to close resource", e);
++                Mohist.LOGGER.error("Failed to close resource", e);
+             }
+ 
+             this.clearFramesTextureData();
+@@ -453,13 +445,13 @@
+         private final Map<String, IBakedModel> cache; // contains all the baked models since they'll never change
+         private final VertexFormat format;
+ 
+-        BakedDynBucket(ModelDynBucket parent,
+-                       ImmutableList<BakedQuad> quads,
+-                       TextureAtlasSprite particle,
+-                       VertexFormat format,
+-                       ImmutableMap<TransformType, TRSRTransformation> transforms,
+-                       Map<String, IBakedModel> cache,
+-                       boolean untransformed)
++        public BakedDynBucket(ModelDynBucket parent,
++                              ImmutableList<BakedQuad> quads,
++                              TextureAtlasSprite particle,
++                              VertexFormat format,
++                              ImmutableMap<TransformType, TRSRTransformation> transforms,
++                              Map<String, IBakedModel> cache,
++                              boolean untransformed)
+         {
+             super(quads, particle, transforms, BakedDynBucketOverrideHandler.INSTANCE, untransformed);
+             this.format = format;

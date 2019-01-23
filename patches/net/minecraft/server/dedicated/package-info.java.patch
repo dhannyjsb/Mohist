@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/server/dedicated/package-info.java
++++ ../src-work/minecraft/net/minecraft/server/dedicated/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.server.dedicated;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

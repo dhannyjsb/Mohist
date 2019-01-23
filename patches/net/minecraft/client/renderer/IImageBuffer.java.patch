@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/IImageBuffer.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/IImageBuffer.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.client.renderer;
+ 
+-import java.awt.image.BufferedImage;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.awt.image.BufferedImage;
++
+ @SideOnly(Side.CLIENT)
+ public interface IImageBuffer
+ {

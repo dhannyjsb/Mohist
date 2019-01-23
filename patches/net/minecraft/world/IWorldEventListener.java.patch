@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/world/IWorldEventListener.java
++++ ../src-work/minecraft/net/minecraft/world/IWorldEventListener.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.world;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.player.EntityPlayer;
+@@ -8,6 +7,8 @@
+ import net.minecraft.util.SoundEvent;
+ import net.minecraft.util.math.BlockPos;
+ 
++import javax.annotation.Nullable;
++
+ public interface IWorldEventListener
+ {
+     void notifyBlockUpdate(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags);

@@ -1,0 +1,50 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/block/model/ItemCameraTransforms.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/block/model/ItemCameraTransforms.java
+@@ -1,17 +1,14 @@
+ package net.minecraft.client.renderer.block.model;
+ 
+-import com.google.gson.JsonDeserializationContext;
+-import com.google.gson.JsonDeserializer;
+-import com.google.gson.JsonElement;
+-import com.google.gson.JsonObject;
+-import com.google.gson.JsonParseException;
+-import java.lang.reflect.Type;
++import com.google.gson.*;
+ import net.minecraft.client.renderer.GlStateManager;
+ import net.minecraft.util.math.MathHelper;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.lwjgl.util.vector.Quaternion;
+ 
++import java.lang.reflect.Type;
++
+ /*
+  * @deprecated use {@link net.minecraftforge.client.model.IPerspectiveAwareModel} instead
+  */
+@@ -68,7 +65,7 @@
+         this.fixed = fixedIn;
+     }
+ 
+-    public void applyTransform(ItemCameraTransforms.TransformType type)
++    public void applyTransform(TransformType type)
+     {
+         applyTransformSide(this.getTransform(type), false);
+     }
+@@ -109,7 +106,7 @@
+     }
+ 
+     @Deprecated
+-    public ItemTransformVec3f getTransform(ItemCameraTransforms.TransformType type)
++    public ItemTransformVec3f getTransform(TransformType type)
+     {
+         switch (type)
+         {
+@@ -134,7 +131,7 @@
+         }
+     }
+ 
+-    public boolean hasCustomTransform(ItemCameraTransforms.TransformType type)
++    public boolean hasCustomTransform(TransformType type)
+     {
+         return this.getTransform(type) != ItemTransformVec3f.DEFAULT;
+     }

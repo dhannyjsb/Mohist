@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/entity/ai/attributes/IAttributeInstance.java
++++ ../src-work/minecraft/net/minecraft/entity/ai/attributes/IAttributeInstance.java
+@@ -1,11 +1,12 @@
+ package net.minecraft.entity.ai.attributes;
+ 
+-import java.util.Collection;
+-import java.util.UUID;
+-import javax.annotation.Nullable;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.util.Collection;
++import java.util.UUID;
++
+ public interface IAttributeInstance
+ {
+     IAttribute getAttribute();

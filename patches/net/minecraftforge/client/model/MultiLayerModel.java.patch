@@ -1,0 +1,87 @@
+--- ../src-base/minecraft/net/minecraftforge/client/model/MultiLayerModel.java
++++ ../src-work/minecraft/net/minecraftforge/client/model/MultiLayerModel.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,12 +19,11 @@
+ 
+ package net.minecraftforge.client.model;
+ 
+-import java.util.Collection;
+-import java.util.List;
+-
+-import javax.annotation.Nullable;
+-import javax.vecmath.Matrix4f;
+-
++import cn.pfcraft.server.Mohist;
++import com.google.common.collect.ImmutableList;
++import com.google.common.collect.ImmutableMap;
++import com.google.gson.JsonElement;
++import com.google.gson.JsonParser;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.client.renderer.block.model.BakedQuad;
+ import net.minecraft.client.renderer.block.model.IBakedModel;
+@@ -41,16 +40,14 @@
+ import net.minecraftforge.common.ForgeVersion;
+ import net.minecraftforge.common.model.IModelState;
+ import net.minecraftforge.common.model.TRSRTransformation;
+-import net.minecraftforge.fml.common.FMLLog;
+-
+ import org.apache.commons.lang3.tuple.Pair;
+ 
+-import java.util.function.Function;
++import javax.annotation.Nullable;
++import javax.vecmath.Matrix4f;
++import java.util.Collection;
++import java.util.List;
+ import java.util.Optional;
+-import com.google.common.collect.ImmutableList;
+-import com.google.common.collect.ImmutableMap;
+-import com.google.gson.JsonElement;
+-import com.google.gson.JsonParser;
++import java.util.function.Function;
+ 
+ public final class MultiLayerModel implements IModel
+ {
+@@ -121,7 +118,7 @@
+         {
+             return new ModelResourceLocation(e.getAsString());
+         }
+-        FMLLog.log.fatal("Expect ModelResourceLocation, got: {}", json);
++        Mohist.LOGGER.fatal("Expect ModelResourceLocation, got: {}", json);
+         return new ModelResourceLocation("builtin/missing", "missing");
+     }
+ 
+@@ -132,6 +129,7 @@
+         private final IBakedModel base;
+         private final IBakedModel missing;
+ 
++
+         public MultiLayerBakedModel(ImmutableMap<Optional<BlockRenderLayer>, IBakedModel> models, IBakedModel missing, ImmutableMap<TransformType, TRSRTransformation> cameraTransforms)
+         {
+             this.models = models;
+@@ -144,8 +142,7 @@
+         public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
+         {
+             BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
+-            if (layer == null)
+-            {
++            if (layer == null) {
+                 ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
+                 for (IBakedModel model : models.values())
+                 {
+@@ -164,8 +161,7 @@
+         }
+ 
+         @Override
+-        public boolean isAmbientOcclusion(IBlockState state)
+-        {
++        public boolean isAmbientOcclusion(IBlockState state) {
+             return base.isAmbientOcclusion(state);
+         }
+ 

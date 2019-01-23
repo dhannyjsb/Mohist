@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraft/client/network/NetHandlerLoginClient.java
++++ ../src-work/minecraft/net/minecraft/client/network/NetHandlerLoginClient.java
+@@ -7,10 +7,6 @@
+ import com.mojang.authlib.minecraft.MinecraftSessionService;
+ import io.netty.util.concurrent.Future;
+ import io.netty.util.concurrent.GenericFutureListener;
+-import java.math.BigInteger;
+-import java.security.PublicKey;
+-import javax.annotation.Nullable;
+-import javax.crypto.SecretKey;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.gui.GuiDisconnected;
+ import net.minecraft.client.gui.GuiScreen;
+@@ -32,6 +28,11 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import javax.annotation.Nullable;
++import javax.crypto.SecretKey;
++import java.math.BigInteger;
++import java.security.PublicKey;
++
+ @SideOnly(Side.CLIENT)
+ public class NetHandlerLoginClient implements INetHandlerLoginClient
+ {

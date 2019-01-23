@@ -1,0 +1,28 @@
+--- ../src-base/minecraft/net/minecraft/util/EntityDamageSourceIndirect.java
++++ ../src-work/minecraft/net/minecraft/util/EntityDamageSourceIndirect.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.util;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.item.ItemStack;
+@@ -8,6 +7,8 @@
+ import net.minecraft.util.text.TextComponentTranslation;
+ import net.minecraft.util.text.translation.I18n;
+ 
++import javax.annotation.Nullable;
++
+ public class EntityDamageSourceIndirect extends EntityDamageSource
+ {
+     private final Entity indirectEntity;
+@@ -38,4 +39,9 @@
+         String s1 = s + ".item";
+         return !itemstack.isEmpty() && itemstack.hasDisplayName() && I18n.canTranslate(s1) ? new TextComponentTranslation(s1, new Object[] {entityLivingBaseIn.getDisplayName(), itextcomponent, itemstack.getTextComponent()}) : new TextComponentTranslation(s, new Object[] {entityLivingBaseIn.getDisplayName(), itextcomponent});
+     }
++
++    @Nullable
++    public Entity getProximateDamageSource() {
++        return super.getTrueSource();
++    }
+ }

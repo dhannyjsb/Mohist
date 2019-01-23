@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/client/shader/ShaderManager.java
++++ ../src-work/minecraft/net/minecraft/client/shader/ShaderManager.java
+@@ -6,12 +6,6 @@
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonObject;
+ import com.google.gson.JsonParser;
+-import java.io.Closeable;
+-import java.io.IOException;
+-import java.nio.charset.StandardCharsets;
+-import java.util.List;
+-import java.util.Map;
+-import javax.annotation.Nullable;
+ import net.minecraft.client.renderer.GlStateManager;
+ import net.minecraft.client.renderer.OpenGlHelper;
+ import net.minecraft.client.renderer.texture.ITextureObject;
+@@ -27,6 +21,13 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import javax.annotation.Nullable;
++import java.io.Closeable;
++import java.io.IOException;
++import java.nio.charset.StandardCharsets;
++import java.util.List;
++import java.util.Map;
++
+ @SideOnly(Side.CLIENT)
+ public class ShaderManager
+ {

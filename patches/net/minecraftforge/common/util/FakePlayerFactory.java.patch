@@ -1,0 +1,60 @@
+--- ../src-base/minecraft/net/minecraftforge/common/util/FakePlayerFactory.java
++++ ../src-work/minecraft/net/minecraftforge/common/util/FakePlayerFactory.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,17 +19,15 @@
+ 
+ package net.minecraftforge.common.util;
+ 
+-import java.lang.ref.WeakReference;
+-import java.util.Iterator;
+-import java.util.Map;
+-import java.util.Map.Entry;
+-import java.util.UUID;
+-
+ import com.google.common.collect.Maps;
+ import com.mojang.authlib.GameProfile;
+-
+ import net.minecraft.world.WorldServer;
+ 
++import java.lang.ref.WeakReference;
++import java.nio.charset.StandardCharsets;
++import java.util.Map;
++import java.util.UUID;
++
+ //To be expanded for generic Mod fake players?
+ public class FakePlayerFactory
+ {
+@@ -56,12 +54,23 @@
+      */
+     public static FakePlayer get(WorldServer world, GameProfile username)
+     {
+-        if (!fakePlayers.containsKey(username))
++        if (username == null || username.getName() == null) return null;
++
++        for (Map.Entry<GameProfile, FakePlayer> mapEntry : fakePlayers.entrySet())
+         {
+-            FakePlayer fakePlayer = new FakePlayer(world, username);
+-            fakePlayers.put(username, fakePlayer);
++            GameProfile gameprofile = mapEntry.getKey();
++            if (gameprofile.getName().equals(username.getName()))
++            {
++                return mapEntry.getValue();
++            }
+         }
+ 
++        FakePlayer fakePlayer = new FakePlayer(world, username);
++        if (username.getId() == null) // GameProfile hashCode check will fail with a null ID
++        {
++            username = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + username.getName()).getBytes(StandardCharsets.UTF_8)), username.getName()); // Create new GameProfile with offline UUID
++        }
++        fakePlayers.put(username, fakePlayer);
+         return fakePlayers.get(username);
+     }
+ 

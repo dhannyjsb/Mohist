@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/network/status/package-info.java
++++ ../src-work/minecraft/net/minecraft/network/status/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.network.status;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

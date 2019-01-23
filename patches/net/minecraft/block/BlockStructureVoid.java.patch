@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockStructureVoid.java
++++ ../src-work/minecraft/net/minecraft/block/BlockStructureVoid.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.block;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.block.material.EnumPushReaction;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.BlockFaceShape;
+@@ -14,6 +13,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ public class BlockStructureVoid extends Block
+ {
+     private static final AxisAlignedBB STRUCTURE_VOID_AABB = new AxisAlignedBB(0.3D, 0.3D, 0.3D, 0.7D, 0.7D, 0.7D);

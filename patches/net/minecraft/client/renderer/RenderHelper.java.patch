@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/RenderHelper.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/RenderHelper.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.client.renderer;
+ 
+-import java.nio.FloatBuffer;
+ import net.minecraft.util.math.Vec3d;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.nio.FloatBuffer;
++
+ @SideOnly(Side.CLIENT)
+ public class RenderHelper
+ {

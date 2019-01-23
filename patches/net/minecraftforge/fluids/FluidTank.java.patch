@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/FluidTank.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/FluidTank.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,14 +19,14 @@
+ 
+ package net.minecraftforge.fluids;
+ 
+-import javax.annotation.Nullable;
+-
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.tileentity.TileEntity;
+ import net.minecraftforge.fluids.capability.FluidTankPropertiesWrapper;
+ import net.minecraftforge.fluids.capability.IFluidHandler;
+ import net.minecraftforge.fluids.capability.IFluidTankProperties;
+ 
++import javax.annotation.Nullable;
++
+ /**
+  * Reference implementation of {@link IFluidTank}. Use/extend this or implement your own.
+  */

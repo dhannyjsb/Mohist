@@ -1,0 +1,32 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/capability/wrappers/FluidBlockWrapper.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/capability/wrappers/FluidBlockWrapper.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,17 +19,17 @@
+ 
+ package net.minecraftforge.fluids.capability.wrappers;
+ 
+-import javax.annotation.Nullable;
+-
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.World;
+ import net.minecraftforge.fluids.Fluid;
+ import net.minecraftforge.fluids.FluidStack;
+-import net.minecraftforge.fluids.capability.FluidTankProperties;
+ import net.minecraftforge.fluids.IFluidBlock;
+-import net.minecraftforge.fluids.capability.IFluidTankProperties;
++import net.minecraftforge.fluids.capability.FluidTankProperties;
+ import net.minecraftforge.fluids.capability.IFluidHandler;
++import net.minecraftforge.fluids.capability.IFluidTankProperties;
+ 
++import javax.annotation.Nullable;
++
+ /**
+  * Wrapper to handle {@link IFluidBlock} as an IFluidHandler
+  */

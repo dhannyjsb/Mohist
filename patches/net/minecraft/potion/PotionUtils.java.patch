@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraft/potion/PotionUtils.java
++++ ../src-work/minecraft/net/minecraft/potion/PotionUtils.java
+@@ -2,11 +2,6 @@
+ 
+ import com.google.common.base.MoreObjects;
+ import com.google.common.collect.Lists;
+-import java.util.Collection;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Map.Entry;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.ai.attributes.AttributeModifier;
+ import net.minecraft.entity.ai.attributes.IAttribute;
+ import net.minecraft.init.PotionTypes;
+@@ -20,6 +15,12 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.util.Collection;
++import java.util.List;
++import java.util.Map;
++import java.util.Map.Entry;
++
+ public class PotionUtils
+ {
+     public static List<PotionEffect> getEffectsFromStack(ItemStack stack)

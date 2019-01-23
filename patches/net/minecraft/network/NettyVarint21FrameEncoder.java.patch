@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/network/NettyVarint21FrameEncoder.java
++++ ../src-work/minecraft/net/minecraft/network/NettyVarint21FrameEncoder.java
+@@ -1,8 +1,8 @@
+ package net.minecraft.network;
+ 
+ import io.netty.buffer.ByteBuf;
+-import io.netty.channel.ChannelHandlerContext;
+ import io.netty.channel.ChannelHandler.Sharable;
++import io.netty.channel.ChannelHandlerContext;
+ import io.netty.handler.codec.MessageToByteEncoder;
+ 
+ @Sharable

@@ -1,0 +1,37 @@
+--- ../src-base/minecraft/net/minecraftforge/common/network/ForgeNetworkHandler.java
++++ ../src-work/minecraft/net/minecraftforge/common/network/ForgeNetworkHandler.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,7 +19,6 @@
+ 
+ package net.minecraftforge.common.network;
+ 
+-import java.util.EnumMap;
+ import net.minecraftforge.common.ForgeModContainer;
+ import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
+ import net.minecraftforge.fml.common.network.FMLOutboundHandler;
+@@ -28,6 +27,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.EnumMap;
++
+ public class ForgeNetworkHandler
+ {
+     private static EnumMap<Side, FMLEmbeddedChannel> channelPair;
+@@ -54,4 +55,9 @@
+         clientChannel.pipeline().addAfter(handlerName, "DimensionHandler", new DimensionMessageHandler());
+         clientChannel.pipeline().addAfter(handlerName, "FluidIdRegistryHandler", new FluidIdRegistryMessageHandler());
+     }
++
++    public static FMLEmbeddedChannel getServerChannel()
++    {
++        return channelPair.get(Side.SERVER);
++    }
+ }

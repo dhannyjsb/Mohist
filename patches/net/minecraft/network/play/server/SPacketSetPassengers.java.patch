@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/network/play/server/SPacketSetPassengers.java
++++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketSetPassengers.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.network.play.server;
+ 
+-import java.io.IOException;
+-import java.util.List;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+@@ -9,6 +7,9 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++import java.util.List;
++
+ public class SPacketSetPassengers implements Packet<INetHandlerPlayClient>
+ {
+     private int entityId;

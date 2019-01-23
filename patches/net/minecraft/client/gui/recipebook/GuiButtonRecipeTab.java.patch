@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/recipebook/GuiButtonRecipeTab.java
++++ ../src-work/minecraft/net/minecraft/client/gui/recipebook/GuiButtonRecipeTab.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.client.gui.recipebook;
+ 
+-import java.util.Iterator;
+-import java.util.List;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.gui.GuiButtonToggle;
+ import net.minecraft.client.renderer.GlStateManager;
+@@ -15,6 +13,9 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.Iterator;
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiButtonRecipeTab extends GuiButtonToggle
+ {

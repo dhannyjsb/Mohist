@@ -1,0 +1,6 @@
+++++ REJECTED PATCH 3
+             FarmlandWaterManager.removeTickets(event.getChunk());
+     }
+ }
+-
+++++ END PATCH

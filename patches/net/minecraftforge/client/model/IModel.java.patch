@@ -1,0 +1,44 @@
+--- ../src-base/minecraft/net/minecraftforge/client/model/IModel.java
++++ ../src-work/minecraft/net/minecraftforge/client/model/IModel.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,9 +19,6 @@
+ 
+ package net.minecraftforge.client.model;
+ 
+-import java.util.Collection;
+-
+-import java.util.Optional;
+ import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.ImmutableMap;
+ import net.minecraft.client.renderer.block.model.IBakedModel;
+@@ -30,11 +27,13 @@
+ import net.minecraft.client.renderer.vertex.VertexFormat;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraftforge.common.model.IModelState;
+-
+-import java.util.function.Function;
+ import net.minecraftforge.common.model.TRSRTransformation;
+ import net.minecraftforge.common.model.animation.IClip;
+ 
++import java.util.Collection;
++import java.util.Optional;
++import java.util.function.Function;
++
+ /*
+  * Interface for models that can be baked
+  * (possibly to different vertex formats and with different state).
+@@ -123,6 +122,7 @@
+         return this;
+     }
+ 
++
+     default Optional<ModelBlock> asVanillaModel() {
+         return Optional.empty();
+     }

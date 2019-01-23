@@ -1,0 +1,31 @@
+--- ../src-base/minecraft/net/minecraft/world/gen/structure/StructureComponent.java
++++ ../src-work/minecraft/net/minecraft/world/gen/structure/StructureComponent.java
+@@ -1,8 +1,5 @@
+ package net.minecraft.world.gen.structure;
+ 
+-import java.util.List;
+-import java.util.Random;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.BlockDispenser;
+ import net.minecraft.block.BlockDoor;
+ import net.minecraft.block.material.Material;
+@@ -21,6 +18,10 @@
+ import net.minecraft.world.World;
+ import net.minecraft.world.gen.structure.template.TemplateManager;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++import java.util.Random;
++
+ public abstract class StructureComponent
+ {
+     protected StructureBoundingBox boundingBox;
+@@ -293,7 +294,7 @@
+         }
+     }
+ 
+-    protected void fillWithRandomizedBlocks(World worldIn, StructureBoundingBox boundingboxIn, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, boolean alwaysReplace, Random rand, StructureComponent.BlockSelector blockselector)
++    protected void fillWithRandomizedBlocks(World worldIn, StructureBoundingBox boundingboxIn, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, boolean alwaysReplace, Random rand, BlockSelector blockselector)
+     {
+         for (int i = minY; i <= maxY; ++i)
+         {

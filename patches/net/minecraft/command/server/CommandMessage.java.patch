@@ -1,0 +1,28 @@
+--- ../src-base/minecraft/net/minecraft/command/server/CommandMessage.java
++++ ../src-work/minecraft/net/minecraft/command/server/CommandMessage.java
+@@ -1,13 +1,6 @@
+ package net.minecraft.command.server;
+ 
+-import java.util.Arrays;
+-import java.util.List;
+-import javax.annotation.Nullable;
+-import net.minecraft.command.CommandBase;
+-import net.minecraft.command.CommandException;
+-import net.minecraft.command.ICommandSender;
+-import net.minecraft.command.PlayerNotFoundException;
+-import net.minecraft.command.WrongUsageException;
++import net.minecraft.command.*;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.util.math.BlockPos;
+@@ -15,6 +8,10 @@
+ import net.minecraft.util.text.TextComponentTranslation;
+ import net.minecraft.util.text.TextFormatting;
+ 
++import javax.annotation.Nullable;
++import java.util.Arrays;
++import java.util.List;
++
+ public class CommandMessage extends CommandBase
+ {
+     public List<String> getAliases()

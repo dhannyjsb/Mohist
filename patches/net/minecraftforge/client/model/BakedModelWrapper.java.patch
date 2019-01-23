@@ -1,0 +1,35 @@
+--- ../src-base/minecraft/net/minecraftforge/client/model/BakedModelWrapper.java
++++ ../src-work/minecraft/net/minecraftforge/client/model/BakedModelWrapper.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -16,13 +16,8 @@
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  */
+-
+ package net.minecraftforge.client.model;
+ 
+-import javax.annotation.Nullable;
+-import javax.vecmath.Matrix4f;
+-import java.util.List;
+-
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.client.renderer.block.model.BakedQuad;
+ import net.minecraft.client.renderer.block.model.IBakedModel;
+@@ -32,6 +27,10 @@
+ import net.minecraft.util.EnumFacing;
+ import org.apache.commons.lang3.tuple.Pair;
+ 
++import javax.annotation.Nullable;
++import javax.vecmath.Matrix4f;
++import java.util.List;
++
+ public abstract class BakedModelWrapper<T extends IBakedModel> implements IBakedModel
+ {
+     protected final T originalModel;

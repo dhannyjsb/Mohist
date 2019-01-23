@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/shader/ShaderLinkHelper.java
++++ ../src-work/minecraft/net/minecraft/client/shader/ShaderLinkHelper.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.shader;
+ 
+-import java.io.IOException;
+ import net.minecraft.client.renderer.OpenGlHelper;
+ import net.minecraft.client.util.JsonException;
+ import net.minecraftforge.fml.relauncher.Side;
+@@ -8,6 +7,8 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import java.io.IOException;
++
+ @SideOnly(Side.CLIENT)
+ public class ShaderLinkHelper
+ {

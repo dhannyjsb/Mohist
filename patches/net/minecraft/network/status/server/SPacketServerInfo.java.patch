@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/network/status/server/SPacketServerInfo.java
++++ ../src-work/minecraft/net/minecraft/network/status/server/SPacketServerInfo.java
+@@ -2,7 +2,6 @@
+ 
+ import com.google.gson.Gson;
+ import com.google.gson.GsonBuilder;
+-import java.io.IOException;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.network.ServerStatusResponse;
+@@ -14,6 +13,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++
+ public class SPacketServerInfo implements Packet<INetHandlerStatusClient>
+ {
+     public static final Gson GSON = (new GsonBuilder()).registerTypeAdapter(ServerStatusResponse.Version.class, new ServerStatusResponse.Version.Serializer()).registerTypeAdapter(ServerStatusResponse.Players.class, new ServerStatusResponse.Players.Serializer()).registerTypeAdapter(ServerStatusResponse.class, new ServerStatusResponse.Serializer()).registerTypeHierarchyAdapter(ITextComponent.class, new ITextComponent.Serializer()).registerTypeHierarchyAdapter(Style.class, new Style.Serializer()).registerTypeAdapterFactory(new EnumTypeAdapterFactory()).create();

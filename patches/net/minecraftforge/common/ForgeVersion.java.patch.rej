@@ -1,0 +1,6 @@
+++++ REJECTED PATCH 7
+         return ret == null ? PENDING_CHECK : ret;
+     }
+ }
+-
+++++ END PATCH

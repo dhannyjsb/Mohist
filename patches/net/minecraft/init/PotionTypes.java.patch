@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/init/PotionTypes.java
++++ ../src-work/minecraft/net/minecraft/init/PotionTypes.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.init;
+ 
+ import com.google.common.collect.Sets;
+-import java.util.Set;
+ import net.minecraft.potion.PotionType;
+ import net.minecraft.util.ResourceLocation;
+ 
++import java.util.Set;
++
+ public class PotionTypes
+ {
+     private static final Set<PotionType> CACHE;

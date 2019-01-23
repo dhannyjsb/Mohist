@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/inventory/GuiEditSign.java
++++ ../src-work/minecraft/net/minecraft/client/gui/inventory/GuiEditSign.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.gui.inventory;
+ 
+-import java.io.IOException;
+ import net.minecraft.block.Block;
+ import net.minecraft.client.gui.GuiButton;
+ import net.minecraft.client.gui.GuiScreen;
+@@ -17,6 +16,8 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.lwjgl.input.Keyboard;
+ 
++import java.io.IOException;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiEditSign extends GuiScreen
+ {

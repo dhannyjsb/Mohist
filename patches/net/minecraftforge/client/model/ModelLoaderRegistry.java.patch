@@ -1,0 +1,53 @@
+--- ../src-base/minecraft/net/minecraftforge/client/model/ModelLoaderRegistry.java
++++ ../src-work/minecraft/net/minecraftforge/client/model/ModelLoaderRegistry.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,10 +19,12 @@
+ 
+ package net.minecraftforge.client.model;
+ 
+-import java.util.Deque;
+-import java.util.Map;
+-import java.util.Set;
+-
++import cn.pfcraft.server.Mohist;
++import com.google.common.base.Joiner;
++import com.google.common.collect.ImmutableMap;
++import com.google.common.collect.Maps;
++import com.google.common.collect.Queues;
++import com.google.common.collect.Sets;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+ import net.minecraft.client.resources.IReloadableResourceManager;
+@@ -35,13 +37,10 @@
+ import net.minecraftforge.common.animation.ITimeValue;
+ import net.minecraftforge.common.model.animation.AnimationStateMachine;
+ import net.minecraftforge.common.model.animation.IAnimationStateMachine;
+-import net.minecraftforge.fml.common.FMLLog;
+ 
+-import com.google.common.base.Joiner;
+-import com.google.common.collect.ImmutableMap;
+-import com.google.common.collect.Maps;
+-import com.google.common.collect.Queues;
+-import com.google.common.collect.Sets;
++import java.util.Deque;
++import java.util.Map;
++import java.util.Set;
+ 
+ /*
+  * Central hub for custom model loaders.
+@@ -212,7 +211,7 @@
+         }
+         catch(Exception e)
+         {
+-            FMLLog.log.error(error, e);
++            Mohist.LOGGER.error(error, e);
+             return getMissingModel(location, e);
+         }
+     }

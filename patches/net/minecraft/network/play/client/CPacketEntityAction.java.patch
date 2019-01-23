@@ -1,0 +1,57 @@
+--- ../src-base/minecraft/net/minecraft/network/play/client/CPacketEntityAction.java
++++ ../src-work/minecraft/net/minecraft/network/play/client/CPacketEntityAction.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.network.play.client;
+ 
+-import java.io.IOException;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+@@ -8,10 +7,12 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++
+ public class CPacketEntityAction implements Packet<INetHandlerPlayServer>
+ {
+     private int entityID;
+-    private CPacketEntityAction.Action action;
++    private Action action;
+     private int auxData;
+ 
+     public CPacketEntityAction()
+@@ -19,13 +20,13 @@
+     }
+ 
+     @SideOnly(Side.CLIENT)
+-    public CPacketEntityAction(Entity entityIn, CPacketEntityAction.Action actionIn)
++    public CPacketEntityAction(Entity entityIn, Action actionIn)
+     {
+         this(entityIn, actionIn, 0);
+     }
+ 
+     @SideOnly(Side.CLIENT)
+-    public CPacketEntityAction(Entity entityIn, CPacketEntityAction.Action actionIn, int auxDataIn)
++    public CPacketEntityAction(Entity entityIn, Action actionIn, int auxDataIn)
+     {
+         this.entityID = entityIn.getEntityId();
+         this.action = actionIn;
+@@ -35,7 +36,7 @@
+     public void readPacketData(PacketBuffer buf) throws IOException
+     {
+         this.entityID = buf.readVarInt();
+-        this.action = (CPacketEntityAction.Action)buf.readEnumValue(CPacketEntityAction.Action.class);
++        this.action = (Action)buf.readEnumValue(Action.class);
+         this.auxData = buf.readVarInt();
+     }
+ 
+@@ -51,7 +52,7 @@
+         handler.processEntityAction(this);
+     }
+ 
+-    public CPacketEntityAction.Action getAction()
++    public Action getAction()
+     {
+         return this.action;
+     }

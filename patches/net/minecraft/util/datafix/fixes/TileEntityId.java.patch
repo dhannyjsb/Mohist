@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/util/datafix/fixes/TileEntityId.java
++++ ../src-work/minecraft/net/minecraft/util/datafix/fixes/TileEntityId.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.util.datafix.fixes;
+ 
+ import com.google.common.collect.Maps;
+-import java.util.Map;
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.util.datafix.IFixableData;
+ 
++import java.util.Map;
++
+ public class TileEntityId implements IFixableData
+ {
+     private static final Map<String, String> OLD_TO_NEW_ID_MAP = Maps.<String, String>newHashMap();

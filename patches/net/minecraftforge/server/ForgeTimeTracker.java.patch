@@ -1,0 +1,30 @@
+--- ../src-base/minecraft/net/minecraftforge/server/ForgeTimeTracker.java
++++ ../src-work/minecraft/net/minecraftforge/server/ForgeTimeTracker.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,16 +19,15 @@
+ 
+ package net.minecraftforge.server;
+ 
+-import java.lang.ref.WeakReference;
+-import java.util.Map;
+-
+ import com.google.common.collect.ImmutableMap;
+ import com.google.common.collect.MapMaker;
+-
+ import net.minecraft.entity.Entity;
+ import net.minecraft.tileentity.TileEntity;
+ import net.minecraftforge.server.timings.TimeTracker;
+ 
++import java.lang.ref.WeakReference;
++import java.util.Map;
++
+ /**
+  * @deprecated To be removed in 1.13 - Implementation has been moved
+  * @see net.minecraftforge.server.timings.TimeTracker

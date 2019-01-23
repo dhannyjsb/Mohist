@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/event/FMLConstructionEvent.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/event/FMLConstructionEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,12 +19,11 @@
+ 
+ package net.minecraftforge.fml.common.event;
+ 
+-import net.minecraftforge.fml.common.ModClassLoader;
++import com.google.common.collect.ListMultimap;
+ import net.minecraftforge.fml.common.LoaderState.ModState;
++import net.minecraftforge.fml.common.ModClassLoader;
+ import net.minecraftforge.fml.common.discovery.ASMDataTable;
+ 
+-import com.google.common.collect.ListMultimap;
+-
+ /**
+  * An internal FML event used to signal the construction of mods. Should not be used by mods.
+  */

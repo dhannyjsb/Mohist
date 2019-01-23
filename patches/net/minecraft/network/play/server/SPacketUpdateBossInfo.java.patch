@@ -1,0 +1,43 @@
+--- ../src-base/minecraft/net/minecraft/network/play/server/SPacketUpdateBossInfo.java
++++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketUpdateBossInfo.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.network.play.server;
+ 
+-import java.io.IOException;
+-import java.util.UUID;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.network.play.INetHandlerPlayClient;
+@@ -10,10 +8,13 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++import java.util.UUID;
++
+ public class SPacketUpdateBossInfo implements Packet<INetHandlerPlayClient>
+ {
+     private UUID uniqueId;
+-    private SPacketUpdateBossInfo.Operation operation;
++    private Operation operation;
+     private ITextComponent name;
+     private float percent;
+     private BossInfo.Color color;
+@@ -26,7 +27,7 @@
+     {
+     }
+ 
+-    public SPacketUpdateBossInfo(SPacketUpdateBossInfo.Operation operationIn, BossInfo data)
++    public SPacketUpdateBossInfo(Operation operationIn, BossInfo data)
+     {
+         this.operation = operationIn;
+         this.uniqueId = data.getUniqueId();
+@@ -42,7 +43,7 @@
+     public void readPacketData(PacketBuffer buf) throws IOException
+     {
+         this.uniqueId = buf.readUniqueId();
+-        this.operation = (SPacketUpdateBossInfo.Operation)buf.readEnumValue(SPacketUpdateBossInfo.Operation.class);
++        this.operation = (Operation)buf.readEnumValue(Operation.class);
+ 
+         switch (this.operation)
+         {

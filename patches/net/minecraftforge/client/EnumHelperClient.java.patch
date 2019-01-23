@@ -1,0 +1,22 @@
+--- ../src-base/minecraft/net/minecraftforge/client/EnumHelperClient.java
++++ ../src-work/minecraft/net/minecraftforge/client/EnumHelperClient.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -20,10 +20,10 @@
+ package net.minecraftforge.client;
+ 
+ import net.minecraft.client.audio.MusicTicker;
++import net.minecraft.client.settings.GameSettings.Options;
+ import net.minecraft.util.SoundEvent;
+ import net.minecraft.util.Util.EnumOS;
+ import net.minecraft.world.GameType;
+-import net.minecraft.client.settings.GameSettings.Options;
+ import net.minecraftforge.common.util.EnumHelper;
+ 
+ import javax.annotation.Nullable;

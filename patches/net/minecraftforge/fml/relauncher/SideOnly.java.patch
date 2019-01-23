@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/relauncher/SideOnly.java
++++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/SideOnly.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,14 +19,14 @@
+ 
+ package net.minecraftforge.fml.relauncher;
+ 
++import net.minecraftforge.fml.common.SidedProxy;
++
+ import java.lang.annotation.ElementType;
+ import java.lang.annotation.Retention;
+ import java.lang.annotation.RetentionPolicy;
+ import java.lang.annotation.Target;
+ 
+-import net.minecraftforge.fml.common.SidedProxy;
+ 
+-
+ /**
+  * Marks the associated element as being only available on a certain {@link Side}. This is
+  * generally meant for internal Forge and FML use only and should only be used on mod classes

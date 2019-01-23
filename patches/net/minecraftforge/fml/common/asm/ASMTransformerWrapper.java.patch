@@ -1,0 +1,55 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/asm/ASMTransformerWrapper.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/asm/ASMTransformerWrapper.java
+@@ -1,6 +1,8 @@
++
++
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,6 +21,17 @@
+ 
+ package net.minecraftforge.fml.common.asm;
+ 
++import com.google.common.cache.CacheBuilder;
++import com.google.common.cache.CacheLoader;
++import com.google.common.cache.LoadingCache;
++import com.google.common.collect.Maps;
++import net.minecraft.launchwrapper.IClassTransformer;
++import net.minecraft.launchwrapper.LaunchClassLoader;
++import org.objectweb.asm.*;
++import org.objectweb.asm.commons.GeneratorAdapter;
++import org.objectweb.asm.commons.Method;
++
++import javax.annotation.Nullable;
+ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+@@ -29,24 +42,6 @@
+ import java.security.Permission;
+ import java.util.Map;
+ 
+-import net.minecraft.launchwrapper.IClassTransformer;
+-import net.minecraft.launchwrapper.LaunchClassLoader;
+-
+-import org.objectweb.asm.ClassVisitor;
+-import org.objectweb.asm.ClassWriter;
+-import org.objectweb.asm.FieldVisitor;
+-import org.objectweb.asm.Opcodes;
+-import org.objectweb.asm.Type;
+-import org.objectweb.asm.commons.GeneratorAdapter;
+-import org.objectweb.asm.commons.Method;
+-
+-import com.google.common.cache.CacheBuilder;
+-import com.google.common.cache.CacheLoader;
+-import com.google.common.cache.LoadingCache;
+-import com.google.common.collect.Maps;
+-
+-import javax.annotation.Nullable;
+-
+ public class ASMTransformerWrapper
+ {
+     private static final Map<String, String> wrapperModMap = Maps.newHashMap();

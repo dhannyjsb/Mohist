@@ -1,0 +1,13 @@
+--- ../src-base/minecraft/net/minecraft/world/LockCode.java
++++ ../src-work/minecraft/net/minecraft/world/LockCode.java
+@@ -1,8 +1,9 @@
+ package net.minecraft.world;
+ 
+-import javax.annotation.concurrent.Immutable;
+ import net.minecraft.nbt.NBTTagCompound;
+ 
++import javax.annotation.concurrent.Immutable;
++
+ @Immutable
+ public class LockCode
+ {

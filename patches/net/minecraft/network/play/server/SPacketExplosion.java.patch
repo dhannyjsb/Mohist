@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraft/network/play/server/SPacketExplosion.java
++++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketExplosion.java
+@@ -1,8 +1,6 @@
+ package net.minecraft.network.play.server;
+ 
+ import com.google.common.collect.Lists;
+-import java.io.IOException;
+-import java.util.List;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.network.play.INetHandlerPlayClient;
+@@ -11,6 +9,9 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++import java.util.List;
++
+ public class SPacketExplosion implements Packet<INetHandlerPlayClient>
+ {
+     private double posX;

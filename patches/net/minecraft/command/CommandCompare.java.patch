@@ -1,0 +1,22 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandCompare.java
++++ ../src-work/minecraft/net/minecraft/command/CommandCompare.java
+@@ -1,8 +1,5 @@
+ package net.minecraft.command;
+ 
+-import java.util.Collections;
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.init.Blocks;
+ import net.minecraft.nbt.NBTTagCompound;
+@@ -12,6 +9,10 @@
+ import net.minecraft.world.World;
+ import net.minecraft.world.gen.structure.StructureBoundingBox;
+ 
++import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.List;
++
+ public class CommandCompare extends CommandBase
+ {
+     public String getName()

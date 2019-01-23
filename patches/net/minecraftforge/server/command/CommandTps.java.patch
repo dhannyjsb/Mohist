@@ -1,0 +1,49 @@
+--- ../src-base/minecraft/net/minecraftforge/server/command/CommandTps.java
++++ ../src-work/minecraft/net/minecraftforge/server/command/CommandTps.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -16,18 +16,18 @@
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  */
+-
+ package net.minecraftforge.server.command;
+ 
+-import java.text.DecimalFormat;
+-
+ import net.minecraft.command.CommandBase;
+ import net.minecraft.command.CommandException;
+ import net.minecraft.command.ICommandSender;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.world.DimensionType;
++import net.minecraft.world.WorldServer;
+ import net.minecraftforge.common.DimensionManager;
+ 
++import java.text.DecimalFormat;
++
+ class CommandTps extends CommandBase
+ {
+     private static final DecimalFormat TIME_FORMATTER = new DecimalFormat("########0.000");
+@@ -90,13 +90,15 @@
+     private static String getDimensionPrefix(int dimId)
+     {
+         DimensionType providerType = DimensionManager.getProviderType(dimId);
++        WorldServer world = DimensionManager.getWorld(dimId);
++        String wn = world.worldInfo.getWorldName();
+         if (providerType == null)
+         {
+             return String.format("Dim %2d", dimId);
+         }
+         else
+         {
+-            return String.format("Dim %2d (%s)", dimId, providerType.getName());
++            return String.format("Dim %2d (%s)("+ wn+")", dimId, providerType.getName());
+         }
+     }
+ 

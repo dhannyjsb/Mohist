@@ -1,0 +1,115 @@
+--- ../src-base/minecraft/net/minecraftforge/server/console/TerminalHandler.java
++++ ../src-work/minecraft/net/minecraftforge/server/console/TerminalHandler.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,73 +19,62 @@
+ 
+ package net.minecraftforge.server.console;
+ 
+-import net.minecraftforge.server.terminalconsole.TerminalConsoleAppender;
+-
++import jline.console.ConsoleReader;
+ import net.minecraft.server.dedicated.DedicatedServer;
+-import org.jline.reader.EndOfFileException;
+-import org.jline.reader.LineReader;
+-import org.jline.reader.LineReaderBuilder;
+-import org.jline.reader.UserInterruptException;
+-import org.jline.terminal.Terminal;
++import net.minecraft.util.text.TextFormatting;
++import net.minecraftforge.server.console.log4j.TerminalConsoleAppender;
++import org.apache.logging.log4j.LogManager;
++import org.apache.logging.log4j.Logger;
+ 
++import java.io.IOException;
++
+ public final class TerminalHandler
+ {
+ 
++    private static final Logger logger = LogManager.getLogger();
++
+     private TerminalHandler()
+     {
+     }
+ 
+     public static boolean handleCommands(DedicatedServer server)
+     {
+-        final Terminal terminal = TerminalConsoleAppender.getTerminal();
+-        if (terminal == null)
+-            return false;
+-
+-        LineReader reader = LineReaderBuilder.builder()
+-                .appName("Forge")
+-                .terminal(terminal)
+-                .completer(new ConsoleCommandCompleter(server))
+-                .build();
+-        reader.setOpt(LineReader.Option.DISABLE_EVENT_EXPANSION);
+-        reader.unsetOpt(LineReader.Option.INSERT_TAB);
+-
+-        TerminalConsoleAppender.setReader(reader);
+-
+-        try
++        final ConsoleReader reader = TerminalConsoleAppender.getReader();
++        if (reader != null)
+         {
++            TerminalConsoleAppender.setFormatter(new ConsoleFormatter());
++            reader.addCompleter(new ConsoleCommandCompleter(server));
++
+             String line;
+             while (!server.isServerStopped() && server.isServerRunning())
+             {
+                 try
+                 {
+                     line = reader.readLine("> ");
++                    if (line == null)
++                    {
++                        break;
++                    }
++
++                    line = line.trim();
++                    if (!line.isEmpty())
++                    {
++                        server.addPendingCommand(line, server);
++                    }
+                 }
+-                catch (EndOfFileException ignored)
++                catch (IOException e)
+                 {
+-                    // Continue reading after EOT
+-                    continue;
++                    logger.error("Exception handling console input", e);
+                 }
+-
+-                if (line == null)
+-                    break;
+-
+-                line = line.trim();
+-                if (!line.isEmpty())
+-                {
+-                    server.addPendingCommand(line, server);
+-                }
+             }
++
++            return true;
+         }
+-        catch (UserInterruptException e)
++        else
+         {
+-            server.initiateShutdown();
++            TerminalConsoleAppender.setFormatter(TextFormatting::getTextWithoutFormattingCodes);
++            return false;
+         }
+-        finally
+-        {
+-            TerminalConsoleAppender.setReader(null);
+-        }
+-
+-        return true;
+     }
+ 
+ }

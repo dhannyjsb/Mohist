@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockLilyPad.java
++++ ../src-work/minecraft/net/minecraft/block/BlockLilyPad.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.block;
+ 
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.creativetab.CreativeTabs;
+@@ -13,6 +11,9 @@
+ import net.minecraft.world.IBlockAccess;
+ import net.minecraft.world.World;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++
+ public class BlockLilyPad extends BlockBush
+ {
+     protected static final AxisAlignedBB LILY_PAD_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.09375D, 0.9375D);
+@@ -34,7 +35,7 @@
+     {
+         super.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
+ 
+-        if (entityIn instanceof EntityBoat)
++        if (entityIn instanceof EntityBoat && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(entityIn, pos, Blocks.AIR, 0).isCancelled())
+         {
+             worldIn.destroyBlock(new BlockPos(pos), true);
+         }

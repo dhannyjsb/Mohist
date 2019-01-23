@@ -1,0 +1,136 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockRedstoneComparator.java
++++ ../src-work/minecraft/net/minecraft/block/BlockRedstoneComparator.java
+@@ -1,9 +1,6 @@
+ package net.minecraft.block;
+ 
+ import com.google.common.base.Predicate;
+-import java.util.List;
+-import java.util.Random;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.properties.IProperty;
+ import net.minecraft.block.properties.PropertyBool;
+@@ -21,27 +18,27 @@
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.tileentity.TileEntity;
+ import net.minecraft.tileentity.TileEntityComparator;
+-import net.minecraft.util.EnumFacing;
+-import net.minecraft.util.EnumHand;
+-import net.minecraft.util.IStringSerializable;
+-import net.minecraft.util.Mirror;
+-import net.minecraft.util.Rotation;
+-import net.minecraft.util.SoundCategory;
++import net.minecraft.util.*;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.text.translation.I18n;
+ import net.minecraft.world.IBlockAccess;
+ import net.minecraft.world.World;
++import org.bukkit.craftbukkit.event.CraftEventFactory;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++import java.util.Random;
++
+ public class BlockRedstoneComparator extends BlockRedstoneDiode implements ITileEntityProvider
+ {
+     public static final PropertyBool POWERED = PropertyBool.create("powered");
+-    public static final PropertyEnum<BlockRedstoneComparator.Mode> MODE = PropertyEnum.<BlockRedstoneComparator.Mode>create("mode", BlockRedstoneComparator.Mode.class);
++    public static final PropertyEnum<Mode> MODE = PropertyEnum.<Mode>create("mode", Mode.class);
+ 
+     public BlockRedstoneComparator(boolean powered)
+     {
+         super(powered);
+-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, Boolean.valueOf(false)).withProperty(MODE, BlockRedstoneComparator.Mode.COMPARE));
++        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, Boolean.valueOf(false)).withProperty(MODE, Mode.COMPARE));
+         this.hasTileEntity = true;
+     }
+ 
+@@ -68,7 +65,7 @@
+     protected IBlockState getPoweredState(IBlockState unpoweredState)
+     {
+         Boolean obool = (Boolean)unpoweredState.getValue(POWERED);
+-        BlockRedstoneComparator.Mode blockredstonecomparator$mode = (BlockRedstoneComparator.Mode)unpoweredState.getValue(MODE);
++        Mode blockredstonecomparator$mode = (Mode)unpoweredState.getValue(MODE);
+         EnumFacing enumfacing = (EnumFacing)unpoweredState.getValue(FACING);
+         return Blocks.POWERED_COMPARATOR.getDefaultState().withProperty(FACING, enumfacing).withProperty(POWERED, obool).withProperty(MODE, blockredstonecomparator$mode);
+     }
+@@ -76,7 +73,7 @@
+     protected IBlockState getUnpoweredState(IBlockState poweredState)
+     {
+         Boolean obool = (Boolean)poweredState.getValue(POWERED);
+-        BlockRedstoneComparator.Mode blockredstonecomparator$mode = (BlockRedstoneComparator.Mode)poweredState.getValue(MODE);
++        Mode blockredstonecomparator$mode = (Mode)poweredState.getValue(MODE);
+         EnumFacing enumfacing = (EnumFacing)poweredState.getValue(FACING);
+         return Blocks.UNPOWERED_COMPARATOR.getDefaultState().withProperty(FACING, enumfacing).withProperty(POWERED, obool).withProperty(MODE, blockredstonecomparator$mode);
+     }
+@@ -94,7 +91,7 @@
+ 
+     private int calculateOutput(World worldIn, BlockPos pos, IBlockState state)
+     {
+-        return state.getValue(MODE) == BlockRedstoneComparator.Mode.SUBTRACT ? Math.max(this.calculateInputStrength(worldIn, pos, state) - this.getPowerOnSides(worldIn, pos, state), 0) : this.calculateInputStrength(worldIn, pos, state);
++        return state.getValue(MODE) == Mode.SUBTRACT ? Math.max(this.calculateInputStrength(worldIn, pos, state) - this.getPowerOnSides(worldIn, pos, state), 0) : this.calculateInputStrength(worldIn, pos, state);
+     }
+ 
+     protected boolean shouldBePowered(World worldIn, BlockPos pos, IBlockState state)
+@@ -180,7 +177,7 @@
+         else
+         {
+             state = state.cycleProperty(MODE);
+-            float f = state.getValue(MODE) == BlockRedstoneComparator.Mode.SUBTRACT ? 0.55F : 0.5F;
++            float f = state.getValue(MODE) == Mode.SUBTRACT ? 0.55F : 0.5F;
+             worldIn.playSound(playerIn, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+             worldIn.setBlockState(pos, state, 2);
+             this.onStateChange(worldIn, pos, state);
+@@ -223,17 +220,23 @@
+             tileentitycomparator.setOutputSignal(i);
+         }
+ 
+-        if (j != i || state.getValue(MODE) == BlockRedstoneComparator.Mode.COMPARE)
++        if (j != i || state.getValue(MODE) == Mode.COMPARE)
+         {
+             boolean flag1 = this.shouldBePowered(worldIn, pos, state);
+             boolean flag = this.isPowered(state);
+ 
+             if (flag && !flag1)
+             {
++                if (CraftEventFactory.callRedstoneChange(worldIn, pos.getX(), pos.getY(), pos.getZ(), 15, 0).getNewCurrent() != 0) {
++                    return;
++                }
+                 worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(false)), 2);
+             }
+             else if (!flag && flag1)
+             {
++                if (CraftEventFactory.callRedstoneChange(worldIn, pos.getX(), pos.getY(), pos.getZ(), 0, 15).getNewCurrent() != 15) {
++                    return; 
++                }
+                 worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(true)), 2);
+             }
+ 
+@@ -278,7 +281,7 @@
+ 
+     public IBlockState getStateFromMeta(int meta)
+     {
+-        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(POWERED, Boolean.valueOf((meta & 8) > 0)).withProperty(MODE, (meta & 4) > 0 ? BlockRedstoneComparator.Mode.SUBTRACT : BlockRedstoneComparator.Mode.COMPARE);
++        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(POWERED, Boolean.valueOf((meta & 8) > 0)).withProperty(MODE, (meta & 4) > 0 ? Mode.SUBTRACT : Mode.COMPARE);
+     }
+ 
+     public int getMetaFromState(IBlockState state)
+@@ -291,7 +294,7 @@
+             i |= 8;
+         }
+ 
+-        if (state.getValue(MODE) == BlockRedstoneComparator.Mode.SUBTRACT)
++        if (state.getValue(MODE) == Mode.SUBTRACT)
+         {
+             i |= 4;
+         }
+@@ -316,7 +319,7 @@
+ 
+     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+     {
+-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(POWERED, Boolean.valueOf(false)).withProperty(MODE, BlockRedstoneComparator.Mode.COMPARE);
++        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(POWERED, Boolean.valueOf(false)).withProperty(MODE, Mode.COMPARE);
+     }
+ 
+     @Override

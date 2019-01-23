@@ -1,0 +1,35 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/player/PlayerEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/player/PlayerEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,19 +19,18 @@
+ 
+ package net.minecraftforge.event.entity.player;
+ 
+-import java.io.File;
+-
+-import net.minecraftforge.common.MinecraftForge;
+-import net.minecraftforge.event.ForgeEventFactory;
+-import net.minecraftforge.fml.common.eventhandler.Cancelable;
+-import net.minecraft.block.Block;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.util.math.BlockPos;
++import net.minecraftforge.common.MinecraftForge;
++import net.minecraftforge.event.ForgeEventFactory;
+ import net.minecraftforge.event.entity.living.LivingEvent;
++import net.minecraftforge.fml.common.eventhandler.Cancelable;
+ import net.minecraftforge.fml.common.eventhandler.Event;
+ 
++import java.io.File;
++
+ /**
+  * PlayerEvent is fired whenever an event involving Living entities occurs. <br>
+  * If a method utilizes this {@link Event} as its parameter, the method will

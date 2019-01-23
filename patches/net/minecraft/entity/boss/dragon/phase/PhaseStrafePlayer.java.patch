@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/entity/boss/dragon/phase/PhaseStrafePlayer.java
++++ ../src-work/minecraft/net/minecraft/entity/boss/dragon/phase/PhaseStrafePlayer.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.entity.boss.dragon.phase;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.entity.boss.EntityDragon;
+ import net.minecraft.entity.player.EntityPlayer;
+@@ -13,6 +12,8 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import javax.annotation.Nullable;
++
+ public class PhaseStrafePlayer extends PhaseBase
+ {
+     private static final Logger LOGGER = LogManager.getLogger();

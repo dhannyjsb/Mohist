@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/client/util/ISearchTree.java
++++ ../src-work/minecraft/net/minecraft/client/util/ISearchTree.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.client.util;
+ 
+-import java.util.List;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public interface ISearchTree<T>
+ {

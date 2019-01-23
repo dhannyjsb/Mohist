@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraftforge/event/terraingen/InitNoiseGensEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/terraingen/InitNoiseGensEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,14 +19,14 @@
+ 
+ package net.minecraftforge.event.terraingen;
+ 
+-import java.util.Random;
+-
+ import net.minecraft.world.World;
+ import net.minecraft.world.gen.NoiseGeneratorOctaves;
+ import net.minecraft.world.gen.NoiseGeneratorPerlin;
+ import net.minecraft.world.gen.NoiseGeneratorSimplex;
+ import net.minecraftforge.event.world.WorldEvent;
+ 
++import java.util.Random;
++
+ public class InitNoiseGensEvent<T extends InitNoiseGensEvent.Context> extends WorldEvent
+ {
+     private final Random rand;

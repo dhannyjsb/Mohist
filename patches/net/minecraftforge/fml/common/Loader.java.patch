@@ -1,0 +1,501 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/Loader.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/Loader.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,23 +19,16 @@
+ 
+ package net.minecraftforge.fml.common;
+ 
+-import java.io.File;
+-import java.io.FileInputStream;
+-import java.io.FileOutputStream;
+-import java.io.IOException;
+-import java.io.InputStream;
+-import java.io.InputStreamReader;
+-import java.io.OutputStreamWriter;
+-import java.net.MalformedURLException;
+-import java.nio.charset.StandardCharsets;
+-import java.util.ArrayList;
+-import java.util.Comparator;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Properties;
+-import java.util.Set;
+-
++import cn.pfcraft.server.Mohist;
++import com.google.common.base.CharMatcher;
++import com.google.common.base.Joiner;
++import com.google.common.base.Splitter;
++import com.google.common.collect.*;
++import com.google.common.collect.Multiset.Entry;
++import com.google.gson.JsonArray;
++import com.google.gson.JsonElement;
++import com.google.gson.JsonObject;
++import com.google.gson.JsonParser;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraftforge.common.ForgeVersion;
+ import net.minecraftforge.common.capabilities.CapabilityManager;
+@@ -51,11 +44,11 @@
+ import net.minecraftforge.fml.common.event.FMLInterModComms;
+ import net.minecraftforge.fml.common.event.FMLLoadEvent;
+ import net.minecraftforge.fml.common.event.FMLModIdMappingEvent;
+-import net.minecraftforge.fml.common.registry.*;
++import net.minecraftforge.fml.common.registry.ItemStackHolderInjector;
+ import net.minecraftforge.fml.common.toposort.ModSorter;
+ import net.minecraftforge.fml.common.toposort.ModSortingException;
+-import net.minecraftforge.fml.common.toposort.TopologicalSort;
+ import net.minecraftforge.fml.common.toposort.ModSortingException.SortingExceptionData;
++import net.minecraftforge.fml.common.toposort.TopologicalSort;
+ import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+ import net.minecraftforge.fml.common.versioning.DependencyParser;
+ import net.minecraftforge.fml.common.versioning.VersionParser;
+@@ -66,37 +59,14 @@
+ import net.minecraftforge.fml.relauncher.libraries.Repository;
+ import net.minecraftforge.registries.GameData;
+ import net.minecraftforge.registries.ObjectHolderRegistry;
+-
+ import org.apache.commons.io.IOUtils;
+ import org.apache.logging.log4j.Level;
+ 
+-import com.google.common.base.CharMatcher;
+-import com.google.common.base.Joiner;
+-import com.google.common.base.Splitter;
+-import com.google.common.collect.ArrayListMultimap;
+-import com.google.common.collect.BiMap;
+-import com.google.common.collect.HashBiMap;
+-import com.google.common.collect.ImmutableList;
+-import com.google.common.collect.ImmutableMap;
+-import com.google.common.collect.ImmutableMultiset;
+-import com.google.common.collect.Iterables;
+-import com.google.common.collect.LinkedHashMultimap;
+-import com.google.common.collect.ListMultimap;
+-import com.google.common.collect.Lists;
+-import com.google.common.collect.Maps;
+-import com.google.common.collect.Multimaps;
+-import com.google.common.collect.Multiset.Entry;
+-import com.google.common.collect.Multisets;
+-import com.google.common.collect.Ordering;
+-import com.google.common.collect.SetMultimap;
+-import com.google.common.collect.Sets;
+-import com.google.common.collect.TreeMultimap;
+-import com.google.gson.JsonArray;
+-import com.google.gson.JsonElement;
+-import com.google.gson.JsonObject;
+-import com.google.gson.JsonParser;
+-
+ import javax.annotation.Nullable;
++import java.io.*;
++import java.net.MalformedURLException;
++import java.nio.charset.StandardCharsets;
++import java.util.*;
+ 
+ /**
+  * The loader class performs the actual loading of the mod code from disk.
+@@ -207,7 +177,7 @@
+         modClassLoader = new ModClassLoader(getClass().getClassLoader());
+         if (mccversion !=null && !mccversion.equals(MC_VERSION))
+         {
+-            FMLLog.log.fatal("This version of FML is built for Minecraft {}, we have detected Minecraft {} in your minecraft jar file", mccversion, MC_VERSION);
++            Mohist.LOGGER.fatal("This version of FML is built for Minecraft {}, we have detected Minecraft {} in your minecraft jar file", mccversion, MC_VERSION);
+             throw new LoaderException(String.format("This version of FML is built for Minecraft %s, we have detected Minecraft %s in your minecraft jar file", mccversion, MC_VERSION));
+         }
+ 
+@@ -230,7 +200,7 @@
+      */
+     private void sortModList()
+     {
+-        FMLLog.log.trace("Verifying mod requirements are satisfied");
++        Mohist.LOGGER.trace("Verifying mod requirements are satisfied");
+         List<WrongMinecraftVersionException> wrongMinecraftExceptions = new ArrayList<>();
+         List<MissingModsException> missingModsExceptions = new ArrayList<>();
+         try
+@@ -246,9 +216,9 @@
+             {
+                 if (!mod.acceptableMinecraftVersionRange().containsVersion(minecraft.getProcessedVersion()))
+                 {
+-                    FMLLog.log.fatal("The mod {} does not wish to run in Minecraft version {}. You will have to remove it to play.", mod.getModId(), getMCVersionString());
++                    Mohist.LOGGER.fatal("The mod {} does not wish to run in Minecraft version {}. You will have to remove it to play.", mod.getModId(), getMCVersionString());
+                     WrongMinecraftVersionException ret = new WrongMinecraftVersionException(mod, getMCVersionString());
+-                    FMLLog.log.fatal(ret.getMessage());
++                    Mohist.LOGGER.fatal(ret.getMessage());
+                     wrongMinecraftExceptions.add(ret);
+                     continue;
+                 }
+@@ -276,14 +246,14 @@
+                 }
+                 if (!missingModsException.getMissingModInfos().isEmpty())
+                 {
+-                    FMLLog.log.fatal(missingModsException.toString());
++                    Mohist.LOGGER.fatal(missingModsException.toString());
+                     missingModsExceptions.add(missingModsException);
+                 }
+             }
+ 
+             if (wrongMinecraftExceptions.isEmpty() && missingModsExceptions.isEmpty())
+             {
+-                FMLLog.log.trace("All mod requirements are satisfied");
++                Mohist.LOGGER.trace("All mod requirements are satisfied");
+             }
+             else if (missingModsExceptions.size()==1 && wrongMinecraftExceptions.isEmpty())
+             {
+@@ -303,7 +273,7 @@
+ 
+             try
+             {
+-                FMLLog.log.trace("Sorting mods into an ordered list");
++                Mohist.LOGGER.trace("Sorting mods into an ordered list");
+                 List<ModContainer> sortedMods = sorter.sort();
+                 // Reset active list to the sorted list
+                 modController.getActiveModList().clear();
+@@ -312,37 +282,37 @@
+                 mods.removeAll(sortedMods);
+                 sortedMods.addAll(mods);
+                 mods = sortedMods;
+-                FMLLog.log.trace("Mod sorting completed successfully");
++                Mohist.LOGGER.trace("Mod sorting completed successfully");
+             }
+             catch (ModSortingException sortException)
+             {
+-                FMLLog.log.fatal("A dependency cycle was detected in the input mod set so an ordering cannot be determined");
++                Mohist.LOGGER.fatal("A dependency cycle was detected in the input mod set so an ordering cannot be determined");
+                 SortingExceptionData<ModContainer> exceptionData = sortException.getExceptionData();
+-                FMLLog.log.fatal("The first mod in the cycle is {}", exceptionData.getFirstBadNode());
+-                FMLLog.log.fatal("The mod cycle involves");
++                Mohist.LOGGER.fatal("The first mod in the cycle is {}", exceptionData.getFirstBadNode());
++                Mohist.LOGGER.fatal("The mod cycle involves");
+                 for (ModContainer mc : exceptionData.getVisitedNodes())
+                 {
+-                    FMLLog.log.fatal("{} : before: {}, after: {}", mc.toString(), mc.getDependants(), mc.getDependencies());
++                    Mohist.LOGGER.fatal("{} : before: {}, after: {}", mc.toString(), mc.getDependants(), mc.getDependencies());
+                 }
+-                FMLLog.log.error("The full error", sortException);
++                Mohist.LOGGER.error("The full error", sortException);
+                 throw sortException;
+             }
+         }
+         finally
+         {
+-            FMLLog.log.debug("Mod sorting data");
++            Mohist.LOGGER.debug("Mod sorting data");
+             int unprintedMods = mods.size();
+             for (ModContainer mod : getActiveModList())
+             {
+                 if (!mod.isImmutable())
+                 {
+-                    FMLLog.log.debug("\t{}({}:{}): {} ({})", mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName(), mod.getSortingRules());
++                    Mohist.LOGGER.debug("\t{}({}:{}): {} ({})", mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName(), mod.getSortingRules());
+                     unprintedMods--;
+                 }
+             }
+             if (unprintedMods == mods.size())
+             {
+-                FMLLog.log.debug("No user mods found to sort");
++                Mohist.LOGGER.debug("No user mods found to sort");
+             }
+         }
+ 
+@@ -365,7 +335,7 @@
+     private ModDiscoverer identifyMods(List<String> additionalContainers)
+     {
+         injectedContainers.addAll(additionalContainers);
+-        FMLLog.log.debug("Building injected Mod Containers {}", injectedContainers);
++        Mohist.LOGGER.debug("Building injected Mod Containers {}", injectedContainers);
+         mods.add(minecraft);
+         // Add in the MCP mod container
+         mods.add(new InjectedModContainer(mcp,new File("minecraft.jar")));
+@@ -378,7 +348,7 @@
+             }
+             catch (Exception e)
+             {
+-                FMLLog.log.error("A problem occurred instantiating the injected mod container {}", cont, e);
++                Mohist.LOGGER.error("A problem occurred instantiating the injected mod container {}", cont, e);
+                 throw new LoaderException(e);
+             }
+             mods.add(new InjectedModContainer(mc,mc.getSource()));
+@@ -387,9 +357,9 @@
+ 
+         //if (!FMLForgePlugin.RUNTIME_DEOBF) //Only descover mods in the classpath if we're in the dev env.
+         {                                  //TODO: Move this to GradleStart? And add a specific mod canidate for Forge itself.
+-            FMLLog.log.debug("Attempting to load mods contained in the minecraft jar file and associated classes");
++            Mohist.LOGGER.debug("Attempting to load mods contained in the minecraft jar file and associated classes");
+             discoverer.findClasspathMods(modClassLoader);
+-            FMLLog.log.debug("Minecraft jar mods loaded successfully");
++            Mohist.LOGGER.debug("Minecraft jar mods loaded successfully");
+         }
+ 
+         List<Artifact> maven_canidates = LibraryManager.flattenLists(minecraftDir);
+@@ -413,11 +383,11 @@
+             // skip loaded coremods
+             if (CoreModManager.getIgnoredMods().contains(mod.getName()))
+             {
+-                FMLLog.log.trace("Skipping already parsed coremod or tweaker {}", mod.getName());
++                Mohist.LOGGER.trace("Skipping already parsed coremod or tweaker {}", mod.getName());
+             }
+             else
+             {
+-                FMLLog.log.debug("Found a candidate zip or jar file {}", mod.getName());
++                Mohist.LOGGER.debug("Found a candidate zip or jar file {}", mod.getName());
+                 discoverer.addCandidate(new ModCandidate(mod, mod, ContainerType.JAR));
+             }
+         }
+@@ -425,7 +395,7 @@
+         mods.addAll(discoverer.identifyMods());
+         identifyDuplicates(mods);
+         namedMods = Maps.uniqueIndex(mods, ModContainer::getModId);
+-        FMLLog.log.info("Forge Mod Loader has identified {} mod{} to load", mods.size(), mods.size() != 1 ? "s" : "");
++        Mohist.LOGGER.info("Forge Mod Loader has identified {} mod{} to load", mods.size(), mods.size() != 1 ? "s" : "");
+         return discoverer;
+     }
+ 
+@@ -455,7 +425,7 @@
+         {
+             if (e.getCount() > 1)
+             {
+-                FMLLog.log.fatal("Found a duplicate mod {} at {}", e.getElement().getModId(), dupsearch.get(e.getElement()));
++                Mohist.LOGGER.fatal("Found a duplicate mod {} at {}", e.getElement().getModId(), dupsearch.get(e.getElement()));
+                 dupes.putAll(e.getElement(),dupsearch.get(e.getElement()));
+             }
+         }
+@@ -484,44 +454,44 @@
+         }
+         catch (IOException ioe)
+         {
+-            FMLLog.log.error("Failed to resolve loader directories: mods : {} ; config {}", canonicalModsDir.getAbsolutePath(),
++            Mohist.LOGGER.error("Failed to resolve loader directories: mods : {} ; config {}", canonicalModsDir.getAbsolutePath(),
+                             configDir.getAbsolutePath(), ioe);
+             throw new LoaderException(ioe);
+         }
+ 
+         if (!canonicalModsDir.exists())
+         {
+-            FMLLog.log.info("No mod directory found, creating one: {}", canonicalModsPath);
++            Mohist.LOGGER.info("No mod directory found, creating one: {}", canonicalModsPath);
+             boolean dirMade = canonicalModsDir.mkdir();
+             if (!dirMade)
+             {
+-                FMLLog.log.fatal("Unable to create the mod directory {}", canonicalModsPath);
++                Mohist.LOGGER.fatal("Unable to create the mod directory {}", canonicalModsPath);
+                 throw new LoaderException(String.format("Unable to create the mod directory %s", canonicalModsPath));
+             }
+-            FMLLog.log.info("Mod directory created successfully");
++            Mohist.LOGGER.info("Mod directory created successfully");
+         }
+ 
+         if (!canonicalConfigDir.exists())
+         {
+-            FMLLog.log.debug("No config directory found, creating one: {}", canonicalConfigPath);
++            Mohist.LOGGER.debug("No config directory found, creating one: {}", canonicalConfigPath);
+             boolean dirMade = canonicalConfigDir.mkdir();
+             if (!dirMade)
+             {
+-                FMLLog.log.fatal("Unable to create the config directory {}", canonicalConfigPath);
++                Mohist.LOGGER.fatal("Unable to create the config directory {}", canonicalConfigPath);
+                 throw new LoaderException();
+             }
+-            FMLLog.log.info("Config directory created successfully");
++            Mohist.LOGGER.info("Config directory created successfully");
+         }
+ 
+         if (!canonicalModsDir.isDirectory())
+         {
+-            FMLLog.log.fatal("Attempting to load mods from {}, which is not a directory", canonicalModsPath);
++            Mohist.LOGGER.fatal("Attempting to load mods from {}, which is not a directory", canonicalModsPath);
+             throw new LoaderException();
+         }
+ 
+         if (!configDir.isDirectory())
+         {
+-            FMLLog.log.fatal("Attempting to load configuration from {}, which is not a directory", canonicalConfigPath);
++            Mohist.LOGGER.fatal("Attempting to load configuration from {}, which is not a directory", canonicalConfigPath);
+             throw new LoaderException();
+         }
+ 
+@@ -575,14 +545,14 @@
+         {
+             if (nonMod.isFile())
+             {
+-                FMLLog.log.info("FML has found a non-mod file {} in your mods directory. It will now be injected into your classpath. This could severe stability issues, it should be removed if possible.", nonMod.getName());
++                Mohist.LOGGER.info("FML has found a non-mod file {} in your mods directory. It will now be injected into your classpath. This could severe stability issues, it should be removed if possible.", nonMod.getName());
+                 try
+                 {
+                     modClassLoader.addFile(nonMod);
+                 }
+                 catch (MalformedURLException e)
+                 {
+-                    FMLLog.log.error("Encountered a weird problem with non-mod file injection : {}", nonMod.getName(), e);
++                    Mohist.LOGGER.error("Encountered a weird problem with non-mod file injection : {}", nonMod.getName(), e);
+                 }
+             }
+         }
+@@ -592,22 +562,22 @@
+         modController.transition(LoaderState.CONSTRUCTING, false);
+         modController.distributeStateMessage(LoaderState.CONSTRUCTING, modClassLoader, discoverer.getASMTable(), reverseDependencies);
+ 
+-        FMLLog.log.debug("Mod signature data");
+-        FMLLog.log.debug(" \tValid Signatures:");
++        Mohist.LOGGER.debug("Mod signature data");
++        Mohist.LOGGER.debug(" \tValid Signatures:");
+         for (ModContainer mod : getActiveModList())
+         {
+             if (mod.getSigningCertificate() != null)
+-                FMLLog.log.debug("\t\t({}) {}\t({}\t{})\t{}", CertificateHelper.getFingerprint(mod.getSigningCertificate()), mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName());
++                Mohist.LOGGER.debug("\t\t({}) {}\t({}\t{})\t{}", CertificateHelper.getFingerprint(mod.getSigningCertificate()), mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName());
+         }
+-        FMLLog.log.debug(" \tMissing Signatures:");
++        Mohist.LOGGER.debug(" \tMissing Signatures:");
+         for (ModContainer mod : getActiveModList())
+         {
+             if (mod.getSigningCertificate() == null)
+-                FMLLog.log.debug("\t\t{}\t({}\t{})\t{}", mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName());
++                Mohist.LOGGER.debug("\t\t{}\t({}\t{})\t{}", mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName());
+         }
+         if (getActiveModList().isEmpty())
+         {
+-            FMLLog.log.debug("No user mod signature data found");
++            Mohist.LOGGER.debug("No user mod signature data found");
+         }
+         progressBar.step("Initializing mods Phase 1");
+         modController.transition(LoaderState.PREINITIALIZATION, false);
+@@ -617,7 +587,7 @@
+     {
+         if (!modController.isInState(LoaderState.PREINITIALIZATION))
+         {
+-            FMLLog.log.warn("There were errors previously. Not beginning mod initialization phase");
++            Mohist.LOGGER.warn("There were errors previously. Not beginning mod initialization phase");
+             return;
+         }
+         GameData.fireCreateRegistryEvents();
+@@ -636,31 +606,31 @@
+     private void disableRequestedMods()
+     {
+         String forcedModList = System.getProperty("fml.modStates", "");
+-        FMLLog.log.trace("Received a system property request \'{}\'",forcedModList);
++        Mohist.LOGGER.trace("Received a system property request \'{}\'",forcedModList);
+         Map<String, String> sysPropertyStateList = Splitter.on(CharMatcher.anyOf(";:"))
+                 .omitEmptyStrings().trimResults().withKeyValueSeparator("=")
+                 .split(forcedModList);
+-        FMLLog.log.trace("System property request managing the state of {} mods", sysPropertyStateList.size());
++        Mohist.LOGGER.trace("System property request managing the state of {} mods", sysPropertyStateList.size());
+         Map<String, String> modStates = Maps.newHashMap();
+ 
+         forcedModFile = new File(canonicalConfigDir, "fmlModState.properties");
+         Properties forcedModListProperties = new Properties();
+         if (forcedModFile.exists() && forcedModFile.isFile())
+         {
+-            FMLLog.log.trace("Found a mod state file {}", forcedModFile.getName());
++            Mohist.LOGGER.trace("Found a mod state file {}", forcedModFile.getName());
+             try
+             {
+                 forcedModListProperties.load(new InputStreamReader(new FileInputStream(forcedModFile), StandardCharsets.UTF_8));
+-                FMLLog.log.trace("Loaded states for {} mods from file", forcedModListProperties.size());
++                Mohist.LOGGER.trace("Loaded states for {} mods from file", forcedModListProperties.size());
+             }
+             catch (Exception e)
+             {
+-                FMLLog.log.info("An error occurred reading the fmlModState.properties file", e);
++                Mohist.LOGGER.info("An error occurred reading the fmlModState.properties file", e);
+             }
+         }
+         modStates.putAll(Maps.fromProperties(forcedModListProperties));
+         modStates.putAll(sysPropertyStateList);
+-        FMLLog.log.debug("After merging, found state information for {} mods", modStates.size());
++        Mohist.LOGGER.debug("After merging, found state information for {} mods", modStates.size());
+ 
+         Map<String, Boolean> isEnabled = Maps.transformValues(modStates, Boolean::parseBoolean);
+ 
+@@ -668,7 +638,7 @@
+         {
+             if (namedMods.containsKey(entry.getKey()))
+             {
+-                FMLLog.log.info("Setting mod {} to enabled state {}", entry.getKey(), entry.getValue());
++                Mohist.LOGGER.info("Setting mod {} to enabled state {}", entry.getKey(), entry.getValue());
+                 namedMods.get(entry.getKey()).setEnabledState(entry.getValue());
+             }
+         }
+@@ -751,7 +721,7 @@
+         modController.transition(LoaderState.AVAILABLE, false);
+         modController.distributeStateMessage(LoaderState.AVAILABLE);
+         GameData.freezeData();
+-        FMLLog.log.info("Forge Mod Loader has successfully loaded {} mod{}", mods.size(), mods.size() == 1 ? "" : "s");
++        Mohist.LOGGER.info("Forge Mod Loader has successfully loaded {} mod{}", mods.size(), mods.size() == 1 ? "" : "s");
+         progressBar.step("Completing Minecraft initialization");
+     }
+ 
+@@ -897,7 +867,7 @@
+         }
+ 
+         if (difference.size() > 0)
+-            FMLLog.log.info("Attempting connection with missing mods {} at {}", difference, side);
++            Mohist.LOGGER.info("Attempting connection with missing mods {} at {}", difference, side);
+         return true;
+     }
+ 
+@@ -915,17 +885,17 @@
+         Disableable disableable = mc.canBeDisabled();
+         if (disableable == Disableable.NEVER)
+         {
+-            FMLLog.log.info("Cannot disable mod {} - it is never allowed to be disabled", modId);
++            Mohist.LOGGER.info("Cannot disable mod {} - it is never allowed to be disabled", modId);
+             return;
+         }
+         if (disableable == Disableable.DEPENDENCIES)
+         {
+-            FMLLog.log.info("Cannot disable mod {} - there are dependent mods that require its presence", modId);
++            Mohist.LOGGER.info("Cannot disable mod {} - there are dependent mods that require its presence", modId);
+             return;
+         }
+         if (disableable == Disableable.YES)
+         {
+-            FMLLog.log.info("Runtime disabling mod {}", modId);
++            Mohist.LOGGER.info("Runtime disabling mod {}", modId);
+             modController.disableMod(mc);
+             List<ModContainer> localmods = Lists.newArrayList(mods);
+             localmods.remove(mc);
+@@ -941,7 +911,7 @@
+         }
+         catch (Exception e)
+         {
+-            FMLLog.log.info("An error occurred writing the fml mod states file, your disabled change won't persist", e);
++            Mohist.LOGGER.info("An error occurred writing the fml mod states file, your disabled change won't persist", e);
+         }
+     }
+ 
+@@ -959,7 +929,7 @@
+         File injectedDepFile = new File(getConfigDir(),"injectedDependencies.json");
+         if (!injectedDepFile.exists())
+         {
+-            FMLLog.log.debug("File {} not found. No dependencies injected", injectedDepFile.getAbsolutePath());
++            Mohist.LOGGER.debug("File {} not found. No dependencies injected", injectedDepFile.getAbsolutePath());
+             return;
+         }
+         JsonParser parser = new JsonParser();
+@@ -981,18 +951,18 @@
+                     } else if (type.equals("after")) {
+                         injectedAfter.put(modId, VersionParser.parseVersionReference(depObj.get("target").getAsString()));
+                     } else {
+-                        FMLLog.log.error("Invalid dependency type {}", type);
++                        Mohist.LOGGER.error("Invalid dependency type {}", type);
+                         throw new RuntimeException("Unable to parse type");
+                     }
+                 }
+             }
+         } catch (Exception e)
+         {
+-            FMLLog.log.error("Unable to parse {} - skipping", injectedDepFile);
+-            FMLLog.log.throwing(Level.ERROR, e);
++            Mohist.LOGGER.error("Unable to parse {} - skipping", injectedDepFile);
++            Mohist.LOGGER.throwing(Level.ERROR, e);
+             return;
+         }
+-        FMLLog.log.debug("Loaded {} injected dependencies on modIds: {}", injectedBefore.size(), injectedBefore.keySet());
++        Mohist.LOGGER.debug("Loaded {} injected dependencies on modIds: {}", injectedBefore.size(), injectedBefore.keySet());
+     }
+ 
+     List<ArtifactVersion> getInjectedBefore(String modId)

@@ -1,0 +1,6 @@
+++++ REJECTED PATCH 4
+      */
+     AxisAlignedBB getBoundingBox(EntityMinecart cart);
+ }
+-
+++++ END PATCH

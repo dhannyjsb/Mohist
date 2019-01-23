@@ -1,0 +1,22 @@
+--- ../src-base/minecraft/net/minecraft/world/gen/ChunkGeneratorEnd.java
++++ ../src-work/minecraft/net/minecraft/world/gen/ChunkGeneratorEnd.java
+@@ -1,8 +1,5 @@
+ package net.minecraft.world.gen;
+ 
+-import java.util.List;
+-import java.util.Random;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.BlockChorusFlower;
+ import net.minecraft.block.BlockFalling;
+ import net.minecraft.block.material.Material;
+@@ -22,6 +19,10 @@
+ import net.minecraft.world.gen.feature.WorldGenEndIsland;
+ import net.minecraft.world.gen.structure.MapGenEndCity;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++import java.util.Random;
++
+ public class ChunkGeneratorEnd implements IChunkGenerator
+ {
+     private final Random rand;

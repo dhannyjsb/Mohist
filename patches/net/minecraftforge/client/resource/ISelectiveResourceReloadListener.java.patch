@@ -1,0 +1,16 @@
+--- ../src-base/minecraft/net/minecraftforge/client/resource/ISelectiveResourceReloadListener.java
++++ ../src-work/minecraft/net/minecraftforge/client/resource/ISelectiveResourceReloadListener.java
+@@ -19,11 +19,11 @@
+ 
+ package net.minecraftforge.client.resource;
+ 
+-import java.util.function.Predicate;
+-
+ import net.minecraft.client.resources.IResourceManager;
+ import net.minecraft.client.resources.IResourceManagerReloadListener;
+ 
++import java.util.function.Predicate;
++
+ public interface ISelectiveResourceReloadListener extends IResourceManagerReloadListener
+ {
+     @Override

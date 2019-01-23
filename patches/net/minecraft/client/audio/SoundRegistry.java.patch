@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/audio/SoundRegistry.java
++++ ../src-work/minecraft/net/minecraft/client/audio/SoundRegistry.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.client.audio;
+ 
+ import com.google.common.collect.Maps;
+-import java.util.Map;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.util.registry.RegistrySimple;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.Map;
++
+ @SideOnly(Side.CLIENT)
+ public class SoundRegistry extends RegistrySimple<ResourceLocation, SoundEventAccessor>
+ {

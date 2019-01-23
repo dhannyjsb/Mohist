@@ -1,0 +1,54 @@
+--- ../src-base/minecraft/net/minecraft/util/text/Style.java
++++ ../src-work/minecraft/net/minecraft/util/text/Style.java
+@@ -1,20 +1,14 @@
+ package net.minecraft.util.text;
+ 
+-import com.google.gson.JsonDeserializationContext;
+-import com.google.gson.JsonDeserializer;
+-import com.google.gson.JsonElement;
+-import com.google.gson.JsonObject;
+-import com.google.gson.JsonParseException;
+-import com.google.gson.JsonPrimitive;
+-import com.google.gson.JsonSerializationContext;
+-import com.google.gson.JsonSerializer;
+-import java.lang.reflect.Type;
+-import javax.annotation.Nullable;
++import com.google.gson.*;
+ import net.minecraft.util.text.event.ClickEvent;
+ import net.minecraft.util.text.event.HoverEvent;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.lang.reflect.Type;
++
+ public class Style
+ {
+     private Style parentStyle;
+@@ -361,15 +355,17 @@
+ 
+     public int hashCode()
+     {
+-        int i = this.color.hashCode();
+-        i = 31 * i + this.bold.hashCode();
+-        i = 31 * i + this.italic.hashCode();
+-        i = 31 * i + this.underlined.hashCode();
+-        i = 31 * i + this.strikethrough.hashCode();
+-        i = 31 * i + this.obfuscated.hashCode();
+-        i = 31 * i + this.clickEvent.hashCode();
+-        i = 31 * i + this.hoverEvent.hashCode();
+-        i = 31 * i + this.insertion.hashCode();
++        // CraftBukkit start - fix npe
++        int i = color == null ? 0 : this.color.hashCode();
++        i = 31 * i + (bold == null ? 0 : this.bold.hashCode());
++        i = 31 * i + (italic == null ? 0 : this.italic.hashCode());
++        i = 31 * i + (underlined == null ? 0 : this.underlined.hashCode());
++        i = 31 * i + (strikethrough == null ? 0 : this.strikethrough.hashCode());
++        i = 31 * i + (obfuscated == null ? 0 : this.obfuscated.hashCode());
++        i = 31 * i + (clickEvent == null ? 0 : this.clickEvent.hashCode());
++        i = 31 * i + (hoverEvent == null ? 0 : this.hoverEvent.hashCode());
++        i = 31 * i + (insertion == null ? 0 : this.insertion.hashCode());
++        // CraftBukkit end
+         return i;
+     }
+ 

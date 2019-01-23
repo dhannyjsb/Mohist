@@ -1,0 +1,96 @@
+--- ../src-base/minecraft/net/minecraft/item/crafting/FurnaceRecipes.java
++++ ../src-work/minecraft/net/minecraft/item/crafting/FurnaceRecipes.java
+@@ -1,8 +1,7 @@
+ package net.minecraft.item.crafting;
+ 
++import cn.pfcraft.server.Mohist;
+ import com.google.common.collect.Maps;
+-import java.util.Map;
+-import java.util.Map.Entry;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.BlockStoneBrick;
+ import net.minecraft.init.Blocks;
+@@ -12,18 +11,24 @@
+ import net.minecraft.item.ItemFishFood;
+ import net.minecraft.item.ItemStack;
+ 
++import java.util.Map;
++import java.util.Map.Entry;
++
+ public class FurnaceRecipes
+ {
+     private static final FurnaceRecipes SMELTING_BASE = new FurnaceRecipes();
+-    private final Map<ItemStack, ItemStack> smeltingList = Maps.<ItemStack, ItemStack>newHashMap();
++    public Map<ItemStack, ItemStack> smeltingList = Maps.<ItemStack, ItemStack>newHashMap();
+     private final Map<ItemStack, Float> experienceList = Maps.<ItemStack, Float>newHashMap();
+ 
++    public Map<ItemStack,ItemStack> customRecipes = Maps.newHashMap();
++    public Map<ItemStack,Float> customExperience = Maps.newHashMap();
++
+     public static FurnaceRecipes instance()
+     {
+         return SMELTING_BASE;
+     }
+ 
+-    private FurnaceRecipes()
++    public FurnaceRecipes()
+     {
+         this.addSmeltingRecipeForBlock(Blocks.IRON_ORE, new ItemStack(Items.IRON_INGOT), 0.7F);
+         this.addSmeltingRecipeForBlock(Blocks.GOLD_ORE, new ItemStack(Items.GOLD_INGOT), 1.0F);
+@@ -101,6 +106,11 @@
+         this.addSmeltingRecipe(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, EnumDyeColor.BLACK.getMetadata()), new ItemStack(Blocks.BLACK_GLAZED_TERRACOTTA), 0.1F);
+     }
+ 
++    public void registerRecipe(ItemStack itemstack, ItemStack itemstack1, float f) {
++        this.customRecipes.put(itemstack, itemstack1);
++        this.customExperience.put(itemstack, f);
++    }
++
+     public void addSmeltingRecipeForBlock(Block input, ItemStack stack, float experience)
+     {
+         this.addSmelting(Item.getItemFromBlock(input), stack, experience);
+@@ -113,13 +123,22 @@
+ 
+     public void addSmeltingRecipe(ItemStack input, ItemStack stack, float experience)
+     {
+-        if (getSmeltingResult(input) != ItemStack.EMPTY) { net.minecraftforge.fml.common.FMLLog.log.info("Ignored smelting recipe with conflicting input: {} = {}", input, stack); return; }
++        if (getSmeltingResult(input) != ItemStack.EMPTY) { Mohist.LOGGER.info("Ignored smelting recipe with conflicting input: {} = {}", input, stack); return; }
+         this.smeltingList.put(input, stack);
+         this.experienceList.put(stack, Float.valueOf(experience));
+     }
+ 
++    // TODO: Test this
+     public ItemStack getSmeltingResult(ItemStack stack)
+     {
++        for (Entry<ItemStack, ItemStack> entry : this.customRecipes.entrySet())
++        {
++            if (this.compareItemStacks(stack, entry.getKey()))
++            {
++                return entry.getValue();
++            }
++        }
++
+         for (Entry<ItemStack, ItemStack> entry : this.smeltingList.entrySet())
+         {
+             if (this.compareItemStacks(stack, entry.getKey()))
+@@ -141,11 +160,20 @@
+         return this.smeltingList;
+     }
+ 
++    // TODO: Test this
+     public float getSmeltingExperience(ItemStack stack)
+     {
+         float ret = stack.getItem().getSmeltingExperience(stack);
+         if (ret != -1) return ret;
+ 
++        for (Entry<ItemStack, Float> entry : this.customExperience.entrySet())
++        {
++            if (this.compareItemStacks(stack, entry.getKey()))
++            {
++                return ((Float)entry.getValue()).floatValue();
++            }
++        }
++
+         for (Entry<ItemStack, Float> entry : this.experienceList.entrySet())
+         {
+             if (this.compareItemStacks(stack, entry.getKey()))

@@ -1,0 +1,66 @@
+--- ../src-base/minecraft/net/minecraft/entity/passive/EntityChicken.java
++++ ../src-work/minecraft/net/minecraft/entity/passive/EntityChicken.java
+@@ -1,22 +1,9 @@
+ package net.minecraft.entity.passive;
+ 
+ import com.google.common.collect.Sets;
+-import java.util.Set;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.Block;
+-import net.minecraft.entity.Entity;
+-import net.minecraft.entity.EntityAgeable;
+-import net.minecraft.entity.EntityLiving;
+-import net.minecraft.entity.EntityLivingBase;
+-import net.minecraft.entity.SharedMonsterAttributes;
+-import net.minecraft.entity.ai.EntityAIFollowParent;
+-import net.minecraft.entity.ai.EntityAILookIdle;
+-import net.minecraft.entity.ai.EntityAIMate;
+-import net.minecraft.entity.ai.EntityAIPanic;
+-import net.minecraft.entity.ai.EntityAISwimming;
+-import net.minecraft.entity.ai.EntityAITempt;
+-import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
+-import net.minecraft.entity.ai.EntityAIWatchClosest;
++import net.minecraft.entity.*;
++import net.minecraft.entity.ai.*;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.init.Items;
+ import net.minecraft.init.SoundEvents;
+@@ -33,6 +20,9 @@
+ import net.minecraft.world.World;
+ import net.minecraft.world.storage.loot.LootTableList;
+ 
++import javax.annotation.Nullable;
++import java.util.Set;
++
+ public class EntityChicken extends EntityAnimal
+ {
+     private static final Set<Item> TEMPTATION_ITEMS = Sets.newHashSet(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
+@@ -78,6 +68,9 @@
+ 
+     public void onLivingUpdate()
+     {
++        if (this.isChickenJockey()) {
++            this.persistenceRequired = !this.canDespawn();
++        }
+         super.onLivingUpdate();
+         this.oFlap = this.wingRotation;
+         this.oFlapSpeed = this.destPos;
+@@ -101,7 +94,9 @@
+         if (!this.world.isRemote && !this.isChild() && !this.isChickenJockey() && --this.timeUntilNextEgg <= 0)
+         {
+             this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
++            this.forceDrops = true;
+             this.dropItem(Items.EGG, 1);
++            this.forceDrops = false;
+             this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
+         }
+     }
+@@ -174,7 +169,7 @@
+         compound.setInteger("EggLayTime", this.timeUntilNextEgg);
+     }
+ 
+-    protected boolean canDespawn()
++    public boolean canDespawn()
+     {
+         return this.isChickenJockey() && !this.isBeingRidden();
+     }

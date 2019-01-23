@@ -1,0 +1,57 @@
+--- ../src-base/minecraft/net/minecraft/world/BossInfo.java
++++ ../src-work/minecraft/net/minecraft/world/BossInfo.java
+@@ -1,20 +1,21 @@
+ package net.minecraft.world;
+ 
+-import java.util.UUID;
+ import net.minecraft.util.text.ITextComponent;
+ 
++import java.util.UUID;
++
+ public abstract class BossInfo
+ {
+     private final UUID uniqueId;
+-    protected ITextComponent name;
+-    protected float percent;
+-    protected BossInfo.Color color;
+-    protected BossInfo.Overlay overlay;
++    public ITextComponent name;
++    public float percent;
++    public Color color;
++    public Overlay overlay;
+     protected boolean darkenSky;
+     protected boolean playEndBossMusic;
+     protected boolean createFog;
+ 
+-    public BossInfo(UUID uniqueIdIn, ITextComponent nameIn, BossInfo.Color colorIn, BossInfo.Overlay overlayIn)
++    public BossInfo(UUID uniqueIdIn, ITextComponent nameIn, Color colorIn, Overlay overlayIn)
+     {
+         this.uniqueId = uniqueIdIn;
+         this.name = nameIn;
+@@ -48,22 +49,22 @@
+         this.percent = percentIn;
+     }
+ 
+-    public BossInfo.Color getColor()
++    public Color getColor()
+     {
+         return this.color;
+     }
+ 
+-    public void setColor(BossInfo.Color colorIn)
++    public void setColor(Color colorIn)
+     {
+         this.color = colorIn;
+     }
+ 
+-    public BossInfo.Overlay getOverlay()
++    public Overlay getOverlay()
+     {
+         return this.overlay;
+     }
+ 
+-    public void setOverlay(BossInfo.Overlay overlayIn)
++    public void setOverlay(Overlay overlayIn)
+     {
+         this.overlay = overlayIn;
+     }

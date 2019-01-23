@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiScreenResourcePacks.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiScreenResourcePacks.java
+@@ -1,19 +1,15 @@
+ package net.minecraft.client.gui;
+ 
+ import com.google.common.collect.Lists;
++import net.minecraft.client.renderer.OpenGlHelper;
++import net.minecraft.client.resources.*;
++import net.minecraftforge.fml.relauncher.Side;
++import net.minecraftforge.fml.relauncher.SideOnly;
++
+ import java.io.File;
+ import java.io.IOException;
+ import java.util.Collections;
+ import java.util.List;
+-import net.minecraft.client.renderer.OpenGlHelper;
+-import net.minecraft.client.resources.I18n;
+-import net.minecraft.client.resources.ResourcePackListEntry;
+-import net.minecraft.client.resources.ResourcePackListEntryDefault;
+-import net.minecraft.client.resources.ResourcePackListEntryFound;
+-import net.minecraft.client.resources.ResourcePackListEntryServer;
+-import net.minecraft.client.resources.ResourcePackRepository;
+-import net.minecraftforge.fml.relauncher.Side;
+-import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+ public class GuiScreenResourcePacks extends GuiScreen

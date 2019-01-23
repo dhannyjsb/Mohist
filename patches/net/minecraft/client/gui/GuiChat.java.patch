@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiChat.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiChat.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.client.gui;
+ 
+-import java.io.IOException;
+-import javax.annotation.Nullable;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.util.ITabCompleter;
+ import net.minecraft.util.TabCompleter;
+@@ -17,6 +15,9 @@
+ import org.lwjgl.input.Keyboard;
+ import org.lwjgl.input.Mouse;
+ 
++import javax.annotation.Nullable;
++import java.io.IOException;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiChat extends GuiScreen implements ITabCompleter
+ {
+@@ -46,7 +47,7 @@
+         this.inputField.setFocused(true);
+         this.inputField.setText(this.defaultInputFieldText);
+         this.inputField.setCanLoseFocus(false);
+-        this.tabCompleter = new GuiChat.ChatTabCompleter(this.inputField);
++        this.tabCompleter = new ChatTabCompleter(this.inputField);
+     }
+ 
+     public void onGuiClosed()

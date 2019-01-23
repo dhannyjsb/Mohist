@@ -1,0 +1,105 @@
+--- ../src-base/minecraft/net/minecraft/advancements/PlayerAdvancements.java
++++ ../src-work/minecraft/net/minecraft/advancements/PlayerAdvancements.java
+@@ -8,18 +8,6 @@
+ import com.google.gson.GsonBuilder;
+ import com.google.gson.JsonParseException;
+ import com.google.gson.reflect.TypeToken;
+-import java.io.File;
+-import java.io.IOException;
+-import java.nio.charset.StandardCharsets;
+-import java.util.Comparator;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Set;
+-import java.util.Map.Entry;
+-import java.util.function.Function;
+-import java.util.stream.Collectors;
+-import java.util.stream.Stream;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.network.play.server.SPacketAdvancementInfo;
+ import net.minecraft.network.play.server.SPacketSelectAdvancementsTab;
+@@ -30,6 +18,18 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import javax.annotation.Nullable;
++import java.io.File;
++import java.io.IOException;
++import java.nio.charset.StandardCharsets;
++import java.util.Comparator;
++import java.util.List;
++import java.util.Map;
++import java.util.Map.Entry;
++import java.util.Set;
++import java.util.stream.Collectors;
++import java.util.stream.Stream;
++
+ public class PlayerAdvancements
+ {
+     private static final Logger LOGGER = LogManager.getLogger();
+@@ -39,7 +39,7 @@
+     };
+     private final MinecraftServer server;
+     private final File progressFile;
+-    private final Map<Advancement, AdvancementProgress> progress = Maps.<Advancement, AdvancementProgress>newLinkedHashMap();
++    public final Map<Advancement, AdvancementProgress> progress = Maps.<Advancement, AdvancementProgress>newLinkedHashMap();
+     private final Set<Advancement> visible = Sets.<Advancement>newLinkedHashSet();
+     private final Set<Advancement> visibilityChanged = Sets.<Advancement>newLinkedHashSet();
+     private final Set<Advancement> progressChanged = Sets.<Advancement>newLinkedHashSet();
+@@ -167,6 +167,7 @@
+ 
+     public void save()
+     {
++        if (org.spigotmc.SpigotConfig.disableAdvancementSaving) return;
+         Map<ResourceLocation, AdvancementProgress> map = Maps.<ResourceLocation, AdvancementProgress>newHashMap();
+ 
+         for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet())
+@@ -194,37 +195,38 @@
+         }
+     }
+ 
+-    public boolean grantCriterion(Advancement p_192750_1_, String p_192750_2_)
++    public boolean grantCriterion(Advancement advancement, String p_192750_2_)
+     {
+         // Forge: don't grant advancements for fake players
+         if (this.player instanceof net.minecraftforge.common.util.FakePlayer) return false;
+ 
+         boolean flag = false;
+-        AdvancementProgress advancementprogress = this.getProgress(p_192750_1_);
++        AdvancementProgress advancementprogress = this.getProgress(advancement);
+         boolean flag1 = advancementprogress.isDone();
+ 
+         if (advancementprogress.grantCriterion(p_192750_2_))
+         {
+-            this.unregisterListeners(p_192750_1_);
+-            this.progressChanged.add(p_192750_1_);
++            this.unregisterListeners(advancement);
++            this.progressChanged.add(advancement);
+             flag = true;
+ 
+             if (!flag1 && advancementprogress.isDone())
+             {
+-                p_192750_1_.getRewards().apply(this.player);
++                this.player.world.getServer().getPluginManager().callEvent(new org.bukkit.event.player.PlayerAdvancementDoneEvent(this.player.getBukkitEntity(), advancement.bukkit));
++                advancement.getRewards().apply(this.player);
+ 
+-                if (p_192750_1_.getDisplay() != null && p_192750_1_.getDisplay().shouldAnnounceToChat() && this.player.world.getGameRules().getBoolean("announceAdvancements"))
++                if (advancement.getDisplay() != null && advancement.getDisplay().shouldAnnounceToChat() && this.player.world.getGameRules().getBoolean("announceAdvancements"))
+                 {
+-                    this.server.getPlayerList().sendMessage(new TextComponentTranslation("chat.type.advancement." + p_192750_1_.getDisplay().getFrame().getName(), new Object[] {this.player.getDisplayName(), p_192750_1_.getDisplayText()}));
++                    this.server.getPlayerList().sendMessage(new TextComponentTranslation("chat.type.advancement." + advancement.getDisplay().getFrame().getName(), new Object[] {this.player.getDisplayName(), advancement.getDisplayText()}));
+                 }
+ 
+-                net.minecraftforge.common.ForgeHooks.onAdvancement(this.player, p_192750_1_);
++                net.minecraftforge.common.ForgeHooks.onAdvancement(this.player, advancement);
+             }
+         }
+ 
+         if (advancementprogress.isDone())
+         {
+-            this.ensureVisibility(p_192750_1_);
++            this.ensureVisibility(advancement);
+         }
+ 
+         return flag;

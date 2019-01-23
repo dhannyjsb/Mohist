@@ -1,0 +1,6 @@
+++++ REJECTED PATCH 3
+     @Override
+     public void close() throws IOException;
+ }
+-
+++++ END PATCH

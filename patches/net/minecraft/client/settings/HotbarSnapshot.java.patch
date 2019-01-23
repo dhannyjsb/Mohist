@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/settings/HotbarSnapshot.java
++++ ../src-work/minecraft/net/minecraft/client/settings/HotbarSnapshot.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.settings;
+ 
+-import java.util.ArrayList;
+ import net.minecraft.entity.player.InventoryPlayer;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.nbt.NBTTagCompound;
+@@ -8,6 +7,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.ArrayList;
++
+ @SideOnly(Side.CLIENT)
+ public class HotbarSnapshot extends ArrayList<ItemStack>
+ {

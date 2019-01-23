@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/server/gui/PlayerListComponent.java
++++ ../src-work/minecraft/net/minecraft/server/gui/PlayerListComponent.java
+@@ -1,13 +1,14 @@
+ package net.minecraft.server.gui;
+ 
+-import java.util.Vector;
+-import javax.swing.JList;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.util.ITickable;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.swing.*;
++import java.util.Vector;
++
+ @SideOnly(Side.SERVER)
+ public class PlayerListComponent extends JList implements ITickable
+ {

@@ -1,0 +1,28 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/network/FMLEmbeddedChannel.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/network/FMLEmbeddedChannel.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -21,9 +21,6 @@
+ 
+ import io.netty.channel.ChannelHandler;
+ import io.netty.channel.embedded.EmbeddedChannel;
+-
+-import java.util.Map.Entry;
+-
+ import net.minecraft.network.Packet;
+ import net.minecraftforge.fml.common.Loader;
+ import net.minecraftforge.fml.common.ModContainer;
+@@ -33,6 +30,7 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ 
+ import javax.annotation.Nullable;
++import java.util.Map.Entry;
+ 
+ /**
+  * Utility wrapper around {@link EmbeddedChannel}. Provides some convenience methods

@@ -1,0 +1,26 @@
+--- ../src-base/minecraft/net/minecraft/entity/monster/EntityGolem.java
++++ ../src-work/minecraft/net/minecraft/entity/monster/EntityGolem.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.entity.monster;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.EntityCreature;
+ import net.minecraft.entity.passive.IAnimals;
+ import net.minecraft.util.DamageSource;
+ import net.minecraft.util.SoundEvent;
+ import net.minecraft.world.World;
+ 
++import javax.annotation.Nullable;
++
+ public abstract class EntityGolem extends EntityCreature implements IAnimals
+ {
+     public EntityGolem(World worldIn)
+@@ -41,7 +42,7 @@
+         return 120;
+     }
+ 
+-    protected boolean canDespawn()
++    public boolean canDespawn()
+     {
+         return false;
+     }

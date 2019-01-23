@@ -1,0 +1,58 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/toposort/TopologicalSort.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/toposort/TopologicalSort.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,24 +19,12 @@
+ 
+ package net.minecraftforge.fml.common.toposort;
+ 
+-import java.util.ArrayList;
+-import java.util.Collections;
+-import java.util.Comparator;
+-import java.util.HashMap;
+-import java.util.HashSet;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.NoSuchElementException;
+-import java.util.Set;
+-import java.util.SortedSet;
+-import java.util.TreeSet;
+-
+-import net.minecraftforge.fml.common.FMLLog;
+-
++import cn.pfcraft.server.Mohist;
+ import com.google.common.collect.Sets;
+ import com.google.common.collect.Sets.SetView;
+ 
++import java.util.*;
++
+ /**
+  * Topological sort for mod loading
+  *
+@@ -181,13 +169,13 @@
+                 return;
+             }
+ 
+-            FMLLog.log.fatal("Mod Sorting failed.");
+-            FMLLog.log.fatal("Visiting node {}", node);
+-            FMLLog.log.fatal("Current sorted list : {}", sortedResult);
+-            FMLLog.log.fatal("Visited set for this node : {}", visitedNodes);
+-            FMLLog.log.fatal("Explored node set : {}", expandedNodes);
++            Mohist.LOGGER.fatal("Mod Sorting failed.");
++            Mohist.LOGGER.fatal("Visiting node {}", node);
++            Mohist.LOGGER.fatal("Current sorted list : {}", sortedResult);
++            Mohist.LOGGER.fatal("Visited set for this node : {}", visitedNodes);
++            Mohist.LOGGER.fatal("Explored node set : {}", expandedNodes);
+             SetView<T> cycleList = Sets.difference(visitedNodes, expandedNodes);
+-            FMLLog.log.fatal("Likely cycle is in : {}", cycleList);
++            Mohist.LOGGER.fatal("Likely cycle is in : {}", cycleList);
+             throw new ModSortingException("There was a cycle detected in the input graph, sorting is not possible", node, cycleList);
+         }
+ 

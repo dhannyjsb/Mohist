@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/profiler/package-info.java
++++ ../src-work/minecraft/net/minecraft/profiler/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.profiler;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

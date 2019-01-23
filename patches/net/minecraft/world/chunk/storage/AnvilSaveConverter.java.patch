@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/world/chunk/storage/AnvilSaveConverter.java
++++ ../src-work/minecraft/net/minecraft/world/chunk/storage/AnvilSaveConverter.java
+@@ -1,14 +1,6 @@
+ package net.minecraft.world.chunk.storage;
+ 
+ import com.google.common.collect.Lists;
+-import java.io.DataInputStream;
+-import java.io.DataOutputStream;
+-import java.io.File;
+-import java.io.FilenameFilter;
+-import java.io.IOException;
+-import java.util.Collection;
+-import java.util.Collections;
+-import java.util.List;
+ import net.minecraft.client.AnvilConverterException;
+ import net.minecraft.init.Biomes;
+ import net.minecraft.nbt.CompressedStreamTools;
+@@ -29,6 +21,11 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import java.io.*;
++import java.util.Collection;
++import java.util.Collections;
++import java.util.List;
++
+ public class AnvilSaveConverter extends SaveFormatOld
+ {
+     private static final Logger LOGGER = LogManager.getLogger();

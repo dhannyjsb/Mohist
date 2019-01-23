@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/shader/Framebuffer.java
++++ ../src-work/minecraft/net/minecraft/client/shader/Framebuffer.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.shader;
+ 
+-import java.nio.IntBuffer;
+ import net.minecraft.client.renderer.BufferBuilder;
+ import net.minecraft.client.renderer.GlStateManager;
+ import net.minecraft.client.renderer.OpenGlHelper;
+@@ -10,6 +9,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.nio.IntBuffer;
++
+ @SideOnly(Side.CLIENT)
+ public class Framebuffer
+ {

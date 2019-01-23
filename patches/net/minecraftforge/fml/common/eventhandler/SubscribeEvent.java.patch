@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/eventhandler/SubscribeEvent.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/eventhandler/SubscribeEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -22,8 +22,8 @@
+ import java.lang.annotation.Retention;
+ import java.lang.annotation.Target;
+ 
+-import static java.lang.annotation.RetentionPolicy.*;
+-import static java.lang.annotation.ElementType.*;
++import static java.lang.annotation.ElementType.METHOD;
++import static java.lang.annotation.RetentionPolicy.RUNTIME;
+ 
+ @Retention(value = RUNTIME)
+ @Target(value = METHOD)

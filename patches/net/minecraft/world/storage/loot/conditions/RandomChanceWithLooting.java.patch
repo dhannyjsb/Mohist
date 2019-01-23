@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/loot/conditions/RandomChanceWithLooting.java
++++ ../src-work/minecraft/net/minecraft/world/storage/loot/conditions/RandomChanceWithLooting.java
+@@ -3,13 +3,12 @@
+ import com.google.gson.JsonDeserializationContext;
+ import com.google.gson.JsonObject;
+ import com.google.gson.JsonSerializationContext;
+-import java.util.Random;
+-import net.minecraft.enchantment.EnchantmentHelper;
+-import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.util.JsonUtils;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.world.storage.loot.LootContext;
+ 
++import java.util.Random;
++
+ public class RandomChanceWithLooting implements LootCondition
+ {
+     private final float chance;

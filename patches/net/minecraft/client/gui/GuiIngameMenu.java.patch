@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiIngameMenu.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiIngameMenu.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.gui;
+ 
+-import java.io.IOException;
+ import net.minecraft.client.gui.achievement.GuiStats;
+ import net.minecraft.client.gui.advancements.GuiScreenAdvancements;
+ import net.minecraft.client.multiplayer.WorldClient;
+@@ -9,6 +8,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiIngameMenu extends GuiScreen
+ {

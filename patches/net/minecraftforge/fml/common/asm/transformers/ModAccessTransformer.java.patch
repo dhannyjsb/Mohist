@@ -1,0 +1,44 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/asm/transformers/ModAccessTransformer.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/asm/transformers/ModAccessTransformer.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,6 +19,11 @@
+ 
+ package net.minecraftforge.fml.common.asm.transformers;
+ 
++import cn.pfcraft.server.Mohist;
++import com.google.common.collect.Maps;
++import com.google.common.io.ByteSource;
++import com.google.common.io.CharSource;
++
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.lang.reflect.Field;
+@@ -27,12 +32,7 @@
+ import java.util.jar.Attributes;
+ import java.util.jar.JarEntry;
+ import java.util.jar.JarFile;
+-import net.minecraftforge.fml.common.FMLLog;
+ 
+-import com.google.common.collect.Maps;
+-import com.google.common.io.ByteSource;
+-import com.google.common.io.CharSource;
+-
+ public class ModAccessTransformer extends AccessTransformer
+ {
+     public static final Attributes.Name FMLAT = new Attributes.Name("FMLAT");
+@@ -55,7 +55,7 @@
+             int added = getModifiers().size() - old_count;
+             if (added > 0)
+             {
+-                FMLLog.log.debug("Loaded {} rules from AccessTransformer mod jar file {}\n", added, e.getKey());
++                Mohist.LOGGER.debug("Loaded {} rules from AccessTransformer mod jar file {}\n", added, e.getKey());
+             }
+         }
+     }

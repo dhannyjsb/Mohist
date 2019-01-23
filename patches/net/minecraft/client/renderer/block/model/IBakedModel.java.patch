@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/block/model/IBakedModel.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/block/model/IBakedModel.java
+@@ -1,13 +1,14 @@
+ package net.minecraft.client.renderer.block.model;
+ 
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+ import net.minecraft.util.EnumFacing;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public interface IBakedModel
+ {
+@@ -27,7 +28,6 @@
+     ItemOverrideList getOverrides();
+ 
+     default boolean isAmbientOcclusion(IBlockState state) { return isAmbientOcclusion(); }
+-
+     /*
+      * Returns the pair of the model for the given perspective, and the matrix
+      * that should be applied to the GL state before rendering it (matrix may be null).

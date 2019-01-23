@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/resources/data/FontMetadataSectionSerializer.java
++++ ../src-work/minecraft/net/minecraft/client/resources/data/FontMetadataSectionSerializer.java
+@@ -4,12 +4,13 @@
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonObject;
+ import com.google.gson.JsonParseException;
+-import java.lang.reflect.Type;
+ import net.minecraft.util.JsonUtils;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.apache.commons.lang3.Validate;
+ 
++import java.lang.reflect.Type;
++
+ @SideOnly(Side.CLIENT)
+ public class FontMetadataSectionSerializer extends BaseMetadataSectionSerializer<FontMetadataSection>
+ {

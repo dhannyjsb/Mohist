@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraft/client/multiplayer/GuiConnecting.java
++++ ../src-work/minecraft/net/minecraft/client/multiplayer/GuiConnecting.java
+@@ -1,9 +1,5 @@
+ package net.minecraft.client.multiplayer;
+ 
+-import java.io.IOException;
+-import java.net.InetAddress;
+-import java.net.UnknownHostException;
+-import java.util.concurrent.atomic.AtomicInteger;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.gui.GuiButton;
+ import net.minecraft.client.gui.GuiDisconnected;
+@@ -21,6 +17,11 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import java.io.IOException;
++import java.net.InetAddress;
++import java.net.UnknownHostException;
++import java.util.concurrent.atomic.AtomicInteger;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiConnecting extends GuiScreen
+ {

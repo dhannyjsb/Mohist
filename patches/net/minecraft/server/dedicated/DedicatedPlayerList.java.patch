@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/server/dedicated/DedicatedPlayerList.java
++++ ../src-work/minecraft/net/minecraft/server/dedicated/DedicatedPlayerList.java
+@@ -1,13 +1,14 @@
+ package net.minecraft.server.dedicated;
+ 
+ import com.mojang.authlib.GameProfile;
+-import java.io.IOException;
+ import net.minecraft.server.management.PlayerList;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import java.io.IOException;
++
+ @SideOnly(Side.SERVER)
+ public class DedicatedPlayerList extends PlayerList
+ {

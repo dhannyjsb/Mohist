@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/block/properties/package-info.java
++++ ../src-work/minecraft/net/minecraft/block/properties/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.block.properties;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

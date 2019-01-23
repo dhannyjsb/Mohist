@@ -1,0 +1,22 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandGive.java
++++ ../src-work/minecraft/net/minecraft/command/CommandGive.java
+@@ -1,8 +1,5 @@
+ package net.minecraft.command;
+ 
+-import java.util.Collections;
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.item.EntityItem;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.init.SoundEvents;
+@@ -14,6 +11,10 @@
+ import net.minecraft.util.SoundCategory;
+ import net.minecraft.util.math.BlockPos;
+ 
++import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.List;
++
+ public class CommandGive extends CommandBase
+ {
+     public String getName()

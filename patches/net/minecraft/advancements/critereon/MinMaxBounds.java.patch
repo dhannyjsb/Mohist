@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/advancements/critereon/MinMaxBounds.java
++++ ../src-work/minecraft/net/minecraft/advancements/critereon/MinMaxBounds.java
+@@ -2,9 +2,10 @@
+ 
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonObject;
+-import javax.annotation.Nullable;
+ import net.minecraft.util.JsonUtils;
+ 
++import javax.annotation.Nullable;
++
+ public class MinMaxBounds
+ {
+     public static final MinMaxBounds UNBOUNDED = new MinMaxBounds((Float)null, (Float)null);

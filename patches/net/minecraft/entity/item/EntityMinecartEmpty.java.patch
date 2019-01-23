@@ -1,0 +1,13 @@
+--- ../src-base/minecraft/net/minecraft/entity/item/EntityMinecartEmpty.java
++++ ../src-work/minecraft/net/minecraft/entity/item/EntityMinecartEmpty.java
+@@ -64,8 +64,8 @@
+         }
+     }
+ 
+-    public EntityMinecart.Type getType()
++    public Type getType()
+     {
+-        return EntityMinecart.Type.RIDEABLE;
++        return Type.RIDEABLE;
+     }
+ }

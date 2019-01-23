@@ -1,0 +1,10 @@
+++++ REJECTED PATCH 4
+         {
+             if (time < 1000)
+             {
+-                return "碌s";
++                return "?s";
+             }
+             else
+             {
+++++ END PATCH

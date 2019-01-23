@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/texture/DynamicTexture.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/texture/DynamicTexture.java
+@@ -1,11 +1,12 @@
+ package net.minecraft.client.renderer.texture;
+ 
+-import java.awt.image.BufferedImage;
+-import java.io.IOException;
+ import net.minecraft.client.resources.IResourceManager;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.awt.image.BufferedImage;
++import java.io.IOException;
++
+ @SideOnly(Side.CLIENT)
+ public class DynamicTexture extends AbstractTexture
+ {

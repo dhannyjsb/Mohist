@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/item/ItemExpireEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/item/ItemExpireEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,8 +19,8 @@
+ 
+ package net.minecraftforge.event.entity.item;
+ 
+-import net.minecraftforge.fml.common.eventhandler.Cancelable;
+ import net.minecraft.entity.item.EntityItem;
++import net.minecraftforge.fml.common.eventhandler.Cancelable;
+ 
+ /**
+  * Event that is fired when an EntityItem's age has reached its maximum

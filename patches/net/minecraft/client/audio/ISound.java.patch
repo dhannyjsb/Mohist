@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraft/client/audio/ISound.java
++++ ../src-work/minecraft/net/minecraft/client/audio/ISound.java
+@@ -1,11 +1,12 @@
+ package net.minecraft.client.audio;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.util.SoundCategory;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ @SideOnly(Side.CLIENT)
+ public interface ISound
+ {
+@@ -32,7 +33,7 @@
+ 
+     float getZPosF();
+ 
+-    ISound.AttenuationType getAttenuationType();
++    AttenuationType getAttenuationType();
+ 
+     @SideOnly(Side.CLIENT)
+     public static enum AttenuationType

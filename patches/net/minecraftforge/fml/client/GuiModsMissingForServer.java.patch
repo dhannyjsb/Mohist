@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/client/GuiModsMissingForServer.java
++++ ../src-work/minecraft/net/minecraftforge/fml/client/GuiModsMissingForServer.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,14 +19,14 @@
+ 
+ package net.minecraftforge.fml.client;
+ 
+-import java.util.List;
+-
+ import net.minecraft.client.gui.GuiButton;
+ import net.minecraft.client.gui.GuiScreen;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraftforge.fml.common.MissingModsException;
+ import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+ 
++import java.util.List;
++
+ public class GuiModsMissingForServer extends GuiScreen
+ {
+     private MissingModsException modsMissing;

@@ -1,0 +1,57 @@
+--- ../src-base/minecraft/net/minecraftforge/common/crafting/CompoundIngredient.java
++++ ../src-work/minecraft/net/minecraftforge/common/crafting/CompoundIngredient.java
+@@ -1,39 +1,18 @@
+-/*
+- * Minecraft Forge
+- * Copyright (c) 2016-2018.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Lesser General Public
+- * License as published by the Free Software Foundation version 2.1
+- * of the License.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Lesser General Public License for more details.
+- *
+- * You should have received a copy of the GNU Lesser General Public
+- * License along with this library; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+- */
+-
+ package net.minecraftforge.common.crafting;
+ 
+-import java.util.Collection;
+-import java.util.Collections;
+-import java.util.List;
+-
+-import javax.annotation.Nonnull;
+-import javax.annotation.Nullable;
+-
+ import com.google.common.collect.Lists;
+-
+ import it.unimi.dsi.fastutil.ints.IntArrayList;
+ import it.unimi.dsi.fastutil.ints.IntComparators;
+ import it.unimi.dsi.fastutil.ints.IntList;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.item.crafting.Ingredient;
+ 
++import javax.annotation.Nonnull;
++import javax.annotation.Nullable;
++import java.util.Collection;
++import java.util.Collections;
++import java.util.List;
++
+ public class CompoundIngredient extends Ingredient
+ {
+     private Collection<Ingredient> children;
+@@ -109,7 +88,7 @@
+     {
+         return isSimple;
+     }
+-    
++
+     @Nonnull
+     public Collection<Ingredient> getChildren()
+     {
