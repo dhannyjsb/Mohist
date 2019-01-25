@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        mavenLocal()
         mavenCentral()
         maven {
             name 'prok'
@@ -7,7 +8,7 @@ buildscript {
         }
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://files.minecraftforge.net/maven"
         }
         maven {
             name = "sonatype"
@@ -28,9 +29,10 @@ version = '0.0.1'
 
 repositories {
     clear()
+    mavenCentral()
     maven {
         name = "forge"
-        url = "http://files.minecraftforge.net/maven"
+        url = "https://files.minecraftforge.net/maven"
     }
     maven {
         name = "sonatype"
@@ -52,7 +54,6 @@ repositories {
         name 'prok'
         url 'https://repo.prok.pw/'
     }
-    mavenCentral()
 }
 
 configurations{
