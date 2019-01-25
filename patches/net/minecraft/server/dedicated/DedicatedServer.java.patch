@@ -227,7 +227,15 @@
                  long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -287,14 +346,33 @@
+@@ -270,6 +329,7 @@
+                 this.loadAllWorlds(this.getFolderName(), this.getFolderName(), k, worldtype, s2);
+                 long i1 = System.nanoTime() - j;
+                 String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
++                LOGGER.info("Starting Minecraft server on {}:{}", this.getServerHostname().isEmpty() ? "*" : this.getServerHostname(), Integer.valueOf(this.getServerPort()));
+                 LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
+                 this.currentTime = getCurrentTimeMillis();
+ 
+@@ -287,14 +347,33 @@
                      this.rconQueryThread.startThread();
                  }
  
@@ -264,7 +272,7 @@
                  {
                      Thread thread1 = new Thread(new ServerHangWatchdog(this));
                      thread1.setName("Server Watchdog");
-@@ -427,11 +505,20 @@
+@@ -427,11 +506,20 @@
  
      public void executePendingCommands()
      {
@@ -289,7 +297,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -684,13 +771,79 @@
+@@ -684,13 +772,79 @@
  
      public String getPlugins()
      {

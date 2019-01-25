@@ -311,7 +311,7 @@
 +    }
 +
 +    public static Environment registerBukkitDimension(int dim, String worldType) {
-+        Environment env = Environment.getEnvironment(dim);
++        org.bukkit.World.Environment env = org.bukkit.World.Environment.getEnvironment(dim);
 +        if(env == null){
 +            worldType = worldType.replace("WorldProvider","");
 +            env = EnumHelper.addBukkitEnvironment(dim,worldType.toUpperCase());

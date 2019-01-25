@@ -127,13 +127,13 @@
       "clientreq":true
     },
     {
-      "name" : "com.googlecode.json-simple:json-simple:1.1",
+      "name" : "com.googlecode.json-simple:json-simple:1.1.1",
       "serverreq":true,
       "clientreq":true,
       "url" : "http://repo.maven.apache.org/maven2"
     },
     {
-      "name" : "org.yaml:snakeyaml:1.15",
+      "name" : "org.yaml:snakeyaml:1.23",
       "serverreq":true,
       "clientreq":true,
       "url" : "http://repo.maven.apache.org/maven2"
@@ -178,7 +178,7 @@
     },
     {
       "name": "net.md-5:SpecialSource:1.8.5",
-      "url" : "http://repo.maven.apache.org/maven2",
+      "url" : "https://hub.spigotmc.org/nexus/content/groups/public/",
       "serverreq":true
     },
     {
@@ -188,7 +188,7 @@
     },
     {
       "name": "net.md-5:bungeecord-chat:1.12-SNAPSHOT",
-      "url" : "https://oss.sonatype.org/content/repositories/snapshots/",
+      "url" : "https://hub.spigotmc.org/nexus/content/groups/public/",
       "serverreq":true
     },
     {

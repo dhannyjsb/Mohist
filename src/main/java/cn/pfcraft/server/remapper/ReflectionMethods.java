@@ -42,7 +42,8 @@ public class ReflectionMethods {
     }
 
     public static Method getDeclaredMethod(Class<?> inst, String name, Class<?>...parameterTypes) throws NoSuchMethodException, SecurityException {
-        if (!inst.getName().startsWith("net.minecraft.")) return inst.getDeclaredMethod(name, parameterTypes);
+        if (!inst.getName().startsWith("net.minecraft."))
+            return inst.getDeclaredMethod(name, parameterTypes);
         return inst.getDeclaredMethod(RemapUtils.mapMethod(inst, name, parameterTypes), parameterTypes);
     }
 

@@ -3,8 +3,8 @@ package cn.pfcraft.server.remapper;
 import net.md_5.specialsource.JarMapping;
 import net.md_5.specialsource.JarRemapper;
 
-public class PFServerRemapper extends JarRemapper {
-    public PFServerRemapper(JarMapping jarMapping){
+public class CustomRemapper extends JarRemapper {
+    public CustomRemapper(JarMapping jarMapping){
         super(jarMapping);
     }
 

@@ -39,8 +39,3 @@
   */
  
  package net.minecraftforge.fml.repackage.com.nothome.delta;
-@@ -76,4 +71,3 @@
-     }
- 
- }
--

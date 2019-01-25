@@ -57,34 +57,31 @@ public final class MinecraftTimings {
                 return null;
             }
         Plugin plugin;
-
-                Runnable task = ((CraftTask) bukkitTask).task;
-
-                final Class<? extends Runnable> taskClass = task.getClass();
+        Runnable task = ((CraftTask) bukkitTask).task;
+        Class<? extends Runnable> taskClass = task.getClass();
         if (bukkitTask.getOwner() != null) {
-                plugin = bukkitTask.getOwner();
-            } else {
-                plugin = TimingsManager.getPluginByClassloader(taskClass);
-            }
+            plugin = bukkitTask.getOwner();
+        } else {
+            plugin = TimingsManager.getPluginByClassloader(taskClass);
+        }
 
-                final String taskname = taskNameCache.computeIfAbsent(taskClass, clazz ->
-                        clazz.isAnonymousClass() || clazz.isLocalClass()
+        String taskname = taskNameCache.computeIfAbsent(taskClass, clazz ->
+                clazz.isAnonymousClass() || clazz.isLocalClass()
                                         ? clazz.getName()
                                         : clazz.getCanonicalName());
 
-                StringBuilder name = new StringBuilder(64);
+        StringBuilder name = new StringBuilder(64);
         name.append("Task: ").append(taskname);
         if (period > 0) {
-                name.append(" (interval:").append(period).append(")");
-            } else {
-                name.append(" (Single)");
-            }
+            name.append(" (interval:").append(period).append(")");
+        } else {
+            name.append(" (Single)");
+        }
 
-                if (plugin == null) {
-                return Timings.ofSafe(null, name.toString());
-            }
-
-                return Timings.ofSafe(plugin, name.toString());
+        if (plugin == null) {
+            return Timings.ofSafe(null, name.toString());
+        }
+        return Timings.ofSafe(plugin, name.toString());
     }
 
     /**

@@ -21,11 +21,9 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.ChunkPos;
-@@ -20,31 +16,24 @@
- import net.minecraft.world.WorldProvider;
+@@ -21,30 +17,22 @@
  import net.minecraft.world.WorldServer;
  import net.minecraft.world.chunk.Chunk;
-+import net.minecraftforge.common.util.ChunkCoordComparator;
  
 +import javax.annotation.Nullable;
 +import java.util.*;
@@ -52,18 +50,16 @@
      private final List<EntityPlayerMP> players = Lists.<EntityPlayerMP>newArrayList();
      private final Long2ObjectMap<PlayerChunkMapEntry> entryMap = new Long2ObjectOpenHashMap<PlayerChunkMapEntry>(4096);
      private final Set<PlayerChunkMapEntry> dirtyEntries = Sets.<PlayerChunkMapEntry>newHashSet();
--    private final List<PlayerChunkMapEntry> pendingSendToPlayers = Lists.<PlayerChunkMapEntry>newLinkedList();
--    private final List<PlayerChunkMapEntry> entriesWithoutChunks = Lists.<PlayerChunkMapEntry>newLinkedList();
+     private final List<PlayerChunkMapEntry> pendingSendToPlayers = Lists.<PlayerChunkMapEntry>newLinkedList();
+     private final List<PlayerChunkMapEntry> entriesWithoutChunks = Lists.<PlayerChunkMapEntry>newLinkedList();
 -    private final List<PlayerChunkMapEntry> entries = Lists.<PlayerChunkMapEntry>newArrayList();
-+    private final List<PlayerChunkMapEntry> pendingSendToPlayers = new Vector();
-+    private final List<PlayerChunkMapEntry> entriesWithoutChunks = new Vector();
-+    private final List<PlayerChunkMapEntry> entries = new Vector();
++    private final List<PlayerChunkMapEntry> entries = Lists.<PlayerChunkMapEntry>newLinkedList();
      private int playerViewRadius;
 +    public int getViewDistance() { return playerViewRadius; } // Paper OBFHELPER
      private long previousTotalWorldTime;
      private boolean sortMissingChunks = true;
      private boolean sortSendToPlayers = true;
-@@ -52,7 +41,7 @@
+@@ -52,7 +40,7 @@
      public PlayerChunkMap(WorldServer serverWorld)
      {
          this.world = serverWorld;
@@ -72,7 +68,7 @@
      }
  
      public WorldServer getWorldServer()
-@@ -109,6 +98,7 @@
+@@ -109,6 +97,7 @@
  
          if (i - this.previousTotalWorldTime > 8000L)
          {
@@ -80,7 +76,7 @@
              this.previousTotalWorldTime = i;
  
              for (int j = 0; j < this.entries.size(); ++j)
-@@ -117,21 +107,25 @@
+@@ -117,21 +106,25 @@
                  playerchunkmapentry.update();
                  playerchunkmapentry.updateChunkInhabitedTime();
              }
@@ -106,7 +102,7 @@
              Collections.sort(this.entriesWithoutChunks, new Comparator<PlayerChunkMapEntry>()
              {
                  public int compare(PlayerChunkMapEntry p_compare_1_, PlayerChunkMapEntry p_compare_2_)
-@@ -139,11 +133,13 @@
+@@ -139,11 +132,13 @@
                      return ComparisonChain.start().compare(p_compare_1_.getClosestPlayerDistance(), p_compare_2_.getClosestPlayerDistance()).result();
                  }
              });
@@ -120,7 +116,7 @@
              Collections.sort(this.pendingSendToPlayers, new Comparator<PlayerChunkMapEntry>()
              {
                  public int compare(PlayerChunkMapEntry p_compare_1_, PlayerChunkMapEntry p_compare_2_)
-@@ -151,10 +147,12 @@
+@@ -151,10 +146,12 @@
                      return ComparisonChain.start().compare(p_compare_1_.getClosestPlayerDistance(), p_compare_2_.getClosestPlayerDistance()).result();
                  }
              });
@@ -133,7 +129,7 @@
              long l = System.nanoTime() + 50000000L;
              int k = 49;
              Iterator<PlayerChunkMapEntry> iterator = this.entriesWithoutChunks.iterator();
-@@ -183,13 +181,18 @@
+@@ -183,13 +180,18 @@
                              break;
                          }
                      }
@@ -152,7 +148,7 @@
              Iterator<PlayerChunkMapEntry> iterator1 = this.pendingSendToPlayers.iterator();
  
              while (iterator1.hasNext())
-@@ -207,16 +210,19 @@
+@@ -207,16 +209,19 @@
                      }
                  }
              }
@@ -172,7 +168,7 @@
          }
      }
  
-@@ -257,6 +263,14 @@
+@@ -257,6 +262,14 @@
          return playerchunkmapentry;
      }
  
@@ -187,7 +183,7 @@
      public void markBlockForUpdate(BlockPos pos)
      {
          int i = pos.getX() >> 4;
-@@ -276,14 +290,24 @@
+@@ -276,14 +289,24 @@
          player.managedPosX = player.posX;
          player.managedPosZ = player.posZ;
  
@@ -215,7 +211,7 @@
          this.players.add(player);
          this.markSortPending();
      }
-@@ -337,19 +361,23 @@
+@@ -337,19 +360,23 @@
          {
              int k = (int)player.managedPosX >> 4;
              int l = (int)player.managedPosZ >> 4;
@@ -242,7 +238,7 @@
                          }
  
                          if (!this.overlaps(l1 - j1, i2 - k1, i, j, i1))
-@@ -367,6 +395,12 @@
+@@ -367,6 +394,12 @@
                  player.managedPosX = player.posX;
                  player.managedPosZ = player.posZ;
                  this.markSortPending();
@@ -255,7 +251,7 @@
              }
          }
      }
-@@ -377,50 +411,61 @@
+@@ -377,50 +410,61 @@
          return playerchunkmapentry != null && playerchunkmapentry.containsPlayer(player) && playerchunkmapentry.isSentToPlayers();
      }
  
@@ -347,7 +343,7 @@
              this.markSortPending();
          }
      }
-@@ -463,4 +508,63 @@
+@@ -463,4 +507,63 @@
              this.getWorldServer().getChunkProvider().queueUnload(chunk);
          }
      }

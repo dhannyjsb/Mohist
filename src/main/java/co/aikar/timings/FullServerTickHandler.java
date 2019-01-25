@@ -13,7 +13,6 @@ public class FullServerTickHandler extends TimingHandler
         TimingsManager.TIMING_MAP.put(IDENTITY, this);
     }
 
-    @Override
     public Timing startTiming() {
         if (TimingsManager.needsFullReset) {
             TimingsManager.resetTimings();
@@ -24,7 +23,6 @@ public class FullServerTickHandler extends TimingHandler
         return super.startTiming();
     }
 
-    @Override
     public void stopTiming() {
         super.stopTiming();
         if (!this.isEnabled()) {
@@ -47,15 +45,15 @@ public class FullServerTickHandler extends TimingHandler
                 this.avgUsedMemory = this.avgUsedMemory * 0.9833333333333333 + usedMemory * 0.016666666666666666;
             }
         }
-        final long start = System.nanoTime();
+        long start = System.nanoTime();
         TimingsManager.tick();
-        final long diff = System.nanoTime() - start;
+        long diff = System.nanoTime() - start;
         TimingsManager.CURRENT = TimingsManager.TIMINGS_TICK;
         TimingsManager.TIMINGS_TICK.addDiff(diff);
         this.record.setCurTickCount(this.record.getCurTickCount() - 1);
         this.minuteData.setCurTickTotal(this.record.getCurTickTotal());
         this.minuteData.setCurTickCount(1);
-        final boolean violated = this.isViolated();
+        boolean violated = this.isViolated();
         this.minuteData.processTick(violated);
         TimingsManager.TIMINGS_TICK.processTick(violated);
         this.processTick(violated);

@@ -5,7 +5,6 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
-
 import java.util.function.Predicate;
 
 public class SideTransformer implements IClassTransformer {
@@ -16,10 +15,9 @@ public class SideTransformer implements IClassTransformer {
                             (method.desc.contains("Lnet/minecraft/client/renderer/") && !method.desc.contains("Lnet/minecraft/client/renderer/block/model/ModelResourceLocation"))
             );
 
-    @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (basicClass == null) return basicClass;
-
+        if (basicClass == null)
+            return basicClass;
         ClassReader reader = new ClassReader(basicClass);
         ClassNode node = new ClassNode();
         reader.accept(node, 0);
@@ -31,8 +29,6 @@ public class SideTransformer implements IClassTransformer {
             node.accept(writer);
             return writer.toByteArray();
         }
-
         return basicClass;
-
     }
 }

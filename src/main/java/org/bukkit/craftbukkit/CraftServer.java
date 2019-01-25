@@ -1684,6 +1684,12 @@ public final class CraftServer implements Server {
         }
 
         @Override
+        public YamlConfiguration getMohistConfig()
+        {
+            return MohistConfig.config;
+        }
+
+        @Override
         public YamlConfiguration getPaperConfig()
         {
             return com.destroystokyo.paper.PaperConfig.config;

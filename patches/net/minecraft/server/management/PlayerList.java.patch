@@ -195,7 +195,7 @@
 -        this.setPlayerGameTypeBasedOnOther(playerIn, (EntityPlayerMP)null, worldserver);
 +        this.setPlayerGameTypeBasedOnOther(playerIn, null, worldserver);
          playerIn.connection = nethandlerplayserver;
-+        //forge 允许从ServerConnectionFromClientEvent向客户端发�?�数据包
++        //forge 允许从ServerConnectionFromClientEvent向客户端发送数据包
          net.minecraftforge.fml.common.FMLCommonHandler.instance().fireServerConnectionEvent(netManager);
 +        // Mohist start - send DimensionRegisterMessage to client before attempting to login to a Bukkit dimension
 +        if (DimensionManager.isBukkitDimension(playerIn.dimension))

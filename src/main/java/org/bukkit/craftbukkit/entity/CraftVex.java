@@ -1,7 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.destroystokyo.paper.entity.SentientNPC;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityVex;
 import org.bukkit.craftbukkit.CraftServer;

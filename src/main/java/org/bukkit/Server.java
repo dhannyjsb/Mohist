@@ -11,6 +11,7 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -950,6 +951,11 @@ public interface Server extends PluginMessageRecipient {
         }
 
         public org.bukkit.configuration.file.YamlConfiguration getSpigotConfig()
+        {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public org.bukkit.configuration.file.YamlConfiguration getMohistConfig()
         {
             throw new UnsupportedOperationException("Not supported yet.");
         }

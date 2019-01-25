@@ -19,7 +19,7 @@ import java.util.ListIterator;
 public class ReflectionTransformer {
     public static final String DESC_ReflectionMethods = Type.getInternalName(ReflectionMethods.class);
     public static JarMapping jarMapping;
-    public static PFServerRemapper remapper;
+    public static CustomRemapper remapper;
 
     public static final HashMap<String, String> classDeMapping = Maps.newHashMap();
     public static final Multimap<String, String> methodDeMapping = ArrayListMultimap.create();
@@ -39,7 +39,7 @@ public class ReflectionTransformer {
         JointProvider provider = new JointProvider();
         provider.add(new ClassInheritanceProvider());
         jarMapping.setFallbackInheritanceProvider(provider);
-        remapper = new PFServerRemapper(jarMapping);
+        remapper = new CustomRemapper(jarMapping);
 
         jarMapping.classes.forEach((k, v) -> classDeMapping.put(v, k));
         jarMapping.methods.forEach((k, v) -> methodDeMapping.put(v, k));
@@ -56,7 +56,7 @@ public class ReflectionTransformer {
         reader.accept(node, 0); // Visit using ClassNode
         boolean remapCL = false;
         if (node.superName.equals("java/net/URLClassLoader")) {
-            node.superName = "cn/pfcraft/server/remapper/PFServerURLClassLoader";
+            node.superName = "cn/pfcraft/server/remapper/CustomURLClassLoader";
             remapCL = true;
         }
 
@@ -68,7 +68,7 @@ public class ReflectionTransformer {
                 if (next instanceof TypeInsnNode) {
                     TypeInsnNode insn = (TypeInsnNode) next;
                     if (insn.getOpcode() == Opcodes.NEW && insn.desc.equals("java/net/URLClassLoader")) { // remap new URLClassLoader
-                        insn.desc = "cn/pfcraft/server/remapper/PFServerURLClassLoader";
+                        insn.desc = "cn/pfcraft/server/remapper/CustomURLClassLoader";
                         remapCL = true;
                     }
                 }
@@ -139,6 +139,6 @@ public class ReflectionTransformer {
 
     public static void remapURLClassLoader(MethodInsnNode method) {
         if (!(method.owner.equals("java/net/URLClassLoader") && method.name.equals("<init>"))) return;
-        method.owner = "cn/pfcraft/server/remapper/PFServerURLClassLoader";
+        method.owner = "cn/pfcraft/server/remapper/CustomURLClassLoader";
     }
 }

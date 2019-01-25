@@ -578,8 +578,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     @Override
     public void updateInventory() {
         if (getHandle().connection == null) {
-            getHandle().sendContainerToPlayer(getHandle().openContainer);
+            return;
         }
+        getHandle().sendContainerToPlayer(getHandle().openContainer);
     }
 
     @Override

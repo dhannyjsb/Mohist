@@ -109,3 +109,12 @@
          }
          finally
          {
+@@ -296,7 +290,7 @@
+     @Override
+     public NetworkManager getClientToServerNetworkManager()
+     {
+-        throw new RuntimeException("Missing");
++        return null;
+     }
+     @Override
+     public INetHandler getClientPlayHandler()

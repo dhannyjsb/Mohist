@@ -1,7 +1,6 @@
 package co.aikar.timings;
 
 import co.aikar.util.LoadingMap;
-import com.google.common.base.Function;
 import com.google.common.collect.EvictingQueue;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -9,31 +8,27 @@ import org.bukkit.command.Command;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.PluginClassLoader;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public final class TimingsManager {
-    static final Map<TimingIdentifier, TimingHandler> TIMING_MAP =
-            Collections.synchronizedMap(LoadingMap.newHashMap(
-                        new Function<TimingIdentifier, TimingHandler>() {
-                @Override
-                public TimingHandler apply(TimingIdentifier id) {
-                                        return (id.protect ?
-                                                    new UnsafeTimingHandler(id) :
-                                                    new TimingHandler(id)
-                                                        );
-                                    }
-            },
-                        256, .5F
-                            ));
+    static final Map<TimingIdentifier, TimingHandler> TIMING_MAP = LoadingMap.of(
+                new ConcurrentHashMap<>(4096, .5F), id -> (id.protect ?
+                            new UnsafeTimingHandler(id) :
+                            new TimingHandler(id)
+                                )
+                    );
     public static final FullServerTickHandler FULL_SERVER_TICK = new FullServerTickHandler();
     public static final TimingHandler TIMINGS_TICK = Timings.ofSafe("Timings Tick", FULL_SERVER_TICK);
     public static final Timing PLUGIN_GROUP_HANDLER = Timings.ofSafe("Plugins");
     public static List<String> hiddenConfigs = new ArrayList<String>();
     public static boolean privacy = false;
 
-    static final Collection<TimingHandler> HANDLERS = new ArrayDeque<TimingHandler>();
-    static final ArrayDeque<TimingHistory.MinuteReport> MINUTE_REPORTS = new ArrayDeque<TimingHistory.MinuteReport>();
+    static final List<TimingHandler> HANDLERS = new ArrayList<>(1024);
+    static final List<TimingHistory.MinuteReport> MINUTE_REPORTS = new ArrayList<>(64);
 
     static EvictingQueue<TimingHistory> HISTORY = EvictingQueue.create(12);
     static TimingHandler CURRENT;

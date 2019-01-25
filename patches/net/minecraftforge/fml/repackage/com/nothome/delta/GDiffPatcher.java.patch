@@ -75,8 +75,3 @@
  /**
   * This class patches an input file with a GDIFF patch file.
   *
-@@ -245,4 +218,3 @@
-         }
-     }
- }
--

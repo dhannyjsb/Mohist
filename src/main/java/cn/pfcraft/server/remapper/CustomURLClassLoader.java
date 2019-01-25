@@ -21,7 +21,7 @@ import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PFServerURLClassLoader extends URLClassLoader
+public class CustomURLClassLoader extends URLClassLoader
 {
 
     private JarMapping jarMapping;
@@ -34,20 +34,20 @@ public class PFServerURLClassLoader extends URLClassLoader
         provider.add(new ClassInheritanceProvider());
         provider.add(new ClassLoaderProvider(this));
         this.jarMapping.setFallbackInheritanceProvider(provider);
-        this.remapper = new PFServerRemapper(this.jarMapping);
+        this.remapper = new CustomRemapper(this.jarMapping);
     }
 
-    public PFServerURLClassLoader(final URL[] urls, final ClassLoader parent) {
+    public CustomURLClassLoader(final URL[] urls, final ClassLoader parent) {
         super(urls, parent);
         this.classes = new HashMap<>();
     }
 
-    public PFServerURLClassLoader(final URL[] urls) {
+    public CustomURLClassLoader(final URL[] urls) {
         super(urls);
         this.classes = new HashMap<>();
     }
 
-    public PFServerURLClassLoader(final URL[] urls, final ClassLoader parent, final URLStreamHandlerFactory factory) {
+    public CustomURLClassLoader(final URL[] urls, final ClassLoader parent, final URLStreamHandlerFactory factory) {
         super(urls, parent, factory);
         this.classes = new HashMap<>();
     }

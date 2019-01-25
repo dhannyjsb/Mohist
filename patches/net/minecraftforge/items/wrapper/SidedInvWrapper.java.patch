@@ -8,12 +8,3 @@
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
-@@ -236,4 +236,8 @@
-     {
-         return inv.isItemValidForSlot(slot, stack);
-     }
-+
-+    public net.minecraft.inventory.IInventory getInv() {
-+        return this.inv;
-+    }
- }

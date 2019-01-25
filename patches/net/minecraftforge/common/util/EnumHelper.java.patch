@@ -111,6 +111,6 @@
 +        if(!isSetup){
 +            setup();
 +        }
-+        return (World.Environment)addEnum(World.Environment.class,name,new Class[]{Integer.TYPE}, new Object[]{Integer.valueOf(id)});
++        return addEnum(World.Environment.class,name,new Class[]{Integer.TYPE}, new Object[]{Integer.valueOf(id)});
 +    }
  }

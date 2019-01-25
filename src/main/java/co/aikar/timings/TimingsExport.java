@@ -1,5 +1,6 @@
 package co.aikar.timings;
 
+import co.aikar.util.JSONUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
@@ -30,8 +31,6 @@ import java.util.zip.GZIPOutputStream;
 
 import static co.aikar.timings.TimingsManager.HISTORY;
 import static co.aikar.util.JSONUtil.*;
-
-
 
 @SuppressWarnings({"rawtypes", "SuppressionAnnotation"})
 class TimingsExport extends Thread {
@@ -121,21 +120,17 @@ class TimingsExport extends Thread {
             history[i++] = timingHistory;
         }
 
-            history[i] = new TimingHistory(); // Current snapshot
+        history[i] = new TimingHistory(); // Current snapshot
         tileEntityTypeSet.addAll(history[i].tileEntityTypeSet);
         entityTypeSet.addAll(history[i].entityTypeSet);
 
-    
-                    Map handlers = createObject();
+        Map handlers = JSONUtil.createObject(new JSONUtil.JSONPair[0]);
         for (TimingIdentifier.TimingGroup group : TimingIdentifier.GROUP_MAP.values()) {
             for (TimingHandler id : group.handlers) {
                     if (!id.isTimed() && !id.isSpecial()) {
                             continue;
                         }
-                    handlers.put(id.id, toArray(
-                                group.id,
-                                id.name
-                                    ));
+                    handlers.put(id.id, JSONUtil.toArray(group.id, id.name));
                 }
         }
 

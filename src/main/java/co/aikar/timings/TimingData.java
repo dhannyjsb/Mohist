@@ -1,6 +1,7 @@
 package co.aikar.timings;
 
 import java.util.List;
+
 import static co.aikar.util.JSONUtil.toArray;
 
 /**

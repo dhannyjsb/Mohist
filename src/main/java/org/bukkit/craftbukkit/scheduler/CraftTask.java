@@ -5,7 +5,6 @@ import co.aikar.timings.Timing;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.spigotmc.CustomTimingsHandler;
 
 
 public class CraftTask implements BukkitTask, Runnable { // Spigot

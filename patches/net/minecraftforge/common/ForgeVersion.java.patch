@@ -237,16 +237,3 @@
      // Gather a list of mods that have opted in to this update system by providing a URL.
      public static Map<ModContainer, URL> gatherMods()
      {
-@@ -357,7 +178,6 @@
- 
-     private static Map<ModContainer, CheckResult> results = new ConcurrentHashMap<ModContainer, CheckResult>();
-     private static final CheckResult PENDING_CHECK = new CheckResult(PENDING, null, null, null);
--
-     public static CheckResult getResult(ModContainer mod)
-     {
-         if (mod == null) return PENDING_CHECK;
-@@ -367,4 +187,3 @@
-         return ret == null ? PENDING_CHECK : ret;
-     }
- }
--

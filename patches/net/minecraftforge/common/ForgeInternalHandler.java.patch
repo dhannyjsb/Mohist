@@ -8,16 +8,3 @@
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
-@@ -96,7 +96,6 @@
-         if (event.phase == Phase.END)
-             FMLClientHandler.instance().updateCloudSettings();
-     }
--
-     @SubscribeEvent
-     public void onChunkUnload(ChunkEvent.Unload event)
-     {
-@@ -104,4 +103,3 @@
-             FarmlandWaterManager.removeTickets(event.getChunk());
-     }
- }
--

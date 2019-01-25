@@ -1,9 +1,9 @@
 package org.bukkit;
 
-import java.util.List;
-
 import org.bukkit.advancement.Advancement;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public interface UnsafeValues {
 

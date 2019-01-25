@@ -3,7 +3,7 @@ package org.bukkit.plugin.java;
 import cn.pfcraft.server.Mohist;
 import cn.pfcraft.server.remapper.ClassInheritanceProvider;
 import cn.pfcraft.server.remapper.MappingLoader;
-import cn.pfcraft.server.remapper.PFServerRemapper;
+import cn.pfcraft.server.remapper.CustomRemapper;
 import cn.pfcraft.server.remapper.ReflectionTransformer;
 import net.md_5.specialsource.JarMapping;
 import net.md_5.specialsource.JarRemapper;
@@ -67,7 +67,7 @@ public final class PluginClassLoader extends URLClassLoader {
         provider.add(new ClassInheritanceProvider());
         provider.add(new ClassLoaderProvider(this));
         this.jarMapping.setFallbackInheritanceProvider(provider);
-        remapper = new PFServerRemapper(jarMapping);
+        remapper = new CustomRemapper(jarMapping);
 
         try {
             Class<?> jarClass;

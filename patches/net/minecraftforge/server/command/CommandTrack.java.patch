@@ -37,12 +37,3 @@
  class CommandTrack extends CommandTreeBase
  {
  
-@@ -241,7 +236,7 @@
-         {
-             if (time < 1000)
-             {
--                return "µs";
-+                return "?s";
-             }
-             else
-             {
