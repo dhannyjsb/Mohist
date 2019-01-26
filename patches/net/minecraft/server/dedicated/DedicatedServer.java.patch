@@ -1,0 +1,22 @@
+--- ../src-base/minecraft/net/minecraft/server/dedicated/DedicatedServer.java
++++ ../src-work/minecraft/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -61,7 +61,7 @@
+     private ServerEula eula;
+     private boolean canSpawnStructures;
+     private GameType gameType;
+-    private boolean guiIsEnabled;
++    private boolean guiIsEnabled = false;
+     public static boolean allowPlayerLogins = false;
+ 
+     public DedicatedServer(File anvilFileIn, DataFixer dataFixerIn, YggdrasilAuthenticationService authServiceIn, MinecraftSessionService sessionServiceIn, GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)
+@@ -497,8 +497,8 @@
+ 
+     public void setGuiEnabled()
+     {
+-        MinecraftServerGui.createServerGui(this);
+-        this.guiIsEnabled = true;
++        //MinecraftServerGui.createServerGui(this);
++        this.guiIsEnabled = false;
+     }
+ 
+     public boolean getGuiEnabled()
