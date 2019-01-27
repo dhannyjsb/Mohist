@@ -134,6 +134,7 @@ launch4j {
 }
 tasks.generateXmlConfig.dependsOn installer
 tasks.compileJava.enabled = false
+compileJava.options.encoding = 'UTF-8'
 tasks.reobfuscate.setProperty("extraSrg",["PK: org/bukkit/craftbukkit org/bukkit/craftbukkit/v1_12_R1"])
 task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     onlyIf {
@@ -152,9 +153,6 @@ task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     keyStore = jarsigner.keystore
     inputFile = outputJar.archivePath
     outputFile = outputJar.archivePath
-}
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
 }
 build.dependsOn signUniversal
 installer.dependsOn signUniversal
