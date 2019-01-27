@@ -132,6 +132,8 @@ installer {
 launch4j {
     jreMinVersion = '1.8.0'
 }
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 tasks.generateXmlConfig.dependsOn installer
 tasks.compileJava.enabled = false
 compileJava.options.encoding = 'UTF-8'
@@ -162,7 +164,7 @@ outputJar {
 
     manifest.attributes([
             "Implementation-Title": "Mohist",
-            "Implementation-Version": "git-" + version,
+            "Implementation-Version": version,
             "Main-Class": "net.minecraftforge.fml.relauncher.ServerLaunchWrapper",
             "TweakClass": "net.minecraftforge.fml.common.launcher.FMLTweaker",
             "Class-Path": getServerClasspath(file("jsons/1.12.2-rel.json"))
