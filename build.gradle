@@ -47,6 +47,10 @@ repositories {
         url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
     maven {
+        name 'papermc'
+        url 'https://papermc.io/repo/repository/maven-public/'
+    }
+    maven {
         name 'maven'
         url 'https://mvnrepository.com/artifact/'
     }
@@ -63,6 +67,7 @@ configurations{
 
 dependencies {
     libraries 'org.avaje:ebean:2.8.1'
+    libraries 'co.aikar:fastutil-lite:1.0'
 }
 
 jar{
@@ -186,7 +191,6 @@ extractForgeSources {
 genGradleProjects {
     addCompileDep "junit:junit:4.12"
 }
-
 
 import groovy.json.JsonSlurper
 

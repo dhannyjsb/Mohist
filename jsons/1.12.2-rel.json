@@ -128,15 +128,15 @@
     },
     {
       "name" : "com.googlecode.json-simple:json-simple:1.1.1",
+      "url" : "http://repo.maven.apache.org/maven2",
       "serverreq":true,
-      "clientreq":true,
-      "url" : "http://repo.maven.apache.org/maven2"
+      "clientreq":true
     },
     {
       "name" : "org.yaml:snakeyaml:1.23",
+      "url" : "http://repo.maven.apache.org/maven2",
       "serverreq":true,
-      "clientreq":true,
-      "url" : "http://repo.maven.apache.org/maven2"
+      "clientreq":true
     },
     {
       "name": "lzma:lzma:0.0.1",
@@ -159,43 +159,50 @@
     {
       "name": "mysql:mysql-connector-java:5.1.46",
       "url" : "http://repo.maven.apache.org/maven2",
+      "clientreq":true,
       "serverreq":true
     },
     {
       "name": "org.xerial:sqlite-jdbc:3.21.0.1",
       "url" : "http://repo.maven.apache.org/maven2",
+      "clientreq":true,
       "serverreq":true
     },
     {
       "name": "org.apache.commons:commons-lang3:3.5",
       "url" : "http://repo.maven.apache.org/maven2",
+      "clientreq":true,
       "serverreq":true
     },
     {
       "name": "commons-lang:commons-lang:2.6",
       "url" : "http://repo.maven.apache.org/maven2",
+      "clientreq":true,
       "serverreq":true
     },
     {
       "name": "net.md-5:SpecialSource:1.8.5",
       "url" : "https://hub.spigotmc.org/nexus/content/groups/public/",
+      "clientreq":true,
       "serverreq":true
     },
     {
       "name": "jline:jline:2.13",
       "url" : "http://repo.maven.apache.org/maven2",
+      "clientreq":true,
       "serverreq":true
     },
     {
       "name": "net.md-5:bungeecord-chat:1.12-SNAPSHOT",
       "url" : "https://hub.spigotmc.org/nexus/content/groups/public/",
+      "clientreq":true,
       "serverreq":true
     },
     {
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "url" : "http://files.minecraftforge.net/maven/",
-      "serverreq":true,
-      "clientreq":true
+      "clientreq":true,
+      "serverreq":true
     }
   ]
 },

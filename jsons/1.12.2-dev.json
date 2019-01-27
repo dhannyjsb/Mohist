@@ -105,32 +105,33 @@
     },
     {
       "name": "org.xerial:sqlite-jdbc:3.21.0.1",
-      "url" : "http://repo.maven.apache.org/maven2",
-      "serverreq":true
+      "children" : ["sources"],
+      "url" : "http://repo.maven.apache.org/maven2"
     },
     {
       "name": "mysql:mysql-connector-java:5.1.46",
-      "url" : "http://repo.maven.apache.org/maven2",
-      "serverreq":true
+      "children" : ["sources"],
+      "url" : "http://repo.maven.apache.org/maven2"
     },
     {
       "name": "net.md-5:SpecialSource:1.8.5",
+      "children" : ["sources"],
       "url" : "https://hub.spigotmc.org/nexus/content/groups/public/"
     },
     {
       "name": "net.md-5:bungeecord-chat:1.12-SNAPSHOT",
-      "url" : "https://hub.spigotmc.org/nexus/content/groups/public/",
-      "serverreq":true
+      "children" : ["sources"],
+      "url" : "https://hub.spigotmc.org/nexus/content/groups/public/"
     },
     {
       "name": "org.apache.commons:commons-lang3:3.5",
-      "url" : "http://repo.maven.apache.org/maven2",
-      "serverreq":true
+      "children" : ["sources"],
+      "url" : "http://repo.maven.apache.org/maven2"
     },
     {
       "name": "commons-lang:commons-lang:2.6",
-      "url" : "http://repo.maven.apache.org/maven2",
-      "serverreq":true
+      "children" : ["sources"],
+      "url" : "http://repo.maven.apache.org/maven2"
     },
     {
       "name": "org.apache.maven:maven-artifact:3.5.3",
