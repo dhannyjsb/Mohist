@@ -103,8 +103,6 @@ minecraft {
             genMcpPatches = false
             applyMcpPatches = false
             s2sKeepImports = true
-            //dchImports = true
-            //ignoreWhiteSpaces = false
             with common
         }
 
@@ -116,8 +114,6 @@ minecraft {
             genMcpPatches = true
             applyMcpPatches = true
             s2sKeepImports = true
-            //dchImports = true
-            //ignoreWhiteSpaces = false
             with common
         }
     }
@@ -143,10 +139,10 @@ task signUniversal(type: SignJar, dependsOn: 'outputJar') {
         project.hasProperty('jarsigner')
     }
 
-    def jarsigner = [:];
+    def jarsigner = [:]
 
     if (project.hasProperty('jarsigner'))
-        jarsigner = project.jarsigner;
+        jarsigner = project.jarsigner
 
     alias = 'forge'
     exclude "paulscode/**"
@@ -194,12 +190,11 @@ genGradleProjects {
 import groovy.json.JsonSlurper
 
 String getServerClasspath(File file) {
-    def node = new JsonSlurper().parse(file);
+    def node = new JsonSlurper().parse(file)
     def out = new StringBuilder()
     node.versionInfo.libraries.each { lib ->
         if (lib.serverreq)
         {
-            // group : artifact : version
             def split = lib.name.split(':')
             def group = split[0].replace('.', '/')
             def artifact = split[1]
@@ -207,6 +202,6 @@ String getServerClasspath(File file) {
             out += "libraries/$group/$artifact/$version/$artifact-${version}.jar "
         }
     }
-    out += "minecraft_server.${minecraft.version}.jar"
-    return out.toString();
+    out += "minecraft_server.1.12.2.jar"
+    return out.toString()
 }
