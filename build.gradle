@@ -65,10 +65,6 @@ dependencies {
     libraries 'org.avaje:ebean:2.8.1'
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
 jar{
     into('lib') {
         from configurations.libraries
@@ -153,6 +149,9 @@ task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     inputFile = outputJar.archivePath
     outputFile = outputJar.archivePath
 }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 build.dependsOn signUniversal
 installer.dependsOn signUniversal
 
@@ -188,7 +187,8 @@ genGradleProjects {
     addCompileDep "junit:junit:4.12"
 }
 
-import groovy.json.JsonSlurper;
+import groovy.json.JsonSlurper
+import org.gradle.api.tasks.compile.JavaCompile;
 
 String getServerClasspath(File file) {
     def node = new JsonSlurper().parse(file);
