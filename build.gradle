@@ -187,8 +187,8 @@ genGradleProjects {
     addCompileDep "junit:junit:4.12"
 }
 
+
 import groovy.json.JsonSlurper
-import org.gradle.api.tasks.compile.JavaCompile;
 
 String getServerClasspath(File file) {
     def node = new JsonSlurper().parse(file);
