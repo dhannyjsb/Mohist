@@ -9,7 +9,15 @@
      public static boolean allowPlayerLogins = false;
  
      public DedicatedServer(File anvilFileIn, DataFixer dataFixerIn, YggdrasilAuthenticationService authServiceIn, MinecraftSessionService sessionServiceIn, GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)
-@@ -497,8 +497,8 @@
+@@ -271,6 +271,7 @@
+                 long i1 = System.nanoTime() - j;
+                 String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
+                 LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
++                LOGGER.info("Starting Minecraft server on {}:{}", this.getServerHostname().isEmpty() ? "*" : this.getServerHostname(), Integer.valueOf(this.getServerPort()));
+                 this.currentTime = getCurrentTimeMillis();
+ 
+                 if (this.settings.hasProperty("announce-player-achievements"))
+@@ -497,8 +498,8 @@
  
      public void setGuiEnabled()
      {
