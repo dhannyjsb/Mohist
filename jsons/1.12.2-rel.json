@@ -199,6 +199,12 @@
       "serverreq":true
     },
     {
+      "name": "co.aikar:fastutil-lite:1.0",
+      "url" : "https://papermc.io/repo/repository/maven-public/",
+      "clientreq":true,
+      "serverreq":true
+    },
+    {
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "url" : "http://files.minecraftforge.net/maven/",
       "clientreq":true,

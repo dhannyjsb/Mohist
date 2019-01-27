@@ -134,6 +134,11 @@
       "url" : "http://repo.maven.apache.org/maven2"
     },
     {
+      "name": "co.aikar:fastutil-lite:1.0",
+      "children" : ["sources"],
+      "url" : "https://papermc.io/repo/repository/maven-public/"
+    },
+    {
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "children" : ["sources"],
       "url" : "http://repo.maven.apache.org/maven2"

@@ -67,7 +67,6 @@ configurations{
 
 dependencies {
     libraries 'org.avaje:ebean:2.8.1'
-    libraries 'co.aikar:fastutil-lite:1.0'
 }
 
 jar{
