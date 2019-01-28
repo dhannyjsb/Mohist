@@ -44,6 +44,9 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Represents the Bukkit core, for version and Server singleton handling
  */
@@ -589,7 +592,7 @@ public final class Bukkit {
      * Dispatches a command on this server, and executes it if found.
      *
      * @param sender the apparent sender of the command
-     * @param commandLine the command + arguments. Example: <code>test abc
+     * @param commandLine the command arguments. Example: <code>test abc
      *     123</code>
      * @return returns false if no target is found
      * @throws CommandException thrown when the executor for the given command
@@ -1202,6 +1205,47 @@ public final class Bukkit {
       */
     public static CommandMap getCommandMap() {
         return server.getCommandMap();
+    }
+    
+    /**
+     * Checks if player names should be suggested when a command returns {@code null} as
+     * their tab completion result.
+     *
+     * @return true if player names should be suggested
+     */
+           public static boolean suggestPlayerNamesWhenNullTabCompletions() {
+           return server.suggestPlayerNamesWhenNullTabCompletions();
+       }
+
+    /**
+         * Creates a PlayerProfile for the specified uuid, with name as null
+         * @param uuid UUID to create profile for
+         * @return A PlayerProfile object
+         */
+    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid) {
+        return server.createProfile(uuid);
+    }
+
+    /**
+     * Creates a PlayerProfile for the specified name, with UUID as null
+     * @param name Name to create profile for
+     * @return A PlayerProfile object
+     */
+    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name) {
+        return server.createProfile(name);
+    }
+
+    /**
+     * Creates a PlayerProfile for the specified name/uuid
+     *
+     * Both UUID and Name can not be null at same time. One must be supplied.
+     *
+     * @param uuid UUID to create profile for
+     * @param name Name to create profile for
+     * @return A PlayerProfile object
+     */
+    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
+        return server.createProfile(uuid, name);
     }
     // Paper end
 }

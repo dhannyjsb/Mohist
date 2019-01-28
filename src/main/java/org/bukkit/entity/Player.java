@@ -30,7 +30,7 @@ import org.bukkit.scoreboard.Scoreboard;
 /**
  * Represents a player, connected or not
  */
-public interface Player extends HumanEntity, Conversable, CommandSender, OfflinePlayer, PluginMessageRecipient {
+public interface Player extends HumanEntity, Conversable, CommandSender, OfflinePlayer, PluginMessageRecipient, com.destroystokyo.paper.network.NetworkClient { // Paper - Extend NetworkClient
 
     /**
      * Gets the "friendly" name to display of this player. This may include
@@ -396,6 +396,24 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void sendMap(MapView map);
 
     // Paper start
+    /**
+     * Sends an Action Bar message to the client.
+     *
+     * Use Section symbols for legacy color codes to send formatting.
+     *
+     * @param message The message to send
+     */
+    public void sendActionBar(String message);
+
+    /**
+     * Sends an Action Bar message to the client.
+     *
+     * Use supplied alternative character to the section symbol to represent legacy color codes.
+     *
+     * @param alternateChar Alternate symbol such as '&'
+     * @param message The message to send
+     */
+    public void sendActionBar(char alternateChar, String message);
     /**
      * Sends the component to the player
      *
@@ -896,7 +914,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param amount Exp amount to give
      */
-    public void giveExp(int amount);
+    public void giveExp(int amount, boolean applyMending);
+
+    public int applyMending(int amount);
 
     /**
      * Gives the player the amount of experience levels specified. Levels can

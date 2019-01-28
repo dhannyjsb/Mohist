@@ -121,4 +121,19 @@ public interface ItemFactory {
      * @return the default color for leather armor
      */
     Color getDefaultLeatherColor();
+
+    // Paper start
+    /**
+     * Minecart updates are converting simple item stacks into more complex NBT oriented Item Stacks.
+     *
+     * Use this method to to ensure any desired data conversions are processed.
+     * The input itemstack will not be the same as the returned itemstack.
+     *
+     * @param item The item to process conversions on
+     * @return A potentially Data Converted ItemStack
+     */
+    ItemStack ensureServerConversions(ItemStack item);
+
+    String getI18NDisplayName(ItemStack item);
+    // Paper end
 }

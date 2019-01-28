@@ -1,7 +1,10 @@
 package org.bukkit.inventory.meta;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+
+import javax.annotation.Nullable;
 
 /**
  * Represents a skull ({@link Material#SKULL_ITEM}) that can have an owner.
@@ -36,6 +39,10 @@ public interface SkullMeta extends ItemMeta {
      */
     @Deprecated
     boolean setOwner(String owner);
+
+    void setPlayerProfile(@Nullable PlayerProfile profile);
+
+    @Nullable PlayerProfile getPlayerProfile();
 
     /**
      * Gets the owner of the skull.

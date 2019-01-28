@@ -35,6 +35,7 @@ final class PluginClassLoader extends URLClassLoader {
     final JavaPlugin plugin;
     private JavaPlugin pluginInit;
     private IllegalStateException pluginState;
+    private java.util.logging.Logger logger; // Paper - add field
 
     // Spigot Start
     static
@@ -71,6 +72,8 @@ final class PluginClassLoader extends URLClassLoader {
         this.jar = new JarFile(file);
         this.manifest = jar.getManifest();
         this.url = file.toURI().toURL();
+
+        this.logger = com.destroystokyo.paper.utils.PaperPluginLogger.getLogger(description); // Paper - Register logger early
 
         try {
             Class<?> jarClass;
@@ -186,6 +189,7 @@ final class PluginClassLoader extends URLClassLoader {
         pluginState = new IllegalStateException("Initial initialization");
         this.pluginInit = javaPlugin;
 
+        javaPlugin.logger = this.logger; // Paper - set logger
         javaPlugin.init(loader, loader.server, description, dataFolder, file, this);
     }
 }
