@@ -401,6 +401,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param component the components to send
      */
+    @Override
     public default void sendMessage(net.md_5.bungee.api.chat.BaseComponent component) {
         spigot().sendMessage(component);
     }
@@ -410,6 +411,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param components the components to send
      */
+    @Override
     public default void sendMessage(net.md_5.bungee.api.chat.BaseComponent... components) {
         spigot().sendMessage(components);
     }
@@ -1205,7 +1207,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException Thrown if the URL is null.
      * @throws IllegalArgumentException Thrown if the URL is too long. The
      *     length restriction is an implementation specific arbitrary value.
+     *     @deprecated use {@link #setResourcePack(String, String)}
      */
+    @Deprecated // Paper
     public void setResourcePack(String url);
 
     /**
@@ -1711,5 +1715,56 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param viewDistance the player's view distance
      */
     public void setViewDistance(int viewDistance);
+    // Paper end
+    
+       // Paper start
+        /**
+         * Request that the player's client download and switch resource packs.
+         * <p>
+         * The player's client will download the new resource pack asynchronously
+         * in the background, and will automatically switch to it once the
+         * download is complete. If the client has downloaded and cached the same
+         * resource pack in the past, it will perform a quick timestamp check
+         * over the network to determine if the resource pack has changed and
+         * needs to be downloaded again. When this request is sent for the very
+         * first time from a given server, the client will first display a
+         * confirmation GUI to the player before proceeding with the download.
+         * <p>
+         * Notes:
+         * <ul>
+         * <li>Players can disable server resources on their client, in which
+         *     case this method will have no affect on them.
+         * <li>There is no concept of resetting resource packs back to default
+         *     within Minecraft, so players will have to relog to do so.
+         * </ul>
+         *
+         * @param url The URL from which the client will download the resource
+         *     pack. The string must contain only US-ASCII characters and should
+         *     be encoded as per RFC 1738.
+         * @param hash A 40 character hexadecimal and lowercase SHA-1 digest of
+         *     the resource pack file.
+         * @throws IllegalArgumentException Thrown if the URL is null.
+         * @throws IllegalArgumentException Thrown if the URL is too long. The
+         *     length restriction is an implementation specific arbitrary value.
+         */
+        void setResourcePack(String url, String hash);
+
+    /**
+     * @return the most recent resource pack status received from the player,
+     *         or null if no status has ever been received from this player.
+     */
+    org.bukkit.event.player.PlayerResourcePackStatusEvent.Status getResourcePackStatus();
+
+    /**
+     * @return the most recent resource pack hash received from the player,
+     *         or null if no hash has ever been received from this player.
+     */
+    String getResourcePackHash();
+
+    /**
+     * @return true if the last resource pack status received from this player
+     *         was {@link org.bukkit.event.player.PlayerResourcePackStatusEvent.Status#SUCCESSFULLY_LOADED}
+     */
+    boolean hasResourcePack();
     // Paper end
 }
