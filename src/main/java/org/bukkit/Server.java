@@ -17,10 +17,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -229,6 +226,26 @@ public interface Server extends PluginMessageRecipient {
      */
     public int broadcastMessage(String message);
 
+    // Paper start
+    /**
+      * Sends the component to all online players.
+      *
+      * @param component the component to send
+      */
+    public default void broadcast(net.md_5.bungee.api.chat.BaseComponent component) {
+        spigot().broadcast(component);
+    }
+
+    /**
+     * Sends an array of components as a single message to all online players.
+     *
+     * @param components the components to send
+     */
+    public default void broadcast(net.md_5.bungee.api.chat.BaseComponent... components) {
+        spigot().broadcast(components);
+    }
+    // Paper end
+    
     /**
      * Gets the name of the update folder. The update folder is used to safely
      * update plugins at the right moment on a plugin load.
@@ -470,7 +487,7 @@ public interface Server extends PluginMessageRecipient {
      * Dispatches a command on this server, and executes it if found.
      *
      * @param sender the apparent sender of the command
-     * @param commandLine the command + arguments. Example: <code>test abc
+     * @param commandLine the command arguments. Example: <code>test abc
      *     123</code>
      * @return returns false if no target is found
      * @throws CommandException thrown when the executor for the given command
@@ -928,6 +945,22 @@ public interface Server extends PluginMessageRecipient {
      */
     Entity getEntity(UUID uuid);
 
+    // Paper start
+    /**
+      * Gets the current server TPS
+      *
+      * @return current server TPS (1m, 5m, 15m in Paper-Server)
+      */
+    public double[] getTPS();
+
+    /**
+     * Gets the active {@link CommandMap}
+     *
+     * @return the active command map
+     */
+    CommandMap getCommandMap();
+    // Paper end
+    
     /**
      * Get the advancement specified by this key.
      *
@@ -950,4 +983,36 @@ public interface Server extends PluginMessageRecipient {
      */
     @Deprecated
     UnsafeValues getUnsafe();
+
+    // Spigot start
+    public class Spigot
+    {
+        /**
+         * Sends the component to the player
+         *
+         * @param component the components to send
+         */
+        public void broadcast(net.md_5.bungee.api.chat.BaseComponent component) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        /**
+         * Sends an array of components as a single message to the player
+         *
+         * @param components the components to send
+         */
+        public void broadcast(net.md_5.bungee.api.chat.BaseComponent... components) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        /**
+         * Restart the server. If the server administrator has not configured restarting, the server will stop.
+         */
+        public void restart() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+
+    Spigot spigot();
+    // Spigot end
 }

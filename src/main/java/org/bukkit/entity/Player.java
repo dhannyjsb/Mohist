@@ -2,6 +2,7 @@ package org.bukkit.entity;
 
 import java.net.InetSocketAddress;
 
+import com.destroystokyo.paper.Title;
 import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -394,13 +395,150 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      */
     public void sendMap(MapView map);
 
+    // Paper start
     /**
-     * Forces an update of the player's entire inventory.
+     * Sends the component to the player
      *
-     * @deprecated This method should not be relied upon as it is a temporary
-     *     work-around for a larger, more complicated issue.
+     * @param component the components to send
+     */
+    public default void sendMessage(net.md_5.bungee.api.chat.BaseComponent component) {
+        spigot().sendMessage(component);
+    }
+
+    /**
+     * Sends an array of components as a single message to the player
+     *
+     * @param components the components to send
+     */
+    public default void sendMessage(net.md_5.bungee.api.chat.BaseComponent... components) {
+        spigot().sendMessage(components);
+    }
+
+    /**
+     * Sends an array of components as a single message to the specified screen position of this player
+     *
+     * @param position the screen position
+     * @param components the components to send
+     */
+    public default void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent... components) {
+        spigot().sendMessage(position, components);
+    }
+
+    /**
+         * Set the text displayed in the player list header and footer for this player
+         *
+         * @param header content for the top of the player list
+         * @param footer content for the bottom of the player list
+         */
+    public void setPlayerListHeaderFooter(net.md_5.bungee.api.chat.BaseComponent[] header, net.md_5.bungee.api.chat.BaseComponent[] footer);
+
+    /**
+     * Set the text displayed in the player list header and footer for this player
+     *
+     * @param header content for the top of the player list
+     * @param footer content for the bottom of the player list
+     */
+    public void setPlayerListHeaderFooter(net.md_5.bungee.api.chat.BaseComponent header, net.md_5.bungee.api.chat.BaseComponent footer);
+
+    /**
+     * Update the times for titles displayed to the player
+     *
+     * @param fadeInTicks  ticks to fade-in
+     * @param stayTicks    ticks to stay visible
+     * @param fadeOutTicks ticks to fade-out
+     * @deprecated Use {@link #updateTitle(Title)}
      */
     @Deprecated
+    public void setTitleTimes(int fadeInTicks, int stayTicks, int fadeOutTicks);
+
+    /**
+     * Update the subtitle of titles displayed to the player
+     *
+     * @deprecated Use {@link #updateTitle(Title)}
+     */
+    @Deprecated
+    public void setSubtitle(net.md_5.bungee.api.chat.BaseComponent[] subtitle);
+
+    /**
+     * Update the subtitle of titles displayed to the player
+     *
+     * @deprecated Use {@link #updateTitle(Title)}
+     */
+    @Deprecated
+    public void setSubtitle(net.md_5.bungee.api.chat.BaseComponent subtitle);
+
+    /**
+     * Show the given title to the player, along with the last subtitle set, using the last set times
+     *
+     * @deprecated Use {@link #sendTitle(Title)} or {@link #updateTitle(Title)}
+     */
+    @Deprecated
+    public void showTitle(net.md_5.bungee.api.chat.BaseComponent[] title);
+
+    /**
+     * Show the given title to the player, along with the last subtitle set, using the last set times
+     *
+     * @deprecated Use {@link #sendTitle(Title)} or {@link #updateTitle(Title)}
+     */
+    @Deprecated
+    public void showTitle(net.md_5.bungee.api.chat.BaseComponent title);
+
+    /**
+     * Show the given title and subtitle to the player using the given times
+     *
+     * @param title        big text
+     * @param subtitle     little text under it
+     * @param fadeInTicks  ticks to fade-in
+     * @param stayTicks    ticks to stay visible
+     * @param fadeOutTicks ticks to fade-out
+     * @deprecated Use {@link #sendTitle(Title)} or {@link #updateTitle(Title)}
+     */
+    @Deprecated
+    public void showTitle(net.md_5.bungee.api.chat.BaseComponent[] title, net.md_5.bungee.api.chat.BaseComponent[] subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks);
+
+    /**
+     * Show the given title and subtitle to the player using the given times
+     *
+     * @param title        big text
+     * @param subtitle     little text under it
+     * @param fadeInTicks  ticks to fade-in
+     * @param stayTicks    ticks to stay visible
+     * @param fadeOutTicks ticks to fade-out
+     * @deprecated Use {@link #sendTitle(Title)} or {@link #updateTitle(Title)}
+     */
+    @Deprecated
+    public void showTitle(net.md_5.bungee.api.chat.BaseComponent title, net.md_5.bungee.api.chat.BaseComponent subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks);
+
+    /**
+     * Show the title to the player, overriding any previously displayed title.
+     *
+     * <p>This method overrides any previous title, use {@link #updateTitle(Title)} to change the existing one.</p>
+     *
+     * @param title the title to send
+     * @throws NullPointerException if the title is null
+     */
+    void sendTitle(Title title);
+
+    /**
+     * Show the title to the player, overriding any previously displayed title.
+     *
+     * <p>This method doesn't override previous titles, but changes their values.</p>
+     *
+     * @param title the title to send
+     * @throws NullPointerException if title is null
+     */
+    void updateTitle(Title title);
+
+    /**
+     * Hide any title that is currently visible to the player
+     */
+    public void hideTitle();
+    // Paper end
+    
+    /**
+     * Forces an update of the player's entire inventory.
+     */
+    //@Deprecated // Spigot - undeprecate
     public void updateInventory();
 
     /**
@@ -1439,4 +1577,139 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @return the player's locale
      */
     public String getLocale();
+
+    // Spigot start
+    public class Spigot extends Entity.Spigot
+    {
+        /**
+         *  Gets the connection address of this player, regardless of whether it
+         *  has been spoofed or not.
+         * @return the player's connection address
+         */
+        public InetSocketAddress getRawAddress()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        @Deprecated
+        public void playEffect(Location location, Effect effect, int id, int data, float offsetX, float offsetY, float offsetZ, float speed, int particleCount, int radius)
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        /**
+          * Gets whether the player collides with entities
+          *
+          * @return the player's collision toggle state
+          * @deprecated see {@link LivingEntity#isCollidable()}
+          */
+        @Deprecated
+        public boolean getCollidesWithEntities()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        /**
+         * Sets whether the player collides with entities
+         *
+         * @param collides whether the player should collide with entities or
+         * not.
+         * @deprecated {@link LivingEntity#setCollidable(boolean)}
+         */
+        @Deprecated
+        public void setCollidesWithEntities(boolean collides)
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+        
+        /**
+         * Respawns the player if dead.
+         */
+        public void respawn()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        /**
+         * Gets player locale language.
+         *
+         * @return the player's client language settings
+         * @deprecated Use {@link Player#getLocale()}
+         */
+        @Deprecated
+        public String getLocale()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        /**
+         * Gets all players hidden with {@link #hidePlayer(org.bukkit.entity.Player)}.
+         *
+         * @return a Set with all hidden players
+         */
+        public java.util.Set<Player> getHiddenPlayers()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        @Override
+        public void sendMessage(net.md_5.bungee.api.chat.BaseComponent component) {
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
+
+         @Override
+        public void sendMessage(net.md_5.bungee.api.chat.BaseComponent... components) {
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
+
+         /**
+         * Sends the component to the specified screen position of this player
+         *
+         * @param position the screen position
+         * @param component the components to send
+         */
+         public void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent component) {
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
+
+         /**
+         * Sends an array of components as a single message to the specified screen position of this player
+         *
+         * @param position the screen position
+         * @param components the components to send
+         */
+         public void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent... components) {
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
+    }
+
+    @Override
+    Spigot spigot();
+    // Spigot end
+    
+    // Paper start
+    /**
+     * Get whether the player can affect mob spawning
+     * @return if the player can affect mob spawning
+     */
+    public boolean getAffectsSpawning();
+
+    /**
+     * Set whether the player can affect mob spawning
+     * @param affects Whether the player can affect mob spawning
+     */
+    public void setAffectsSpawning(boolean affects);
+
+    /**
+     * Gets the view distance for this player
+     * @return the player's view distance
+     */
+    public int getViewDistance();
+
+    /**
+     * Sets the view distance for this player
+     * @param viewDistance the player's view distance
+     */
+    public void setViewDistance(int viewDistance);
+    // Paper end
 }

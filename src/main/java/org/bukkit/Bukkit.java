@@ -17,10 +17,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -281,6 +278,26 @@ public final class Bukkit {
         return server.broadcastMessage(message);
     }
 
+    // Paper start
+    /**
+     * Sends the component to all online players.
+     *
+     * @param component the component to send
+     */
+    public static void broadcast(net.md_5.bungee.api.chat.BaseComponent component) {
+        server.broadcast(component);
+    }
+
+    /**
+     *  Sends an array of components as a single message to all online players.
+     *
+     * @param components the components to send
+     */
+    public static void broadcast(net.md_5.bungee.api.chat.BaseComponent... components) {
+        server.broadcast(components);
+    }
+    // Paper end
+    
     /**
      * Gets the name of the update folder. The update folder is used to safely
      * update plugins at the right moment on a plugin load.
@@ -1134,6 +1151,16 @@ public final class Bukkit {
         return server.getEntity(uuid);
     }
 
+    // Paper start
+    /**
+      * Gets the current server TPS
+      * @return current server TPS (1m, 5m, 15m in Paper-Server)
+      */
+    public static double[] getTPS() {
+        return server.getTPS();
+    }
+// Paper end
+    
     /**
      * Get the advancement specified by this key.
      *
@@ -1162,4 +1189,19 @@ public final class Bukkit {
     public static UnsafeValues getUnsafe() {
         return server.getUnsafe();
     }
+
+    public static Server.Spigot spigot()
+    {
+        return server.spigot();
+    }
+    // Paper start
+    /**
+      * Gets the active {@link CommandMap}
+      *
+      * @return the active command map
+      */
+    public static CommandMap getCommandMap() {
+        return server.getCommandMap();
+    }
+    // Paper end
 }
