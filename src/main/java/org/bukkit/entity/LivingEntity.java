@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -378,5 +379,17 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param arrows Number of arrows to stick in this entity
      */
     void setArrowsStuck(int arrows);
+
+    int getShieldBlockingDelay();
+
+    void setShieldBlockingDelay(int delay);
+
+    ItemStack getActiveItem();
+
+    int getItemUseRemainingTime();
+
+    int getHandRaisedTime();
+
+    boolean isHandRaised();
     // Paper end
 }

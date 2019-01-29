@@ -23,6 +23,9 @@ public interface Chunk {
      */
     int getZ();
 
+    default long getChunkKey() {
+        return (long) getX() & 0xffffffffL | ((long) getZ() & 0xffffffffL) << 32;
+    }
     /**
      * Gets the world containing this chunk
      *

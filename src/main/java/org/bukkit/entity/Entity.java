@@ -1,10 +1,6 @@
 package org.bukkit.entity;
 
-import org.bukkit.Location;
-import org.bukkit.EntityEffect;
-import org.bukkit.Nameable;
-import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.util.Vector;
@@ -513,5 +509,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @return True if entity spawned from a mob spawner
      */
     boolean fromMobSpawner();
+
+    Chunk getChunk();
     // Paper end
 }

@@ -2,11 +2,9 @@ package org.bukkit;
 
 import java.io.File;
 import org.bukkit.generator.ChunkGenerator;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
+import java.util.*;
+import java.util.function.Predicate;
 
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -25,6 +23,238 @@ import org.bukkit.util.Vector;
 public interface World extends PluginMessageRecipient, Metadatable {
 
     // Paper start
+    /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param radius Radius
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+     public default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double radius) {
+         return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, radius, radius, radius);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xzRadius X/Z Radius
+     * @param yRadius Y Radius
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+     public default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double xzRadius, double yRadius) {
+         return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, xzRadius, yRadius, xzRadius);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z radius
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+     public default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double xRadius, double yRadius, double zRadius) {
+         return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, xRadius, yRadius, zRadius);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param radius X Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of living entities near location. This will always be a non-null collection
+     */
+     public default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double radius, Predicate<LivingEntity> predicate) {
+         return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, radius, radius, radius, predicate);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xzRadius X/Z Radius
+     * @param yRadius Y Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of living entities near location. This will always be a non-null collection
+     */
+     public default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double xzRadius, double yRadius, Predicate<LivingEntity> predicate) {
+         return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, xzRadius, yRadius, xzRadius, predicate);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of living entities near location. This will always be a non-null collection.
+     */
+     public default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double xRadius, double yRadius, double zRadius, Predicate<LivingEntity> predicate) {
+         return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, xRadius, yRadius, zRadius, predicate);
+     }
+
+    public Entity getEntity(UUID uuid);
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param radius X/Y/Z Radius
+     * @return the collection of living entities near location. This will always be a non-null collection.
+     */
+     public default Collection<Player> getNearbyPlayers(Location loc, double radius) {
+         return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, radius, radius, radius);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xzRadius X/Z Radius
+     * @param yRadius Y Radius
+     * @return the collection of living entities near location. This will always be a non-null collection.
+     */
+     public default Collection<Player> getNearbyPlayers(Location loc, double xzRadius, double yRadius) {
+         return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, xzRadius, yRadius, xzRadius);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z Radius
+     * @return the collection of players near location. This will always be a non-null collection.
+     */
+     public default Collection<Player> getNearbyPlayers(Location loc, double xRadius, double yRadius, double zRadius) {
+         return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, xRadius, yRadius, zRadius);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param radius X/Y/Z Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of players near location. This will always be a non-null collection.
+     */
+     public default Collection<Player> getNearbyPlayers(Location loc, double radius, Predicate<Player> predicate) {
+         return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, radius, radius, radius, predicate);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xzRadius X/Z Radius
+     * @param yRadius Y Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of players near location. This will always be a non-null collection.
+     */
+     public default Collection<Player> getNearbyPlayers(Location loc, double xzRadius, double yRadius, Predicate<Player> predicate) {
+         return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, xzRadius, yRadius, xzRadius, predicate);
+     }
+
+     /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of players near location. This will always be a non-null collection.
+     */
+     public default Collection<Player> getNearbyPlayers(Location loc, double xRadius, double yRadius, double zRadius, Predicate<Player> predicate) {
+         return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, xRadius, yRadius, zRadius, predicate);
+     }
+
+     /**
+     * Gets all nearby entities of the specified type, within the specified radius (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param radius X/Y/Z radius to search within
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+     public default <T extends Entity> Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double radius) {
+         return getNearbyEntitiesByType(clazz, loc, radius, radius, radius, null);
+     }
+
+     /**
+     * Gets all nearby entities of the specified type, within the specified radius, with x and x radius matching (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param xzRadius X/Z radius to search within
+     * @param yRadius Y radius to search within
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+     public default <T extends Entity> Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double xzRadius, double yRadius) {
+         return getNearbyEntitiesByType(clazz, loc, xzRadius, yRadius, xzRadius, null);
+     }
+
+     /**
+     * Gets all nearby entities of the specified type, within the specified radius (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z Radius
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+     public default <T extends Entity> Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double xRadius, double yRadius, double zRadius) {
+         return getNearbyEntitiesByType(clazz, loc, xRadius, yRadius, zRadius, null);
+     }
+
+     /**
+     * Gets all nearby entities of the specified type, within the specified radius (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param radius X/Y/Z radius to search within
+     * @param predicate a predicate used to filter results
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+     public default <T extends Entity> Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double radius, Predicate<T> predicate) {
+         return getNearbyEntitiesByType(clazz, loc, radius, radius, radius, predicate);
+     }
+
+     /**
+     * Gets all nearby entities of the specified type, within the specified radius, with x and x radius matching (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param xzRadius X/Z radius to search within
+     * @param yRadius Y radius to search within
+     * @param predicate a predicate used to filter results
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+     public default <T extends Entity> Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double xzRadius, double yRadius, Predicate<T> predicate) {
+         return getNearbyEntitiesByType(clazz, loc, xzRadius, yRadius, xzRadius, predicate);
+     }
+
+      /**
+      * Gets all nearby entities of the specified type, within the specified radius (bounding box)
+      * @param clazz Type to filter by
+      * @param loc Center location
+      * @param xRadius X Radius
+      * @param yRadius Y Radius
+      * @param zRadius Z Radius
+      * @param predicate a predicate used to filter results
+      * @param <T> the entity type
+      * @return the collection of entities near location. This will always be a non-null collection.
+      */
+     public default <T extends Entity> Collection<T> getNearbyEntitiesByType(Class<? extends Entity> clazz, Location loc, double xRadius, double yRadius, double zRadius, Predicate<T> predicate) {
+         if (clazz == null) {
+                 clazz = Entity.class;
+             }
+         List<T> nearby = new ArrayList<>();
+         for (Entity bukkitEntity : getNearbyEntities(loc, xRadius, yRadius, zRadius)) {
+                 //noinspection unchecked
+                         if (clazz.isAssignableFrom(bukkitEntity.getClass()) && (predicate == null || predicate.test((T) bukkitEntity))) {
+                         //noinspection unchecked
+                                 nearby.add((T) bukkitEntity);
+                     }
+             }
+         return nearby;
+     }
+    // Paper end
     /**
     * @return The amount of Entities in this world
     */
@@ -163,6 +393,29 @@ public interface World extends PluginMessageRecipient, Metadatable {
      */
     public Chunk getChunkAt(Block block);
 
+    public default boolean isChunkGenerated(long chunkKey) {
+        return isChunkGenerated((int) chunkKey, (int) (chunkKey >> 32));
+    }
+
+    public boolean isChunkGenerated(int x, int z);
+
+    public default Block getBlockAtKey(long key) {
+        int x = (int) ((key << 37) >> 37);
+        int y = (int) (key >>> 54);
+        int z = (int) ((key << 10) >> 37);
+        return getBlockAt(x, y, z);
+    }
+
+    public default Location getLocationAtKey(long key) {
+        int x = (int) ((key << 37) >> 37);
+        int y = (int) (key >>> 54);
+        int z = (int) ((key << 10) >> 37);
+        return new Location(this, x, y, z);
+    }
+    
+    public default Chunk getChunkAt(long chunkKey) {
+        return getChunkAt((int) chunkKey, (int) (chunkKey >> 32));
+    }
     /**
      * Checks if the specified {@link Chunk} is loaded
      *
@@ -682,6 +935,102 @@ public interface World extends PluginMessageRecipient, Metadatable {
      */
     public boolean createExplosion(Location loc, float power, boolean setFire);
 
+    // Paper start
+    /**
+   * Creates explosion at given location with given power and optionally
+   * setting blocks on fire, with the specified entity as the source.
+   *
+   * @param source The source entity of the explosion
+   * @param loc Location to blow up
+   * @param power The power of explosion, where 4F is TNT
+   * @param setFire Whether or not to set blocks on fire
+   * @param breakBlocks Whether or not to have blocks be destroyed
+   * @return false if explosion was canceled, otherwise true
+   */
+    public boolean createExplosion(Entity source, Location loc, float power, boolean setFire, boolean breakBlocks);
+
+    /**
+   * Creates explosion at given location with given power and optionally
+   * setting blocks on fire, with the specified entity as the source.
+   *
+   * Will destroy other blocks
+   *
+   * @param source The source entity of the explosion
+   * @param loc Location to blow up
+   * @param power The power of explosion, where 4F is TNT
+   * @param setFire Whether or not to set blocks on fire
+   * @return false if explosion was canceled, otherwise true
+   */
+    public default boolean createExplosion(Entity source, Location loc, float power, boolean setFire) {
+        return createExplosion(source, loc, power, setFire, true);
+    }
+    /**
+   * Creates explosion at given location with given power, with the specified entity as the source.
+   * Will set blocks on fire and destroy blocks.
+   *
+   * @param source The source entity of the explosion
+   * @param loc Location to blow up
+   * @param power The power of explosion, where 4F is TNT
+   * @return false if explosion was canceled, otherwise true
+   */
+    public default boolean createExplosion(Entity source, Location loc, float power) {
+        return createExplosion(source, loc, power, true, true);
+    }
+    /**
+   * Creates explosion at given entities location with given power and optionally
+   * setting blocks on fire, with the specified entity as the source.
+   *
+   * @param source The source entity of the explosion
+   * @param power The power of explosion, where 4F is TNT
+   * @param setFire Whether or not to set blocks on fire
+   * @param breakBlocks Whether or not to have blocks be destroyed
+   * @return false if explosion was canceled, otherwise true
+   */
+    public default boolean createExplosion(Entity source, float power, boolean setFire, boolean breakBlocks) {
+        return createExplosion(source, source.getLocation(), power, setFire, breakBlocks);
+    }
+    /**
+   * Creates explosion at given entities location with given power and optionally
+   * setting blocks on fire, with the specified entity as the source.
+   *
+   * Will destroy blocks.
+   *
+   * @param source The source entity of the explosion
+   * @param power The power of explosion, where 4F is TNT
+   * @param setFire Whether or not to set blocks on fire
+   * @return false if explosion was canceled, otherwise true
+   */
+    public default boolean createExplosion(Entity source, float power, boolean setFire) {
+        return createExplosion(source, source.getLocation(), power, setFire, true);
+    }
+
+    /**
+   * Creates explosion at given entities location with given power and optionally
+   * setting blocks on fire, with the specified entity as the source.
+   *
+   * @param source The source entity of the explosion
+   * @param power The power of explosion, where 4F is TNT
+   * @return false if explosion was canceled, otherwise true
+   */
+    public default boolean createExplosion(Entity source, float power) {
+        return createExplosion(source, source.getLocation(), power, true, true);
+    }
+
+    /**
+   * Creates explosion at given location with given power and optionally
+   * setting blocks on fire or breaking blocks.
+   *
+   * @param loc Location to blow up
+   * @param power The power of explosion, where 4F is TNT
+   * @param setFire Whether or not to set blocks on fire
+   * @param breakBlocks Whether or not to have blocks be destroyed
+   * @return false if explosion was canceled, otherwise true
+   */
+    public default boolean createExplosion(Location loc, float power, boolean setFire, boolean breakBlocks) {
+        return createExplosion(loc.getX(), loc.getY(), loc.getZ(), power, setFire, breakBlocks);
+    }
+    // Paper end
+    
     /**
      * Gets the {@link Environment} type of this world
      *
@@ -1495,8 +1844,56 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
-
+    public default <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data) { spawnParticle(particle, null, null, x, y, z, count, offsetX, offsetY, offsetZ, extra, data, true); }// Paper start - Expand Particle API
+    /**
+    * Spawns the particle (the number of times specified by count)
+    * at the target location. The position of each particle will be
+    * randomized positively and negatively by the offset parameters
+    * on each axis.
+    *
+    * @param particle the particle to spawn
+    * @param receivers List of players to receive the particles, or null for all in world
+    * @param source Source of the particles to be used in visibility checks, or null if no player source
+    * @param x the position on the x axis to spawn at
+    * @param y the position on the y axis to spawn at
+    * @param z the position on the z axis to spawn at
+    * @param count the number of particles
+    * @param offsetX the maximum random offset on the X axis
+    * @param offsetY the maximum random offset on the Y axis
+    * @param offsetZ the maximum random offset on the Z axis
+    * @param extra the extra data for this particle, depends on the
+    *              particle used (normally speed)
+    * @param data the data to use for the particle or null,
+    *             the type of this depends on {@link Particle#getDataType()}
+    * @param <T> Type
+    */
+    public default <T> void spawnParticle(Particle particle, List<Player> receivers, Player source, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data) { spawnParticle(particle, receivers, source, x, y, z, count, offsetX, offsetY, offsetZ, extra, data, true); }
+    /**
+    * Spawns the particle (the number of times specified by count)
+    * at the target location. The position of each particle will be
+    * randomized positively and negatively by the offset parameters
+    * on each axis.
+    *
+    * @param particle the particle to spawn
+    * @param receivers List of players to receive the particles, or null for all in world
+    * @param source Source of the particles to be used in visibility checks, or null if no player source
+    * @param x the position on the x axis to spawn at
+    * @param y the position on the y axis to spawn at
+    * @param z the position on the z axis to spawn at
+    * @param count the number of particles
+    * @param offsetX the maximum random offset on the X axis
+    * @param offsetY the maximum random offset on the Y axis
+    * @param offsetZ the maximum random offset on the Z axis
+    * @param extra the extra data for this particle, depends on the
+    *              particle used (normally speed)
+    * @param data the data to use for the particle or null,
+    *             the type of this depends on {@link Particle#getDataType()}
+    * @param <T> Type
+    * @param force allows the particle to be seen further away from the player
+    *              and shows to players using any vanilla client particle settings
+    */
+    public <T> void spawnParticle(Particle particle, List<Player> receivers, Player source, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data, boolean force);
+    // Paper end
     // Spigot start
     public class Spigot
     {

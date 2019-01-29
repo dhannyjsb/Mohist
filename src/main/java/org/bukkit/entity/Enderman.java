@@ -7,6 +7,7 @@ import org.bukkit.material.MaterialData;
  */
 public interface Enderman extends Monster {
 
+    public boolean teleportRandomly();
     /**
      * Get the id and data of the block that the Enderman is carrying.
      *

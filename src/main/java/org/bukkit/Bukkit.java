@@ -433,6 +433,10 @@ public final class Bukkit {
         return server.getPlayer(id);
     }
 
+    @Nullable
+    public static UUID getPlayerUniqueId(String playerName) {
+        return server.getPlayerUniqueId(playerName);
+    }
     /**
      * Gets the plugin manager for interfacing with plugins.
      *

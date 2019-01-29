@@ -363,6 +363,9 @@ public interface Server extends PluginMessageRecipient {
      */
     public Player getPlayer(UUID id);
 
+    @Nullable
+    public UUID getPlayerUniqueId(String playerName);
+
     /**
      * Gets the plugin manager for interfacing with plugins.
      *

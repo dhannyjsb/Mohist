@@ -71,4 +71,15 @@ public enum Particle {
     public Class<?> getDataType() {
         return dataType;
     }
+
+    // Paper start - Particle API expansion
+    /**
+     * Creates a {@link com.destroystokyo.paper.ParticleBuilder}
+     *
+     * @return a {@link com.destroystokyo.paper.ParticleBuilder} for the particle
+     */
+    public com.destroystokyo.paper.ParticleBuilder builder() {
+        return new com.destroystokyo.paper.ParticleBuilder(this);
+    }
+    // Paper end
 }
