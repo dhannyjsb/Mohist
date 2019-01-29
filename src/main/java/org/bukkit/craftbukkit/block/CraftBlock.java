@@ -25,7 +25,11 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.*;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
@@ -33,6 +37,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockVector;
+
+import javax.annotation.Resource;
 
 public class CraftBlock implements Block {
     private final CraftChunk chunk;
@@ -112,7 +118,7 @@ public class CraftBlock implements Block {
         net.minecraft.world.World world = chunk.getHandle().getWorld();
         BlockPos position = new BlockPos(x, y, z);
         IBlockState blockData = world.getBlockState(position);
-        world.setBlockState(position, blockData.getBlock().getStateFromMeta(data), flag);
+        world.setBlockState(position, blockData.getBlock().getDefaultState(), flag);
     }
 
     private IBlockState getData0() {
@@ -157,7 +163,7 @@ public class CraftBlock implements Block {
             IBlockState old = chunk.getHandle().getBlockState(position);
             boolean success = chunk.getHandle().getWorld().setBlockState(position, blockData, 18); // NOTIFY | NO_OBSERVER
             if (success) {
-                chunk.getHandle().getWorld().notify(
+                chunk.getHandle().getWorld().notifyBlockUpdate(
                         position,
                         old,
                         blockData,
@@ -412,11 +418,11 @@ public class CraftBlock implements Block {
     }
 
     public boolean isBlockFacePowered(BlockFace face) {
-        return chunk.getHandle().getWorld().isBlockPowered(new BlockPos(x, y, z), blockFaceToNotch(face));
+        return chunk.getHandle().getWorld().isSidePowered(new BlockPos(x, y, z), blockFaceToNotch(face));
     }
 
     public boolean isBlockFaceIndirectlyPowered(BlockFace face) {
-        int power = chunk.getHandle().getWorld().getStrongPower(new BlockPos(x, y, z), blockFaceToNotch(face));
+        int power = chunk.getHandle().getWorld().getRedstonePower(new BlockPos(x, y, z), blockFaceToNotch(face));
 
         Block relative = getRelative(face);
         if (relative.getType() == Material.REDSTONE_WIRE) {
@@ -434,7 +440,7 @@ public class CraftBlock implements Block {
         if ((face == BlockFace.UP || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y + 1, z), EnumFacing.UP)) power = wire.getMaxCurrentStrength(world, new BlockPos(x, y + 1, z), power);
         if ((face == BlockFace.EAST || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x + 1, y, z), EnumFacing.EAST)) power = wire.getMaxCurrentStrength(world, new BlockPos(x + 1, y, z), power);
         if ((face == BlockFace.WEST || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x - 1, y, z), EnumFacing.WEST)) power = wire.getMaxCurrentStrength(world, new BlockPos(x - 1, y, z), power);
-        if ((face == BlockFace.NORTH || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y, z - 1),EnumFacing.NORTH)) power = wire.getMaxCurrentStrength(world, new BlockPos(x, y, z - 1), power);
+        if ((face == BlockFace.NORTH || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y, z - 1), EnumFacing.NORTH)) power = wire.getMaxCurrentStrength(world, new BlockPos(x, y, z - 1), power);
         if ((face == BlockFace.SOUTH || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y, z + 1), EnumFacing.SOUTH)) power = wire.getMaxCurrentStrength(world, new BlockPos(x, y, z - 1), power);
         return power > 0 ? power : (face == BlockFace.SELF ? isBlockIndirectlyPowered() : isBlockFaceIndirectlyPowered(face)) ? 15 : 0;
     }
@@ -452,7 +458,7 @@ public class CraftBlock implements Block {
     }
 
     public PistonMoveReaction getPistonMoveReaction() {
-        return PistonMoveReaction.getById(getNMSBlock().getMobilityFlag(getNMSBlock().getStateFromMeta(getData())).ordinal());
+        return PistonMoveReaction.getById(getNMSBlock().getMobilityFlag(getNMSBlock().getDefaultState()).ordinal());
     }
 
     private boolean itemCausesDrops(ItemStack item) {
@@ -468,7 +474,7 @@ public class CraftBlock implements Block {
         boolean result = false;
 
         if (block != null && block != Blocks.AIR) {
-            block.dropBlockAsItemWithChance(chunk.getHandle().getWorld(), new BlockPos(x, y, z), block.getStateFromMeta(data), 1.0F, 0);
+            block.dropBlockAsItemWithChance(chunk.getHandle().getWorld(), new BlockPos(x, y, z), block.getDefaultState(), 1.0F, 0);
             result = true;
         }
 
@@ -517,7 +523,7 @@ public class CraftBlock implements Block {
                             drops.add(new ItemStack(Material.INK_SACK, 1, (short) 3));
                         }
                     } else {
-                        drops.add(new ItemStack(org.bukkit.craftbukkit.util.CraftMagicNumbers.getMaterial(item), 1, (short) block.damageDropped(data)));
+                        drops.add(new ItemStack(CraftMagicNumbers.getMaterial(item), 1, (short) block.damageDropped(data)));
                     }
                 }
             }

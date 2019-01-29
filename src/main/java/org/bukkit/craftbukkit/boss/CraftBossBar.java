@@ -2,14 +2,13 @@ package org.bukkit.craftbukkit.boss;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketUpdateBossInfo;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.Overlay;
 import org.bukkit.boss.BossBar;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
@@ -122,12 +121,12 @@ public class CraftBossBar implements BossBar {
     @Override
     public void setProgress(double progress) {
     	Preconditions.checkArgument(progress >= 0.0 && progress <= 1.0, "Progress must be between 0.0 and 1.0 (%s)", progress);
-        handle.setProgress((float) progress);
+        handle.setPercent((float) progress);
     }
 
     @Override
     public double getProgress() {
-        return handle.getProgress();
+        return handle.getPercent();
     }
 
     @Override
@@ -143,7 +142,7 @@ public class CraftBossBar implements BossBar {
     @Override
     public List<Player> getPlayers() {
         ImmutableList.Builder<Player> players = ImmutableList.builder();
-        for (EntityPlayer p : handle.getPlayers()) {
+        for (EntityPlayerMP p : handle.getPlayers()) {
             players.add(p.getBukkitEntity());
         }
         return players.build();

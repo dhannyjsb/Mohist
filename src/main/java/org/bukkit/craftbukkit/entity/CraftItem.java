@@ -1,8 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.server.Entity;
-import net.minecraft.server.EntityItem;
-
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -22,11 +21,11 @@ public class CraftItem extends CraftEntity implements Item {
     }
 
     public ItemStack getItemStack() {
-        return CraftItemStack.asCraftMirror(item.getItemStack());
+        return CraftItemStack.asCraftMirror(item.getItem());
     }
 
     public void setItemStack(ItemStack stack) {
-        item.setItemStack(CraftItemStack.asNMSCopy(stack));
+        item.setItem(CraftItemStack.asNMSCopy(stack));
     }
 
     public int getPickupDelay() {

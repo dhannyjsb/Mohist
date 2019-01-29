@@ -4,29 +4,17 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.minecraft.server.AdvancementDataWorld;
-
-import net.minecraft.server.Block;
-import net.minecraft.server.Blocks;
-import net.minecraft.server.ChatDeserializer;
-import net.minecraft.server.Item;
-import net.minecraft.server.MinecraftKey;
+import net.minecraft.advancements.AdvancementManager;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.MojangsonParseException;
-import net.minecraft.server.MojangsonParser;
-import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.StatisticList;
-
+import net.minecraft.stats.StatList;
+import net.minecraft.util.JsonUtils;
+import net.minecraft.util.ResourceLocation;
 import org.bukkit.Achievement;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -38,6 +26,16 @@ import org.bukkit.craftbukkit.CraftStatistic;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @SuppressWarnings("deprecation")
 public final class CraftMagicNumbers implements UnsafeValues {
@@ -58,34 +56,34 @@ public final class CraftMagicNumbers implements UnsafeValues {
     @Deprecated
     // A bad method for bad magic.
     public static int getId(Block block) {
-        return Block.getId(block);
+        return Block.getIdFromBlock(block);
     }
 
     public static Material getMaterial(Block block) {
-        return Material.getMaterial(Block.getId(block));
+        return Material.getMaterial(Block.getIdFromBlock(block));
     }
 
     public static Item getItem(Material material) {
         // TODO: Don't use ID
-        Item item = Item.getById(material.getId());
+        Item item = Item.getItemById(material.getId());
         return item;
     }
 
     @Deprecated
     // A bad method for bad magic.
     public static Item getItem(int id) {
-        return Item.getById(id);
+        return Item.getItemById(id);
     }
 
     @Deprecated
     // A bad method for bad magic.
     public static int getId(Item item) {
-        return Item.getId(item);
+        return Item.getIdFromItem(item);
     }
 
     public static Material getMaterial(Item item) {
         // TODO: Don't use ID
-        Material material = Material.getMaterial(Item.getId(item));
+        Material material = Material.getMaterial(Item.getIdFromItem(item));
 
         if (material == null) {
             return Material.AIR;
@@ -99,7 +97,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
             return null;
         }
         // TODO: Don't use ID
-        Block block = Block.getById(material.getId());
+        Block block = Block.getBlockById(material.getId());
 
         if (block == null) {
             return Blocks.AIR;
@@ -110,13 +108,13 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     @Override
     public Material getMaterialFromInternalName(String name) {
-        return getMaterial((Item) Item.REGISTRY.get(new MinecraftKey(name)));
+        return getMaterial((Item) Item.REGISTRY.getObject(new ResourceLocation(name)));
     }
 
     @Override
     public List<String> tabCompleteInternalMaterialName(String token, List<String> completions) {
         ArrayList<String> results = Lists.newArrayList();
-        for (MinecraftKey key : (Set<MinecraftKey>)Item.REGISTRY.keySet()) {
+        for (ResourceLocation key : Item.REGISTRY.getKeys()) {
             results.add(key.toString());
         }
         return StringUtil.copyPartialMatches(token, results, completions);
@@ -124,11 +122,11 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     @Override
     public ItemStack modifyItemStack(ItemStack stack, String arguments) {
-        net.minecraft.server.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
+        net.minecraft.item.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 
         try {
-            nmsStack.setTag((NBTTagCompound) MojangsonParser.parse(arguments));
-        } catch (MojangsonParseException ex) {
+            nmsStack.setTagCompound((NBTTagCompound) JsonToNBT.getTagFromJson(arguments));
+        } catch (NBTException ex) {
             Logger.getLogger(CraftMagicNumbers.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -150,9 +148,9 @@ public final class CraftMagicNumbers implements UnsafeValues {
     @Override
     public List<String> tabCompleteInternalStatisticOrAchievementName(String token, List<String> completions) {
         List<String> matches = new ArrayList<String>();
-        Iterator iterator = StatisticList.stats.iterator();
+        Iterator iterator = StatList.ALL_STATS.iterator();
         while (iterator.hasNext()) {
-            String statistic = ((net.minecraft.server.Statistic) iterator.next()).name;
+            String statistic = ((net.minecraft.stats.StatBase) iterator.next()).statId;
             if (statistic.startsWith(token)) {
                 matches.add(statistic);
             }
@@ -166,13 +164,13 @@ public final class CraftMagicNumbers implements UnsafeValues {
             throw new IllegalArgumentException("Advancement " + key + " already exists.");
         }
 
-        net.minecraft.server.Advancement.SerializedAdvancement nms = (net.minecraft.server.Advancement.SerializedAdvancement) ChatDeserializer.a(AdvancementDataWorld.DESERIALIZER, advancement, net.minecraft.server.Advancement.SerializedAdvancement.class);
+        net.minecraft.advancements.Advancement.Builder nms = JsonUtils.gsonDeserialize(AdvancementManager.GSON, advancement, net.minecraft.advancements.Advancement.Builder.class);
         if (nms != null) {
-            AdvancementDataWorld.REGISTRY.a(Maps.newHashMap(Collections.singletonMap(CraftNamespacedKey.toMinecraft(key), nms)));
+            AdvancementManager.ADVANCEMENT_LIST.loadAdvancements(Maps.newHashMap(Collections.singletonMap(CraftNamespacedKey.toMinecraft(key), nms)));
             Advancement bukkit = Bukkit.getAdvancement(key);
 
             if (bukkit != null) {
-                File file = new File(MinecraftServer.getServer().getAdvancementData().folder, key.getNamespace() + File.separator + key.getKey() + ".json");
+                File file = new File(MinecraftServer.getServerCB().getAdvancementManager().advancementsDir, key.getNamespace() + File.separator + key.getKey() + ".json");
                 file.getParentFile().mkdirs();
 
                 try {
@@ -181,7 +179,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
                     Bukkit.getLogger().log(Level.SEVERE, "Error saving advancement " + key, ex);
                 }
 
-                MinecraftServer.getServer().getPlayerList().reload();
+                MinecraftServer.getServerCB().getPlayerList().reloadResources();
 
                 return bukkit;
             }
@@ -192,7 +190,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     @Override
     public boolean removeAdvancement(NamespacedKey key) {
-        File file = new File(MinecraftServer.getServer().getAdvancementData().folder, key.getNamespace() + File.separator + key.getKey() + ".json");
+        File file = new File(MinecraftServer.getServerInst().getAdvancementManager().advancementsDir, key.getNamespace() + File.separator + key.getKey() + ".json");
         return file.delete();
     }
 
@@ -200,7 +198,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
      * This helper class represents the different NBT Tags.
      * <p>
      * These should match NBTBase#getTypeId
-     */
+     *
     public static class NBT {
 
         public static final int TAG_END = 0;

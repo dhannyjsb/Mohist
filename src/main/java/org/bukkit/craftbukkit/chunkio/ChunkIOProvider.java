@@ -17,7 +17,7 @@ class ChunkIOProvider implements AsynchronousExecutor.CallBackProvider<QueuedChu
     public Chunk callStage1(QueuedChunk queuedChunk) throws RuntimeException {
         try {
             AnvilChunkLoader loader = queuedChunk.loader;
-            Object[] data = loader.loadChunk(queuedChunk.world, queuedChunk.x, queuedChunk.z);
+            Object[] data = loader.loadChunk__Async(queuedChunk.world, queuedChunk.x, queuedChunk.z);
             
             if (data != null) {
                 queuedChunk.compound = (NBTTagCompound) data[1];
@@ -38,13 +38,15 @@ class ChunkIOProvider implements AsynchronousExecutor.CallBackProvider<QueuedChu
             return;
         }
 
-        queuedChunk.loader.loadEntities(chunk, queuedChunk.compound.getCompoundTag("Level"), queuedChunk.world);
-        chunk.setLastSavedTime(queuedChunk.provider.world.getTotalWorldTime());
+        queuedChunk.loader.loadEntities(queuedChunk.world, queuedChunk.compound.getCompoundTag("Level"), chunk);
+        chunk.setLastSaveTime(queuedChunk.provider.world.getTotalWorldTime());
         queuedChunk.provider.id2ChunkMap.put(ChunkPos.asLong(queuedChunk.x, queuedChunk.z), chunk);
         chunk.onLoad();
 
         if (queuedChunk.provider.chunkGenerator != null) {
+            queuedChunk.provider.world.timings.syncChunkLoadStructuresTimer.startTiming(); // Spigot
             queuedChunk.provider.chunkGenerator.recreateStructures(chunk, queuedChunk.x, queuedChunk.z);
+            queuedChunk.provider.world.timings.syncChunkLoadStructuresTimer.stopTiming(); // Spigot
         }
 
         chunk.populateCB(queuedChunk.provider, queuedChunk.provider.chunkGenerator, false);

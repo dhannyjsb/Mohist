@@ -2,11 +2,11 @@ package org.bukkit.craftbukkit.inventory;
 
 import java.util.Map;
 
-import net.minecraft.server.CraftingManager;
-import net.minecraft.server.NonNullList;
-import net.minecraft.server.RecipeItemStack;
-import net.minecraft.server.ShapedRecipes;
-
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -46,15 +46,16 @@ public class CraftShapedRecipe extends ShapedRecipe implements CraftRecipe {
         String[] shape = this.getShape();
         Map<Character, ItemStack> ingred = this.getIngredientMap();
         int width = shape[0].length();
-        NonNullList<RecipeItemStack> data = NonNullList.a(shape.length * width, RecipeItemStack.a);
+        NonNullList<Ingredient> data = NonNullList.withSize(shape.length * width, Ingredient.EMPTY);
 
         for (int i = 0; i < shape.length; i++) {
             String row = shape[i];
             for (int j = 0; j < row.length(); j++) {
-                data.set(i * width + j, RecipeItemStack.a(new net.minecraft.server.ItemStack[]{CraftItemStack.asNMSCopy(ingred.get(row.charAt(j)))}));
+                data.set(i * width + j, Ingredient.fromStacks(new net.minecraft.item.ItemStack[]{CraftItemStack.asNMSCopy(ingred.get(row.charAt(j)))}));
             }
         }
-
-        CraftingManager.a(CraftNamespacedKey.toMinecraft(this.getKey()), new ShapedRecipes("", width, shape.length, data, CraftItemStack.asNMSCopy(this.getResult())));
+        // TODO: Check if it's correct way to register recipes
+        ForgeRegistries.RECIPES.register(new ShapedRecipes("", width, shape.length, data, CraftItemStack.asNMSCopy(this.getResult())));
+        // CraftingManager.register(CraftNamespacedKey.toMinecraft(this.getKey()), new ShapedRecipes("", width, shape.length, data, CraftItemStack.asNMSCopy(this.getResult())));
     }
 }

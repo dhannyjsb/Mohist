@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.server.EntitySnowman;
+import net.minecraft.entity.monster.EntitySnowman;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Snowman;
@@ -12,12 +12,12 @@ public class CraftSnowman extends CraftGolem implements Snowman {
 
     @Override
     public boolean isDerp() {
-        return !getHandle().hasPumpkin();
+        return !getHandle().isPumpkinEquipped();
     }
 
     @Override
     public void setDerp(boolean derpMode) {
-        getHandle().setHasPumpkin(!derpMode);
+        getHandle().setPumpkinEquipped(!derpMode);
     }
 
     @Override

@@ -1,24 +1,23 @@
 package org.bukkit.craftbukkit.potion;
 
-import net.minecraft.server.MobEffectList;
-
+import net.minecraft.potion.Potion;
 import org.bukkit.Color;
 import org.bukkit.potion.PotionEffectType;
 
 public class CraftPotionEffectType extends PotionEffectType {
-    private final MobEffectList handle;
+    private final Potion handle;
 
-    public CraftPotionEffectType(MobEffectList handle) {
-        super(MobEffectList.getId(handle));
+    public CraftPotionEffectType(Potion handle) {
+        super(Potion.getIdFromPotion(handle));
         this.handle = handle;
     }
 
     @Override
     public double getDurationModifier() {
-        return handle.durationModifier;
+        return handle.effectiveness;
     }
 
-    public MobEffectList getHandle() {
+    public Potion getHandle() {
         return handle;
     }
 
@@ -91,6 +90,6 @@ public class CraftPotionEffectType extends PotionEffectType {
 
     @Override
     public Color getColor() {
-        return Color.fromRGB(handle.getColor());
+        return Color.fromRGB(handle.getLiquidColor());
     }
 }

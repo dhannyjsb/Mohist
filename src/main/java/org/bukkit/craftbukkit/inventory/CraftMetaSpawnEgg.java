@@ -3,11 +3,12 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap.Builder;
 import java.util.Map;
-import net.minecraft.server.DataConverterTypes;
-import net.minecraft.server.MinecraftKey;
+
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.NBTBase;
-import net.minecraft.server.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.datafix.FixTypes;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.entity.EntityType;
@@ -38,10 +39,10 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
         super(tag);
 
         if (tag.hasKey(ENTITY_TAG.NBT)) {
-            entityTag = tag.getCompound(ENTITY_TAG.NBT);
+            entityTag = tag.getCompoundTag(ENTITY_TAG.NBT);
 
             if (entityTag.hasKey(ENTITY_ID.NBT)) {
-                this.spawnedType = EntityType.fromName(new MinecraftKey(entityTag.getString(ENTITY_ID.NBT)).getKey());
+                this.spawnedType = EntityType.fromName(new ResourceLocation(entityTag.getString(ENTITY_ID.NBT)).getResourcePath());
             }
         }
     }
@@ -58,11 +59,11 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
         super.deserializeInternal(tag);
 
         if (tag.hasKey(ENTITY_TAG.NBT)) {
-            entityTag = tag.getCompound(ENTITY_TAG.NBT);
-            MinecraftServer.getServer().dataConverterManager.a(DataConverterTypes.ENTITY, entityTag); // PAIL: convert
+            entityTag = tag.getCompoundTag(ENTITY_TAG.NBT);
+            MinecraftServer.getServerCB().getDataFixer().process(FixTypes.ENTITY, entityTag); // PAIL: convert TODO: identify DataConverterTypes after implementation
 
             if (entityTag.hasKey(ENTITY_ID.NBT)) {
-                this.spawnedType = EntityType.fromName(new MinecraftKey(entityTag.getString(ENTITY_ID.NBT)).getKey());
+                this.spawnedType = EntityType.fromName(new ResourceLocation(entityTag.getString(ENTITY_ID.NBT)).getResourcePath());
             }
         }
     }
@@ -83,11 +84,11 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
         }
 
         if (hasSpawnedType()) {
-            entityTag.setString(ENTITY_ID.NBT, new MinecraftKey(spawnedType.getName()).toString());
+            entityTag.setString(ENTITY_ID.NBT, new ResourceLocation(spawnedType.getName()).toString());
         }
 
         if (entityTag != null) {
-            tag.set(ENTITY_TAG.NBT, entityTag);
+            tag.setTag(ENTITY_TAG.NBT, entityTag);
         }
     }
 
@@ -177,7 +178,7 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
 
         clone.spawnedType = spawnedType;
         if (entityTag != null) {
-            clone.entityTag = entityTag.g();
+            clone.entityTag = entityTag.copy();
         }
 
         return clone;

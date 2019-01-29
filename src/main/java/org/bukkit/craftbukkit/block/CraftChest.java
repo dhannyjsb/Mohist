@@ -69,7 +69,7 @@ public class CraftChest extends CraftLootable<TileEntityChest> implements Chest 
             inventory = new CraftInventoryDoubleChest(left, inventory);
         }
         if (world.getBlockTypeIdAt(x, y, z + 1) == id) {
-            CraftInventory right = new CraftInventory((TileEntityChest) world.getHandle().getTileEntity(new BlockPosition(x, y, z + 1)));
+            CraftInventory right = new CraftInventory((TileEntityChest) world.getHandle().getTileEntity(new BlockPos(x, y, z + 1)));
             inventory = new CraftInventoryDoubleChest(inventory, right);
         }
         return inventory;

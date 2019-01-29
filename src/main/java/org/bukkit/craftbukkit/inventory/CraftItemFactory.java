@@ -2,7 +2,7 @@ package org.bukkit.craftbukkit.inventory;
 
 import java.util.Collection;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -33,6 +33,8 @@ public final class CraftItemFactory implements ItemFactory {
             .add("generic.luck")
             .add("horse.jumpStrength")
             .add("zombie.spawnReinforcements")
+            .add("generic.reachDistance")
+            .add("forge.swimSpeed")
             .build();
     }
 

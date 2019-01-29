@@ -83,7 +83,7 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
 
     @Override
     public void setMirror(Mirror mirror) {
-        getSnapshot().mirror = Mirror.valueOf(mirror.name()); // PAIL: rename mirror
+        getSnapshot().mirror = net.minecraft.util.Mirror.valueOf(mirror.name()); // PAIL: rename mirror
     }
 
     @Override

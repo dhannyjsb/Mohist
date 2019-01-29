@@ -2,8 +2,7 @@ package org.bukkit.craftbukkit.entity;
 
 import java.util.Set;
 
-import net.minecraft.server.EntityMinecartCommandBlock;
-
+import net.minecraft.entity.item.EntityMinecartCommandBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.craftbukkit.CraftServer;
@@ -29,23 +28,18 @@ public class CraftMinecartCommand extends CraftMinecart implements CommandMineca
 
     @Override
     public String getCommand() {
-        return getHandle().getCommandBlock().getCommand();
+        return getHandle().getCommandBlockLogic().getCommand();
     }
 
     @Override
     public void setCommand(String command) {
-        getHandle().getCommandBlock().setCommand(command != null ? command : "");
-        getHandle().getDataWatcher().set(EntityMinecartCommandBlock.COMMAND, getHandle().getCommandBlock().getCommand());
+        getHandle().getCommandBlockLogic().setCommand(command != null ? command : "");
+        getHandle().getDataManager().set(EntityMinecartCommandBlock.COMMAND, getHandle().getCommandBlockLogic().getCommand());
     }
 
     @Override
     public void setName(String name) {
-        getHandle().getCommandBlock().setName(name != null ? name : "@");
-    }
-
-    @Override
-    public String toString() {
-        return "CraftMinecartCommand";
+        getHandle().getCommandBlockLogic().setName(name != null ? name : "@");
     }
 
     @Override
@@ -63,7 +57,7 @@ public class CraftMinecartCommand extends CraftMinecart implements CommandMineca
 
     @Override
     public String getName() {
-        return getHandle().getCommandBlock().getName();
+        return getHandle().getCommandBlockLogic().getName();
     }
 
     @Override

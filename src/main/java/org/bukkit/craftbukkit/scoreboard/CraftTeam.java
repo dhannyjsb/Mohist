@@ -2,8 +2,9 @@ package org.bukkit.craftbukkit.scoreboard;
 
 import java.util.Set;
 
-import net.minecraft.server.ScoreboardTeamBase.EnumNameTagVisibility;
-import org.apache.commons.lang.Validate;
+import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.scoreboard.Team.EnumVisible;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scoreboard.NameTagVisibility;
@@ -11,15 +12,13 @@ import org.bukkit.scoreboard.Team;
 
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.server.ScoreboardTeam;
-import net.minecraft.server.ScoreboardTeamBase;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
 final class CraftTeam extends CraftScoreboardComponent implements Team {
-    private final ScoreboardTeam team;
+    private final ScorePlayerTeam team;
 
-    CraftTeam(CraftScoreboard scoreboard, ScoreboardTeam team) {
+    CraftTeam(CraftScoreboard scoreboard, ScorePlayerTeam team) {
         super(scoreboard);
         this.team = team;
     }
@@ -85,13 +84,13 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
         CraftScoreboard scoreboard = checkState();
 
         team.setColor(CraftChatMessage.getColor(color));
-        scoreboard.board.handleTeamChanged(team); // SPIGOT-3684 - backing team fires this for prefix/suffix but not colour
+        scoreboard.board.broadcastTeamInfoUpdate(team); // SPIGOT-3684 - backing team fires this for prefix/suffix but not colour
     }
 
     public boolean allowFriendlyFire() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
-        return team.allowFriendlyFire();
+        return team.getAllowFriendlyFire();
     }
 
     public void setAllowFriendlyFire(boolean enabled) throws IllegalStateException {
@@ -103,13 +102,13 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
     public boolean canSeeFriendlyInvisibles() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
-        return team.canSeeFriendlyInvisibles();
+        return team.getSeeFriendlyInvisiblesEnabled();
     }
 
     public void setCanSeeFriendlyInvisibles(boolean enabled) throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
-        team.setCanSeeFriendlyInvisibles(enabled);
+        team.setSeeFriendlyInvisiblesEnabled(enabled);
     }
 
     public NameTagVisibility getNameTagVisibility() throws IllegalArgumentException {
@@ -128,7 +127,7 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
         CraftScoreboard scoreboard = checkState();
 
         ImmutableSet.Builder<OfflinePlayer> players = ImmutableSet.builder();
-        for (String playerName : team.getPlayerNameSet()) {
+        for (String playerName : team.getMembershipCollection()) {
             players.add(Bukkit.getOfflinePlayer(playerName));
         }
         return players.build();
@@ -139,7 +138,7 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
         CraftScoreboard scoreboard = checkState();
 
         ImmutableSet.Builder<String> entries = ImmutableSet.builder();
-        for (String playerName: team.getPlayerNameSet()){
+        for (String playerName: team.getMembershipCollection()){
             entries.add(playerName);
         }
         return entries.build();
@@ -148,7 +147,7 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
     public int getSize() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
-        return team.getPlayerNameSet().size();
+        return team.getMembershipCollection().size();
     }
 
     public void addPlayer(OfflinePlayer player) throws IllegalStateException, IllegalArgumentException {
@@ -172,7 +171,7 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
         Validate.notNull(entry, "Entry cannot be null");
         CraftScoreboard scoreboard = checkState();
 
-        if (!team.getPlayerNameSet().contains(entry)) {
+        if (!team.getMembershipCollection().contains(entry)) {
             return false;
         }
 
@@ -190,7 +189,7 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
 
         CraftScoreboard scoreboard = checkState();
 
-        return team.getPlayerNameSet().contains(entry);
+        return team.getMembershipCollection().contains(entry);
     }
 
     @Override
@@ -222,35 +221,35 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
 
         switch (option) {
             case NAME_TAG_VISIBILITY:
-                team.setNameTagVisibility(EnumNameTagVisibility.values()[status.ordinal()]);
+                team.setNameTagVisibility(EnumVisible.values()[status.ordinal()]);
                 break;
             case DEATH_MESSAGE_VISIBILITY:
-                team.setDeathMessageVisibility(EnumNameTagVisibility.values()[status.ordinal()]);
+                team.setDeathMessageVisibility(EnumVisible.values()[status.ordinal()]);
                 break;
             case COLLISION_RULE:
-                team.setCollisionRule(ScoreboardTeamBase.EnumTeamPush.values()[status.ordinal()]);
+                team.setCollisionRule(net.minecraft.scoreboard.Team.CollisionRule.values()[status.ordinal()]);
                 break;
             default:
                 throw new IllegalArgumentException("Unrecognised option " + option);
         }
     }
 
-    public static EnumNameTagVisibility bukkitToNotch(NameTagVisibility visibility) {
+    public static EnumVisible bukkitToNotch(NameTagVisibility visibility) {
         switch (visibility) {
             case ALWAYS:
-                return EnumNameTagVisibility.ALWAYS;
+                return EnumVisible.ALWAYS;
             case NEVER:
-                return EnumNameTagVisibility.NEVER;
+                return EnumVisible.NEVER;
             case HIDE_FOR_OTHER_TEAMS:
-                return EnumNameTagVisibility.HIDE_FOR_OTHER_TEAMS;
+                return EnumVisible.HIDE_FOR_OTHER_TEAMS;
             case HIDE_FOR_OWN_TEAM:
-                return EnumNameTagVisibility.HIDE_FOR_OWN_TEAM;
+                return EnumVisible.HIDE_FOR_OWN_TEAM;
             default:
                 throw new IllegalArgumentException("Unknown visibility level " + visibility);
         }
     }
 
-    public static NameTagVisibility notchToBukkit(EnumNameTagVisibility visibility) {
+    public static NameTagVisibility notchToBukkit(EnumVisible visibility) {
         switch (visibility) {
             case ALWAYS:
                 return NameTagVisibility.ALWAYS;

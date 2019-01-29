@@ -1,12 +1,11 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.server.BlockPosition;
-import net.minecraft.server.EntityItemFrame;
-import net.minecraft.server.EnumDirection;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.WorldServer;
-
-import org.apache.commons.lang.Validate;
+import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
+import org.apache.commons.lang3.Validate;
 
 import org.bukkit.Rotation;
 import org.bukkit.block.BlockFace;
@@ -35,24 +34,24 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
         EntityItemFrame old = this.getHandle();
 
         WorldServer world = ((CraftWorld) getWorld()).getHandle();
-        BlockPosition position = old.getBlockPosition();
-        EnumDirection direction = old.getDirection();
-        ItemStack item = old.getItem() != null ? old.getItem().cloneItemStack() : null;
+        BlockPos position = old.getPosition();
+        EnumFacing direction = old.getHorizontalFacing();
+        ItemStack item = old.getDisplayedItem() != null ? old.getDisplayedItem().copy() : null;
 
-        old.die();
+        old.setDead();
 
         EntityItemFrame frame = new EntityItemFrame(world,position,direction);
-        frame.setItem(item);
-        world.addEntity(frame);
+        frame.setDisplayedItem(item);
+        world.spawnEntity(frame);
         this.entity = frame;
     }
 
     public void setItem(org.bukkit.inventory.ItemStack item) {
-        getHandle().setItem(CraftItemStack.asNMSCopy(item));
+        getHandle().setDisplayedItem(CraftItemStack.asNMSCopy(item));
     }
 
     public org.bukkit.inventory.ItemStack getItem() {
-        return CraftItemStack.asBukkitCopy(getHandle().getItem());
+        return CraftItemStack.asBukkitCopy(getHandle().getDisplayedItem());
     }
 
     public Rotation getRotation() {
@@ -85,7 +84,7 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
 
     public void setRotation(Rotation rotation) {
         Validate.notNull(rotation, "Rotation cannot be null");
-        getHandle().setRotation(toInteger(rotation));
+        getHandle().setItemRotation(toInteger(rotation));
     }
 
     static int toInteger(Rotation rotation) {

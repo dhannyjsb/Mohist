@@ -31,11 +31,11 @@ public class CraftBanner extends CraftBlockEntityState<TileEntityBanner> impleme
     public void load(TileEntityBanner banner) {
         super.load(banner);
 
-        base = DyeColor.getByDyeData((byte) banner.baseColor.getInvColorIndex());
+        base = DyeColor.getByDyeData((byte) banner.baseColor.getDyeDamage());
         patterns = new ArrayList<Pattern>();
 
         if (banner.patterns != null) {
-            for (int i = 0; i < banner.patterns.size(); i++) {
+            for (int i = 0; i < banner.patterns.tagCount(); i++) {
                 NBTTagCompound p = (NBTTagCompound) banner.patterns.get(i);
                 patterns.add(new Pattern(DyeColor.getByDyeData((byte) p.getInteger("Color")), PatternType.getByIdentifier(p.getString("Pattern"))));
             }

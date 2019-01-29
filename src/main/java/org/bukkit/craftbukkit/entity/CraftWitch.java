@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.server.EntityWitch;
+import net.minecraft.entity.monster.EntityWitch;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Witch;
 import org.bukkit.entity.EntityType;

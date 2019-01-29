@@ -160,11 +160,11 @@ public class CraftBlockState implements BlockState {
         }
 
         BlockPos pos = new BlockPos(x, y, z);
-        IBlockState newBlock = CraftMagicNumbers.getBlock(getType()).getStateFromMeta(getRawData());
+        IBlockState newBlock = CraftMagicNumbers.getBlock(getType()).getDefaultState();
         block.setTypeIdAndData(getTypeId(), getRawData(), applyPhysics);
         world.getHandle().notifyBlockUpdate(
                 pos,
-                CraftMagicNumbers.getBlock(block).getStateFromMeta(block.getData()),
+                CraftMagicNumbers.getBlock(block).getDefaultState(),
                 newBlock,
                 3
         );

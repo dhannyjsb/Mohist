@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit.command;
 
-import net.minecraft.command.ICommandListener;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import org.bukkit.block.Block;
@@ -13,7 +12,7 @@ import org.bukkit.craftbukkit.util.CraftChatMessage;
 public class CraftBlockCommandSender extends ServerCommandSender implements BlockCommandSender {
     private final ICommandSender block;
 
-    public CraftBlockCommandSender(ICommandListener commandBlockListenerAbstract) {
+    public CraftBlockCommandSender(ICommandSender commandBlockListenerAbstract) {
         super();
         this.block = commandBlockListenerAbstract;
     }
@@ -46,7 +45,7 @@ public class CraftBlockCommandSender extends ServerCommandSender implements Bloc
         throw new UnsupportedOperationException("Cannot change operator status of a block");
     }
 
-    public ICommandListener getTileEntity() {
+    public ICommandSender getTileEntity() {
         return block;
     }
 }

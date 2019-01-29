@@ -21,7 +21,7 @@ public class CraftCreatureSpawner extends CraftBlockEntityState<TileEntityMobSpa
 
     @Override
     public EntityType getSpawnedType() {
-        ResourceLocation key = this.getSnapshot().getSpawnerBaseLogicBaseLogic().getEntityId();
+        ResourceLocation key = this.getSnapshot().getSpawnerBaseLogic().getEntityId();
         return (key == null) ? EntityType.PIG : EntityType.fromName(key.getResourcePath());
     }
 
@@ -31,12 +31,12 @@ public class CraftCreatureSpawner extends CraftBlockEntityState<TileEntityMobSpa
             throw new IllegalArgumentException("Can't spawn EntityType " + entityType + " from mobspawners!");
         }
 
-        this.getSnapshot().getSpawnerBaseLogicBaseLogic().setEntityId(new ResourceLocation(entityType.getName()));
+        this.getSnapshot().getSpawnerBaseLogic().setEntityId(new ResourceLocation(entityType.getName()));
     }
 
     @Override
     public String getCreatureTypeName() {
-        return this.getSnapshot().getSpawnerBaseLogicBaseLogic().getEntityId().getResourcePath();
+        return this.getSnapshot().getSpawnerBaseLogic().getEntityId().getResourcePath();
     }
 
     @Override

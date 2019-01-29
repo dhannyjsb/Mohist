@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.server.EntityAnimal;
+import net.minecraft.entity.passive.EntityAnimal;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Animals;
 

@@ -3,18 +3,25 @@ package org.bukkit.craftbukkit.command;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.command.*;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.CommandResultStats;
+import net.minecraft.command.EntitySelector;
+import net.minecraft.command.ICommandListener;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecartCommandBlock;
+import net.minecraft.server.*;
 
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
-import org.apache.commons.lang.Validate;
+import net.minecraftforge.fml.common.LoaderExceptionModCrash;
+import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
@@ -42,14 +49,14 @@ public final class VanillaCommandWrapper extends BukkitCommand {
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (!testPermission(sender)) return true;
 
-        ICommandListener icommandlistener = getListener(sender);
+        ICommandSender icommandlistener = getListener(sender);
         try {
             dispatchVanillaCommand(sender, icommandlistener, args);
         } catch (CommandException commandexception) {
             // Taken from CommandHandler
-            TextComponentTranslation TextComponentTranslation = new TextComponentTranslation(commandexception.getMessage(), commandexception.getErrorObjects());
-            TextComponentTranslation.getStyle().setColor(TextFormatting.RED);
-            icommandlistener.sendMessage(TextComponentTranslation);
+            TextComponentTranslation chatmessage = new TextComponentTranslation(commandexception.getMessage(), commandexception.getErrorObjects());
+            chatmessage.getStyle().setColor(TextFormatting.RED);
+            icommandlistener.sendMessage(chatmessage);
         }
         return true;
     }
@@ -59,19 +66,19 @@ public final class VanillaCommandWrapper extends BukkitCommand {
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(args, "Arguments cannot be null");
         Validate.notNull(alias, "Alias cannot be null");
-        return (List<String>) vanillaCommand.getTabCompletions(MinecraftServer.getServerInst(), getListener(sender), args, (location) == null ? null : new BlockPos(location.getX(), location.getY(), location.getZ()));
+        return (List<String>) vanillaCommand.getTabCompletions(MinecraftServer.getServerCB(), getListener(sender), args, (location) == null ? null : new BlockPos(location.getX(), location.getY(), location.getZ()));
     }
 
     public static CommandSender lastSender = null; // Nasty :(
 
-    public final int dispatchVanillaCommand(CommandSender bSender, ICommandListener icommandlistener, String[] as) throws CommandException {
+    public final int dispatchVanillaCommand(CommandSender bSender, ICommandSender icommandlistener, String[] as) throws CommandException {
         // Copied from net.minecraft.server.CommandHandler
         int i = getPlayerListSize(as);
         int j = 0;
         // Some commands use the worldserver variable but we leave it full of null values,
         // so we must temporarily populate it with the world of the commandsender
-        WorldServer[] prev = MinecraftServer.getServerInst().worldServer;
-        MinecraftServer server = MinecraftServer.getServerInst();
+        WorldServer[] prev = MinecraftServer.getServerCB().worlds;
+        MinecraftServer server = MinecraftServer.getServerCB();
         server.worlds = new WorldServer[server.worldServerList.size()];
         server.worlds[0] = (WorldServer) icommandlistener.getEntityWorld();
         int bpos = 0;
@@ -87,7 +94,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
         try {
             if (vanillaCommand.checkPermission(server, icommandlistener)) {
                 if (i > -1) {
-                    List<Entity> list = ((List<Entity>)EntitySelector.matchEntitiesDefault(icommandlistener, as[i], Entity.class));
+                    List<Entity> list = ((List<Entity>) EntitySelector.matchEntitiesDefault(icommandlistener, as[i], Entity.class));
                     String s2 = as[i];
 
                     icommandlistener.setCommandStat(CommandResultStats.Type.AFFECTED_ENTITIES, list.size());
@@ -103,9 +110,9 @@ public final class VanillaCommandWrapper extends BukkitCommand {
                             vanillaCommand.execute(server, icommandlistener, as);
                             j++;
                         } catch (WrongUsageException exceptionusage) {
-                            TextComponentTranslation TextComponentTranslation = new TextComponentTranslation("commands.generic.usage", new Object[] { new TextComponentTranslation(exceptionusage.getMessage(), exceptionusage.getArgs())});
-                            TextComponentTranslation.getStyle().setColor(TextFormatting.RED);
-                            icommandlistener.sendMessage(TextComponentTranslation);
+                            TextComponentTranslation chatmessage = new TextComponentTranslation("commands.generic.usage", new Object[] { new TextComponentTranslation(exceptionusage.getMessage(), exceptionusage.getErrorObjects())});
+                            chatmessage.getStyle().setColor(TextFormatting.RED);
+                            icommandlistener.sendMessage(chatmessage);
                         } catch (CommandException commandexception) {
                             CommandBase.notifyCommandListener(icommandlistener, vanillaCommand, 0, commandexception.getMessage(), commandexception.getErrorObjects());
                         } finally {
@@ -119,20 +126,20 @@ public final class VanillaCommandWrapper extends BukkitCommand {
                     j++;
                 }
             } else {
-                TextComponentTranslation TextComponentTranslation = new TextComponentTranslation("commands.generic.permission", new Object[0]);
-                TextComponentTranslation.getStyle().setColor(TextFormatting.RED);
-                icommandlistener.sendMessage(TextComponentTranslation);
+                TextComponentTranslation chatmessage = new TextComponentTranslation("commands.generic.permission", new Object[0]);
+                chatmessage.getStyle().setColor(TextFormatting.RED);
+                icommandlistener.sendMessage(chatmessage);
             }
         } catch (WrongUsageException exceptionusage) {
-            TextComponentTranslation TextComponentTranslation1 = new TextComponentTranslation("commands.generic.usage", new Object[] { new TextComponentTranslation(exceptionusage.getMessage(), exceptionusage.getArgs()) });
-            TextComponentTranslation1.getStyle().setColor(TextFormatting.RED);
-            icommandlistener.sendMessage(TextComponentTranslation1);
+            TextComponentTranslation chatmessage1 = new TextComponentTranslation("commands.generic.usage", new Object[] { new TextComponentTranslation(exceptionusage.getMessage(), exceptionusage.getErrorObjects()) });
+            chatmessage1.getStyle().setColor(TextFormatting.RED);
+            icommandlistener.sendMessage(chatmessage1);
         } catch (CommandException commandexception) {
             CommandBase.notifyCommandListener(icommandlistener, vanillaCommand, 0, commandexception.getMessage(), commandexception.getErrorObjects());
         } catch (Throwable throwable) {
-            TextComponentTranslation TextComponentTranslation3 = new TextComponentTranslation("commands.generic.exception", new Object[0]);
-            TextComponentTranslation3.getStyle().setColor(TextFormatting.RED);
-            icommandlistener.sendMessage(TextComponentTranslation3);
+            TextComponentTranslation chatmessage3 = new TextComponentTranslation("commands.generic.exception", new Object[0]);
+            chatmessage3.getStyle().setColor(TextFormatting.RED);
+            icommandlistener.sendMessage(chatmessage3);
             if (icommandlistener.getCommandSenderEntity() instanceof EntityMinecartCommandBlock) {
                 MinecraftServer.LOGGER.log(Level.WARN, String.format("MinecartCommandBlock at (%d,%d,%d) failed to handle command", icommandlistener.getPosition().getX(), icommandlistener.getPosition().getY(), icommandlistener.getPosition().getZ()), throwable);
             } else if(icommandlistener instanceof CommandBlockBaseLogic) {
@@ -143,12 +150,12 @@ public final class VanillaCommandWrapper extends BukkitCommand {
             }
         } finally {
             icommandlistener.setCommandStat(CommandResultStats.Type.SUCCESS_COUNT, j);
-            MinecraftServer.getServerInst().worldServer = prev;
+            MinecraftServer.getServerCB().worlds = prev;
         }
         return j;
     }
 
-    private ICommandListener getListener(CommandSender sender) {
+    private ICommandSender getListener(CommandSender sender) {
         if (sender instanceof Player) {
             return ((CraftPlayer) sender).getHandle();
         }
@@ -156,10 +163,10 @@ public final class VanillaCommandWrapper extends BukkitCommand {
             return ((CraftBlockCommandSender) sender).getTileEntity();
         }
         if (sender instanceof CommandMinecart) {
-            return ((EntityMinecartCommandBlock) ((CraftMinecartCommand) sender).getHandle()).getCommandBlock();
+            return ((EntityMinecartCommandBlock) ((CraftMinecartCommand) sender).getHandle()).getCommandBlockLogic();
         }
         if (sender instanceof RemoteConsoleCommandSender) {
-            return ((DedicatedServer)MinecraftServer.getServer()).remoteControlCommandListener;
+            return ((DedicatedServer)MinecraftServer.getServerCB()).rconConsoleSource;
         }
         if (sender instanceof ConsoleCommandSender) {
             return ((CraftServer) sender.getServer()).getServer();

@@ -1,9 +1,8 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.server.EntityPainting;
-import net.minecraft.server.EntityPainting.EnumArt;
-import net.minecraft.server.WorldServer;
-
+import net.minecraft.entity.item.EntityPainting;
+import net.minecraft.entity.item.EntityPainting.EnumArt;
+import net.minecraft.world.WorldServer;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftArt;
@@ -31,11 +30,11 @@ public class CraftPainting extends CraftHanging implements Painting {
         EntityPainting painting = this.getHandle();
         EnumArt oldArt = painting.art;
         painting.art = CraftArt.BukkitToNotch(art);
-        painting.setDirection(painting.direction);
-        if (!force && !painting.survives()) {
+        painting.updateFacingWithBoundingBox(painting.facingDirection);
+        if (!force && !painting.onValidSurface()) {
             // Revert painting since it doesn't fit
             painting.art = oldArt;
-            painting.setDirection(painting.direction);
+            painting.updateFacingWithBoundingBox(painting.facingDirection);
             return false;
         }
         this.update();
@@ -54,12 +53,12 @@ public class CraftPainting extends CraftHanging implements Painting {
     private void update() {
         WorldServer world = ((CraftWorld) getWorld()).getHandle();
         EntityPainting painting = new EntityPainting(world);
-        painting.blockPosition = getHandle().blockPosition;
+        painting.hangingPosition = getHandle().getHangingPosition();
         painting.art = getHandle().art;
-        painting.setDirection(getHandle().direction);
-        getHandle().die();
+        painting.updateFacingWithBoundingBox(getHandle().facingDirection);
+        getHandle().setDead();
         getHandle().velocityChanged = true; // because this occurs when the painting is broken, so it might be important
-        world.addEntity(painting);
+        world.spawnEntity(painting);
         this.entity = painting;
     }
 
