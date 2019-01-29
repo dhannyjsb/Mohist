@@ -107,7 +107,7 @@ public class EntityDeathEvent extends EntityEvent implements org.bukkit.event.Ca
     public void setReviveHealth(double reviveHealth) throws IllegalArgumentException {
         double maxHealth = ((LivingEntity) entity).getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue();
         if ((maxHealth != 0 && reviveHealth <= 0) || (reviveHealth > maxHealth)) {
-                throw new IllegalArgumentException("Health must be between 0 (exclusive) and " + maxHealth + " (inclusive), but was " reviveHealth);
+                throw new IllegalArgumentException("Health must be between 0 (exclusive) and " + maxHealth + " (inclusive), but was " + reviveHealth);
             }
         this.reviveHealth = reviveHealth;
     }
