@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/pathfinding/Path.java
++++ ../src-work/minecraft/net/minecraft/pathfinding/Path.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.pathfinding;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.util.math.Vec3d;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ public class Path
+ {
+     private final PathPoint[] points;

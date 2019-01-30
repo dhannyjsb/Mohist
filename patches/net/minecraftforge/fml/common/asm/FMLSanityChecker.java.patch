@@ -1,0 +1,121 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/asm/FMLSanityChecker.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/asm/FMLSanityChecker.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,6 +19,18 @@
+ 
+ package net.minecraftforge.fml.common.asm;
+ 
++import cn.pfcraft.server.Mohist;
++import com.google.common.io.ByteStreams;
++import net.minecraft.launchwrapper.LaunchClassLoader;
++import net.minecraftforge.fml.common.CertificateHelper;
++import net.minecraftforge.fml.common.FMLCommonHandler;
++import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
++import net.minecraftforge.fml.common.patcher.ClassPatchManager;
++import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
++import net.minecraftforge.fml.relauncher.IFMLCallHook;
++import net.minecraftforge.fml.relauncher.Side;
++import org.apache.commons.io.IOUtils;
++
+ import java.io.File;
+ import java.io.InputStream;
+ import java.net.URLDecoder;
+@@ -29,20 +41,6 @@
+ import java.util.jar.JarEntry;
+ import java.util.jar.JarFile;
+ 
+-import net.minecraftforge.fml.common.FMLLog;
+-import org.apache.commons.io.IOUtils;
+-
+-import net.minecraft.launchwrapper.LaunchClassLoader;
+-import net.minecraftforge.fml.common.CertificateHelper;
+-import net.minecraftforge.fml.common.FMLCommonHandler;
+-import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+-import net.minecraftforge.fml.common.patcher.ClassPatchManager;
+-import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
+-import net.minecraftforge.fml.relauncher.IFMLCallHook;
+-import net.minecraftforge.fml.relauncher.Side;
+-
+-import com.google.common.io.ByteStreams;
+-
+ public class FMLSanityChecker implements IFMLCallHook
+ {
+     private static final String FMLFINGERPRINT =   "51:0A:FB:4C:AF:A4:A0:F2:F5:CF:C5:0E:B4:CC:3C:30:24:4A:E3:8E".toLowerCase().replace(":", "");
+@@ -70,17 +68,17 @@
+                     String fingerprint = CertificateHelper.getFingerprint(cert);
+                     if (fingerprint.equals(FMLFINGERPRINT))
+                     {
+-                        FMLLog.log.info("Found valid fingerprint for FML. Certificate fingerprint {}", fingerprint);
++                        Mohist.LOGGER.info("Found valid fingerprint for FML. Certificate fingerprint {}", fingerprint);
+                         goodFML = true;
+                     }
+                     else if (fingerprint.equals(FORGEFINGERPRINT))
+                     {
+-                        FMLLog.log.info("Found valid fingerprint for Minecraft Forge. Certificate fingerprint {}", fingerprint);
++                        Mohist.LOGGER.info("Found valid fingerprint for Minecraft Forge. Certificate fingerprint {}", fingerprint);
+                         goodFML = true;
+                     }
+                     else
+                     {
+-                        FMLLog.log.error("Found invalid fingerprint for FML: {}", fingerprint);
++                        Mohist.LOGGER.error("Found invalid fingerprint for FML: {}", fingerprint);
+                     }
+                 }
+             }
+@@ -132,7 +130,7 @@
+                         String fingerprint = CertificateHelper.getFingerprint(cert);
+                         if (fingerprint.equals(MCFINGERPRINT))
+                         {
+-                            FMLLog.log.info("Found valid fingerprint for Minecraft. Certificate fingerprint {}", fingerprint);
++                            Mohist.LOGGER.info("Found valid fingerprint for Minecraft. Certificate fingerprint {}", fingerprint);
+                             goodMC = true;
+                         }
+                     }
+@@ -140,7 +138,7 @@
+             }
+             catch (Throwable e)
+             {
+-                FMLLog.log.error("A critical error occurred trying to read the minecraft jar file", e);
++                Mohist.LOGGER.error("A critical error occurred trying to read the minecraft jar file", e);
+             }
+             finally
+             {
+@@ -153,11 +151,11 @@
+         }
+         if (!goodMC)
+         {
+-            FMLLog.log.error("The minecraft jar {} appears to be corrupt! There has been CRITICAL TAMPERING WITH MINECRAFT, it is highly unlikely minecraft will work! STOP NOW, get a clean copy and try again!", codeSource.getLocation().getFile());
++            Mohist.LOGGER.error("The minecraft jar {} appears to be corrupt! There has been CRITICAL TAMPERING WITH MINECRAFT, it is highly unlikely minecraft will work! STOP NOW, get a clean copy and try again!", codeSource.getLocation().getFile());
+             if (!Boolean.parseBoolean(System.getProperty("fml.ignoreInvalidMinecraftCertificates","false")))
+             {
+-                FMLLog.log.error("For your safety, FML will not launch minecraft. You will need to fetch a clean version of the minecraft jar file");
+-                FMLLog.log.error("Technical information: The class net.minecraft.client.ClientBrandRetriever should have been associated with the minecraft jar file, " +
++                Mohist.LOGGER.error("For your safety, FML will not launch minecraft. You will need to fetch a clean version of the minecraft jar file");
++                Mohist.LOGGER.error("Technical information: The class net.minecraft.client.ClientBrandRetriever should have been associated with the minecraft jar file, " +
+                 		"and should have returned us a valid, intact minecraft jar location. This did not work. Either you have modified the minecraft jar file (if so " +
+                 		"run the forge installer again), or you are using a base editing jar that is changing this class (and likely others too). If you REALLY " +
+                 		"want to run minecraft in this configuration, add the flag -Dfml.ignoreInvalidMinecraftCertificates=true to the 'JVM settings' in your launcher profile.");
+@@ -165,13 +163,13 @@
+             }
+             else
+             {
+-                FMLLog.log.error("FML has been ordered to ignore the invalid or missing minecraft certificate. This is very likely to cause a problem!");
+-                FMLLog.log.error("Technical information: ClientBrandRetriever was at {}, there were {} certificates for it", codeSource.getLocation(), certCount);
++                Mohist.LOGGER.error("FML has been ordered to ignore the invalid or missing minecraft certificate. This is very likely to cause a problem!");
++                Mohist.LOGGER.error("Technical information: ClientBrandRetriever was at {}, there were {} certificates for it", codeSource.getLocation(), certCount);
+             }
+         }
+         if (!goodFML)
+         {
+-            FMLLog.log.error("FML appears to be missing any signature data. This is not a good thing");
++            Mohist.LOGGER.error("FML appears to be missing any signature data. This is not a good thing");
+         }
+         return null;
+     }

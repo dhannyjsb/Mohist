@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemPotion.java
++++ ../src-work/minecraft/net/minecraft/item/ItemPotion.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.item;
+ 
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.advancements.CriteriaTriggers;
+ import net.minecraft.client.util.ITooltipFlag;
+ import net.minecraft.creativetab.CreativeTabs;
+@@ -23,6 +21,9 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++
+ public class ItemPotion extends Item
+ {
+     public ItemPotion()

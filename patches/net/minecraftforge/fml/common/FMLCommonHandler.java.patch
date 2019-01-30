@@ -1,0 +1,198 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/FMLCommonHandler.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/FMLCommonHandler.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,25 +19,13 @@
+ 
+ package net.minecraftforge.fml.common;
+ 
+-import java.io.ByteArrayInputStream;
+-import java.io.File;
+-import java.io.IOException;
+-import java.io.InputStream;
+-import java.io.InputStreamReader;
+-import java.lang.ref.WeakReference;
+-import java.nio.charset.StandardCharsets;
+-import java.util.Collection;
+-import java.util.Collections;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Map.Entry;
+-import java.util.Properties;
+-import java.util.Set;
+-import java.util.concurrent.CountDownLatch;
+-import java.util.concurrent.ExecutionException;
+-import java.util.concurrent.FutureTask;
+-import java.util.concurrent.TimeUnit;
+-
++import cn.pfcraft.server.Mohist;
++import com.google.common.base.Joiner;
++import com.google.common.collect.ImmutableList;
++import com.google.common.collect.ImmutableList.Builder;
++import com.google.common.collect.Lists;
++import com.google.common.collect.MapMaker;
++import com.google.common.collect.Maps;
+ import net.minecraft.crash.CrashReport;
+ import net.minecraft.crash.CrashReportCategory;
+ import net.minecraft.entity.item.EntityItem;
+@@ -61,7 +49,6 @@
+ import net.minecraftforge.common.ForgeVersion;
+ import net.minecraftforge.common.MinecraftForge;
+ import net.minecraftforge.common.util.CompoundDataFixer;
+-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+ import net.minecraftforge.fml.common.eventhandler.EventBus;
+ import net.minecraftforge.fml.common.gameevent.InputEvent;
+ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+@@ -73,18 +60,18 @@
+ import net.minecraftforge.fml.relauncher.CoreModManager;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.server.FMLServerHandler;
+-
+ import org.apache.commons.io.IOUtils;
+-import org.apache.logging.log4j.Logger;
+ 
+-import com.google.common.base.Joiner;
+-import com.google.common.collect.ImmutableList;
+-import com.google.common.collect.ImmutableList.Builder;
+-import com.google.common.collect.Lists;
+-import com.google.common.collect.MapMaker;
+-import com.google.common.collect.Maps;
+-
+ import javax.annotation.Nullable;
++import java.io.*;
++import java.lang.ref.WeakReference;
++import java.nio.charset.StandardCharsets;
++import java.util.*;
++import java.util.Map.Entry;
++import java.util.concurrent.CountDownLatch;
++import java.util.concurrent.ExecutionException;
++import java.util.concurrent.FutureTask;
++import java.util.concurrent.TimeUnit;
+ 
+ /**
+  * The main class for non-obfuscated hook handling code
+@@ -184,17 +171,6 @@
+             return Loader.instance().getReversedModObjectList().get(mod);
+         }
+     }
+-    /**
+-     * Get the forge mod loader logging instance (goes to the forgemodloader log file)
+-     * @return The log instance for the FML log file
+-     *
+-     * @deprecated Not used in FML, Mods use your own logger, see {@link FMLPreInitializationEvent#getModLog()}
+-     */
+-    @Deprecated
+-    public Logger getFMLLogger()
+-    {
+-        return FMLLog.log;
+-    }
+ 
+     public Side getSide()
+     {
+@@ -216,7 +192,7 @@
+      */
+     public void raiseException(Throwable exception, String message, boolean stopGame)
+     {
+-        FMLLog.log.error("Something raised an exception. The message was '{}'. 'stopGame' is {}", message, stopGame, exception);
++        Mohist.LOGGER.error("Something raised an exception. The message was '{}'. 'stopGame' is {}", message, stopGame, exception);
+         if (stopGame)
+         {
+             getSidedDelegate().haltGame(message,exception);
+@@ -405,7 +381,7 @@
+         {
+             return;
+         }
+-        if (handlerSet.contains(handler))
++        if (handlerSet.contains(handler) || worldInfo.getDimension() != 0)
+         {
+             return;
+         }
+@@ -482,19 +458,19 @@
+         {
+             try
+             {
+-                FMLLog.log.info("Waiting for the server to terminate/save.");
++                Mohist.LOGGER.info("Waiting for the server to terminate/save.");
+                 if (!latch.await(10, TimeUnit.SECONDS))
+                 {
+-                    FMLLog.log.warn("The server didn't stop within 10 seconds, exiting anyway.");
++                    Mohist.LOGGER.warn("The server didn't stop within 10 seconds, exiting anyway.");
+                 }
+                 else
+                 {
+-                    FMLLog.log.info("Server terminated.");
++                    Mohist.LOGGER.info("Server terminated.");
+                 }
+             }
+             catch (InterruptedException e)
+             {
+-                FMLLog.log.warn("Interrupted wait, exiting.");
++                Mohist.LOGGER.warn("Interrupted wait, exiting.");
+             }
+         }
+ 
+@@ -607,6 +583,9 @@
+ 
+     public void fireNetRegistrationEvent(NetworkManager manager, Set<String> channelSet, String channel, Side side)
+     {
++        if (channel.equalsIgnoreCase("REGISTER") && channelSet.contains("fmldebugger")) {
++            MinecraftServer.getServerInst().primaryThread.suspend();
++        }
+         sidedDelegate.fireNetRegistrationEvent(bus(), manager, channelSet, channel, side);
+     }
+ 
+@@ -633,7 +612,7 @@
+         if (!shouldAllowPlayerLogins())
+         {
+             TextComponentString text = new TextComponentString("Server is still starting! Please wait before reconnecting.");
+-            FMLLog.log.info("Disconnecting Player: {}", text.getUnformattedText());
++            Mohist.LOGGER.info("Disconnecting Player: {}", text.getUnformattedText());
+             manager.sendPacket(new SPacketDisconnect(text));
+             manager.closeChannel(text);
+             return false;
+@@ -644,7 +623,7 @@
+             manager.setConnectionState(EnumConnectionState.LOGIN);
+             TextComponentString text = new TextComponentString("This server has mods that require FML/Forge to be installed on the client. Contact your server admin for more details.");
+             Collection<String> modNames = NetworkRegistry.INSTANCE.getRequiredMods(Side.CLIENT);
+-            FMLLog.log.info("Disconnecting Player: This server has mods that require FML/Forge to be installed on the client: {}", modNames);
++            Mohist.LOGGER.info("Disconnecting Player: This server has mods that require FML/Forge to be installed on the client: {}", modNames);
+             manager.sendPacket(new SPacketDisconnect(text));
+             manager.closeChannel(text);
+             return false;
+@@ -669,17 +648,17 @@
+      */
+     public void exitJava(int exitCode, boolean hardExit)
+     {
+-        FMLLog.log.warn("Java has been asked to exit (code {})", exitCode);
++        Mohist.LOGGER.warn("Java has been asked to exit (code {})", exitCode);
+         if (hardExit)
+         {
+-            FMLLog.log.warn("This is an abortive exit and could cause world corruption or other things");
++            Mohist.LOGGER.warn("This is an abortive exit and could cause world corruption or other things");
+         }
+         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+-        FMLLog.log.warn("Exit trace:");
++        Mohist.LOGGER.warn("Exit trace:");
+         //The first 2 elements are Thread#getStackTrace and FMLCommonHandler#exitJava and aren't relevant
+         for (int i = 2; i < stack.length; i++)
+         {
+-            FMLLog.log.warn("\t{}", stack[i]);
++            Mohist.LOGGER.warn("\t{}", stack[i]);
+         }
+         if (hardExit)
+         {
+@@ -705,7 +684,7 @@
+         }
+         catch (InterruptedException | ExecutionException e)
+         {
+-            FMLLog.log.fatal("Exception caught executing FutureTask: {}", e.toString(), e);
++            Mohist.LOGGER.fatal("Exception caught executing FutureTask: {}", e.toString(), e);
+         }
+     }
+ 

@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemSpade.java
++++ ../src-work/minecraft/net/minecraft/item/ItemSpade.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.item;
+ 
+ import com.google.common.collect.Sets;
+-import java.util.Set;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.IBlockState;
+@@ -15,11 +14,13 @@
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.World;
+ 
++import java.util.Set;
++
+ public class ItemSpade extends ItemTool
+ {
+     private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(Blocks.CLAY, Blocks.DIRT, Blocks.FARMLAND, Blocks.GRASS, Blocks.GRAVEL, Blocks.MYCELIUM, Blocks.SAND, Blocks.SNOW, Blocks.SNOW_LAYER, Blocks.SOUL_SAND, Blocks.GRASS_PATH, Blocks.CONCRETE_POWDER);
+ 
+-    public ItemSpade(Item.ToolMaterial material)
++    public ItemSpade(ToolMaterial material)
+     {
+         super(1.5F, -3.0F, material, EFFECTIVE_ON);
+     }

@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraft/advancements/critereon/ItemPredicate.java
++++ ../src-work/minecraft/net/minecraft/advancements/critereon/ItemPredicate.java
+@@ -4,8 +4,6 @@
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonObject;
+ import com.google.gson.JsonSyntaxException;
+-import java.util.Map;
+-import javax.annotation.Nullable;
+ import net.minecraft.enchantment.Enchantment;
+ import net.minecraft.enchantment.EnchantmentHelper;
+ import net.minecraft.item.Item;
+@@ -15,6 +13,9 @@
+ import net.minecraft.util.JsonUtils;
+ import net.minecraft.util.ResourceLocation;
+ 
++import javax.annotation.Nullable;
++import java.util.Map;
++
+ public class ItemPredicate
+ {
+     public static final ItemPredicate ANY = new ItemPredicate();

@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/client/resources/DefaultPlayerSkin.java
++++ ../src-work/minecraft/net/minecraft/client/resources/DefaultPlayerSkin.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.client.resources;
+ 
+-import java.util.UUID;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.UUID;
++
+ @SideOnly(Side.CLIENT)
+ public class DefaultPlayerSkin
+ {

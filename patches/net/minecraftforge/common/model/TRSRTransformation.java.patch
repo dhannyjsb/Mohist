@@ -1,0 +1,54 @@
+--- ../src-base/minecraft/net/minecraftforge/common/model/TRSRTransformation.java
++++ ../src-work/minecraft/net/minecraftforge/common/model/TRSRTransformation.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,22 +19,8 @@
+ 
+ package net.minecraftforge.common.model;
+ 
+-import java.util.EnumMap;
+-import java.util.Map;
+-import java.util.Objects;
+-import java.util.Optional;
+-
+-import javax.annotation.Nullable;
+-import javax.vecmath.AxisAngle4f;
+-import javax.vecmath.Matrix3f;
+-import javax.vecmath.Matrix4f;
+-import javax.vecmath.Quat4f;
+-import javax.vecmath.SingularMatrixException;
+-import javax.vecmath.Tuple3f;
+-import javax.vecmath.Tuple4f;
+-import javax.vecmath.Vector3f;
+-import javax.vecmath.Vector4f;
+-
++import com.google.common.base.MoreObjects;
++import com.google.common.collect.Maps;
+ import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
+ import net.minecraft.client.renderer.block.model.ModelRotation;
+ import net.minecraft.util.EnumFacing;
+@@ -42,12 +28,15 @@
+ import net.minecraftforge.client.ForgeHooksClient;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+-
+ import org.apache.commons.lang3.tuple.Pair;
+ import org.apache.commons.lang3.tuple.Triple;
+ 
+-import com.google.common.base.MoreObjects;
+-import com.google.common.collect.Maps;
++import javax.annotation.Nullable;
++import javax.vecmath.*;
++import java.util.EnumMap;
++import java.util.Map;
++import java.util.Objects;
++import java.util.Optional;
+ 
+ /*
+  * Interpolation-friendly affine transformation.

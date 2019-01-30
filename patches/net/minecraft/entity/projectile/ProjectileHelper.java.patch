@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/entity/projectile/ProjectileHelper.java
++++ ../src-work/minecraft/net/minecraft/entity/projectile/ProjectileHelper.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.entity.projectile;
+ 
+-import java.util.List;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.MathHelper;
+@@ -8,6 +7,8 @@
+ import net.minecraft.util.math.Vec3d;
+ import net.minecraft.world.World;
+ 
++import java.util.List;
++
+ public final class ProjectileHelper
+ {
+     public static RayTraceResult forwardsRaycast(Entity projectile, boolean includeEntities, boolean ignoreExcludedEntity, Entity excludedEntity)

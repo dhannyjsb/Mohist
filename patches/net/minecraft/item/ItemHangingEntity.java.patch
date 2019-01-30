@@ -1,0 +1,38 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemHangingEntity.java
++++ ../src-work/minecraft/net/minecraft/item/ItemHangingEntity.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.item;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.creativetab.CreativeTabs;
+ import net.minecraft.entity.EntityHanging;
+ import net.minecraft.entity.item.EntityItemFrame;
+@@ -11,7 +10,11 @@
+ import net.minecraft.util.EnumHand;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.World;
++import org.bukkit.entity.Player;
++import org.bukkit.event.hanging.HangingPlaceEvent;
+ 
++import javax.annotation.Nullable;
++
+ public class ItemHangingEntity extends Item
+ {
+     private final Class <? extends EntityHanging > hangingEntityClass;
+@@ -35,6 +38,16 @@
+             {
+                 if (!worldIn.isRemote)
+                 {
++                    Player who = (player == null) ? null : (Player) player.getBukkitEntity();
++                    org.bukkit.block.Block blockClicked = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
++                    org.bukkit.block.BlockFace blockFace = org.bukkit.craftbukkit.block.CraftBlock.notchToBlockFace(facing);
++
++                    HangingPlaceEvent event = new HangingPlaceEvent((org.bukkit.entity.Hanging) entityhanging.getBukkitEntity(), who, blockClicked, blockFace);
++                    worldIn.getServer().getPluginManager().callEvent(event);
++
++                    if (event.isCancelled()) {
++                        return EnumActionResult.FAIL;
++                    }
+                     entityhanging.playPlaceSound();
+                     worldIn.spawnEntity(entityhanging);
+                 }

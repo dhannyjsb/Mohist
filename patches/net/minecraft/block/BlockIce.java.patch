@@ -1,0 +1,30 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockIce.java
++++ ../src-work/minecraft/net/minecraft/block/BlockIce.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.block;
+ 
+-import java.util.Random;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.material.EnumPushReaction;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.IBlockState;
+@@ -20,6 +18,9 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.util.Random;
++
+ public class BlockIce extends BlockBreakable
+ {
+     public BlockIce()
+@@ -86,6 +87,9 @@
+ 
+     protected void turnIntoWater(World worldIn, BlockPos pos)
+     {
++        if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockFadeEvent(worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()), worldIn.provider.doesWaterVaporize() ? Blocks.AIR : Blocks.WATER).isCancelled()) {
++            return;
++        }
+         if (worldIn.provider.doesWaterVaporize())
+         {
+             worldIn.setBlockToAir(pos);

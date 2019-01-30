@@ -1,0 +1,81 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/relauncher/libraries/ModList.java
++++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/libraries/ModList.java
+@@ -16,30 +16,23 @@
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  */
+-
+ package net.minecraftforge.fml.relauncher.libraries;
+ 
+-import java.io.File;
+-import java.io.IOException;
+-import java.nio.charset.StandardCharsets;
+-import java.util.ArrayList;
+-import java.util.Collections;
+-import java.util.HashMap;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Optional;
+-import java.util.stream.Collectors;
+-
++import cn.pfcraft.server.Mohist;
+ import com.google.common.collect.ImmutableList;
+ import com.google.common.io.Files;
+ import com.google.gson.Gson;
+ import com.google.gson.GsonBuilder;
+ import com.google.gson.JsonSyntaxException;
+-
+ import net.minecraft.launchwrapper.Launch;
+ import net.minecraftforge.common.ForgeVersion;
+-import net.minecraftforge.fml.common.FMLLog;
+ 
++import java.io.File;
++import java.io.IOException;
++import java.nio.charset.StandardCharsets;
++import java.util.*;
++import java.util.stream.Collectors;
++
+ public class ModList
+ {
+     private static final Gson GSON = new GsonBuilder().setLenient().create();
+@@ -54,7 +47,7 @@
+         }
+         catch (IOException e)
+         {
+-            FMLLog.log.error(FMLLog.log.getMessageFactory().newMessage("Unable to load ModList json at {}.", json.getAbsoluteFile()), e);
++            Mohist.LOGGER.error(Mohist.LOGGER.getMessageFactory().newMessage("Unable to load ModList json at {}.", json.getAbsoluteFile()), e);
+         }
+ 
+         return new ModList(json, mcdir);
+@@ -127,11 +120,11 @@
+             }
+             catch (JsonSyntaxException jse)
+             {
+-                FMLLog.log.info(FMLLog.log.getMessageFactory().newMessage("Failed to parse modList json file {}.", path), jse);
++                Mohist.LOGGER.info(Mohist.LOGGER.getMessageFactory().newMessage("Failed to parse modList json file {}.", path), jse);
+             }
+             catch (IOException ioe)
+             {
+-                FMLLog.log.info(FMLLog.log.getMessageFactory().newMessage("Failed to read modList json file {}.", path), ioe);
++                Mohist.LOGGER.info(Mohist.LOGGER.getMessageFactory().newMessage("Failed to read modList json file {}.", path), ioe);
+             }
+         }
+         this.mod_list = temp_list == null ? new JsonModList() : temp_list;
+@@ -148,7 +141,7 @@
+             }
+             catch (IOException e)
+             {
+-                FMLLog.log.info(FMLLog.log.getMessageFactory().newMessage("Failed to create repository for modlist at {}.", mod_list.repositoryRoot), e);
++                Mohist.LOGGER.info(Mohist.LOGGER.getMessageFactory().newMessage("Failed to create repository for modlist at {}.", mod_list.repositoryRoot), e);
+             }
+         }
+         this.repo = temp;
+@@ -209,7 +202,7 @@
+         }
+         catch (IOException ioe)
+         {
+-            FMLLog.log.info(FMLLog.log.getMessageFactory().newMessage("Unable to canonicalize path {} relative to {}", path, root.getAbsolutePath()));
++            Mohist.LOGGER.info(Mohist.LOGGER.getMessageFactory().newMessage("Unable to canonicalize path {} relative to {}", path, root.getAbsolutePath()));
+         }
+         return null;
+     }

@@ -1,0 +1,72 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockChest.java
++++ ../src-work/minecraft/net/minecraft/block/BlockChest.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.block;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.properties.IProperty;
+ import net.minecraft.block.properties.PropertyDirection;
+@@ -20,11 +19,7 @@
+ import net.minecraft.stats.StatList;
+ import net.minecraft.tileentity.TileEntity;
+ import net.minecraft.tileentity.TileEntityChest;
+-import net.minecraft.util.EnumBlockRenderType;
+-import net.minecraft.util.EnumFacing;
+-import net.minecraft.util.EnumHand;
+-import net.minecraft.util.Mirror;
+-import net.minecraft.util.Rotation;
++import net.minecraft.util.*;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
+@@ -34,6 +29,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ public class BlockChest extends BlockContainer
+ {
+     public static final PropertyDirection FACING = BlockHorizontal.FACING;
+@@ -42,14 +39,14 @@
+     protected static final AxisAlignedBB WEST_CHEST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
+     protected static final AxisAlignedBB EAST_CHEST_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 1.0D, 0.875D, 0.9375D);
+     protected static final AxisAlignedBB NOT_CONNECTED_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
+-    public final BlockChest.Type chestType;
++    public final Type chestType;
+ 
+-    protected BlockChest(BlockChest.Type chestTypeIn)
++    protected BlockChest(Type chestTypeIn)
+     {
+         super(Material.WOOD);
+         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+         this.chestType = chestTypeIn;
+-        this.setCreativeTab(chestTypeIn == BlockChest.Type.TRAP ? CreativeTabs.REDSTONE : CreativeTabs.DECORATIONS);
++        this.setCreativeTab(chestTypeIn == Type.TRAP ? CreativeTabs.REDSTONE : CreativeTabs.DECORATIONS);
+     }
+ 
+     public boolean isOpaqueCube(IBlockState state)
+@@ -424,11 +421,11 @@
+             {
+                 playerIn.displayGUIChest(ilockablecontainer);
+ 
+-                if (this.chestType == BlockChest.Type.BASIC)
++                if (this.chestType == Type.BASIC)
+                 {
+                     playerIn.addStat(StatList.CHEST_OPENED);
+                 }
+-                else if (this.chestType == BlockChest.Type.TRAP)
++                else if (this.chestType == Type.TRAP)
+                 {
+                     playerIn.addStat(StatList.TRAPPED_CHEST_TRIGGERED);
+                 }
+@@ -503,7 +500,7 @@
+ 
+     public boolean canProvidePower(IBlockState state)
+     {
+-        return this.chestType == BlockChest.Type.TRAP;
++        return this.chestType == Type.TRAP;
+     }
+ 
+     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)

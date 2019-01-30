@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/block/model/BakedQuadRetextured.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/block/model/BakedQuadRetextured.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.client.renderer.block.model;
+ 
+-import java.util.Arrays;
+ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.Arrays;
++
+ @SideOnly(Side.CLIENT)
+ public class BakedQuadRetextured extends BakedQuad
+ {

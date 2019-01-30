@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraft/client/shader/Shader.java
++++ ../src-work/minecraft/net/minecraft/client/shader/Shader.java
+@@ -1,8 +1,6 @@
+ package net.minecraft.client.shader;
+ 
+ import com.google.common.collect.Lists;
+-import java.io.IOException;
+-import java.util.List;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.renderer.BufferBuilder;
+ import net.minecraft.client.renderer.GlStateManager;
+@@ -14,6 +12,9 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.lwjgl.util.vector.Matrix4f;
+ 
++import java.io.IOException;
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class Shader
+ {

@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/debug/DebugRendererNeighborsUpdate.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/debug/DebugRendererNeighborsUpdate.java
+@@ -3,10 +3,6 @@
+ import com.google.common.collect.Maps;
+ import com.google.common.collect.Ordering;
+ import com.google.common.collect.Sets;
+-import java.util.Iterator;
+-import java.util.Map;
+-import java.util.Set;
+-import java.util.Map.Entry;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.renderer.GlStateManager;
+ import net.minecraft.client.renderer.RenderGlobal;
+@@ -17,6 +13,11 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.Iterator;
++import java.util.Map;
++import java.util.Map.Entry;
++import java.util.Set;
++
+ @SideOnly(Side.CLIENT)
+ public class DebugRendererNeighborsUpdate implements DebugRenderer.IDebugRenderer
+ {

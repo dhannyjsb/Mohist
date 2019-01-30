@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/server/management/UserListWhitelist.java
++++ ../src-work/minecraft/net/minecraft/server/management/UserListWhitelist.java
+@@ -2,10 +2,11 @@
+ 
+ import com.google.gson.JsonObject;
+ import com.mojang.authlib.GameProfile;
+-import java.io.File;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.File;
++
+ public class UserListWhitelist extends UserList<GameProfile, UserListWhitelistEntry>
+ {
+     public UserListWhitelist(File p_i1132_1_)

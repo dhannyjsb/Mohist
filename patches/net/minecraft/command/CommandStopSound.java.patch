@@ -1,0 +1,23 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandStopSound.java
++++ ../src-work/minecraft/net/minecraft/command/CommandStopSound.java
+@@ -1,9 +1,6 @@
+ package net.minecraft.command;
+ 
+ import io.netty.buffer.Unpooled;
+-import java.util.Collections;
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.network.play.server.SPacketCustomPayload;
+@@ -12,6 +9,10 @@
+ import net.minecraft.util.SoundEvent;
+ import net.minecraft.util.math.BlockPos;
+ 
++import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.List;
++
+ public class CommandStopSound extends CommandBase
+ {
+     public String getName()

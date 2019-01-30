@@ -1,0 +1,22 @@
+--- ../src-base/minecraft/net/minecraft/stats/StatBase.java
++++ ../src-work/minecraft/net/minecraft/stats/StatBase.java
+@@ -1,8 +1,5 @@
+ package net.minecraft.stats;
+ 
+-import java.text.DecimalFormat;
+-import java.text.NumberFormat;
+-import java.util.Locale;
+ import net.minecraft.scoreboard.IScoreCriteria;
+ import net.minecraft.scoreboard.ScoreCriteriaStat;
+ import net.minecraft.util.IJsonSerializable;
+@@ -11,6 +8,10 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.text.DecimalFormat;
++import java.text.NumberFormat;
++import java.util.Locale;
++
+ public class StatBase
+ {
+     public final String statId;

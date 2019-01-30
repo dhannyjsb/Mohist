@@ -1,0 +1,23 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiScreenAddServer.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiScreenAddServer.java
+@@ -1,9 +1,6 @@
+ package net.minecraft.client.gui;
+ 
+ import com.google.common.base.Predicate;
+-import java.io.IOException;
+-import java.net.IDN;
+-import javax.annotation.Nullable;
+ import net.minecraft.client.multiplayer.ServerData;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.util.StringUtils;
+@@ -11,6 +8,10 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.lwjgl.input.Keyboard;
+ 
++import javax.annotation.Nullable;
++import java.io.IOException;
++import java.net.IDN;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiScreenAddServer extends GuiScreen
+ {

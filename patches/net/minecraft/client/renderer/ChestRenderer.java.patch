@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/ChestRenderer.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/ChestRenderer.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.client.renderer;
+ 
+ import net.minecraft.block.Block;
+-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+ import net.minecraft.item.ItemStack;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;

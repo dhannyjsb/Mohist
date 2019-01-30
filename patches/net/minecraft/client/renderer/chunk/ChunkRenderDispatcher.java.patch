@@ -1,0 +1,71 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/chunk/ChunkRenderDispatcher.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/chunk/ChunkRenderDispatcher.java
+@@ -7,18 +7,8 @@
+ import com.google.common.util.concurrent.ListenableFuture;
+ import com.google.common.util.concurrent.ListenableFutureTask;
+ import com.google.common.util.concurrent.ThreadFactoryBuilder;
+-import java.util.List;
+-import java.util.Queue;
+-import java.util.concurrent.BlockingQueue;
+-import java.util.concurrent.PriorityBlockingQueue;
+-import java.util.concurrent.ThreadFactory;
+ import net.minecraft.client.Minecraft;
+-import net.minecraft.client.renderer.BufferBuilder;
+-import net.minecraft.client.renderer.GlStateManager;
+-import net.minecraft.client.renderer.OpenGlHelper;
+-import net.minecraft.client.renderer.RegionRenderCacheBuilder;
+-import net.minecraft.client.renderer.VertexBufferUploader;
+-import net.minecraft.client.renderer.WorldVertexBufferUploader;
++import net.minecraft.client.renderer.*;
+ import net.minecraft.client.renderer.vertex.VertexBuffer;
+ import net.minecraft.util.BlockRenderLayer;
+ import net.minecraft.util.math.MathHelper;
+@@ -27,6 +17,12 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import java.util.List;
++import java.util.Queue;
++import java.util.concurrent.BlockingQueue;
++import java.util.concurrent.PriorityBlockingQueue;
++import java.util.concurrent.ThreadFactory;
++
+ @SideOnly(Side.CLIENT)
+ public class ChunkRenderDispatcher
+ {
+@@ -39,7 +35,7 @@
+     private final BlockingQueue<RegionRenderCacheBuilder> queueFreeRenderBuilders;
+     private final WorldVertexBufferUploader worldVertexUploader = new WorldVertexBufferUploader();
+     private final VertexBufferUploader vertexUploader = new VertexBufferUploader();
+-    private final Queue<ChunkRenderDispatcher.PendingUpload> queueChunkUploads = Queues.<ChunkRenderDispatcher.PendingUpload>newPriorityQueue();
++    private final Queue<PendingUpload> queueChunkUploads = Queues.<PendingUpload>newPriorityQueue();
+     private final ChunkRenderWorker renderWorker;
+ 
+     public ChunkRenderDispatcher()
+@@ -283,7 +279,7 @@
+ 
+             synchronized (this.queueChunkUploads)
+             {
+-                this.queueChunkUploads.add(new ChunkRenderDispatcher.PendingUpload(listenablefuturetask, p_188245_5_));
++                this.queueChunkUploads.add(new PendingUpload(listenablefuturetask, p_188245_5_));
+                 return listenablefuturetask;
+             }
+         }
+@@ -354,7 +350,7 @@
+     }
+ 
+     @SideOnly(Side.CLIENT)
+-    class PendingUpload implements Comparable<ChunkRenderDispatcher.PendingUpload>
++    class PendingUpload implements Comparable<PendingUpload>
+     {
+         private final ListenableFutureTask<Object> uploadTask;
+         private final double distanceSq;
+@@ -365,7 +361,7 @@
+             this.distanceSq = distanceSqIn;
+         }
+ 
+-        public int compareTo(ChunkRenderDispatcher.PendingUpload p_compareTo_1_)
++        public int compareTo(PendingUpload p_compareTo_1_)
+         {
+             return Doubles.compare(this.distanceSq, p_compareTo_1_.distanceSq);
+         }

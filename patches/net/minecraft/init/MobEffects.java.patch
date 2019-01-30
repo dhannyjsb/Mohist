@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/init/MobEffects.java
++++ ../src-work/minecraft/net/minecraft/init/MobEffects.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.init;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.potion.Potion;
+ import net.minecraft.util.ResourceLocation;
+ 
++import javax.annotation.Nullable;
++
+ public class MobEffects
+ {
+     public static final Potion SPEED;

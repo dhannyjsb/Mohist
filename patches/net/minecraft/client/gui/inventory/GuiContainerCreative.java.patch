@@ -1,0 +1,170 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/inventory/GuiContainerCreative.java
++++ ../src-work/minecraft/net/minecraft/client/gui/inventory/GuiContainerCreative.java
+@@ -1,11 +1,6 @@
+ package net.minecraft.client.gui.inventory;
+ 
+ import com.google.common.collect.Lists;
+-import java.io.IOException;
+-import java.util.List;
+-import java.util.Locale;
+-import java.util.Map;
+-import javax.annotation.Nullable;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.entity.EntityPlayerSP;
+ import net.minecraft.client.gui.GuiButton;
+@@ -26,11 +21,7 @@
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.entity.player.InventoryPlayer;
+ import net.minecraft.init.Items;
+-import net.minecraft.inventory.ClickType;
+-import net.minecraft.inventory.Container;
+-import net.minecraft.inventory.IInventory;
+-import net.minecraft.inventory.InventoryBasic;
+-import net.minecraft.inventory.Slot;
++import net.minecraft.inventory.*;
+ import net.minecraft.item.Item;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.util.NonNullList;
+@@ -40,9 +31,16 @@
+ import net.minecraft.util.text.TextFormatting;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
++import org.bukkit.inventory.InventoryView;
+ import org.lwjgl.input.Keyboard;
+ import org.lwjgl.input.Mouse;
+ 
++import javax.annotation.Nullable;
++import java.io.IOException;
++import java.util.List;
++import java.util.Locale;
++import java.util.Map;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiContainerCreative extends InventoryEffectRenderer
+ {
+@@ -62,7 +60,7 @@
+ 
+     public GuiContainerCreative(EntityPlayer player)
+     {
+-        super(new GuiContainerCreative.ContainerCreative(player));
++        super(new ContainerCreative(player));
+         player.openContainer = this.inventorySlots;
+         this.allowUserInput = true;
+         this.ySize = 136;
+@@ -130,7 +128,7 @@
+                     ItemStack itemstack1 = slotIn.getStack();
+                     this.mc.player.dropItem(itemstack, true);
+                     this.mc.playerController.sendPacketDropItem(itemstack);
+-                    this.mc.playerController.sendSlotPacket(itemstack1, ((GuiContainerCreative.CreativeSlot)slotIn).slot.slotNumber);
++                    this.mc.playerController.sendSlotPacket(itemstack1, ((CreativeSlot)slotIn).slot.slotNumber);
+                 }
+                 else if (type == ClickType.THROW && !this.mc.player.inventory.getItemStack().isEmpty())
+                 {
+@@ -140,7 +138,7 @@
+                 }
+                 else
+                 {
+-                    this.mc.player.inventoryContainer.slotClick(slotIn == null ? slotId : ((GuiContainerCreative.CreativeSlot)slotIn).slot.slotNumber, mouseButton, type, this.mc.player);
++                    this.mc.player.inventoryContainer.slotClick(slotIn == null ? slotId : ((CreativeSlot)slotIn).slot.slotNumber, mouseButton, type, this.mc.player);
+                     this.mc.player.inventoryContainer.detectAndSendChanges();
+                 }
+             }
+@@ -352,7 +350,7 @@
+ 
+     private void updateCreativeSearch()
+     {
+-        GuiContainerCreative.ContainerCreative guicontainercreative$containercreative = (GuiContainerCreative.ContainerCreative)this.inventorySlots;
++        ContainerCreative guicontainercreative$containercreative = (ContainerCreative)this.inventorySlots;
+         guicontainercreative$containercreative.itemList.clear();
+ 
+         CreativeTabs tab = CreativeTabs.CREATIVE_TAB_ARRAY[selectedTabIndex];
+@@ -452,7 +450,7 @@
+     private boolean needsScrollBars()
+     {
+         if (CreativeTabs.CREATIVE_TAB_ARRAY[selectedTabIndex] == null) return false;
+-        return selectedTabIndex != CreativeTabs.INVENTORY.getTabIndex() && CreativeTabs.CREATIVE_TAB_ARRAY[selectedTabIndex].shouldHidePlayerInventory() && ((GuiContainerCreative.ContainerCreative)this.inventorySlots).canScroll();
++        return selectedTabIndex != CreativeTabs.INVENTORY.getTabIndex() && CreativeTabs.CREATIVE_TAB_ARRAY[selectedTabIndex].shouldHidePlayerInventory() && ((ContainerCreative)this.inventorySlots).canScroll();
+     }
+ 
+     private void setCurrentCreativeTab(CreativeTabs tab)
+@@ -460,7 +458,7 @@
+         if (tab == null) return;
+         int i = selectedTabIndex;
+         selectedTabIndex = tab.getTabIndex();
+-        GuiContainerCreative.ContainerCreative guicontainercreative$containercreative = (GuiContainerCreative.ContainerCreative)this.inventorySlots;
++        ContainerCreative guicontainercreative$containercreative = (ContainerCreative)this.inventorySlots;
+         this.dragSplittingSlots.clear();
+         guicontainercreative$containercreative.itemList.clear();
+ 
+@@ -513,7 +511,7 @@
+ 
+             for (int l = 0; l < container.inventorySlots.size(); ++l)
+             {
+-                Slot slot = new GuiContainerCreative.CreativeSlot(container.inventorySlots.get(l), l);
++                Slot slot = new CreativeSlot(container.inventorySlots.get(l), l);
+                 guicontainercreative$containercreative.inventorySlots.add(slot);
+ 
+                 if (l >= 5 && l < 9)
+@@ -592,7 +590,7 @@
+ 
+         if (i != 0 && this.needsScrollBars())
+         {
+-            int j = (((GuiContainerCreative.ContainerCreative)this.inventorySlots).itemList.size() + 9 - 1) / 9 - 5;
++            int j = (((ContainerCreative)this.inventorySlots).itemList.size() + 9 - 1) / 9 - 5;
+ 
+             if (i > 0)
+             {
+@@ -606,7 +604,7 @@
+ 
+             this.currentScroll = (float)((double)this.currentScroll - (double)i / (double)j);
+             this.currentScroll = MathHelper.clamp(this.currentScroll, 0.0F, 1.0F);
+-            ((GuiContainerCreative.ContainerCreative)this.inventorySlots).scrollTo(this.currentScroll);
++            ((ContainerCreative)this.inventorySlots).scrollTo(this.currentScroll);
+         }
+     }
+ 
+@@ -637,7 +635,7 @@
+         {
+             this.currentScroll = ((float)(mouseY - l) - 7.5F) / ((float)(j1 - l) - 15.0F);
+             this.currentScroll = MathHelper.clamp(this.currentScroll, 0.0F, 1.0F);
+-            ((GuiContainerCreative.ContainerCreative)this.inventorySlots).scrollTo(this.currentScroll);
++            ((ContainerCreative)this.inventorySlots).scrollTo(this.currentScroll);
+         }
+ 
+         super.drawScreen(mouseX, mouseY, partialTicks);
+@@ -992,7 +990,7 @@
+                 {
+                     for (int j = 0; j < 9; ++j)
+                     {
+-                        this.addSlotToContainer(new GuiContainerCreative.LockedSlot(GuiContainerCreative.basicInventory, i * 9 + j, 9 + j * 18, 18 + i * 18));
++                        this.addSlotToContainer(new LockedSlot(GuiContainerCreative.basicInventory, i * 9 + j, 9 + j * 18, 18 + i * 18));
+                     }
+                 }
+ 
+@@ -1042,6 +1040,11 @@
+                 return this.itemList.size() > 45;
+             }
+ 
++            @Override
++            public InventoryView getBukkitView() {
++                return null;
++            }
++
+             public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
+             {
+                 if (index >= this.inventorySlots.size() - 9 && index < this.inventorySlots.size())
+@@ -1147,12 +1150,12 @@
+         }
+ 
+         /*========================================= FORGE START =====================================*/
+-        public net.minecraft.util.ResourceLocation getBackgroundLocation()
++        public ResourceLocation getBackgroundLocation()
+         {
+             return this.slot.getBackgroundLocation();
+         }
+ 
+-        public void setBackgroundLocation(net.minecraft.util.ResourceLocation texture)
++        public void setBackgroundLocation(ResourceLocation texture)
+         {
+             this.slot.setBackgroundLocation(texture);
+         }

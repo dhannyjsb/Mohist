@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/client/shader/package-info.java
++++ ../src-work/minecraft/net/minecraft/client/shader/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.client.shader;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

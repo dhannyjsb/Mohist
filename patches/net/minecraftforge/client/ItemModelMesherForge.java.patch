@@ -1,0 +1,33 @@
+--- ../src-base/minecraft/net/minecraftforge/client/ItemModelMesherForge.java
++++ ../src-work/minecraft/net/minecraftforge/client/ItemModelMesherForge.java
+@@ -19,13 +19,9 @@
+ 
+ package net.minecraftforge.client;
+ 
+-import java.util.Map;
+-
+ import com.google.common.collect.Maps;
+-
+ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+-
+ import net.minecraft.client.renderer.ItemMeshDefinition;
+ import net.minecraft.client.renderer.ItemModelMesher;
+ import net.minecraft.client.renderer.block.model.IBakedModel;
+@@ -38,6 +34,7 @@
+ 
+ import javax.annotation.Nonnull;
+ import javax.annotation.Nullable;
++import java.util.Map;
+ 
+ /**
+  * Wrapper around ItemModeMesher that cleans up the internal maps to respect ID remapping.
+@@ -98,7 +95,7 @@
+             }
+             final Int2ObjectMap<IBakedModel> map = mods;
+             e.getValue().int2ObjectEntrySet().forEach(entry ->
+-                map.put(entry.getIntKey(), manager.getModel(entry.getValue()))
++                    map.put(entry.getIntKey(), manager.getModel(entry.getValue()))
+             );
+         }
+     }

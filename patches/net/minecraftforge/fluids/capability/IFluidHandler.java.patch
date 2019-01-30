@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/capability/IFluidHandler.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/capability/IFluidHandler.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,10 +19,11 @@
+ 
+ package net.minecraftforge.fluids.capability;
+ 
++import net.minecraftforge.fluids.FluidStack;
++import net.minecraftforge.fluids.IFluidTank;
++
+ import javax.annotation.Nullable;
+ 
+-import net.minecraftforge.fluids.*;
+-
+ /**
+  * Implement this interface as a capability which should handle fluids, generally storing them in
+  * one or more internal {@link IFluidTank} objects.

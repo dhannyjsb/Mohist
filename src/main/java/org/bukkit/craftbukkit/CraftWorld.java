@@ -1764,7 +1764,6 @@ public class CraftWorld implements World {
             CraftWorld.this.playEffect( location, effect, 0 );
         }
 
-        @Override
         public LightningStrike strikeLightning(Location loc, boolean isSilent)
         {
             EntityLightningBolt lightning = new EntityLightningBolt( world, loc.getX(), loc.getY(), loc.getZ(), false, isSilent );
@@ -1772,7 +1771,6 @@ public class CraftWorld implements World {
             return new CraftLightningStrike( server, lightning );
         }
 
-        @Override
         public LightningStrike strikeLightningEffect(Location loc, boolean isSilent)
         {
             EntityLightningBolt lightning = new EntityLightningBolt( world, loc.getX(), loc.getY(), loc.getZ(), true, isSilent );

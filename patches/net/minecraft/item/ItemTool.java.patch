@@ -1,0 +1,39 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemTool.java
++++ ../src-work/minecraft/net/minecraft/item/ItemTool.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.item;
+ 
+ import com.google.common.collect.Multimap;
+-import java.util.Set;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.creativetab.CreativeTabs;
+@@ -14,15 +13,17 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.Set;
++
+ public class ItemTool extends Item
+ {
+     private final Set<Block> effectiveBlocks;
+     protected float efficiency;
+     protected float attackDamage;
+     protected float attackSpeed;
+-    protected Item.ToolMaterial toolMaterial;
++    protected ToolMaterial toolMaterial;
+ 
+-    protected ItemTool(float attackDamageIn, float attackSpeedIn, Item.ToolMaterial materialIn, Set<Block> effectiveBlocksIn)
++    protected ItemTool(float attackDamageIn, float attackSpeedIn, ToolMaterial materialIn, Set<Block> effectiveBlocksIn)
+     {
+         this.efficiency = 4.0F;
+         this.toolMaterial = materialIn;
+@@ -47,7 +48,7 @@
+         }
+     }
+ 
+-    protected ItemTool(Item.ToolMaterial materialIn, Set<Block> effectiveBlocksIn)
++    protected ItemTool(ToolMaterial materialIn, Set<Block> effectiveBlocksIn)
+     {
+         this(0.0F, 0.0F, materialIn, effectiveBlocksIn);
+     }

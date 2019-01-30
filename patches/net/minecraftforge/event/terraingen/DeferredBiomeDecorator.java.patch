@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraftforge/event/terraingen/DeferredBiomeDecorator.java
++++ ../src-work/minecraft/net/minecraftforge/event/terraingen/DeferredBiomeDecorator.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,13 +19,14 @@
+ 
+ package net.minecraftforge.event.terraingen;
+ 
+-import java.util.Random;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.World;
+-import net.minecraft.world.biome.BiomeDecorator;
+ import net.minecraft.world.biome.Biome;
++import net.minecraft.world.biome.BiomeDecorator;
+ import net.minecraftforge.common.MinecraftForge;
+ 
++import java.util.Random;
++
+ public class DeferredBiomeDecorator extends BiomeDecorator {
+     private BiomeDecorator wrapped;
+ 

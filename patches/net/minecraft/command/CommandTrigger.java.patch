@@ -1,0 +1,23 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandTrigger.java
++++ ../src-work/minecraft/net/minecraft/command/CommandTrigger.java
+@@ -1,9 +1,6 @@
+ package net.minecraft.command;
+ 
+ import com.google.common.collect.Lists;
+-import java.util.Collections;
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.scoreboard.IScoreCriteria;
+@@ -13,6 +10,10 @@
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.util.math.BlockPos;
+ 
++import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.List;
++
+ public class CommandTrigger extends CommandBase
+ {
+     public String getName()

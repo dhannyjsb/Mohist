@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/entity/boss/dragon/phase/PhaseHover.java
++++ ../src-work/minecraft/net/minecraft/entity/boss/dragon/phase/PhaseHover.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.entity.boss.dragon.phase;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.boss.EntityDragon;
+ import net.minecraft.util.math.Vec3d;
+ 
++import javax.annotation.Nullable;
++
+ public class PhaseHover extends PhaseBase
+ {
+     private Vec3d targetLocation;

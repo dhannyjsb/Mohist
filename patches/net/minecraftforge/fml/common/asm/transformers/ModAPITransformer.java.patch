@@ -1,0 +1,125 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/asm/transformers/ModAPITransformer.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/asm/transformers/ModAPITransformer.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,19 +19,15 @@
+ 
+ package net.minecraftforge.fml.common.asm.transformers;
+ 
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.ListIterator;
+-import java.util.Map;
+-import java.util.Set;
+-
++import cn.pfcraft.server.Mohist;
++import com.google.common.collect.ArrayListMultimap;
++import com.google.common.collect.ListMultimap;
++import com.google.common.collect.Sets;
+ import net.minecraft.launchwrapper.IClassTransformer;
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.Loader;
+ import net.minecraftforge.fml.common.ModAPIManager;
+ import net.minecraftforge.fml.common.discovery.ASMDataTable;
+ import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
+-
+ import org.objectweb.asm.ClassReader;
+ import org.objectweb.asm.ClassWriter;
+ import org.objectweb.asm.signature.SignatureReader;
+@@ -39,9 +35,7 @@
+ import org.objectweb.asm.tree.ClassNode;
+ import org.objectweb.asm.tree.MethodNode;
+ 
+-import com.google.common.collect.ArrayListMultimap;
+-import com.google.common.collect.ListMultimap;
+-import com.google.common.collect.Sets;
++import java.util.*;
+ 
+ public class ModAPITransformer implements IClassTransformer {
+ 
+@@ -64,17 +58,17 @@
+         ClassReader classReader = new ClassReader(basicClass);
+         classReader.accept(classNode, 0);
+ 
+-        if (logDebugInfo) FMLLog.log.trace("Optional removal - found optionals for class {} - processing", name);
++        if (logDebugInfo) Mohist.LOGGER.trace("Optional removal - found optionals for class {} - processing", name);
+         for (ASMData optional : optionals.get(lookupName))
+         {
+             String modId = (String) optional.getAnnotationInfo().get("modid");
+ 
+             if (Loader.isModLoaded(modId) || ModAPIManager.INSTANCE.hasAPI(modId))
+             {
+-                if (logDebugInfo) FMLLog.log.trace("Optional removal skipped - mod present {}", modId);
++                if (logDebugInfo) Mohist.LOGGER.trace("Optional removal skipped - mod present {}", modId);
+                 continue;
+             }
+-            if (logDebugInfo) FMLLog.log.trace("Optional on {} triggered - mod missing {}", name, modId);
++            if (logDebugInfo) Mohist.LOGGER.trace("Optional on {} triggered - mod missing {}", name, modId);
+ 
+             if (optional.getAnnotationInfo().containsKey("iface"))
+             {
+@@ -88,7 +82,7 @@
+             }
+ 
+         }
+-        if (logDebugInfo) FMLLog.log.trace("Optional removal - class {} processed", name);
++        if (logDebugInfo) Mohist.LOGGER.trace("Optional removal - class {} processed", name);
+ 
+         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+         classNode.accept(writer);
+@@ -109,11 +103,11 @@
+             if (methodDescriptor.equals(method.name+method.desc))
+             {
+                 iterator.remove();
+-                if (logDebugInfo) FMLLog.log.debug("Optional removal - method {} removed", methodDescriptor);
++                if (logDebugInfo) Mohist.LOGGER.debug("Optional removal - method {} removed", methodDescriptor);
+                 return;
+             }
+         }
+-        if (logDebugInfo) FMLLog.log.debug("Optional removal - method {} NOT removed - not found", methodDescriptor);
++        if (logDebugInfo) Mohist.LOGGER.debug("Optional removal - method {} NOT removed - not found", methodDescriptor);
+     }
+ 
+     private void stripInterface(ClassNode classNode, String interfaceName, boolean stripRefs)
+@@ -126,28 +120,28 @@
+             final RemovingSignatureWriter signatureWriter = new RemovingSignatureWriter(ifaceName);
+             sr.accept(signatureWriter);
+             classNode.signature = signatureWriter.toString();
+-            if (logDebugInfo) FMLLog.log.debug("Optional removal - interface {} removed from type signature", interfaceName);
++            if (logDebugInfo) Mohist.LOGGER.debug("Optional removal - interface {} removed from type signature", interfaceName);
+         }
+-        if (found && logDebugInfo) FMLLog.log.debug("Optional removal - interface {} removed", interfaceName);
+-        if (!found && logDebugInfo) FMLLog.log.debug("Optional removal - interface {} NOT removed - not found", interfaceName);
++        if (found && logDebugInfo) Mohist.LOGGER.debug("Optional removal - interface {} removed", interfaceName);
++        if (!found && logDebugInfo) Mohist.LOGGER.debug("Optional removal - interface {} NOT removed - not found", interfaceName);
+ 
+         if (found && stripRefs)
+         {
+-            if (logDebugInfo) FMLLog.log.debug("Optional removal - interface {} - stripping method signature references", interfaceName);
++            if (logDebugInfo) Mohist.LOGGER.debug("Optional removal - interface {} - stripping method signature references", interfaceName);
+             for (Iterator<MethodNode> iterator = classNode.methods.iterator(); iterator.hasNext();)
+             {
+                 MethodNode node = iterator.next();
+                 if (node.desc.contains(ifaceName))
+                 {
+-                    if (logDebugInfo) FMLLog.log.debug("Optional removal - interface {} - stripping method containing reference {}", interfaceName, node.name);
++                    if (logDebugInfo) Mohist.LOGGER.debug("Optional removal - interface {} - stripping method containing reference {}", interfaceName, node.name);
+                     iterator.remove();
+                 }
+             }
+-            if (logDebugInfo) FMLLog.log.debug("Optional removal - interface {} - all method signature references stripped", interfaceName);
++            if (logDebugInfo) Mohist.LOGGER.debug("Optional removal - interface {} - all method signature references stripped", interfaceName);
+         }
+         else if (found)
+         {
+-            if (logDebugInfo) FMLLog.log.debug("Optional removal - interface {} - NOT stripping method signature references", interfaceName);
++            if (logDebugInfo) Mohist.LOGGER.debug("Optional removal - interface {} - NOT stripping method signature references", interfaceName);
+         }
+     }
+ 

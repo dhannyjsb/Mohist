@@ -1,0 +1,184 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/RenderGlobal.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/RenderGlobal.java
+@@ -5,22 +5,7 @@
+ import com.google.common.collect.Queues;
+ import com.google.common.collect.Sets;
+ import com.google.gson.JsonSyntaxException;
+-import java.io.IOException;
+-import java.util.Collection;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Queue;
+-import java.util.Random;
+-import java.util.Set;
+-import java.util.function.Supplier;
+-import javax.annotation.Nullable;
+-import net.minecraft.block.Block;
+-import net.minecraft.block.BlockChest;
+-import net.minecraft.block.BlockEnderChest;
+-import net.minecraft.block.BlockSign;
+-import net.minecraft.block.BlockSkull;
+-import net.minecraft.block.SoundType;
++import net.minecraft.block.*;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.client.Minecraft;
+@@ -28,13 +13,7 @@
+ import net.minecraft.client.audio.PositionedSoundRecord;
+ import net.minecraft.client.multiplayer.WorldClient;
+ import net.minecraft.client.particle.Particle;
+-import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
+-import net.minecraft.client.renderer.chunk.CompiledChunk;
+-import net.minecraft.client.renderer.chunk.IRenderChunkFactory;
+-import net.minecraft.client.renderer.chunk.ListChunkFactory;
+-import net.minecraft.client.renderer.chunk.RenderChunk;
+-import net.minecraft.client.renderer.chunk.VboChunkFactory;
+-import net.minecraft.client.renderer.chunk.VisGraph;
++import net.minecraft.client.renderer.chunk.*;
+ import net.minecraft.client.renderer.culling.ClippingHelper;
+ import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+ import net.minecraft.client.renderer.culling.Frustum;
+@@ -67,19 +46,8 @@
+ import net.minecraft.item.ItemRecord;
+ import net.minecraft.tileentity.TileEntity;
+ import net.minecraft.tileentity.TileEntityChest;
+-import net.minecraft.util.BlockRenderLayer;
+-import net.minecraft.util.ClassInheritanceMultiMap;
+-import net.minecraft.util.EnumFacing;
+-import net.minecraft.util.EnumParticleTypes;
+-import net.minecraft.util.ReportedException;
+-import net.minecraft.util.ResourceLocation;
+-import net.minecraft.util.SoundCategory;
+-import net.minecraft.util.SoundEvent;
+-import net.minecraft.util.math.AxisAlignedBB;
+-import net.minecraft.util.math.BlockPos;
+-import net.minecraft.util.math.MathHelper;
+-import net.minecraft.util.math.RayTraceResult;
+-import net.minecraft.util.math.Vec3d;
++import net.minecraft.util.*;
++import net.minecraft.util.math.*;
+ import net.minecraft.world.IWorldEventListener;
+ import net.minecraft.world.World;
+ import net.minecraft.world.border.WorldBorder;
+@@ -91,6 +59,10 @@
+ import org.lwjgl.util.vector.Vector3f;
+ import org.lwjgl.util.vector.Vector4f;
+ 
++import javax.annotation.Nullable;
++import java.io.IOException;
++import java.util.*;
++
+ @SideOnly(Side.CLIENT)
+ public class RenderGlobal implements IWorldEventListener, IResourceManagerReloadListener
+ {
+@@ -105,7 +77,7 @@
+     private final RenderManager renderManager;
+     private WorldClient world;
+     private Set<RenderChunk> chunksToUpdate = Sets.<RenderChunk>newLinkedHashSet();
+-    private List<RenderGlobal.ContainerLocalRenderInformation> renderInfos = Lists.<RenderGlobal.ContainerLocalRenderInformation>newArrayListWithCapacity(69696);
++    private List<ContainerLocalRenderInformation> renderInfos = Lists.<ContainerLocalRenderInformation>newArrayListWithCapacity(69696);
+     private final Set<TileEntity> setTileEntities = Sets.<TileEntity>newHashSet();
+     private ViewFrustum viewFrustum;
+     private int starGLCallList = -1;
+@@ -606,7 +578,7 @@
+             List<Entity> list2 = Lists.<Entity>newArrayList();
+             BlockPos.PooledMutableBlockPos blockpos$pooledmutableblockpos = BlockPos.PooledMutableBlockPos.retain();
+ 
+-            for (RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation : this.renderInfos)
++            for (ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation : this.renderInfos)
+             {
+                 Chunk chunk = this.world.getChunkFromBlockCoords(renderglobal$containerlocalrenderinformation.renderChunk.getPosition());
+                 ClassInheritanceMultiMap<Entity> classinheritancemultimap = chunk.getEntityLists()[renderglobal$containerlocalrenderinformation.renderChunk.getPosition().getY() / 16];
+@@ -693,7 +665,7 @@
+             RenderHelper.enableStandardItemLighting();
+ 
+             TileEntityRendererDispatcher.instance.preDrawBatch();
+-            for (RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation1 : this.renderInfos)
++            for (ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation1 : this.renderInfos)
+             {
+                 List<TileEntity> list3 = renderglobal$containerlocalrenderinformation1.renderChunk.getCompiledChunk().getTileEntities();
+ 
+@@ -791,7 +763,7 @@
+     {
+         int i = 0;
+ 
+-        for (RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation : this.renderInfos)
++        for (ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation : this.renderInfos)
+         {
+             CompiledChunk compiledchunk = renderglobal$containerlocalrenderinformation.renderChunk.compiledChunk;
+ 
+@@ -862,15 +834,15 @@
+         if (!flag && this.displayListEntitiesDirty)
+         {
+             this.displayListEntitiesDirty = false;
+-            this.renderInfos = Lists.<RenderGlobal.ContainerLocalRenderInformation>newArrayList();
+-            Queue<RenderGlobal.ContainerLocalRenderInformation> queue = Queues.<RenderGlobal.ContainerLocalRenderInformation>newArrayDeque();
++            this.renderInfos = Lists.<ContainerLocalRenderInformation>newArrayList();
++            Queue<ContainerLocalRenderInformation> queue = Queues.<ContainerLocalRenderInformation>newArrayDeque();
+             Entity.setRenderDistanceWeight(MathHelper.clamp((double)this.mc.gameSettings.renderDistanceChunks / 8.0D, 1.0D, 2.5D));
+             boolean flag1 = this.mc.renderChunksMany;
+ 
+             if (renderchunk != null)
+             {
+                 boolean flag2 = false;
+-                RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation3 = new RenderGlobal.ContainerLocalRenderInformation(renderchunk, (EnumFacing)null, 0);
++                ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation3 = new ContainerLocalRenderInformation(renderchunk, (EnumFacing)null, 0);
+                 Set<EnumFacing> set1 = this.getVisibleFacings(blockpos1);
+ 
+                 if (set1.size() == 1)
+@@ -913,7 +885,7 @@
+                         if (renderchunk1 != null && camera.isBoundingBoxInFrustum(renderchunk1.boundingBox.expand(0.0, blockpos1.getY() > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY, 0.0))) // Forge: fix MC-73139
+                         {
+                             renderchunk1.setFrameIndex(frameCount);
+-                            queue.add(new RenderGlobal.ContainerLocalRenderInformation(renderchunk1, (EnumFacing)null, 0));
++                            queue.add(new ContainerLocalRenderInformation(renderchunk1, (EnumFacing)null, 0));
+                         }
+                     }
+                 }
+@@ -923,7 +895,7 @@
+ 
+             while (!queue.isEmpty())
+             {
+-                RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation1 = queue.poll();
++                ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation1 = queue.poll();
+                 RenderChunk renderchunk3 = renderglobal$containerlocalrenderinformation1.renderChunk;
+                 EnumFacing enumfacing2 = renderglobal$containerlocalrenderinformation1.facing;
+                 this.renderInfos.add(renderglobal$containerlocalrenderinformation1);
+@@ -934,7 +906,7 @@
+ 
+                     if ((!flag1 || !renderglobal$containerlocalrenderinformation1.hasDirection(enumfacing1.getOpposite())) && (!flag1 || enumfacing2 == null || renderchunk3.getCompiledChunk().isVisible(enumfacing2.getOpposite(), enumfacing1)) && renderchunk2 != null && renderchunk2.setFrameIndex(frameCount) && camera.isBoundingBoxInFrustum(renderchunk2.boundingBox))
+                     {
+-                        RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation = new RenderGlobal.ContainerLocalRenderInformation(renderchunk2, enumfacing1, renderglobal$containerlocalrenderinformation1.counter + 1);
++                        ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation = new ContainerLocalRenderInformation(renderchunk2, enumfacing1, renderglobal$containerlocalrenderinformation1.counter + 1);
+                         renderglobal$containerlocalrenderinformation.setDirection(renderglobal$containerlocalrenderinformation1.setFacing, enumfacing1);
+                         queue.add(renderglobal$containerlocalrenderinformation);
+                     }
+@@ -956,7 +928,7 @@
+         Set<RenderChunk> set = this.chunksToUpdate;
+         this.chunksToUpdate = Sets.<RenderChunk>newLinkedHashSet();
+ 
+-        for (RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation2 : this.renderInfos)
++        for (ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation2 : this.renderInfos)
+         {
+             RenderChunk renderchunk4 = renderglobal$containerlocalrenderinformation2.renderChunk;
+ 
+@@ -1088,7 +1060,7 @@
+                 this.prevRenderSortZ = entityIn.posZ;
+                 int k = 0;
+ 
+-                for (RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation : this.renderInfos)
++                for (ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation : this.renderInfos)
+                 {
+                     if (renderglobal$containerlocalrenderinformation.renderChunk.compiledChunk.isLayerStarted(blockLayerIn) && k++ < 15)
+                     {
+@@ -1875,8 +1847,7 @@
+         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.DST_COLOR, GlStateManager.DestFactor.SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+         GlStateManager.enableBlend();
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
+-        // FORGE: Fix MC-234
+-        GlStateManager.doPolygonOffset(-1.0F, -10.0F);
++        GlStateManager.doPolygonOffset(-3.0F, -3.0F);
+         GlStateManager.enablePolygonOffset();
+         GlStateManager.alphaFunc(516, 0.1F);
+         GlStateManager.enableAlpha();

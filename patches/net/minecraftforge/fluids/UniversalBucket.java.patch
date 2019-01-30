@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/UniversalBucket.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/UniversalBucket.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -36,8 +36,8 @@
+ import net.minecraft.util.text.translation.I18n;
+ import net.minecraft.world.World;
+ import net.minecraftforge.common.capabilities.ICapabilityProvider;
+-import net.minecraftforge.event.entity.player.FillBucketEvent;
+ import net.minecraftforge.event.ForgeEventFactory;
++import net.minecraftforge.event.entity.player.FillBucketEvent;
+ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+ import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
+ import net.minecraftforge.fml.common.eventhandler.Event;

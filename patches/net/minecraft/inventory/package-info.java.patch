@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/inventory/package-info.java
++++ ../src-work/minecraft/net/minecraft/inventory/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.inventory;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

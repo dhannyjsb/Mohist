@@ -1,0 +1,66 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockNewLog.java
++++ ../src-work/minecraft/net/minecraft/block/BlockNewLog.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.block;
+ 
+ import com.google.common.base.Predicate;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.material.MapColor;
+ import net.minecraft.block.properties.IProperty;
+ import net.minecraft.block.properties.PropertyEnum;
+@@ -14,6 +13,8 @@
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.IBlockAccess;
+ 
++import javax.annotation.Nullable;
++
+ public class BlockNewLog extends BlockLog
+ {
+     public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.<BlockPlanks.EnumType>create("variant", BlockPlanks.EnumType.class, new Predicate<BlockPlanks.EnumType>()
+@@ -26,14 +27,14 @@
+ 
+     public BlockNewLog()
+     {
+-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.ACACIA).withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
++        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.ACACIA).withProperty(LOG_AXIS, EnumAxis.Y));
+     }
+ 
+     public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+     {
+         BlockPlanks.EnumType blockplanks$enumtype = (BlockPlanks.EnumType)state.getValue(VARIANT);
+ 
+-        switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
++        switch ((EnumAxis)state.getValue(LOG_AXIS))
+         {
+             case X:
+             case Z:
+@@ -67,16 +68,16 @@
+         switch (meta & 12)
+         {
+             case 0:
+-                iblockstate = iblockstate.withProperty(LOG_AXIS, BlockLog.EnumAxis.Y);
++                iblockstate = iblockstate.withProperty(LOG_AXIS, EnumAxis.Y);
+                 break;
+             case 4:
+-                iblockstate = iblockstate.withProperty(LOG_AXIS, BlockLog.EnumAxis.X);
++                iblockstate = iblockstate.withProperty(LOG_AXIS, EnumAxis.X);
+                 break;
+             case 8:
+-                iblockstate = iblockstate.withProperty(LOG_AXIS, BlockLog.EnumAxis.Z);
++                iblockstate = iblockstate.withProperty(LOG_AXIS, EnumAxis.Z);
+                 break;
+             default:
+-                iblockstate = iblockstate.withProperty(LOG_AXIS, BlockLog.EnumAxis.NONE);
++                iblockstate = iblockstate.withProperty(LOG_AXIS, EnumAxis.NONE);
+         }
+ 
+         return iblockstate;
+@@ -88,7 +89,7 @@
+         int i = 0;
+         i = i | ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata() - 4;
+ 
+-        switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
++        switch ((EnumAxis)state.getValue(LOG_AXIS))
+         {
+             case X:
+                 i |= 4;

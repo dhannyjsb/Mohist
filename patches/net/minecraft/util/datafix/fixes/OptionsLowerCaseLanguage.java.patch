@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/util/datafix/fixes/OptionsLowerCaseLanguage.java
++++ ../src-work/minecraft/net/minecraft/util/datafix/fixes/OptionsLowerCaseLanguage.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.util.datafix.fixes;
+ 
+-import java.util.Locale;
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.util.datafix.IFixableData;
+ 
++import java.util.Locale;
++
+ public class OptionsLowerCaseLanguage implements IFixableData
+ {
+     public int getFixVersion()

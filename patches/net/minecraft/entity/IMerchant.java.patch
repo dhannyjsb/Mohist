@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/entity/IMerchant.java
++++ ../src-work/minecraft/net/minecraft/entity/IMerchant.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.entity;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.util.math.BlockPos;
+@@ -11,6 +10,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ public interface IMerchant
+ {
+     void setCustomer(@Nullable EntityPlayer player);

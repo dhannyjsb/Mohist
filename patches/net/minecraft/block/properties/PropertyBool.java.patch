@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/block/properties/PropertyBool.java
++++ ../src-work/minecraft/net/minecraft/block/properties/PropertyBool.java
+@@ -2,6 +2,7 @@
+ 
+ import com.google.common.base.Optional;
+ import com.google.common.collect.ImmutableSet;
++
+ import java.util.Collection;
+ 
+ public class PropertyBool extends PropertyHelper<Boolean>

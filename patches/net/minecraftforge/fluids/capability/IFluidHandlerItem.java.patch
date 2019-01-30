@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/capability/IFluidHandlerItem.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/capability/IFluidHandlerItem.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,11 +19,10 @@
+ 
+ package net.minecraftforge.fluids.capability;
+ 
+-import javax.annotation.Nonnull;
+-import javax.annotation.Nullable;
+-
+ import net.minecraft.item.ItemStack;
+ 
++import javax.annotation.Nonnull;
++
+ /**
+  * ItemStacks handled by an {@link IFluidHandler} may change, so this class allows
+  * users of the fluid handler to get the container after it has been used.

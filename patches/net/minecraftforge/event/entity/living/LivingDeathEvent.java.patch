@@ -1,0 +1,26 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/living/LivingDeathEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/living/LivingDeathEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,13 +19,13 @@
+ 
+ package net.minecraftforge.event.entity.living;
+ 
++import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.entity.player.EntityPlayerMP;
++import net.minecraft.util.DamageSource;
+ import net.minecraftforge.common.ForgeHooks;
+ import net.minecraftforge.common.MinecraftForge;
+ import net.minecraftforge.fml.common.eventhandler.Cancelable;
+-import net.minecraft.util.DamageSource;
+-import net.minecraft.entity.EntityLivingBase;
+ 
+ /**
+  * LivingDeathEvent is fired when an Entity dies. <br>

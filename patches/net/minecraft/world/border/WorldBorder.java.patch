@@ -1,0 +1,38 @@
+--- ../src-base/minecraft/net/minecraft/world/border/WorldBorder.java
++++ ../src-work/minecraft/net/minecraft/world/border/WorldBorder.java
+@@ -1,14 +1,16 @@
+ package net.minecraft.world.border;
+ 
+ import com.google.common.collect.Lists;
+-import java.util.List;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.ChunkPos;
++import net.minecraft.world.WorldServer;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.List;
++
+ public class WorldBorder
+ {
+     private final List<IBorderListener> listeners = Lists.<IBorderListener>newArrayList();
+@@ -24,6 +26,9 @@
+     private int warningTime;
+     private int warningDistance;
+ 
++    // TODO: Check if it's initialized properly
++    public WorldServer world;
++
+     public WorldBorder()
+     {
+         this.endDiameter = this.startDiameter;
+@@ -206,6 +211,7 @@
+ 
+     public void addListener(IBorderListener listener)
+     {
++        if (listeners.contains(listener)) return;
+         this.listeners.add(listener);
+     }
+ 

@@ -1,0 +1,16 @@
+--- ../src-base/minecraft/net/minecraft/client/audio/SoundList.java
++++ ../src-work/minecraft/net/minecraft/client/audio/SoundList.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.client.audio;
+ 
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class SoundList
+ {

@@ -1,0 +1,49 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/block/model/multipart/Selector.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/block/model/multipart/Selector.java
+@@ -4,15 +4,7 @@
+ import com.google.common.base.Function;
+ import com.google.common.base.Predicate;
+ import com.google.common.collect.Iterables;
+-import com.google.gson.JsonDeserializationContext;
+-import com.google.gson.JsonDeserializer;
+-import com.google.gson.JsonElement;
+-import com.google.gson.JsonObject;
+-import com.google.gson.JsonParseException;
+-import java.lang.reflect.Type;
+-import java.util.Set;
+-import java.util.Map.Entry;
+-import javax.annotation.Nullable;
++import com.google.gson.*;
+ import net.minecraft.block.state.BlockStateContainer;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.client.renderer.block.model.VariantList;
+@@ -20,6 +12,11 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.lang.reflect.Type;
++import java.util.Map.Entry;
++import java.util.Set;
++
+ @SideOnly(Side.CLIENT)
+ public class Selector
+ {
+@@ -88,7 +85,7 @@
+                 @Nullable
+                 public ICondition apply(@Nullable JsonElement p_apply_1_)
+                 {
+-                    return p_apply_1_ == null ? null : Selector.Deserializer.getOrAndCondition(p_apply_1_.getAsJsonObject());
++                    return p_apply_1_ == null ? null : Deserializer.getOrAndCondition(p_apply_1_.getAsJsonObject());
+                 }
+             };
+             private static final Function<Entry<String, JsonElement>, ICondition> FUNCTION_PROPERTY_VALUE = new Function<Entry<String, JsonElement>, ICondition>()
+@@ -96,7 +93,7 @@
+                 @Nullable
+                 public ICondition apply(@Nullable Entry<String, JsonElement> p_apply_1_)
+                 {
+-                    return p_apply_1_ == null ? null : Selector.Deserializer.makePropertyValue(p_apply_1_);
++                    return p_apply_1_ == null ? null : Deserializer.makePropertyValue(p_apply_1_);
+                 }
+             };
+ 

@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/resources/data/AnimationMetadataSection.java
++++ ../src-work/minecraft/net/minecraft/client/resources/data/AnimationMetadataSection.java
+@@ -1,11 +1,12 @@
+ package net.minecraft.client.resources.data;
+ 
+ import com.google.common.collect.Sets;
+-import java.util.List;
+-import java.util.Set;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.List;
++import java.util.Set;
++
+ @SideOnly(Side.CLIENT)
+ public class AnimationMetadataSection implements IMetadataSection
+ {

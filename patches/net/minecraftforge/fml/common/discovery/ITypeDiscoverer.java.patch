@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/discovery/ITypeDiscoverer.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/discovery/ITypeDiscoverer.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,11 +19,11 @@
+ 
+ package net.minecraftforge.fml.common.discovery;
+ 
++import net.minecraftforge.fml.common.ModContainer;
++
+ import java.util.List;
+ import java.util.regex.Pattern;
+ 
+-import net.minecraftforge.fml.common.ModContainer;
+-
+ public interface ITypeDiscoverer
+ {
+     // main class part, followed by an optional $ and an "inner class" part. $ cannot be last, otherwise scala breaks

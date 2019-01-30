@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/recipebook/RecipeList.java
++++ ../src-work/minecraft/net/minecraft/client/gui/recipebook/RecipeList.java
+@@ -2,8 +2,6 @@
+ 
+ import com.google.common.collect.Lists;
+ import it.unimi.dsi.fastutil.ints.IntList;
+-import java.util.BitSet;
+-import java.util.List;
+ import net.minecraft.client.util.RecipeItemHelper;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.item.crafting.IRecipe;
+@@ -11,6 +9,9 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.BitSet;
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class RecipeList
+ {

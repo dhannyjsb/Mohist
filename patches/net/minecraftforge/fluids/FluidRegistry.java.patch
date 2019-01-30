@@ -1,0 +1,127 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/FluidRegistry.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/FluidRegistry.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,13 +19,12 @@
+ 
+ package net.minecraftforge.fluids;
+ 
+-import java.util.Collections;
+-import java.util.Map;
+-import java.util.Map.Entry;
+-import java.util.Set;
+-
+-import net.minecraftforge.fml.common.LoaderState;
+-
++import cn.pfcraft.server.Mohist;
++import com.google.common.base.Strings;
++import com.google.common.collect.BiMap;
++import com.google.common.collect.HashBiMap;
++import com.google.common.collect.Maps;
++import com.google.common.collect.Sets;
+ import net.minecraft.block.Block;
+ import net.minecraft.init.Blocks;
+ import net.minecraft.nbt.NBTTagCompound;
+@@ -34,20 +33,17 @@
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.util.text.translation.I18n;
+ import net.minecraftforge.common.MinecraftForge;
+-
+-import com.google.common.base.Strings;
+-import com.google.common.collect.BiMap;
+-import com.google.common.collect.HashBiMap;
+-import com.google.common.collect.Maps;
+-import com.google.common.collect.Sets;
+-
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.Loader;
++import net.minecraftforge.fml.common.LoaderState;
+ import net.minecraftforge.fml.common.ModContainer;
+ import net.minecraftforge.fml.common.eventhandler.Event;
+ import net.minecraftforge.registries.IRegistryDelegate;
+ 
+ import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.Map;
++import java.util.Map.Entry;
++import java.util.Set;
+ 
+ /**
+  * Handles Fluid registrations. Fluids MUST be registered in order to function.
+@@ -122,13 +118,13 @@
+                 String derivedName = defaultName.split(":",2)[1];
+                 String localDefault = defaultFluidName.get(derivedName);
+                 if (localDefault == null) {
+-                    FMLLog.log.error("The fluid {} (specified as {}) is missing from this instance - it will be removed", derivedName, defaultName);
++                    Mohist.LOGGER.error("The fluid {} (specified as {}) is missing from this instance - it will be removed", derivedName, defaultName);
+                     continue;
+                 }
+                 fluid = masterFluidReference.get(localDefault);
+-                FMLLog.log.error("The fluid {} specified as default is not present - it will be reverted to default {}", defaultName, localDefault);
++                Mohist.LOGGER.error("The fluid {} specified as default is not present - it will be reverted to default {}", defaultName, localDefault);
+             }
+-            FMLLog.log.debug("The fluid {} has been selected as the default fluid for {}", defaultName, fluid.getName());
++            Mohist.LOGGER.debug("The fluid {} has been selected as the default fluid for {}", defaultName, fluid.getName());
+             Fluid oldFluid = localFluids.put(fluid.getName(), fluid);
+             Integer id = localFluidIDs.remove(oldFluid);
+             localFluidIDs.put(fluid, id);
+@@ -260,7 +256,7 @@
+         {
+             ModContainer modContainer = Loader.instance().activeModContainer();
+             String modContainerName = modContainer == null ? null : modContainer.getName();
+-            FMLLog.log.error("Trying to activate the universal filled bucket too late. Call it statically in your Mods class. Mod: {}", modContainerName);
++            Mohist.LOGGER.error("Trying to activate the universal filled bucket too late. Call it statically in your Mods class. Mod: {}", modContainerName);
+         }
+         else
+         {
+@@ -371,7 +367,7 @@
+     {
+         String name = masterFluidReference.inverse().get(key);
+         if (Strings.isNullOrEmpty(name)) {
+-            FMLLog.log.error("The fluid registry is corrupted. A fluid {} {} is not properly registered. The mod that registered this is broken", key.getClass().getName(), key.getName());
++            Mohist.LOGGER.error("The fluid registry is corrupted. A fluid {} {} is not properly registered. The mod that registered this is broken", key.getClass().getName(), key.getName());
+             throw new IllegalStateException("The fluid registry is corrupted");
+         }
+         return name;
+@@ -397,7 +393,7 @@
+         Set<String> defaults = Sets.newHashSet();
+         if (tag.hasKey("DefaultFluidList",9))
+         {
+-            FMLLog.log.debug("Loading persistent fluid defaults from world");
++            Mohist.LOGGER.debug("Loading persistent fluid defaults from world");
+             NBTTagList tl = tag.getTagList("DefaultFluidList", 8);
+             for (int i = 0; i < tl.tagCount(); i++)
+             {
+@@ -406,7 +402,7 @@
+         }
+         else
+         {
+-            FMLLog.log.debug("World is missing persistent fluid defaults - using local defaults");
++            Mohist.LOGGER.debug("World is missing persistent fluid defaults - using local defaults");
+         }
+         loadFluidDefaults(HashBiMap.create(fluidIDs), defaults);
+     }
+@@ -436,13 +432,13 @@
+ 
+         if (!illegalFluids.isEmpty())
+         {
+-            FMLLog.log.fatal("The fluid registry is corrupted. Something has inserted a fluid without registering it");
+-            FMLLog.log.fatal("There is {} unregistered fluids", illegalFluids.size());
++            Mohist.LOGGER.fatal("The fluid registry is corrupted. Something has inserted a fluid without registering it");
++            Mohist.LOGGER.fatal("There is {} unregistered fluids", illegalFluids.size());
+             for (Fluid f: illegalFluids)
+             {
+-                FMLLog.log.fatal("  Fluid name : {}, type: {}", f.getName(), f.getClass().getName());
++                Mohist.LOGGER.fatal("  Fluid name : {}, type: {}", f.getName(), f.getClass().getName());
+             }
+-            FMLLog.log.fatal("The mods that own these fluids need to register them properly");
++            Mohist.LOGGER.fatal("The mods that own these fluids need to register them properly");
+             throw new IllegalStateException("The fluid map contains fluids unknown to the master fluid registry");
+         }
+     }

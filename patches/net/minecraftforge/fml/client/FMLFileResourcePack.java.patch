@@ -1,0 +1,47 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/client/FMLFileResourcePack.java
++++ ../src-work/minecraft/net/minecraftforge/fml/client/FMLFileResourcePack.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,21 +19,18 @@
+ 
+ package net.minecraftforge.fml.client;
+ 
++import cn.pfcraft.server.Mohist;
++import net.minecraft.client.resources.FileResourcePack;
++import net.minecraftforge.fml.common.FMLContainerHolder;
++import net.minecraftforge.fml.common.ModContainer;
++
++import javax.imageio.ImageIO;
+ import java.awt.image.BufferedImage;
+ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.nio.charset.StandardCharsets;
+ 
+-import net.minecraftforge.fml.common.FMLLog;
+-import org.apache.logging.log4j.LogManager;
+-
+-import javax.imageio.ImageIO;
+-
+-import net.minecraft.client.resources.FileResourcePack;
+-import net.minecraftforge.fml.common.FMLContainerHolder;
+-import net.minecraftforge.fml.common.ModContainer;
+-
+ public class FMLFileResourcePack extends FileResourcePack implements FMLContainerHolder {
+ 
+     private ModContainer container;
+@@ -60,7 +57,7 @@
+         {
+             if ("pack.mcmeta".equals(resourceName))
+             {
+-                FMLLog.log.debug("Mod {} is missing a pack.mcmeta file, substituting a dummy one", container.getName());
++                Mohist.LOGGER.debug("Mod {} is missing a pack.mcmeta file, substituting a dummy one", container.getName());
+                 return new ByteArrayInputStream(("{\n" +
+                         " \"pack\": {\n"+
+                         "   \"description\": \"dummy FML pack for "+container.getName()+"\",\n"+

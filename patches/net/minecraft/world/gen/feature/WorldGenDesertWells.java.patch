@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/world/gen/feature/WorldGenDesertWells.java
++++ ../src-work/minecraft/net/minecraft/world/gen/feature/WorldGenDesertWells.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.world.gen.feature;
+ 
+ import com.google.common.base.Predicates;
+-import java.util.Random;
+ import net.minecraft.block.BlockSand;
+ import net.minecraft.block.BlockSlab;
+ import net.minecraft.block.BlockStoneSlab;
+@@ -12,6 +11,8 @@
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.World;
+ 
++import java.util.Random;
++
+ public class WorldGenDesertWells extends WorldGenerator
+ {
+     private static final BlockStateMatcher IS_SAND = BlockStateMatcher.forBlock(Blocks.SAND).where(BlockSand.VARIANT, Predicates.equalTo(BlockSand.EnumType.SAND));

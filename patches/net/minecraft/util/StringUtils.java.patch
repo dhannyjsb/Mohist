@@ -1,0 +1,16 @@
+--- ../src-base/minecraft/net/minecraft/util/StringUtils.java
++++ ../src-work/minecraft/net/minecraft/util/StringUtils.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.util;
+ 
+-import java.util.regex.Pattern;
+-import javax.annotation.Nullable;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.util.regex.Pattern;
++
+ public class StringUtils
+ {
+     private static final Pattern PATTERN_CONTROL_CODE = Pattern.compile("(?i)\\u00A7[0-9A-FK-OR]");

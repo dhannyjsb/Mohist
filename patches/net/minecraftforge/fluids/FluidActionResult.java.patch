@@ -1,0 +1,23 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/FluidActionResult.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/FluidActionResult.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,10 +19,10 @@
+ 
+ package net.minecraftforge.fluids;
+ 
+-import javax.annotation.Nonnull;
+-
+ import net.minecraft.item.ItemStack;
+ 
++import javax.annotation.Nonnull;
++
+ /**
+  * Holds the result of a fluid action from {@link FluidUtil}.
+  *

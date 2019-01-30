@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandSetSpawnpoint.java
++++ ../src-work/minecraft/net/minecraft/command/CommandSetSpawnpoint.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.command;
+ 
+-import java.util.Collections;
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.util.math.BlockPos;
+ 
++import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.List;
++
+ public class CommandSetSpawnpoint extends CommandBase
+ {
+     public String getName()

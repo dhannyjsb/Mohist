@@ -1,0 +1,46 @@
+--- ../src-base/minecraft/net/minecraftforge/client/model/ItemLayerModel.java
++++ ../src-work/minecraft/net/minecraftforge/client/model/ItemLayerModel.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,10 +19,8 @@
+ 
+ package net.minecraftforge.client.model;
+ 
+-import javax.vecmath.Vector4f;
+-
+-import net.minecraftforge.common.ForgeVersion;
+-
++import com.google.common.collect.ImmutableList;
++import com.google.common.collect.ImmutableMap;
+ import net.minecraft.client.renderer.block.model.BakedQuad;
+ import net.minecraft.client.renderer.block.model.IBakedModel;
+ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+@@ -34,19 +32,14 @@
+ import net.minecraft.util.EnumFacing;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
++import net.minecraftforge.common.ForgeVersion;
+ import net.minecraftforge.common.model.IModelState;
+ import net.minecraftforge.common.model.TRSRTransformation;
+ 
+-import java.util.Arrays;
+-import java.util.BitSet;
+-import java.util.Collection;
+-import java.util.EnumMap;
+-import java.util.Optional;
++import javax.vecmath.Vector4f;
++import java.util.*;
+ import java.util.function.Function;
+ 
+-import com.google.common.collect.ImmutableList;
+-import com.google.common.collect.ImmutableMap;
+-
+ public final class ItemLayerModel implements IModel
+ {
+     public static final ItemLayerModel INSTANCE = new ItemLayerModel(ImmutableList.of());

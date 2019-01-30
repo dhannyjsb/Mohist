@@ -1,0 +1,22 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandClearInventory.java
++++ ../src-work/minecraft/net/minecraft/command/CommandClearInventory.java
+@@ -1,8 +1,5 @@
+ package net.minecraft.command;
+ 
+-import java.util.Collections;
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.item.Item;
+ import net.minecraft.nbt.JsonToNBT;
+@@ -12,6 +9,10 @@
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.text.TextComponentTranslation;
+ 
++import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.List;
++
+ public class CommandClearInventory extends CommandBase
+ {
+     public String getName()

@@ -1,0 +1,26 @@
+--- ../src-base/minecraft/net/minecraft/server/gui/StatsComponent.java
++++ ../src-work/minecraft/net/minecraft/server/gui/StatsComponent.java
+@@ -1,17 +1,15 @@
+ package net.minecraft.server.gui;
+ 
+-import java.awt.Color;
+-import java.awt.Dimension;
+-import java.awt.Graphics;
+-import java.awt.event.ActionEvent;
+-import java.awt.event.ActionListener;
+-import java.text.DecimalFormat;
+-import javax.swing.JComponent;
+-import javax.swing.Timer;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.swing.*;
++import java.awt.*;
++import java.awt.event.ActionEvent;
++import java.awt.event.ActionListener;
++import java.text.DecimalFormat;
++
+ @SideOnly(Side.SERVER)
+ public class StatsComponent extends JComponent
+ {

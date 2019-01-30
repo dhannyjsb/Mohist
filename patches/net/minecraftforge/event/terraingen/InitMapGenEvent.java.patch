@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraftforge/event/terraingen/InitMapGenEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/terraingen/InitMapGenEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,8 +19,8 @@
+ 
+ package net.minecraftforge.event.terraingen;
+ 
+-import net.minecraftforge.fml.common.eventhandler.Event;
+ import net.minecraft.world.gen.MapGenBase;
++import net.minecraftforge.fml.common.eventhandler.Event;
+ 
+ public class InitMapGenEvent extends Event
+ {

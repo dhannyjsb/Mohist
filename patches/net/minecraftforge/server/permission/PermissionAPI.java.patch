@@ -1,0 +1,36 @@
+--- ../src-base/minecraft/net/minecraftforge/server/permission/PermissionAPI.java
++++ ../src-work/minecraft/net/minecraftforge/server/permission/PermissionAPI.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,15 +19,14 @@
+ 
+ package net.minecraftforge.server.permission;
+ 
++import cn.pfcraft.server.Mohist;
+ import com.google.common.base.Preconditions;
+ import com.mojang.authlib.GameProfile;
+ import net.minecraft.entity.player.EntityPlayer;
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.Loader;
+ import net.minecraftforge.fml.common.LoaderState;
+ import net.minecraftforge.server.permission.context.IContext;
+ import net.minecraftforge.server.permission.context.PlayerContext;
+-import org.apache.logging.log4j.Level;
+ 
+ import javax.annotation.Nullable;
+ 
+@@ -42,7 +41,7 @@
+     {
+         Preconditions.checkNotNull(handler, "Permission handler can't be null!");
+         Preconditions.checkState(Loader.instance().getLoaderState().ordinal() <= LoaderState.PREINITIALIZATION.ordinal(), "Can't register after IPermissionHandler PreInit!");
+-        FMLLog.log.warn("Replacing {} with {}", permissionHandler.getClass().getName(), handler.getClass().getName());
++        Mohist.LOGGER.warn("Replacing {} with {}", permissionHandler.getClass().getName(), handler.getClass().getName());
+         permissionHandler = handler;
+     }
+ 

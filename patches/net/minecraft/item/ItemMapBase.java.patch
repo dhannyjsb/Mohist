@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemMapBase.java
++++ ../src-work/minecraft/net/minecraft/item/ItemMapBase.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.item;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.network.Packet;
+ import net.minecraft.world.World;
+ 
++import javax.annotation.Nullable;
++
+ public class ItemMapBase extends Item
+ {
+     public boolean isMap()

@@ -33,11 +33,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@SuppressWarnings("deprecation")
 public final class CraftMagicNumbers implements UnsafeValues {
     public static final UnsafeValues INSTANCE = new CraftMagicNumbers();
 
@@ -170,7 +168,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
             Advancement bukkit = Bukkit.getAdvancement(key);
 
             if (bukkit != null) {
-                File file = new File(MinecraftServer.getServerCB().getAdvancementManager().advancementsDir, key.getNamespace() + File.separator + key.getKey() + ".json");
+                File file = new File(MinecraftServer.getServerInst().getAdvancementManager().advancementsDir, key.getNamespace() + File.separator + key.getKey() + ".json");
                 file.getParentFile().mkdirs();
 
                 try {
@@ -179,7 +177,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
                     Bukkit.getLogger().log(Level.SEVERE, "Error saving advancement " + key, ex);
                 }
 
-                MinecraftServer.getServerCB().getPlayerList().reloadResources();
+                MinecraftServer.getServerInst().getPlayerList().reloadResources();
 
                 return bukkit;
             }
@@ -194,11 +192,6 @@ public final class CraftMagicNumbers implements UnsafeValues {
         return file.delete();
     }
 
-    /**
-     * This helper class represents the different NBT Tags.
-     * <p>
-     * These should match NBTBase#getTypeId
-     *
     public static class NBT {
 
         public static final int TAG_END = 0;

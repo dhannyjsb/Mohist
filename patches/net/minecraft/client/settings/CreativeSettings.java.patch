@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/settings/CreativeSettings.java
++++ ../src-work/minecraft/net/minecraft/client/settings/CreativeSettings.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.settings;
+ 
+-import java.io.File;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.nbt.CompressedStreamTools;
+ import net.minecraft.nbt.NBTTagCompound;
+@@ -9,6 +8,8 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import java.io.File;
++
+ @SideOnly(Side.CLIENT)
+ public class CreativeSettings
+ {

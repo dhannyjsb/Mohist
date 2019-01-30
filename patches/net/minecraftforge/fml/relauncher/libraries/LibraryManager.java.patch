@@ -1,0 +1,309 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/relauncher/libraries/LibraryManager.java
++++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/libraries/LibraryManager.java
+@@ -16,28 +16,21 @@
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  */
+-
+ package net.minecraftforge.fml.relauncher.libraries;
+ 
+-import java.io.ByteArrayInputStream;
+-import java.io.ByteArrayOutputStream;
+-import java.io.File;
+-import java.io.FileOutputStream;
+-import java.io.FilenameFilter;
+-import java.io.IOException;
+-import java.io.InputStream;
++import cn.pfcraft.server.Mohist;
++import com.google.common.io.ByteStreams;
++import com.google.common.io.Files;
++import net.minecraft.launchwrapper.Launch;
++import net.minecraftforge.common.ForgeVersion;
++import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
++import org.apache.commons.lang3.tuple.Pair;
++import org.apache.maven.artifact.versioning.ArtifactVersion;
++
++import java.io.*;
+ import java.net.URISyntaxException;
+ import java.security.CodeSource;
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.Comparator;
+-import java.util.Date;
+-import java.util.HashSet;
+-import java.util.List;
+-import java.util.Locale;
+-import java.util.Map;
+-import java.util.Optional;
+-import java.util.Set;
++import java.util.*;
+ import java.util.jar.Attributes;
+ import java.util.jar.JarEntry;
+ import java.util.jar.JarFile;
+@@ -45,16 +38,6 @@
+ import java.util.zip.ZipEntry;
+ import java.util.zip.ZipInputStream;
+ 
+-import org.apache.commons.lang3.tuple.Pair;
+-import org.apache.maven.artifact.versioning.ArtifactVersion;
+-
+-import com.google.common.io.ByteStreams;
+-import com.google.common.io.Files;
+-import net.minecraft.launchwrapper.Launch;
+-import net.minecraftforge.common.ForgeVersion;
+-import net.minecraftforge.fml.common.FMLLog;
+-import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
+-
+ public class LibraryManager
+ {
+     public static final boolean DISABLE_EXTERNAL_MANIFEST = Boolean.parseBoolean(System.getProperty("forge.disable_external_manifest", "false"));
+@@ -75,10 +58,10 @@
+     public static void setup(File minecraftHome)
+     {
+         File libDir = findLibraryFolder(minecraftHome);
+-        FMLLog.log.debug("Determined Minecraft Libraries Root: {}", libDir);
++        Mohist.LOGGER.debug("Determined Minecraft Libraries Root: {}", libDir);
+         Repository old = Repository.replace(libDir, "libraries");
+         if (old != null)
+-            FMLLog.log.debug("  Overwriting Previous: {}", old);
++            Mohist.LOGGER.debug("  Overwriting Previous: {}", old);
+         libraries_dir = Repository.get("libraries");
+ 
+         File mods = new File(minecraftHome, "mods");
+@@ -119,14 +102,14 @@
+     {
+         if (LIBRARY_DIRECTORY_OVERRIDE != null)
+         {
+-            FMLLog.log.error("System variable set to override Library Directory: {}", LIBRARY_DIRECTORY_OVERRIDE);
++            Mohist.LOGGER.error("System variable set to override Library Directory: {}", LIBRARY_DIRECTORY_OVERRIDE);
+             return new File(LIBRARY_DIRECTORY_OVERRIDE);
+         }
+ 
+         CodeSource source = ArtifactVersion.class.getProtectionDomain().getCodeSource();
+         if (source == null)
+         {
+-            FMLLog.log.error("Unable to determine codesource for {}. Using default libraries directory.", ArtifactVersion.class.getName());
++            Mohist.LOGGER.error("Unable to determine codesource for {}. Using default libraries directory.", ArtifactVersion.class.getName());
+             return new File(minecraftHome, "libraries");
+         }
+ 
+@@ -142,17 +125,17 @@
+ 
+             if (!comp.endsWith("/org/apache/maven/maven-artifact/"))
+             {
+-                FMLLog.log.error("Apache Maven library folder was not in the format expected. Using default libraries directory.");
+-                FMLLog.log.error("Full: {}", new File(source.getLocation().toURI()));
+-                FMLLog.log.error("Trimmed: {}", comp);
++               // Mohist.LOGGER.error("Apache Maven library folder was not in the format expected. Using default libraries directory.");
++               // Mohist.LOGGER.error("Full: {}", new File(source.getLocation().toURI()));
++               // Mohist.LOGGER.error("Trimmed: {}", comp);
+                 return new File(minecraftHome, "libraries");
+             }
+             //     maven-artifact  /maven          /apache         /org            /libraries
+-            return apache          .getParentFile().getParentFile().getParentFile().getParentFile();
++            return apache.getParentFile().getParentFile().getParentFile().getParentFile();
+         }
+         catch (URISyntaxException e)
+         {
+-            FMLLog.log.error(FMLLog.log.getMessageFactory().newMessage("Unable to determine file for {}. Using default libraries directory.", ArtifactVersion.class.getName()), e);
++            Mohist.LOGGER.error(Mohist.LOGGER.getMessageFactory().newMessage("Unable to determine file for {}. Using default libraries directory.", ArtifactVersion.class.getName()), e);
+         }
+ 
+         return new File(minecraftHome, "libraries"); //Everything else failed, return the default.
+@@ -163,7 +146,7 @@
+         if (!dir.exists())
+             return;
+ 
+-        FMLLog.log.debug("Cleaning up mods folder: {}", dir);
++        Mohist.LOGGER.debug("Cleaning up mods folder: {}", dir);
+         for (File file : dir.listFiles(f -> f.isFile() && f.getName().endsWith(".jar")))
+         {
+             Pair<Artifact, byte[]> ret = extractPacked(file, modlist, modDirs);
+@@ -183,7 +166,7 @@
+         }
+         catch (IOException e)
+         {
+-            FMLLog.log.error(FMLLog.log.getMessageFactory().newMessage("Error updating modlist file {}", modlist.getName()), e);
++            Mohist.LOGGER.error(Mohist.LOGGER.getMessageFactory().newMessage("Error updating modlist file {}", modlist.getName()), e);
+         }
+     }
+ 
+@@ -191,20 +174,20 @@
+     {
+         if (processed.contains(file))
+         {
+-            FMLLog.log.debug("File already proccessed {}, Skipping", file.getAbsolutePath());
++            Mohist.LOGGER.debug("File already proccessed {}, Skipping", file.getAbsolutePath());
+             return null;
+         }
+         JarFile jar = null;
+         try
+         {
+             jar = new JarFile(file);
+-            FMLLog.log.debug("Examining file: {}", file.getName());
++            Mohist.LOGGER.debug("Examining file: {}", file.getName());
+             processed.add(file);
+             return extractPacked(jar, modlist, modDirs);
+         }
+         catch (IOException ioe)
+         {
+-            FMLLog.log.error("Unable to read the jar file {} - ignoring", file.getName(), ioe);
++            Mohist.LOGGER.error("Unable to read the jar file {} - ignoring", file.getName(), ioe);
+         }
+         finally
+         {
+@@ -237,7 +220,7 @@
+             {
+                 if (!dep.endsWith(".jar"))
+                 {
+-                    FMLLog.log.error("Contained Dep is not a jar file: {}", dep);
++                    Mohist.LOGGER.error("Contained Dep is not a jar file: {}", dep);
+                     throw new IllegalStateException("Invalid contained dep, Must be jar: " + dep);
+                 }
+ 
+@@ -247,14 +230,14 @@
+                 JarEntry depEntry = jar.getJarEntry(dep);
+                 if (depEntry == null)
+                 {
+-                    FMLLog.log.error("Contained Dep is not in the jar: {}", dep);
++                    Mohist.LOGGER.error("Contained Dep is not in the jar: {}", dep);
+                     throw new IllegalStateException("Invalid contained dep, Missing from jar: " + dep);
+                 }
+ 
+                 String depEndName = new File(dep).getName(); // extract last part of name
+                 if (skipContainedDeps.contains(dep) || skipContainedDeps.contains(depEndName))
+                 {
+-                    FMLLog.log.error("Skipping dep at request: {}", dep);
++                    Mohist.LOGGER.error("Skipping dep at request: {}", dep);
+                     continue;
+                 }
+ 
+@@ -294,31 +277,31 @@
+                         File target = new File(dir, depEndName);
+                         if (target.exists())
+                         {
+-                            FMLLog.log.debug("Found existing ContainDep extracted to {}, skipping extraction", target.getCanonicalPath());
++                            Mohist.LOGGER.debug("Found existing ContainDep extracted to {}, skipping extraction", target.getCanonicalPath());
+                             found = true;
+                         }
+                     }
+                     if (!found)
+                     {
+                         File target = new File(modDirs[0], depEndName);
+-                        FMLLog.log.debug("Extracting ContainedDep {} from {} to {}", dep, jar.getName(), target.getCanonicalPath());
++                        Mohist.LOGGER.debug("Extracting ContainedDep {} from {} to {}", dep, jar.getName(), target.getCanonicalPath());
+                         try
+                         {
+                             Files.createParentDirs(target);
+                             try
+-                            (
+-                                FileOutputStream out = new FileOutputStream(target);
+-                                InputStream in = data == null ? jar.getInputStream(depEntry) : new ByteArrayInputStream(data)
+-                            )
++                                    (
++                                            FileOutputStream out = new FileOutputStream(target);
++                                            InputStream in = data == null ? jar.getInputStream(depEntry) : new ByteArrayInputStream(data)
++                                    )
+                             {
+                                 ByteStreams.copy(in, out);
+                             }
+-                            FMLLog.log.debug("Extracted ContainedDep {} from {} to {}", dep, jar.getName(), target.getCanonicalPath());
++                            Mohist.LOGGER.debug("Extracted ContainedDep {} from {} to {}", dep, jar.getName(), target.getCanonicalPath());
+                             extractPacked(target, modlist, modDirs);
+                         }
+                         catch (IOException e)
+                         {
+-                            FMLLog.log.error("An error occurred extracting dependency", e);
++                            Mohist.LOGGER.error("An error occurred extracting dependency", e);
+                         }
+                     }
+                 }
+@@ -330,7 +313,7 @@
+                         File target = artifact.getFile();
+                         if (target.exists())
+                         {
+-                            FMLLog.log.debug("Found existing ContainedDep {}({}) from {} extracted to {}, skipping extraction", dep, artifact.toString(), target.getCanonicalPath(), jar.getName());
++                            Mohist.LOGGER.debug("Found existing ContainedDep {}({}) from {} extracted to {}, skipping extraction", dep, artifact.toString(), target.getCanonicalPath(), jar.getName());
+                             if (!ENABLE_AUTO_MOD_MOVEMENT)
+                             {
+                                 Pair<?, ?> child = extractPacked(target, modlist, modDirs); //If we're not building a real list we have to re-build the dep list every run. So search down.
+@@ -342,17 +325,17 @@
+                         }
+                         else
+                         {
+-                            FMLLog.log.debug("Extracting ContainedDep {}({}) from {} to {}", dep, artifact.toString(), jar.getName(), target.getCanonicalPath());
++                            Mohist.LOGGER.debug("Extracting ContainedDep {}({}) from {} to {}", dep, artifact.toString(), jar.getName(), target.getCanonicalPath());
+                             Files.createParentDirs(target);
+                             try
+-                            (
+-                                FileOutputStream out = new FileOutputStream(target);
+-                                InputStream in = data == null ? jar.getInputStream(depEntry) : new ByteArrayInputStream(data)
+-                            )
++                                    (
++                                            FileOutputStream out = new FileOutputStream(target);
++                                            InputStream in = data == null ? jar.getInputStream(depEntry) : new ByteArrayInputStream(data)
++                                    )
+                             {
+                                 ByteStreams.copy(in, out);
+                             }
+-                            FMLLog.log.debug("Extracted ContainedDep {}({}) from {} to {}", dep, artifact.toString(), jar.getName(), target.getCanonicalPath());
++                            Mohist.LOGGER.debug("Extracted ContainedDep {}({}) from {} to {}", dep, artifact.toString(), jar.getName(), target.getCanonicalPath());
+ 
+                             if (artifact.isSnapshot())
+                             {
+@@ -375,11 +358,11 @@
+                     }
+                     catch (NumberFormatException nfe)
+                     {
+-                        FMLLog.log.error(FMLLog.log.getMessageFactory().newMessage("An error occurred extracting dependency. Invalid Timestamp: {}", meta.getValue(TIMESTAMP)), nfe);
++                        Mohist.LOGGER.error(Mohist.LOGGER.getMessageFactory().newMessage("An error occurred extracting dependency. Invalid Timestamp: {}", meta.getValue(TIMESTAMP)), nfe);
+                     }
+                     catch (IOException e)
+                     {
+-                        FMLLog.log.error("An error occurred extracting dependency", e);
++                        Mohist.LOGGER.error("An error occurred extracting dependency", e);
+                     }
+                 }
+             }
+@@ -447,22 +430,22 @@
+         String extraMods = args.get("--mods");
+         if (extraMods != null)
+         {
+-            FMLLog.log.info("Found mods from the command line:");
++            Mohist.LOGGER.info("Found mods from the command line:");
+             for (String mod : extraMods.split(","))
+             {
+                 File file = new File(mcDir, mod);
+                 if (!file.exists())
+                 {
+-                    FMLLog.log.info("  Failed to find mod file {} ({})", mod, file.getAbsolutePath());
++                    Mohist.LOGGER.info("  Failed to find mod file {} ({})", mod, file.getAbsolutePath());
+                 }
+                 else if (!list.contains(file))
+                 {
+-                    FMLLog.log.debug("  Adding {} ({}) to the mod list", mod, file.getAbsolutePath());
++                    Mohist.LOGGER.debug("  Adding {} ({}) to the mod list", mod, file.getAbsolutePath());
+                     list.add(file);
+                 }
+                 else if (!list.contains(file))
+                 {
+-                    FMLLog.log.debug("  Duplicte command line mod detected {} ({})", mod, file.getAbsolutePath());
++                    Mohist.LOGGER.debug("  Duplicte command line mod detected {} ({})", mod, file.getAbsolutePath());
+                 }
+             }
+         }
+@@ -473,12 +456,12 @@
+             if (!base.isDirectory() || !base.exists())
+                 continue;
+ 
+-            FMLLog.log.info("Searching {} for mods", base.getAbsolutePath());
++            Mohist.LOGGER.info("Searching {} for mods", base.getAbsolutePath());
+             for (File f : base.listFiles(MOD_FILENAME_FILTER))
+             {
+                 if (!list.contains(f))
+                 {
+-                    FMLLog.log.debug("  Adding {} to the mod list", f.getName());
++                    Mohist.LOGGER.debug("  Adding {} to the mod list", f.getName());
+                     list.add(f);
+                 }
+             }

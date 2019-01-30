@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/entity/passive/EntityDonkey.java
++++ ../src-work/minecraft/net/minecraft/entity/passive/EntityDonkey.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.entity.passive;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.EntityAgeable;
+ import net.minecraft.init.SoundEvents;
+ import net.minecraft.util.DamageSource;
+@@ -10,6 +9,8 @@
+ import net.minecraft.world.World;
+ import net.minecraft.world.storage.loot.LootTableList;
+ 
++import javax.annotation.Nullable;
++
+ public class EntityDonkey extends AbstractChestHorse
+ {
+     public EntityDonkey(World worldIn)

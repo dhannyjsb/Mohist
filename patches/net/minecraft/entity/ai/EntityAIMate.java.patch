@@ -1,0 +1,66 @@
+--- ../src-base/minecraft/net/minecraft/entity/ai/EntityAIMate.java
++++ ../src-work/minecraft/net/minecraft/entity/ai/EntityAIMate.java
+@@ -1,16 +1,18 @@
+ package net.minecraft.entity.ai;
+ 
+-import java.util.List;
+-import java.util.Random;
+ import net.minecraft.advancements.CriteriaTriggers;
+ import net.minecraft.entity.EntityAgeable;
+ import net.minecraft.entity.item.EntityXPOrb;
+ import net.minecraft.entity.passive.EntityAnimal;
++import net.minecraft.entity.passive.EntityTameable;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.stats.StatList;
+ import net.minecraft.util.EnumParticleTypes;
+ import net.minecraft.world.World;
+ 
++import java.util.List;
++import java.util.Random;
++
+ public class EntityAIMate extends EntityAIBase
+ {
+     private final EntityAnimal animal;
+@@ -106,6 +108,9 @@
+ 
+         if (entityageable != null)
+         {
++            if (entityageable instanceof EntityTameable && ((EntityTameable) entityageable).isTamed()) {
++                entityageable.persistenceRequired = true;
++            }
+             EntityPlayerMP entityplayermp = this.animal.getLoveCause();
+ 
+             if (entityplayermp == null && this.targetMate.getLoveCause() != null)
+@@ -113,6 +118,13 @@
+                 entityplayermp = this.targetMate.getLoveCause();
+             }
+ 
++            int experience = this.animal.getRNG().nextInt(7) + 1;
++            org.bukkit.event.entity.EntityBreedEvent entityBreedEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityBreedEvent(entityageable, animal, targetMate, entityplayermp, this.animal.breedItem, experience);
++            if (entityBreedEvent.isCancelled()) {
++                return;
++            }
++            experience = entityBreedEvent.getExperience();
++
+             if (entityplayermp != null)
+             {
+                 entityplayermp.addStat(StatList.ANIMALS_BRED);
+@@ -125,7 +137,7 @@
+             this.targetMate.resetInLove();
+             entityageable.setGrowingAge(-24000);
+             entityageable.setLocationAndAngles(this.animal.posX, this.animal.posY, this.animal.posZ, 0.0F, 0.0F);
+-            this.world.spawnEntity(entityageable);
++            this.world.addEntity(entityageable, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.BREEDING);
+             Random random = this.animal.getRNG();
+ 
+             for (int i = 0; i < 7; ++i)
+@@ -141,7 +153,8 @@
+ 
+             if (this.world.getGameRules().getBoolean("doMobLoot"))
+             {
+-                this.world.spawnEntity(new EntityXPOrb(this.world, this.animal.posX, this.animal.posY, this.animal.posZ, random.nextInt(7) + 1));
++                if (experience > 0)
++                    this.world.spawnEntity(new EntityXPOrb(this.world, this.animal.posX, this.animal.posY, this.animal.posZ, experience));
+             }
+         }
+     }

@@ -1,0 +1,63 @@
+--- ../src-base/minecraft/net/minecraftforge/common/model/animation/AnimationStateMachine.java
++++ ../src-work/minecraft/net/minecraftforge/common/model/animation/AnimationStateMachine.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,23 +19,13 @@
+ 
+ package net.minecraftforge.common.model.animation;
+ 
++import cn.pfcraft.server.Mohist;
+ import com.google.common.base.Predicate;
+ import com.google.common.cache.CacheBuilder;
+ import com.google.common.cache.CacheLoader;
+ import com.google.common.cache.LoadingCache;
+-import com.google.common.collect.ImmutableList;
+-import com.google.common.collect.ImmutableMap;
+-import com.google.common.collect.ImmutableMultimap;
+-import com.google.common.collect.ImmutableSet;
+-import com.google.common.collect.Iterables;
+-import com.google.common.collect.Maps;
+-import com.google.common.collect.Multimaps;
+-import com.google.common.collect.Sets;
+-import com.google.gson.Gson;
+-import com.google.gson.GsonBuilder;
+-import com.google.gson.JsonParseException;
+-import com.google.gson.TypeAdapter;
+-import com.google.gson.TypeAdapterFactory;
++import com.google.common.collect.*;
++import com.google.gson.*;
+ import com.google.gson.annotations.SerializedName;
+ import com.google.gson.reflect.TypeToken;
+ import com.google.gson.stream.JsonReader;
+@@ -48,7 +38,6 @@
+ import net.minecraftforge.common.animation.TimeValues;
+ import net.minecraftforge.common.model.IModelState;
+ import net.minecraftforge.common.util.JsonUtils;
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.apache.commons.lang3.tuple.Pair;
+@@ -163,7 +152,7 @@
+                     }
+                     else
+                     {
+-                        FMLLog.log.error("Unknown special event \"{}\", ignoring.", event.event());
++                        Mohist.LOGGER.error("Unknown special event \"{}\", ignoring.", event.event());
+                     }
+                 }
+             }
+@@ -232,7 +221,7 @@
+         }
+         catch(IOException | JsonParseException e)
+         {
+-            FMLLog.log.error("Exception loading Animation State Machine {}, skipping", location, e);
++            Mohist.LOGGER.error("Exception loading Animation State Machine {}, skipping", location, e);
+             return missing;
+         }
+         finally

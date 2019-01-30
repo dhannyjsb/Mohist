@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemElytra.java
++++ ../src-work/minecraft/net/minecraft/item/ItemElytra.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.item;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.block.BlockDispenser;
+ import net.minecraft.creativetab.CreativeTabs;
+ import net.minecraft.entity.EntityLiving;
+@@ -16,6 +15,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ public class ItemElytra extends Item
+ {
+     public ItemElytra()

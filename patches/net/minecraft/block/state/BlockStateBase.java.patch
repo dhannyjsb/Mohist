@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/block/state/BlockStateBase.java
++++ ../src-work/minecraft/net/minecraft/block/state/BlockStateBase.java
+@@ -3,12 +3,13 @@
+ import com.google.common.base.Function;
+ import com.google.common.base.Joiner;
+ import com.google.common.collect.Iterables;
++import net.minecraft.block.Block;
++import net.minecraft.block.properties.IProperty;
++
++import javax.annotation.Nullable;
+ import java.util.Collection;
+ import java.util.Iterator;
+ import java.util.Map.Entry;
+-import javax.annotation.Nullable;
+-import net.minecraft.block.Block;
+-import net.minecraft.block.properties.IProperty;
+ 
+ public abstract class BlockStateBase implements IBlockState
+ {

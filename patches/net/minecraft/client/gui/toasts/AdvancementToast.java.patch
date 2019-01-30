@@ -1,0 +1,41 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/toasts/AdvancementToast.java
++++ ../src-work/minecraft/net/minecraft/client/gui/toasts/AdvancementToast.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.gui.toasts;
+ 
+-import java.util.List;
+ import net.minecraft.advancements.Advancement;
+ import net.minecraft.advancements.DisplayInfo;
+ import net.minecraft.advancements.FrameType;
+@@ -14,6 +13,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class AdvancementToast implements IToast
+ {
+@@ -25,7 +26,7 @@
+         this.advancement = advancementIn;
+     }
+ 
+-    public IToast.Visibility draw(GuiToast toastGui, long delta)
++    public Visibility draw(GuiToast toastGui, long delta)
+     {
+         toastGui.getMinecraft().getTextureManager().bindTexture(TEXTURE_TOASTS);
+         GlStateManager.color(1.0F, 1.0F, 1.0F);
+@@ -77,11 +78,11 @@
+ 
+             RenderHelper.enableGUIStandardItemLighting();
+             toastGui.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, displayinfo.getIcon(), 8, 8);
+-            return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
++            return delta >= 5000L ? Visibility.HIDE : Visibility.SHOW;
+         }
+         else
+         {
+-            return IToast.Visibility.HIDE;
++            return Visibility.HIDE;
+         }
+     }
+ }

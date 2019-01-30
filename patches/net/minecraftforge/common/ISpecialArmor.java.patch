@@ -1,0 +1,64 @@
+--- ../src-base/minecraft/net/minecraftforge/common/ISpecialArmor.java
++++ ../src-work/minecraft/net/minecraftforge/common/ISpecialArmor.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,20 +19,18 @@
+ 
+ package net.minecraftforge.common;
+ 
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-
+-import net.minecraft.util.CombatRules;
+-import net.minecraft.util.DamageSource;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.entity.SharedMonsterAttributes;
+ import net.minecraft.entity.player.EntityPlayer;
+-import net.minecraft.inventory.EntityEquipmentSlot;
+ import net.minecraft.item.ItemArmor;
+ import net.minecraft.item.ItemStack;
++import net.minecraft.util.CombatRules;
++import net.minecraft.util.DamageSource;
+ import net.minecraft.util.NonNullList;
+ 
+ import javax.annotation.Nonnull;
++import java.util.ArrayList;
++import java.util.Arrays;
+ 
+ /**
+  * This interface is to be implemented by ItemArmor classes. It will allow to
+@@ -87,13 +85,13 @@
+     void damageArmor(EntityLivingBase entity, @Nonnull ItemStack stack, DamageSource source, int damage, int slot);
+ 
+     /**
+-    * Simple check to see if the armor should interact with "Unblockable" damage
+-    * sources. A fair number of vanilla damage sources have this tag, such as
+-    * Anvils, Falling, Fire, and Magic.
+-    *
+-    * Returning true here means that the armor is able to meaningfully respond
+-    * to this damage source. Otherwise, no interaction is allowed.
+-    */
++     * Simple check to see if the armor should interact with "Unblockable" damage
++     * sources. A fair number of vanilla damage sources have this tag, such as
++     * Anvils, Falling, Fire, and Magic.
++     *
++     * Returning true here means that the armor is able to meaningfully respond
++     * to this damage source. Otherwise, no interaction is allowed.
++     */
+     default boolean handleUnblockableDamage(EntityLivingBase entity, @Nonnull ItemStack armor, DamageSource source, double damage, int slot)
+     {
+         return false;
+@@ -131,6 +129,7 @@
+          */
+         public static float applyArmor(EntityLivingBase entity, NonNullList<ItemStack> inventory, DamageSource source, double damage)
+         {
++
+             if (DEBUG)
+             {
+                 System.out.println("Start: " + damage);

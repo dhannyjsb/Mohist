@@ -1,0 +1,46 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/block/model/SimpleBakedModel.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/block/model/SimpleBakedModel.java
+@@ -2,9 +2,6 @@
+ 
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Maps;
+-import java.util.List;
+-import java.util.Map;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+ import net.minecraft.util.EnumFacing;
+@@ -13,6 +10,10 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++import java.util.Map;
++
+ @SideOnly(Side.CLIENT)
+ public class SimpleBakedModel implements IBakedModel
+ {
+@@ -132,19 +133,19 @@
+                 }
+             }
+ 
+-            public SimpleBakedModel.Builder addFaceQuad(EnumFacing facing, BakedQuad quad)
++            public Builder addFaceQuad(EnumFacing facing, BakedQuad quad)
+             {
+                 (this.builderFaceQuads.get(facing)).add(quad);
+                 return this;
+             }
+ 
+-            public SimpleBakedModel.Builder addGeneralQuad(BakedQuad quad)
++            public Builder addGeneralQuad(BakedQuad quad)
+             {
+                 this.builderGeneralQuads.add(quad);
+                 return this;
+             }
+ 
+-            public SimpleBakedModel.Builder setTexture(TextureAtlasSprite texture)
++            public Builder setTexture(TextureAtlasSprite texture)
+             {
+                 this.builderTexture = texture;
+                 return this;

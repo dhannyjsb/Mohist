@@ -1,0 +1,13 @@
+--- ../src-base/minecraft/net/minecraft/entity/boss/dragon/phase/PhaseList.java
++++ ../src-work/minecraft/net/minecraft/entity/boss/dragon/phase/PhaseList.java
+@@ -1,8 +1,9 @@
+ package net.minecraft.entity.boss.dragon.phase;
+ 
++import net.minecraft.entity.boss.EntityDragon;
++
+ import java.lang.reflect.Constructor;
+ import java.util.Arrays;
+-import net.minecraft.entity.boss.EntityDragon;
+ 
+ public class PhaseList<T extends IPhase>
+ {

@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/network/play/server/SPacketAnimation.java
++++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketAnimation.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.network.play.server;
+ 
+-import java.io.IOException;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+@@ -8,6 +7,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++
+ public class SPacketAnimation implements Packet<INetHandlerPlayClient>
+ {
+     private int entityId;

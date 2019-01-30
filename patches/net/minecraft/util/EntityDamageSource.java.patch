@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/util/EntityDamageSource.java
++++ ../src-work/minecraft/net/minecraft/util/EntityDamageSource.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.util;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.entity.player.EntityPlayer;
+@@ -10,6 +9,8 @@
+ import net.minecraft.util.text.TextComponentTranslation;
+ import net.minecraft.util.text.translation.I18n;
+ 
++import javax.annotation.Nullable;
++
+ public class EntityDamageSource extends DamageSource
+ {
+     @Nullable

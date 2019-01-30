@@ -1,0 +1,52 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/versioning/DependencyParser.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/versioning/DependencyParser.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,19 +19,15 @@
+ 
+ package net.minecraftforge.fml.common.versioning;
+ 
+-import java.util.ArrayList;
+-import java.util.HashSet;
+-import java.util.List;
+-import java.util.Locale;
+-import java.util.Set;
+-
++import cn.pfcraft.server.Mohist;
+ import com.google.common.base.Splitter;
+ import com.google.common.base.Strings;
+ import com.google.common.collect.ImmutableList;
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.LoaderException;
+ import net.minecraftforge.fml.relauncher.Side;
+ 
++import java.util.*;
++
+ public final class DependencyParser
+ {
+     public static class DependencyInfo
+@@ -187,15 +183,15 @@
+     {
+         if (Strings.isNullOrEmpty(depModId))
+         {
+-            FMLLog.log.error(new DependencyParserException(modId, dep, "The modId is null or empty").getMessage());
++            Mohist.LOGGER.error(new DependencyParserException(modId, dep, "The modId is null or empty").getMessage());
+         }
+         else if (depModId.length() > 64)
+         {
+-            FMLLog.log.error(new DependencyParserException(modId, dep, String.format("The modId '%s' is longer than the maximum of 64 characters.", depModId)).getMessage());
++            Mohist.LOGGER.error(new DependencyParserException(modId, dep, String.format("The modId '%s' is longer than the maximum of 64 characters.", depModId)).getMessage());
+         }
+         else if (!depModId.equals(depModId.toLowerCase(Locale.ENGLISH)))
+         {
+-            FMLLog.log.error(new DependencyParserException(modId, dep, String.format("The modId '%s' must be all lowercase.", depModId)).getMessage());
++            Mohist.LOGGER.error(new DependencyParserException(modId, dep, String.format("The modId '%s' must be all lowercase.", depModId)).getMessage());
+         }
+     }
+ 

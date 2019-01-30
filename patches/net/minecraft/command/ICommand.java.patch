@@ -1,0 +1,16 @@
+--- ../src-base/minecraft/net/minecraft/command/ICommand.java
++++ ../src-work/minecraft/net/minecraft/command/ICommand.java
+@@ -1,10 +1,11 @@
+ package net.minecraft.command;
+ 
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.util.math.BlockPos;
+ 
++import javax.annotation.Nullable;
++import java.util.List;
++
+ public interface ICommand extends Comparable<ICommand>
+ {
+     String getName();

@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/network/play/server/SPacketSetExperience.java
++++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketSetExperience.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.network.play.server;
+ 
+-import java.io.IOException;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.network.play.INetHandlerPlayClient;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++
+ public class SPacketSetExperience implements Packet<INetHandlerPlayClient>
+ {
+     private float experienceBar;

@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/advancements/CriterionProgress.java
++++ ../src-work/minecraft/net/minecraft/advancements/CriterionProgress.java
+@@ -4,10 +4,11 @@
+ import com.google.gson.JsonNull;
+ import com.google.gson.JsonPrimitive;
+ import com.google.gson.JsonSyntaxException;
++import net.minecraft.network.PacketBuffer;
++
+ import java.text.ParseException;
+ import java.text.SimpleDateFormat;
+ import java.util.Date;
+-import net.minecraft.network.PacketBuffer;
+ 
+ public class CriterionProgress
+ {

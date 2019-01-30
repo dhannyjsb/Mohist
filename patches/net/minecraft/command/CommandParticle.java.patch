@@ -1,0 +1,22 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandParticle.java
++++ ../src-work/minecraft/net/minecraft/command/CommandParticle.java
+@@ -1,8 +1,5 @@
+ package net.minecraft.command;
+ 
+-import java.util.Collections;
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.util.EnumParticleTypes;
+@@ -11,6 +8,10 @@
+ import net.minecraft.world.World;
+ import net.minecraft.world.WorldServer;
+ 
++import javax.annotation.Nullable;
++import java.util.Collections;
++import java.util.List;
++
+ public class CommandParticle extends CommandBase
+ {
+     public String getName()

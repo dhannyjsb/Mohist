@@ -1,0 +1,36 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiListWorldSelectionEntry.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiListWorldSelectionEntry.java
+@@ -1,11 +1,5 @@
+ package net.minecraft.client.gui;
+ 
+-import java.awt.image.BufferedImage;
+-import java.io.File;
+-import java.text.DateFormat;
+-import java.text.SimpleDateFormat;
+-import java.util.Date;
+-import javax.imageio.ImageIO;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.audio.PositionedSoundRecord;
+ import net.minecraft.client.renderer.GlStateManager;
+@@ -14,7 +8,6 @@
+ import net.minecraft.init.SoundEvents;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.util.text.TextFormatting;
+-import net.minecraft.world.WorldSettings;
+ import net.minecraft.world.storage.ISaveFormat;
+ import net.minecraft.world.storage.ISaveHandler;
+ import net.minecraft.world.storage.WorldInfo;
+@@ -26,6 +19,13 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import javax.imageio.ImageIO;
++import java.awt.image.BufferedImage;
++import java.io.File;
++import java.text.DateFormat;
++import java.text.SimpleDateFormat;
++import java.util.Date;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiListWorldSelectionEntry implements GuiListExtended.IGuiListEntry
+ {

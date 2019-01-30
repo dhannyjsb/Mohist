@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/ImageBufferDownload.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/ImageBufferDownload.java
+@@ -1,13 +1,13 @@
+ package net.minecraft.client.renderer;
+ 
+-import java.awt.Color;
+-import java.awt.Graphics;
++import net.minecraftforge.fml.relauncher.Side;
++import net.minecraftforge.fml.relauncher.SideOnly;
++
++import javax.annotation.Nullable;
++import java.awt.*;
+ import java.awt.image.BufferedImage;
+ import java.awt.image.DataBufferInt;
+ import java.awt.image.ImageObserver;
+-import javax.annotation.Nullable;
+-import net.minecraftforge.fml.relauncher.Side;
+-import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+ public class ImageBufferDownload implements IImageBuffer

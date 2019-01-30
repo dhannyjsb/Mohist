@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/loot/properties/EntityPropertyManager.java
++++ ../src-work/minecraft/net/minecraft/world/storage/loot/properties/EntityPropertyManager.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.world.storage.loot.properties;
+ 
+ import com.google.common.collect.Maps;
+-import java.util.Map;
+ import net.minecraft.util.ResourceLocation;
+ 
++import java.util.Map;
++
+ public class EntityPropertyManager
+ {
+     private static final Map < ResourceLocation, EntityProperty.Serializer<? >> NAME_TO_SERIALIZER_MAP = Maps. < ResourceLocation, EntityProperty.Serializer<? >> newHashMap();

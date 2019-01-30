@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/tileentity/TileEntityBeaconRenderer.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/tileentity/TileEntityBeaconRenderer.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.renderer.tileentity;
+ 
+-import java.util.List;
+ import net.minecraft.client.renderer.BufferBuilder;
+ import net.minecraft.client.renderer.GlStateManager;
+ import net.minecraft.client.renderer.Tessellator;
+@@ -11,6 +10,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+ public class TileEntityBeaconRenderer extends TileEntitySpecialRenderer<TileEntityBeacon>
+ {

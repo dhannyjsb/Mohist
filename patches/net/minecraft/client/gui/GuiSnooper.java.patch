@@ -1,0 +1,39 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiSnooper.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiSnooper.java
+@@ -1,14 +1,15 @@
+ package net.minecraft.client.gui;
+ 
+ import com.google.common.collect.Lists;
+-import java.io.IOException;
+-import java.util.TreeMap;
+-import java.util.Map.Entry;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.client.settings.GameSettings;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++import java.util.Map.Entry;
++import java.util.TreeMap;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiSnooper extends GuiScreen
+ {
+@@ -18,7 +19,7 @@
+     private final java.util.List<String> values = Lists.<String>newArrayList();
+     private String title;
+     private String[] desc;
+-    private GuiSnooper.List list;
++    private List list;
+     private GuiButton toggleButton;
+ 
+     public GuiSnooper(GuiScreen p_i1061_1_, GameSettings p_i1061_2_)
+@@ -60,7 +61,7 @@
+             }
+         }
+ 
+-        this.list = new GuiSnooper.List();
++        this.list = new List();
+     }
+ 
+     public void handleMouseInput() throws IOException

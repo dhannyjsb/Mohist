@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/client/tutorial/FindTreeStep.java
++++ ../src-work/minecraft/net/minecraft/client/tutorial/FindTreeStep.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.client.tutorial;
+ 
+ import com.google.common.collect.Sets;
+-import java.util.Set;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.client.entity.EntityPlayerSP;
+@@ -19,6 +18,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.Set;
++
+ @SideOnly(Side.CLIENT)
+ public class FindTreeStep implements ITutorialStep
+ {

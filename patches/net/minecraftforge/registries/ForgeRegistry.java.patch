@@ -1,0 +1,345 @@
+--- ../src-base/minecraft/net/minecraftforge/registries/ForgeRegistry.java
++++ ../src-work/minecraft/net/minecraftforge/registries/ForgeRegistry.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -16,34 +16,11 @@
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  */
+-
+ package net.minecraftforge.registries;
+ 
+-import java.lang.reflect.Method;
+-import java.util.BitSet;
+-import java.util.Collection;
+-import java.util.Collections;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Map.Entry;
+-import java.util.Set;
+-
+-import javax.annotation.Nonnull;
+-import javax.annotation.Nullable;
+-
+-import org.apache.commons.lang3.Validate;
+-
++import cn.pfcraft.server.Mohist;
+ import com.google.common.base.Preconditions;
+-import com.google.common.collect.ArrayListMultimap;
+-import com.google.common.collect.BiMap;
+-import com.google.common.collect.HashBiMap;
+-import com.google.common.collect.ImmutableList;
+-import com.google.common.collect.Lists;
+-import com.google.common.collect.Maps;
+-import com.google.common.collect.Multimap;
+-import com.google.common.collect.Sets;
+-
++import com.google.common.collect.*;
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.nbt.NBTTagList;
+ import net.minecraft.nbt.NBTTagString;
+@@ -51,11 +28,17 @@
+ import net.minecraftforge.event.RegistryEvent;
+ import net.minecraftforge.event.RegistryEvent.MissingMappings;
+ import net.minecraftforge.fml.common.FMLContainer;
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.InjectedModContainer;
+ import net.minecraftforge.fml.common.Loader;
+ import net.minecraftforge.fml.common.ModContainer;
++import org.apache.commons.lang3.Validate;
+ 
++import javax.annotation.Nonnull;
++import javax.annotation.Nullable;
++import java.lang.reflect.Method;
++import java.util.*;
++import java.util.Map.Entry;
++
+ public class ForgeRegistry<V extends IForgeRegistryEntry<V>> implements IForgeRegistryInternal<V>, IForgeRegistryModifiable<V>
+ {
+     public static final boolean DEBUG = Boolean.parseBoolean(System.getProperty("forge.debugRegistryEntries", "false"));
+@@ -297,7 +280,7 @@
+         V oldEntry = getRaw(key);
+         if (oldEntry == value) // already registered, return prev registration's id
+         {
+-            FMLLog.bigWarning("Registry {}: The object {} has been registered twice for the same name {}.", this.superType.getSimpleName(), value, key);
++            Mohist.bigWarning("Registry {}: The object {} has been registered twice for the same name {}.", this.superType.getSimpleName(), value, key);
+             return this.getID(value);
+         }
+         if (oldEntry != null) // duplicate name
+@@ -307,7 +290,7 @@
+             if (owner == null)
+                 throw new IllegalStateException(String.format("Could not determine owner for the override on %s. Value: %s", key, value));
+             if (DEBUG)
+-                FMLLog.log.debug("Registry {} Override: {} {} -> {}", this.superType.getSimpleName(), key, oldEntry, value);
++                Mohist.LOGGER.debug("Registry {} Override: {} {} -> {}", this.superType.getSimpleName(), key, oldEntry, value);
+             idToUse = this.getID(oldEntry);
+         }
+ 
+@@ -350,10 +333,10 @@
+             this.add.onAdd(this, this.stage, idToUse, value, oldEntry);
+ 
+         if (this.dummies.remove(key) && DEBUG)
+-            FMLLog.log.debug("Registry {} Dummy Remove: {}", this.superType.getSimpleName(), key);
++            Mohist.LOGGER.debug("Registry {} Dummy Remove: {}", this.superType.getSimpleName(), key);
+ 
+         if (DEBUG)
+-            FMLLog.log.trace("Registry {} add: {} {} {} (req. id {})", this.superType.getSimpleName(), key, idToUse, value, id);
++            Mohist.LOGGER.trace("Registry {} add: {} {} {} (req. id {})", this.superType.getSimpleName(), key, idToUse, value, id);
+ 
+         return idToUse;
+     }
+@@ -382,7 +365,7 @@
+             throw new IllegalStateException(String.format("Attempted to register the alias %s -> %s to late", from, to));
+         this.aliases.put(from, to);
+         if (DEBUG)
+-            FMLLog.log.trace("Registry {} alias: {} -> {}", this.superType.getSimpleName(), from, to);
++            Mohist.LOGGER.trace("Registry {} alias: {} -> {}", this.superType.getSimpleName(), from, to);
+     }
+ 
+     void addDummy(ResourceLocation key)
+@@ -391,7 +374,7 @@
+             throw new IllegalStateException(String.format("Attempted to register the dummy %s to late", key));
+         this.dummies.add(key);
+         if (DEBUG)
+-            FMLLog.log.trace("Registry {} dummy: {}", this.superType.getSimpleName(), key);
++            Mohist.LOGGER.trace("Registry {} dummy: {}", this.superType.getSimpleName(), key);
+     }
+ 
+     private RegistryDelegate<V> getDelegate(V thing)
+@@ -478,7 +461,7 @@
+     void sync(ResourceLocation name, ForgeRegistry<V> from)
+     {
+         if (DEBUG)
+-            FMLLog.log.debug("Registry {} Sync: {} -> {}", this.superType.getSimpleName(), this.stage.getName(), from.stage.getName());
++            Mohist.LOGGER.debug("Registry {} Sync: {} -> {}", this.superType.getSimpleName(), this.stage.getName(), from.stage.getName());
+         if (this == from)
+             throw new IllegalArgumentException("WTF We are the same!?!?!");
+         if (from.superType != this.superType)
+@@ -515,7 +498,7 @@
+                 int realId = add(id, entry.getValue());
+                 if (id != realId && id != -1)
+                 {
+-                    FMLLog.log.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), id, realId);
++                    Mohist.LOGGER.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), id, realId);
+                     errored = true;
+                 }
+             }
+@@ -527,14 +510,14 @@
+                     OverrideOwner owner = from.owners.inverse().get(value);
+                     if (owner == null)
+                     {
+-                        FMLLog.log.warn("Registry {}: Override did not have an associated owner object. Name: {} Value: {}", this.superType.getSimpleName(), entry.getKey(), value);
++                        Mohist.LOGGER.warn("Registry {}: Override did not have an associated owner object. Name: {} Value: {}", this.superType.getSimpleName(), entry.getKey(), value);
+                         errored = true;
+                         continue;
+                     }
+                     int realId = add(id, value, owner.owner);
+                     if (id != realId && id != -1)
+                     {
+-                        FMLLog.log.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), id, realId);
++                        Mohist.LOGGER.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), id, realId);
+                         errored = true;
+                     }
+                 }
+@@ -589,7 +572,7 @@
+                 throw new IllegalStateException("Removed a entry that did not have an associated id: " + key + " " + value.toString() + " This should never happen unless hackery!");
+ 
+             if (DEBUG)
+-                FMLLog.log.trace("Registry {} remove: {} {}", this.superType.getSimpleName(), key, id);
++                Mohist.LOGGER.trace("Registry {} remove: {} {}", this.superType.getSimpleName(), key, id);
+         }
+ 
+         return value;
+@@ -613,7 +596,6 @@
+      */
+     public void freeze()
+     {
+-        this.isFrozen = true;
+     }
+ 
+     public void unfreeze()
+@@ -633,8 +615,8 @@
+ 
+         Collections.sort(ids);
+ 
+-        FMLLog.log.trace("Registry Name : {}", name);
+-        ids.forEach(id -> FMLLog.log.trace("  Registry: {} {} {}", id, getKey(getValue(id)), getValue(id)));
++        Mohist.LOGGER.trace("Registry Name : {}", name);
++        ids.forEach(id -> Mohist.LOGGER.trace("  Registry: {} {} {}", id, getKey(getValue(id)), getValue(id)));
+     }
+ 
+     public void loadIds(Map<ResourceLocation, Integer> ids, Map<ResourceLocation, String> overrides, Map<ResourceLocation, Integer> missing, Map<ResourceLocation, Integer[]> remapped, ForgeRegistry<V> old, ResourceLocation name)
+@@ -648,13 +630,13 @@
+ 
+             if (currId == -1)
+             {
+-                FMLLog.log.info("Registry {}: Found a missing id from the world {}", this.superType.getSimpleName(), itemName);
++                Mohist.LOGGER.info("Registry {}: Found a missing id from the world {}", this.superType.getSimpleName(), itemName);
+                 missing.put(itemName, newId);
+                 continue; // no block/item -> nothing to add
+             }
+             else if (currId != newId)
+             {
+-                FMLLog.log.debug("Registry {}: Fixed {} id mismatch {}: {} (init) -> {} (map).", this.superType.getSimpleName(), name, itemName, currId, newId);
++                Mohist.LOGGER.debug("Registry {}: Fixed {} id mismatch {}: {} (init) -> {} (map).", this.superType.getSimpleName(), name, itemName, currId, newId);
+                 remapped.put(itemName, new Integer[] {currId, newId});
+             }
+ 
+@@ -680,7 +662,7 @@
+                 OverrideOwner owner = old.owners.inverse().get(value);
+                 if (owner == null)
+                 {
+-                    FMLLog.log.warn("Registry {}: Override did not have an associated owner object. Name: {} Value: {}", this.superType.getSimpleName(), entry.getKey(), value);
++                    Mohist.LOGGER.warn("Registry {}: Override did not have an associated owner object. Name: {} Value: {}", this.superType.getSimpleName(), entry.getKey(), value);
+                     continue;
+                 }
+ 
+@@ -689,12 +671,12 @@
+ 
+                 int realId = add(newId, value, owner.owner);
+                 if (newId != realId)
+-                    FMLLog.log.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), newId, realId);
++                    Mohist.LOGGER.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), newId, realId);
+             }
+ 
+             int realId = add(newId, obj, primaryName == null ? itemName.getResourceDomain() : primaryName);
+             if (realId != newId)
+-                FMLLog.log.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), newId, realId);
++                Mohist.LOGGER.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), newId, realId);
+             ovs.remove(itemName);
+         }
+ 
+@@ -708,16 +690,16 @@
+                 V _new = this.owners.get(new OverrideOwner(owner, itemName));
+                 if (_new == null)
+                 {
+-                    FMLLog.log.warn("Registry {}: Skipping override for {}, Unknown owner {}", this.superType.getSimpleName(), itemName, owner);
++                    Mohist.LOGGER.warn("Registry {}: Skipping override for {}, Unknown owner {}", this.superType.getSimpleName(), itemName, owner);
+                     continue;
+                 }
+ 
+-                FMLLog.log.info("Registry {}: Activating override {} for {}", this.superType.getSimpleName(), owner, itemName);
++                Mohist.LOGGER.info("Registry {}: Activating override {} for {}", this.superType.getSimpleName(), owner, itemName);
+ 
+                 int newId = this.getID(itemName);
+                 int realId = this.add(newId, _new, owner);
+                 if (newId != realId)
+-                    FMLLog.log.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), newId, realId);
++                    Mohist.LOGGER.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), entry.getKey(), newId, realId);
+             }
+         }
+     }
+@@ -729,7 +711,7 @@
+ 
+         V dummy = this.dummyFactory.createDummy(key);
+         if (DEBUG)
+-            FMLLog.log.debug("Registry Dummy Add: {} {} -> {}", key, id, dummy);
++            Mohist.LOGGER.debug("Registry Dummy Add: {} {} -> {}", key, id, dummy);
+ 
+         //It was blocked before so we need to unset the blocking map
+         this.availabilityMap.clear(id);
+@@ -746,15 +728,15 @@
+                 throw new IllegalStateException("Removed a entry that did not have an associated id: " + key + " " + value.toString() + " This should never happen unless hackery!");
+ 
+             if (oldid != id)
+-                FMLLog.log.debug("Registry {}: Dummy ID mismatch {} {} -> {}", this.superType.getSimpleName(), key, oldid, id);
++                Mohist.LOGGER.debug("Registry {}: Dummy ID mismatch {} {} -> {}", this.superType.getSimpleName(), key, oldid, id);
+ 
+             if (DEBUG)
+-                FMLLog.log.debug("Registry {} remove: {} {}", this.superType.getSimpleName(), key, oldid);
++                Mohist.LOGGER.debug("Registry {} remove: {} {}", this.superType.getSimpleName(), key, oldid);
+         }
+ 
+         int realId = this.add(id, dummy);
+         if (realId != id)
+-            FMLLog.log.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), key, id, realId);
++            Mohist.LOGGER.warn("Registry {}: Object did not get ID it asked for. Name: {} Expected: {} Got: {}", this.superType.getSimpleName(), key, id, realId);
+         this.dummies.add(key);
+ 
+         return true;
+@@ -780,7 +762,7 @@
+             V obj = this.names.get(key);
+             OverrideOwner owner = this.owners.inverse().get(obj);
+             if (owner == null && DEBUG)
+-                FMLLog.log.debug("Registry {} {}: Invalid override {} {}", this.superType.getSimpleName(), this.stage.getName(), key, obj);
++                Mohist.LOGGER.debug("Registry {} {}: Invalid override {} {}", this.superType.getSimpleName(), this.stage.getName(), key, obj);
+             ret.put(key, owner.owner);
+         }
+         return ret;
+@@ -868,7 +850,7 @@
+                     ResourceLocation aliasv = new ResourceLocation(v);
+                     if (aliasv.equals(aliask))
+                     {
+-                        FMLLog.log.warn("Found unrecoverable 4894 bugged alias/override: {} -> {}, skipping.", aliask, aliasv);
++                        Mohist.LOGGER.warn("Found unrecoverable 4894 bugged alias/override: {} -> {}, skipping.", aliask, aliasv);
+                     }
+                     else
+                     {
+@@ -910,7 +892,7 @@
+ 
+     void processMissingEvent(ResourceLocation name, ForgeRegistry<V> pool, List<MissingMappings.Mapping<V>> mappings, Map<ResourceLocation, Integer> missing, Map<ResourceLocation, Integer[]> remaps, Collection<ResourceLocation> defaulted, Collection<ResourceLocation> failed, boolean injectNetworkDummies)
+     {
+-        FMLLog.log.debug("Processing missing event for {}:", name);
++        Mohist.LOGGER.debug("Processing missing event for {}:", name);
+         int ignored = 0;
+ 
+         for (MissingMappings.Mapping<V> remap : mappings)
+@@ -922,19 +904,19 @@
+                 // entry re-mapped, finish the registration with the new name/object, but the old id
+                 int currId = getID(remap.getTarget());
+                 ResourceLocation newName = pool.getKey(remap.getTarget());
+-                FMLLog.log.debug("  Remapping {} -> {}.", remap.key, newName);
++                Mohist.LOGGER.debug("  Remapping {} -> {}.", remap.key, newName);
+ 
+                 missing.remove(remap.key);
+                 //I don't think this will work, but I dont think it ever worked.. the item is already in the map with a different id... we want to fix that..
+                 int realId = this.add(remap.id, remap.getTarget());
+                 if (realId != remap.id)
+-                    FMLLog.log.warn("Registered object did not get ID it asked for. Name: {} Type: {} Expected: {} Got: {}", newName, this.getRegistrySuperType(), remap.id, realId);
++                    Mohist.LOGGER.warn("Registered object did not get ID it asked for. Name: {} Type: {} Expected: {} Got: {}", newName, this.getRegistrySuperType(), remap.id, realId);
+                 this.addAlias(remap.key, newName);
+ 
+ 
+                 if (currId != realId)
+                 {
+-                    FMLLog.log.info("  Fixed id mismatch {}: {} (init) -> {} (map).", newName, currId, realId);
++                    Mohist.LOGGER.info("  Fixed id mismatch {}: {} (init) -> {} (map).", newName, currId, realId);
+                     remaps.put(newName, new Integer[] {currId, realId});
+                 }
+             }
+@@ -951,24 +933,24 @@
+                 }
+                 else if (action == MissingMappings.Action.IGNORE)
+                 {
+-                    FMLLog.log.debug("  Ignoring {}", remap.key);
++                    Mohist.LOGGER.debug("  Ignoring {}", remap.key);
+                     ignored++;
+                 }
+                 else if (action == MissingMappings.Action.FAIL)
+                 {
+-                    FMLLog.log.debug("  Failing {}!", remap.key);
++                    Mohist.LOGGER.debug("  Failing {}!", remap.key);
+                     failed.add(remap.key);
+                 }
+                 else if (action == MissingMappings.Action.WARN)
+                 {
+-                    FMLLog.log.warn("  {} may cause world breakage!", remap.key);
++                    Mohist.LOGGER.warn("  {} may cause world breakage!", remap.key);
+                 }
+                 this.block(remap.id);
+             }
+         }
+ 
+         if (failed.isEmpty() && ignored > 0)
+-            FMLLog.log.debug("There were {} missing mappings that have been ignored", ignored);
++            Mohist.LOGGER.debug("There were {} missing mappings that have been ignored", ignored);
+     }
+ 
+     private static class OverrideOwner

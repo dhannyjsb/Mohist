@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/entity/projectile/EntityDragonFireball.java
++++ ../src-work/minecraft/net/minecraft/entity/projectile/EntityDragonFireball.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.entity.projectile;
+ 
+-import java.util.List;
+ import net.minecraft.entity.EntityAreaEffectCloud;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.init.MobEffects;
+@@ -14,6 +13,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.List;
++
+ public class EntityDragonFireball extends EntityFireball
+ {
+     public EntityDragonFireball(World worldIn)

@@ -1,0 +1,43 @@
+--- ../src-base/minecraft/net/minecraft/entity/monster/EntityPigZombie.java
++++ ../src-work/minecraft/net/minecraft/entity/monster/EntityPigZombie.java
+@@ -1,12 +1,6 @@
+ package net.minecraft.entity.monster;
+ 
+-import java.util.UUID;
+-import javax.annotation.Nullable;
+-import net.minecraft.entity.Entity;
+-import net.minecraft.entity.EntityCreature;
+-import net.minecraft.entity.EntityLiving;
+-import net.minecraft.entity.EntityLivingBase;
+-import net.minecraft.entity.SharedMonsterAttributes;
++import net.minecraft.entity.*;
+ import net.minecraft.entity.ai.EntityAIHurtByTarget;
+ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+ import net.minecraft.entity.ai.attributes.AttributeModifier;
+@@ -27,11 +21,14 @@
+ import net.minecraft.world.World;
+ import net.minecraft.world.storage.loot.LootTableList;
+ 
++import javax.annotation.Nullable;
++import java.util.UUID;
++
+ public class EntityPigZombie extends EntityZombie
+ {
+     private static final UUID ATTACK_SPEED_BOOST_MODIFIER_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
+     private static final AttributeModifier ATTACK_SPEED_BOOST_MODIFIER = (new AttributeModifier(ATTACK_SPEED_BOOST_MODIFIER_UUID, "Attacking speed boost", 0.05D, 0)).setSaved(false);
+-    private int angerLevel;
++    public int angerLevel;
+     private int randomSoundDelay;
+     private UUID angerTargetUUID;
+ 
+@@ -53,8 +50,8 @@
+ 
+     protected void applyEntityAI()
+     {
+-        this.targetTasks.addTask(1, new EntityPigZombie.AIHurtByAggressor(this));
+-        this.targetTasks.addTask(2, new EntityPigZombie.AITargetAggressor(this));
++        this.targetTasks.addTask(1, new AIHurtByAggressor(this));
++        this.targetTasks.addTask(2, new AITargetAggressor(this));
+     }
+ 
+     protected void applyEntityAttributes()

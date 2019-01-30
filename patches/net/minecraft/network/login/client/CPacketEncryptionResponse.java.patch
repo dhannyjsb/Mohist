@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraft/network/login/client/CPacketEncryptionResponse.java
++++ ../src-work/minecraft/net/minecraft/network/login/client/CPacketEncryptionResponse.java
+@@ -1,9 +1,5 @@
+ package net.minecraft.network.login.client;
+ 
+-import java.io.IOException;
+-import java.security.PrivateKey;
+-import java.security.PublicKey;
+-import javax.crypto.SecretKey;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.network.login.INetHandlerLoginServer;
+@@ -11,6 +7,11 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.crypto.SecretKey;
++import java.io.IOException;
++import java.security.PrivateKey;
++import java.security.PublicKey;
++
+ public class CPacketEncryptionResponse implements Packet<INetHandlerLoginServer>
+ {
+     private byte[] secretKeyEncrypted = new byte[0];

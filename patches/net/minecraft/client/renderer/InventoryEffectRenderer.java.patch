@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/InventoryEffectRenderer.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/InventoryEffectRenderer.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.client.renderer;
+ 
+ import com.google.common.collect.Ordering;
+-import java.util.Collection;
+ import net.minecraft.client.gui.inventory.GuiContainer;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.inventory.Container;
+@@ -10,6 +9,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.Collection;
++
+ @SideOnly(Side.CLIENT)
+ public abstract class InventoryEffectRenderer extends GuiContainer
+ {

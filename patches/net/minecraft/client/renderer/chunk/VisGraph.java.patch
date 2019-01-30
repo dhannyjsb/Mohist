@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/chunk/VisGraph.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/chunk/VisGraph.java
+@@ -1,16 +1,17 @@
+ package net.minecraft.client.renderer.chunk;
+ 
+ import com.google.common.collect.Queues;
+-import java.util.BitSet;
+-import java.util.EnumSet;
+-import java.util.Queue;
+-import java.util.Set;
+ import net.minecraft.util.EnumFacing;
+ import net.minecraft.util.IntegerCache;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.BitSet;
++import java.util.EnumSet;
++import java.util.Queue;
++import java.util.Set;
++
+ @SideOnly(Side.CLIENT)
+ public class VisGraph
+ {

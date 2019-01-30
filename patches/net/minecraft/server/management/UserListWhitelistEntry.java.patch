@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/server/management/UserListWhitelistEntry.java
++++ ../src-work/minecraft/net/minecraft/server/management/UserListWhitelistEntry.java
+@@ -2,6 +2,7 @@
+ 
+ import com.google.gson.JsonObject;
+ import com.mojang.authlib.GameProfile;
++
+ import java.util.UUID;
+ 
+ public class UserListWhitelistEntry extends UserListEntry<GameProfile>

@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiSleepMP.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiSleepMP.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.client.gui;
+ 
+-import java.io.IOException;
+ import net.minecraft.client.network.NetHandlerPlayClient;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.network.play.client.CPacketEntityAction;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiSleepMP extends GuiChat
+ {

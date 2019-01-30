@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/capability/FluidTankPropertiesWrapper.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/capability/FluidTankPropertiesWrapper.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,11 +19,11 @@
+ 
+ package net.minecraftforge.fluids.capability;
+ 
+-import javax.annotation.Nullable;
+-
+ import net.minecraftforge.fluids.FluidStack;
+ import net.minecraftforge.fluids.FluidTank;
+ 
++import javax.annotation.Nullable;
++
+ /**
+  * Basic {@link IFluidTankProperties} wrapper for {@link FluidTank}.
+  */

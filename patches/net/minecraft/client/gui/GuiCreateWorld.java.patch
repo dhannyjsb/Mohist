@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiCreateWorld.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiCreateWorld.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.client.gui;
+ 
+-import java.io.IOException;
+-import java.util.Random;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.util.ChatAllowedCharacters;
+ import net.minecraft.world.GameType;
+@@ -14,6 +12,9 @@
+ import org.apache.commons.lang3.StringUtils;
+ import org.lwjgl.input.Keyboard;
+ 
++import java.io.IOException;
++import java.util.Random;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiCreateWorld extends GuiScreen
+ {

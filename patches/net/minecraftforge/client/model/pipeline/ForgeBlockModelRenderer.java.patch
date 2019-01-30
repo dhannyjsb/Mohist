@@ -1,0 +1,28 @@
+--- ../src-base/minecraft/net/minecraftforge/client/model/pipeline/ForgeBlockModelRenderer.java
++++ ../src-work/minecraft/net/minecraftforge/client/model/pipeline/ForgeBlockModelRenderer.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,8 +19,6 @@
+ 
+ package net.minecraftforge.client.model.pipeline;
+ 
+-import java.util.List;
+-
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.client.renderer.BlockModelRenderer;
+ import net.minecraft.client.renderer.BufferBuilder;
+@@ -32,6 +30,8 @@
+ import net.minecraft.world.IBlockAccess;
+ import net.minecraftforge.common.ForgeModContainer;
+ 
++import java.util.List;
++
+ public class ForgeBlockModelRenderer extends BlockModelRenderer
+ {
+     private final ThreadLocal<VertexLighterFlat> lighterFlat;

@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/asm/transformers/deobf/LZMAInputSupplier.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/asm/transformers/deobf/LZMAInputSupplier.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,13 +19,12 @@
+ 
+ package net.minecraftforge.fml.common.asm.transformers.deobf;
+ 
+-import java.io.IOException;
+-import java.io.InputStream;
+-
+ import LZMA.LzmaInputStream;
+-
+ import com.google.common.io.ByteSource;
+ 
++import java.io.IOException;
++import java.io.InputStream;
++
+ public class LZMAInputSupplier extends ByteSource {
+     private InputStream compressedData;
+ 

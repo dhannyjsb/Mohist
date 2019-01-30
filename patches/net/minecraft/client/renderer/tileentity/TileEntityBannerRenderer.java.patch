@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/tileentity/TileEntityBannerRenderer.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/tileentity/TileEntityBannerRenderer.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.renderer.tileentity;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.client.model.ModelBanner;
+ import net.minecraft.client.renderer.BannerTextures;
+ import net.minecraft.client.renderer.GlStateManager;
+@@ -12,6 +11,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ @SideOnly(Side.CLIENT)
+ public class TileEntityBannerRenderer extends TileEntitySpecialRenderer<TileEntityBanner>
+ {

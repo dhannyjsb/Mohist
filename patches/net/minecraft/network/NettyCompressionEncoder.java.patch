@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/network/NettyCompressionEncoder.java
++++ ../src-work/minecraft/net/minecraft/network/NettyCompressionEncoder.java
+@@ -3,6 +3,7 @@
+ import io.netty.buffer.ByteBuf;
+ import io.netty.channel.ChannelHandlerContext;
+ import io.netty.handler.codec.MessageToByteEncoder;
++
+ import java.util.zip.Deflater;
+ 
+ public class NettyCompressionEncoder extends MessageToByteEncoder<ByteBuf>

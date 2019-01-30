@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/entity/item/EntityMinecartMobSpawner.java
++++ ../src-work/minecraft/net/minecraft/entity/item/EntityMinecartMobSpawner.java
+@@ -69,9 +69,9 @@
+         });
+     }
+ 
+-    public EntityMinecart.Type getType()
++    public Type getType()
+     {
+-        return EntityMinecart.Type.SPAWNER;
++        return Type.SPAWNER;
+     }
+ 
+     public IBlockState getDefaultDisplayTile()

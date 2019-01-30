@@ -1,0 +1,45 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/network/internal/FMLRuntimeCodec.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/network/internal/FMLRuntimeCodec.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,16 +19,14 @@
+ 
+ package net.minecraftforge.fml.common.network.internal;
+ 
+-import net.minecraftforge.fml.common.FMLLog;
++import cn.pfcraft.server.Mohist;
++import com.google.common.base.Splitter;
++import io.netty.buffer.ByteBuf;
++import io.netty.channel.ChannelHandlerContext;
+ import net.minecraftforge.fml.common.network.ByteBufUtils;
+ import net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec;
+ import net.minecraftforge.fml.common.network.FMLNetworkException;
+ 
+-import com.google.common.base.Splitter;
+-
+-import io.netty.buffer.ByteBuf;
+-import io.netty.channel.ChannelHandlerContext;
+-
+ public class FMLRuntimeCodec extends FMLIndexedMessageToMessageCodec<FMLMessage> {
+     public FMLRuntimeCodec()
+     {
+@@ -53,10 +51,10 @@
+     {
+         if (msg.payload().getByte(0) == 0 && msg.payload().readableBytes() > 2)
+         {
+-            FMLLog.log.fatal("The connection appears to have sent an invalid FML packet of type 0, this is likely because it think's it's talking to 1.6.4 FML");
+-            FMLLog.log.info("Bad data :");
++            Mohist.LOGGER.fatal("The connection appears to have sent an invalid FML packet of type 0, this is likely because it think's it's talking to 1.6.4 FML");
++            Mohist.LOGGER.info("Bad data :");
+             for (String l : Splitter.on('\n').split(ByteBufUtils.getContentDump(msg.payload()))) {
+-                FMLLog.log.info("\t{}",l);
++                Mohist.LOGGER.info("\t{}",l);
+             }
+             throw new FMLNetworkException("Invalid FML packet");
+         }

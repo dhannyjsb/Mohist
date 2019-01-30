@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraftforge/event/world/NoteBlockEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/world/NoteBlockEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,13 +19,12 @@
+ 
+ package net.minecraftforge.event.world;
+ 
++import com.google.common.base.Preconditions;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.World;
+ import net.minecraftforge.fml.common.eventhandler.Cancelable;
+ 
+-import com.google.common.base.Preconditions;
+-
+ /**
+  * Base class for Noteblock Events
+  *

@@ -1,0 +1,46 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/client/config/GuiSelectString.java
++++ ../src-work/minecraft/net/minecraftforge/fml/client/config/GuiSelectString.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,19 +19,19 @@
+ 
+ package net.minecraftforge.fml.client.config;
+ 
+-import java.io.IOException;
+-import java.util.ArrayList;
+-import java.util.Collections;
+-import java.util.List;
+-import java.util.Map;
+-
++import cn.pfcraft.server.Mohist;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.gui.GuiButton;
+ import net.minecraft.client.gui.GuiScreen;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.util.text.TextFormatting;
+-import net.minecraftforge.fml.common.FMLLog;
+ 
++import java.io.IOException;
++import java.util.ArrayList;
++import java.util.Collections;
++import java.util.List;
++import java.util.Map;
++
+ import static net.minecraftforge.fml.client.config.GuiUtils.RESET_CHAR;
+ import static net.minecraftforge.fml.client.config.GuiUtils.UNDO_CHAR;
+ 
+@@ -129,7 +129,7 @@
+             }
+             catch (Throwable e)
+             {
+-                FMLLog.log.error("Error performing GuiSelectString action:", e);
++                Mohist.LOGGER.error("Error performing GuiSelectString action:", e);
+             }
+             this.mc.displayGuiScreen(this.parentScreen);
+         }

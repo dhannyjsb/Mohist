@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/BlockFluidRenderer.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/BlockFluidRenderer.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.client.renderer;
+ 
+-import net.minecraft.block.Block;
+ import net.minecraft.block.BlockLiquid;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.IBlockState;
+@@ -8,7 +7,6 @@
+ import net.minecraft.client.renderer.color.BlockColors;
+ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+ import net.minecraft.client.renderer.texture.TextureMap;
+-import net.minecraft.init.Blocks;
+ import net.minecraft.util.EnumFacing;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;

@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/block/SoundType.java
++++ ../src-work/minecraft/net/minecraft/block/SoundType.java
+@@ -2,8 +2,6 @@
+ 
+ import net.minecraft.init.SoundEvents;
+ import net.minecraft.util.SoundEvent;
+-import net.minecraftforge.fml.relauncher.Side;
+-import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ public class SoundType
+ {

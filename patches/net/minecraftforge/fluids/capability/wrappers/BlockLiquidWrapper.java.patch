@@ -1,0 +1,32 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/capability/wrappers/BlockLiquidWrapper.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/capability/wrappers/BlockLiquidWrapper.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,8 +19,6 @@
+ 
+ package net.minecraftforge.fluids.capability.wrappers;
+ 
+-import javax.annotation.Nullable;
+-
+ import net.minecraft.block.BlockLiquid;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.IBlockState;
+@@ -34,9 +32,11 @@
+ import net.minecraftforge.fluids.FluidRegistry;
+ import net.minecraftforge.fluids.FluidStack;
+ import net.minecraftforge.fluids.capability.FluidTankProperties;
+-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+ import net.minecraftforge.fluids.capability.IFluidHandler;
++import net.minecraftforge.fluids.capability.IFluidTankProperties;
+ 
++import javax.annotation.Nullable;
++
+ /**
+  * Wrapper to handle vanilla Water or Lava as an IFluidHandler.
+  * Methods are modeled after {@link ItemBucket#onItemRightClick(World, EntityPlayer, EnumHand)}

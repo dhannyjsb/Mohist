@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockOldLeaf.java
++++ ../src-work/minecraft/net/minecraft/block/BlockOldLeaf.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.block;
+ 
+ import com.google.common.base.Predicate;
+-import javax.annotation.Nullable;
+ import net.minecraft.block.properties.IProperty;
+ import net.minecraft.block.properties.PropertyEnum;
+ import net.minecraft.block.state.BlockStateContainer;
+@@ -17,6 +16,8 @@
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.World;
+ 
++import javax.annotation.Nullable;
++
+ public class BlockOldLeaf extends BlockLeaves
+ {
+     public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.<BlockPlanks.EnumType>create("variant", BlockPlanks.EnumType.class, new Predicate<BlockPlanks.EnumType>()

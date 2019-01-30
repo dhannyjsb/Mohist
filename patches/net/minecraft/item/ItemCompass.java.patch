@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemCompass.java
++++ ../src-work/minecraft/net/minecraft/item/ItemCompass.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.item;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.entity.item.EntityItemFrame;
+@@ -11,6 +10,8 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ public class ItemCompass extends Item
+ {
+     public ItemCompass()

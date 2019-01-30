@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/SaveDataMemoryStorage.java
++++ ../src-work/minecraft/net/minecraft/world/storage/SaveDataMemoryStorage.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.world.storage;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ @SideOnly(Side.CLIENT)
+ public class SaveDataMemoryStorage extends MapStorage
+ {

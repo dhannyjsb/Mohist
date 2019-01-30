@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiVideoSettings.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiVideoSettings.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.client.gui;
+ 
+-import java.io.IOException;
+ import net.minecraft.client.renderer.OpenGlHelper;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.client.settings.GameSettings;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.io.IOException;
++
+ @SideOnly(Side.CLIENT)
+ public class GuiVideoSettings extends GuiScreen
+ {

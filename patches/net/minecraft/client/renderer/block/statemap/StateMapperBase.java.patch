@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/block/statemap/StateMapperBase.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/block/statemap/StateMapperBase.java
+@@ -2,8 +2,6 @@
+ 
+ import com.google.common.collect.Maps;
+ import com.google.common.collect.UnmodifiableIterator;
+-import java.util.Map;
+-import java.util.Map.Entry;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.properties.IProperty;
+ import net.minecraft.block.state.IBlockState;
+@@ -11,6 +9,9 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.Map;
++import java.util.Map.Entry;
++
+ @SideOnly(Side.CLIENT)
+ public abstract class StateMapperBase implements IStateMapper
+ {

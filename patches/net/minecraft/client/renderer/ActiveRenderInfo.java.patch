@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/ActiveRenderInfo.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/ActiveRenderInfo.java
+@@ -1,7 +1,5 @@
+ package net.minecraft.client.renderer;
+ 
+-import java.nio.FloatBuffer;
+-import java.nio.IntBuffer;
+ import net.minecraft.block.BlockLiquid;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.entity.Entity;
+@@ -14,6 +12,9 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.lwjgl.util.glu.GLU;
+ 
++import java.nio.FloatBuffer;
++import java.nio.IntBuffer;
++
+ @SideOnly(Side.CLIENT)
+ public class ActiveRenderInfo
+ {

@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/living/LivingPackSizeEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/living/LivingPackSizeEvent.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,8 +19,8 @@
+ 
+ package net.minecraftforge.event.entity.living;
+ 
+-import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
+ import net.minecraft.entity.EntityLiving;
++import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
+ 
+ @HasResult
+ public class LivingPackSizeEvent extends LivingEvent

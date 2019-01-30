@@ -1,0 +1,60 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/client/config/GuiConfig.java
++++ ../src-work/minecraft/net/minecraftforge/fml/client/config/GuiConfig.java
+@@ -1,6 +1,6 @@
+ /*
+  * Minecraft Forge
+- * Copyright (c) 2016-2018.
++ * Copyright (c) 2016.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -19,16 +19,7 @@
+ 
+ package net.minecraftforge.fml.client.config;
+ 
+-import static net.minecraftforge.fml.client.config.GuiUtils.RESET_CHAR;
+-import static net.minecraftforge.fml.client.config.GuiUtils.UNDO_CHAR;
+-
+-import java.io.IOException;
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.Collections;
+-import java.util.Comparator;
+-import java.util.List;
+-
++import cn.pfcraft.server.Mohist;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.gui.GuiButton;
+ import net.minecraft.client.gui.GuiScreen;
+@@ -41,14 +32,20 @@
+ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+ import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+ import net.minecraftforge.fml.client.event.ConfigChangedEvent.PostConfigChangedEvent;
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.Loader;
+ import net.minecraftforge.fml.common.eventhandler.Event.Result;
+-
+ import org.lwjgl.input.Keyboard;
+ 
+ import javax.annotation.Nullable;
++import java.io.IOException;
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.Comparator;
++import java.util.List;
+ 
++import static net.minecraftforge.fml.client.config.GuiUtils.RESET_CHAR;
++import static net.minecraftforge.fml.client.config.GuiUtils.UNDO_CHAR;
++
+ /**
+  * This class is the base GuiScreen for all config GUI screens. It can be extended by mods to provide the top-level config screen
+  * that will be called when the Config button is clicked from the Main Menu Mods list.
+@@ -337,7 +334,7 @@
+             }
+             catch (Throwable e)
+             {
+-                FMLLog.log.error("Error performing GuiConfig action:", e);
++                Mohist.LOGGER.error("Error performing GuiConfig action:", e);
+             }
+ 
+             if (flag)

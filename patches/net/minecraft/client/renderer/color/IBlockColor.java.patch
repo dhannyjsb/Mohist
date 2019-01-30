@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/color/IBlockColor.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/color/IBlockColor.java
+@@ -1,12 +1,13 @@
+ package net.minecraft.client.renderer.color;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.IBlockAccess;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import javax.annotation.Nullable;
++
+ @SideOnly(Side.CLIENT)
+ public interface IBlockColor
+ {

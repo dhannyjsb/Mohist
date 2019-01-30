@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/recipebook/package-info.java
++++ ../src-work/minecraft/net/minecraft/client/gui/recipebook/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.client.gui.recipebook;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

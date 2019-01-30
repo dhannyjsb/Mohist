@@ -1,0 +1,176 @@
+--- ../src-base/minecraft/net/minecraft/util/EnumFacing.java
++++ ../src-work/minecraft/net/minecraft/util/EnumFacing.java
+@@ -3,37 +3,38 @@
+ import com.google.common.base.Predicate;
+ import com.google.common.collect.Iterators;
+ import com.google.common.collect.Maps;
+-import java.util.Iterator;
+-import java.util.Locale;
+-import java.util.Map;
+-import java.util.Random;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
+ import net.minecraft.util.math.Vec3i;
+ 
++import javax.annotation.Nullable;
++import java.util.Iterator;
++import java.util.Locale;
++import java.util.Map;
++import java.util.Random;
++
+ public enum EnumFacing implements IStringSerializable
+ {
+-    DOWN(0, 1, -1, "down", EnumFacing.AxisDirection.NEGATIVE, EnumFacing.Axis.Y, new Vec3i(0, -1, 0)),
+-    UP(1, 0, -1, "up", EnumFacing.AxisDirection.POSITIVE, EnumFacing.Axis.Y, new Vec3i(0, 1, 0)),
+-    NORTH(2, 3, 2, "north", EnumFacing.AxisDirection.NEGATIVE, EnumFacing.Axis.Z, new Vec3i(0, 0, -1)),
+-    SOUTH(3, 2, 0, "south", EnumFacing.AxisDirection.POSITIVE, EnumFacing.Axis.Z, new Vec3i(0, 0, 1)),
+-    WEST(4, 5, 1, "west", EnumFacing.AxisDirection.NEGATIVE, EnumFacing.Axis.X, new Vec3i(-1, 0, 0)),
+-    EAST(5, 4, 3, "east", EnumFacing.AxisDirection.POSITIVE, EnumFacing.Axis.X, new Vec3i(1, 0, 0));
++    DOWN(0, 1, -1, "down", AxisDirection.NEGATIVE, Axis.Y, new Vec3i(0, -1, 0)),
++    UP(1, 0, -1, "up", AxisDirection.POSITIVE, Axis.Y, new Vec3i(0, 1, 0)),
++    NORTH(2, 3, 2, "north", AxisDirection.NEGATIVE, Axis.Z, new Vec3i(0, 0, -1)),
++    SOUTH(3, 2, 0, "south", AxisDirection.POSITIVE, Axis.Z, new Vec3i(0, 0, 1)),
++    WEST(4, 5, 1, "west", AxisDirection.NEGATIVE, Axis.X, new Vec3i(-1, 0, 0)),
++    EAST(5, 4, 3, "east", AxisDirection.POSITIVE, Axis.X, new Vec3i(1, 0, 0));
+ 
+     private final int index;
+     private final int opposite;
+     private final int horizontalIndex;
+     private final String name;
+-    private final EnumFacing.Axis axis;
+-    private final EnumFacing.AxisDirection axisDirection;
++    private final Axis axis;
++    private final AxisDirection axisDirection;
+     private final Vec3i directionVec;
+     public static final EnumFacing[] VALUES = new EnumFacing[6];
+     public static final EnumFacing[] HORIZONTALS = new EnumFacing[4];
+     private static final Map<String, EnumFacing> NAME_LOOKUP = Maps.<String, EnumFacing>newHashMap();
+ 
+-    private EnumFacing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, EnumFacing.AxisDirection axisDirectionIn, EnumFacing.Axis axisIn, Vec3i directionVecIn)
++    private EnumFacing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, AxisDirection axisDirectionIn, Axis axisIn, Vec3i directionVecIn)
+     {
+         this.index = indexIn;
+         this.horizontalIndex = horizontalIndexIn;
+@@ -54,7 +55,7 @@
+         return this.horizontalIndex;
+     }
+ 
+-    public EnumFacing.AxisDirection getAxisDirection()
++    public AxisDirection getAxisDirection()
+     {
+         return this.axisDirection;
+     }
+@@ -64,7 +65,7 @@
+         return getFront(this.opposite);
+     }
+ 
+-    public EnumFacing rotateAround(EnumFacing.Axis axis)
++    public EnumFacing rotateAround(Axis axis)
+     {
+         switch (axis)
+         {
+@@ -170,17 +171,17 @@
+ 
+     public int getFrontOffsetX()
+     {
+-        return this.axis == EnumFacing.Axis.X ? this.axisDirection.getOffset() : 0;
++        return this.axis == Axis.X ? this.axisDirection.getOffset() : 0;
+     }
+ 
+     public int getFrontOffsetY()
+     {
+-        return this.axis == EnumFacing.Axis.Y ? this.axisDirection.getOffset() : 0;
++        return this.axis == Axis.Y ? this.axisDirection.getOffset() : 0;
+     }
+ 
+     public int getFrontOffsetZ()
+     {
+-        return this.axis == EnumFacing.Axis.Z ? this.axisDirection.getOffset() : 0;
++        return this.axis == Axis.Z ? this.axisDirection.getOffset() : 0;
+     }
+ 
+     public String getName2()
+@@ -188,7 +189,7 @@
+         return this.name;
+     }
+ 
+-    public EnumFacing.Axis getAxis()
++    public Axis getAxis()
+     {
+         return this.axis;
+     }
+@@ -253,7 +254,7 @@
+         return this.name;
+     }
+ 
+-    public static EnumFacing getFacingFromAxis(EnumFacing.AxisDirection axisDirectionIn, EnumFacing.Axis axisIn)
++    public static EnumFacing getFacingFromAxis(AxisDirection axisDirectionIn, Axis axisIn)
+     {
+         for (EnumFacing enumfacing : values())
+         {
+@@ -307,15 +308,15 @@
+     }
+ 
+     public static enum Axis implements Predicate<EnumFacing>, IStringSerializable {
+-        X("x", EnumFacing.Plane.HORIZONTAL),
+-        Y("y", EnumFacing.Plane.VERTICAL),
+-        Z("z", EnumFacing.Plane.HORIZONTAL);
++        X("x", Plane.HORIZONTAL),
++        Y("y", Plane.VERTICAL),
++        Z("z", Plane.HORIZONTAL);
+ 
+-        private static final Map<String, EnumFacing.Axis> NAME_LOOKUP = Maps.<String, EnumFacing.Axis>newHashMap();
++        private static final Map<String, Axis> NAME_LOOKUP = Maps.<String, Axis>newHashMap();
+         private final String name;
+-        private final EnumFacing.Plane plane;
++        private final Plane plane;
+ 
+-        private Axis(String name, EnumFacing.Plane plane)
++        private Axis(String name, Plane plane)
+         {
+             this.name = name;
+             this.plane = plane;
+@@ -324,7 +325,7 @@
+         @Nullable
+         public static EnumFacing.Axis byName(String name)
+         {
+-            return name == null ? null : (EnumFacing.Axis)NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
++            return name == null ? null : (Axis)NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
+         }
+ 
+         public String getName2()
+@@ -334,12 +335,12 @@
+ 
+         public boolean isVertical()
+         {
+-            return this.plane == EnumFacing.Plane.VERTICAL;
++            return this.plane == Plane.VERTICAL;
+         }
+ 
+         public boolean isHorizontal()
+         {
+-            return this.plane == EnumFacing.Plane.HORIZONTAL;
++            return this.plane == Plane.HORIZONTAL;
+         }
+ 
+         public String toString()
+@@ -352,7 +353,7 @@
+             return p_apply_1_ != null && p_apply_1_.getAxis() == this;
+         }
+ 
+-        public EnumFacing.Plane getPlane()
++        public Plane getPlane()
+         {
+             return this.plane;
+         }
+@@ -364,7 +365,7 @@
+ 
+         static
+         {
+-            for (EnumFacing.Axis enumfacing$axis : values())
++            for (Axis enumfacing$axis : values())
+             {
+                 NAME_LOOKUP.put(enumfacing$axis.getName2().toLowerCase(Locale.ROOT), enumfacing$axis);
+             }
