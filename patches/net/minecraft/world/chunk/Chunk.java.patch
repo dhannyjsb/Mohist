@@ -50,25 +50,50 @@
  public class Chunk implements net.minecraftforge.common.capabilities.ICapabilityProvider
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -50,13 +59,13 @@
+@@ -50,13 +59,38 @@
      private final int[] precipitationHeightMap;
      private final boolean[] updateSkylightColumns;
      private boolean loaded;
 -    private final World world;
 -    private final int[] heightMap;
-+    public final World world; // Mohist - private -> public
-+    public final int[] heightMap; // Mohist - private -> public
++    public final World world;
++    public final int[] heightMap;
      public final int x;
      public final int z;
      private boolean isGapLightingUpdated;
 -    private final Map<BlockPos, TileEntity> tileEntities;
 -    private final ClassInheritanceMultiMap<Entity>[] entityLists;
-+    public final Map<BlockPos, TileEntity> tileEntities; // Mohist - private -> public
++    public final Map<BlockPos, TileEntity> tileEntities;
 +    public final ClassInheritanceMultiMap<Entity>[] entityLists;  // Spigot
++
++    // Paper start
++    private class TileEntityHashMap extends java.util.HashMap<BlockPos, TileEntity> {
++        @Override
++        public TileEntity put(BlockPos key, TileEntity value) {
++            TileEntity replaced = super.put(key, value);
++            if (replaced != null) {
++                    replaced.setCurrentChunk(null);
++                }
++            if (value != null) {
++                    value.setCurrentChunk(Chunk.this);
++                }
++            return replaced;
++        }
++
++        @Override
++        public TileEntity remove(Object key) {
++            TileEntity removed = super.remove(key);
++            if (removed != null) {
++                    removed.setCurrentChunk(null);
++                }
++            return removed;
++        }
++    }
++    // Paper end
      private boolean isTerrainPopulated;
      private boolean isLightPopulated;
      private boolean ticked;
-@@ -68,7 +77,38 @@
+@@ -68,14 +102,45 @@
      private int queuedLightChecks;
      private final ConcurrentLinkedQueue<BlockPos> tileEntityPosQueue;
      public boolean unloadQueued;
@@ -107,7 +132,15 @@
      public Chunk(World worldIn, int x, int z)
      {
          this.storageArrays = new ExtendedBlockStorage[16];
-@@ -92,8 +132,15 @@
+         this.blockBiomeArray = new byte[256];
+         this.precipitationHeightMap = new int[256];
+         this.updateSkylightColumns = new boolean[256];
+-        this.tileEntities = Maps.<BlockPos, TileEntity>newHashMap();
++        this.tileEntities = new TileEntityHashMap(); // Paper
+         this.queuedLightChecks = 4096;
+         this.tileEntityPosQueue = Queues.<BlockPos>newConcurrentLinkedQueue();
+         this.entityLists = (ClassInheritanceMultiMap[])(new ClassInheritanceMultiMap[16]);
+@@ -92,8 +157,15 @@
          Arrays.fill(this.precipitationHeightMap, -999);
          Arrays.fill(this.blockBiomeArray, (byte) - 1);
          capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
@@ -123,7 +156,7 @@
      public Chunk(World worldIn, ChunkPrimer primer, int x, int z)
      {
          this(worldIn, x, z);
-@@ -565,12 +612,12 @@
+@@ -565,12 +637,12 @@
                  {
                      if (block1 != block) //Only fire block breaks when the block changes.
                      block1.breakBlock(this.world, pos, iblockstate);
@@ -138,7 +171,7 @@
                      if (te != null && te.shouldRefresh(this.world, pos, iblockstate, state))
                      this.world.removeTileEntity(pos);
                  }
-@@ -608,6 +655,7 @@
+@@ -608,6 +680,7 @@
                      }
                  }
  
@@ -146,7 +179,7 @@
                  // If capturing blocks, only run block physics for TE's. Non-TE's are handled in ForgeHooks.onPlaceItemIntoWorld
                  if (!this.world.isRemote && block1 != block && (!this.world.captureBlockSnapshots || block.hasTileEntity(state)))
                  {
-@@ -616,7 +664,7 @@
+@@ -616,7 +689,7 @@
  
                  if (block.hasTileEntity(state))
                  {
@@ -155,16 +188,19 @@
  
                      if (tileentity1 == null)
                      {
-@@ -742,7 +790,26 @@
+@@ -742,7 +815,29 @@
          entityIn.chunkCoordY = k;
          entityIn.chunkCoordZ = this.z;
          this.entityLists[k].add(entityIn);
 -        this.markDirty(); // Forge - ensure chunks are marked to save after an entity add
++        // Paper start
++        entityIn.setCurrentChunk(this);
++        // Paper end
 +        this.markDirty();
 +        if (entityIn instanceof EntityItem) {
-+            ++this.itemCounts[k];
++        ++this.itemCounts[k];
 +        } else if (entityIn instanceof IInventory) {
-+            ++this.inventoryEntityCounts[k];
++        ++this.inventoryEntityCounts[k];
 +        }
 +        if (entityIn instanceof EntityLiving) {
 +            EntityLiving entityinsentient = (EntityLiving) entityIn;
@@ -183,11 +219,14 @@
      }
  
      public void removeEntity(Entity entityIn)
-@@ -763,7 +830,26 @@
+@@ -763,7 +858,29 @@
          }
  
          this.entityLists[index].remove(entityIn);
 -        this.markDirty(); // Forge - ensure chunks are marked to save after entity removals
++        // Paper start
++        entityIn.setCurrentChunk(null);
++        // Paper end
 +        this.markDirty();
 +        if (entityIn instanceof EntityItem) {
 +            --this.itemCounts[index];
@@ -211,7 +250,7 @@
      }
  
      public boolean canSeeSky(BlockPos pos)
-@@ -783,9 +869,12 @@
+@@ -783,9 +900,12 @@
      }
  
      @Nullable
@@ -226,7 +265,7 @@
  
          if (tileentity != null && tileentity.isInvalid())
          {
-@@ -795,12 +884,12 @@
+@@ -795,12 +915,12 @@
  
          if (tileentity == null)
          {
@@ -241,7 +280,7 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -864,7 +953,7 @@
+@@ -864,7 +984,7 @@
  
      public void onUnload()
      {
@@ -250,7 +289,7 @@
          this.loaded = false;
  
          for (TileEntity tileentity : this.tileEntities.values())
-@@ -874,7 +963,14 @@
+@@ -874,7 +994,14 @@
  
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
          {
@@ -266,7 +305,7 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -893,7 +989,7 @@
+@@ -893,7 +1020,7 @@
  
          for (int k = i; k <= j; ++k)
          {
@@ -275,7 +314,7 @@
              {
                  for (Entity entity : this.entityLists[k])
                  {
-@@ -928,14 +1024,22 @@
+@@ -928,14 +1055,22 @@
          int j = MathHelper.floor((aabb.maxY + World.MAX_ENTITY_RADIUS) / 16.0D);
          i = MathHelper.clamp(i, 0, this.entityLists.length - 1);
          j = MathHelper.clamp(j, 0, this.entityLists.length - 1);
@@ -303,7 +342,7 @@
                  }
              }
          }
-@@ -1001,6 +1105,64 @@
+@@ -1001,6 +1136,63 @@
          }
      }
  
@@ -362,13 +401,12 @@
 +                chunk4.populate(chunkGenrator);
 +            }
 +        }
-+        world.timings.syncChunkLoadPostTimer.stopTiming(); // Spigot
 +    }
 +
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1179,26 @@
+@@ -1017,6 +1209,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -395,7 +433,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1257,7 @@
+@@ -1075,7 +1287,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -404,7 +442,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1268,7 @@
+@@ -1086,7 +1298,7 @@
  
      public boolean isPopulated()
      {
@@ -413,7 +451,7 @@
      }
  
      public boolean wasTicked()
-@@ -1540,11 +1722,11 @@
+@@ -1540,11 +1752,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.

@@ -16,6 +16,9 @@ import java.util.logging.Logger;
 
 public class Main {
 
+    public static boolean useJline = true;
+    public static boolean useConsole = true;
+
     public static OptionSet main(String[] args) {
         // Todo: Installation script
         OptionParser parser = new OptionParser() {

@@ -8,11 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.CraftServer;
 
 import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -22,14 +19,14 @@ public class Commandmohist extends Command {
     public Commandmohist(String name) {
         super(name);
         this.description = "Mohist related commands";
-        this.usageMessage = "/mohist [heap | reload]";
+        this.usageMessage = "/mohist [reload]";
         this.setPermission("bukkit.command.mohist");
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location location) throws IllegalArgumentException {
         if (args.length <= 1)
-            return CommandBase.getListMatchingLast(args, "heap", "reload");
+            return CommandBase.getListMatchingLast(args, "reload");
 
         return Collections.emptyList();
     }
@@ -44,9 +41,6 @@ public class Commandmohist extends Command {
         }
 
         switch (args[0].toLowerCase(Locale.ENGLISH))  {
-            case "heap":
-                dumpHeap(sender);
-                break;
             case "reload":
                 doReload(sender);
                 break;
@@ -58,17 +52,6 @@ public class Commandmohist extends Command {
         return true;
     }
 
-    private void dumpHeap(CommandSender sender) {
-        File file = new File(new File(new File("."), "dumps"),
-                "heap-dump-" + DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss").format(LocalDateTime.now()) + "-server.hprof");
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW  +"Writing JVM heap data to " + file);
-        if (CraftServer.dumpHeap(file)) {
-            Command.broadcastCommandMessage(sender, ChatColor.GREEN + "Heap dump complete");
-        } else {
-            Command.broadcastCommandMessage(sender, ChatColor.RED + "Failed to write heap dump, see sever log for details");
-        }
-    }
-
     private void doReload(CommandSender sender) {
         Command.broadcastCommandMessage(sender, ChatColor.RED + "Please note that this command is not supported and may cause issues.");
         Command.broadcastCommandMessage(sender, ChatColor.RED + "If you encounter any issues please use the /stop command to restart your server.");
@@ -76,7 +59,7 @@ public class Commandmohist extends Command {
         MinecraftServer console = MinecraftServer.getServerInst();
        MohistConfig.init((File) console.options.valueOf("mohist-settings"));
         for (WorldServer world : console.worlds) {
-            world.pfserverConfig.init();
+            world.mohistConfig.init();
         }
         console.server.reloadCount++;
 
