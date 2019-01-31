@@ -1,5 +1,8 @@
 package org.bukkit.craftbukkit;
 
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -7,12 +10,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
 
 public class Main {
 
@@ -122,6 +122,22 @@ public class Main {
                         .defaultsTo(new File("spigot.yml"))
                         .describedAs("Yml file");
                 // Spigot End
+
+                // Mohist Start
+                acceptsAll(asList("mohist", "mohist-settings"), "File for mohist settings")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File("mohist.yml"))
+                        .describedAs("Yml file");
+                // Mohist End
+
+                // Paper Start
+                acceptsAll(asList("paper", "paper-settings"), "File for paper settings")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File("paper.yml"))
+                        .describedAs("Yml file");
+                // Paper end
 
                 acceptsAll(asList("mixin"), "This argument is needed for proper Mixin Framework work in the test env");
             }

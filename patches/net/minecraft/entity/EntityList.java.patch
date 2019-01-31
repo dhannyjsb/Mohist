@@ -101,7 +101,7 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.stats.StatBase;
  import net.minecraft.stats.StatList;
-@@ -102,12 +21,17 @@
+@@ -102,12 +21,16 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -115,12 +115,11 @@
      private static final ResourceLocation PLAYER = new ResourceLocation("player");
      private static final Logger LOGGER = LogManager.getLogger();
 -    public static final Map<ResourceLocation, EntityList.EntityEggInfo> ENTITY_EGGS = Maps.<ResourceLocation, EntityList.EntityEggInfo>newLinkedHashMap();
-+    public static final RegistryNamespaced<ResourceLocation, Class<? extends Entity>> REGISTRY = new CraftCustomEntityRegistry<ResourceLocation, Class<? extends Entity>>(); // Mohist - compatible with bukkit plugin
 +    public static final Map<ResourceLocation, EntityEggInfo> ENTITY_EGGS = Maps.<ResourceLocation, EntityEggInfo>newLinkedHashMap();
      private static final Set<ResourceLocation> EXTRA_NAMES = Sets.newHashSet();
  
      @Nullable
-@@ -222,7 +146,7 @@
+@@ -222,7 +145,7 @@
              }
              catch (Exception e)
              {
@@ -129,7 +128,7 @@
                          nbt.getString("id"), entity.getName(), e);
                  entity = null;
              }
-@@ -425,13 +349,13 @@
+@@ -425,13 +348,13 @@
          }
      }
  

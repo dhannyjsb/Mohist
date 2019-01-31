@@ -735,6 +735,8 @@ public final class CraftServer implements Server {
         }
 
         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
+        cn.pfcraft.server.MohistConfig.init((File) console.options.valueOf("mohist-settings")); // Mohist
+        com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
         for (WorldServer world : console.worlds) {
             world.worldInfo.setDifficulty(difficulty);
             world.setAllowedSpawnTypes(monsters, animals);
@@ -750,6 +752,8 @@ public final class CraftServer implements Server {
                 world.ticksPerMonsterSpawns = this.getTicksPerMonsterSpawns();
             }
             world.spigotConfig.init(); // Spigot
+            world.mohistConfig.init(); // Mohist
+            world.paperConfig.init(); // Paper
         }
 
         pluginManager.clearPlugins();
@@ -757,6 +761,8 @@ public final class CraftServer implements Server {
         resetRecipes();
         reloadData();
         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
+        cn.pfcraft.server.MohistConfig.registerCommands(); // Mohsit
+        com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
         overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
 
         int pollCount = 0;
@@ -823,7 +829,7 @@ public final class CraftServer implements Server {
         Map<String, Map<String, Object>> perms;
 
         try {
-            perms = (Map<String, Map<String, Object>>) yaml.load(stream);
+            perms = yaml.load(stream);
         } catch (MarkedYAMLException ex) {
             getLogger().log(Level.WARNING, "Server permissions file " + file + " is not valid YAML: " + ex.toString());
             return;
@@ -1778,4 +1784,25 @@ public final class CraftServer implements Server {
     {
         return spigot;
     }
+    
+    // Paper start
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static boolean dumpHeap(File file) {
+        try {
+            if (file.getParentFile() != null) {
+                file.getParentFile().mkdirs();
+            }
+                Class clazz = Class.forName("com.sun.management.HotSpotDiagnosticMXBean");
+                javax.management.MBeanServer server = java.lang.management.ManagementFactory.getPlatformMBeanServer();
+                Object hotspotMBean = java.lang.management.ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", clazz);
+                java.lang.reflect.Method m = clazz.getMethod("dumpHeap", String.class, boolean.class);
+                m.invoke(hotspotMBean, file.getPath(), true);
+                return true;
+            } catch (Throwable t) {
+                Bukkit.getLogger().severe("Could not write heap to " + file);
+                t.printStackTrace();
+                return false;
+            }
+    }
+    // Paper end
 }
