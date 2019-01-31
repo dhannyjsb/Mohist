@@ -568,7 +568,19 @@
      }
  
      protected abstract void readEntityFromNBT(NBTTagCompound compound);
-@@ -2110,6 +2398,29 @@
+@@ -1931,6 +2219,11 @@
+         return this.entityDropItem(new ItemStack(itemIn, size, 0), offsetY);
+     }
+ 
++    @Nullable public final EntityItem dropItem(ItemStack itemstack, float offset)
++    {
++        return this.entityDropItem(itemstack, offset);
++    } // Paper - OBFHELPER
++
+     @Nullable
+     public EntityItem entityDropItem(ItemStack stack, float offsetY)
+     {
+@@ -2110,6 +2403,29 @@
          }
          else
          {
@@ -598,7 +610,7 @@
              if (!this.world.isRemote && passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer))
              {
                  this.riddenByEntities.add(0, passenger);
-@@ -2129,6 +2440,21 @@
+@@ -2129,6 +2445,21 @@
          }
          else
          {
@@ -620,7 +632,7 @@
              this.riddenByEntities.remove(passenger);
              passenger.rideCooldown = 60;
          }
-@@ -2197,7 +2523,7 @@
+@@ -2197,7 +2528,7 @@
          return 300;
      }
  
@@ -629,7 +641,7 @@
      public void setVelocity(double x, double y, double z)
      {
          this.motionX = x;
-@@ -2325,12 +2651,12 @@
+@@ -2325,12 +2656,12 @@
          this.setFlag(5, invisible);
      }
  
@@ -644,7 +656,7 @@
      {
          byte b0 = ((Byte)this.dataManager.get(FLAGS)).byteValue();
  
-@@ -2351,17 +2677,52 @@
+@@ -2351,17 +2682,52 @@
  
      public void setAir(int air)
      {
@@ -699,7 +711,7 @@
          }
      }
  
-@@ -2540,7 +2901,7 @@
+@@ -2540,7 +2906,7 @@
      public Entity changeDimension(int dimensionIn)
      {
          if (this.world.isRemote || this.isDead) return null;
@@ -708,7 +720,7 @@
      }
  
      @Nullable // Forge: Entities that require custom handling should override this method, not the other
-@@ -2551,20 +2912,75 @@
+@@ -2551,20 +2917,75 @@
              if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
              this.world.profiler.startSection("changeDimension");
              MinecraftServer minecraftserver = this.getServer();
@@ -788,7 +800,7 @@
              BlockPos blockpos;
  
              if (dimensionIn == 1 && teleporter.isVanilla())
-@@ -2596,8 +3012,12 @@
+@@ -2596,8 +3017,12 @@
                  teleporter.placeEntity(worldserver1, this, f);
                  blockpos = new BlockPos(this);
              }
@@ -802,7 +814,7 @@
              this.world.profiler.endStartSection("reloading");
              Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
  
-@@ -2605,6 +3025,7 @@
+@@ -2605,6 +3030,7 @@
              {
                  entity.copyDataFromOld(this);
  
@@ -810,7 +822,7 @@
                  if (i == 1 && dimensionIn == 1 && teleporter.isVanilla())
                  {
                      BlockPos blockpos1 = worldserver1.getTopSolidOrLiquidBlock(worldserver1.getSpawnPoint());
-@@ -2614,19 +3035,28 @@
+@@ -2614,19 +3040,28 @@
                  {
                      entity.moveToBlockPosAndAngles(blockpos, entity.rotationYaw, entity.rotationPitch);
                  }
@@ -840,7 +852,7 @@
              return entity;
          }
          else
-@@ -2755,6 +3185,11 @@
+@@ -2755,6 +3190,11 @@
  
      public void setCustomNameTag(String name)
      {
@@ -852,7 +864,7 @@
          this.dataManager.set(CUSTOM_NAME, name);
      }
  
-@@ -2838,7 +3273,25 @@
+@@ -2838,7 +3278,25 @@
  
      public void setEntityBoundingBox(AxisAlignedBB bb)
      {
@@ -879,7 +891,7 @@
      }
  
      public float getEyeHeight()
-@@ -2974,7 +3427,6 @@
+@@ -2974,7 +3432,6 @@
      public void onRemovedFromWorld() {
          this.isAddedToWorld = false;
      }
@@ -887,7 +899,7 @@
      /**
       * Returns a NBTTagCompound that can be used to store custom data for this entity.
       * It will be written, and read from disc, so it persists over world saves.
-@@ -3030,7 +3482,7 @@
+@@ -3030,7 +3487,7 @@
          {
              return ((net.minecraft.entity.item.EntityMinecart)this).getCartItem();
          }
@@ -896,7 +908,7 @@
          {
              return new ItemStack(((EntityBoat)this).getItemBoat());
          }
-@@ -3109,14 +3561,14 @@
+@@ -3109,14 +3566,14 @@
      }
  
      @Override
@@ -913,7 +925,7 @@
      {
          return capabilities == null ? null : capabilities.getCapability(capability, facing);
      }
-@@ -3303,6 +3755,10 @@
+@@ -3303,6 +3760,10 @@
          }
      }
  
@@ -924,7 +936,7 @@
      @Nullable
      public Entity getRidingEntity()
      {
-@@ -3319,7 +3775,7 @@
+@@ -3319,7 +3780,7 @@
          return SoundCategory.NEUTRAL;
      }
  

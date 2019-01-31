@@ -36,7 +36,18 @@
          this.prevPosX = this.posX;
          this.prevPosY = this.posY;
          this.prevPosZ = this.posZ;
-@@ -84,12 +90,14 @@
+@@ -69,6 +75,10 @@
+         }
+ 
+         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
++
++        // Paper start - Configurable TNT entity height nerf
++        if (this.world.paperConfig.entityTNTHeightNerf != 0 && this.posY > this.world.paperConfig.entityTNTHeightNerf) {
++
+         this.motionX *= 0.9800000190734863D;
+         this.motionY *= 0.9800000190734863D;
+         this.motionZ *= 0.9800000190734863D;
+@@ -84,12 +94,14 @@
  
          if (this.fuse <= 0)
          {
@@ -52,7 +63,7 @@
          }
          else
          {
-@@ -100,8 +108,15 @@
+@@ -100,8 +112,15 @@
  
      private void explode()
      {

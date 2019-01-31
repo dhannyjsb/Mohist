@@ -42,7 +42,23 @@
                  {
                      this.world.setBlockToAir(blockpos);
                  }
-@@ -170,7 +171,7 @@
+@@ -132,6 +133,15 @@
+ 
+             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+ 
++            // Paper start - Configurable EntityFallingBlock height nerf
++            if (this.world.paperConfig.fallingBlockHeightNerf != 0 && this.posY > this.world.paperConfig.fallingBlockHeightNerf) {
++                if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
++                    this.dropItem(new ItemStack(block, 1, block.getDropData(this.getBlock())), 0.0F);
++                }
++                this.die();
++            }
++            // Paper end
++
+             if (!this.world.isRemote)
+             {
+                 BlockPos blockpos1 = new BlockPos(this);
+@@ -170,7 +180,7 @@
                      if (!flag1 && BlockFalling.canFallThrough(this.world.getBlockState(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ))))
                      {
                          this.onGround = false;
@@ -51,7 +67,7 @@
                      }
  
                      this.motionX *= 0.699999988079071D;
-@@ -183,8 +184,12 @@
+@@ -183,8 +193,12 @@
  
                          if (!this.dontSetBlock)
                          {
@@ -65,7 +81,7 @@
                                  if (block instanceof BlockFalling)
                                  {
                                      ((BlockFalling)block).onEndFalling(this.world, blockpos1, this.fallTile, iblockstate);
-@@ -248,7 +253,9 @@
+@@ -248,7 +262,9 @@
  
                  for (Entity entity : list)
                  {

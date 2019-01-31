@@ -62,4 +62,63 @@ public class PaperWorldConfig {
         config.addDefault("world-settings.default." + path, def);
         return config.getString("world-settings." + worldName + "." + path, config.getString("world-settings.default." + path));
     }
+
+    public int cactusMaxHeight;
+    public int reedMaxHeight;
+    private void blockGrowthHeight() {
+        cactusMaxHeight = getInt("max-growth-height.cactus", 3);
+        reedMaxHeight = getInt("max-growth-height.reeds", 3);
+        log("Max height for cactus growth " + cactusMaxHeight + ". Max height for reed growth " + reedMaxHeight);
+    }
+
+    public double babyZombieMovementSpeed;
+    private void babyZombieMovementSpeed() {
+        babyZombieMovementSpeed = getDouble("baby-zombie-movement-speed", 0.5D); // Player moves at 0.1F, for reference
+        log("Baby zombies will move at the speed of " + babyZombieMovementSpeed);
+    }
+
+    public int fishingMinTicks;
+    public int fishingMaxTicks;
+    private void fishingTickRange() {
+        fishingMinTicks = getInt("fishing-time-range.MinimumTicks", 100);
+        fishingMaxTicks = getInt("fishing-time-range.MaximumTicks", 600);
+        log("Fishing time ranges are between " + fishingMinTicks +" and " + fishingMaxTicks + " ticks");
+    }
+
+    public boolean nerfedMobsShouldJump;
+    private void nerfedMobsShouldJump() {
+        nerfedMobsShouldJump = getBoolean("spawner-nerfed-mobs-should-jump", false);
+    }
+
+    public int softDespawnDistance;
+    public int hardDespawnDistance;
+    private void despawnDistances() {
+        softDespawnDistance = getInt("despawn-ranges.soft", 32); // 32^2 = 1024, Minecraft Default
+        hardDespawnDistance = getInt("despawn-ranges.hard", 128); // 128^2 = 16384, Minecraft Default
+
+        if (softDespawnDistance > hardDespawnDistance) {
+            softDespawnDistance = hardDespawnDistance;
+        }
+
+        log("Living Entity Despawn Ranges:  Soft: " + softDespawnDistance + " Hard: " + hardDespawnDistance);
+
+        softDespawnDistance = softDespawnDistance*softDespawnDistance;
+        hardDespawnDistance = hardDespawnDistance*hardDespawnDistance;
+    }
+
+    public boolean keepSpawnInMemory;
+    private void keepSpawnInMemory() {
+        keepSpawnInMemory = getBoolean("keep-spawn-loaded", true);
+        log("Keep spawn chunk loaded: " + keepSpawnInMemory);
+    }
+
+    public int fallingBlockHeightNerf;
+    public int entityTNTHeightNerf;
+    private void heightNerfs() {
+        fallingBlockHeightNerf = getInt("falling-block-height-nerf", 0);
+        entityTNTHeightNerf = getInt("tnt-entity-height-nerf", 0);
+        if (fallingBlockHeightNerf != 0) log("Falling Block Height Limit set to Y: " + fallingBlockHeightNerf);
+                if (entityTNTHeightNerf != 0) log("TNT Entity Height Limit set to Y: " + entityTNTHeightNerf);
+    }
+
 }

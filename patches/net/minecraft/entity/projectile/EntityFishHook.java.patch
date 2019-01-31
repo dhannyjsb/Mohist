@@ -125,6 +125,15 @@
                  this.motionY = (double)(-0.4F * MathHelper.nextFloat(this.rand, 0.6F, 1.0F));
                  this.playSound(SoundEvents.ENTITY_BOBBER_SPLASH, 0.25F, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
                  double d3 = this.getEntityBoundingBox().minY + 0.5D;
+@@ -482,7 +492,7 @@
+         }
+         else
+         {
+-            this.ticksCaughtDelay = MathHelper.getInt(this.rand, 100, 600);
++            this.ticksCaughtDelay = MathHelper.getInt(this.rand, world.paperConfig.fishingMinTicks, world.paperConfig.fishingMaxTicks); // Paper
+             this.ticksCaughtDelay -= this.lureSpeed * 20 * 5;
+         }
+     }
 @@ -509,6 +519,11 @@
              net.minecraftforge.event.entity.player.ItemFishedEvent event = null;
              if (this.caughtEntity != null)

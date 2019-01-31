@@ -72,7 +72,7 @@
  public abstract class EntityLiving extends EntityLivingBase
  {
      private static final DataParameter<Byte> AI_FLAGS = EntityDataManager.<Byte>createKey(EntityLiving.class, DataSerializers.BYTE);
-@@ -68,16 +63,16 @@
+@@ -68,22 +63,24 @@
      protected EntityJumpHelper jumpHelper;
      private final EntityBodyHelper bodyHelper;
      protected PathNavigate navigator;
@@ -95,7 +95,15 @@
      private final Map<PathNodeType, Float> mapPathPriority = Maps.newEnumMap(PathNodeType.class);
      private ResourceLocation deathLootTable;
      private long deathLootTableSeed;
-@@ -171,8 +166,40 @@
+     private boolean isLeashed;
+     private Entity leashHolder;
+     private NBTTagCompound leashNBTTag;
++    @Nullable
++    public EntityAISwimming goalFloat; // Paper
+ 
+     public EntityLiving(World worldIn)
+     {
+@@ -171,8 +168,40 @@
      {
          this.attackTarget = entitylivingbaseIn;
          net.minecraftforge.common.ForgeHooks.onLivingSetAttackTarget(this, entitylivingbaseIn);
@@ -136,7 +144,7 @@
      public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
      {
          return cls != EntityGhast.class;
-@@ -447,12 +474,21 @@
+@@ -447,12 +476,21 @@
      {
          super.readEntityFromNBT(compound);
  
@@ -160,7 +168,7 @@
  
          if (compound.hasKey("ArmorItems", 9))
          {
-@@ -653,8 +689,14 @@
+@@ -653,8 +691,14 @@
              }
          }
  
@@ -177,7 +185,7 @@
              double d0;
  
              switch (entityequipmentslot.getSlotType())
-@@ -671,7 +713,9 @@
+@@ -671,7 +715,9 @@
  
              if (!itemstack1.isEmpty() && (double)(this.rand.nextFloat() - 0.1F) < d0)
              {
@@ -187,7 +195,7 @@
              }
  
              this.setItemStackToSlot(entityequipmentslot, itemstack);
-@@ -696,7 +740,7 @@
+@@ -696,7 +742,7 @@
          return true;
      }
  
@@ -196,20 +204,47 @@
      {
          return true;
      }
-@@ -753,6 +797,12 @@
+@@ -730,17 +776,16 @@
+                 double d2 = entity.posZ - this.posZ;
+                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
+ 
+-                if (this.canDespawn() && d3 > 16384.0D)
++                if (this.canDespawn() && d3 > world.paperConfig.hardDespawnDistance) { // CraftBukkit - remove isTypeNotPersistent() check // Paper - custom despawn distances
+                 {
+                     this.setDead();
+                 }
+ 
+-                if (this.idleTime > 600 && this.rand.nextInt(800) == 0 && d3 > 1024.0D && this.canDespawn())
++                if (this.idleTime > 600 && this.rand.nextInt(800) == 0 && d3 > world.paperConfig.softDespawnDistance && this.canDespawn()) // CraftBukkit - remove isTypeNotPersistent() check // Paper - custom despawn distances
+                 {
+                     this.setDead();
+                 }
+-                else if (d3 < 1024.0D)
+-                {
++                else if (d3 < world.paperConfig.softDespawnDistance) { // Paper - custom despawn distances
+                     this.idleTime = 0;
+                 }
+             }
+@@ -753,6 +798,18 @@
          this.world.profiler.startSection("checkDespawn");
          this.despawnEntity();
          this.world.profiler.endSection();
 +        // Spigot Start
 +        if (this.fromMobSpawner)
 +        {
++            // Paper start - Allow nerfed mobs to jump and float
++            if (goalFloat != null) {
++                if (goalFloat.validConditions()) goalFloat.update();
++                this.getControllerJump().jumpIfSet();
++            }
++            // Paper end
 +            return;
 +        }
 +        // Spigot End
          this.world.profiler.startSection("sensing");
          this.senses.clearSensingCache();
          this.world.profiler.endSection();
-@@ -1209,6 +1259,10 @@
+@@ -1209,6 +1266,10 @@
      {
          if (this.getLeashed() && this.getLeashHolder() == player)
          {
@@ -220,7 +255,7 @@
              this.clearLeashed(true, !player.capabilities.isCreativeMode);
              return true;
          }
-@@ -1218,6 +1272,10 @@
+@@ -1218,6 +1279,10 @@
  
              if (itemstack.getItem() == Items.LEAD && this.canBeLeashedTo(player))
              {
@@ -231,7 +266,7 @@
                  this.setLeashHolder(player, true);
                  itemstack.shrink(1);
                  return true;
-@@ -1245,11 +1303,13 @@
+@@ -1245,11 +1310,13 @@
          {
              if (!this.isEntityAlive())
              {
@@ -245,7 +280,7 @@
                  this.clearLeashed(true, true);
              }
          }
-@@ -1264,7 +1324,9 @@
+@@ -1264,7 +1331,9 @@
  
              if (!this.world.isRemote && dropLead)
              {
@@ -255,7 +290,7 @@
              }
  
              if (!this.world.isRemote && sendPacket && this.world instanceof WorldServer)
-@@ -1348,6 +1410,7 @@
+@@ -1348,6 +1417,7 @@
              }
              else
              {
@@ -263,7 +298,7 @@
                  this.clearLeashed(false, true);
              }
          }
-@@ -1448,7 +1511,6 @@
+@@ -1448,7 +1518,6 @@
          ON_GROUND,
          IN_AIR,
          IN_WATER;
