@@ -6,6 +6,6 @@
    [**Discord**](https://discord.gg/HNmmrCV)
 
 ### Info
-* jdk1.8.0_191+
+* jdk1.8.0_201
 * Forge-1.12.2 - 14.23.5.2810
-* We don't recommend it because we removed the outdated method unless you modify your plugin or mod
+* Paper-1.12.2
