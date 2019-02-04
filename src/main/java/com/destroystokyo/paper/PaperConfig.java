@@ -61,6 +61,10 @@ public class PaperConfig {
         readConfig(PaperConfig.class, null);
     }
 
+    protected static void logError(String s) {
+        Bukkit.getLogger().severe(s);
+    }
+
     protected static void log(String s) {
         if (verbose) {
             Bukkit.getLogger().info(s);
@@ -173,5 +177,15 @@ public class PaperConfig {
     public static int regionFileCacheSize = 256;
     private static void regionFileCacheSize() {
         regionFileCacheSize = getInt("settings.region-file-cache-size", 256);
+    }
+
+    public static boolean suggestPlayersWhenNullTabCompletions = true;
+    private static void suggestPlayersWhenNull() {
+        suggestPlayersWhenNullTabCompletions = getBoolean("settings.suggest-player-names-when-null-tab-completions", suggestPlayersWhenNullTabCompletions);
+    }
+
+    public static boolean saveEmptyScoreboardTeams = false;
+    private static void saveEmptyScoreboardTeams() {
+        saveEmptyScoreboardTeams = getBoolean("settings.save-empty-scoreboard-teams", false);
     }
 }

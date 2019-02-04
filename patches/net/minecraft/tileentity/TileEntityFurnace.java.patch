@@ -96,7 +96,7 @@
 +        if (this.isBurning() && this.canSmelt()) {
 +            this.cookTime += elapsedTicks;
 +            if (this.cookTime >= this.totalCookTime) {
-+                this.cookTime -= this.totalCookTime;
++                this.cookTime -= this.totalCookTime; // Paper
 +                this.totalCookTime = this.getCookTime(this.furnaceItemStacks.get(0));
 +                this.smeltItem();
 +                flag1 = true;

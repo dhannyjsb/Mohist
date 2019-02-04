@@ -26,7 +26,7 @@
                  this.dropItemOrSelf(source.getTrueSource(), false);
                  this.playSound(SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM, 1.0F, 1.0F);
                  this.setDisplayedItem(ItemStack.EMPTY);
-@@ -140,7 +144,7 @@
+@@ -140,20 +144,20 @@
      {
          if (!stack.isEmpty())
          {
@@ -35,3 +35,28 @@
              {
                  MapData mapdata = ((ItemMap)stack.getItem()).getMapData(stack, this.world);
                  mapdata.mapDecorations.remove("frame-" + this.getEntityId());
+             }
+ 
+-            stack.setItemFrame((EntityItemFrame)null);
+-            this.setDisplayedItem(ItemStack.EMPTY); //Forge: Fix MC-124833 Pistons duplicating Items.
++            stack.setItemFrame(null);
++            this.setDisplayedItem(ItemStack.EMPTY); //Forge and Paper: Fix MC-124833 Pistons duplicating Items.
+         }
+     }
+ 
+     public ItemStack getDisplayedItem()
+     {
+-        return (ItemStack)this.getDataManager().get(ITEM);
++        return this.getDataManager().get(ITEM);
+     }
+ 
+     public void setDisplayedItem(ItemStack stack)
+@@ -199,7 +203,7 @@
+ 
+     public int getRotation()
+     {
+-        return ((Integer)this.getDataManager().get(ROTATION)).intValue();
++        return this.getDataManager().get(ROTATION).intValue();
+     }
+ 
+     public void setItemRotation(int rotationIn)

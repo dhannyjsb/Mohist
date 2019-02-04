@@ -106,6 +106,7 @@ import net.minecraft.network.play.server.SPacketTimeUpdate;
 import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MCUtil;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -143,11 +144,13 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.TreeType;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.WorldBorder;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.block.CraftBlock;
+import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftItem;
 import org.bukkit.craftbukkit.entity.CraftLightningStrike;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -305,7 +308,7 @@ public class CraftWorld implements World {
     public int getTileEntityCount() {
         // We don't use the full world tile entity list, so we must iterate chunks
                 int size = 0;
-        for (net.minecraft.world.chunk.Chunk chunk : ((ChunkProviderServer) world.getChunkProvider()).chunks.values()) {
+        for (net.minecraft.world.chunk.Chunk chunk : ((ChunkProviderServer) world.getChunkProvider()).id2ChunkMap.values()) {
                 size += chunk.tileEntities.size();
             }
         return size;
@@ -314,7 +317,7 @@ public class CraftWorld implements World {
         return world.tickableTileEntities.size();
     }
     public int getChunkCount() {
-        return world.getChunkProvider().chunks.size();
+        return world.getChunkProvider().id2ChunkMap.size();
     }
     public int getPlayerCount() {
         return world.playerEntities.size();
@@ -443,6 +446,7 @@ public class CraftWorld implements World {
     }
 
     private boolean unloadChunk0(int x, int z, boolean save) {
+        Boolean result = MCUtil.ensureMain("Unload Chunk", () -> { // Paper - Ensure never async
         net.minecraft.world.chunk.Chunk chunk = world.getChunkProvider().getChunkIfLoaded(x, z);
         if (chunk == null) {
             return true;
@@ -450,6 +454,7 @@ public class CraftWorld implements World {
 
         // If chunk had previously been queued to save, must do save to avoid loss of that data
         return world.getChunkProvider().unloadChunk(chunk, chunk.mustSave || save);
+        }); return result != null ? result : false; // Paper - Ensure never async
     }
 
     public boolean regenerateChunk(int x, int z) {
@@ -791,6 +796,12 @@ public class CraftWorld implements World {
         return !world.newExplosion(null, x, y, z, power, setFire, breakBlocks).wasCanceled;
     }
 
+    // Paper start
+    public boolean createExplosion(Entity source, Location loc, float power, boolean setFire, boolean breakBlocks) {
+        return !world.createExplosion(source != null ? ((CraftEntity) source).getHandle() : null, loc.getX(), loc.getY(), loc.getZ(), power, setFire, breakBlocks).wasCanceled;
+    }
+    // Paper end
+
     public boolean createExplosion(Location loc, float power) {
         return createExplosion(loc, power, false);
     }
@@ -835,6 +846,12 @@ public class CraftWorld implements World {
     public Chunk getChunkAt(Location location) {
         return getChunkAt(location.getBlockX() >> 4, location.getBlockZ() >> 4);
     }
+
+    // Paper start
+    public boolean isChunkGenerated(int x, int z) {
+        return this.getHandle().getChunkProvider().isChunkGenerated(x, z);
+    }
+    // Paper end
 
     public ChunkGenerator getGenerator() {
         return generator;
@@ -1167,6 +1184,10 @@ public class CraftWorld implements World {
         if (Boat.class.isAssignableFrom(clazz)) {
             entity = new EntityBoat(world, x, y, z);
             entity.setLocationAndAngles(x, y, z, yaw, pitch);
+            // Paper start
+        } else if (org.bukkit.entity.Item.class.isAssignableFrom(clazz)) {
+            entity = new EntityItem(world, x, y, z, new net.minecraft.item.ItemStack(net.minecraft.item.Item.getItemFromBlock(net.minecraft.block.Blocks.DIRT)));
+            // Paper end
         } else if (FallingBlock.class.isAssignableFrom(clazz)) {
             entity = new EntityFallingBlock(world, x, y, z, world.getBlockState(new BlockPos(x, y, z)));
         } else if (Projectile.class.isAssignableFrom(clazz)) {

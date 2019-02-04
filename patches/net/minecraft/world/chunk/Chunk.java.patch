@@ -451,6 +451,15 @@
      }
  
      public boolean wasTicked()
+@@ -1500,7 +1712,7 @@
+ 
+     public long getInhabitedTime()
+     {
+-        return this.inhabitedTime;
++        return world.paperConfig.useInhabitedTime ? this.inhabitedTime : 0; // Paper
+     }
+ 
+     public void setInhabitedTime(long newInhabitedTime)
 @@ -1540,11 +1752,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  

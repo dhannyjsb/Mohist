@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/scoreboard/ScoreboardSaveData.java
++++ ../src-work/minecraft/net/minecraft/scoreboard/ScoreboardSaveData.java
+@@ -221,6 +221,7 @@
+ 
+         for (ScorePlayerTeam scoreplayerteam : this.scoreboard.getTeams())
+         {
++            if (!com.destroystokyo.paper.PaperConfig.saveEmptyScoreboardTeams && scoreplayerteam.getPlayerNameSet().isEmpty()) continue; // Paper
+             NBTTagCompound nbttagcompound = new NBTTagCompound();
+             nbttagcompound.setString("Name", scoreplayerteam.getName());
+             nbttagcompound.setString("DisplayName", scoreplayerteam.getDisplayName());

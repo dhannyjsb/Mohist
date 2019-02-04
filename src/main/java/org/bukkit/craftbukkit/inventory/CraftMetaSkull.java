@@ -1,10 +1,12 @@
 package org.bukkit.craftbukkit.inventory;
 
-import java.util.Map;
-
+import com.google.common.collect.ImmutableMap.Builder;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntitySkull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,8 +16,7 @@ import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.google.common.collect.ImmutableMap.Builder;
-import com.mojang.authlib.GameProfile;
+import java.util.Map;
 
 @DelegateDeserialization(SerializableMeta.class)
 class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
@@ -139,7 +140,13 @@ class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
         if (name == null) {
             profile = null;
         } else {
-            profile = new GameProfile(null, name);
+            // Paper start - Use Online Players Skull
+            GameProfile newProfile = null;
+            EntityPlayer player = MinecraftServer.getServerInst().getPlayerList().getPlayerByUsername(name);
+            if (player != null) newProfile = player.getGameProfile();
+            if (newProfile == null) newProfile = new GameProfile(null, name);
+            profile = newProfile;
+            // Paper end
         }
 
         return true;

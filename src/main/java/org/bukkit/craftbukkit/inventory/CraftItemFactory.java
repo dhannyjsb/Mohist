@@ -202,5 +202,17 @@ public final class CraftItemFactory implements ItemFactory {
     public ItemStack ensureServerConversions(ItemStack item) {
         return CraftItemStack.asCraftMirror(CraftItemStack.asNMSCopy(item));
     }
+
+    @Override
+    public String getI18NDisplayName(ItemStack item) {
+        net.minecraft.item.ItemStack nms = null;
+        if (item instanceof CraftItemStack) {
+            nms = ((CraftItemStack) item).handle;
+        }
+        if (nms == null) {
+            nms = CraftItemStack.asNMSCopy(item);
+        }
+        return nms != null ? nms.getName() : null;
+    }
     // Paper end
 }

@@ -157,6 +157,15 @@
                      this.shrink(1);
  
                      if (entityIn instanceof EntityPlayer)
+@@ -532,7 +578,7 @@
+         playerIn.addStat(StatList.getCraftStats(this.item), amount);
+         this.getItem().onCreated(this, worldIn, playerIn);
+     }
+-
++    public int getItemUseMaxDuration() { return getMaxItemUseDuration(); } // Paper - OBFHELPER
+     public int getMaxItemUseDuration()
+     {
+         return this.getItem().getMaxItemUseDuration(this);
 @@ -982,6 +1028,14 @@
  
      public void setRepairCost(int cost)

@@ -92,7 +92,10 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public void setHealth(double health) {
         health = (float) health;
         if ((health < 0) || (health > getMaxHealth())) {
-            throw new IllegalArgumentException("Health must be between 0 and " + getMaxHealth() + "(" + health + ")");
+            // Paper - Be more informative
+            throw new IllegalArgumentException("Health must be between 0 and " + getMaxHealth() + ", but was " + health
+                    + ". (attribute base value: " + this.getHandle().getAttributeInstance(GenericAttributes.maxHealth).b()
+                    + (this instanceof CraftPlayer ? ", player: " + this.getName() + ')' : ')'));
         }
 
         getHandle().setHealth((float) health);
@@ -246,6 +249,16 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public Player getKiller() {
         return getHandle().attackingPlayer == null ? null : (Player) getHandle().attackingPlayer.getBukkitEntity();
     }
+
+    // Paper start
+    @Override
+    public void setKiller(Player killer) {
+        net.minecraft.entity.player.EntityPlayerMP entityPlayer = killer == null ? null : ((CraftPlayer) killer).getHandle();
+        getHandle().attackingPlayer = entityPlayer;
+        getHandle().lastDamager = entityPlayer;
+        getHandle().lastDamageByPlayerTime = entityPlayer == null ? 0 : 100; // 100 value taken from EntityLiving#damageEntity
+    }
+    // Paper end
 
     public boolean addPotionEffect(PotionEffect effect) {
         return addPotionEffect(effect, false);

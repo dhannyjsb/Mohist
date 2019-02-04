@@ -129,6 +129,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     private double health = 20;
     private boolean scaledHealth = false;
     private double healthScale = 20;
+    private static final boolean DISABLE_CHANNEL_LIMIT = System.getProperty("paper.disableChannelLimit") != null; // Paper - add a flag to disable the channel limit
 
     public CraftPlayer(CraftServer server, EntityPlayer entity) {
         super(server, entity);
@@ -1191,6 +1192,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public void addChannel(String channel) {
+        com.google.common.base.Preconditions.checkState( DISABLE_CHANNEL_LIMIT || channels.size() < 128, "Too many channels registered" ); // Spigot // Paper - flag to disable channel limit
         if (channels.add(channel)) {
             server.getPluginManager().callEvent(new PlayerRegisterChannelEvent(this, channel));
         }

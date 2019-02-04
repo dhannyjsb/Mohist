@@ -131,4 +131,38 @@ public class PaperWorldConfig {
     private void allowLeashingUndeadHorse() {
         allowLeashingUndeadHorse = getBoolean("allow-leashing-undead-horse", false);
     }
+
+    public boolean armorStandEntityLookups = true;
+    private void armorStandEntityLookups() {
+        armorStandEntityLookups = getBoolean("armor-stands-do-collision-entity-lookups", true);
+    }
+
+    public boolean useInhabitedTime = true;
+    private void useInhabitedTime() {
+        useInhabitedTime = getBoolean("use-chunk-inhabited-timer", true);
+    }
+
+    public boolean disableIceAndSnow;
+    private void disableIceAndSnow(){
+        disableIceAndSnow = getBoolean("disable-ice-and-snow", false);
+    }
+
+    public boolean disableThunder;
+    private void disableThunder() {
+        disableThunder = getBoolean("disable-thunder", false);
+    }
+
+    public int maxChunkSendsPerTick = 81;
+    private void maxChunkSendsPerTick() {
+        maxChunkSendsPerTick = getInt("max-chunk-sends-per-tick", maxChunkSendsPerTick);
+        if (maxChunkSendsPerTick <= 0) {
+            maxChunkSendsPerTick = 81;
+        }
+        log("Max Chunk Sends Per Tick: " + maxChunkSendsPerTick);
+    }
+
+    public boolean disableChestCatDetection;
+    private void disableChestCatDetection() {
+        disableChestCatDetection = getBoolean("game-mechanics.disable-chest-cat-detection", false);
+    }
 }

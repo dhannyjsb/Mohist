@@ -379,6 +379,48 @@ public final class CraftServer implements Server {
         }
     }
 
+    @Override
+    public boolean reloadCommandAliases() {
+        Set<String> removals = getCommandAliases().keySet().stream()
+                .map(key -> key.toLowerCase(java.util.Locale.ENGLISH))
+                .collect(java.util.stream.Collectors.toSet());
+        getCommandMap().getKnownCommands().keySet().removeIf(removals::contains);
+        File file = getCommandsConfigFile();
+        try {
+            commandsConfiguration.load(file);
+        } catch (FileNotFoundException ex) {
+            return false;
+        } catch (IOException | org.bukkit.configuration.InvalidConfigurationException ex) {
+            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+            return false;
+        }
+        commandMap.registerServerAliases();
+        return true;
+    }
+
+    @Override
+    public void reloadPermissions() {
+        pluginManager.clearPermissions();
+        if (com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions();
+        for (Plugin plugin : pluginManager.getPlugins()) {
+            for (Permission perm : plugin.getDescription().getPermissions()) {
+                try {
+                    pluginManager.addPermission(perm);
+                } catch (IllegalArgumentException ex) {
+                    getLogger().log(Level.WARNING, "Plugin " + plugin.getDescription().getFullName() + " tried to register permission '" + perm.getName() + "' but it's already registered", ex);
+                }
+            }
+        }
+        if (!com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions();
+        DefaultPermissions.registerCorePermissions();
+        CraftDefaultPermissions.registerCorePermissions();
+    }
+
+    @Override
+    public boolean suggestPlayerNamesWhenNullTabCompletions() {
+        return com.destroystokyo.paper.PaperConfig.suggestPlayersWhenNullTabCompletions;
+    }
+
     public void disablePlugins() {
         pluginManager.disablePlugins();
     }

@@ -830,7 +830,7 @@ public class CraftEventFactory {
             hitBlock = entity.getBukkitEntity().getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
         }
 
-        ProjectileHitEvent event = new ProjectileHitEvent((Projectile) entity.getBukkitEntity(), position.entityHit == null ? null : position.entityHit.getBukkitEntity(), hitBlock);
+        ProjectileHitEvent event = new ProjectileHitEvent((Projectile) entity.getBukkitEntity(), position.entityHit == null ? null : position.entityHit.getBukkitEntity(), hitBlock, position.direction == null ? null : CraftBlock.notchToBlockFace(position.direction)); // Paper - add BlockFace parameter
         entity.world.getServer().getPluginManager().callEvent(event);
         return event;
     }

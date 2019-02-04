@@ -99,6 +99,15 @@
      }
  
      protected void entityInit()
+@@ -246,7 +249,7 @@
+         super.updateAITasks();
+     }
+ 
+-    protected boolean teleportRandomly()
++    public boolean teleportRandomly()
+     {
+         double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * 64.0D;
+         double d1 = this.posY + (double)(this.rand.nextInt(64) - 32);
 @@ -524,8 +527,11 @@
  
                  if (iblockstate2 != null && this.canPlaceBlock(world, blockpos, iblockstate2.getBlock(), iblockstate, iblockstate1))

@@ -79,3 +79,15 @@
      }
  
      public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+@@ -543,6 +540,11 @@
+ 
+     private boolean isOcelotSittingOnChest(World worldIn, BlockPos pos)
+     {
++        // Paper start - Option ti dsiable chest cat detection
++        if (worldIn.paperConfig.disableChestCatDetection) {
++            return false;
++        }
++        // Paper end
+         for (Entity entity : worldIn.getEntitiesWithinAABB(EntityOcelot.class, new AxisAlignedBB((double)pos.getX(), (double)(pos.getY() + 1), (double)pos.getZ(), (double)(pos.getX() + 1), (double)(pos.getY() + 2), (double)(pos.getZ() + 1))))
+         {
+             EntityOcelot entityocelot = (EntityOcelot)entity;
