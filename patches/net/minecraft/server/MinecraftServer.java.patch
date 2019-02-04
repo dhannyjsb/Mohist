@@ -914,7 +914,16 @@
      }
  
      public boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)
-@@ -1331,7 +1487,7 @@
+@@ -1303,6 +1459,8 @@
+         this.maxPlayerIdleMinutes = idleTimeout;
+     }
+ 
++    public MinecraftSessionService getSessionService() { return getMinecraftSessionService(); } // Paper - OBFHELPER
++
+     public MinecraftSessionService getMinecraftSessionService()
+     {
+         return this.sessionService;
+@@ -1331,7 +1489,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -923,7 +932,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1349,7 +1505,8 @@
+@@ -1349,7 +1507,8 @@
  
      public boolean sendCommandFeedback()
      {
@@ -933,7 +942,7 @@
      }
  
      public MinecraftServer getServer()
-@@ -1357,6 +1514,11 @@
+@@ -1357,6 +1516,11 @@
          return this;
      }
  
@@ -945,7 +954,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1528,14 @@
+@@ -1366,15 +1530,14 @@
      {
          Validate.notNull(callable);
  
@@ -966,7 +975,7 @@
          }
          else
          {
-@@ -1412,11 +1573,13 @@
+@@ -1412,11 +1575,13 @@
  
      public AdvancementManager getAdvancementManager()
      {
@@ -980,7 +989,7 @@
          return this.worlds[0].getFunctionManager();
      }
  
-@@ -1425,6 +1588,7 @@
+@@ -1425,6 +1590,7 @@
          if (this.isCallingFromMinecraftThread())
          {
              this.getPlayerList().saveAllPlayerData();
@@ -988,7 +997,7 @@
              this.worlds[0].getLootTableManager().reloadLootTables();
              this.getAdvancementManager().reload();
              this.getFunctionManager().reload();
-@@ -1455,8 +1619,11 @@
+@@ -1455,8 +1621,11 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1001,7 +1010,7 @@
          //Forge: Copied from DedicatedServer.init as to run as early as possible, Old code left in place intentionally.
          //Done in good faith with permission: https://github.com/MinecraftForge/MinecraftForge/issues/3659#issuecomment-390467028
          ServerEula eula = new ServerEula(new File("eula.txt"));
-@@ -1466,119 +1633,32 @@
+@@ -1466,119 +1635,32 @@
              eula.createEULAFile();
              return;
          }
@@ -1074,7 +1083,8 @@
 -                }
 -            }
 -
-             YggdrasilAuthenticationService yggdrasilauthenticationservice = new YggdrasilAuthenticationService(Proxy.NO_PROXY, UUID.randomUUID().toString());
+-            YggdrasilAuthenticationService yggdrasilauthenticationservice = new YggdrasilAuthenticationService(Proxy.NO_PROXY, UUID.randomUUID().toString());
++            YggdrasilAuthenticationService yggdrasilauthenticationservice = new com.destroystokyo.paper.profile.PaperAuthenticationService(Proxy.NO_PROXY, UUID.randomUUID().toString()); // Paper
              MinecraftSessionService minecraftsessionservice = yggdrasilauthenticationservice.createMinecraftSessionService();
              GameProfileRepository gameprofilerepository = yggdrasilauthenticationservice.createProfileRepository();
              PlayerProfileCache playerprofilecache = new PlayerProfileCache(gameprofilerepository, new File(s1, USER_CACHE_FILE.getName()));
@@ -1132,7 +1142,7 @@
          }
          catch (Exception exception)
          {
-@@ -1595,7 +1675,8 @@
+@@ -1595,7 +1677,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {

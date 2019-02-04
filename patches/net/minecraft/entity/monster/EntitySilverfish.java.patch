@@ -56,6 +56,15 @@
          this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
          this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
      }
+@@ -146,7 +138,7 @@
+         if (super.getCanSpawnHere())
+         {
+             EntityPlayer entityplayer = this.world.getNearestPlayerNotCreative(this, 5.0D);
+-            return entityplayer == null;
++            return !(entityplayer != null && !entityplayer.affectsSpawning) && entityplayer == null; // Paper - Affects Spawning API
+         }
+         else
+         {
 @@ -221,6 +213,9 @@
  
                      if (BlockSilverfish.canContainSilverfish(iblockstate))

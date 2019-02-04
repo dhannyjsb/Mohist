@@ -169,4 +169,9 @@ public class PaperConfig {
         config.addDefault(path, def);
         return config.getString(path, config.getString(path));
     }
+
+    public static int regionFileCacheSize = 256;
+    private static void regionFileCacheSize() {
+        regionFileCacheSize = getInt("settings.region-file-cache-size", 256);
+    }
 }

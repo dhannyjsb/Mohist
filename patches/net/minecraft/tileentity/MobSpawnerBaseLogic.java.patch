@@ -63,16 +63,17 @@
          }
      }
  
-@@ -132,7 +130,12 @@
+@@ -131,8 +129,13 @@
+                             if (!net.minecraftforge.event.ForgeEventFactory.doSpecialSpawn(entityliving, this.getSpawnerWorld(), (float)entity.posX, (float)entity.posY, (float)entity.posZ, this))
                              ((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData)null);
                          }
- 
--                        AnvilChunkLoader.spawnEntity(entity, world);
++                        entity.spawnedViaMobSpawner = true; // Paper
 +                        if (entity.world.spigotConfig.nerfSpawnerMobs) entity.fromMobSpawner = true; // Spigot Start
 +                        if (org.bukkit.craftbukkit.event.CraftEventFactory.callSpawnerSpawnEvent(entity, blockpos).isCancelled()) {
 +                            continue;
 +                        }
-+
+ 
+-                        AnvilChunkLoader.spawnEntity(entity, world);
 +                        AnvilChunkLoader.spawnEntity(entity, world, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.SPAWNER);
                          world.playEvent(2004, blockpos, 0);
  

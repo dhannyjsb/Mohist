@@ -18,6 +18,15 @@
  public class BlockDragonEgg extends Block
  {
      protected static final AxisAlignedBB DRAGON_EGG_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 1.0D, 0.9375D);
+@@ -68,7 +70,7 @@
+ 
+                 if (blockpos.getY() > 0)
+                 {
+-                    worldIn.setBlockState(blockpos, this.getDefaultState(), 2);
++                    worldIn.setBlockState(blockpos.up(), this.getDefaultState(), 2); // Paper
+                 }
+             }
+         }
 @@ -97,6 +99,16 @@
  
                  if (worldIn.isAirBlock(blockpos))

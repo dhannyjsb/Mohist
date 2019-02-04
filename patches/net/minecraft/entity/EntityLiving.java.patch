@@ -204,13 +204,24 @@
      {
          return true;
      }
-@@ -730,17 +776,16 @@
+@@ -721,26 +767,23 @@
+         }
+         else
+         {
+-            Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
++            EntityPlayer entity = this.world.getClosestPlayerToEntity(this, -1.0D);
+ 
+-            if (entity != null)
+-            {
++            if (entity != null && entity.affectsSpawning) { // Paper - Affects Spawning API
+                 double d0 = entity.posX - this.posX;
+                 double d1 = entity.posY - this.posY;
                  double d2 = entity.posZ - this.posZ;
                  double d3 = d0 * d0 + d1 * d1 + d2 * d2;
  
 -                if (this.canDespawn() && d3 > 16384.0D)
+-                {
 +                if (this.canDespawn() && d3 > world.paperConfig.hardDespawnDistance) { // CraftBukkit - remove isTypeNotPersistent() check // Paper - custom despawn distances
-                 {
                      this.setDead();
                  }
  
@@ -225,7 +236,7 @@
                      this.idleTime = 0;
                  }
              }
-@@ -753,6 +798,18 @@
+@@ -753,6 +796,18 @@
          this.world.profiler.startSection("checkDespawn");
          this.despawnEntity();
          this.world.profiler.endSection();
@@ -244,7 +255,7 @@
          this.world.profiler.startSection("sensing");
          this.senses.clearSensingCache();
          this.world.profiler.endSection();
-@@ -1209,6 +1266,10 @@
+@@ -1209,6 +1264,10 @@
      {
          if (this.getLeashed() && this.getLeashHolder() == player)
          {
@@ -255,7 +266,7 @@
              this.clearLeashed(true, !player.capabilities.isCreativeMode);
              return true;
          }
-@@ -1218,6 +1279,10 @@
+@@ -1218,6 +1277,10 @@
  
              if (itemstack.getItem() == Items.LEAD && this.canBeLeashedTo(player))
              {
@@ -266,7 +277,7 @@
                  this.setLeashHolder(player, true);
                  itemstack.shrink(1);
                  return true;
-@@ -1245,11 +1310,13 @@
+@@ -1245,11 +1308,13 @@
          {
              if (!this.isEntityAlive())
              {
@@ -280,7 +291,7 @@
                  this.clearLeashed(true, true);
              }
          }
-@@ -1264,7 +1331,9 @@
+@@ -1264,7 +1329,9 @@
  
              if (!this.world.isRemote && dropLead)
              {
@@ -290,7 +301,7 @@
              }
  
              if (!this.world.isRemote && sendPacket && this.world instanceof WorldServer)
-@@ -1348,6 +1417,7 @@
+@@ -1348,6 +1415,7 @@
              }
              else
              {
@@ -298,7 +309,7 @@
                  this.clearLeashed(false, true);
              }
          }
-@@ -1448,7 +1518,6 @@
+@@ -1448,7 +1516,6 @@
          ON_GROUND,
          IN_AIR,
          IN_WATER;

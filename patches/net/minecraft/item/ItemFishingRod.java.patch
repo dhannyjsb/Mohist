@@ -40,7 +40,7 @@
                      entityfishhook.setLuck(k);
                  }
  
-+                PlayerFishEvent playerFishEvent = new PlayerFishEvent((org.bukkit.entity.Player) playerIn.getBukkitEntity(), null, (org.bukkit.entity.FishHook) entityfishhook.getBukkitEntity(), PlayerFishEvent.State.FISHING);
++                PlayerFishEvent playerFishEvent = new PlayerFishEvent((org.bukkit.entity.Player) playerIn.getBukkitEntity(), null, (org.bukkit.entity.Fish) entityfishhook.getBukkitEntity(), PlayerFishEvent.State.FISHING);
 +                worldIn.getServer().getPluginManager().callEvent(playerFishEvent);
 +
 +                if (playerFishEvent.isCancelled()) {

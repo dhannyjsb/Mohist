@@ -96,8 +96,8 @@
 +        if (this.isBurning() && this.canSmelt()) {
 +            this.cookTime += elapsedTicks;
 +            if (this.cookTime >= this.totalCookTime) {
-+                this.cookTime = 0;
-+                this.totalCookTime = this.getCookTime((ItemStack) this.furnaceItemStacks.get(0));
++                this.cookTime -= this.totalCookTime;
++                this.totalCookTime = this.getCookTime(this.furnaceItemStacks.get(0));
 +                this.smeltItem();
 +                flag1 = true;
 +            }

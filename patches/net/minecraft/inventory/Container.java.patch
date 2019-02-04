@@ -124,6 +124,15 @@
      protected Slot addSlotToContainer(Slot slotIn)
      {
          slotIn.slotNumber = this.inventorySlots.size();
+@@ -60,7 +155,7 @@
+ 
+         for (int i = 0; i < this.inventorySlots.size(); ++i)
+         {
+-            nonnulllist.add(((Slot)this.inventorySlots.get(i)).getStack());
++            nonnulllist.add(this.inventorySlots.get(i).getStack());
+         }
+ 
+         return nonnulllist;
 @@ -79,7 +174,7 @@
              ItemStack itemstack = ((Slot)this.inventorySlots.get(i)).getStack();
              ItemStack itemstack1 = this.inventoryItemStacks.get(i);
@@ -133,7 +142,12 @@
              {
                  boolean clientStackChanged = !ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack);
                  itemstack1 = itemstack.isEmpty() ? ItemStack.EMPTY : itemstack.copy();
-@@ -92,6 +187,7 @@
+@@ -88,10 +183,11 @@
+                 if (clientStackChanged)
+                 for (int j = 0; j < this.listeners.size(); ++j)
+                 {
+-                    ((IContainerListener)this.listeners.get(j)).sendSlotContents(this, i, itemstack1);
++                    this.listeners.get(j).sendSlotContents(this, i, itemstack1);
                  }
              }
          }
@@ -141,6 +155,15 @@
      }
  
      public boolean enchantItem(EntityPlayer playerIn, int id)
+@@ -160,7 +256,7 @@
+             }
+             else if (this.dragEvent == 1)
+             {
+-                Slot slot7 = this.inventorySlots.get(slotId);
++                Slot slot7 = slotId < this.inventorySlots.size() ? this.inventorySlots.get(slotId) : null; // Paper - Ensure drag in bounds
+                 ItemStack itemstack12 = inventoryplayer.getItemStack();
+ 
+                 if (slot7 != null && canAddItemToSlot(slot7, itemstack12, true) && slot7.isItemValid(itemstack12) && (this.dragMode == 2 || itemstack12.getCount() > this.dragSlots.size()) && this.canDragIntoSlot(slot7))
 @@ -174,7 +270,7 @@
                  {
                      ItemStack itemstack9 = inventoryplayer.getItemStack().copy();

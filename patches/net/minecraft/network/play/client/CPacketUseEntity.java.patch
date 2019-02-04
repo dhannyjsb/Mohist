@@ -8,7 +8,7 @@
  import net.minecraft.entity.Entity;
  import net.minecraft.network.Packet;
  import net.minecraft.network.PacketBuffer;
-@@ -12,10 +10,13 @@
+@@ -12,10 +10,14 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -19,11 +19,12 @@
  {
      private int entityId;
 -    private CPacketUseEntity.Action action;
++    public int getEntityId() { return this.entityId; } // Paper - add accessor
 +    private Action action;
      private Vec3d hitVec;
      private EnumHand hand;
  
-@@ -26,14 +27,14 @@
+@@ -26,14 +28,14 @@
      public CPacketUseEntity(Entity entityIn)
      {
          this.entityId = entityIn.getEntityId();
@@ -40,7 +41,7 @@
          this.hand = handIn;
      }
  
-@@ -41,7 +42,7 @@
+@@ -41,7 +43,7 @@
      public CPacketUseEntity(Entity entityIn, EnumHand handIn, Vec3d hitVecIn)
      {
          this.entityId = entityIn.getEntityId();
@@ -49,7 +50,7 @@
          this.hand = handIn;
          this.hitVec = hitVecIn;
      }
-@@ -49,14 +50,14 @@
+@@ -49,14 +51,14 @@
      public void readPacketData(PacketBuffer buf) throws IOException
      {
          this.entityId = buf.readVarInt();
@@ -67,7 +68,7 @@
          {
              this.hand = (EnumHand)buf.readEnumValue(EnumHand.class);
          }
-@@ -67,14 +68,14 @@
+@@ -67,14 +69,14 @@
          buf.writeVarInt(this.entityId);
          buf.writeEnumValue(this.action);
  
@@ -84,7 +85,7 @@
          {
              buf.writeEnumValue(this.hand);
          }
-@@ -91,7 +92,7 @@
+@@ -91,7 +93,7 @@
          return worldIn.getEntityByID(this.entityId);
      }
  

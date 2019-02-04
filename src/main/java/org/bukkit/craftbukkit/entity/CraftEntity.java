@@ -832,4 +832,17 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         return spigot;
     }
     // Spigot end
+
+    // Paper start
+    @Override
+    public Location getOrigin() {
+        Location origin = getHandle().origin;
+        return origin == null ? null : origin.clone();
+    }
+
+    @Override
+    public boolean fromMobSpawner() {
+        return getHandle().spawnedViaMobSpawner;
+    }
+    // Paper end
 }

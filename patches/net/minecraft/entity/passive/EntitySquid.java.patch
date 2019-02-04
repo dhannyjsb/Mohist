@@ -16,6 +16,15 @@
  public class EntitySquid extends EntityWaterMob
  {
      public float squidPitch;
+@@ -38,7 +39,7 @@
+     {
+         super(worldIn);
+         this.setSize(0.8F, 0.8F);
+-        this.rand.setSeed((long)(1 + this.getEntityId()));
++        //this.rand.setSeed((long)(1 + this.getEntityId())); // Paper
+         this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
+     }
+ 
 @@ -49,7 +50,7 @@
  
      protected void initEntityAI()

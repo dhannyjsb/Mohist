@@ -170,7 +170,7 @@
          playerIn.setWorld(playerWorld);
          playerIn.interactionManager.setWorld((WorldServer)playerIn.world);
          String s1 = "local";
-@@ -134,13 +160,37 @@
+@@ -134,36 +160,63 @@
              s1 = netManager.getRemoteAddress().toString();
          }
  
@@ -194,7 +194,6 @@
 -        this.setPlayerGameTypeBasedOnOther(playerIn, (EntityPlayerMP)null, worldserver);
 +        this.setPlayerGameTypeBasedOnOther(playerIn, null, worldserver);
          playerIn.connection = nethandlerplayserver;
-+        //forge 允许从ServerConnectionFromClientEvent向客户端发�?�数据包
          net.minecraftforge.fml.common.FMLCommonHandler.instance().fireServerConnectionEvent(netManager);
 +        // Mohist start - send DimensionRegisterMessage to client before attempting to login to a Bukkit dimension
 +        if (DimensionManager.isBukkitDimension(playerIn.dimension))
@@ -210,7 +209,10 @@
          nethandlerplayserver.sendPacket(new SPacketCustomPayload("MC|Brand", (new PacketBuffer(Unpooled.buffer())).writeString(this.getServerInstance().getServerModName())));
          nethandlerplayserver.sendPacket(new SPacketServerDifficulty(worldinfo.getDifficulty(), worldinfo.isDifficultyLocked()));
          nethandlerplayserver.sendPacket(new SPacketPlayerAbilities(playerIn.capabilities));
-@@ -150,20 +200,23 @@
+         nethandlerplayserver.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
++        nethandlerplayserver.sendPacket(new SPacketEntityStatus(playerIn, (byte) (worldserver.getGameRules().getBoolean("reducedDebugInfo") ? 22 : 23))); // Paper - fix this rule not being initialized on the client
+         this.updatePermissionLevel(playerIn);
+         playerIn.getStatFile().markAllDirty();
          playerIn.getRecipeBook().init(playerIn);
          this.sendScoreboard((ServerScoreboard)worldserver.getScoreboard(), playerIn);
          this.mcServer.refreshStatusNextTick();

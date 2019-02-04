@@ -17,3 +17,12 @@
  public class ChunkCache implements IBlockAccess
  {
      protected int chunkX;
+@@ -34,7 +34,7 @@
+         {
+             for (int l = this.chunkZ; l <= j; ++l)
+             {
+-                this.chunkArray[k - this.chunkX][l - this.chunkZ] = worldIn.getChunkFromChunkCoords(k, l);
++                this.chunkArray[k - this.chunkX][l - this.chunkZ] = worldIn.getChunkIfLoaded(k, l); // Paper
+             }
+         }
+ 

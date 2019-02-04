@@ -1274,12 +1274,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void setFlying(boolean value) {
+        boolean needsUpdate = getHandle().abilities.isFlying != value; // Paper - Only refresh abilities if needed
         if (!getAllowFlight() && value) {
             throw new IllegalArgumentException("Cannot make player fly if getAllowFlight() is false");
         }
 
         getHandle().capabilities.isFlying = value;
-        getHandle().sendPlayerAbilities();
+        if (needsUpdate) getHandle().updateAbilities(); // Paper - Only refresh abilities if needed
     }
 
     @Override
@@ -1566,6 +1567,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     @Override
     public String getLocale() {
         return getHandle().language;
+    }
+
+    public void setAffectsSpawning(boolean affects) {
+        this.getHandle().affectsSpawning = affects;
+    }
+
+    @Override
+    public boolean getAffectsSpawning() {
+        return this.getHandle().affectsSpawning;
     }
 
     // Spigot start

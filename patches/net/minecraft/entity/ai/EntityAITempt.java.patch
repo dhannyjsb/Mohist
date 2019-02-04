@@ -30,19 +30,14 @@
      private int delayTemptCounter;
      private boolean isRunning;
      private final Set<Item> temptItem;
-@@ -53,6 +58,7 @@
+@@ -52,15 +57,15 @@
+         else
          {
              this.temptingPlayer = this.temptedEntity.world.getClosestPlayerToEntity(this.temptedEntity, 10.0D);
- 
-+            /*
-             if (this.temptingPlayer == null)
-             {
-                 return false;
-@@ -61,6 +67,16 @@
-             {
-                 return this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
-             }
-+            */
+-
+-            if (this.temptingPlayer == null)
+-            {
+-                return false;
 +            boolean tempt = this.temptingPlayer == null ? false : this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
 +            if (tempt) {
 +                EntityTargetLivingEntityEvent event = CraftEventFactory.callEntityTargetLivingEvent(this.temptedEntity, this.temptingPlayer, EntityTargetEvent.TargetReason.TEMPT);
@@ -50,8 +45,12 @@
 +                    return false;
 +                }
 +                this.temptingPlayer = (event.getTarget() == null) ? null : ((CraftLivingEntity) event.getTarget()).getHandle();
-+            }
-+            return tempt;
+             }
+-            else
+-            {
+-                return this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
+-            }
++            return tempt && this.temptingPlayer != null; // Paper - must have target - plugin might of cancelled
          }
      }
  

@@ -753,15 +753,7 @@
          if (this.isMovementBlocked())
          {
              this.isJumping = false;
-@@ -2359,6 +2645,7 @@
-             this.updateEntityActionState();
-             this.world.profiler.endSection();
-         }
-+        SpigotTimings.timerEntityAI.stopTiming(); // Spigot
- 
-         this.world.profiler.endSection();
-         this.world.profiler.startSection("jump");
-@@ -2426,7 +2713,8 @@
+@@ -2426,7 +2712,8 @@
  
          if (!this.world.isRemote)
          {
@@ -771,7 +763,7 @@
          }
      }
  
-@@ -2560,12 +2848,12 @@
+@@ -2560,12 +2847,12 @@
  
      public boolean canBeCollidedWith()
      {
@@ -786,7 +778,7 @@
      }
  
      protected void markVelocityChanged()
-@@ -2629,7 +2917,7 @@
+@@ -2629,7 +2916,7 @@
          {
              PotionEffect effect = iterator.next();
  
@@ -795,7 +787,7 @@
              {
                  onFinishedPotionEffect(effect);
                  iterator.remove();
-@@ -2667,7 +2955,8 @@
+@@ -2667,7 +2954,8 @@
          if (this.isHandActive())
          {
              ItemStack itemstack = this.getHeldItem(this.getActiveHand());
@@ -805,7 +797,7 @@
  
              if (itemstack == this.activeItemStack)
              {
-@@ -2785,8 +3074,24 @@
+@@ -2785,8 +3073,24 @@
          if (!this.activeItemStack.isEmpty() && this.isHandActive())
          {
              this.updateItemUse(this.activeItemStack, 16);
@@ -832,7 +824,7 @@
              itemstack = net.minecraftforge.event.ForgeEventFactory.onItemUseFinish(this, activeItemStackCopy, getItemInUseCount(), itemstack);
              this.setHeldItem(this.getActiveHand(), itemstack);
              this.resetActiveHand();
-@@ -2897,11 +3202,14 @@
+@@ -2897,11 +3201,14 @@
  
              if (flag1)
              {
@@ -852,7 +844,7 @@
                  }
              }
          }
-@@ -2936,6 +3244,11 @@
+@@ -2936,6 +3243,11 @@
          }
      }
  
@@ -864,7 +856,7 @@
      public boolean canBeHitWithPotion()
      {
          return true;
-@@ -2949,7 +3262,7 @@
+@@ -2949,7 +3261,7 @@
      @SuppressWarnings("unchecked")
      @Override
      @Nullable
@@ -873,7 +865,7 @@
      {
          if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
          {
-@@ -2961,7 +3274,7 @@
+@@ -2961,7 +3273,7 @@
      }
  
      @Override
@@ -882,7 +874,7 @@
      {
          return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
      }
-@@ -2975,7 +3288,7 @@
+@@ -2975,7 +3287,7 @@
      public void setPartying(BlockPos pos, boolean p_191987_2_)
      {
      }

@@ -1,9 +1,11 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/storage/RegionFileCache.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/storage/RegionFileCache.java
-@@ -1,6 +1,10 @@
+@@ -1,15 +1,22 @@
  package net.minecraft.world.chunk.storage;
  
- import com.google.common.collect.Maps;
+-import com.google.common.collect.Maps;
++import com.destroystokyo.paper.PaperConfig;
++import com.destroystokyo.paper.exception.ServerInternalException;
 +import net.minecraft.nbt.CompressedStreamTools;
 +import net.minecraft.nbt.NBTTagCompound;
 +
@@ -11,7 +13,54 @@
  import java.io.DataInputStream;
  import java.io.DataOutputStream;
  import java.io.File;
-@@ -92,12 +96,33 @@
+ import java.io.IOException;
++import java.util.Iterator;
++import java.util.LinkedHashMap;
+ import java.util.Map;
+ 
+ public class RegionFileCache
+ {
+-    private static final Map<File, RegionFile> REGIONS_BY_FILE = Maps.<File, RegionFile>newHashMap();
++    private static final Map<File, RegionFile> REGIONS_BY_FILE = new LinkedHashMap(PaperConfig.regionFileCacheSize, 0.75f, true); // Spigot - private -> public, Paper - HashMap -> LinkedHashMap
+ 
+     public static synchronized RegionFile createOrLoadRegionFile(File worldDir, int chunkX, int chunkZ)
+     {
+@@ -28,9 +35,8 @@
+                 file1.mkdirs();
+             }
+ 
+-            if (REGIONS_BY_FILE.size() >= 256)
+-            {
+-                clearRegionFileReferences();
++            if (REGIONS_BY_FILE.size() >= PaperConfig.regionFileCacheSize) { // Paper
++                trimCache(); // Paper
+             }
+ 
+             RegionFile regionfile1 = new RegionFile(file2);
+@@ -39,6 +45,22 @@
+         }
+     }
+ 
++    // Paper Start
++    private static synchronized void trimCache() {
++            Iterator<Map.Entry<File, RegionFile>> itr = RegionFileCache.REGIONS_BY_FILE.entrySet().iterator();
++            int count = RegionFileCache.REGIONS_BY_FILE.size() - PaperConfig.regionFileCacheSize;
++            while (count-- >= 0 && itr.hasNext()) {
++                    try {
++                        itr.next().getValue().close();
++                    } catch (IOException ioexception) {
++                        ioexception.printStackTrace();
++                        ServerInternalException.reportInternalException(ioexception);
++                    }
++                    itr.remove();
++                }
++        }
++    // Paper End
++
+     public static synchronized RegionFile getRegionFileIfExists(File worldDir, int chunkX, int chunkZ)
+     {
+         File file1 = new File(worldDir, "region");
+@@ -92,12 +114,33 @@
          return regionfile.getChunkDataInputStream(chunkX & 31, chunkZ & 31);
      }
  

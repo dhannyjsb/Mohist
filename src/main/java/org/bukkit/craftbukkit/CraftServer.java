@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit;
 
+import cn.pfcraft.server.Mohist;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -146,6 +147,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -171,7 +173,7 @@ import java.util.logging.Logger;
 //import jline.console.ConsoleReader;
 
 public final class CraftServer implements Server {
-    private final String serverName = "CraftBukkit";
+    private final String serverName = Mohist.name;
     private final String serverVersion;
     private final String bukkitVersion = Versioning.getBukkitVersion();
     private final Logger logger = Logger.getLogger("Minecraft");
@@ -750,8 +752,16 @@ public final class CraftServer implements Server {
             world.paperConfig.init(); // Paper
         }
 
+        Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
         pluginManager.clearPlugins();
         commandMap.clearCommands();
+        // Paper start
+        for (Plugin plugin : pluginClone) {
+            entityMetadata.removeAll(plugin);
+            worldMetadata.removeAll(plugin);
+            playerMetadata.removeAll(plugin);
+        }
+        // Paper end
         resetRecipes();
         reloadData();
         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
@@ -1566,6 +1576,7 @@ public final class CraftServer implements Server {
         return helpMap;
     }
 
+    @Override // Paper - add override
     public SimpleCommandMap getCommandMap() {
         return commandMap;
     }
@@ -1817,6 +1828,22 @@ public final class CraftServer implements Server {
                 t.printStackTrace();
                 return false;
             }
+    }
+    
+    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid) {
+        return createProfile(uuid, null);
+    }
+
+    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name) {
+        return createProfile(null, name);
+    }
+
+    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
+        Player player = uuid != null ? Bukkit.getPlayer(uuid) : (name != null ? Bukkit.getPlayerExact(name) : null);
+        if (player != null) {
+                return new com.destroystokyo.paper.profile.CraftPlayerProfile((CraftPlayer)player);
+            }
+        return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
     }
     // Paper end
 }

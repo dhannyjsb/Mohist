@@ -36,17 +36,7 @@
  public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -58,7 +57,9 @@
-     @Nullable
-     public Chunk loadChunk(World worldIn, int x, int z) throws IOException
-     {
-+        worldIn.timings.syncChunkLoadDataTimer.startTiming(); // Spigot
-         Object[] data = this.loadChunk__Async(worldIn, x, z);
-+        worldIn.timings.syncChunkLoadDataTimer.stopTiming(); // Spigot
- 
-         if (data != null)
-         {
-@@ -79,14 +80,14 @@
+@@ -79,14 +78,14 @@
  
          if (nbttagcompound == null)
          {
@@ -64,7 +54,7 @@
          }
  
          return this.checkedReadChunkFromNBT__Async(worldIn, x, z, nbttagcompound);
-@@ -237,9 +238,10 @@
+@@ -237,9 +236,10 @@
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -78,7 +68,7 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -366,7 +368,7 @@
+@@ -366,7 +366,7 @@
                  }
                  catch (Exception e)
                  {
@@ -87,7 +77,7 @@
                              entity.getClass().getName(), e);
                  }
              }
-@@ -384,7 +386,7 @@
+@@ -384,7 +384,7 @@
              }
              catch (Exception e)
              {
@@ -96,7 +86,7 @@
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +423,7 @@
+@@ -421,7 +421,7 @@
              }
              catch (Exception exception)
              {
@@ -105,42 +95,23 @@
              }
          }
      }
-@@ -477,6 +479,7 @@
- 
-     public void loadEntities(World worldIn, NBTTagCompound compound, Chunk chunk)
-     {
-+        worldIn.timings.syncChunkLoadEntitiesTimer.startTiming(); // Spigot
-         NBTTagList nbttaglist1 = compound.getTagList("Entities", 10);
- 
-         for (int j1 = 0; j1 < nbttaglist1.tagCount(); ++j1)
-@@ -486,6 +489,8 @@
+@@ -485,7 +485,6 @@
+             readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
- 
-+        worldIn.timings.syncChunkLoadEntitiesTimer.stopTiming(); // Spigot
-+        worldIn.timings.syncChunkLoadTileEntitiesTimer.startTiming(); // Spigot
+-
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +503,8 @@
+@@ -498,7 +497,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
 -
-+        worldIn.timings.syncChunkLoadTileEntitiesTimer.stopTiming(); // Spigot
-+        worldIn.timings.syncChunkLoadTileTicksTimer.startTiming(); // Spigot
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -520,6 +526,7 @@
-                 worldIn.scheduleBlockUpdate(new BlockPos(nbttagcompound3.getInteger("x"), nbttagcompound3.getInteger("y"), nbttagcompound3.getInteger("z")), block, nbttagcompound3.getInteger("t"), nbttagcompound3.getInteger("p"));
-             }
-         }
-+        worldIn.timings.syncChunkLoadTileTicksTimer.stopTiming(); // Spigot
-     }
- 
-     @Nullable
-@@ -608,8 +615,11 @@
+@@ -608,8 +606,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {

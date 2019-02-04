@@ -33,11 +33,12 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
+-public class TileEntitySkull extends TileEntity implements ITickable
 +import javax.annotation.Nullable;
 +import java.util.UUID;
 +import java.util.concurrent.*;
 +
- public class TileEntitySkull extends TileEntity implements ITickable
++public class TileEntitySkull extends TileEntity // Paper - remove tickable
  {
      private int skullType;
 -    private int skullRotation;

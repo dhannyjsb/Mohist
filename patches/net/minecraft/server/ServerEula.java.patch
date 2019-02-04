@@ -58,16 +58,19 @@
          }
  
          return flag;
-@@ -63,7 +62,7 @@
+@@ -63,8 +62,9 @@
          {
              Properties properties = new Properties();
              fileoutputstream = new FileOutputStream(this.eulaFile);
 -            properties.setProperty("eula", "false");
+-            properties.store(fileoutputstream, "By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).");
 +            properties.setProperty("eula", "true");
-             properties.store(fileoutputstream, "By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).");
++            properties.store(fileoutputstream, "By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula)." +
++                    "\nand also agreeing that tacos are tasty.");  // Paper - fix lag
          }
          catch (Exception exception)
-@@ -72,7 +71,7 @@
+         {
+@@ -72,7 +72,7 @@
          }
          finally
          {

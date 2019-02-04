@@ -7,10 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -142,6 +139,14 @@ public class Main {
                         .describedAs("Yml file");
                 // Paper end
 
+                // Paper start
+                acceptsAll(asList("server-name"), "Name of the server")
+                        .withRequiredArg()
+                        .ofType(String.class)
+                        .defaultsTo("Unknown Server")
+                        .describedAs("Name");
+                // Paper end
+
                 acceptsAll(asList("mixin"), "This argument is needed for proper Mixin Framework work in the test env");
             }
         };
@@ -168,25 +173,7 @@ public class Main {
                 return null;
             }
 
-            try {
-                if (Main.class.getPackage().getImplementationVendor() != null && System.getProperty("IReallyKnowWhatIAmDoingISwear") == null) {
-                    Date buildDate = new SimpleDateFormat("yyyyMMdd-HHmm").parse(Main.class.getPackage().getImplementationVendor());
-
-                    Calendar deadline = Calendar.getInstance();
-                    deadline.add(Calendar.DAY_OF_YEAR, -14);
-                    if (buildDate.before(deadline.getTime())) {
-                        System.err.println("*** Error, this build is outdated ***");
-                        System.err.println("*** Please download a new build as per instructions from https://www.spigotmc.org/ ***");
-                        System.err.println("*** Server will start in 15 seconds ***");
-                        Thread.sleep(TimeUnit.SECONDS.toMillis(15));
-                    }
-                }
-
-                System.out.println("Loading libraries, please wait...");
-                // MinecraftServer.main(options);
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
+            System.out.println("Loading libraries, please wait...");
             return options;
         }
         return null;

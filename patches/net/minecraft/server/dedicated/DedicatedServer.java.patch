@@ -17,19 +17,20 @@
      public static boolean allowPlayerLogins = false;
  
      public DedicatedServer(File anvilFileIn, DataFixer dataFixerIn, YggdrasilAuthenticationService authServiceIn, MinecraftSessionService sessionServiceIn, GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)
-@@ -181,6 +181,11 @@
+@@ -181,6 +181,12 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
 +            // Paper start
 +            com.destroystokyo.paper.PaperConfig.init((File) options.valueOf("paper-settings"));
 +            com.destroystokyo.paper.PaperConfig.registerCommands();
++            com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
 +            // Paper end
 +
              LOGGER.info("Generating keypair");
              this.setKeyPair(CryptManager.generateKeyPair());
              LOGGER.info("Starting Minecraft server on {}:{}", this.getServerHostname().isEmpty() ? "*" : this.getServerHostname(), Integer.valueOf(this.getServerPort()));
-@@ -271,6 +276,7 @@
+@@ -271,6 +277,7 @@
                  long i1 = System.nanoTime() - j;
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
                  LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
@@ -37,7 +38,7 @@
                  this.currentTime = getCurrentTimeMillis();
  
                  if (this.settings.hasProperty("announce-player-achievements"))
-@@ -497,8 +503,8 @@
+@@ -497,8 +504,8 @@
  
      public void setGuiEnabled()
      {

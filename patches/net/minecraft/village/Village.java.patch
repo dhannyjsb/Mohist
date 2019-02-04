@@ -33,7 +33,7 @@
  public class Village implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
  {
      private World world;
-@@ -38,7 +38,7 @@
+@@ -38,10 +38,10 @@
      private int numVillagers;
      private int noBreedTicks;
      private final Map<UUID, Integer> playerReputation = Maps.<UUID, Integer>newHashMap();
@@ -41,7 +41,11 @@
 +    private final List<VillageAggressor> villageAgressors = Lists.<VillageAggressor>newArrayList();
      private int numIronGolems;
  
-     public Village()
+-    public Village()
++    private Village()
+     {
+         this.capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
+     }
 @@ -83,7 +83,7 @@
              {
                  EntityIronGolem entityirongolem = new EntityIronGolem(this.world);

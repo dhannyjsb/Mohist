@@ -46,7 +46,14 @@
      public int findChunksForSpawning(WorldServer worldServerIn, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate)
      {
          if (!spawnHostileMobs && !spawnPeacefulMobs)
-@@ -46,11 +66,14 @@
+@@ -40,17 +60,20 @@
+ 
+             for (EntityPlayer entityplayer : worldServerIn.playerEntities)
+             {
+-                if (!entityplayer.isSpectator())
++                if (!entityplayer.isSpectator() && entityplayer.affectsSpawning)
+                 {
+                     int j = MathHelper.floor(entityplayer.posX / 16.0D);
                      int k = MathHelper.floor(entityplayer.posZ / 16.0D);
                      int l = 8;
  

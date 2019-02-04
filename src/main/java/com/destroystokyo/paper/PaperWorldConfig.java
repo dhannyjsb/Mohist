@@ -121,4 +121,14 @@ public class PaperWorldConfig {
                 if (entityTNTHeightNerf != 0) log("TNT Entity Height Limit set to Y: " + entityTNTHeightNerf);
     }
 
+    public boolean disableEndCredits;
+    private void disableEndCredits() {
+        disableEndCredits = getBoolean("game-mechanics.disable-end-credits", false);
+        log("End credits disabled: " + disableEndCredits);
+    }
+
+    public boolean allowLeashingUndeadHorse = false;
+    private void allowLeashingUndeadHorse() {
+        allowLeashingUndeadHorse = getBoolean("allow-leashing-undead-horse", false);
+    }
 }

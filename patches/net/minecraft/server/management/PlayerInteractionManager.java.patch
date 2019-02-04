@@ -53,7 +53,15 @@
  
          if (this.receivedFinishDiggingPacket)
          {
-@@ -137,6 +140,17 @@
+@@ -100,6 +103,7 @@
+                 if (j != this.durabilityRemainingOnBlock)
+                 {
+                     this.world.sendBlockBreakProgress(this.player.getEntityId(), this.delayedDestroyPos, j);
++                    this.player.connection.sendPacket(new SPacketBlockChange(this.world, this.delayedDestroyPos)); // Paper - MC-54026 - backport from 1.13
+                     this.durabilityRemainingOnBlock = j;
+                 }
+ 
+@@ -137,6 +141,17 @@
  
      public void onBlockClicked(BlockPos pos, EnumFacing side)
      {
@@ -71,7 +79,7 @@
          double reachDist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
          net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock event = net.minecraftforge.common.ForgeHooks.onLeftClickBlock(player, pos, side, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
          if (event.isCanceled())
-@@ -185,8 +199,20 @@
+@@ -185,8 +200,20 @@
              this.initialDamage = this.curblockDamage;
              float f = 1.0F;
  
@@ -94,7 +102,7 @@
                  if (event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
                  {
                      block.onBlockClicked(this.world, pos, this.player);
-@@ -200,6 +226,25 @@
+@@ -200,6 +227,25 @@
                  }
                  f = iblockstate.getPlayerRelativeBlockHardness(this.player, this.player.world, pos);
              }
@@ -120,7 +128,7 @@
              if (event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  if (f >= 1.0F)
-@@ -230,6 +275,7 @@
+@@ -230,6 +276,7 @@
      {
          if (pos.equals(this.destroyPos))
          {
@@ -128,7 +136,7 @@
              int i = this.curblockDamage - this.initialDamage;
              IBlockState iblockstate = this.world.getBlockState(pos);
  
-@@ -251,6 +297,15 @@
+@@ -251,6 +298,15 @@
                      this.initialBlockDamage = this.initialDamage;
                  }
              }
@@ -144,7 +152,7 @@
          }
      }
  
-@@ -328,6 +383,7 @@
+@@ -328,6 +384,7 @@
                      }
                  }
  
@@ -152,7 +160,7 @@
                  // Drop experience
                  if (!this.isCreative() && flag1 && exp > 0)
                  {
-@@ -396,9 +452,49 @@
+@@ -396,9 +453,49 @@
          }
      }
  
@@ -203,7 +211,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -433,7 +529,6 @@
+@@ -433,7 +530,6 @@
                      .onRightClickBlock(player, hand, pos, facing, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
              if (event.isCanceled()) return event.getCancellationResult();
  
@@ -211,7 +219,7 @@
              if (event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  result = stack.onItemUseFirst(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-@@ -446,10 +541,10 @@
+@@ -446,10 +542,10 @@
              {
                  IBlockState iblockstate = worldIn.getBlockState(pos);
                  if(event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
@@ -226,7 +234,7 @@
              }
  
              if (stack.isEmpty())
-@@ -478,10 +573,10 @@
+@@ -478,10 +574,10 @@
                      int i = stack.getCount();
                      if (result != EnumActionResult.SUCCESS && event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
                              || result == EnumActionResult.SUCCESS && event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW) {
@@ -241,7 +249,7 @@
                      } else return result;
                  }
                  else
-@@ -497,6 +592,7 @@
+@@ -497,6 +593,7 @@
          }
      }
  

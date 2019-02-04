@@ -37,6 +37,15 @@
      public SaveHandler(File p_i46648_1_, String saveDirectoryNameIn, boolean p_i46648_3_, DataFixer dataFixerIn)
      {
          this.dataFixer = dataFixerIn;
+@@ -196,7 +197,7 @@
+         }
+         catch (Exception var5)
+         {
+-            LOGGER.warn("Failed to save player data for {}", (Object)player.getName());
++            LOGGER.error("Failed to save player data for {}", player.getName(), var5); // Paper
+         }
+     }
+ 
 @@ -221,6 +222,14 @@
  
          if (nbttagcompound != null)

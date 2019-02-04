@@ -47,7 +47,7 @@
 +    public boolean canDespawn()
      {
 -        return !this.isTamed() && this.ticksExisted > 2400;
-+        return !this.isTamed() /*&& this.ticksExisted > 2400*/; // CraftBukkit
++        return !this.isTamed() && !this.hasCustomName() && !this.isLeashed() /*&& this.ticksExisted > 2400*/; // CraftBukkit (ticks lived) - Paper (honor name and leash)
      }
  
      protected void applyEntityAttributes()

@@ -89,7 +89,22 @@
                          s, oclass.getName(), throwable);
                  tileentity = null;
              }
-@@ -315,7 +343,7 @@
+@@ -243,7 +271,13 @@
+ 
+         if (this.world != null)
+         {
+-            CrashReportCategory.addBlockInfo(reportCategory, this.pos, this.getBlockType(), this.getBlockMetadata());
++
++            // Paper start - Prevent TileEntity and Entity crashes
++            Block block = this.getBlockType();
++            if (block != null) {
++                CrashReportCategory.addBlockInfo(reportCategory, this.pos, this.getBlockType(), this.getBlockMetadata());
++            }
++            // Paper end
+             reportCategory.addDetail("Actual block type", new ICrashReportDetail<String>()
+             {
+                 public String call() throws Exception
+@@ -315,7 +349,7 @@
       * @param net The NetworkManager the packet originated from
       * @param pkt The data packet
       */
@@ -98,7 +113,7 @@
      {
      }
  
-@@ -339,16 +367,7 @@
+@@ -339,16 +373,7 @@
      }
  
      private boolean isVanilla = getClass().getName().startsWith("net.minecraft.");
@@ -116,7 +131,7 @@
      public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
      {
          return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
-@@ -359,17 +378,8 @@
+@@ -359,17 +384,8 @@
          return pass == 0;
      }
  
@@ -135,7 +150,7 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +541,26 @@
+@@ -531,4 +547,12 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }
@@ -143,22 +158,8 @@
 +    @Nullable
 +    public InventoryHolder getOwner() {
 +        if (world == null) return null;
-+        // Spigot start
-+        org.bukkit.block.Block block = world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
-+        if (block == null) {
-+            org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "No block for owner at %s %d %d %d", new Object[]{world.getWorld(), pos.getX(), pos.getY(), pos.getZ()});
-+            return null;
-+        }
-+        // Spigot end
-+        org.bukkit.block.BlockState state = block.getState();
-+        if (state instanceof InventoryHolder)
-+        {
-+            return (InventoryHolder) state;
-+        } else if (state instanceof CraftBlockEntityState) {
-+            TileEntity te = ((CraftBlockEntityState) state).getTileEntity();
-+            if (te instanceof IInventory)
-+                return (InventoryHolder) new CustomInventory((IInventory) te);
-+        }
++        org.bukkit.block.BlockState state = world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()).getState();
++        if (state instanceof InventoryHolder) return (InventoryHolder) state;
 +        return null;
 +    }
  }

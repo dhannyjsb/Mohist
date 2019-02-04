@@ -40,10 +40,11 @@
                  {
                      i1 = 0;
                  }
-@@ -113,14 +116,22 @@
+@@ -113,14 +116,23 @@
              this.placeStaticBlock(worldIn, pos, state);
          }
  
++        if (worldIn.getBlockState(pos).getBlock().getDefaultState().getMaterial() != blockMaterial) return; // Paper - Stop updating flowing block if material has changed
 +        org.bukkit.block.Block source = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
          IBlockState iblockstate1 = worldIn.getBlockState(pos.down());
  
@@ -65,7 +66,7 @@
                  return;
              }
  
-@@ -150,14 +161,19 @@
+@@ -150,14 +162,19 @@
  
              for (EnumFacing enumfacing1 : set)
              {

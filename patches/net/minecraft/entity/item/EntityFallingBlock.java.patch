@@ -91,3 +91,18 @@
                  }
  
                  if (flag && (double)this.rand.nextFloat() < 0.05000000074505806D + (double)i * 0.05D)
+@@ -336,6 +352,14 @@
+         {
+             this.fallTile = Blocks.SAND.getDefaultState();
+         }
++        // Paper start - Try and load origin location from the old NBT tags for backwards compatibility
++        if (compound.hasKey("SourceLoc_x")) {
++            int srcX = compound.getInteger("SourceLoc_x");
++            int srcY = compound.getInteger("SourceLoc_y");
++            int srcZ = compound.getInteger("SourceLoc_z");
++            origin = new org.bukkit.Location(world.getWorld(), srcX, srcY, srcZ);
++        }
++        // Paper end
+     }
+ 
+     public void setHurtEntities(boolean p_145806_1_)
