@@ -96,7 +96,7 @@
                  int hook = net.minecraftforge.event.ForgeEventFactory.onItemExpire(this, item);
                  if (hook < 0) this.setDead();
                  else          this.lifespan += hook;
-@@ -191,10 +208,35 @@
+@@ -191,10 +208,39 @@
          }
      }
  
@@ -126,6 +126,10 @@
      {
 -        for (EntityItem entityitem : this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(0.5D, 0.0D, 0.5D)))
 -        {
++        // Paper start - avoid item merge if stack size above max stack size
++        ItemStack stack = getItem();
++        if (stack.getCount() >= stack.getMaxStackSize()) return;
++        // Paper end
 +        // Spigot start
 +        double radius = world.spigotConfig.itemMerge;
 +        for (EntityItem entityitem : this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(radius, radius, radius)))
@@ -134,7 +138,7 @@
              this.combineItems(entityitem);
          }
      }
-@@ -248,11 +290,14 @@
+@@ -248,11 +294,14 @@
                      }
                      else
                      {
@@ -154,7 +158,7 @@
                          return true;
                      }
                  }
-@@ -314,6 +359,9 @@
+@@ -314,6 +363,9 @@
          }
          else
          {
@@ -164,7 +168,7 @@
              this.markVelocityChanged();
              this.health = (int)((float)this.health - amount);
  
-@@ -393,6 +441,35 @@
+@@ -393,6 +445,35 @@
              Item item = itemstack.getItem();
              int i = itemstack.getCount();
  

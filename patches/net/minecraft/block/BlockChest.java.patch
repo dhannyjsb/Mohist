@@ -61,6 +61,15 @@
                  {
                      playerIn.addStat(StatList.TRAPPED_CHEST_TRIGGERED);
                  }
+@@ -470,7 +467,7 @@
+ 
+                     if (block == this)
+                     {
+-                        if (!allowBlocking && this.isBlocked(worldIn, blockpos)) // Forge: fix MC-99321
++                        if (!allowBlocking && this.isBlocked(worldIn, blockpos)) // Forge and Paper: fix MC-99321
+                         {
+                             return null;
+                         }
 @@ -503,7 +500,7 @@
  
      public boolean canProvidePower(IBlockState state)

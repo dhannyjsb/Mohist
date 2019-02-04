@@ -37,3 +37,11 @@
  
      public BlockShulkerBox(EnumDyeColor colorIn)
      {
+@@ -203,6 +199,7 @@
+             }
+ 
+             worldIn.updateComparatorOutputLevel(pos, state.getBlock());
++            tileentityshulkerbox.clear(); // Paper - This was intended to be called in Vanilla (is checked in the if statement above if has been called) - Fixes dupe issues
+         }
+ 
+         super.breakBlock(worldIn, pos, state);

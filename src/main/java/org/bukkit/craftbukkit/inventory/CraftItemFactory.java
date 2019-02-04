@@ -196,4 +196,11 @@ public final class CraftItemFactory implements ItemFactory {
     public Color getDefaultLeatherColor() {
         return DEFAULT_LEATHER_COLOR;
     }
+
+    // Paper start
+    @Override
+    public ItemStack ensureServerConversions(ItemStack item) {
+        return CraftItemStack.asCraftMirror(CraftItemStack.asNMSCopy(item));
+    }
+    // Paper end
 }

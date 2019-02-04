@@ -194,9 +194,9 @@
          this.entityLists[k].add(entityIn);
 -        this.markDirty(); // Forge - ensure chunks are marked to save after an entity add
 +        // Paper start
++        this.markDirty();
 +        entityIn.setCurrentChunk(this);
 +        // Paper end
-+        this.markDirty();
 +        if (entityIn instanceof EntityItem) {
 +        ++this.itemCounts[k];
 +        } else if (entityIn instanceof IInventory) {
@@ -225,9 +225,9 @@
          this.entityLists[index].remove(entityIn);
 -        this.markDirty(); // Forge - ensure chunks are marked to save after entity removals
 +        // Paper start
++        this.markDirty();
 +        entityIn.setCurrentChunk(null);
 +        // Paper end
-+        this.markDirty();
 +        if (entityIn instanceof EntityItem) {
 +            --this.itemCounts[index];
 +        } else if (entityIn instanceof IInventory) {
