@@ -2,7 +2,6 @@ package org.spigotmc;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.defaults.TimingsCommand;
 
 import java.io.PrintStream;
 import java.util.Queue;
@@ -81,7 +80,6 @@ public class CustomTimingsHandler
                 timings.reset();
             }
         }
-        TimingsCommand.timingStart = System.nanoTime();
     }
 
     /**

@@ -712,7 +712,7 @@
 -
 +        // Paper start - "Fixes" an issue where the vehicle doesn't track the passenger disconnection dismount.
 +        if (this.isPassenger() && this.getVehicleDirect() instanceof EntityLiving) {
-+            this.stopRiding();
++            this.dismountRidingEntity();
 +        }
 +        // Paper end
          if (this.sleeping)

@@ -25,7 +25,7 @@ public class CraftPlayerProfile implements PlayerProfile {
     private final PropertySet properties = new PropertySet();
 
     public CraftPlayerProfile(CraftPlayer player) {
-        this.profile = player.getHandle().getProfile();
+        this.profile = player.getHandle().getGameProfile();
     }
 
     public CraftPlayerProfile(UUID id, String name) {
@@ -143,12 +143,12 @@ public class CraftPlayerProfile implements PlayerProfile {
             }
         MinecraftServer server = MinecraftServer.getServerInst();
         String name = profile.getName();
-        PlayerProfileCache userCache = server.getUserCache();
+        PlayerProfileCache userCache = server.getPlayerProfileCache();
         if (profile.getId() == null) {
                 final GameProfile profile;
                 boolean isOnlineMode = server.getOnlineMode() || (SpigotConfig.bungee && PaperConfig.bungeeOnlineMode);
                 if (isOnlineMode) {
-                        profile = lookupName ? userCache.getProfile(name) : userCache.getProfileIfCached(name);
+                        profile = lookupName ? userCache.getGameProfileForUsername(name) : userCache.getProfileIfCached(name);
                     } else {
                         // Make an OfflinePlayer using an offline mode UUID since the name has no profile
                                 profile = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8)), name);
@@ -160,7 +160,7 @@ public class CraftPlayerProfile implements PlayerProfile {
 
                 if (profile.getName() == null) {
                 // If we need textures, skip this check, as we will get it below anyways.
-                        GameProfile profile = userCache.getProfile(this.profile.getId());
+                        GameProfile profile = userCache.getProfileByUUID(this.profile.getId());
                 if (profile != null) {
                         this.profile = profile;
                     }
