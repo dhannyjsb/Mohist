@@ -7,5 +7,5 @@
 
 ### Info
 * jdk1.8.0_191+
-* Forge-1.12.2 - 14.23.5.2808
+* Forge-1.12.2 - 14.23.5.2810
 * We don't recommend it because we removed the outdated method unless you modify your plugin or mod
