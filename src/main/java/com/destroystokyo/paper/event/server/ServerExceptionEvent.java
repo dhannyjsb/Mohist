@@ -1,10 +1,9 @@
 package com.destroystokyo.paper.event.server;
 
+import com.destroystokyo.paper.exception.ServerException;
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang.Validate;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import com.destroystokyo.paper.exception.ServerException;
 
 /**
  * Called whenever an exception is thrown in a recoverable section of the server.

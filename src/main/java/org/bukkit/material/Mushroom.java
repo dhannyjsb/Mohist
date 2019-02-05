@@ -1,12 +1,12 @@
 package org.bukkit.material;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.material.types.MushroomBlockTexture;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Represents a huge mushroom block with certain combinations of faces set to

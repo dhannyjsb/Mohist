@@ -1,10 +1,10 @@
 package org.bukkit.craftbukkit.scoreboard;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.scoreboard.IScoreCriteria;
 import net.minecraft.scoreboard.ScoreObjective;
+
+import java.util.Map;
 
 final class CraftCriteria {
     static final Map<String, CraftCriteria> DEFAULTS;

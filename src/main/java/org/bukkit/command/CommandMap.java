@@ -1,7 +1,8 @@
 package org.bukkit.command;
 
-import java.util.List;
 import org.bukkit.Location;
+
+import java.util.List;
 
 public interface CommandMap {
 

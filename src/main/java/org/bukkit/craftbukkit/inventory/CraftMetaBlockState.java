@@ -2,8 +2,6 @@ package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
-
 import net.minecraft.block.BlockJukebox;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -58,6 +56,8 @@ import org.bukkit.craftbukkit.block.CraftSkull;
 import org.bukkit.craftbukkit.block.CraftStructureBlock;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.BlockStateMeta;
+
+import java.util.Map;
 
 @DelegateDeserialization(CraftMetaItem.SerializableMeta.class)
 public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta {

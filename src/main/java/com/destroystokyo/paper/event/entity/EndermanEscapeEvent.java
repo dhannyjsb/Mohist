@@ -1,9 +1,7 @@
 package com.destroystokyo.paper.event.entity;
 
 import org.bukkit.entity.Enderman;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityEvent;
 

@@ -1,11 +1,9 @@
 package org.bukkit;
 
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.Map;
-
+import com.google.common.collect.Maps;
 import org.apache.commons.lang.Validate;
 import org.bukkit.map.MapView;
+import org.bukkit.material.Banner;
 import org.bukkit.material.Bed;
 import org.bukkit.material.Button;
 import org.bukkit.material.Cake;
@@ -34,6 +32,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.MonsterEggs;
 import org.bukkit.material.Mushroom;
 import org.bukkit.material.NetherWarts;
+import org.bukkit.material.Observer;
 import org.bukkit.material.PistonBaseMaterial;
 import org.bukkit.material.PistonExtensionMaterial;
 import org.bukkit.material.PoweredRail;
@@ -60,10 +59,9 @@ import org.bukkit.material.Wood;
 import org.bukkit.material.WoodenStep;
 import org.bukkit.material.Wool;
 
-import com.google.common.collect.Maps;
-
-import org.bukkit.material.Banner;
-import org.bukkit.material.Observer;
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * An enum of all material IDs accepted by the official server and client
@@ -540,7 +538,7 @@ public enum Material {
 
     private final int id;
     private final Constructor<? extends MaterialData> ctor;
-    private static Material[] byId = new Material[383];
+    private static Material[] byId = new Material[38000];
     private final static Map<String, Material> BY_NAME = Maps.newHashMap();
     private final int maxStack;
     private final short durability;

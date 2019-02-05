@@ -4,9 +4,9 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.world.World;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Rabbit;
-import org.bukkit.craftbukkit.CraftWorld;
 
 public class CraftRabbit extends CraftAnimals implements Rabbit {
 

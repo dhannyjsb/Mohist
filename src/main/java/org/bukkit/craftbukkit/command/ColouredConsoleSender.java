@@ -1,15 +1,14 @@
 package org.bukkit.craftbukkit.command;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import net.minecraftforge.server.terminalconsole.TerminalConsoleAppender;
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.Ansi.Attribute;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.Ansi.Attribute;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public class ColouredConsoleSender extends CraftConsoleCommandSender {
     private final Map<ChatColor, String> replacements = new EnumMap<ChatColor, String>(ChatColor.class);

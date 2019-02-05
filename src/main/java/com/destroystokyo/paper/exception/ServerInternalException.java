@@ -1,7 +1,7 @@
 package com.destroystokyo.paper.exception;
 
-import org.bukkit.Bukkit;
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
+import org.bukkit.Bukkit;
 
 /**
  * Thrown when the internal server throws a recoverable exception.

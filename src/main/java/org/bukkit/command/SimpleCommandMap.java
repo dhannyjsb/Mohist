@@ -1,5 +1,20 @@
 package org.bukkit.command;
 
+import com.destroystokyo.paper.event.server.ServerExceptionEvent;
+import com.destroystokyo.paper.exception.ServerCommandException;
+import com.destroystokyo.paper.exception.ServerTabCompleteException;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.command.defaults.HelpCommand;
+import org.bukkit.command.defaults.PluginsCommand;
+import org.bukkit.command.defaults.ReloadCommand;
+import org.bukkit.command.defaults.TimingsCommand;
+import org.bukkit.command.defaults.VersionCommand;
+import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,16 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import com.destroystokyo.paper.event.server.ServerExceptionEvent;
-import com.destroystokyo.paper.exception.ServerCommandException;
-import com.destroystokyo.paper.exception.ServerTabCompleteException;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.command.defaults.*;
-import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
 public class SimpleCommandMap implements CommandMap {
     private static final Pattern PATTERN_ON_SPACE = Pattern.compile(" ", Pattern.LITERAL);

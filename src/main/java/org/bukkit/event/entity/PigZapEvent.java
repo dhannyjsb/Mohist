@@ -5,7 +5,6 @@ import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.HandlerList;
 
 /**
  * Stores data for pigs being zapped

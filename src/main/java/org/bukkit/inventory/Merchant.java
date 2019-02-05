@@ -1,8 +1,8 @@
 package org.bukkit.inventory;
 
-import java.util.List;
-
 import org.bukkit.entity.HumanEntity;
+
+import java.util.List;
 
 /**
  * Represents a merchant. A merchant is a special type of inventory which can

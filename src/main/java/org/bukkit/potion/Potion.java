@@ -1,12 +1,12 @@
 package org.bukkit.potion;
 
-import java.util.Collection;
-
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
+
+import java.util.Collection;
 
 /**
  * Potion Adapter for pre-1.9 data values

@@ -176,4 +176,10 @@ public class PaperWorldConfig {
             log("Max Chunk Gens Per Tick: " + maxChunkGensPerTick);
         }
     }
+
+    public boolean queueLightUpdates;
+    private void queueLightUpdates() {
+        queueLightUpdates = getBoolean("queue-light-updates", false);
+        log("Lighting Queue enabled: " + queueLightUpdates);
+    }
 }

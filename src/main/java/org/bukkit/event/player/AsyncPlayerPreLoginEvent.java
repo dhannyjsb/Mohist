@@ -1,12 +1,12 @@
 package org.bukkit.event.player;
 
-import java.net.InetAddress;
-import java.util.UUID;
-
 import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import java.net.InetAddress;
+import java.util.UUID;
 
 /**
  * Stores details for players attempting to log in.

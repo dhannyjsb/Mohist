@@ -1,9 +1,9 @@
 package org.bukkit.command;
 
-import java.util.List;
-
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.Plugin;
+
+import java.util.List;
 
 /**
  * Represents a {@link Command} belonging to a plugin

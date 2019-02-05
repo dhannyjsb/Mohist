@@ -1,7 +1,5 @@
 package com.destroystokyo.paper.event.server;
 
-import static java.util.Objects.requireNonNull;
-
 import com.destroystokyo.paper.network.StatusClient;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.base.Strings;
@@ -11,14 +9,15 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.util.CachedServerIcon;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import static java.util.Objects.requireNonNull;
 
 /**
   * Extended version of {@link ServerListPingEvent} that allows full control

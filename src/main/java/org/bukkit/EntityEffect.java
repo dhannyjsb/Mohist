@@ -1,7 +1,5 @@
 package org.bukkit;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.ArmorStand;
@@ -18,6 +16,8 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Witch;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.ZombieVillager;
+
+import java.util.Map;
 
 /**
  * A list of all Effects that can happen to entities.

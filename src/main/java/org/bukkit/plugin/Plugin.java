@@ -1,13 +1,13 @@
 package org.bukkit.plugin;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.logging.Logger;
-
 import org.bukkit.Server;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.generator.ChunkGenerator;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * Represents a Plugin

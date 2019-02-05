@@ -3,10 +3,11 @@ package org.bukkit.entity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-import java.util.List;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.Merchant;
+
+import java.util.List;
 
 /**
  * Represents a villager NPC

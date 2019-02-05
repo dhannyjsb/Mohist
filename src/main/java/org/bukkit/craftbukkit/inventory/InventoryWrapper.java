@@ -2,9 +2,6 @@ package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -13,6 +10,9 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InventoryWrapper implements IInventory {
 

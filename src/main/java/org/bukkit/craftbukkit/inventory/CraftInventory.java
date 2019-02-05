@@ -1,11 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-
 import net.minecraft.inventory.IInventory;
-
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.InventoryMerchant;
@@ -18,13 +13,17 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityShulkerBox;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Material;
 import org.bukkit.inventory.PlayerInventory;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 
 public class CraftInventory implements Inventory {
     protected final IInventory inventory;

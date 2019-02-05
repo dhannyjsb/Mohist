@@ -1,11 +1,11 @@
 package org.bukkit.entity;
 
-import java.util.List;
-
 import org.bukkit.Color;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
 
 public interface TippedArrow extends Arrow {
 

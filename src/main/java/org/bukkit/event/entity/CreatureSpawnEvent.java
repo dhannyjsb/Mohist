@@ -1,8 +1,6 @@
 package org.bukkit.event.entity;
 
-import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.HandlerList;
 
 /**
  * Called when a creature is spawned into a world.

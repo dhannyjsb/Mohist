@@ -1,10 +1,11 @@
 package org.bukkit;
 
 import com.google.common.base.Preconditions;
+import org.bukkit.plugin.Plugin;
+
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Represents a String based key which consists of two components - a namespace

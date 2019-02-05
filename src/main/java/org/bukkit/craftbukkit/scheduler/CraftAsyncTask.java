@@ -1,12 +1,12 @@
 package org.bukkit.craftbukkit.scheduler;
 
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitWorker;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Level;
-
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitWorker;
 
 class CraftAsyncTask extends CraftTask {
 

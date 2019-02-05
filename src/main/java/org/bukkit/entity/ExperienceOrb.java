@@ -1,7 +1,5 @@
 package org.bukkit.entity;
 
-import org.omg.CORBA.UNKNOWN;
-
 import javax.annotation.Nullable;
 
 /**
