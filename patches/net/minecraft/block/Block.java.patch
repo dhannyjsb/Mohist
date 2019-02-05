@@ -160,7 +160,7 @@
      }
  
      /**
-@@ -1601,7 +1596,7 @@
+@@ -1606,7 +1601,7 @@
       * particles, this is a server side method that spawns particles with
       * WorldServer.spawnParticle
       *
@@ -169,7 +169,7 @@
       * @param blockPosition of the block that the entity landed on.
       * @param iblockstate State at the specific world/pos
       * @param entity the entity that hit landed on the block.
-@@ -1637,7 +1632,7 @@
+@@ -1642,7 +1637,7 @@
       * texture sheets for different sides/locations in the world.
       *
       * @param state The current state
@@ -178,7 +178,7 @@
       * @param target The target the player is looking at {x/y/z/side/sub}
       * @param manager A reference to the current particle manager.
       * @return True to prevent vanilla digging particles form spawning.
-@@ -1688,12 +1683,12 @@
+@@ -1693,12 +1688,12 @@
          IBlockState plant = plantable.getPlant(world, pos.offset(direction));
          net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
  
@@ -194,7 +194,7 @@
          {
              return true;
          }
-@@ -1705,14 +1700,14 @@
+@@ -1710,14 +1705,14 @@
  
          switch (plantType)
          {
@@ -214,7 +214,7 @@
                  boolean hasWater = (world.getBlockState(pos.east()).getMaterial() == Material.WATER ||
                                      world.getBlockState(pos.west()).getMaterial() == Material.WATER ||
                                      world.getBlockState(pos.north()).getMaterial() == Material.WATER ||
-@@ -1739,9 +1734,9 @@
+@@ -1744,9 +1739,9 @@
       */
      public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
      {
@@ -226,7 +226,7 @@
          }
      }
  
-@@ -1756,7 +1751,7 @@
+@@ -1761,7 +1756,7 @@
       */
      public boolean isFertile(World world, BlockPos pos)
      {
@@ -235,7 +235,7 @@
          {
              return ((Integer)world.getBlockState(pos).getValue(BlockFarmland.MOISTURE)) > 0;
          }
-@@ -1794,17 +1789,17 @@
+@@ -1799,17 +1794,17 @@
      {
          if (entity instanceof net.minecraft.entity.boss.EntityDragon)
          {
@@ -264,7 +264,7 @@
          }
          else if ((entity instanceof net.minecraft.entity.boss.EntityWither) ||
                   (entity instanceof net.minecraft.entity.projectile.EntityWitherSkull))
-@@ -1818,14 +1813,14 @@
+@@ -1823,14 +1818,14 @@
      /**
       * Determines if this block can be used as the base of a beacon.
       *
@@ -281,7 +281,7 @@
      }
  
      /**
-@@ -1913,7 +1908,7 @@
+@@ -1918,7 +1913,7 @@
       */
      public float getEnchantPowerBonus(World world, BlockPos pos)
      {
@@ -290,7 +290,7 @@
      }
  
      /**
-@@ -1925,14 +1920,14 @@
+@@ -1930,14 +1925,14 @@
       * @return If the recoloring was successful
       */
      @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -308,7 +308,7 @@
                  if (current != color && prop.getAllowedValues().contains(color))
                  {
                      world.setBlockState(pos, state.withProperty(prop, color));
-@@ -2069,7 +2064,7 @@
+@@ -2074,7 +2069,7 @@
       */
      public boolean isToolEffective(String type, IBlockState state)
      {
@@ -317,7 +317,7 @@
              return false;
          return type != null && type.equals(getHarvestTool(state));
      }
-@@ -2267,11 +2262,12 @@
+@@ -2272,11 +2267,12 @@
          return false;
      }
  
@@ -333,7 +333,7 @@
          return isBurning(world, pos) ? net.minecraft.pathfinding.PathNodeType.DAMAGE_FIRE : null;
      }
  
-@@ -2623,6 +2619,18 @@
+@@ -2628,6 +2624,18 @@
          registerBlock(id, new ResourceLocation(textualID), block_);
      }
  
