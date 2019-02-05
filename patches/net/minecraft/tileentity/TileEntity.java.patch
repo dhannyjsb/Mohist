@@ -1,27 +1,29 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntity.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntity.java
-@@ -1,14 +1,15 @@
+@@ -1,6 +1,5 @@
  package net.minecraft.tileentity;
  
 -import javax.annotation.Nullable;
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockJukebox;
  import net.minecraft.block.state.IBlockState;
- import net.minecraft.crash.CrashReportCategory;
- import net.minecraft.crash.ICrashReportDetail;
+@@ -9,6 +8,7 @@
  import net.minecraft.init.Blocks;
-+import net.minecraft.inventory.IInventory;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 +import net.minecraft.util.KeyedObject;
  import net.minecraft.util.Mirror;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.util.Rotation;
-@@ -20,12 +21,16 @@
+@@ -16,16 +16,20 @@
+ import net.minecraft.util.registry.RegistryNamespaced;
+ import net.minecraft.util.text.ITextComponent;
+ import net.minecraft.world.World;
++import net.minecraft.world.chunk.Chunk;
+ import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-+import org.bukkit.craftbukkit.block.CraftBlockEntityState;
 +import org.bukkit.inventory.InventoryHolder;
  
 -public abstract class TileEntity implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
@@ -36,11 +38,19 @@
      protected BlockPos pos = BlockPos.ORIGIN;
      protected boolean tileEntityInvalid;
      private int blockMetadata = -1;
-@@ -36,9 +41,32 @@
+@@ -36,9 +40,40 @@
          REGISTRY.putObject(new ResourceLocation(id), clazz);
      }
  
 +    // Paper start
++    private java.lang.ref.WeakReference<Chunk> currentChunk = null;
++    public Chunk getCurrentChunk() {
++        final Chunk chunk = currentChunk != null ? currentChunk.get() : world.getChunkIfLoaded(pos.getX() >> 4, pos.getZ() >> 4);
++        return chunk != null && chunk.isLoaded() ? chunk : null;
++    }
++    public void setCurrentChunk(Chunk chunk) {
++        this.currentChunk = chunk != null ? new java.lang.ref.WeakReference<>(chunk) : null;
++    }
 +    private String tileEntityKeyString = null;
 +    private ResourceLocation tileEntityKey = getResourceLocation();
 +
@@ -71,7 +81,7 @@
          return REGISTRY.getNameForObject(clazz);
      }
  
-@@ -108,7 +136,7 @@
+@@ -108,7 +143,7 @@
          catch (Throwable throwable1)
          {
              LOGGER.error("Failed to create block entity {}", s, throwable1);
@@ -80,7 +90,7 @@
                      s, oclass == null ? null : oclass.getName(), throwable1);
          }
  
-@@ -122,7 +150,7 @@
+@@ -122,7 +157,7 @@
              catch (Throwable throwable)
              {
                  LOGGER.error("Failed to load data for block entity {}", s, throwable);
@@ -89,7 +99,7 @@
                          s, oclass.getName(), throwable);
                  tileentity = null;
              }
-@@ -243,7 +271,13 @@
+@@ -243,7 +278,13 @@
  
          if (this.world != null)
          {
@@ -104,7 +114,7 @@
              reportCategory.addDetail("Actual block type", new ICrashReportDetail<String>()
              {
                  public String call() throws Exception
-@@ -315,7 +349,7 @@
+@@ -315,7 +356,7 @@
       * @param net The NetworkManager the packet originated from
       * @param pkt The data packet
       */
@@ -113,7 +123,7 @@
      {
      }
  
-@@ -339,16 +373,7 @@
+@@ -339,16 +380,7 @@
      }
  
      private boolean isVanilla = getClass().getName().startsWith("net.minecraft.");
@@ -131,7 +141,7 @@
      public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
      {
          return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
-@@ -359,17 +384,8 @@
+@@ -359,17 +391,8 @@
          return pass == 0;
      }
  
@@ -150,7 +160,7 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +547,12 @@
+@@ -531,4 +554,12 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }

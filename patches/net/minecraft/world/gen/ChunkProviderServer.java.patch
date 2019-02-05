@@ -32,19 +32,34 @@
      public final IChunkGenerator chunkGenerator;
      public final IChunkLoader chunkLoader;
      public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192);
-@@ -69,6 +70,12 @@
+@@ -69,11 +70,17 @@
          }
      }
  
 +    // Paper start
 +    public boolean isChunkGenerated(int x, int z) {
-+        return this.id2ChunkMap.containsKey(ChunkPos.asLong(x, z)) || this.chunkLoader.chunkExists(x, z);
++        return this.id2ChunkMap.containsKey(ChunkPos.asLong(x, z)) || this.chunkLoader.isChunkGeneratedAt(x, z);
 +    }
 +    // Paper end
 +
      @Nullable
      public Chunk getLoadedChunk(int x, int z)
      {
+         long i = ChunkPos.asLong(x, z);
+-        Chunk chunk = (Chunk)this.id2ChunkMap.get(i);
++        Chunk chunk = this.id2ChunkMap.get(i);
+ 
+         if (chunk != null)
+         {
+@@ -262,7 +269,7 @@
+                 for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
+                 {
+                     Long olong = iterator.next();
+-                    Chunk chunk = (Chunk)this.id2ChunkMap.get(olong);
++                    Chunk chunk = this.id2ChunkMap.get(olong);
+ 
+                     if (chunk != null && chunk.unloadQueued)
+                     {
 @@ -275,9 +282,6 @@
                      }
                  }

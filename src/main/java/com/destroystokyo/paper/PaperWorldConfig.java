@@ -165,4 +165,15 @@ public class PaperWorldConfig {
     private void disableChestCatDetection() {
         disableChestCatDetection = getBoolean("game-mechanics.disable-chest-cat-detection", false);
     }
+
+    public int maxChunkGensPerTick = 10;
+    private void maxChunkGensPerTick() {
+        maxChunkGensPerTick = getInt("max-chunk-gens-per-tick", maxChunkGensPerTick);
+        if (maxChunkGensPerTick <= 0) {
+            maxChunkGensPerTick = Integer.MAX_VALUE;
+            log("Max Chunk Gens Per Tick: Unlimited (NOT RECOMMENDED)");
+        } else {
+            log("Max Chunk Gens Per Tick: " + maxChunkGensPerTick);
+        }
+    }
 }

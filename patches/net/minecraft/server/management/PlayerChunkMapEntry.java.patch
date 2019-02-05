@@ -38,3 +38,12 @@
      private int changes;
      private int changedSectionFilter;
      private long lastUpdateInhabitedTime;
+@@ -41,7 +38,7 @@
+         }
+     };
+     private boolean loading = true;
+-
++    boolean chunkExists; // Paper
+     public PlayerChunkMapEntry(PlayerChunkMap mapIn, int chunkX, int chunkZ)
+     {
+         this.playerChunkMap = mapIn;

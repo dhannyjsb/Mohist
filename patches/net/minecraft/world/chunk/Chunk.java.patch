@@ -1,8 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/Chunk.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/Chunk.java
-@@ -3,25 +3,25 @@
+@@ -1,27 +1,26 @@
+ package net.minecraft.world.chunk;
+ 
  import com.google.common.base.Predicate;
- import com.google.common.collect.Maps;
+-import com.google.common.collect.Maps;
  import com.google.common.collect.Queues;
 -import java.util.Arrays;
 -import java.util.List;
@@ -33,7 +35,7 @@
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.ReportedException;
  import net.minecraft.util.math.AxisAlignedBB;
-@@ -40,7 +40,16 @@
+@@ -40,7 +39,16 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -50,12 +52,13 @@
  public class Chunk implements net.minecraftforge.common.capabilities.ICapabilityProvider
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -50,13 +59,38 @@
+@@ -50,13 +58,39 @@
      private final int[] precipitationHeightMap;
      private final boolean[] updateSkylightColumns;
      private boolean loaded;
 -    private final World world;
 -    private final int[] heightMap;
++    public boolean isLoaded() { return loaded; } // Paper - OBFHELPER
 +    public final World world;
 +    public final int[] heightMap;
      public final int x;
@@ -451,7 +454,19 @@
      }
  
      public boolean wasTicked()
-@@ -1500,7 +1712,7 @@
+@@ -1414,11 +1626,6 @@
+         return true;
+     }
+ 
+-    public boolean isLoaded()
+-    {
+-        return this.loaded;
+-    }
+-
+     @SideOnly(Side.CLIENT)
+     public void markLoaded(boolean loaded)
+     {
+@@ -1500,7 +1707,7 @@
  
      public long getInhabitedTime()
      {
@@ -460,7 +475,7 @@
      }
  
      public void setInhabitedTime(long newInhabitedTime)
-@@ -1540,11 +1752,11 @@
+@@ -1540,11 +1747,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.

@@ -1,11 +1,37 @@
 --- ../src-base/minecraft/net/minecraft/item/ItemBlockSpecial.java
 +++ ../src-work/minecraft/net/minecraft/item/ItemBlockSpecial.java
-@@ -18,7 +18,7 @@
+@@ -5,7 +5,6 @@
+ import net.minecraft.block.BlockSnow;
+ import net.minecraft.block.SoundType;
+ import net.minecraft.block.state.IBlockState;
+-import net.minecraft.entity.Entity;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.init.Blocks;
+@@ -18,7 +17,7 @@
  
  public class ItemBlockSpecial extends Item
  {
 -    private final Block block;
-+    public final Block block;
++    public final Block block; // PAIL: private->public  CraftBukkit
  
      public ItemBlockSpecial(Block block)
      {
+@@ -30,7 +29,7 @@
+         IBlockState iblockstate = worldIn.getBlockState(pos);
+         Block block = iblockstate.getBlock();
+ 
+-        if (block == Blocks.SNOW_LAYER && ((Integer)iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
++        if (block == Blocks.SNOW_LAYER && iblockstate.getValue(BlockSnow.LAYERS).intValue() < 1)
+         {
+             facing = EnumFacing.UP;
+         }
+@@ -41,7 +40,7 @@
+ 
+         ItemStack itemstack = player.getHeldItem(hand);
+ 
+-        if (!itemstack.isEmpty() && player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(this.block, pos, false, facing, (Entity)null))
++        if (!itemstack.isEmpty() && player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(this.block, pos, false, facing, null))
+         {
+             IBlockState iblockstate1 = this.block.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, 0, player, hand);
+ 
