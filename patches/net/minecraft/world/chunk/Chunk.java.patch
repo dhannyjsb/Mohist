@@ -258,11 +258,16 @@
      }
  
      public boolean canSeeSky(BlockPos pos)
-@@ -783,9 +905,12 @@
+@@ -783,9 +905,17 @@
      }
  
      @Nullable
 -    public TileEntity getTileEntity(BlockPos pos, Chunk.EnumCreateEntityType p_177424_2_)
++    public final TileEntity getTileEntityImmediately(final BlockPos pos) {
++        return this.getTileEntity(pos, EnumCreateEntityType.IMMEDIATE);
++    }
++
++    @Nullable
 +    public TileEntity getTileEntity(BlockPos pos, EnumCreateEntityType p_177424_2_)
      {
 -        TileEntity tileentity = this.tileEntities.get(pos);
@@ -273,7 +278,7 @@
  
          if (tileentity != null && tileentity.isInvalid())
          {
-@@ -795,12 +920,12 @@
+@@ -795,12 +925,12 @@
  
          if (tileentity == null)
          {
@@ -288,7 +293,7 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -864,7 +989,7 @@
+@@ -864,7 +994,7 @@
  
      public void onUnload()
      {
@@ -297,7 +302,7 @@
          this.loaded = false;
  
          for (TileEntity tileentity : this.tileEntities.values())
-@@ -874,7 +999,14 @@
+@@ -874,7 +1004,14 @@
  
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
          {
@@ -313,7 +318,7 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -893,7 +1025,7 @@
+@@ -893,7 +1030,7 @@
  
          for (int k = i; k <= j; ++k)
          {
@@ -322,7 +327,7 @@
              {
                  for (Entity entity : this.entityLists[k])
                  {
-@@ -928,14 +1060,22 @@
+@@ -928,14 +1065,22 @@
          int j = MathHelper.floor((aabb.maxY + World.MAX_ENTITY_RADIUS) / 16.0D);
          i = MathHelper.clamp(i, 0, this.entityLists.length - 1);
          j = MathHelper.clamp(j, 0, this.entityLists.length - 1);
@@ -350,7 +355,7 @@
                  }
              }
          }
-@@ -1001,6 +1141,63 @@
+@@ -1001,6 +1146,63 @@
          }
      }
  
@@ -414,7 +419,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1214,26 @@
+@@ -1017,6 +1219,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -441,7 +446,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1292,7 @@
+@@ -1075,7 +1297,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -450,7 +455,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1303,7 @@
+@@ -1086,7 +1308,7 @@
  
      public boolean isPopulated()
      {
@@ -459,7 +464,7 @@
      }
  
      public boolean wasTicked()
-@@ -1414,11 +1631,6 @@
+@@ -1414,11 +1636,6 @@
          return true;
      }
  
@@ -471,7 +476,7 @@
      @SideOnly(Side.CLIENT)
      public void markLoaded(boolean loaded)
      {
-@@ -1500,7 +1712,7 @@
+@@ -1500,7 +1717,7 @@
  
      public long getInhabitedTime()
      {
@@ -480,7 +485,7 @@
      }
  
      public void setInhabitedTime(long newInhabitedTime)
-@@ -1540,11 +1752,11 @@
+@@ -1540,11 +1757,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.

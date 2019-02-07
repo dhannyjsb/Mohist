@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/entity/EntityLiving.java
 +++ ../src-work/minecraft/net/minecraft/entity/EntityLiving.java
-@@ -1,32 +1,20 @@
+@@ -1,13 +1,9 @@
  package net.minecraft.entity;
  
  import com.google.common.collect.Maps;
@@ -11,15 +11,11 @@
 -import javax.annotation.Nullable;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.enchantment.EnchantmentHelper;
--import net.minecraft.entity.ai.EntityAITasks;
--import net.minecraft.entity.ai.EntityJumpHelper;
--import net.minecraft.entity.ai.EntityLookHelper;
--import net.minecraft.entity.ai.EntityMoveHelper;
--import net.minecraft.entity.ai.EntitySenses;
-+import net.minecraft.entity.ai.*;
- import net.minecraft.entity.ai.attributes.AttributeModifier;
- import net.minecraft.entity.item.EntityBoat;
- import net.minecraft.entity.item.EntityItem;
++import net.minecraft.entity.ai.EntityAISwimming;
+ import net.minecraft.entity.ai.EntityAITasks;
+ import net.minecraft.entity.ai.EntityJumpHelper;
+ import net.minecraft.entity.ai.EntityLookHelper;
+@@ -19,6 +15,7 @@
  import net.minecraft.entity.monster.EntityGhast;
  import net.minecraft.entity.monster.IMob;
  import net.minecraft.entity.player.EntityPlayer;
@@ -27,31 +23,7 @@
  import net.minecraft.init.Blocks;
  import net.minecraft.init.Items;
  import net.minecraft.inventory.EntityEquipmentSlot;
--import net.minecraft.item.Item;
--import net.minecraft.item.ItemArmor;
--import net.minecraft.item.ItemBow;
--import net.minecraft.item.ItemStack;
--import net.minecraft.item.ItemSword;
-+import net.minecraft.item.*;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraft.nbt.NBTTagFloat;
- import net.minecraft.nbt.NBTTagList;
-@@ -37,13 +25,7 @@
- import net.minecraft.pathfinding.PathNavigate;
- import net.minecraft.pathfinding.PathNavigateGround;
- import net.minecraft.pathfinding.PathNodeType;
--import net.minecraft.util.DamageSource;
--import net.minecraft.util.EnumHand;
--import net.minecraft.util.EnumHandSide;
--import net.minecraft.util.EnumParticleTypes;
--import net.minecraft.util.NonNullList;
--import net.minecraft.util.ResourceLocation;
--import net.minecraft.util.SoundEvent;
-+import net.minecraft.util.*;
- import net.minecraft.util.datafix.DataFixer;
- import net.minecraft.util.datafix.FixTypes;
- import net.minecraft.util.datafix.walkers.ItemStackDataLists;
-@@ -57,7 +39,20 @@
+@@ -57,7 +54,20 @@
  import net.minecraft.world.storage.loot.LootTable;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -72,7 +44,7 @@
  public abstract class EntityLiving extends EntityLivingBase
  {
      private static final DataParameter<Byte> AI_FLAGS = EntityDataManager.<Byte>createKey(EntityLiving.class, DataSerializers.BYTE);
-@@ -68,22 +63,24 @@
+@@ -68,22 +78,24 @@
      protected EntityJumpHelper jumpHelper;
      private final EntityBodyHelper bodyHelper;
      protected PathNavigate navigator;
@@ -103,7 +75,7 @@
  
      public EntityLiving(World worldIn)
      {
-@@ -171,8 +168,40 @@
+@@ -171,8 +183,40 @@
      {
          this.attackTarget = entitylivingbaseIn;
          net.minecraftforge.common.ForgeHooks.onLivingSetAttackTarget(this, entitylivingbaseIn);
@@ -144,7 +116,7 @@
      public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
      {
          return cls != EntityGhast.class;
-@@ -447,12 +476,21 @@
+@@ -447,12 +491,21 @@
      {
          super.readEntityFromNBT(compound);
  
@@ -168,7 +140,19 @@
  
          if (compound.hasKey("ArmorItems", 9))
          {
-@@ -653,8 +691,14 @@
+@@ -581,6 +634,11 @@
+         {
+             for (EntityItem entityitem : this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D)))
+             {
++                // Paper Start
++                if (!entityitem.canMobPickup) {
++                    continue;
++                }
++                // Paper End
+                 if (!entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup())
+                 {
+                     this.updateEquipmentIfNeeded(entityitem);
+@@ -653,8 +711,14 @@
              }
          }
  
@@ -185,7 +169,7 @@
              double d0;
  
              switch (entityequipmentslot.getSlotType())
-@@ -671,7 +715,9 @@
+@@ -671,7 +735,9 @@
  
              if (!itemstack1.isEmpty() && (double)(this.rand.nextFloat() - 0.1F) < d0)
              {
@@ -195,7 +179,7 @@
              }
  
              this.setItemStackToSlot(entityequipmentslot, itemstack);
-@@ -696,7 +742,7 @@
+@@ -696,7 +762,7 @@
          return true;
      }
  
@@ -204,7 +188,7 @@
      {
          return true;
      }
-@@ -721,26 +767,23 @@
+@@ -721,26 +787,23 @@
          }
          else
          {
@@ -236,7 +220,7 @@
                      this.idleTime = 0;
                  }
              }
-@@ -753,6 +796,18 @@
+@@ -753,6 +816,18 @@
          this.world.profiler.startSection("checkDespawn");
          this.despawnEntity();
          this.world.profiler.endSection();
@@ -246,7 +230,7 @@
 +            // Paper start - Allow nerfed mobs to jump and float
 +            if (goalFloat != null) {
 +                if (goalFloat.validConditions()) goalFloat.update();
-+                this.getControllerJump().jumpIfSet();
++                this.getJumpHelper().jumpIfSet();
 +            }
 +            // Paper end
 +            return;
@@ -255,7 +239,7 @@
          this.world.profiler.startSection("sensing");
          this.senses.clearSensingCache();
          this.world.profiler.endSection();
-@@ -1209,6 +1264,10 @@
+@@ -1209,6 +1284,10 @@
      {
          if (this.getLeashed() && this.getLeashHolder() == player)
          {
@@ -266,7 +250,7 @@
              this.clearLeashed(true, !player.capabilities.isCreativeMode);
              return true;
          }
-@@ -1218,6 +1277,10 @@
+@@ -1218,6 +1297,10 @@
  
              if (itemstack.getItem() == Items.LEAD && this.canBeLeashedTo(player))
              {
@@ -277,7 +261,7 @@
                  this.setLeashHolder(player, true);
                  itemstack.shrink(1);
                  return true;
-@@ -1245,11 +1308,13 @@
+@@ -1245,11 +1328,13 @@
          {
              if (!this.isEntityAlive())
              {
@@ -291,7 +275,7 @@
                  this.clearLeashed(true, true);
              }
          }
-@@ -1264,7 +1329,9 @@
+@@ -1264,7 +1349,9 @@
  
              if (!this.world.isRemote && dropLead)
              {
@@ -301,7 +285,7 @@
              }
  
              if (!this.world.isRemote && sendPacket && this.world instanceof WorldServer)
-@@ -1348,6 +1415,7 @@
+@@ -1348,6 +1435,7 @@
              }
              else
              {
@@ -309,7 +293,7 @@
                  this.clearLeashed(false, true);
              }
          }
-@@ -1448,7 +1516,6 @@
+@@ -1448,7 +1536,6 @@
          ON_GROUND,
          IN_AIR,
          IN_WATER;

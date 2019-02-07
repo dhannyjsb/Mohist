@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.BaseEncoding;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -40,6 +41,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.GameType;
 import net.minecraft.world.WorldServer;
@@ -1576,6 +1578,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     @Override
     public boolean getAffectsSpawning() {
         return this.getHandle().affectsSpawning;
+    }
+
+    @Override
+    public void sendActionBar(String message) {
+        if (getHandle().connection == null || message == null || message.isEmpty()) return;
+        getHandle().connection.sendPacket(new SPacketChat(new TextComponentString(message), ChatType.GAME_INFO));
+    }
+
+    @Override
+    public void sendActionBar(char alternateChar, String message) {
+        if (message == null || message.isEmpty()) return;
+        sendActionBar(org.bukkit.ChatColor.translateAlternateColorCodes(alternateChar, message));
     }
 
     // Spigot start

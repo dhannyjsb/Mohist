@@ -94,7 +94,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if ((health < 0) || (health > getMaxHealth())) {
             // Paper - Be more informative
             throw new IllegalArgumentException("Health must be between 0 and " + getMaxHealth() + ", but was " + health
-                    + ". (attribute base value: " + this.getHandle().getAttributeInstance(GenericAttributes.maxHealth).b()
+                    + ". (attribute base value: " + this.getHandle().getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue()
                     + (this instanceof CraftPlayer ? ", player: " + this.getName() + ')' : ')'));
         }
 
@@ -506,12 +506,22 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     // Paper start
     @Override
     public int getArrowsStuck() {
-        return getHandle().getArrowCount();
+        return getHandle().getArrowCountInEntity();
     }
 
     @Override
     public void setArrowsStuck(int arrows) {
-        getHandle().setArrowCount(arrows);
+        getHandle().setArrowCountInEntity(arrows);
+    }
+
+    @Override
+    public int getShieldBlockingDelay() {
+        return getHandle().getShieldBlockingDelay();
+    }
+
+    @Override
+    public void setShieldBlockingDelay(int delay) {
+        getHandle().setShieldBlockingDelay(delay);
     }
     // Paper end
 }

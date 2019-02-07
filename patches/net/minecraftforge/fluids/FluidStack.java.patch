@@ -9,7 +9,7 @@
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
-@@ -19,10 +20,10 @@
+@@ -19,6 +20,7 @@
  
  package net.minecraftforge.fluids;
  
@@ -17,22 +17,3 @@
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraftforge.common.util.Constants;
--import net.minecraftforge.fml.common.FMLLog;
- import net.minecraftforge.registries.IRegistryDelegate;
- 
- import javax.annotation.Nullable;
-@@ -45,12 +46,12 @@
-     {
-         if (fluid == null)
-         {
--            FMLLog.bigWarning("Null fluid supplied to fluidstack. Did you try and create a stack for an unregistered fluid?");
-+            Mohist.bigWarning("Null fluid supplied to fluidstack. Did you try and create a stack for an unregistered fluid?");
-             throw new IllegalArgumentException("Cannot create a fluidstack from a null fluid");
-         }
-         else if (!FluidRegistry.isFluidRegistered(fluid))
-         {
--            FMLLog.bigWarning("Failed attempt to create a FluidStack for an unregistered Fluid {} (type {})", fluid.getName(), fluid.getClass().getName());
-+            Mohist.bigWarning("Failed attempt to create a FluidStack for an unregistered Fluid {} (type {})", fluid.getName(), fluid.getClass().getName());
-             throw new IllegalArgumentException("Cannot create a fluidstack from an unregistered fluid");
-         }
-         this.fluidDelegate = FluidRegistry.makeDelegate(fluid);

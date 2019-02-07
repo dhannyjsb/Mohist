@@ -672,21 +672,20 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1053,9 +1347,10 @@
-         this.perWorldStorage.saveAllData();
+@@ -1058,6 +1352,12 @@
+         return this.canAddEntity(entityIn) ? super.spawnEntity(entityIn) : false;
      }
  
--    public boolean spawnEntity(Entity entityIn)
--    {
--        return this.canAddEntity(entityIn) ? super.spawnEntity(entityIn) : false;
 +    public boolean addEntity(Entity entityIn, CreatureSpawnEvent.SpawnReason spawnReason) {
 +        // World.spawnEntity(Entity) will call this, and we still want to perform
 +        // existing entity checking when it's called with a SpawnReason
 +        return this.canAddEntity(entityIn) ? super.addEntity(entityIn, spawnReason) : false;
-     }
- 
++    }
++
      public void loadEntities(Collection<Entity> entityCollection)
-@@ -1074,7 +1369,7 @@
+     {
+         for (Entity entity : Lists.newArrayList(entityCollection))
+@@ -1074,7 +1374,7 @@
      {
          if (entityIn.isDead)
          {
@@ -695,7 +694,7 @@
              return false;
          }
          else
-@@ -1093,7 +1388,7 @@
+@@ -1093,7 +1393,7 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
@@ -704,7 +703,7 @@
                          return false;
                      }
  
-@@ -1141,9 +1436,15 @@
+@@ -1141,9 +1441,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -721,7 +720,7 @@
              return true;
          }
          else
-@@ -1164,11 +1465,18 @@
+@@ -1164,11 +1470,18 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -742,7 +741,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1519,8 @@
+@@ -1211,7 +1524,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -752,7 +751,7 @@
                  }
              }
  
-@@ -1298,11 +1607,22 @@
+@@ -1298,11 +1612,22 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
@@ -778,7 +777,7 @@
              this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
-@@ -1356,7 +1676,7 @@
+@@ -1356,7 +1681,7 @@
          return this.functionManager;
      }
  

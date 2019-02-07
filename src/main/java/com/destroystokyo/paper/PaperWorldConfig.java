@@ -182,4 +182,9 @@ public class PaperWorldConfig {
         queueLightUpdates = getBoolean("queue-light-updates", false);
         log("Lighting Queue enabled: " + queueLightUpdates);
     }
+
+    public int shieldBlockingDelay = 5;
+    private void shieldBlockingDelay() {
+        shieldBlockingDelay = getInt("game-mechanics.shield-blocking-delay", 5);
+    }
 }

@@ -15,7 +15,7 @@
  import net.minecraft.stats.StatList;
  import net.minecraft.util.DamageSource;
  import net.minecraft.util.datafix.DataFixer;
-@@ -26,13 +26,17 @@
+@@ -26,13 +26,18 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -31,10 +31,11 @@
      private int age;
 -    private int pickupDelay;
 +    public int pickupDelay;
++    public boolean canMobPickup = true; // Paper
      private int health;
      private String thrower;
      private String owner;
-@@ -43,6 +47,8 @@
+@@ -43,6 +48,8 @@
       */
      public int lifespan = 6000;
  
@@ -43,7 +44,7 @@
      public EntityItem(World worldIn, double x, double y, double z)
      {
          super(worldIn);
-@@ -60,7 +66,7 @@
+@@ -60,7 +67,7 @@
      {
          this(worldIn, x, y, z);
          this.setItem(stack);
@@ -52,7 +53,7 @@
      }
  
      protected boolean canTriggerWalking()
-@@ -93,10 +99,15 @@
+@@ -93,10 +100,15 @@
          {
              super.onUpdate();
  
@@ -72,7 +73,7 @@
  
              this.prevPosX = this.posX;
              this.prevPosY = this.posY;
-@@ -156,10 +167,12 @@
+@@ -156,10 +168,12 @@
                  this.motionY *= -0.5D;
              }
  
@@ -85,7 +86,7 @@
  
              this.handleWaterMovement();
  
-@@ -180,6 +193,10 @@
+@@ -180,6 +194,10 @@
  
              if (!this.world.isRemote && this.age >= lifespan)
              {
@@ -96,7 +97,7 @@
                  int hook = net.minecraftforge.event.ForgeEventFactory.onItemExpire(this, item);
                  if (hook < 0) this.setDead();
                  else          this.lifespan += hook;
-@@ -191,10 +208,39 @@
+@@ -191,10 +209,39 @@
          }
      }
  
@@ -138,7 +139,7 @@
              this.combineItems(entityitem);
          }
      }
-@@ -248,11 +294,14 @@
+@@ -248,11 +295,14 @@
                      }
                      else
                      {
@@ -158,7 +159,7 @@
                          return true;
                      }
                  }
-@@ -314,6 +363,9 @@
+@@ -314,6 +364,9 @@
          }
          else
          {
@@ -168,13 +169,14 @@
              this.markVelocityChanged();
              this.health = (int)((float)this.health - amount);
  
-@@ -393,6 +445,35 @@
+@@ -393,6 +446,42 @@
              Item item = itemstack.getItem();
              int i = itemstack.getCount();
  
 +            // CraftBukkit start - fire PlayerPickupItemEvent
 +            int canHold = entityIn.inventory.canHold(itemstack);
 +            int remaining = i - canHold;
++            boolean flyAtPlayer = false; // Paper
 +
 +            if (this.pickupDelay <= 0 && canHold > 0) {
 +                itemstack.setCount(canHold);
@@ -190,7 +192,13 @@
 +                PlayerPickupItemEvent playerEvent = new PlayerPickupItemEvent((org.bukkit.entity.Player)entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
 +                playerEvent.setCancelled(!entityIn.canPickUpLoot);
 +                this.world.getServer().getPluginManager().callEvent(playerEvent);
++                flyAtPlayer = playerEvent.getFlyAtPlayer(); // Paper
 +                if (playerEvent.isCancelled()) {
++                    // Paper Start
++                    if (flyAtPlayer) {
++                        entityIn.onItemPickup(this, i);
++                    }
++                    // Paper End
 +                    return;
 +                }
 +
@@ -204,3 +212,19 @@
              int hook = net.minecraftforge.event.ForgeEventFactory.onItemPickup(this, entityIn);
              if (hook < 0) return;
              ItemStack clone = itemstack.copy();
+@@ -401,10 +490,13 @@
+             {
+                 clone.setCount(clone.getCount() - this.getItem().getCount());
+                 net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerItemPickupEvent(entityIn, this, clone);
+-
++                // Paper Start
++                if (flyAtPlayer) {
++                    entityIn.onItemPickup(this, i);
++                }
++                // Paper End
+                 if (itemstack.isEmpty())
+                 {
+-                    entityIn.onItemPickup(this, i);
+                     this.setDead();
+                     itemstack.setCount(i);
+                 }
