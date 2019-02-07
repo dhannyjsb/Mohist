@@ -13,12 +13,11 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.entity.EnumCreatureType;
-@@ -26,11 +20,20 @@
+@@ -26,14 +20,41 @@
  import net.minecraft.world.chunk.storage.IChunkLoader;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.event.world.ChunkUnloadEvent;
-+import org.spigotmc.SlackActivityAccountant;
  
 +import javax.annotation.Nullable;
 +import java.io.IOException;
@@ -34,8 +33,31 @@
 +    public final Set<Long> droppedChunksSet = Sets.<Long>newHashSet();
      public final IChunkGenerator chunkGenerator;
      public final IChunkLoader chunkLoader;
-     public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192);
-@@ -69,11 +72,17 @@
+-    public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192);
++    // Paper start
++    protected Chunk lastChunkByPos = null;
++    public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192) {
++        @Override
++        public Chunk get(long key) {
++            if (lastChunkByPos != null && key == lastChunkByPos.chunkKey) {
++                return lastChunkByPos;
++            }
++            return lastChunkByPos = super.get(key);
++        }
++
++        @Override
++        public Chunk remove(long key) {
++            if (lastChunkByPos != null && key == lastChunkByPos.chunkKey) {
++                lastChunkByPos = null;
++            }
++            return super.remove(key);
++        }
++    }; // CraftBukkit
++    // Paper end
+     public final WorldServer world;
+     private final Set<Long> loadingChunks = com.google.common.collect.Sets.newHashSet();
+ 
+@@ -69,11 +90,17 @@
          }
      }
  
@@ -54,7 +76,25 @@
  
          if (chunk != null)
          {
-@@ -207,7 +216,7 @@
+@@ -106,7 +133,7 @@
+                 {
+                 this.id2ChunkMap.put(ChunkPos.asLong(x, z), chunk);
+                 chunk.onLoad();
+-                chunk.populate(this, this.chunkGenerator);
++                chunk.populateCB(this, this.chunkGenerator, false);
+                 }
+ 
+                 loadingChunks.remove(pos);
+@@ -154,7 +181,7 @@
+ 
+             this.id2ChunkMap.put(i, chunk);
+             chunk.onLoad();
+-            chunk.populate(this, this.chunkGenerator);
++            chunk.populateCB(this, this.chunkGenerator, true);
+         }
+ 
+         return chunk;
+@@ -207,7 +234,7 @@
          }
          catch (MinecraftException minecraftexception)
          {
@@ -63,7 +103,7 @@
          }
      }
  
-@@ -262,7 +271,7 @@
+@@ -262,28 +289,54 @@
                  for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
                  {
                      Long olong = iterator.next();
@@ -72,7 +112,15 @@
  
                      if (chunk != null && chunk.unloadQueued)
                      {
-@@ -275,15 +284,40 @@
+-                        chunk.onUnload();
+-                        net.minecraftforge.common.ForgeChunkManager.putDormantChunk(ChunkPos.asLong(chunk.x, chunk.z), chunk);
+-                        this.saveChunkData(chunk);
+-                        this.saveChunkExtraData(chunk);
+-                        this.id2ChunkMap.remove(olong);
++                        if (!unloadChunk(chunk, true)) {
++                            continue;
++                        }
+                         ++i;
                      }
                  }
              }
@@ -85,30 +133,33 @@
          return false;
      }
  
-+    public boolean unloadChunk(final Chunk chunk, boolean save) {
-+        final ChunkUnloadEvent event = new ChunkUnloadEvent(chunk.bukkitChunk, save);
++    public boolean unloadChunk(Chunk chunk, boolean save) {
++        ChunkUnloadEvent event = new ChunkUnloadEvent(chunk.bukkitChunk, save);
 +        this.world.getServer().getPluginManager().callEvent(event);
 +        if (event.isCancelled()) {
 +            return false;
 +        }
 +        save = event.isSaveChunk();
-+        chunk.lightingQueue.processUnload();
-+        for (int x = -2; x < 3; ++x) {
-+            for (int z = -2; z < 3; ++z) {
-+                if (x != 0 || z != 0) {
-+                    final Chunk neighbor = this.getLoadedChunk(chunk.x + x, chunk.z + z);
-+                    if (neighbor != null) {
-+                        neighbor.setNeighborUnloaded(-x, -z);
-+                        chunk.setNeighborUnloaded(x, z);
-+                    }
++
++        // Update neighbor counts
++        for (int x = -2; x < 3; x++) {
++            for (int z = -2; z < 3; z++) {
++                if (x == 0 && z == 0) {
++                    continue;
++                }
++
++                Chunk neighbor = this.getLoadedChunk(chunk.x + x, chunk.z + z);
++                if (neighbor != null) {
++                    neighbor.setNeighborUnloaded(-x, -z);
++                    chunk.setNeighborUnloaded(x, z);
 +                }
 +            }
 +        }
-+        chunk.removeEntities();
-+        if (save) {
-+            this.saveChunk(chunk, true);
-+            this.saveChunkNOP(chunk);
-+        }
++        // Moved from unloadChunks above
++        chunk.onUnload();
++        net.minecraftforge.common.ForgeChunkManager.putDormantChunk(ChunkPos.asLong(chunk.x, chunk.z), chunk);
++        this.saveChunkData(chunk);
++        this.saveChunkExtraData(chunk);
 +        this.id2ChunkMap.remove(chunk.chunkKey);
 +        return true;
 +    }

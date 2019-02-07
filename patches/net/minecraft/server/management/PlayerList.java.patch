@@ -517,52 +517,13 @@
      public EntityPlayerMP createPlayerForUser(GameProfile profile)
      {
          UUID uuid = EntityPlayer.getUUID(profile);
-@@ -504,26 +725,76 @@
+@@ -504,26 +725,37 @@
          return new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(0), profile, playerinteractionmanager);
      }
  
 -    public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP playerIn, int dimension, boolean conqueredEnd)
 +    public EntityPlayerMP createPlayerForUser(GameProfile profile, EntityPlayerMP entityPlayerMP)
      {
-+        /* CraftBukkit - Moved up
-+        UUID uuid = EntityPlayer.getUUID(profile);
-+        List<EntityPlayerMP> list = Lists.<EntityPlayerMP>newArrayList();
-+
-+        for (int i = 0; i < this.playerEntityList.size(); ++i)
-+        {
-+            EntityPlayerMP entityplayermp = this.playerEntityList.get(i);
-+
-+            if (entityplayermp.getUniqueID().equals(uuid))
-+            {
-+                list.add(entityplayermp);
-+            }
-+        }
-+
-+        EntityPlayerMP entityplayermp2 = this.uuidToPlayerMap.get(profile.getId());
-+
-+        if (entityplayermp2 != null && !list.contains(entityplayermp2))
-+        {
-+            list.add(entityplayermp2);
-+        }
-+
-+        for (EntityPlayerMP entityplayermp1 : list)
-+        {
-+            entityplayermp1.connection.disconnect(new TextComponentTranslation("multiplayer.disconnect.duplicate_login", new Object[0]));
-+        }
-+
-+        PlayerInteractionManager playerinteractionmanager;
-+
-+        if (this.mcServer.isDemo())
-+        {
-+            playerinteractionmanager = new DemoPlayerInteractionManager(this.mcServer.getWorld(0));
-+        }
-+        else
-+        {
-+            playerinteractionmanager = new PlayerInteractionManager(this.mcServer.getWorld(0));
-+        }
-+
-+        return new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(0), profile, playerinteractionmanager);
-+        */
 +        return entityPlayerMP;
 +    }
 +
@@ -598,7 +559,7 @@
          playerIn.dimension = dimension;
          PlayerInteractionManager playerinteractionmanager;
  
-@@ -537,6 +808,11 @@
+@@ -537,6 +769,11 @@
          }
  
          EntityPlayerMP entityplayermp = new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(playerIn.dimension), playerIn.getGameProfile(), playerinteractionmanager);
@@ -610,7 +571,7 @@
          entityplayermp.connection = playerIn.connection;
          entityplayermp.copyFrom(playerIn, conqueredEnd);
          entityplayermp.dimension = dimension;
-@@ -549,48 +825,177 @@
+@@ -549,48 +786,177 @@
              entityplayermp.addTag(s);
          }
  
@@ -760,7 +721,7 @@
 +        if (exitWorld != null) {
 +            if ((cause == PlayerTeleportEvent.TeleportCause.END_PORTAL) && (i == 0)) {
 +                // THE_END -> NORMAL; use bed if available, otherwise default spawn
-+                exit = ((org.bukkit.craftbukkit.entity.CraftPlayer) entityplayer.getBukkitEntity()).getBedSpawnLocation();
++                exit = entityplayer.getBukkitEntity().getBedSpawnLocation();
 +                if (exit == null || ((CraftWorld) exit.getWorld()).getHandle().dimension != 0) {
 +                    BlockPos randomSpawn = entityplayer.getSpawnPoint(mcServer, exitWorld);
 +                    exit = new Location(exitWorld.getWorld(), randomSpawn.getX(), randomSpawn.getY(), randomSpawn.getZ());
@@ -809,7 +770,7 @@
      public void updatePermissionLevel(EntityPlayerMP player)
      {
          GameProfile gameprofile = player.getGameProfile();
-@@ -642,7 +1047,9 @@
+@@ -642,7 +1008,9 @@
  
      public void transferEntityToWorld(Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn)
      {
@@ -820,7 +781,7 @@
      }
  
      // TODO: Remove (1.13)
-@@ -729,11 +1136,155 @@
+@@ -729,11 +1097,155 @@
          entityIn.setWorld(toWorldIn);
      }
  
@@ -977,7 +938,7 @@
              this.playerPingIndex = 0;
          }
      }
-@@ -746,6 +1297,24 @@
+@@ -746,6 +1258,24 @@
          }
      }
  
@@ -1002,7 +963,7 @@
      public void sendPacketToAllPlayersInDimension(Packet<?> packetIn, int dimension)
      {
          for (int i = 0; i < this.playerEntityList.size(); ++i)
-@@ -861,12 +1430,20 @@
+@@ -861,12 +1391,20 @@
          int i = this.mcServer.getOpPermissionLevel();
          this.ops.addEntry(new UserListOpsEntry(profile, this.mcServer.getOpPermissionLevel(), this.ops.bypassesPlayerLimit(profile)));
          this.sendPlayerPermissionLevel(this.getPlayerByUUID(profile.getId()), i);
@@ -1023,20 +984,45 @@
      }
  
      private void sendPlayerPermissionLevel(EntityPlayerMP player, int permLevel)
-@@ -922,6 +1499,12 @@
-         {
-             EntityPlayerMP entityplayermp = this.playerEntityList.get(i);
+@@ -918,11 +1456,33 @@
  
+     public void sendToAllNearExcept(@Nullable EntityPlayer except, double x, double y, double z, double radius, int dimension, Packet<?> packetIn)
+     {
+-        for (int i = 0; i < this.playerEntityList.size(); ++i)
+-        {
+-            EntityPlayerMP entityplayermp = this.playerEntityList.get(i);
++        // Paper start - Use world list instead of server list where preferable
++        sendToAllNearExcept(except, x, y, z, radius, dimension, null, packetIn); // Retained for compatibility
++    }
+ 
+-            if (entityplayermp != except && entityplayermp.dimension == dimension)
++    public void sendToAllNearExcept(@Nullable EntityPlayer except, double d0, double d1, double d2, double d3, WorldServer world, Packet<?> packet) {
++        sendToAllNearExcept(except, d0, d1, d2, d3, world.dimension, world, packet);
++    }
++
++    public void sendToAllNearExcept(@Nullable EntityPlayer except, double x, double y, double z, double radius, int dimension, @Nullable WorldServer world, Packet<?> packetIn) {
++        if (world == null && except != null && except.world instanceof WorldServer) {
++            world = (WorldServer) except.world;
++        }
++
++        List<? extends EntityPlayer> players1 = world == null ? playerEntityList : world.playerEntities;
++        for (int j = 0; j < players1.size(); ++j) {
++            EntityPlayer entity = players1.get(j);
++            if (!(entity instanceof EntityPlayerMP)) continue;
++            EntityPlayerMP entityplayermp = (EntityPlayerMP) players1.get(j);
++            // Paper end
++
 +            // CraftBukkit start - Test if player receiving packet can see the source of the packet
 +            if (except != null && except instanceof EntityPlayerMP && !entityplayermp.getBukkitEntity().canSee(((EntityPlayerMP) except).getBukkitEntity())) {
 +                continue;
 +            }
 +            // CraftBukkit end
 +
-             if (entityplayermp != except && entityplayermp.dimension == dimension)
++            if (entityplayermp != except && (world != null || entityplayermp.dimension == dimension)) // Paper
              {
                  double d0 = x - entityplayermp.posX;
-@@ -988,16 +1571,21 @@
+                 double d1 = y - entityplayermp.posY;
+@@ -988,16 +1548,21 @@
  
          if (worldIn.isRaining())
          {
@@ -1062,7 +1048,7 @@
          playerIn.connection.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
      }
  
-@@ -1079,17 +1667,26 @@
+@@ -1079,17 +1644,26 @@
  
      public void removeAllPlayers()
      {
@@ -1093,7 +1079,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -1097,10 +1694,19 @@
+@@ -1097,10 +1671,19 @@
          this.sendMessage(component, true);
      }
  
@@ -1115,7 +1101,7 @@
  
          if (statisticsmanagerserver == null)
          {
-@@ -1119,7 +1725,7 @@
+@@ -1119,7 +1702,7 @@
  
              statisticsmanagerserver = new StatisticsManagerServer(this.mcServer, file2);
              statisticsmanagerserver.readStatFile();
@@ -1124,7 +1110,7 @@
          }
  
          return statisticsmanagerserver;
-@@ -1128,14 +1734,14 @@
+@@ -1128,14 +1711,14 @@
      public PlayerAdvancements getPlayerAdvancements(EntityPlayerMP p_192054_1_)
      {
          UUID uuid = p_192054_1_.getUniqueID();
@@ -1141,7 +1127,7 @@
          }
  
          playeradvancements.setPlayer(p_192054_1_);
-@@ -1148,7 +1754,7 @@
+@@ -1148,7 +1731,7 @@
  
          if (this.mcServer.worlds != null)
          {
@@ -1150,7 +1136,7 @@
              {
                  if (worldserver != null)
                  {
-@@ -1176,9 +1782,10 @@
+@@ -1176,9 +1759,10 @@
  
      public void reloadResources()
      {

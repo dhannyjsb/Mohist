@@ -28,14 +28,4 @@ public class Mohist {
 		return bukkit_version;
 	}
 
-	public static void bigWarning(String format, Object... data){
-		StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-		LOGGER.warn("****************************************");
-		LOGGER.warn("* "+format, data);
-		for (int i = 2; i < 8 && i < trace.length; i++)
-		{
-			LOGGER.warn("*  at {}{}", trace[i].toString(), i == 7 ? "..." : "");
-		}
-		LOGGER.warn("****************************************");
-	}
 }

@@ -717,7 +717,7 @@
          if (super.addWeatherEffect(entityIn))
          {
 -            this.mcServer.getPlayerList().sendToAllNearExcept((EntityPlayer)null, entityIn.posX, entityIn.posY, entityIn.posZ, 512.0D, this.provider.getDimension(), new SPacketSpawnGlobalEntity(entityIn));
-+            this.mcServer.getPlayerList().sendToAllNearExcept((EntityPlayer)null, entityIn.posX, entityIn.posY, entityIn.posZ, 512.0D, dimension, new SPacketSpawnGlobalEntity(entityIn)); // CraftBukkit - Use dimension
++            this.mcServer.getPlayerList().sendToAllNearExcept(null, entityIn.posX, entityIn.posY, entityIn.posZ, 512.0D, this, new SPacketSpawnGlobalEntity(entityIn)); // CraftBukkit - Use dimension  // Paper - use world instead of dimension
              return true;
          }
          else
@@ -747,8 +747,8 @@
                  if (this.fireBlockEvent(blockeventdata))
                  {
 -                    this.mcServer.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this.provider.getDimension(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
-+                    // CraftBukkit - this.provider.dimension -> this.dimension
-+                    this.mcServer.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, dimension, new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
++                    // CraftBukkit - this.provider.dimension -> this.dimension  // Paper - dimension -> world
++                    this.mcServer.getPlayerList().sendToAllNearExcept(null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this, new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
                  }
              }
  

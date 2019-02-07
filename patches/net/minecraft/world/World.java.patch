@@ -158,7 +158,7 @@
 +    }
 +
 +    public Chunk getChunkIfLoaded(int x, int z) {
-+        return ((ChunkProviderServer) this.chunkProvider).getLoadedChunk(x, z);
++        return this.chunkProvider.getLoadedChunk(x, z);
 +    }
 +
 +    protected World(ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, Profiler profilerIn, boolean client, ChunkGenerator gen, org.bukkit.World.Environment env) {
@@ -206,7 +206,7 @@
 +        if (this.worldInfo.getDimension() == 0)
 +        {
 +            generator = this.getServer().getGenerator(this.worldInfo.getWorldName());
-+            this.generator = generator;
++            getWorld().generator = generator;
 +        }
 +        // Mohist end
 +        // CraftBukkit start
