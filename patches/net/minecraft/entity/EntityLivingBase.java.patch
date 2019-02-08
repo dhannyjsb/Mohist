@@ -782,7 +782,7 @@
  
              if (itemstack == this.activeItemStack)
              {
-@@ -2785,8 +3105,24 @@
+@@ -2785,24 +3105,42 @@
          if (!this.activeItemStack.isEmpty() && this.isHandActive())
          {
              this.updateItemUse(this.activeItemStack, 16);
@@ -809,7 +809,26 @@
              itemstack = net.minecraftforge.event.ForgeEventFactory.onItemUseFinish(this, activeItemStackCopy, getItemInUseCount(), itemstack);
              this.setHeldItem(this.getActiveHand(), itemstack);
              this.resetActiveHand();
-@@ -2842,7 +3178,7 @@
+         }
+     }
+-
++    public ItemStack getActiveItem() { return getActiveItemStack(); } // Paper - OBFHELPER
+     public ItemStack getActiveItemStack()
+     {
+         return this.activeItemStack;
+     }
+ 
++    public int getItemUseRemainingTime() { return getItemInUseCount(); } // Paper - OBFHELPER
+     public int getItemInUseCount()
+     {
+         return this.activeItemStackUseCount;
+     }
+ 
++    public int getHandRaisedTime() { return getItemInUseMaxCount(); } // Paper - OBFHELPER
+     public int getItemInUseMaxCount()
+     {
+         return this.isHandActive() ? this.activeItemStack.getMaxItemUseDuration() - this.getItemInUseCount() : 0;
+@@ -2842,7 +3180,7 @@
              }
              else
              {
@@ -818,7 +837,7 @@
              }
          }
          else
-@@ -2897,11 +3233,14 @@
+@@ -2897,11 +3235,14 @@
  
              if (flag1)
              {
@@ -838,7 +857,7 @@
                  }
              }
          }
-@@ -2936,6 +3275,11 @@
+@@ -2936,6 +3277,11 @@
          }
      }
  
@@ -850,7 +869,7 @@
      public boolean canBeHitWithPotion()
      {
          return true;
-@@ -2949,7 +3293,7 @@
+@@ -2949,7 +3295,7 @@
      @SuppressWarnings("unchecked")
      @Override
      @Nullable
@@ -859,7 +878,7 @@
      {
          if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
          {
-@@ -2961,7 +3305,7 @@
+@@ -2961,7 +3307,7 @@
      }
  
      @Override
@@ -868,7 +887,7 @@
      {
          return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
      }
-@@ -2975,7 +3319,7 @@
+@@ -2975,7 +3321,7 @@
      public void setPartying(BlockPos pos, boolean p_191987_2_)
      {
      }
@@ -877,7 +896,7 @@
      @Override
      public void moveRelative(float strafe, float up, float forward, float friction)
      {
-@@ -3001,4 +3345,16 @@
+@@ -3001,4 +3347,16 @@
              this.motionZ += (double)(forward * f2 + strafe * f1);
          }
      }

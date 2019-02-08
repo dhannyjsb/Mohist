@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLeashKnot;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.boss.EntityDragon;
@@ -114,6 +113,8 @@ import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import org.bukkit.Chunk;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -589,14 +590,15 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             return false;
         }
         final CraftEntity other = (CraftEntity) obj;
-        return (this.getEntityId() == other.getEntityId());
+        return (this.getHandle() == other.getHandle()); // Paper - while logically the same, this is clearer
     }
 
+    // Paper - Fix hashCode. entity ID's are not static.
+    // A CraftEntity can change reference to a new entity with a new ID, and hash codes should never change
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + this.getEntityId();
-        return hash;
+        return getUniqueId().hashCode();
+        // Paper end
     }
 
     public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {

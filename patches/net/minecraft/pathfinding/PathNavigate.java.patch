@@ -1,13 +1,22 @@
 --- ../src-base/minecraft/net/minecraft/pathfinding/PathNavigate.java
 +++ ../src-work/minecraft/net/minecraft/pathfinding/PathNavigate.java
-@@ -1,6 +1,5 @@
+@@ -1,6 +1,6 @@
  package net.minecraft.pathfinding;
  
 -import javax.annotation.Nullable;
++import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
  import net.minecraft.block.Block;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.Entity;
-@@ -15,6 +14,8 @@
+@@ -8,6 +8,7 @@
+ import net.minecraft.entity.SharedMonsterAttributes;
+ import net.minecraft.entity.ai.attributes.IAttributeInstance;
+ import net.minecraft.init.Blocks;
++import net.minecraft.util.MCUtil;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
+@@ -15,18 +16,21 @@
  import net.minecraft.world.ChunkCache;
  import net.minecraft.world.World;
  
@@ -16,7 +25,8 @@
  public abstract class PathNavigate
  {
      protected EntityLiving entity;
-@@ -22,11 +23,11 @@
++    public Entity getEntity() { return entity; } // Paper - OBFHELPER
+     protected World world;
      @Nullable
      protected Path currentPath;
      protected double speed;
@@ -31,3 +41,23 @@
      private long timeoutTimer;
      private long lastTimeoutCheck;
      private double timeoutLimit;
+@@ -99,6 +103,9 @@
+         }
+         else
+         {
++            if (!new EntityPathfindEvent(this.getEntity().getBukkitEntity(), MCUtil.toLocation(this.getEntity().world, pos), null).callEvent()) {
++                return null;
++            }
+             this.targetPos = pos;
+             float f = this.getPathSearchRange();
+             this.world.profiler.startSection("pathfind");
+@@ -128,6 +135,9 @@
+             }
+             else
+             {
++                if (!new EntityPathfindEvent(this.getEntity().getBukkitEntity(), MCUtil.toLocation(entity.world, blockpos), entity.getBukkitEntity()).callEvent()) {
++                    return null;
++                }
+                 this.targetPos = blockpos;
+                 float f = this.getPathSearchRange();
+                 this.world.profiler.startSection("pathfind");

@@ -25,6 +25,7 @@ import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -530,6 +531,26 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     @Override
     public void setShieldBlockingDelay(int delay) {
         getHandle().setShieldBlockingDelay(delay);
+    }
+
+    @Override
+    public ItemStack getActiveItem() {
+        return getHandle().getActiveItem().asBukkitMirror();
+    }
+
+    @Override
+    public int getItemUseRemainingTime() {
+        return getHandle().getItemUseRemainingTime();
+    }
+
+    @Override
+    public int getHandRaisedTime() {
+        return getHandle().getHandRaisedTime();
+    }
+
+    @Override
+    public boolean isHandRaised() {
+        return getHandle().isHandRaised();
     }
     // Paper end
 }
