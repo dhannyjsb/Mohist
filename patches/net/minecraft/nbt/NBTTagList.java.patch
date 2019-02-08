@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/nbt/NBTTagList.java
 +++ ../src-work/minecraft/net/minecraft/nbt/NBTTagList.java
-@@ -1,15 +1,16 @@
+@@ -1,18 +1,19 @@
  package net.minecraft.nbt;
  
  import com.google.common.collect.Lists;
@@ -19,4 +19,8 @@
 +public class NBTTagList extends NBTBase implements Iterable<NBTBase>
  {
      private static final Logger LOGGER = LogManager.getLogger();
-     private List<NBTBase> tagList = Lists.<NBTBase>newArrayList();
+-    private List<NBTBase> tagList = Lists.<NBTBase>newArrayList();
++    public List<NBTBase> tagList = Lists.<NBTBase>newArrayList(); // Paper
+     private byte tagType = 0;
+ 
+     void write(DataOutput output) throws IOException

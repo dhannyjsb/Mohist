@@ -34,6 +34,7 @@ import net.minecraft.server.dedicated.PendingCommand;
 import net.minecraft.server.dedicated.PropertyManager;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.server.management.UserListEntry;
+import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryNamespaced;
@@ -209,6 +210,7 @@ public final class CraftServer implements Server {
     private CraftIconCache icon;
     private boolean overrideAllCommandBlockCommands = false;
     private boolean unrestrictedAdvancements;
+    private boolean unrestrictedSignCommands; // Paper
     private final List<CraftPlayer> playerView;
     public int reloadCount;
 
@@ -286,6 +288,12 @@ public final class CraftServer implements Server {
         saveCommandsConfig();
         overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
         unrestrictedAdvancements = commandsConfiguration.getBoolean("unrestricted-advancements");
+        // Paper start
+        unrestrictedSignCommands = commandsConfiguration.getBoolean("unrestricted-signs");
+        if (unrestrictedSignCommands) {
+            logger.warning("Warning: Commands are no longer restricted on signs. If you allow players to use Creative Mode, there may be risk of players bypassing permissions. Use this setting at your own risk!!!!");
+        }
+        // Paper end
         pluginManager.useTimings(configuration.getBoolean("settings.plugin-profiling"));
         monsterSpawn = configuration.getInt("spawn-limits.monsters");
         animalSpawn = configuration.getInt("spawn-limits.animals");
@@ -302,6 +310,7 @@ public final class CraftServer implements Server {
         while (listener instanceof CommandSenderWrapper) {
             listener = ((CommandSenderWrapper) listener).delegate;
         }
+        if (unrestrictedSignCommands && listener instanceof TileEntitySign.ISignCommandListener) return true; // Paper
         return unrestrictedAdvancements && listener instanceof AdvancementRewards.AdvancementCommandListener;
     }
 
@@ -1019,7 +1028,7 @@ public final class CraftServer implements Server {
         System.out.println("Preparing start region for level " + (console.worldServerList.size() - 1) + " (Seed: " + internal.getSeed() + ")");
 
         if (internal.getWorld().getKeepSpawnInMemory()) {
-            short short1 = 196;
+            short short1 = internal.paperConfig.keepLoadedRange; // Paper
             long i = System.currentTimeMillis();
             for (int j = -short1; j <= short1; j += 16) {
                 for (int k = -short1; k <= short1; k += 16) {

@@ -462,7 +462,14 @@
                  {
                      this.updateLCG = this.updateLCG * 3 + 1013904223;
                      int l = this.updateLCG >> 2;
-@@ -416,7 +620,7 @@
+@@ -410,13 +614,13 @@
+                     {
+                         DifficultyInstance difficultyinstance = this.getDifficultyForLocation(blockpos);
+ 
+-                        if (this.getGameRules().getBoolean("doMobSpawning") && this.rand.nextDouble() < (double)difficultyinstance.getAdditionalDifficulty() * 0.01D)
++                        if (this.getGameRules().getBoolean("doMobSpawning") && this.rand.nextDouble() < (double)difficultyinstance.getAdditionalDifficulty() * paperConfig.skeleHorseSpawnChance)
+                         {
+                             EntitySkeletonHorse entityskeletonhorse = new EntitySkeletonHorse(this);
                              entityskeletonhorse.setTrap(true);
                              entityskeletonhorse.setGrowingAge(0);
                              entityskeletonhorse.setPosition((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ());
@@ -685,25 +692,23 @@
      public void loadEntities(Collection<Entity> entityCollection)
      {
          for (Entity entity : Lists.newArrayList(entityCollection))
-@@ -1074,7 +1374,7 @@
+@@ -1074,7 +1374,6 @@
      {
          if (entityIn.isDead)
          {
 -            LOGGER.warn("Tried to add entity {} but it was marked as removed already", (Object)EntityList.getKey(entityIn));
-+            // LOGGER.warn("Tried to add entity {} but it was marked as removed already", (Object)EntityList.getKey(entityIn));
              return false;
          }
          else
-@@ -1093,7 +1393,7 @@
+@@ -1093,7 +1392,6 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
 -                        LOGGER.warn("Keeping entity {} that already exists with UUID {}", EntityList.getKey(entity), uuid.toString());
-+                        // LOGGER.warn("Keeping entity {} that already exists with UUID {}", EntityList.getKey(entity), uuid.toString());
                          return false;
                      }
  
-@@ -1141,9 +1441,15 @@
+@@ -1141,9 +1439,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -720,7 +725,7 @@
              return true;
          }
          else
-@@ -1164,11 +1470,18 @@
+@@ -1164,11 +1468,18 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -741,7 +746,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1524,8 @@
+@@ -1211,7 +1522,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -751,7 +756,7 @@
                  }
              }
  
-@@ -1298,11 +1612,22 @@
+@@ -1298,11 +1610,22 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
@@ -777,7 +782,7 @@
              this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
-@@ -1356,7 +1681,7 @@
+@@ -1356,7 +1679,7 @@
          return this.functionManager;
      }
  

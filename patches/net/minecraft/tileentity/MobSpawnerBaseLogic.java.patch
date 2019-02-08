@@ -20,7 +20,7 @@
  import net.minecraft.util.math.AxisAlignedBB;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.world.World;
-@@ -20,23 +14,26 @@
+@@ -20,23 +14,27 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -45,9 +45,10 @@
 -    private int maxNearbyEntities = 6;
 -    private int activatingRangeFromPlayer = 16;
 -    private int spawnRange = 4;
-+    public int maxNearbyEntities = 6;
-+    public int activatingRangeFromPlayer = 16;
-+    public int spawnRange = 4;
++    public int maxNearbyEntities = 6; // CraftBukkit private -> public
++    public int activatingRangeFromPlayer = 16; // CraftBukkit private -> public
++    public int spawnRange = 4; // CraftBukkit private -> public
++    private int tickDelay = 0; // Paper
  
      @Nullable
 -    private ResourceLocation getEntityId()
@@ -55,7 +56,7 @@
      {
          String s = this.spawnData.getNbt().getString("id");
          return StringUtils.isNullOrEmpty(s) ? null : new ResourceLocation(s);
-@@ -47,6 +44,7 @@
+@@ -47,6 +45,7 @@
          if (id != null)
          {
              this.spawnData.getNbt().setString("id", id.toString());
@@ -63,7 +64,44 @@
          }
      }
  
-@@ -131,8 +129,13 @@
+@@ -58,6 +57,10 @@
+ 
+     public void updateSpawner()
+     {
++        // Paper start - Configurable mob spawner tick rate
++        if (spawnDelay > 0 && --tickDelay > 0) return;
++        tickDelay = this.getSpawnerWorld().paperConfig.mobSpawnerTickRate;
++        // Paper end
+         if (!this.isActivated())
+         {
+             this.prevMobRotation = this.mobRotation;
+@@ -76,7 +79,7 @@
+ 
+                 if (this.spawnDelay > 0)
+                 {
+-                    --this.spawnDelay;
++                    this.spawnDelay -= tickDelay; // Paper
+                 }
+ 
+                 this.prevMobRotation = this.mobRotation;
+@@ -84,14 +87,13 @@
+             }
+             else
+             {
+-                if (this.spawnDelay == -1)
+-                {
++                if (this.spawnDelay < -tickDelay) { // Paper
+                     this.resetTimer();
+                 }
+ 
+                 if (this.spawnDelay > 0)
+                 {
+-                    --this.spawnDelay;
++                    this.spawnDelay -= tickDelay; // Paper
+                     return;
+                 }
+ 
+@@ -131,8 +133,13 @@
                              if (!net.minecraftforge.event.ForgeEventFactory.doSpecialSpawn(entityliving, this.getSpawnerWorld(), (float)entity.posX, (float)entity.posY, (float)entity.posZ, this))
                              ((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData)null);
                          }

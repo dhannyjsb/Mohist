@@ -21,3 +21,17 @@
  public class VillageCollection extends WorldSavedData
  {
      private World world;
+@@ -254,7 +255,12 @@
+ 
+     private boolean isWoodDoor(BlockPos doorPos)
+     {
+-        IBlockState iblockstate = this.world.getBlockState(doorPos);
++        // Paper start
++        IBlockState iblockstate = this.world.getTypeIfLoaded(doorPos);
++        if (iblockstate == null) {
++            return false;
++        }
++        // Paper end
+         Block block = iblockstate.getBlock();
+ 
+         if (block instanceof BlockDoor)

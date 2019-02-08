@@ -33,7 +33,7 @@
  public class Village implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
  {
      private World world;
-@@ -38,10 +38,10 @@
+@@ -38,7 +38,7 @@
      private int numVillagers;
      private int noBreedTicks;
      private final Map<UUID, Integer> playerReputation = Maps.<UUID, Integer>newHashMap();
@@ -41,11 +41,7 @@
 +    private final List<VillageAggressor> villageAgressors = Lists.<VillageAggressor>newArrayList();
      private int numIronGolems;
  
--    public Village()
-+    private Village()
-     {
-         this.capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
-     }
+     public Village()
 @@ -83,7 +83,7 @@
              {
                  EntityIronGolem entityirongolem = new EntityIronGolem(this.world);
@@ -100,7 +96,21 @@
  
              if (!village$villageaggressor.agressor.isEntityAlive() || Math.abs(this.tickCounter - village$villageaggressor.agressionTime) > 300)
              {
-@@ -586,13 +586,13 @@
+@@ -382,7 +382,12 @@
+ 
+     private boolean isWoodDoor(BlockPos pos)
+     {
+-        IBlockState iblockstate = this.world.getBlockState(pos);
++        // Paper start
++        IBlockState iblockstate = this.world.getTypeIfLoaded(pos);
++        if (iblockstate == null) {
++            return false;
++        }
++        // Paper end
+         Block block = iblockstate.getBlock();
+ 
+         if (block instanceof BlockDoor)
+@@ -586,13 +591,13 @@
  
      /* ======================================== FORGE START =====================================*/
      private net.minecraftforge.common.capabilities.CapabilityDispatcher capabilities;

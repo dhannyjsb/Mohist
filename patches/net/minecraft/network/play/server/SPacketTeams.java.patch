@@ -19,3 +19,12 @@
  public class SPacketTeams implements Packet<INetHandlerPlayClient>
  {
      private String name = "";
+@@ -120,7 +121,7 @@
+             buf.writeString(this.suffix);
+             buf.writeByte(this.friendlyFlags);
+             buf.writeString(this.nameTagVisibility);
+-            buf.writeString(this.collisionRule);
++            buf.writeString(!com.destroystokyo.paper.PaperConfig.enablePlayerCollisions ? "never" : this.collisionRule); // Paper
+             buf.writeByte(this.color);
+         }
+ 

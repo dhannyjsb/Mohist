@@ -101,7 +101,7 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.stats.StatBase;
  import net.minecraft.stats.StatList;
-@@ -102,12 +21,16 @@
+@@ -102,12 +21,21 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -111,6 +111,11 @@
 +
  public class EntityList
  {
++    // Paper start
++    public static Map<Class<? extends Entity>, ResourceLocation> clsToKeyMap = new java.util.HashMap<>();
++    public static Map<Class<? extends Entity>, org.bukkit.entity.EntityType> clsToTypeMap = new java.util.HashMap<>();
++    // Paper end
++
      public static final ResourceLocation LIGHTNING_BOLT = new ResourceLocation("lightning_bolt");
      private static final ResourceLocation PLAYER = new ResourceLocation("player");
      private static final Logger LOGGER = LogManager.getLogger();
@@ -119,7 +124,7 @@
      private static final Set<ResourceLocation> EXTRA_NAMES = Sets.newHashSet();
  
      @Nullable
-@@ -222,7 +145,7 @@
+@@ -222,7 +150,7 @@
              }
              catch (Exception e)
              {
@@ -128,7 +133,7 @@
                          nbt.getString("id"), entity.getName(), e);
                  entity = null;
              }
-@@ -425,13 +348,13 @@
+@@ -425,13 +353,13 @@
          }
      }
  
@@ -141,7 +146,7 @@
          net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getValue(resourcelocation);
          if (entry != null) entry.setEgg(egg);
 -        return (EntityList.EntityEggInfo)ENTITY_EGGS.put(resourcelocation, egg);
-+        return (EntityEggInfo)ENTITY_EGGS.put(resourcelocation, egg);
++        return ENTITY_EGGS.put(resourcelocation, egg);
      }
  
      public static class EntityEggInfo

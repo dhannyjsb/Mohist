@@ -93,16 +93,17 @@
          }
      }
  
-@@ -222,7 +235,7 @@
+@@ -222,8 +235,7 @@
              {
                  ++this.ticksInGround;
  
 -                if (this.ticksInGround >= 1200)
-+                if (this.ticksInGround >= world.spigotConfig.arrowDespawnRate) // Spigot - First int after shooter
-                 {
+-                {
++                if (this.ticksInGround >= (pickupStatus != PickupStatus.DISALLOWED ? world.spigotConfig.arrowDespawnRate : world.paperConfig.nonPlayerArrowDespawnRate)) { // Spigot - First int after shooter // Paper
                      this.setDead();
                  }
-@@ -339,7 +352,7 @@
+             }
+@@ -339,7 +351,7 @@
      protected void onHit(RayTraceResult raytraceResultIn)
      {
          Entity entity = raytraceResultIn.entityHit;
@@ -111,7 +112,7 @@
          if (entity != null)
          {
              float f = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-@@ -363,7 +376,12 @@
+@@ -363,7 +375,12 @@
  
              if (this.isBurning() && !(entity instanceof EntityEnderman))
              {
@@ -125,7 +126,7 @@
              }
  
              if (entity.attackEntityFrom(damagesource, (float)i))
-@@ -419,7 +437,7 @@
+@@ -419,7 +436,7 @@
  
                  if (!this.world.isRemote && this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ < 0.0010000000474974513D)
                  {
@@ -134,7 +135,7 @@
                      {
                          this.entityDropItem(this.getArrowStack(), 0.1F);
                      }
-@@ -556,35 +574,16 @@
+@@ -556,35 +573,16 @@
  
          if (compound.hasKey("pickup", 99))
          {
@@ -172,7 +173,7 @@
      protected abstract ItemStack getArrowStack();
  
      protected boolean canTriggerWalking()
-@@ -655,7 +654,13 @@
+@@ -655,7 +653,13 @@
  
          if (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, p_190547_1_) > 0)
          {
@@ -187,7 +188,7 @@
          }
      }
  
-@@ -665,7 +670,7 @@
+@@ -665,7 +669,7 @@
          ALLOWED,
          CREATIVE_ONLY;
  

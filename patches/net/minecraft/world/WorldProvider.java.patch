@@ -27,7 +27,15 @@
  public abstract class WorldProvider
  {
      public static final float[] MOON_PHASE_FACTORS = new float[] {1.0F, 0.75F, 0.5F, 0.25F, 0.0F, 0.25F, 0.5F, 0.75F};
-@@ -412,7 +409,7 @@
+@@ -201,6 +198,7 @@
+         return this.hasSkyLight;
+     }
+ 
++    public final boolean isSkyMissing() { return this.isNether(); } // Paper - OBFHELPER
+     public boolean isNether()
+     {
+         return this.nether;
+@@ -412,7 +410,7 @@
       */
      public WorldSleepResult canSleepAt(net.minecraft.entity.player.EntityPlayer player, BlockPos pos)
      {
@@ -36,7 +44,7 @@
      }
  
      public static enum WorldSleepResult
-@@ -565,10 +562,20 @@
+@@ -565,10 +563,20 @@
  
      public void resetRainAndThunder()
      {
@@ -59,7 +67,7 @@
      }
  
      public boolean canDoLightning(net.minecraft.world.chunk.Chunk chunk)
-@@ -603,4 +610,9 @@
+@@ -603,4 +611,9 @@
      {
          return true;
      }

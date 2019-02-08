@@ -31,6 +31,15 @@
          int j = 1;
  
          if (this.blockMaterial == Material.LAVA && !worldIn.provider.doesWaterVaporize())
+@@ -35,7 +38,7 @@
+             j = 2;
+         }
+ 
+-        int k = this.tickRate(worldIn);
++        int k = this.getFlowSpeed(worldIn, pos); // Paper
+ 
+         if (i > 0)
+         {
 @@ -76,7 +79,7 @@
                  {
                      i1 = 0;
@@ -88,3 +97,29 @@
          {
              if (state.getMaterial() != Material.AIR)
              {
+@@ -303,7 +320,24 @@
+     {
+         if (!this.checkForMixing(worldIn, pos, state))
+         {
+-            worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
++            worldIn.scheduleUpdate(pos, this, this.getFlowSpeed(worldIn, pos)); // Paper
+         }
+     }
++
++    /**
++     +     * Paper - Get flow speed. Throttle if its water and flowing adjacent to lava
++     +     */
++    public int getFlowSpeed(World world, BlockPos blockposition) {
++        if (this.blockMaterial == Material.LAVA) {
++            return world.provider.isSkyMissing() ? world.paperConfig.lavaFlowSpeedNether : world.paperConfig.lavaFlowSpeedNormal;
++        }
++        if (this.blockMaterial == Material.WATER && (
++                world.getBlockState(blockposition.north(1)).getBlock().blockMaterial == Material.LAVA ||
++                        world.getBlockState(blockposition.south(1)).getBlock().blockMaterial == Material.LAVA ||
++                        world.getBlockState(blockposition.west(1)).getBlock().blockMaterial == Material.LAVA ||
++                        world.getBlockState(blockposition.east(1)).getBlock().blockMaterial == Material.LAVA)) {
++            return world.paperConfig.waterOverLavaFlowSpeed;
++        }
++        return super.tickRate(world);
++    }
+ }

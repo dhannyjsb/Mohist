@@ -6,7 +6,7 @@
  
 +    public static long asLong(BlockPos pos) {
 +        return asLong(pos.getX() >> 4, pos.getZ() >> 4);
-+    }
++    }  // Paper - OBFHELPER
 +
      public static long asLong(int x, int z)
      {

@@ -111,25 +111,77 @@
          if (this.getRollingAmplitude() > 0)
          {
              this.setRollingAmplitude(this.getRollingAmplitude() - 1);
-@@ -242,7 +282,8 @@
+@@ -238,63 +278,17 @@
+             this.setDamage(this.getDamage() - 1.0F);
+         }
+ 
++        // Paper start - Configurable nether ceiling damage
++        // Extracted to own function
++        /*
+         if (this.posY < -64.0D)
          {
              this.outOfWorld();
          }
--
-+        // CraftBukkit - handled in postTick
-+        /*
-         if (!this.world.isRemote && this.world instanceof WorldServer)
-         {
-             this.world.profiler.startSection("portal");
-@@ -294,6 +335,7 @@
- 
-             this.world.profiler.endSection();
-         }
 +        */
++        this.checkAndDoHeightDamage();
++        // Paper end
  
+-        if (!this.world.isRemote && this.world instanceof WorldServer)
+-        {
+-            this.world.profiler.startSection("portal");
+-            MinecraftServer minecraftserver = this.world.getMinecraftServer();
+-            int i = this.getMaxInPortalTime();
+-
+-            if (this.inPortal)
+-            {
+-                if (minecraftserver.getAllowNether())
+-                {
+-                    if (!this.isRiding() && this.portalCounter++ >= i)
+-                    {
+-                        this.portalCounter = i;
+-                        this.timeUntilPortal = this.getPortalCooldown();
+-                        int j;
+-
+-                        if (this.world.provider.getDimensionType().getId() == -1)
+-                        {
+-                            j = 0;
+-                        }
+-                        else
+-                        {
+-                            j = -1;
+-                        }
+-
+-                        this.changeDimension(j);
+-                    }
+-
+-                    this.inPortal = false;
+-                }
+-            }
+-            else
+-            {
+-                if (this.portalCounter > 0)
+-                {
+-                    this.portalCounter -= 4;
+-                }
+-
+-                if (this.portalCounter < 0)
+-                {
+-                    this.portalCounter = 0;
+-                }
+-            }
+-
+-            if (this.timeUntilPortal > 0)
+-            {
+-                --this.timeUntilPortal;
+-            }
+-
+-            this.world.profiler.endSection();
+-        }
+-
          if (this.world.isRemote)
          {
-@@ -381,6 +423,16 @@
+             if (this.turnProgress > 0)
+@@ -381,6 +375,16 @@
              if (getCollisionHandler() != null) box = getCollisionHandler().getMinecartCollisionBox(this);
              else                               box = this.getEntityBoundingBox().grow(0.20000000298023224D, 0.0D, 0.20000000298023224D);
  
@@ -146,7 +198,7 @@
              if (canBeRidden() && this.motionX * this.motionX + this.motionZ * this.motionZ > 0.01D)
              {
                  List<Entity> list = this.world.getEntitiesInAABBexcluding(this, box, EntitySelectors.getTeamCollisionPredicate(this));
-@@ -393,10 +445,22 @@
+@@ -393,10 +397,22 @@
  
                          if (!(entity1 instanceof EntityPlayer) && !(entity1 instanceof EntityIronGolem) && !(entity1 instanceof EntityMinecart) && !this.isBeingRidden() && !entity1.isRiding())
                          {
@@ -169,7 +221,7 @@
                              entity1.applyEntityCollision(this);
                          }
                      }
-@@ -408,6 +472,12 @@
+@@ -408,6 +424,12 @@
                  {
                      if (!this.isPassenger(entity) && entity.canBePushed() && entity instanceof EntityMinecart)
                      {
@@ -182,7 +234,7 @@
                          entity.applyEntityCollision(this);
                      }
                  }
-@@ -420,7 +490,8 @@
+@@ -420,7 +442,8 @@
  
      protected double getMaximumSpeed()
      {
@@ -192,7 +244,7 @@
      }
  
      public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)
-@@ -446,18 +517,28 @@
+@@ -446,18 +469,28 @@
  
          if (this.onGround)
          {
@@ -227,7 +279,7 @@
          }
      }
  
-@@ -668,7 +749,7 @@
+@@ -668,7 +701,7 @@
  
      protected void applyDrag()
      {
@@ -236,7 +288,7 @@
          {
              this.motionX *= 0.996999979019165D;
              this.motionY *= 0.0D;
-@@ -868,6 +949,12 @@
+@@ -868,6 +901,12 @@
              {
                  if (!this.isPassenger(entityIn))
                  {
@@ -249,7 +301,7 @@
                      double d0 = entityIn.posX - this.posX;
                      double d1 = entityIn.posZ - this.posZ;
                      double d2 = d0 * d0 + d1 * d1;
-@@ -1003,7 +1090,7 @@
+@@ -1003,7 +1042,7 @@
          return ((Integer)this.dataManager.get(ROLLING_DIRECTION)).intValue();
      }
  
@@ -258,7 +310,7 @@
  
      public IBlockState getDisplayTile()
      {
-@@ -1183,7 +1270,7 @@
+@@ -1183,7 +1222,7 @@
       */
      public boolean isPoweredCart()
      {
@@ -267,7 +319,7 @@
      }
  
      /**
-@@ -1192,7 +1279,7 @@
+@@ -1192,7 +1231,7 @@
       */
      public boolean canBeRidden()
      {
@@ -276,7 +328,7 @@
      }
  
      /**
-@@ -1260,6 +1347,9 @@
+@@ -1260,6 +1299,9 @@
      public void setDragAir(double value)
      {
          dragAir = value;
@@ -286,7 +338,7 @@
      }
  
      public double getSlopeAdjustment()
-@@ -1287,7 +1377,7 @@
+@@ -1287,7 +1329,7 @@
          HOPPER(5, "MinecartHopper"),
          COMMAND_BLOCK(6, "MinecartCommandBlock");
  
@@ -295,7 +347,7 @@
          private final int id;
          private final String name;
  
-@@ -1310,16 +1400,38 @@
+@@ -1310,16 +1352,38 @@
          @SideOnly(Side.CLIENT)
          public static EntityMinecart.Type getById(int idIn)
          {

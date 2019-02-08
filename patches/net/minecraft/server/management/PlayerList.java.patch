@@ -21,30 +21,19 @@
  import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.advancements.PlayerAdvancements;
  import net.minecraft.entity.Entity;
-@@ -23,28 +17,14 @@
- import net.minecraft.network.NetworkManager;
- import net.minecraft.network.Packet;
- import net.minecraft.network.PacketBuffer;
--import net.minecraft.network.play.server.SPacketChangeGameState;
--import net.minecraft.network.play.server.SPacketChat;
--import net.minecraft.network.play.server.SPacketCustomPayload;
--import net.minecraft.network.play.server.SPacketEntityEffect;
--import net.minecraft.network.play.server.SPacketEntityStatus;
--import net.minecraft.network.play.server.SPacketHeldItemChange;
--import net.minecraft.network.play.server.SPacketJoinGame;
--import net.minecraft.network.play.server.SPacketPlayerAbilities;
--import net.minecraft.network.play.server.SPacketPlayerListItem;
--import net.minecraft.network.play.server.SPacketRespawn;
--import net.minecraft.network.play.server.SPacketServerDifficulty;
--import net.minecraft.network.play.server.SPacketSetExperience;
--import net.minecraft.network.play.server.SPacketSpawnPosition;
--import net.minecraft.network.play.server.SPacketTeams;
--import net.minecraft.network.play.server.SPacketTimeUpdate;
--import net.minecraft.network.play.server.SPacketWorldBorder;
-+import net.minecraft.network.play.server.*;
+@@ -27,6 +21,7 @@
+ import net.minecraft.network.play.server.SPacketChat;
+ import net.minecraft.network.play.server.SPacketCustomPayload;
+ import net.minecraft.network.play.server.SPacketEntityEffect;
++import net.minecraft.network.play.server.SPacketEntityMetadata;
+ import net.minecraft.network.play.server.SPacketEntityStatus;
+ import net.minecraft.network.play.server.SPacketHeldItemChange;
+ import net.minecraft.network.play.server.SPacketJoinGame;
+@@ -42,9 +37,11 @@
  import net.minecraft.potion.PotionEffect;
  import net.minecraft.scoreboard.ScoreObjective;
  import net.minecraft.scoreboard.ScorePlayerTeam;
++import net.minecraft.scoreboard.Scoreboard;
  import net.minecraft.scoreboard.ServerScoreboard;
  import net.minecraft.scoreboard.Team;
  import net.minecraft.server.MinecraftServer;
@@ -52,7 +41,7 @@
  import net.minecraft.stats.StatList;
  import net.minecraft.stats.StatisticsManagerServer;
  import net.minecraft.util.math.BlockPos;
-@@ -52,7 +32,7 @@
+@@ -52,7 +49,7 @@
  import net.minecraft.util.text.ChatType;
  import net.minecraft.util.text.ITextComponent;
  import net.minecraft.util.text.TextComponentTranslation;
@@ -61,7 +50,7 @@
  import net.minecraft.world.DimensionType;
  import net.minecraft.world.GameType;
  import net.minecraft.world.World;
-@@ -62,11 +42,33 @@
+@@ -62,11 +59,44 @@
  import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  import net.minecraft.world.storage.IPlayerFileData;
  import net.minecraft.world.storage.WorldInfo;
@@ -82,7 +71,13 @@
 +import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
 +import org.bukkit.craftbukkit.util.CraftChatMessage;
 +import org.bukkit.entity.Player;
-+import org.bukkit.event.player.*;
++import org.bukkit.event.player.PlayerChangedWorldEvent;
++import org.bukkit.event.player.PlayerJoinEvent;
++import org.bukkit.event.player.PlayerLoginEvent;
++import org.bukkit.event.player.PlayerPortalEvent;
++import org.bukkit.event.player.PlayerQuitEvent;
++import org.bukkit.event.player.PlayerRespawnEvent;
++import org.bukkit.event.player.PlayerTeleportEvent;
 +import org.bukkit.util.Vector;
 +import org.spigotmc.event.player.PlayerSpawnLocationEvent;
  
@@ -90,12 +85,17 @@
 +import java.io.File;
 +import java.net.SocketAddress;
 +import java.text.SimpleDateFormat;
-+import java.util.*;
++import java.util.ArrayList;
++import java.util.Iterator;
++import java.util.List;
++import java.util.Map;
++import java.util.Set;
++import java.util.UUID;
 +
  public abstract class PlayerList
  {
      public static final File FILE_PLAYERBANS = new File("banned-players.json");
-@@ -76,15 +78,15 @@
+@@ -76,15 +106,15 @@
      private static final Logger LOGGER = LogManager.getLogger();
      private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
      private final MinecraftServer mcServer;
@@ -115,12 +115,13 @@
      private boolean whiteListEnforced;
      protected int maxPlayers;
      private int viewDistance;
-@@ -92,14 +94,20 @@
+@@ -92,14 +122,21 @@
      private boolean commandsAllowedForAll;
      private int playerPingIndex;
  
 +    private CraftServer cserver;
-+
++    private final Map<String,EntityPlayer> playersByName = new org.spigotmc.CaseInsensitiveMap<EntityPlayer>();
++    @Nullable String collideRuleTeamName; // Paper - Team name used for collideRule
      public PlayerList(MinecraftServer server)
      {
 +        this.cserver = server.server = new CraftServer(server, this);
@@ -138,7 +139,7 @@
          this.mcServer = server;
          this.bannedPlayers.setLanServer(false);
          this.bannedIPs.setLanServer(false);
-@@ -108,6 +116,17 @@
+@@ -108,6 +145,17 @@
  
      public void initializeConnectionToPlayer(NetworkManager netManager, EntityPlayerMP playerIn, NetHandlerPlayServer nethandlerplayserver)
      {
@@ -156,7 +157,7 @@
          GameProfile gameprofile = playerIn.getGameProfile();
          PlayerProfileCache playerprofilecache = this.mcServer.getPlayerProfileCache();
          GameProfile gameprofile1 = playerprofilecache.getProfileByUUID(gameprofile.getId());
-@@ -125,6 +144,13 @@
+@@ -125,6 +173,13 @@
              playerIn.setPosition(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
          }
  
@@ -170,7 +171,7 @@
          playerIn.setWorld(playerWorld);
          playerIn.interactionManager.setWorld((WorldServer)playerIn.world);
          String s1 = "local";
-@@ -134,36 +160,63 @@
+@@ -134,36 +189,63 @@
              s1 = netManager.getRemoteAddress().toString();
          }
  
@@ -243,10 +244,16 @@
          nethandlerplayserver.setPlayerLocation(playerIn.posX, playerIn.posY, playerIn.posZ, playerIn.rotationYaw, playerIn.rotationPitch);
          this.updateTimeAndWeatherForPlayer(playerIn, worldserver);
  
-@@ -217,9 +270,11 @@
+@@ -217,9 +299,17 @@
  
          playerIn.addSelfToInternalCraftingInventory();
          net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerLoggedIn(playerIn);
++        // Paper start - Add to collideRule team if needed
++        final Scoreboard scoreboard = this.getServerInstance().getEntityWorld().getScoreboard();
++        if (this.collideRuleTeamName != null && scoreboard.getTeam(collideRuleTeamName) != null && playerIn.getTeam() == null) {
++            scoreboard.addPlayerToTeam(playerIn.getName(), collideRuleTeamName);
++        }
++        // Paper end
 +        // CraftBukkit - Moved from above, added world
 +        PlayerList.LOGGER.info(playerIn.getName() + "[" + s1 + "] logged in with entity id " + playerIn.getEntityId() + " at ([" + playerIn.world.worldInfo.getWorldName() + "]" + playerIn.posX + ", " + playerIn.posY + ", " + playerIn.posZ + ")");
      }
@@ -256,7 +263,7 @@
      {
          Set<ScoreObjective> set = Sets.<ScoreObjective>newHashSet();
  
-@@ -246,28 +301,29 @@
+@@ -246,28 +336,29 @@
  
      public void setPlayerManager(WorldServer[] worldServers)
      {
@@ -291,7 +298,7 @@
              }
              public void onDamageAmountChanged(WorldBorder border, double newAmount)
              {
-@@ -346,14 +402,14 @@
+@@ -346,14 +437,14 @@
          if (playerIn.connection == null) return;
  
          this.playerDataManager.writePlayerData(playerIn);
@@ -308,7 +315,7 @@
  
          if (playeradvancements != null)
          {
-@@ -375,19 +431,87 @@
+@@ -375,19 +466,95 @@
  
          net.minecraftforge.common.chunkio.ChunkIOExecutor.adjustPoolSize(this.getCurrentPlayerCount());
          worldserver.spawnEntity(playerIn);
@@ -394,11 +401,19 @@
 +            quitMessage = playerQuitEvent.getQuitMessage();
 +        }
 +        // CraftBukkit end
-+
++        // Paper start - Remove from collideRule team if needed
++        if (this.collideRuleTeamName != null) {
++            Scoreboard scoreBoard = this.getServerInstance().getEntityWorld().getScoreboard();
++            ScorePlayerTeam team = scoreBoard.getTeam(this.collideRuleTeamName);
++            if (playerIn.getTeam() == team && team != null) {
++                scoreBoard.removePlayerFromTeam(playerIn.getName(), team);
++            }
++        }
++        // Paper end
          this.writePlayerData(playerIn);
  
          if (playerIn.isRiding())
-@@ -420,11 +544,27 @@
+@@ -420,11 +587,27 @@
          if (entityplayermp == playerIn)
          {
              this.uuidToPlayerMap.remove(uuid);
@@ -429,7 +444,7 @@
      }
  
      public String allowUserToConnect(SocketAddress address, GameProfile profile)
-@@ -463,6 +603,87 @@
+@@ -463,6 +646,87 @@
          }
      }
  
@@ -517,7 +532,7 @@
      public EntityPlayerMP createPlayerForUser(GameProfile profile)
      {
          UUID uuid = EntityPlayer.getUUID(profile);
-@@ -504,26 +725,37 @@
+@@ -504,26 +768,37 @@
          return new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(0), profile, playerinteractionmanager);
      }
  
@@ -559,7 +574,7 @@
          playerIn.dimension = dimension;
          PlayerInteractionManager playerinteractionmanager;
  
-@@ -537,6 +769,11 @@
+@@ -537,6 +812,11 @@
          }
  
          EntityPlayerMP entityplayermp = new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(playerIn.dimension), playerIn.getGameProfile(), playerinteractionmanager);
@@ -571,7 +586,7 @@
          entityplayermp.connection = playerIn.connection;
          entityplayermp.copyFrom(playerIn, conqueredEnd);
          entityplayermp.dimension = dimension;
-@@ -549,48 +786,177 @@
+@@ -549,48 +829,177 @@
              entityplayermp.addTag(s);
          }
  
@@ -761,7 +776,7 @@
 +        exitWorld.getDefaultTeleporter().adjustExit(entityplayer, exit, velocity);
 +
 +        entityplayer.invulnerableDimensionChange = true; // CraftBukkit - Set teleport invulnerability only if player changing worlds
-+        this.moveToWorld(entityplayer, exitWorld.dimension, true, exit, true); // SPIGOT-3864
++        this.moveToWorld(entityplayer, exitWorld.dimension, true, exit, !exitWorld.paperConfig.disableTeleportationSuffocationCheck); // SPIGOT-3864 // Paper GH-1149 - Tie suffocation check to config option
 +        if (entityplayer.motionX != velocity.getX() || entityplayer.motionY != velocity.getY() || entityplayer.motionZ != velocity.getZ()) {
 +            entityplayer.getBukkitEntity().setVelocity(velocity);
 +        }
@@ -770,7 +785,7 @@
      public void updatePermissionLevel(EntityPlayerMP player)
      {
          GameProfile gameprofile = player.getGameProfile();
-@@ -642,7 +1008,9 @@
+@@ -642,7 +1051,9 @@
  
      public void transferEntityToWorld(Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn)
      {
@@ -781,7 +796,7 @@
      }
  
      // TODO: Remove (1.13)
-@@ -729,11 +1097,155 @@
+@@ -729,11 +1140,155 @@
          entityIn.setWorld(toWorldIn);
      }
  
@@ -938,7 +953,7 @@
              this.playerPingIndex = 0;
          }
      }
-@@ -746,6 +1258,24 @@
+@@ -746,6 +1301,24 @@
          }
      }
  
@@ -963,7 +978,7 @@
      public void sendPacketToAllPlayersInDimension(Packet<?> packetIn, int dimension)
      {
          for (int i = 0; i < this.playerEntityList.size(); ++i)
-@@ -861,12 +1391,20 @@
+@@ -861,12 +1434,20 @@
          int i = this.mcServer.getOpPermissionLevel();
          this.ops.addEntry(new UserListOpsEntry(profile, this.mcServer.getOpPermissionLevel(), this.ops.bypassesPlayerLimit(profile)));
          this.sendPlayerPermissionLevel(this.getPlayerByUUID(profile.getId()), i);
@@ -984,7 +999,7 @@
      }
  
      private void sendPlayerPermissionLevel(EntityPlayerMP player, int permLevel)
-@@ -918,11 +1456,33 @@
+@@ -918,11 +1499,33 @@
  
      public void sendToAllNearExcept(@Nullable EntityPlayer except, double x, double y, double z, double radius, int dimension, Packet<?> packetIn)
      {
@@ -1022,7 +1037,7 @@
              {
                  double d0 = x - entityplayermp.posX;
                  double d1 = y - entityplayermp.posY;
-@@ -988,16 +1548,21 @@
+@@ -988,16 +1591,21 @@
  
          if (worldIn.isRaining())
          {
@@ -1048,7 +1063,7 @@
          playerIn.connection.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
      }
  
-@@ -1079,17 +1644,26 @@
+@@ -1079,17 +1687,35 @@
  
      public void removeAllPlayers()
      {
@@ -1059,6 +1074,15 @@
 +        for (EntityPlayerMP player : this.playerEntityList) {
 +            player.connection.disconnect(this.mcServer.server.getShutdownMessage()); // CraftBukkit - add custom shutdown message
          }
++        // CraftBukkit end
++
++        // Paper start - Remove collideRule team if it exists
++        if (this.collideRuleTeamName != null) {
++            Scoreboard scoreboard = this.getServerInstance().getEntityWorld().getScoreboard();
++            ScorePlayerTeam team = scoreboard.getTeam(this.collideRuleTeamName);
++            if (team != null) scoreboard.removeTeam(team);
++        }
++        // Paper end
      }
  
 +    public void sendMessage(ITextComponent[] iChatBaseComponents) {
@@ -1079,7 +1103,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -1097,10 +1671,19 @@
+@@ -1097,10 +1723,19 @@
          this.sendMessage(component, true);
      }
  
@@ -1101,7 +1125,7 @@
  
          if (statisticsmanagerserver == null)
          {
-@@ -1119,7 +1702,7 @@
+@@ -1119,7 +1754,7 @@
  
              statisticsmanagerserver = new StatisticsManagerServer(this.mcServer, file2);
              statisticsmanagerserver.readStatFile();
@@ -1110,7 +1134,7 @@
          }
  
          return statisticsmanagerserver;
-@@ -1128,14 +1711,14 @@
+@@ -1128,14 +1763,14 @@
      public PlayerAdvancements getPlayerAdvancements(EntityPlayerMP p_192054_1_)
      {
          UUID uuid = p_192054_1_.getUniqueID();
@@ -1127,7 +1151,7 @@
          }
  
          playeradvancements.setPlayer(p_192054_1_);
-@@ -1148,7 +1731,7 @@
+@@ -1148,7 +1783,7 @@
  
          if (this.mcServer.worlds != null)
          {
@@ -1136,7 +1160,7 @@
              {
                  if (worldserver != null)
                  {
-@@ -1176,9 +1759,10 @@
+@@ -1176,9 +1811,10 @@
  
      public void reloadResources()
      {

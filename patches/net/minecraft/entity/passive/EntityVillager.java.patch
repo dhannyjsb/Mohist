@@ -341,3 +341,16 @@
              {
                  this.value = p_i47340_1_;
                  this.destination = p_i47340_2_;
+@@ -1199,8 +1200,11 @@
+             {
+                 int i = this.value.getPrice(random);
+                 World world = merchant.getWorld();
+-                BlockPos blockpos = world.findNearestStructure(this.destination, merchant.getPos(), true);
+ 
++                if (!world.paperConfig.enableTreasureMaps) return; //Paper
++                BlockPos blockpos = world.findNearestStructure(this.destination, merchant.getPos(), world.paperConfig.treasureMapsAlreadyDiscovered); // Paper - pass false to return first structure, regardless of if its been discovered. true returns only undiscovered.
++
++
+                 if (blockpos != null)
+                 {
+                     ItemStack itemstack = ItemMap.setupNewMap(world, (double)blockpos.getX(), (double)blockpos.getZ(), (byte)2, true, true);

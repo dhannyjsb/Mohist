@@ -203,7 +203,15 @@
  
      public int getEntityId()
      {
-@@ -301,7 +370,7 @@
+@@ -258,6 +327,7 @@
+         return this.tags.remove(tag);
+     }
+ 
++    protected final void kill() { this.onKillCommand(); } // Paper - OBFHELPER
+     public void onKillCommand()
+     {
+         this.setDead();
+@@ -301,7 +371,7 @@
                      break;
                  }
  
@@ -212,7 +220,7 @@
              }
  
              this.motionX = 0.0D;
-@@ -345,8 +414,35 @@
+@@ -345,8 +415,35 @@
          }
      }
  
@@ -249,7 +257,7 @@
          this.rotationYaw = yaw % 360.0F;
          this.rotationPitch = pitch % 360.0F;
      }
-@@ -389,72 +485,40 @@
+@@ -389,72 +486,40 @@
          this.onEntityUpdate();
      }
  
@@ -338,7 +346,7 @@
                      this.portalCounter = 0;
                  }
              }
-@@ -462,7 +526,28 @@
+@@ -462,7 +527,28 @@
              this.decrementTimeUntilPortal();
              this.world.profiler.endSection();
          }
@@ -367,7 +375,43 @@
          this.spawnRunningParticles();
          this.handleWaterMovement();
  
-@@ -530,6 +615,28 @@
+@@ -498,10 +584,16 @@
+             this.fallDistance *= 0.5F;
+         }
+ 
++        // Paper start - Configurable nether ceiling damage
++        // Extracted to own function
++        /*
+         if (this.posY < -64.0D)
+         {
+             this.outOfWorld();
+         }
++        */
++        this.checkAndDoHeightDamage();
++        // Paper end
+ 
+         if (!this.world.isRemote)
+         {
+@@ -512,6 +604,18 @@
+         this.world.profiler.endSection();
+     }
+ 
++    // Paper start - Configurable top of nether void damage
++    private boolean paperNetherCheck() {
++        return this.world.paperConfig.netherVoidTopDamage && this.world.getWorld().getEnvironment() == org.bukkit.World.Environment.NETHER && this.locY >= 128.0D;
++    }
++
++    protected void checkAndDoHeightDamage() {
++        if (this.posY < -64.0D || paperNetherCheck()) {
++            this.kill();
++        }
++    }
++    // Paper end
++
+     protected void decrementTimeUntilPortal()
+     {
+         if (this.timeUntilPortal > 0)
+@@ -530,6 +634,28 @@
          if (!this.isImmuneToFire)
          {
              this.attackEntityFrom(DamageSource.LAVA, 4.0F);
@@ -396,7 +440,7 @@
              this.setFire(15);
          }
      }
-@@ -579,6 +686,22 @@
+@@ -579,6 +705,22 @@
          }
          else
          {
@@ -419,7 +463,7 @@
              if (type == MoverType.PISTON)
              {
                  long i = this.world.getTotalWorldTime();
-@@ -912,6 +1035,26 @@
+@@ -912,6 +1054,26 @@
                  block.onLanded(this.world, this);
              }
  
@@ -446,7 +490,7 @@
              if (this.canTriggerWalking() && (!this.onGround || !this.isSneaking() || !(this instanceof EntityPlayer)) && !this.isRiding())
              {
                  double d15 = this.posX - d10;
-@@ -958,7 +1101,8 @@
+@@ -958,7 +1120,8 @@
                      this.nextFlap = this.playFlySound(this.distanceWalkedOnStepModified);
                  }
              }
@@ -456,7 +500,7 @@
              try
              {
                  this.doBlockCollisions();
-@@ -970,6 +1114,7 @@
+@@ -970,6 +1133,7 @@
                  this.addEntityCrashInfo(crashreportcategory);
                  throw new ReportedException(crashreport);
              }
@@ -464,7 +508,7 @@
  
              boolean flag1 = this.isWet();
  
-@@ -979,11 +1124,17 @@
+@@ -979,11 +1143,17 @@
  
                  if (!flag1)
                  {
@@ -484,7 +528,7 @@
                      }
                  }
              }
-@@ -1154,6 +1305,14 @@
+@@ -1154,6 +1324,14 @@
          }
      }
  
@@ -499,7 +543,7 @@
      public final boolean isImmuneToFire()
      {
          return this.isImmuneToFire;
-@@ -1369,6 +1528,11 @@
+@@ -1369,6 +1547,11 @@
  
      public void setWorld(World worldIn)
      {
@@ -511,7 +555,7 @@
          this.world = worldIn;
      }
  
-@@ -1687,6 +1851,16 @@
+@@ -1687,6 +1870,16 @@
          {
              compound.setTag("Pos", this.newDoubleNBTList(this.posX, this.posY, this.posZ));
              compound.setTag("Motion", this.newDoubleNBTList(this.motionX, this.motionY, this.motionZ));
@@ -528,7 +572,7 @@
              compound.setTag("Rotation", this.newFloatNBTList(this.rotationYaw, this.rotationPitch));
              compound.setFloat("FallDistance", this.fallDistance);
              compound.setShort("Fire", (short)this.fire);
-@@ -1696,7 +1870,12 @@
+@@ -1696,7 +1889,12 @@
              compound.setBoolean("Invulnerable", this.invulnerable);
              compound.setInteger("PortalCooldown", this.timeUntilPortal);
              compound.setUniqueId("UUID", this.getUniqueID());
@@ -542,7 +586,7 @@
              if (this.hasCustomName())
              {
                  compound.setString("CustomName", this.getCustomNameTag());
-@@ -1761,7 +1940,15 @@
+@@ -1761,7 +1959,15 @@
                      compound.setTag("Passengers", nbttaglist1);
                  }
              }
@@ -559,7 +603,7 @@
              return compound;
          }
          catch (Throwable throwable)
-@@ -1784,21 +1971,6 @@
+@@ -1784,21 +1990,6 @@
              this.motionY = nbttaglist2.getDoubleAt(1);
              this.motionZ = nbttaglist2.getDoubleAt(2);
  
@@ -581,7 +625,7 @@
              this.posX = nbttaglist.getDoubleAt(0);
              this.posY = nbttaglist.getDoubleAt(1);
              this.posZ = nbttaglist.getDoubleAt(2);
-@@ -1869,6 +2041,57 @@
+@@ -1869,6 +2060,57 @@
              {
                  this.setPosition(this.posX, this.posY, this.posZ);
              }
@@ -639,7 +683,7 @@
          }
          catch (Throwable throwable)
          {
-@@ -1884,17 +2107,64 @@
+@@ -1884,17 +2126,64 @@
          return true;
      }
  
@@ -707,7 +751,7 @@
      protected NBTTagList newDoubleNBTList(double... numbers)
      {
          NBTTagList nbttaglist = new NBTTagList();
-@@ -1931,6 +2201,11 @@
+@@ -1931,6 +2220,11 @@
          return this.entityDropItem(new ItemStack(itemIn, size, 0), offsetY);
      }
  
@@ -719,7 +763,7 @@
      @Nullable
      public EntityItem entityDropItem(ItemStack stack, float offsetY)
      {
-@@ -2104,12 +2379,36 @@
+@@ -2104,12 +2398,36 @@
  
      protected void addPassenger(Entity passenger)
      {
@@ -756,7 +800,7 @@
              if (!this.world.isRemote && passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer))
              {
                  this.riddenByEntities.add(0, passenger);
-@@ -2129,6 +2428,21 @@
+@@ -2129,6 +2447,21 @@
          }
          else
          {
@@ -778,7 +822,7 @@
              this.riddenByEntities.remove(passenger);
              passenger.rideCooldown = 60;
          }
-@@ -2197,7 +2511,7 @@
+@@ -2197,7 +2530,7 @@
          return 300;
      }
  
@@ -787,7 +831,7 @@
      public void setVelocity(double x, double y, double z)
      {
          this.motionX = x;
-@@ -2325,12 +2639,12 @@
+@@ -2325,12 +2658,12 @@
          this.setFlag(5, invisible);
      }
  
@@ -802,7 +846,7 @@
      {
          byte b0 = ((Byte)this.dataManager.get(FLAGS)).byteValue();
  
-@@ -2351,17 +2665,52 @@
+@@ -2351,17 +2684,52 @@
  
      public void setAir(int air)
      {
@@ -857,7 +901,7 @@
          }
      }
  
-@@ -2540,7 +2889,7 @@
+@@ -2540,7 +2908,7 @@
      public Entity changeDimension(int dimensionIn)
      {
          if (this.world.isRemote || this.isDead) return null;
@@ -866,7 +910,7 @@
      }
  
      @Nullable // Forge: Entities that require custom handling should override this method, not the other
-@@ -2551,53 +2900,67 @@
+@@ -2551,53 +2919,67 @@
              if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
              this.world.profiler.startSection("changeDimension");
              MinecraftServer minecraftserver = this.getServer();
@@ -974,7 +1018,7 @@
              this.world.profiler.endStartSection("reloading");
              Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
  
-@@ -2605,28 +2968,26 @@
+@@ -2605,28 +2987,26 @@
              {
                  entity.copyDataFromOld(this);
  
@@ -1012,7 +1056,7 @@
              return entity;
          }
          else
-@@ -2755,6 +3116,11 @@
+@@ -2755,6 +3135,11 @@
  
      public void setCustomNameTag(String name)
      {
@@ -1024,7 +1068,7 @@
          this.dataManager.set(CUSTOM_NAME, name);
      }
  
-@@ -2838,7 +3204,25 @@
+@@ -2838,7 +3223,25 @@
  
      public void setEntityBoundingBox(AxisAlignedBB bb)
      {
@@ -1051,7 +1095,7 @@
      }
  
      public float getEyeHeight()
-@@ -2974,7 +3358,6 @@
+@@ -2974,7 +3377,6 @@
      public void onRemovedFromWorld() {
          this.isAddedToWorld = false;
      }
@@ -1059,7 +1103,7 @@
      /**
       * Returns a NBTTagCompound that can be used to store custom data for this entity.
       * It will be written, and read from disc, so it persists over world saves.
-@@ -3030,7 +3413,7 @@
+@@ -3030,7 +3432,7 @@
          {
              return ((net.minecraft.entity.item.EntityMinecart)this).getCartItem();
          }
@@ -1068,7 +1112,7 @@
          {
              return new ItemStack(((EntityBoat)this).getItemBoat());
          }
-@@ -3109,14 +3492,14 @@
+@@ -3109,14 +3511,14 @@
      }
  
      @Override
@@ -1085,18 +1129,19 @@
      {
          return capabilities == null ? null : capabilities.getCapability(capability, facing);
      }
-@@ -3303,6 +3686,10 @@
-         }
+@@ -3304,6 +3706,11 @@
      }
  
-+    @Nullable Entity getVehicleDirect() {
+     @Nullable
++    public Entity getVehicleDirect() {
 +        return this.getRidingEntity();
 +    } // Paper - OBFHELPER
 +
-     @Nullable
++    @Nullable
      public Entity getRidingEntity()
      {
-@@ -3319,7 +3706,7 @@
+         return this.ridingEntity;
+@@ -3319,7 +3726,7 @@
          return SoundCategory.NEUTRAL;
      }
  

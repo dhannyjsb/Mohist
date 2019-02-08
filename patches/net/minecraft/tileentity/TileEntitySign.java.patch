@@ -1,13 +1,16 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntitySign.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntitySign.java
-@@ -1,6 +1,5 @@
+@@ -1,8 +1,8 @@
  package net.minecraft.tileentity;
  
 -import javax.annotation.Nullable;
  import net.minecraft.command.CommandException;
  import net.minecraft.command.CommandResultStats;
++import net.minecraft.command.ICommandListener;
  import net.minecraft.command.ICommandSender;
-@@ -20,11 +19,13 @@
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.player.EntityPlayer;
+@@ -20,11 +20,13 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -22,7 +25,7 @@
      private EntityPlayer player;
      private final CommandResultStats stats = new CommandResultStats();
  
-@@ -38,6 +39,10 @@
+@@ -38,6 +40,10 @@
              compound.setString("Text" + (i + 1), s);
          }
  
@@ -33,6 +36,16 @@
          this.stats.writeStatsToNBT(compound);
          return compound;
      }
+@@ -51,8 +57,7 @@
+     {
+         this.isEditable = false;
+         super.readFromNBT(compound);
+-        ICommandSender icommandsender = new ICommandSender()
+-        {
++        ICommandSender icommandlistener = new ISignCommandListener() { // Paper
+             public String getName()
+             {
+                 return "Sign";
 @@ -79,19 +84,38 @@
              }
          };
@@ -64,7 +77,7 @@
 +                // CraftBukkit end
 +
 +                try {
-+                    this.signText[i] = TextComponentUtils.processComponent(icommandsender, ichatbasecomponent, (Entity) null);
++                    this.signText[i] = TextComponentUtils.processComponent(icommandlistener, ichatbasecomponent, (Entity) null);
 +                } catch (CommandException commandexception) {
 +                    this.signText[i] = ichatbasecomponent;
 +                }
@@ -78,17 +91,34 @@
          }
  
          this.stats.readStatsFromNBT(compound);
-@@ -201,7 +225,12 @@
+@@ -141,8 +165,7 @@
+ 
+     public boolean executeCommand(final EntityPlayer playerIn)
+     {
+-        ICommandSender icommandsender = new ICommandSender()
+-        {
++        ICommandSender icommandlistener = new ISignCommandListener() { // Paper
+             public String getName()
+             {
+                 return playerIn.getName();
+@@ -201,7 +224,12 @@
  
                  if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)
                  {
 -                    playerIn.getServer().getCommandManager().executeCommand(icommandsender, clickevent.getValue());
 +                    // playerIn.getServer().getCommandManager().executeCommand(icommandsender, clickevent.getValue());
-+                    CommandBlockBaseLogic.executeSafely(icommandsender, new org.bukkit.craftbukkit.command.ProxiedNativeCommandSender(
-+                            icommandsender,
-+                            new org.bukkit.craftbukkit.command.CraftBlockCommandSender(icommandsender),
++                    CommandBlockBaseLogic.executeSafely(icommandlistener, new org.bukkit.craftbukkit.command.ProxiedNativeCommandSender(
++                            icommandlistener,
++                            new org.bukkit.craftbukkit.command.CraftBlockCommandSender(icommandlistener),
 +                            playerIn.getBukkitEntity()
 +                    ), clickevent.getValue());
                  }
              }
          }
+@@ -213,4 +241,6 @@
+     {
+         return this.stats;
+     }
++
++    public interface ISignCommandListener extends ICommandSender {} // Paper
+ }

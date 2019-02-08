@@ -188,4 +188,22 @@ public class PaperConfig {
     private static void saveEmptyScoreboardTeams() {
         saveEmptyScoreboardTeams = getBoolean("settings.save-empty-scoreboard-teams", false);
     }
+
+    public static int minChunkLoadThreads = 2;
+    private static void chunkLoadThreads() {
+        minChunkLoadThreads = Math.min(6, getInt("settings.min-chunk-load-threads", 2)); // Keep people from doing stupid things with max of 6
+    }
+
+    public static boolean enablePlayerCollisions = true;
+    private static void enablePlayerCollisions() {
+        enablePlayerCollisions = getBoolean("settings.enable-player-collisions", true);
+    }
+
+    public static boolean useAlternativeLuckFormula = false;
+    private static void useAlternativeLuckFormula() {
+        useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", false);
+        if (useAlternativeLuckFormula) {
+            Bukkit.getLogger().log(Level.INFO, "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
+        }
+    }
 }
