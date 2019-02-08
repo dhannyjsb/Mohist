@@ -40,6 +40,26 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
     }
 
     @Override
+    public ItemStack getItemInMainHand() {
+        return getEquipment().getItemInMainHand();
+    }
+
+    @Override
+    public void setItemInMainHand(ItemStack item) {
+        getEquipment().setItemInMainHand(item);
+    }
+
+    @Override
+    public ItemStack getItemInOffHand() {
+        return getEquipment().getItemInOffHand();
+    }
+
+    @Override
+    public void setItemInOffHand(ItemStack item) {
+        getEquipment().setItemInOffHand(item);
+    }
+	
+    @Override
     public ItemStack getBoots() {
         return getEquipment().getBoots();
     }

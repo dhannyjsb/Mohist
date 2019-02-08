@@ -174,7 +174,7 @@ public final class CraftItemStack extends ItemStack {
 
     @Override
     public int getMaxStackSize() {
-        return (handle == null) ? Material.AIR.getMaxStackSize() : handle.getItem().getItemStackLimit();
+        return (handle == null) ? Material.AIR.getMaxStackSize() : handle.getItem().getItemStackLimit(handle);
     }
 
     // Paper start

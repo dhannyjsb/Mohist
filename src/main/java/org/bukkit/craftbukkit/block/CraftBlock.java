@@ -275,7 +275,6 @@ public class CraftBlock implements Block {
 
     public BlockState getState() {
         Material material = getType();
-
         switch (material) {
         case SIGN:
         case SIGN_POST:

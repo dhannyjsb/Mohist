@@ -45,6 +45,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.GameType;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.MapDecoration;
+import net.minecraftforge.common.util.FakePlayer;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Achievement;
@@ -95,6 +96,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.StandardMessenger;
 import org.bukkit.scoreboard.Scoreboard;
+import org.spigotmc.SpigotConfig;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
@@ -130,7 +132,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     private double healthScale = 20;
     private static final boolean DISABLE_CHANNEL_LIMIT = System.getProperty("paper.disableChannelLimit") != null; // Paper - add a flag to disable the channel limit
 
-    public CraftPlayer(CraftServer server, EntityPlayer entity) {
+    public CraftPlayer(CraftServer server, EntityPlayerMP entity) {
         super(server, entity);
 
         firstPlayed = System.currentTimeMillis();
@@ -255,6 +257,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void kickPlayer(String message) {
+		org.spigotmc.AsyncCatcher.catchOp( "player kick"); // Spigot
         if (getHandle().connection == null) return;
 
         getHandle().connection.disconnect(message == null ? "" : message);
@@ -421,6 +424,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void playEffect(Location loc, Effect effect, int data) {
+		if (getHandle().connection == null) return;
         spigot().playEffect(loc, effect, data, 0, 0, 0, 0, 1, 1, 64); // Spigot
     }
 
@@ -526,9 +530,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public boolean teleport(Location location, PlayerTeleportEvent.TeleportCause cause) {
+        Preconditions.checkArgument(location != null, "location");
+        Preconditions.checkArgument(location.getWorld() != null, "location.world");
+        location.checkFinite();
         EntityPlayerMP entity = getHandle();
 
-        if (getHealth() == 0 || entity.isDead) {
+        if (getHealth() == 0 || entity.isDead || entity instanceof FakePlayer) {
             return false;
         }
 
@@ -612,6 +619,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     @Deprecated
     @Override
     public void updateInventory() {
+        if (getHandle().connection == null) {
+            return;
+        }
         getHandle().sendContainerToPlayer(getHandle().openContainer);
     }
 
@@ -1164,7 +1174,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         StandardMessenger.validatePluginMessage(server.getMessenger(), source, channel, message);
         if (getHandle().connection == null) return;
 
-        if (channels.contains(channel)) {
+        if (channels.contains(channel) || SpigotConfig.bungee) {
             SPacketCustomPayload packet = new SPacketCustomPayload(channel, new PacketBuffer(Unpooled.wrappedBuffer(message)));
             getHandle().connection.sendPacket(packet);
         }
@@ -1282,7 +1292,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
 
         getHandle().capabilities.isFlying = value;
-        if (needsUpdate) getHandle().updateAbilities(); // Paper - Only refresh abilities if needed
+        if (needsUpdate) getHandle().sendPlayerAbilities(); // Paper - Only refresh abilities if needed
     }
 
     @Override
@@ -1371,11 +1381,10 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         Validate.notNull(scoreboard, "Scoreboard cannot be null");
         NetHandlerPlayServer connection = getHandle().connection;
         if (connection == null) {
-            throw new IllegalStateException("Cannot set scoreboard yet");
+            return;
         }
         if (connection.isDisconnected()) {
-            throw new IllegalStateException("Cannot set scoreboard for invalid CraftPlayer");
-        }
+		}
 
         this.server.getScoreboardManager().setPlayerBoard(this, scoreboard);
     }
@@ -1448,8 +1457,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                 break;
             }
         }
-        collection.add(new ModifiableAttributeInstance(getHandle().getAttributeMap(), (new RangedAttribute(null, "generic.maxHealth", scaledHealth ? healthScale : getMaxHealth(), 0.0D, Float.MAX_VALUE)).setDescription("Max Health").setShouldWatch(true)));
-    }
+        // Spigot start
+        double healthMod = scaledHealth ? healthScale : getMaxHealth();
+        if ( healthMod >= Float.MAX_VALUE || healthMod <= 0 )
+        {
+            healthMod = 20; // Reset health
+            getServer().getLogger().warning( getName() + " tried to crash the server with a large health attribute" );
+        }
+         collection.add(new ModifiableAttributeInstance(getHandle().getAttributeMap(), (new RangedAttribute(null, "generic.maxHealth", healthMod, 0.0D, Float.MAX_VALUE)).setDescription("Max Health").setShouldWatch(true)));
+        // Spigot end
+	}
 
     @Override
     public org.bukkit.entity.Entity getSpectatorTarget() {
@@ -1470,6 +1487,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+		if (getHandle().connection == null) return;
         SPacketTitle times = new SPacketTitle(fadeIn, stay, fadeOut);
         getHandle().connection.sendPacket(times);
 
@@ -1486,6 +1504,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void resetTitle() {
+		if (getHandle().connection == null) return;
         SPacketTitle packetReset = new SPacketTitle(SPacketTitle.Type.RESET, null);
         getHandle().connection.sendPacket(packetReset);
     }
@@ -1547,6 +1566,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data) {
+		if (getHandle().connection == null) return;
         if (data != null && !particle.getDataType().isInstance(data)) {
             throw new IllegalArgumentException("data should be " + particle.getDataType() + " got " + data.getClass());
         }
@@ -1595,6 +1615,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     // Spigot start
     private final Player.Spigot spigot = new Player.Spigot()
     {
+	
+		@Override
+		public InetSocketAddress getRawAddress()
+		{
+			return (InetSocketAddress) getHandle().connection.netManager.getRawAddress();
+		}
         @Override
         public boolean getCollidesWithEntities() {
             return CraftPlayer.this.isCollidable();

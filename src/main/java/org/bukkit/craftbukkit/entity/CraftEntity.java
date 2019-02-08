@@ -162,9 +162,11 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         if (entity instanceof EntityLivingBase) {
             // Players
             if (entity instanceof EntityPlayer) {
-                if (entity instanceof EntityPlayerMP) { return new CraftPlayer(server, (EntityPlayer) entity); }
-                else { return new CraftHumanEntity(server, (EntityPlayer) entity); } // TODO add support fake player classes from mods( using FakePlayerFactory.class)
-            }
+                if (entity instanceof EntityPlayerMP) { return new CraftPlayer(server, (EntityPlayerMP) entity); }
+                else {
+                    return new CraftPlayer(server, FakePlayerFactory.get(DimensionManager.getWorld(entity.world.provider.getDimension()), ((EntityPlayer) entity).getGameProfile()));
+                }            
+			}
             // Water Animals
             else if (entity instanceof EntityWaterMob) {
                 if (entity instanceof EntitySquid) { return new CraftSquid(server, (EntitySquid) entity); }
@@ -269,7 +271,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
                 else { return new CraftAmbient(server, (EntityAmbientCreature) entity); }
             }
             else if (entity instanceof EntityArmorStand) { return new CraftArmorStand(server, (EntityArmorStand) entity); }
-            else  { return new CraftLivingEntity(server, (EntityLiving) entity); }
+            else  { return new CraftLivingEntity(server, (EntityLivingBase) entity); }
         }
         else if (entity instanceof MultiPartEntityPart) {
             MultiPartEntityPart part = (MultiPartEntityPart) entity;
@@ -410,6 +412,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         entity.setPositionAndRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         // SPIGOT-619: Force sync head rotation also
         entity.setRotationYawHead(location.getYaw());
+		 entity.world.updateEntityWithOptionalForce(entity, false); // Spigot - register to new chunk
 
         return true;
     }
@@ -423,7 +426,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     }
 
     public List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z) {
-        List<Entity> notchEntityList = entity.world.getEntitiesWithinAABB(entity.getClass(), entity.getEntityBoundingBox().grow(x, y, z), null);
+        List<Entity> notchEntityList = entity.world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(x, y, z), null);
         List<org.bukkit.entity.Entity> bukkitEntityList = new java.util.ArrayList<org.bukkit.entity.Entity>(notchEntityList.size());
 
         for (Entity e : notchEntityList) {

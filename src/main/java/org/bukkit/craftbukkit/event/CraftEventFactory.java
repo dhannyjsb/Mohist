@@ -478,17 +478,18 @@ public class CraftEventFactory {
     public static EntityDeathEvent callEntityDeathEvent(EntityLivingBase victim, List<org.bukkit.inventory.ItemStack> drops) {
         CraftLivingEntity entity = (CraftLivingEntity) victim.getBukkitEntity();
         EntityDeathEvent event = new EntityDeathEvent(entity, drops, victim.getExpReward());
-        CraftWorld world = (CraftWorld) entity.getWorld();
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         victim.expToDrop = event.getDroppedExp();
 
+		victim.capturedDrops.clear();
         for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
-            if (stack == null || stack.getType() == Material.AIR || stack.getAmount() == 0) continue;
-
-            world.dropItemNaturally(entity.getLocation(), stack);
+            net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
+            if (entityitem != null)
+            {
+                victim.capturedDrops.add(entityitem);
+            }
         }
-
         return event;
     }
 
@@ -496,7 +497,6 @@ public class CraftEventFactory {
         CraftPlayer entity = victim.getBukkitEntity();
         PlayerDeathEvent event = new PlayerDeathEvent(entity, drops, victim.getExpReward(), 0, deathMessage);
         event.setKeepInventory(keepInventory);
-        org.bukkit.World world = entity.getWorld();
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         victim.keepLevel = event.getKeepLevel();
@@ -508,13 +508,22 @@ public class CraftEventFactory {
         if (event.getKeepInventory()) {
             return event;
         }
-
-        for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
-            if (stack == null || stack.getType() == Material.AIR) continue;
-
-            world.dropItemNaturally(entity.getLocation(), stack);
+        victim.capturedDrops.clear();
+        for (final org.bukkit.inventory.ItemStack stack : event.getDrops()) {
+            if (stack != null) {
+                if (stack.getType() == Material.AIR) {
+                    continue;
+                }
+				if (victim.captureDrops)
+                {
+                    net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
+                    if (entityitem != null)
+                    {
+                        victim.capturedDrops.add(entityitem);
+                    }
+                }
+            }
         }
-
         return event;
     }
 
@@ -545,7 +554,6 @@ public class CraftEventFactory {
                 }
                 event = new EntityDamageByEntityEvent(damager.getBukkitEntity(), entity.getBukkitEntity(), damageCause, modifiers, modifierFunctions);
             }
-
             callEvent(event);
 
             if (!event.isCancelled()) {
@@ -558,10 +566,12 @@ public class CraftEventFactory {
 
             if (source instanceof EntityDamageSourceIndirect) {
                 damager = ((EntityDamageSourceIndirect) source).getProximateDamageSource();
-                if (damager.getBukkitEntity() instanceof ThrownPotion) {
-                    cause = DamageCause.MAGIC;
-                } else if (damager.getBukkitEntity() instanceof Projectile) {
-                    cause = DamageCause.PROJECTILE;
+			    if (damager != null) {
+                    if (damager.getBukkitEntity() instanceof ThrownPotion) {
+                        cause = DamageCause.MAGIC;
+                    } else if (damager.getBukkitEntity() instanceof Projectile) {
+                        cause = DamageCause.PROJECTILE;
+ 				    }
                 }
             } else if ("thorns".equals(source.damageType)) {
                 cause = DamageCause.THORNS;
@@ -581,13 +591,33 @@ public class CraftEventFactory {
             }
             return event;
         } else if (blockDamage != null) {
-            DamageCause cause;
+            DamageCause cause = null;
             Block damager = blockDamage;
             blockDamage = null;
             if (source == DamageSource.CACTUS) {
                 cause = DamageCause.CONTACT;
             } else if (source == DamageSource.HOT_FLOOR) {
                 cause = DamageCause.HOT_FLOOR;
+			} else if (source == DamageSource.FALL) {
+                cause = DamageCause.FALL;
+            } else if (source == DamageSource.ANVIL || source == DamageSource.FALLING_BLOCK) {
+                cause = DamageCause.FALLING_BLOCK;
+            } else if (source == DamageSource.IN_FIRE) {
+                cause = DamageCause.FIRE;
+            } else if (source == DamageSource.ON_FIRE) {
+                cause = DamageCause.FIRE_TICK;
+            } else if (source == DamageSource.LAVA) {
+                cause = DamageCause.LAVA;
+            } else if (damager instanceof LightningStrike) {
+                cause = DamageCause.LIGHTNING;
+            } else if (source == DamageSource.MAGIC) {
+                cause = DamageCause.MAGIC;
+            } else if (source == MELTING) {
+                cause = DamageCause.MELTING;
+            } else if (source == POISON) {
+                cause = DamageCause.POISON;
+            } else if (source == DamageSource.GENERIC) {
+                cause = DamageCause.CUSTOM;
             } else {
                 cause = DamageCause.CUSTOM;
             }
@@ -597,7 +627,7 @@ public class CraftEventFactory {
             }
             return event;
         } else if (entityDamage != null) {
-            DamageCause cause;
+            DamageCause cause = null;
             CraftEntity damager = entityDamage.getBukkitEntity();
             entityDamage = null;
             if (source == DamageSource.ANVIL || source == DamageSource.FALLING_BLOCK) {
@@ -610,6 +640,18 @@ public class CraftEventFactory {
                 cause = DamageCause.DRAGON_BREATH;
             } else if (source == DamageSource.MAGIC) {
                 cause = DamageCause.MAGIC;
+			} else if (source == DamageSource.CACTUS) {
+                cause = DamageCause.CONTACT;
+            } else if (source == DamageSource.IN_FIRE) {
+                cause = DamageCause.FIRE;
+            } else if (source == DamageSource.ON_FIRE) {
+                cause = DamageCause.FIRE_TICK;
+            } else if (source == DamageSource.LAVA) {
+                cause = DamageCause.LAVA;
+            } else if (source == MELTING) {
+                cause = DamageCause.MELTING;
+            } else if (source == POISON) {
+                cause = DamageCause.POISON;
             } else {
                 cause = DamageCause.CUSTOM;
             }
@@ -620,7 +662,7 @@ public class CraftEventFactory {
             return event;
         }
 
-        DamageCause cause;
+        DamageCause cause = null;
         if (source == DamageSource.IN_FIRE) {
             cause = DamageCause.FIRE;
         } else if (source == DamageSource.STARVE) {
@@ -647,11 +689,13 @@ public class CraftEventFactory {
             cause = DamageCause.CRAMMING;
         } else if (source == DamageSource.GENERIC) {
             cause = DamageCause.CUSTOM;
-        } else {
-            cause = DamageCause.CUSTOM;
         }
 
-        return callEntityDamageEvent(null, entity, cause, modifiers, modifierFunctions);
+        if (cause != null) {
+            return callEntityDamageEvent(null, entity, cause, modifiers, modifierFunctions);
+        } else {
+            return new EntityDamageEvent(entity.getBukkitEntity(), DamageCause.CUSTOM, modifiers, modifierFunctions); // use custom
+        }
     }
 
     private static EntityDamageEvent callEntityDamageEvent(Entity damager, Entity damagee, DamageCause cause, Map<DamageModifier, Double> modifiers, Map<DamageModifier, Function<? super Double, Double>> modifierFunctions) {
@@ -848,14 +892,15 @@ public class CraftEventFactory {
 
         InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
         event.setCancelled(cancelled);
-        server.getPluginManager().callEvent(event);
+		if (container.getBukkitView() != null)
+        	server.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
             container.transferTo(player.openContainer, craftPlayer);
             return null;
+        } else {
+            return container;
         }
-
-        return container;
     }
 
     public static ItemStack callPreCraftEvent(InventoryCrafting matrix, ItemStack result, InventoryView lastCraftView, boolean isRepair) {
@@ -884,7 +929,7 @@ public class CraftEventFactory {
             hitBlock = entity.getBukkitEntity().getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
         }
 
-        ProjectileHitEvent event = new ProjectileHitEvent((Projectile) entity.getBukkitEntity(), position.entityHit == null ? null : position.entityHit.getBukkitEntity(), hitBlock, position.direction == null ? null : CraftBlock.notchToBlockFace(position.direction)); // Paper - add BlockFace parameter
+        ProjectileHitEvent event = new ProjectileHitEvent((Projectile) entity.getBukkitEntity(), position.entityHit == null ? null : position.entityHit.getBukkitEntity(), hitBlock, position.sideHit == null ? null : CraftBlock.notchToBlockFace(position.sideHit)); // Paper - add BlockFace parameter
         entity.world.getServer().getPluginManager().callEvent(event);
         return event;
     }
@@ -977,7 +1022,7 @@ public class CraftEventFactory {
 
     public static void handleInventoryCloseEvent(EntityPlayer human) {
         InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
-        human.world.getServer().getPluginManager().callEvent(event);
+        if(human.openContainer.getBukkitView() != null) human.world.getServer().getPluginManager().callEvent(event);
         human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
     }
 
@@ -1194,4 +1239,12 @@ public class CraftEventFactory {
         world.getServer().getPluginManager().callEvent(blockBreakEvent);
         return blockBreakEvent;
     }
+
+    // Paper start
+    public static com.destroystokyo.paper.event.entity.EntityZapEvent callEntityZapEvent (Entity entity, Entity lightning, Entity changedEntity) {
+        com.destroystokyo.paper.event.entity.EntityZapEvent event = new com.destroystokyo.paper.event.entity.EntityZapEvent(entity.getBukkitEntity(), (LightningStrike) lightning.getBukkitEntity(), changedEntity.getBukkitEntity());
+        entity.getBukkitEntity().getServer().getPluginManager().callEvent(event);
+        return event;
+    }
+    // Paper end
 }

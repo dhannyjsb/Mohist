@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntityEndGateway.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntityEndGateway.java
-@@ -1,10 +1,8 @@
+@@ -1,16 +1,15 @@
  package net.minecraft.tileentity;
  
 -import java.util.List;
@@ -12,7 +12,14 @@
  import net.minecraft.init.Blocks;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTUtil;
-@@ -24,14 +22,22 @@
+ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+ import net.minecraft.util.EnumFacing;
+ import net.minecraft.util.ITickable;
++import net.minecraft.util.MCUtil;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
+@@ -24,14 +23,22 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -37,7 +44,7 @@
  
      public NBTTagCompound writeToNBT(NBTTagCompound compound)
      {
-@@ -171,6 +177,22 @@
+@@ -171,6 +178,22 @@
              if (this.exitPortal != null)
              {
                  BlockPos blockpos = this.exactTeleport ? this.exitPortal : this.findExitPosition();
@@ -47,7 +54,7 @@
 +                    location.setPitch(player.getLocation().getPitch());
 +                    location.setYaw(player.getLocation().getYaw());
 +
-+                    PlayerTeleportEvent teleEvent = new PlayerTeleportEvent(player, player.getLocation(), location, PlayerTeleportEvent.TeleportCause.END_GATEWAY);
++                    PlayerTeleportEvent teleEvent = new com.destroystokyo.paper.event.player.PlayerTeleportEndGatewayEvent(player, player.getLocation(), location, new org.bukkit.craftbukkit.block.CraftEndGateway(MCUtil.toLocation(world, this.getPos()).getBlock())); // Paper
 +                    Bukkit.getPluginManager().callEvent(teleEvent);
 +                    if (teleEvent.isCancelled()) {
 +                        return;

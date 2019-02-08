@@ -39,8 +39,10 @@
   */
  
  package net.minecraftforge.fml.repackage.com.nothome.delta;
-@@ -76,4 +71,3 @@
+@@ -74,6 +69,4 @@
+     public void close() throws IOException {
+         System.err.println("CLOSE");
      }
- 
+-
  }
 -

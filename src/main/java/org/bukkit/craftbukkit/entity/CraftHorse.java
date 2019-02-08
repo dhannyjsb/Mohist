@@ -63,7 +63,7 @@ public class CraftHorse extends CraftAbstractHorse implements Horse {
 
     @Override
     public String toString() {
-        return "CraftHorse{variant=" + getVariant() + ", owner=" + getOwner() + '}';
+        return "CraftHorse{variant=" + getType() + ", owner=" + getOwner() + '}';
     }
 
     @Override

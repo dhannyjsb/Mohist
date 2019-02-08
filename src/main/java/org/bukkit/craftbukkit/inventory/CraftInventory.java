@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.InventoryEnderChest;
@@ -14,12 +15,12 @@ import net.minecraft.tileentity.TileEntityShulkerBox;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,8 @@ public class CraftInventory implements Inventory {
     }
 
     public String getName() {
-        return getInventory().getName();
+    	String name = getInventory().getName();
+        return name != null ? name : "";
     }
 
     public ItemStack getItem(int index) {
@@ -72,7 +74,12 @@ public class CraftInventory implements Inventory {
     }
 
     public ItemStack[] getContents() {
-        List<net.minecraft.item.ItemStack> mcItems = getInventory().getContents();
+    	List<net.minecraft.item.ItemStack> mcItems = null;
+        try {
+            mcItems = getInventory().getContents();
+        } catch (AbstractMethodError e) {
+            return new ItemStack[0];
+        }
 
         return asCraftMirror(mcItems);
     }
@@ -434,18 +441,23 @@ public class CraftInventory implements Inventory {
     }
 
     public List<HumanEntity> getViewers() {
-        return this.inventory.getViewers();
+    	try {
+            return this.inventory.getViewers();
+        } catch (AbstractMethodError e) {
+            return new java.util.ArrayList<HumanEntity>();
+        }
     }
 
     public String getTitle() {
-        return inventory.getName();
+    	String name = this.inventory.getName();
+        return name != null ? name : "";
     }
 
     public InventoryType getType() {
         // Thanks to Droppers extending Dispensers, order is important.
         if (inventory instanceof InventoryCrafting) {
             return inventory.getSizeInventory() >= 9 ? InventoryType.WORKBENCH : InventoryType.CRAFTING;
-        } else if (inventory instanceof PlayerInventory) {
+        } else if (inventory instanceof InventoryPlayer) {
             return InventoryType.PLAYER;
         } else if (inventory instanceof TileEntityDropper) {
             return InventoryType.DROPPER;
@@ -477,7 +489,17 @@ public class CraftInventory implements Inventory {
     }
 
     public InventoryHolder getHolder() {
-        return inventory.getOwner();
+        try {
+            return inventory.getOwner();
+        } catch (AbstractMethodError e) {
+            if (inventory instanceof net.minecraft.tileentity.TileEntity) {
+                net.minecraft.tileentity.TileEntity tileentity = (net.minecraft.tileentity.TileEntity) inventory;
+                BlockState state = tileentity.getWorld().getWorld().getBlockAt(tileentity.getPos().getX(), tileentity.getPos().getY(), tileentity.getPos().getZ()).getState();
+                return (state instanceof InventoryHolder ? (InventoryHolder) state : null);
+            }else{
+                return null;
+            }
+        }
     }
 
     public int getMaxStackSize() {

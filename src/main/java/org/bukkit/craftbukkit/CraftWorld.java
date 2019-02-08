@@ -509,6 +509,7 @@ public class CraftWorld implements World {
     }
 
     public boolean loadChunk(int x, int z, boolean generate) {
+		org.spigotmc.AsyncCatcher.catchOp( "chunk load"); // Spigot
         chunkLoadCount++;
         if (generate) {
             // Use the default variant of loadChunk when generate == true.
@@ -816,17 +817,7 @@ public class CraftWorld implements World {
     public void setEnvironment(Environment env) {
         if (environment != env) {
             environment = env;
-            switch (env) {
-                case NORMAL:
-                    world.provider = new WorldProviderSurface();
-                    break;
-                case NETHER:
-                    world.provider = new WorldProviderHell();
-                    break;
-                case THE_END:
-                    world.provider = new WorldProviderEnd();
-                    break;
-            }
+            world.provider = net.minecraft.world.WorldProvider.getProviderForDimension(environment.getId());
         }
     }
 
@@ -1416,7 +1407,7 @@ public class CraftWorld implements World {
                 if (nmsBlock.getDefaultState().getMaterial().isSolid() || BlockRedstoneDiode.isDiode(nmsBlock.getDefaultState())) {
                     boolean taken = false;
                     AxisAlignedBB bb = EntityHanging.calculateBoundingBox(null, pos, CraftBlock.blockFaceToNotch(dir).getOpposite(), width, height);
-                    List<net.minecraft.entity.Entity> list = (List<net.minecraft.entity.Entity>) world.getEntitiesWithinAABB(null, bb);
+                    List<net.minecraft.entity.Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, bb);
                     for (Iterator<net.minecraft.entity.Entity> it = list.iterator(); !taken && it.hasNext();) {
                         net.minecraft.entity.Entity e = it.next();
                         if (e instanceof EntityHanging) {
@@ -1912,6 +1903,7 @@ public class CraftWorld implements World {
         {
             CraftWorld.this.playEffect( location, effect, 0 );
         }
+
 
         public LightningStrike strikeLightning(Location loc, boolean isSilent)
         {

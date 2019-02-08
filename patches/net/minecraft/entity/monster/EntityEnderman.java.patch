@@ -99,7 +99,22 @@
      }
  
      protected void entityInit()
-@@ -246,7 +249,7 @@
+@@ -187,6 +190,14 @@
+         this.setHeldBlockState(iblockstate);
+     }
+ 
++    // Paper start - OBFHELPER - ok not really, but verify this on updates
++    private boolean f(EntityPlayer player) {
++        boolean shouldAttack = shouldAttackPlayer(player);
++        com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent event = new com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent((org.bukkit.entity.Enderman) getBukkitEntity(), (org.bukkit.entity.Player) player.getBukkitEntity());
++        event.setCancelled(!shouldAttack);
++        return event.callEvent();
++    }
++    // Paper end
+     private boolean shouldAttackPlayer(EntityPlayer player)
+     {
+         ItemStack itemstack = player.inventory.armorInventory.get(3);
+@@ -246,7 +257,7 @@
          super.updateAITasks();
      }
  
@@ -108,7 +123,7 @@
      {
          double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * 64.0D;
          double d1 = this.posY + (double)(this.rand.nextInt(64) - 32);
-@@ -524,8 +527,11 @@
+@@ -524,8 +535,11 @@
  
                  if (iblockstate2 != null && this.canPlaceBlock(world, blockpos, iblockstate2.getBlock(), iblockstate, iblockstate1))
                  {
@@ -122,7 +137,7 @@
                  }
              }
  
-@@ -590,8 +596,14 @@
+@@ -590,8 +604,14 @@
  
                  if (EntityEnderman.CARRIABLE_BLOCKS.contains(block) && flag)
                  {

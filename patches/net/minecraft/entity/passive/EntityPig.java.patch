@@ -52,7 +52,7 @@
      }
  
      @Nullable
-@@ -222,11 +218,16 @@
+@@ -222,11 +218,21 @@
          }
      }
  
@@ -64,13 +64,18 @@
 +            if (lightningBolt == null)
 +                lightningBolt = new EntityLightningBolt(this.world, this.posX, this.posY, this.posZ, true); // Mohist - if null, create EntityLightningBolt for Bukkit
              EntityPigZombie entitypigzombie = new EntityPigZombie(this.world);
++            // Paper start
++            if (CraftEventFactory.callEntityZapEvent(this, lightningBolt, entitypigzombie).isCancelled()) {
++                return;
++            }
++            // Paper end
 +            if (CraftEventFactory.callPigZapEvent(this, lightningBolt, entitypigzombie).isCancelled()) {
 +                return;
 +            }
              entitypigzombie.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.GOLDEN_SWORD));
              entitypigzombie.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
              entitypigzombie.setNoAI(this.isAIDisabled());
-@@ -237,7 +238,7 @@
+@@ -237,7 +243,7 @@
                  entitypigzombie.setAlwaysRenderNameTag(this.getAlwaysRenderNameTag());
              }
  

@@ -232,7 +232,7 @@
              }
          }
      }
-@@ -880,7 +881,7 @@
+@@ -880,11 +881,16 @@
          return false;
      }
  
@@ -241,7 +241,25 @@
      {
          if (!this.world.isRemote && !this.isDead)
          {
-@@ -1016,12 +1017,12 @@
+             EntityWitch entitywitch = new EntityWitch(this.world);
++            // Paper start
++            if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityZapEvent(this, lightningBolt, entitywitch).isCancelled()) {
++                return;
++            }
++            // Paper end
+             entitywitch.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+             entitywitch.onInitialSpawn(this.world.getDifficultyForLocation(new BlockPos(entitywitch)), (IEntityLivingData)null);
+             entitywitch.setNoAI(this.isAIDisabled());
+@@ -895,7 +901,7 @@
+                 entitywitch.setAlwaysRenderNameTag(this.getAlwaysRenderNameTag());
+             }
+ 
+-            this.world.spawnEntity(entitywitch);
++            this.world.addEntity(entitywitch, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING); // Paper - Added lightning spawn reason for this entity
+             this.setDead();
+         }
+     }
+@@ -1016,12 +1022,12 @@
          }
      }
  
@@ -257,7 +275,7 @@
              {
                  this.buyingItem = itemIn;
                  this.price = priceIn;
-@@ -1045,14 +1046,14 @@
+@@ -1045,14 +1051,14 @@
          void addMerchantRecipe(IMerchant merchant, MerchantRecipeList recipeList, Random random);
      }
  
@@ -276,7 +294,7 @@
              {
                  this.buyingItemStack = new ItemStack(p_i45813_1_);
                  this.buyingPriceInfo = p_i45813_2_;
-@@ -1068,7 +1069,7 @@
+@@ -1068,7 +1074,7 @@
              }
          }
  
@@ -285,7 +303,7 @@
          {
              public void addMerchantRecipe(IMerchant merchant, MerchantRecipeList recipeList, Random random)
              {
-@@ -1091,12 +1092,12 @@
+@@ -1091,12 +1097,12 @@
              }
          }
  
@@ -301,7 +319,7 @@
              {
                  this.enchantedItemStack = new ItemStack(p_i45814_1_);
                  this.priceInfo = p_i45814_2_;
-@@ -1120,18 +1121,18 @@
+@@ -1120,18 +1126,18 @@
      @Deprecated
      public static ITradeList[][][][] GET_TRADES_DONT_USE(){ return DEFAULT_TRADE_LIST_MAP; }
  
@@ -324,7 +342,7 @@
              {
                  this.itemToBuy = stack;
                  this.priceInfo = priceInfo;
-@@ -1182,13 +1183,13 @@
+@@ -1182,13 +1188,13 @@
              }
          }
  
@@ -341,7 +359,7 @@
              {
                  this.value = p_i47340_1_;
                  this.destination = p_i47340_2_;
-@@ -1199,8 +1200,11 @@
+@@ -1199,8 +1205,11 @@
              {
                  int i = this.value.getPrice(random);
                  World world = merchant.getWorld();

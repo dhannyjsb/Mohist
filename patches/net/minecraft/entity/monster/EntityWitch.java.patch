@@ -33,7 +33,32 @@
  public class EntityWitch extends EntityMob implements IRangedAttackMob
  {
      private static final UUID MODIFIER_UUID = UUID.fromString("5CD17E52-A79A-43D3-A529-90FDE04B181E");
-@@ -242,10 +237,18 @@
+@@ -123,7 +118,10 @@
+ 
+                     if (itemstack.getItem() == Items.POTIONITEM)
+                     {
+-                        List<PotionEffect> list = PotionUtils.getEffectsFromStack(itemstack);
++                        // Paper start
++                        com.destroystokyo.paper.event.entity.WitchConsumePotionEvent event = new com.destroystokyo.paper.event.entity.WitchConsumePotionEvent((org.bukkit.entity.Witch) this.getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack));
++                        List<PotionEffect> list = event.callEvent() ? PotionUtils.getEffectsFromStack(org.bukkit.craftbukkit.inventory.CraftItemStack.asNMSCopy(event.getPotion())) : null;
++                        // Paper end
+ 
+                         if (list != null)
+                         {
+@@ -160,7 +158,11 @@
+ 
+                 if (potiontype != null)
+                 {
+-                    this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), potiontype));
++                    // Paper start
++                    ItemStack potion = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), potiontype);
++                    org.bukkit.inventory.ItemStack bukkitStack = com.destroystokyo.paper.event.entity.WitchReadyPotionEvent.process((org.bukkit.entity.Witch) this.getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(potion));
++                    this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, org.bukkit.craftbukkit.inventory.CraftItemStack.asNMSCopy(bukkitStack));
++                    // Paper end
+                     this.potionUseTimer = this.getHeldItemMainhand().getMaxItemUseDuration();
+                     this.setDrinkingPotion(true);
+                     this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
+@@ -242,10 +244,18 @@
                  potiontype = PotionTypes.WEAKNESS;
              }
  

@@ -76,6 +76,7 @@ import java.util.Set;
 
 public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     private CraftEntityEquipment equipment;
+	public String entityName;
 
     public CraftLivingEntity(final CraftServer server, final EntityLivingBase entity) {
         super(server, entity);
@@ -83,6 +84,9 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (entity instanceof EntityLiving || entity instanceof EntityArmorStand) {
             equipment = new CraftEntityEquipment(this);
         }
+        this.entityName = EntityRegistry.entityTypeMap.get(entity.getClass());
+        if (entityName == null)
+            entityName = entity.getName();
     }
 
     public double getHealth() {
@@ -243,7 +247,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public String toString() {
-        return "CraftLivingEntity{" + "id=" + getEntityId() + '}';
+        return "CraftLivingEntity{" + "id=" + getEntityId() + ", name=" + this.entityName + "}";
     }
 
     public Player getKiller() {
@@ -388,7 +392,11 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public EntityType getType() {
-        return EntityType.UNKNOWN;
+        EntityType type = EntityType.fromName(this.entityName);
+        if (type != null) {
+            return type;
+        }
+        return EntityType.MOD_CUSTOM;
     }
 
     public boolean hasLineOfSight(Entity other) {

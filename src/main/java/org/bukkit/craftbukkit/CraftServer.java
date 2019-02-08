@@ -54,6 +54,9 @@ import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -379,7 +382,11 @@ public final class CraftServer implements Server {
 
         if (type == PluginLoadOrder.POSTWORLD) {
             commandMap.setFallbackCommands();
-            setVanillaCommands();
+            // Spigot start - Allow vanilla commands to be forced to be the main command
+            setVanillaCommands(true);
+            commandMap.setFallbackCommands();
+            this.setVanillaCommands(false);
+            // Spigot end
             commandMap.registerServerAliases();
             loadCustomPermissions();
             DefaultPermissions.registerCorePermissions();
@@ -434,10 +441,19 @@ public final class CraftServer implements Server {
         pluginManager.disablePlugins();
     }
 
-    private void setVanillaCommands() {
+    private void setVanillaCommands(boolean first) {
         Map<String, ICommand> commands = console.getCommandManager().getCommands();
         for (ICommand cmd : commands.values()) {
-            commandMap.register("minecraft", new VanillaCommandWrapper((CommandBase) cmd, I18n.translateToLocal(cmd.getUsage(null))));
+            // Spigot start
+            VanillaCommandWrapper wrapper = new VanillaCommandWrapper((CommandBase) cmd, I18n.translateToLocal(cmd.getUsage(null)));
+            if (org.spigotmc.SpigotConfig.replaceCommands.contains(wrapper.getName())) {
+                if (first) {
+                    commandMap.register("minecraft", wrapper);
+                }
+            } else if (!first) {
+                commandMap.register("minecraft", wrapper);
+            }
+            // Spigot end
         }
     }
 
@@ -652,7 +668,13 @@ public final class CraftServer implements Server {
 
     @Override
     public long getConnectionThrottle() {
-        return this.configuration.getInt("settings.connection-throttle");
+        // Spigot Start - Automatically set connection throttle for bungee configurations
+        if (org.spigotmc.SpigotConfig.bungee) {
+            return -1;
+        } else {
+            return this.configuration.getInt("settings.connection-throttle");
+        }
+        // Spigot End
     }
 
     @Override
@@ -732,121 +754,14 @@ public final class CraftServer implements Server {
             return true;
         }
 
-        if (sender instanceof Player) {
-            sender.sendMessage("Unknown command. Type \"/help\" for help.");
-        } else {
-            sender.sendMessage("Unknown command. Type \"help\" for help.");
-        }
+        sender.sendMessage(org.spigotmc.SpigotConfig.unknownCommandMessage); // Spigot
 
         return false;
     }
 
     @Override
     public void reload() {
-        reloadCount++;
-        configuration = YamlConfiguration.loadConfiguration(getConfigFile());
-        commandsConfiguration = YamlConfiguration.loadConfiguration(getCommandsConfigFile());
-        PropertyManager config = new PropertyManager(console.options);
-
-        ((DedicatedServer) console).settings = config;
-
-        boolean animals = config.getBooleanProperty("spawn-animals", console.getCanSpawnAnimals());
-        boolean monsters = config.getBooleanProperty("spawn-monsters", console.worldServerList.get(0).getDifficulty() != EnumDifficulty.PEACEFUL);
-        EnumDifficulty difficulty = EnumDifficulty.getDifficultyEnum(config.getIntProperty("difficulty", console.worldServerList.get(0).getDifficulty().ordinal()));
-
-        online.value = config.getBooleanProperty("online-mode", console.isServerInOnlineMode());
-        console.setCanSpawnAnimals(config.getBooleanProperty("spawn-animals", console.getCanSpawnAnimals()));
-        console.setAllowPvp(config.getBooleanProperty("pvp", console.isPVPEnabled()));
-        console.setAllowFlight(config.getBooleanProperty("allow-flight", console.isFlightAllowed()));
-        console.setMOTD(config.getStringProperty("motd", console.getMOTD()));
-        monsterSpawn = configuration.getInt("spawn-limits.monsters");
-        animalSpawn = configuration.getInt("spawn-limits.animals");
-        waterAnimalSpawn = configuration.getInt("spawn-limits.water-animals");
-        ambientSpawn = configuration.getInt("spawn-limits.ambient");
-        warningState = WarningState.value(configuration.getString("settings.deprecated-verbose"));
-        printSaveWarning = false;
-        console.autosavePeriod = configuration.getInt("ticks-per.autosave");
-        chunkGCPeriod = configuration.getInt("chunk-gc.period-in-ticks");
-        chunkGCLoadThresh = configuration.getInt("chunk-gc.load-threshold");
-        loadIcon();
-
-        try {
-            playerList.getBannedIPs().readSavedFile();
-        } catch (IOException ex) {
-            logger.log(Level.WARNING, "Failed to load banned-ips.json, " + ex.getMessage());
-        }
-        try {
-            playerList.getBannedPlayers().readSavedFile();
-        } catch (IOException ex) {
-            logger.log(Level.WARNING, "Failed to load banned-players.json, " + ex.getMessage());
-        }
-
-        org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
-        cn.pfcraft.server.MohistConfig.init((File) console.options.valueOf("mohist-settings")); // Mohist
-        com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
-        for (WorldServer world : console.worlds) {
-            world.worldInfo.setDifficulty(difficulty);
-            world.setAllowedSpawnTypes(monsters, animals);
-            if (this.getTicksPerAnimalSpawns() < 0) {
-                world.ticksPerAnimalSpawns = 400;
-            } else {
-                world.ticksPerAnimalSpawns = this.getTicksPerAnimalSpawns();
-            }
-
-            if (this.getTicksPerMonsterSpawns() < 0) {
-                world.ticksPerMonsterSpawns = 1;
-            } else {
-                world.ticksPerMonsterSpawns = this.getTicksPerMonsterSpawns();
-            }
-            world.spigotConfig.init(); // Spigot
-            world.mohistConfig.init(); // Mohist
-            world.paperConfig.init(); // Paper
-        }
-
-        Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-        pluginManager.clearPlugins();
-        commandMap.clearCommands();
-        // Paper start
-        for (Plugin plugin : pluginClone) {
-            entityMetadata.removeAll(plugin);
-            worldMetadata.removeAll(plugin);
-            playerMetadata.removeAll(plugin);
-        }
-        // Paper end
-        resetRecipes();
-        reloadData();
-        org.spigotmc.SpigotConfig.registerCommands(); // Spigot
-        cn.pfcraft.server.MohistConfig.registerCommands(); // Mohsit
-        com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
-        overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
-
-        int pollCount = 0;
-
-        // Wait for at most 2.5 seconds for plugins to close their threads
-        while (pollCount < 50 && getScheduler().getActiveWorkers().size() > 0) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {}
-            pollCount++;
-        }
-
-        List<BukkitWorker> overdueWorkers = getScheduler().getActiveWorkers();
-        for (BukkitWorker worker : overdueWorkers) {
-            Plugin plugin = worker.getOwner();
-            String author = "<NoAuthorGiven>";
-            if (plugin.getDescription().getAuthors().size() > 0) {
-                author = plugin.getDescription().getAuthors().get(0);
-            }
-            getLogger().log(Level.SEVERE, String.format(
-                "Nag author: '%s' of '%s' about the following: %s",
-                author,
-                plugin.getDescription().getName(),
-                "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
-            ));
-        }
-        loadPlugins();
-        enablePlugins(PluginLoadOrder.STARTUP);
-        enablePlugins(PluginLoadOrder.POSTWORLD);
+        // Mohist - disable reload
     }
 
     @Override
@@ -945,84 +860,18 @@ public final class CraftServer implements Server {
         WorldType type = WorldType.parseWorldType(creator.type().getName());
         boolean generateStructures = creator.generateStructures();
 
-        if (world != null) {
-            return world;
-        }
-
         if ((folder.exists()) && (!folder.isDirectory())) {
             throw new IllegalArgumentException("File exists with the name '" + name + "' and isn't a folder");
         }
 
-        if (generator == null) {
-            generator = getGenerator(name);
+        if (world != null) {
+            return world;
         }
 
-        ISaveFormat converter = new AnvilSaveConverter(getWorldContainer(), getHandle().getServerInstance().getDataFixer());
-        if (converter.isOldMapFormat(name)) {
-            getLogger().info("Converting world '" + name + "'");
-            converter.convertMapFormat(name, new IProgressUpdate() {
-                private long b = System.currentTimeMillis();
-
-                @Override
-                public void displaySavingString(String s) {}
-
-                @Override
-                public void setLoadingProgress(int i) {
-                    if (System.currentTimeMillis() - this.b >= 1000L) {
-                        this.b = System.currentTimeMillis();
-                        MinecraftServer.LOGGER.info("Converting... " + i + "%");
-                    }
-                }
-
-                @Override
-                public void displayLoadingString(String s) {}
-
-                @Override
-                public void resetProgressAndMessage(String message) {}
-
-                @Override
-                public void setDoneWorking() {}
-            });
-        }
-
-        int dimension = CraftWorld.CUSTOM_DIMENSION_OFFSET + console.worldServerList.size();
-        boolean used = false;
-        do {
-            for (WorldServer server : console.worlds) {
-                used = server.dimension == dimension;
-                if (used) {
-                    dimension++;
-                    break;
-                }
-            }
-        } while(used);
         boolean hardcore = false;
 
-        ISaveHandler sdm = new AnvilSaveHandler(getWorldContainer(), name, true, getHandle().getServerInstance().getDataFixer());
-        WorldInfo worlddata = sdm.loadWorldInfo();
-        WorldSettings worldSettings = null;
-        if (worlddata == null) {
-            worldSettings = new WorldSettings(creator.seed(), GameType.getByID(getDefaultGameMode().getValue()), generateStructures, hardcore, type);
-            worldSettings.setGeneratorOptions(creator.generatorSettings());
-            worlddata = new WorldInfo(worldSettings, name);
-        }
-        worlddata.checkName(name); // CraftBukkit - Migration did not rewrite the level.dat; This forces 1.8 to take the last loaded world as respawn (in this case the end)
-        WorldServer internal = (WorldServer) new WorldServer(console, sdm, worlddata, dimension, console.profiler, creator.environment(), generator).init();
-
-        if (!(worlds.containsKey(name.toLowerCase(java.util.Locale.ENGLISH)))) {
-            return null;
-        }
-
-        if (worldSettings != null) {
-            internal.initialize(worldSettings);
-        }
-        internal.worldScoreboard = getScoreboardManager().getMainScoreboard().getHandle();
-
-        internal.entityTracker = new EntityTracker(internal);
-        internal.addEventListener(new ServerWorldEventHandler(console, internal));
-        internal.worldInfo.setDifficulty(EnumDifficulty.EASY);
-        internal.setAllowedSpawnTypes(true, true);
-        console.worldServerList.add(internal);
+        WorldSettings worldSettings = new WorldSettings(creator.seed(), WorldSettings.getGameTypeById(getDefaultGameMode().getValue()), generateStructures, hardcore, type);
+        WorldServer internal = DimensionManager.initDimension(creator, worldSettings);
 
         pluginManager.callEvent(new WorldInitEvent(internal.getWorld()));
         System.out.println("Preparing start region for level " + (console.worldServerList.size() - 1) + " (Seed: " + internal.getSeed() + ")");
@@ -1047,7 +896,7 @@ public final class CraftServer implements Server {
                     }
 
                     BlockPos chunkcoordinates = internal.getSpawnPoint();
-                    internal.getChunkProvider().provideChunk(chunkcoordinates.getX() + j >> 4, chunkcoordinates.getZ() + k >> 4);
+                    internal.getChunkProvider().loadChunk(chunkcoordinates.getX() + j >> 4, chunkcoordinates.getZ() + k >> 4);
                 }
             }
         }
@@ -1095,10 +944,11 @@ public final class CraftServer implements Server {
                 getLogger().log(Level.SEVERE, null, ex);
             }
         }
-
+		MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.WorldEvent.Unload(handle)); // fire unload event before removing world
         worlds.remove(world.getName().toLowerCase(java.util.Locale.ENGLISH));
-        console.worldServerList.remove(console.worldServerList.indexOf(handle));
-        return true;
+        DimensionManager.setWorld(handle.provider.getDimension(), null, FMLCommonHandler.instance().getMinecraftServerInstance()); // remove world from DimensionManager
+        
+		return true;
     }
 
     public MinecraftServer getServer() {
@@ -1108,8 +958,16 @@ public final class CraftServer implements Server {
     @Override
     public World getWorld(String name) {
         Validate.notNull(name, "Name cannot be null");
-
-        return worlds.get(name.toLowerCase(java.util.Locale.ENGLISH));
+        World world = worlds.get(name.toLowerCase(java.util.Locale.ENGLISH));
+        if (world == null && name.toUpperCase().startsWith("DIM")) {
+            int dimension;
+            try {
+                dimension = Integer.valueOf(name.substring(3));
+                WorldServer worldserver = console.getWorld(dimension);
+                if (worldserver != null) world = worldserver.getWorld();
+            } catch (NumberFormatException e) {}
+        }
+        return world;
     }
 
     @Override
@@ -1539,6 +1397,9 @@ public final class CraftServer implements Server {
 
     @Override
     public File getWorldContainer() {
+        if (DimensionManager.getWorld(0) != null) {
+            return ((SaveHandler)DimensionManager.getWorld(0).getSaveHandler()).getWorldDirectory();
+        }
         if (this.getServer().anvilFile != null) {
             return this.getServer().anvilFile;
         }
@@ -1668,6 +1529,11 @@ public final class CraftServer implements Server {
     }
 
     public List<String> tabComplete(net.minecraft.command.ICommandSender sender, String message, BlockPos pos, boolean forceCommand) {
+        // Spigot Start
+        if ((org.spigotmc.SpigotConfig.tabComplete < 0 || message.length() <= org.spigotmc.SpigotConfig.tabComplete) && !message.contains(" ")) {
+            return ImmutableList.of();
+        }
+        // Spigot End
         if (!(sender instanceof EntityPlayerMP)) {
             return ImmutableList.of();
         }
@@ -1833,6 +1699,14 @@ public final class CraftServer implements Server {
         return CraftMagicNumbers.INSTANCE;
     }
 
+    @Override
+    public double[] getTPS() {
+        return new double[] {
+                MinecraftServer.getServerInst().tps1.getAverage(),
+                MinecraftServer.getServerInst().tps5.getAverage(),
+                MinecraftServer.getServerInst().tps15.getAverage()
+        };
+    }
     private final Spigot spigot = new Spigot()
     {
 
