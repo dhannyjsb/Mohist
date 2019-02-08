@@ -2,6 +2,7 @@ package cn.pfcraft.server;
 
 import cn.pfcraft.server.command.defaultcomamnd.Commandmohist;
 import cn.pfcraft.server.command.defaultcomamnd.Commandunban;
+import cn.pfcraft.server.command.defaultcomamnd.VersionCommand;
 import com.google.common.base.Throwables;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.command.Command;
@@ -45,6 +46,7 @@ public class MohistConfig {
         commands = new HashMap<String, Command>();
         commands.put("mohist", new Commandmohist("mohist"));
         commands.put("unban", new Commandunban("unban"));
+        commands.put("version", new VersionCommand("version"));
 
         version = getInt("config-version", 1);
         set("config-version", 1);
