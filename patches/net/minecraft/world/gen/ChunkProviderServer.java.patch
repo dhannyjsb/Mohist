@@ -13,7 +13,11 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.entity.EnumCreatureType;
-@@ -26,14 +20,41 @@
+@@ -23,17 +17,45 @@
+ import net.minecraft.world.biome.Biome;
+ import net.minecraft.world.chunk.Chunk;
+ import net.minecraft.world.chunk.IChunkProvider;
++import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  import net.minecraft.world.chunk.storage.IChunkLoader;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -57,7 +61,7 @@
      public final WorldServer world;
      private final Set<Long> loadingChunks = com.google.common.collect.Sets.newHashSet();
  
-@@ -69,11 +90,21 @@
+@@ -69,11 +91,21 @@
          }
      }
  
@@ -80,7 +84,7 @@
  
          if (chunk != null)
          {
-@@ -92,7 +123,7 @@
+@@ -92,7 +124,7 @@
      @Nullable
      public Chunk loadChunk(int x, int z, @Nullable Runnable runnable)
      {
@@ -89,7 +93,7 @@
          if (chunk == null)
          {
              long pos = ChunkPos.asLong(x, z);
-@@ -106,7 +137,7 @@
+@@ -106,7 +138,7 @@
                  {
                  this.id2ChunkMap.put(ChunkPos.asLong(x, z), chunk);
                  chunk.onLoad();
@@ -98,7 +102,7 @@
                  }
  
                  loadingChunks.remove(pos);
-@@ -154,7 +185,7 @@
+@@ -154,7 +186,7 @@
  
              this.id2ChunkMap.put(i, chunk);
              chunk.onLoad();
@@ -107,7 +111,7 @@
          }
  
          return chunk;
-@@ -207,7 +238,7 @@
+@@ -207,13 +239,21 @@
          }
          catch (MinecraftException minecraftexception)
          {
@@ -116,7 +120,31 @@
          }
      }
  
-@@ -262,28 +293,54 @@
+     public boolean saveChunks(boolean all)
+     {
+         int i = 0;
++        // Paper start
++        AnvilChunkLoader chunkLoader = (AnvilChunkLoader) world.getChunkProvider().chunkLoader;
++        int queueSize = chunkLoader.getQueueSize();
++        if (queueSize > world.paperConfig.queueSizeAutoSaveThreshold){
++            return false;
++        }
++        int autoSaveLimit = world.paperConfig.maxAutoSaveChunksPerTick;
++        // Paper end
+         List<Chunk> list = Lists.newArrayList(this.id2ChunkMap.values());
+ 
+         for (int j = 0; j < list.size(); ++j)
+@@ -231,8 +271,7 @@
+                 chunk.setModified(false);
+                 ++i;
+ 
+-                if (i == 24 && !all)
+-                {
++                if (!all && i >= autoSaveLimit) { // Spigot - // Paper - Incremental Auto Save - cap max per tick
+                     return false;
+                 }
+             }
+@@ -262,28 +301,54 @@
                  for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
                  {
                      Long olong = iterator.next();

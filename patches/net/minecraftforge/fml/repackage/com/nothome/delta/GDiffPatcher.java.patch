@@ -77,13 +77,7 @@
  /**
   * This class patches an input file with a GDIFF patch file.
   *
-@@ -239,10 +233,8 @@
-             patcher.patch(sourceFile, patchFile, outputFile);
- 
-             System.out.println("finished patching file");
--
-         } catch (Exception ioe) {                                   //gls031504a
-             System.err.println("error while patching: " + ioe);
+@@ -245,4 +239,3 @@
          }
      }
  }

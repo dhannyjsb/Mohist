@@ -36,7 +36,15 @@
  public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -79,14 +78,14 @@
+@@ -43,6 +42,7 @@
+     private final DataFixer fixer;
+     private boolean flushing;
+ 
++
+     public AnvilChunkLoader(File chunkSaveLocationIn, DataFixer dataFixerIn)
+     {
+         this.chunkSaveLocation = chunkSaveLocationIn;
+@@ -79,14 +79,14 @@
  
          if (nbttagcompound == null)
          {
@@ -54,7 +62,7 @@
          }
  
          return this.checkedReadChunkFromNBT__Async(worldIn, x, z, nbttagcompound);
-@@ -237,9 +236,10 @@
+@@ -237,9 +237,10 @@
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -68,7 +76,7 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -366,7 +366,7 @@
+@@ -366,7 +367,7 @@
                  }
                  catch (Exception e)
                  {
@@ -77,7 +85,7 @@
                              entity.getClass().getName(), e);
                  }
              }
-@@ -384,7 +384,7 @@
+@@ -384,7 +385,7 @@
              }
              catch (Exception e)
              {
@@ -86,7 +94,7 @@
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +421,7 @@
+@@ -421,7 +422,7 @@
              }
              catch (Exception exception)
              {
@@ -95,7 +103,7 @@
              }
          }
      }
-@@ -485,7 +485,6 @@
+@@ -485,7 +486,6 @@
              readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
@@ -103,7 +111,7 @@
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +497,6 @@
+@@ -498,7 +498,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
@@ -111,7 +119,7 @@
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -608,8 +606,11 @@
+@@ -608,8 +607,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {

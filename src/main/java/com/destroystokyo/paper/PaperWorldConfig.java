@@ -310,4 +310,31 @@ public class PaperWorldConfig {
             log("Bed Search Radius: " + bedSearchRadius);
         }
     }
+
+    public int queueSizeAutoSaveThreshold = 50;
+    private void queueSizeAutoSaveThreshold() {
+        queueSizeAutoSaveThreshold = getInt("save-queue-limit-for-auto-save", 50);
+    }
+
+    public boolean autoReplenishLootables;
+    public boolean restrictPlayerReloot;
+    public boolean changeLootTableSeedOnFill;
+    public int maxLootableRefills;
+    public int lootableRegenMin;
+    public int lootableRegenMax;
+    private void enhancedLootables() {
+        autoReplenishLootables = getBoolean("lootables.auto-replenish", false);
+        restrictPlayerReloot = getBoolean("lootables.restrict-player-reloot", true);
+        changeLootTableSeedOnFill = getBoolean("lootables.reset-seed-on-fill", true);
+        maxLootableRefills = getInt("lootables.max-refills", -1);
+        lootableRegenMin = PaperConfig.getSeconds(getString("lootables.refresh-min", "12h"));
+        lootableRegenMax = PaperConfig.getSeconds(getString("lootables.refresh-max", "2d"));
+        if (autoReplenishLootables) {
+            log("Lootables: Replenishing every " +
+                    PaperConfig.timeSummary(lootableRegenMin) + " to " +
+                    PaperConfig.timeSummary(lootableRegenMax) +
+                    (restrictPlayerReloot ? " (restricting reloot)" : "")
+            );
+        }
+    }
 }

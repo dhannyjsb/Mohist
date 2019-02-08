@@ -8,7 +8,12 @@
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
-@@ -33,4 +33,3 @@
+@@ -28,9 +28,7 @@
+     /** Run before the specified rendering context.
+      */
+     void beforeRenderContext();
+-
+     /** Run after the specified rendering context.
       */
      void afterRenderContext();
  }

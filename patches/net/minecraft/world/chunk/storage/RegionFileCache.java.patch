@@ -65,7 +65,7 @@
      }
  
 +    @Nullable
-+    public static synchronized NBTTagCompound getChunkInputStreamCB(File worldDir, int chunkX, int chunkZ) throws IOException
++    public static NBTTagCompound getChunkInputStreamCB(File worldDir, int chunkX, int chunkZ) throws IOException
 +    {
 +        RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
 +        DataInputStream datainputstream = regionfile.getChunkDataInputStream(chunkX & 31, chunkZ & 31);
@@ -83,7 +83,7 @@
          return regionfile.getChunkDataOutputStream(chunkX & 31, chunkZ & 31);
      }
  
-+    public static synchronized void getChunkOutputStream(File worldDir, int chunkX, int chunkZ, NBTTagCompound nbttagcompound) throws IOException
++    public static void getChunkOutputStream(File worldDir, int chunkX, int chunkZ, NBTTagCompound nbttagcompound) throws IOException
 +    {
 +        RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
 +        DataOutputStream dataoutputstream = regionfile.getChunkDataOutputStream(chunkX & 31, chunkZ & 31);
