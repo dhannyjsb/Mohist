@@ -58,6 +58,9 @@ repositories {
         name 'prok'
         url 'https://repo.prok.pw/'
     }
+    flatDir {
+        dirs 'src/main/resources'
+    }
 }
 
 configurations{
@@ -67,7 +70,7 @@ configurations{
 
 dependencies {
     libraries 'org.avaje:ebean:2.8.1'
-    libraries files('src/main/resources/bukkit-1.12.2-R0.1-SNAPSHOT.jar')
+    libraries fileTree(dir:'src/main/resources',include:['*.jar'])
 }
 
 jar{
