@@ -1,4 +1,4 @@
-# Mohist
+# Mohist Made in China
 
 ##The project will not be maintained for a long time, we are waiting for Forge 1.13, when it is released, Mohist-1.12.2 will stop development.
 
