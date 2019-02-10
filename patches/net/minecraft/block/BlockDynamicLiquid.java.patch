@@ -107,8 +107,8 @@
      }
 +
 +    /**
-+     +     * Paper - Get flow speed. Throttle if its water and flowing adjacent to lava
-+     +     */
++     * Paper - Get flow speed. Throttle if its water and flowing adjacent to lava
++     */
 +    public int getFlowSpeed(World world, BlockPos blockposition) {
 +        if (this.blockMaterial == Material.LAVA) {
 +            return world.provider.isSkyMissing() ? world.paperConfig.lavaFlowSpeedNether : world.paperConfig.lavaFlowSpeedNormal;
