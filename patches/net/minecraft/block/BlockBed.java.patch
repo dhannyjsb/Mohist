@@ -8,7 +8,7 @@
  import net.minecraft.block.material.EnumPushReaction;
  import net.minecraft.block.material.MapColor;
  import net.minecraft.block.material.Material;
-@@ -14,7 +12,6 @@
+@@ -14,20 +12,13 @@
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.EntityLivingBase;
  import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,21 @@
  import net.minecraft.init.Items;
  import net.minecraft.item.EnumDyeColor;
  import net.minecraft.item.Item;
-@@ -36,22 +33,25 @@
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.tileentity.TileEntity;
+ import net.minecraft.tileentity.TileEntityBed;
+-import net.minecraft.util.BlockRenderLayer;
+-import net.minecraft.util.EnumBlockRenderType;
+-import net.minecraft.util.EnumFacing;
+-import net.minecraft.util.EnumHand;
+-import net.minecraft.util.IStringSerializable;
+-import net.minecraft.util.Mirror;
+-import net.minecraft.util.Rotation;
++import net.minecraft.util.*;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.text.TextComponentTranslation;
+@@ -36,22 +27,25 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -45,7 +59,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -73,7 +73,7 @@
+@@ -73,7 +67,7 @@
          }
          else
          {
@@ -54,7 +68,7 @@
              {
                  pos = pos.offset((EnumFacing)state.getValue(FACING));
                  state = worldIn.getBlockState(pos);
-@@ -194,7 +194,7 @@
+@@ -194,7 +188,7 @@
      {
          EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
  
@@ -63,7 +77,7 @@
          {
              if (worldIn.getBlockState(pos.offset(enumfacing)).getBlock() != this)
              {
-@@ -214,7 +214,7 @@
+@@ -214,7 +208,7 @@
  
      public Item getItemDropped(IBlockState state, Random rand, int fortune)
      {
@@ -72,7 +86,7 @@
      }
  
      public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-@@ -229,9 +229,51 @@
+@@ -229,9 +223,51 @@
      }
  
      @Nullable
@@ -125,7 +139,7 @@
          int i = pos.getX();
          int j = pos.getY();
          int k = pos.getZ();
-@@ -262,9 +304,13 @@
+@@ -262,9 +298,13 @@
              }
          }
  
@@ -140,7 +154,7 @@
      protected static boolean hasRoomForPlayer(World worldIn, BlockPos pos)
      {
          return worldIn.getBlockState(pos.down()).isTopSolid() && !worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
-@@ -272,7 +318,7 @@
+@@ -272,7 +312,7 @@
  
      public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
      {
@@ -149,7 +163,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
              EnumDyeColor enumdyecolor = tileentity instanceof TileEntityBed ? ((TileEntityBed)tileentity).getColor() : EnumDyeColor.RED;
-@@ -300,7 +346,7 @@
+@@ -300,7 +340,7 @@
      {
          BlockPos blockpos = pos;
  
@@ -158,7 +172,7 @@
          {
              blockpos = pos.offset((EnumFacing)state.getValue(FACING));
          }
-@@ -312,7 +358,7 @@
+@@ -312,7 +352,7 @@
  
      public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
      {
@@ -167,7 +181,7 @@
          {
              BlockPos blockpos = pos.offset((EnumFacing)state.getValue(FACING));
  
-@@ -325,7 +371,7 @@
+@@ -325,7 +365,7 @@
  
      public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
      {
@@ -176,7 +190,7 @@
          {
              TileEntityBed tileentitybed = (TileEntityBed)te;
              ItemStack itemstack = tileentitybed.getItemStack();
-@@ -346,12 +392,12 @@
+@@ -346,12 +386,12 @@
      public IBlockState getStateFromMeta(int meta)
      {
          EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
@@ -191,7 +205,7 @@
          {
              IBlockState iblockstate = worldIn.getBlockState(pos.offset((EnumFacing)state.getValue(FACING)));
  
-@@ -379,7 +425,7 @@
+@@ -379,7 +419,7 @@
          int i = 0;
          i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
  

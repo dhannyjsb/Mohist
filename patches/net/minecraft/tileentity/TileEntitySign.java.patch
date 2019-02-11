@@ -1,16 +1,13 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntitySign.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntitySign.java
-@@ -1,8 +1,8 @@
+@@ -1,6 +1,5 @@
  package net.minecraft.tileentity;
  
 -import javax.annotation.Nullable;
  import net.minecraft.command.CommandException;
  import net.minecraft.command.CommandResultStats;
-+import net.minecraft.command.ICommandListener;
  import net.minecraft.command.ICommandSender;
- import net.minecraft.entity.Entity;
- import net.minecraft.entity.player.EntityPlayer;
-@@ -20,11 +20,13 @@
+@@ -20,11 +19,13 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -25,7 +22,7 @@
      private EntityPlayer player;
      private final CommandResultStats stats = new CommandResultStats();
  
-@@ -38,6 +40,10 @@
+@@ -38,6 +39,10 @@
              compound.setString("Text" + (i + 1), s);
          }
  
@@ -36,7 +33,7 @@
          this.stats.writeStatsToNBT(compound);
          return compound;
      }
-@@ -51,8 +57,7 @@
+@@ -51,8 +56,7 @@
      {
          this.isEditable = false;
          super.readFromNBT(compound);
@@ -46,7 +43,7 @@
              public String getName()
              {
                  return "Sign";
-@@ -79,19 +84,38 @@
+@@ -79,19 +83,38 @@
              }
          };
  
@@ -91,7 +88,7 @@
          }
  
          this.stats.readStatsFromNBT(compound);
-@@ -141,8 +165,7 @@
+@@ -141,8 +164,7 @@
  
      public boolean executeCommand(final EntityPlayer playerIn)
      {
@@ -101,7 +98,7 @@
              public String getName()
              {
                  return playerIn.getName();
-@@ -201,7 +224,12 @@
+@@ -201,7 +223,12 @@
  
                  if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)
                  {
@@ -115,7 +112,7 @@
                  }
              }
          }
-@@ -213,4 +241,6 @@
+@@ -213,4 +240,6 @@
      {
          return this.stats;
      }

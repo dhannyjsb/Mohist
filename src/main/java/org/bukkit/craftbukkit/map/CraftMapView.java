@@ -8,11 +8,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 public final class CraftMapView implements MapView {

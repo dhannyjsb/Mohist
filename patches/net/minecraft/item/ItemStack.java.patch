@@ -12,7 +12,20 @@
  import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.block.Block;
  import net.minecraft.block.state.IBlockState;
-@@ -49,14 +44,22 @@
+@@ -31,11 +26,7 @@
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.nbt.NBTTagList;
+ import net.minecraft.stats.StatList;
+-import net.minecraft.util.ActionResult;
+-import net.minecraft.util.EnumActionResult;
+-import net.minecraft.util.EnumFacing;
+-import net.minecraft.util.EnumHand;
+-import net.minecraft.util.ResourceLocation;
++import net.minecraft.util.*;
+ import net.minecraft.util.datafix.DataFixer;
+ import net.minecraft.util.datafix.FixTypes;
+ import net.minecraft.util.datafix.walkers.BlockEntityTag;
+@@ -49,14 +40,22 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,7 +50,7 @@
      private NBTTagCompound stackTagCompound;
      private boolean isEmpty;
      int itemDamage;
-@@ -119,47 +122,45 @@
+@@ -119,47 +118,45 @@
  
      public ItemStack(NBTTagCompound compound)
      {
@@ -107,7 +120,7 @@
  
      public static void registerFixes(DataFixer fixer)
      {
-@@ -231,7 +232,8 @@
+@@ -231,7 +228,8 @@
  
          if (this.stackTagCompound != null)
          {
@@ -117,7 +130,7 @@
          }
  
          if (this.capabilities != null)
-@@ -291,6 +293,26 @@
+@@ -291,6 +289,26 @@
  
      public void setItemDamage(int meta)
      {
@@ -144,7 +157,7 @@
          getItem().setDamage(this, meta);
      }
  
-@@ -322,6 +344,18 @@
+@@ -322,6 +340,18 @@
  
                  amount -= j;
  
@@ -163,7 +176,7 @@
                  if (amount <= 0)
                  {
                      return false;
-@@ -347,6 +381,11 @@
+@@ -347,6 +377,11 @@
                  if (this.attemptDamageItem(amount, entityIn.getRNG(), entityIn instanceof EntityPlayerMP ? (EntityPlayerMP)entityIn : null))
                  {
                      entityIn.renderBrokenItemStack(this);
@@ -175,7 +188,7 @@
                      this.shrink(1);
  
                      if (entityIn instanceof EntityPlayer)
-@@ -532,7 +571,7 @@
+@@ -532,7 +567,7 @@
          playerIn.addStat(StatList.getCraftStats(this.item), amount);
          this.getItem().onCreated(this, worldIn, playerIn);
      }
@@ -184,7 +197,7 @@
      public int getMaxItemUseDuration()
      {
          return this.getItem().getMaxItemUseDuration(this);
-@@ -592,6 +631,18 @@
+@@ -592,6 +627,18 @@
          return this.stackTagCompound != null ? this.stackTagCompound.getTagList("ench", 10) : new NBTTagList();
      }
  
@@ -203,7 +216,7 @@
      public void setTagCompound(@Nullable NBTTagCompound nbt)
      {
          this.stackTagCompound = nbt;
-@@ -982,6 +1033,14 @@
+@@ -982,6 +1029,14 @@
  
      public void setRepairCost(int cost)
      {
@@ -218,7 +231,7 @@
          if (!this.hasTagCompound())
          {
              this.stackTagCompound = new NBTTagCompound();
-@@ -1042,6 +1101,14 @@
+@@ -1042,6 +1097,14 @@
          nbttaglist.appendTag(nbttagcompound);
      }
  
@@ -233,7 +246,7 @@
      public ITextComponent getTextComponent()
      {
          TextComponentString textcomponentstring = new TextComponentString(this.getDisplayName());
-@@ -1279,4 +1346,16 @@
+@@ -1279,4 +1342,16 @@
      {
          return this.isEmpty() || this.getItem().doesSneakBypassUse(this, world, pos, player);
      }

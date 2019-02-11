@@ -1,13 +1,24 @@
 --- ../src-base/minecraft/net/minecraftforge/server/command/CommandTps.java
 +++ ../src-work/minecraft/net/minecraftforge/server/command/CommandTps.java
-@@ -26,6 +26,7 @@
+@@ -19,15 +19,16 @@
+ 
+ package net.minecraftforge.server.command;
+ 
+-import java.text.DecimalFormat;
+-
+ import net.minecraft.command.CommandBase;
+ import net.minecraft.command.CommandException;
  import net.minecraft.command.ICommandSender;
  import net.minecraft.server.MinecraftServer;
  import net.minecraft.world.DimensionType;
 +import net.minecraft.world.WorldServer;
  import net.minecraftforge.common.DimensionManager;
  
++import java.text.DecimalFormat;
++
  class CommandTps extends CommandBase
+ {
+     private static final DecimalFormat TIME_FORMATTER = new DecimalFormat("########0.000");
 @@ -90,13 +91,15 @@
      private static String getDimensionPrefix(int dimId)
      {

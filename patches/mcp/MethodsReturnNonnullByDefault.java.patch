@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/mcp/MethodsReturnNonnullByDefault.java
++++ ../src-work/minecraft/mcp/MethodsReturnNonnullByDefault.java
+@@ -1,12 +1,12 @@
+ package mcp;
++
+ import javax.annotation.Nonnull;
++import javax.annotation.meta.TypeQualifierDefault;
+ import java.lang.annotation.Documented;
+ import java.lang.annotation.ElementType;
+ import java.lang.annotation.Retention;
+ import java.lang.annotation.RetentionPolicy;
+ 
+-import javax.annotation.meta.TypeQualifierDefault;
+-
+ /**
+  * This annotation can be applied to a package, class or method to indicate that
+  * the method in that element are nonnull by default unless there is:

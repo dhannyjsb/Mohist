@@ -9,11 +9,3 @@
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
-@@ -19,6 +20,7 @@
- 
- package net.minecraftforge.fluids;
- 
-+import cn.pfcraft.server.Mohist;
- import net.minecraft.item.ItemStack;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraftforge.common.util.Constants;

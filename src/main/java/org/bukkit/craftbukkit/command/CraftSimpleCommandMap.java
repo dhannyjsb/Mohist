@@ -3,11 +3,7 @@ package org.bukkit.craftbukkit.command;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.bukkit.Server;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.*;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 import java.util.Arrays;

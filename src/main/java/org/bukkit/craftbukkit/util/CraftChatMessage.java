@@ -1,11 +1,7 @@
 package org.bukkit.craftbukkit.util;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import org.bukkit.ChatColor;
 

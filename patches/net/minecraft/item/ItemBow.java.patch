@@ -39,7 +39,13 @@
                  }
              }
          });
-@@ -111,6 +110,7 @@
+@@ -106,11 +105,12 @@
+                 if ((double)f >= 0.1D)
+                 {
+                     boolean flag1 = entityplayer.capabilities.isCreativeMode || (itemstack.getItem() instanceof ItemArrow && ((ItemArrow) itemstack.getItem()).isInfinite(itemstack, stack, entityplayer));
+-
++                    boolean consumeArrow = true; // Paper
+                     if (!worldIn.isRemote)
                      {
                          ItemArrow itemarrow = (ItemArrow)(itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.ARROW);
                          EntityArrow entityarrow = itemarrow.createArrow(worldIn, itemstack, entityplayer);
@@ -47,7 +53,7 @@
                          entityarrow.shoot(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, f * 3.0F, 1.0F);
  
                          if (f == 1.0F)
-@@ -134,8 +134,19 @@
+@@ -134,22 +134,41 @@
  
                          if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, stack) > 0)
                          {
@@ -60,7 +66,7 @@
 +                                entityarrow.setFire(event.getDuration());
 +                            }
                          }
-+                        org.bukkit.event.entity.EntityShootBowEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityShootBowEvent(entityplayer, itemstack, entityarrow, f);
++                        org.bukkit.event.entity.EntityShootBowEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityShootBowEvent(entityplayer, stack, itemstack, entityarrow, f);
 +                        if (event.isCancelled()) {
 +                            event.getProjectile().remove();
 +                            return;
@@ -68,7 +74,10 @@
  
                          stack.damageItem(1, entityplayer);
  
-@@ -144,7 +155,15 @@
+-                        if (flag1 || entityplayer.capabilities.isCreativeMode && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW))
+-                        {
++                        consumeArrow = event.getConsumeArrow(); // Paper
++                        if (!consumeArrow || flag1 || ( entityplayer.capabilities.isCreativeMode && ((itemstack.getItem() == Items.SPECTRAL_ARROW) || (itemstack.getItem() == Items.TIPPED_ARROW)))) { // Paper - add !consumeArrow
                              entityarrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
                          }
  
@@ -85,6 +94,12 @@
                      }
  
                      worldIn.playSound((EntityPlayer)null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+ 
+-                    if (!flag1 && !entityplayer.capabilities.isCreativeMode)
++                    if (!flag1 && !entityplayer.capabilities.isCreativeMode && consumeArrow) // Paper
+                     {
+                         itemstack.shrink(1);
+ 
 @@ -211,4 +230,9 @@
      {
          return 1;

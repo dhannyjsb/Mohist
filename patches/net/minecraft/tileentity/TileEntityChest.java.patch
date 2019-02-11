@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntityChest.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntityChest.java
-@@ -1,10 +1,10 @@
+@@ -1,29 +1,30 @@
  package net.minecraft.tileentity;
  
 -import javax.annotation.Nullable;
@@ -12,18 +12,19 @@
  import net.minecraft.init.SoundEvents;
  import net.minecraft.inventory.Container;
  import net.minecraft.inventory.ContainerChest;
-@@ -14,16 +14,21 @@
+-import net.minecraft.inventory.IInventory;
+-import net.minecraft.inventory.InventoryLargeChest;
+ import net.minecraft.inventory.ItemStackHelper;
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.util.EnumFacing;
 -import net.minecraft.util.ITickable;
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.SoundCategory;
-+import net.minecraft.util.SoundEvent;
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
  import net.minecraft.util.datafix.walkers.ItemStackDataLists;
- import net.minecraft.util.math.AxisAlignedBB;
+-import net.minecraft.util.math.AxisAlignedBB;
  import net.minecraft.util.math.BlockPos;
 +import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 +import org.bukkit.entity.HumanEntity;
@@ -36,7 +37,7 @@
  {
      private NonNullList<ItemStack> chestContents = NonNullList.<ItemStack>withSize(27, ItemStack.EMPTY);
      public boolean adjacentChestChecked;
-@@ -36,7 +41,30 @@
+@@ -36,7 +37,30 @@
      public int numPlayersUsing;
      private int ticksSinceSync;
      private BlockChest.Type cachedChestType;
@@ -68,7 +69,7 @@
      public TileEntityChest()
      {
      }
-@@ -109,7 +137,7 @@
+@@ -109,7 +133,7 @@
  
      public int getInventoryStackLimit()
      {
@@ -77,7 +78,7 @@
      }
  
      public void updateContainingBlockInfo()
-@@ -212,6 +240,7 @@
+@@ -212,6 +236,7 @@
  
      public void update()
      {
@@ -85,7 +86,7 @@
          this.checkForAdjacentChests();
          int i = this.pos.getX();
          int j = this.pos.getY();
-@@ -231,7 +260,7 @@
+@@ -231,7 +256,7 @@
  
                      if (iinventory == this || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest)iinventory).isPartOfLargeChest(this))
                      {
@@ -94,7 +95,7 @@
                      }
                  }
              }
-@@ -301,6 +330,7 @@
+@@ -301,6 +326,7 @@
                  this.lidAngle = 0.0F;
              }
          }
@@ -102,7 +103,7 @@
      }
  
      public boolean receiveClientEvent(int id, int type)
-@@ -325,8 +355,40 @@
+@@ -325,8 +351,40 @@
                  this.numPlayersUsing = 0;
              }
  
@@ -143,7 +144,7 @@
              this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), false);
  
              if (this.getChestType() == BlockChest.Type.TRAP)
-@@ -341,6 +403,33 @@
+@@ -341,6 +399,33 @@
          if (!player.isSpectator() && this.getBlockType() instanceof BlockChest)
          {
              --this.numPlayersUsing;
@@ -177,7 +178,7 @@
              this.world.addBlockEvent(this.pos, this.getBlockType(), 1, this.numPlayersUsing);
              this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), false);
  
-@@ -356,7 +445,7 @@
+@@ -356,7 +441,7 @@
      @SuppressWarnings("unchecked")
      @Override
      @Nullable

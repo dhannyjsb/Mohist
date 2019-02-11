@@ -24,11 +24,10 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.network.NetworkManager;
  import net.minecraft.network.login.INetHandlerLoginServer;
-@@ -33,7 +23,22 @@
+@@ -33,7 +23,21 @@
  import org.apache.commons.lang3.Validate;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-+import org.bukkit.Bukkit;
 +import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
  
 +import javax.annotation.Nullable;
@@ -47,7 +46,7 @@
  public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
  {
      private static final AtomicInteger AUTHENTICATOR_THREAD_ID = new AtomicInteger(0);
-@@ -42,13 +47,15 @@
+@@ -42,13 +46,17 @@
      private final byte[] verifyToken = new byte[4];
      private final MinecraftServer server;
      public final NetworkManager networkManager;
@@ -55,6 +54,8 @@
 +    private LoginState currentLoginState = LoginState.HELLO;
      private int connectionTimer;
      private GameProfile loginGameProfile;
++    private void setGameProfile(GameProfile profile) { loginGameProfile = profile; }
++    private GameProfile getGameProfile() { return loginGameProfile; } // Paper - OBFHELPER
      private final String serverId = "";
      private SecretKey secretKey;
      private EntityPlayerMP player;
@@ -64,7 +65,7 @@
      public NetHandlerLoginServer(MinecraftServer serverIn, NetworkManager networkManagerIn)
      {
          this.server = serverIn;
-@@ -58,17 +65,27 @@
+@@ -58,17 +66,27 @@
  
      public void update()
      {
@@ -96,7 +97,7 @@
                  net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.fmlServerHandshake(this.server.getPlayerList(), this.networkManager, this.player);
                  this.player = null;
              }
-@@ -80,6 +97,19 @@
+@@ -80,6 +98,19 @@
          }
      }
  
@@ -116,7 +117,7 @@
      public void disconnect(ITextComponent reason)
      {
          try
-@@ -94,22 +124,54 @@
+@@ -94,22 +125,54 @@
          }
      }
  
@@ -175,7 +176,7 @@
  
              if (this.server.getNetworkCompressionThreshold() >= 0 && !this.networkManager.isLocalChannel())
              {
-@@ -127,12 +189,12 @@
+@@ -127,12 +190,12 @@
  
              if (entityplayermp != null)
              {
@@ -191,7 +192,7 @@
              }
          }
      }
-@@ -149,23 +211,36 @@
+@@ -149,23 +212,36 @@
  
      public void processLoginStart(CPacketLoginStart packetIn)
      {
@@ -232,7 +233,7 @@
          PrivateKey privatekey = this.server.getKeyPair().getPrivate();
  
          if (!Arrays.equals(this.verifyToken, packetIn.getVerifyToken(privatekey)))
-@@ -175,7 +250,7 @@
+@@ -175,7 +251,7 @@
          else
          {
              this.secretKey = packetIn.getSecretKey(privatekey);
@@ -241,7 +242,7 @@
              this.networkManager.enableEncryption(this.secretKey);
              (new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + AUTHENTICATOR_THREAD_ID.incrementAndGet())
              {
-@@ -190,14 +265,18 @@
+@@ -190,14 +266,18 @@
  
                          if (NetHandlerLoginServer.this.loginGameProfile != null)
                          {
@@ -263,7 +264,7 @@
                          }
                          else
                          {
-@@ -211,13 +290,19 @@
+@@ -211,13 +291,19 @@
                          {
                              NetHandlerLoginServer.LOGGER.warn("Authentication servers are down but will let them in anyway!");
                              NetHandlerLoginServer.this.loginGameProfile = NetHandlerLoginServer.this.getOfflineProfile(gameprofile);
@@ -284,7 +285,7 @@
                      }
                  }
                  @Nullable
-@@ -230,6 +315,36 @@
+@@ -230,6 +316,36 @@
          }
      }
  
@@ -297,11 +298,11 @@
 +            final org.bukkit.craftbukkit.CraftServer server = NetHandlerLoginServer.this.server.server;
 +
 +            // Paper start
-+            PlayerProfile profile = Bukkit.createProfile(uniqueId, playerName);
++            PlayerProfile profile = CraftPlayerProfile.asBukkitMirror(getGameProfile());
 +            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId, profile);
 +            server.getPluginManager().callEvent(asyncEvent); profile = asyncEvent.getPlayerProfile();
-+            profile.complete();
-+            loginGameProfile = CraftPlayerProfile.asAuthlibCopy(profile);
++            profile.complete(true);
++            setGameProfile(CraftPlayerProfile.asAuthlib(profile));
 +            playerName = loginGameProfile.getName();
 +            uniqueId = loginGameProfile.getId();
 +            // Paper end

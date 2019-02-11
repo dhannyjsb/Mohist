@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/ibxm/ScreamTracker3.java
++++ ../src-work/minecraft/ibxm/ScreamTracker3.java
+@@ -1,7 +1,10 @@
+ 
+ package ibxm;
+ 
+-import java.io.*;
++import java.io.DataInput;
++import java.io.EOFException;
++import java.io.IOException;
++import java.io.UnsupportedEncodingException;
+ 
+ public class ScreamTracker3 {
+ 	private static final int[] effect_map = new int[] {

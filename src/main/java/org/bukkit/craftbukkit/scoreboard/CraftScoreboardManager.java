@@ -3,12 +3,7 @@ package org.bukkit.craftbukkit.scoreboard;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketScoreboardObjective;
 import net.minecraft.network.play.server.SPacketTeams;
-import net.minecraft.scoreboard.IScoreCriteria;
-import net.minecraft.scoreboard.Score;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.scoreboard.ServerScoreboard;
+import net.minecraft.scoreboard.*;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -16,11 +11,7 @@ import org.bukkit.craftbukkit.util.WeakCollection;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public final class CraftScoreboardManager implements ScoreboardManager {
     private final CraftScoreboard mainScoreboard;

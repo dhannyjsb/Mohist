@@ -1,0 +1,13 @@
+--- ../src-base/minecraft/ibxm/ProTracker.java
++++ ../src-work/minecraft/ibxm/ProTracker.java
+@@ -1,6 +1,9 @@
+ package ibxm;
+ 
+-import java.io.*;
++import java.io.DataInput;
++import java.io.EOFException;
++import java.io.IOException;
++import java.io.UnsupportedEncodingException;
+ 
+ public class ProTracker {
+ 	public static boolean is_mod( byte[] header_1084_bytes ) {

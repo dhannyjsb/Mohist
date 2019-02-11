@@ -31,10 +31,16 @@
  import net.minecraft.server.management.PlayerProfileCache;
  import net.minecraft.server.management.PreYggdrasilConverter;
  import net.minecraft.tileentity.TileEntitySkull;
-@@ -43,30 +30,46 @@
- import net.minecraft.world.World;
- import net.minecraft.world.WorldSettings;
- import net.minecraft.world.WorldType;
+@@ -38,35 +25,47 @@
+ import net.minecraft.util.datafix.DataFixer;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
+-import net.minecraft.world.EnumDifficulty;
+-import net.minecraft.world.GameType;
+-import net.minecraft.world.World;
+-import net.minecraft.world.WorldSettings;
+-import net.minecraft.world.WorldType;
++import net.minecraft.world.*;
 +import net.minecraft.world.chunk.storage.AnvilSaveConverter;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -84,7 +90,7 @@
          Thread thread = new Thread("Server Infinisleeper")
          {
              {
-@@ -125,7 +128,7 @@
+@@ -125,7 +124,7 @@
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStart(this);
  
          LOGGER.info("Loading properties");
@@ -93,7 +99,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -181,10 +184,27 @@
+@@ -181,10 +180,27 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -121,7 +127,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,12 +216,20 @@
+@@ -196,12 +212,20 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -143,7 +149,7 @@
                  LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
              }
  
-@@ -217,7 +245,7 @@
+@@ -217,7 +241,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -152,7 +158,7 @@
                  long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -271,6 +299,7 @@
+@@ -271,6 +295,7 @@
                  long i1 = System.nanoTime() - j;
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
                  LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
@@ -160,7 +166,7 @@
                  this.currentTime = getCurrentTimeMillis();
  
                  if (this.settings.hasProperty("announce-player-achievements"))
-@@ -292,9 +321,28 @@
+@@ -292,9 +317,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -190,7 +196,7 @@
                  {
                      Thread thread1 = new Thread(new ServerHangWatchdog(this));
                      thread1.setName("Server Watchdog");
-@@ -427,11 +475,17 @@
+@@ -427,11 +471,17 @@
  
      public void executePendingCommands()
      {
@@ -212,7 +218,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -497,8 +551,8 @@
+@@ -497,8 +547,8 @@
  
      public void setGuiEnabled()
      {
@@ -223,7 +229,7 @@
      }
  
      public boolean getGuiEnabled()
-@@ -684,13 +738,65 @@
+@@ -684,13 +734,65 @@
  
      public String getPlugins()
      {

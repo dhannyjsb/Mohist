@@ -3,11 +3,7 @@ package org.bukkit.craftbukkit.inventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.crafting.IRecipe;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

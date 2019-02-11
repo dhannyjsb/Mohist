@@ -1,11 +1,7 @@
 package org.bukkit.craftbukkit.command;
 
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.CommandResultStats;
-import net.minecraft.command.EntitySelector;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
+import net.minecraft.command.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecartCommandBlock;
 import net.minecraft.server.MinecraftServer;
@@ -18,11 +14,7 @@ import net.minecraft.world.WorldServer;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.ProxiedCommandSender;
-import org.bukkit.command.RemoteConsoleCommandSender;
+import org.bukkit.command.*;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftMinecartCommand;

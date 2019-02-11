@@ -15,7 +15,22 @@
  import net.minecraft.entity.effect.EntityLightningBolt;
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.entity.projectile.EntityArrow;
-@@ -38,7 +37,16 @@
+@@ -21,13 +20,7 @@
+ import net.minecraft.network.datasync.DataParameter;
+ import net.minecraft.network.datasync.DataSerializers;
+ import net.minecraft.network.datasync.EntityDataManager;
+-import net.minecraft.util.DamageSource;
+-import net.minecraft.util.EnumActionResult;
+-import net.minecraft.util.EnumHand;
+-import net.minecraft.util.EnumHandSide;
+-import net.minecraft.util.EnumParticleTypes;
+-import net.minecraft.util.NonNullList;
+-import net.minecraft.util.SoundEvent;
++import net.minecraft.util.*;
+ import net.minecraft.util.datafix.DataFixer;
+ import net.minecraft.util.datafix.FixTypes;
+ import net.minecraft.util.datafix.walkers.ItemStackDataLists;
+@@ -38,7 +31,16 @@
  import net.minecraft.world.WorldServer;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,7 +47,7 @@
  public class EntityArmorStand extends EntityLivingBase
  {
      private static final Rotations DEFAULT_HEAD_ROTATION = new Rotations(0.0F, 0.0F, 0.0F);
-@@ -67,13 +75,16 @@
+@@ -67,13 +69,16 @@
      public long punchCooldown;
      private int disabledSlots;
      private boolean wasMarker;
@@ -55,7 +70,7 @@
      public EntityArmorStand(World worldIn)
      {
          super(worldIn);
-@@ -95,6 +106,13 @@
+@@ -95,6 +100,13 @@
          this.setPosition(posX, posY, posZ);
      }
  
@@ -69,7 +84,7 @@
      protected final void setSize(float width, float height)
      {
          double d0 = this.posX;
-@@ -457,6 +475,19 @@
+@@ -457,6 +469,19 @@
          {
              if (!itemstack.isEmpty() || (this.disabledSlots & 1 << p_184795_2_.getSlotIndex() + 16) == 0)
              {
@@ -89,7 +104,7 @@
                  if (player.capabilities.isCreativeMode && itemstack.isEmpty() && !p_184795_3_.isEmpty())
                  {
                      ItemStack itemstack2 = p_184795_3_.copy();
-@@ -484,11 +515,14 @@
+@@ -484,11 +509,14 @@
  
      public boolean attackEntityFrom(DamageSource source, float amount)
      {
@@ -105,7 +120,7 @@
                  return false;
              }
              else if (!this.isEntityInvulnerable(source) && !this.canInteract && !this.hasMarker())
-@@ -496,7 +530,7 @@
+@@ -496,7 +524,7 @@
                  if (source.isExplosion())
                  {
                      this.dropContents();
@@ -114,7 +129,7 @@
                      return false;
                  }
                  else if (DamageSource.IN_FIRE.equals(source))
-@@ -541,7 +575,7 @@
+@@ -541,7 +569,7 @@
                          {
                              this.playBrokenSound();
                              this.playParticles();
@@ -123,7 +138,7 @@
                              return false;
                          }
                          else
-@@ -557,7 +591,7 @@
+@@ -557,7 +585,7 @@
                              {
                                  this.dropBlock();
                                  this.playParticles();
@@ -132,7 +147,7 @@
                              }
  
                              return false;
-@@ -623,7 +657,7 @@
+@@ -623,7 +651,7 @@
          if (f <= 0.5F)
          {
              this.dropContents();
@@ -141,7 +156,7 @@
          }
          else
          {
-@@ -634,6 +668,7 @@
+@@ -634,6 +662,7 @@
      private void dropBlock()
      {
          Block.spawnAsEntity(this.world, new BlockPos(this), new ItemStack(Items.ARMOR_STAND));
@@ -149,7 +164,7 @@
          this.dropContents();
      }
  
-@@ -648,6 +683,7 @@
+@@ -648,6 +677,7 @@
              if (!itemstack.isEmpty())
              {
                  Block.spawnAsEntity(this.world, (new BlockPos(this)).up(), itemstack);
@@ -157,7 +172,7 @@
                  this.handItems.set(i, ItemStack.EMPTY);
              }
          }
-@@ -659,6 +695,7 @@
+@@ -659,6 +689,7 @@
              if (!itemstack1.isEmpty())
              {
                  Block.spawnAsEntity(this.world, (new BlockPos(this)).up(), itemstack1);
@@ -165,7 +180,7 @@
                  this.armorItems.set(j, ItemStack.EMPTY);
              }
          }
-@@ -791,6 +828,7 @@
+@@ -791,6 +822,7 @@
  
      public void onKillCommand()
      {
@@ -173,7 +188,7 @@
          this.setDead();
      }
  
-@@ -804,7 +842,7 @@
+@@ -804,7 +836,7 @@
          return this.hasMarker() ? EnumPushReaction.IGNORE : super.getPushReaction();
      }
  
@@ -182,7 +197,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 1, small)));
          this.setSize(0.5F, 1.975F);
-@@ -815,7 +853,7 @@
+@@ -815,7 +847,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 1) != 0;
      }
  
@@ -191,7 +206,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 4, showArms)));
      }
-@@ -825,7 +863,7 @@
+@@ -825,7 +857,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 4) != 0;
      }
  
@@ -200,7 +215,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 8, noBasePlate)));
      }
-@@ -835,7 +873,7 @@
+@@ -835,7 +867,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 8) != 0;
      }
  
@@ -209,7 +224,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 16, marker)));
          this.setSize(0.5F, 1.975F);
-@@ -957,7 +995,7 @@
+@@ -957,7 +989,7 @@
          return SoundEvents.ENTITY_ARMORSTAND_BREAK;
      }
  
@@ -218,7 +233,7 @@
      {
      }
  
-@@ -980,4 +1018,13 @@
+@@ -980,4 +1012,13 @@
      {
          return false;
      }

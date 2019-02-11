@@ -1,10 +1,5 @@
 package org.spigotmc;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.effect.EntityWeatherEffect;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -14,14 +9,11 @@ import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.passive.EntityAmbientCreature;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -36,6 +28,7 @@ public class ActivationRange
     static AxisAlignedBB maxBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
     static AxisAlignedBB miscBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
     static AxisAlignedBB animalBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
+    static AxisAlignedBB waterBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 ); // Paper
     static AxisAlignedBB monsterBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
 
     /**
@@ -47,6 +40,7 @@ public class ActivationRange
      */
     public static byte initializeEntityActivationType(Entity entity)
     {
+        if (entity instanceof EntityWaterMob) { return 4; } // Paper
         if ( entity instanceof EntityMob || entity instanceof EntitySlime )
         {
             return 1; // Monster
@@ -79,6 +73,7 @@ public class ActivationRange
         if ( ( entity.activationType == 3 && config.miscActivationRange == 0 )
                 || ( entity.activationType == 2 && config.animalActivationRange == 0 )
                 || ( entity.activationType == 1 && config.monsterActivationRange == 0 )
+                || ( entity.activationType == 4 && config.waterActivationRange == 0 ) // Paper
                 || entity instanceof EntityPlayer
                 || entity instanceof EntityThrowable
                 || entity instanceof MultiPartEntityPart
@@ -110,6 +105,7 @@ public class ActivationRange
         final int miscActivationRange = world.spigotConfig.miscActivationRange;
         final int animalActivationRange = world.spigotConfig.animalActivationRange;
         final int monsterActivationRange = world.spigotConfig.monsterActivationRange;
+        final int waterActivationRange = world.spigotConfig.waterActivationRange; // Paper
 
         int maxRange = Math.max( monsterActivationRange, animalActivationRange );
         maxRange = Math.max( maxRange, miscActivationRange );
@@ -123,6 +119,7 @@ public class ActivationRange
             miscBB = player.getEntityBoundingBox().grow( miscActivationRange, 256, miscActivationRange );
             animalBB = player.getEntityBoundingBox().grow( animalActivationRange, 256, animalActivationRange );
             monsterBB = player.getEntityBoundingBox().grow( monsterActivationRange, 256, monsterActivationRange );
+            waterBB = player.getEntityBoundingBox().grow( waterActivationRange, 256, waterActivationRange ); // Paper
 
             int i = MathHelper.floor( maxBB.minX / 16.0D );
             int j = MathHelper.floor( maxBB.maxX / 16.0D );
@@ -174,6 +171,14 @@ public class ActivationRange
                                 entity.activatedTick = MinecraftServer.currentTick;
                             }
                             break;
+                            // Paper start
+                        case 4:
+                            if ( waterBB.intersects( entity.getEntityBoundingBox() ) )
+                            {
+                                entity.activatedTick = MinecraftServer.currentTick;
+                            }
+                            break;
+                            // Paper end
                         case 3:
                         default:
                             if ( miscBB.intersects( entity.getEntityBoundingBox() ) )
@@ -195,11 +200,14 @@ public class ActivationRange
      */
     public static boolean checkEntityImmunities(Entity entity)
     {
-        // quick checks.
-        if ( entity.isInWater() || entity.fire > 0 )
-        {
+        // Paper start - optimize Water cases
+        if ((entity.inWater && (!(entity instanceof EntityLiving) || !(((EntityLiving) entity).getNavigator() instanceof PathNavigateSwimmer)))) {
             return true;
         }
+        if (entity.fire > 0) {
+            return true;
+        }
+        // Paper end
         if ( !( entity instanceof EntityArrow ) )
         {
             if ( !entity.onGround || !entity.riddenByEntities.isEmpty() || entity.isRiding() )

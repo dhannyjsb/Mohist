@@ -1,5 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.destroystokyo.paper.profile.CraftPlayerProfile;
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.BaseEncoding;
@@ -23,19 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SPacketBlockChange;
-import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketCustomSound;
-import net.minecraft.network.play.server.SPacketEffect;
-import net.minecraft.network.play.server.SPacketEntityProperties;
-import net.minecraft.network.play.server.SPacketMaps;
-import net.minecraft.network.play.server.SPacketParticles;
-import net.minecraft.network.play.server.SPacketPlayerListItem;
-import net.minecraft.network.play.server.SPacketSoundEffect;
-import net.minecraft.network.play.server.SPacketSpawnPosition;
-import net.minecraft.network.play.server.SPacketTitle;
-import net.minecraft.network.play.server.SPacketUpdateHealth;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ChatType;
@@ -48,33 +38,13 @@ import net.minecraft.world.storage.MapDecoration;
 import net.minecraftforge.common.util.FakePlayer;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.Validate;
-import org.bukkit.Achievement;
-import org.bukkit.BanList;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Instrument;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Note;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.Statistic;
+import org.bukkit.*;
 import org.bukkit.Statistic.Type;
-import org.bukkit.WeatherType;
-import org.bukkit.World;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ManuallyAbandonedConversationCanceller;
-import org.bukkit.craftbukkit.CraftEffect;
-import org.bukkit.craftbukkit.CraftOfflinePlayer;
-import org.bukkit.craftbukkit.CraftParticle;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.CraftSound;
-import org.bukkit.craftbukkit.CraftStatistic;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.*;
 import org.bukkit.craftbukkit.advancement.CraftAdvancement;
 import org.bukkit.craftbukkit.advancement.CraftAdvancementProgress;
 import org.bukkit.craftbukkit.block.CraftSign;
@@ -104,16 +74,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -989,8 +950,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         hiddenPlayers.put(player.getUniqueId(), hidingPlugins);
 
         // Remove this player from the hidden player's EntityTrackerEntry
-        EntityTracker tracker = ((WorldServer) entity.world).entityTracker;
         EntityPlayerMP other = ((CraftPlayer) player).getHandle();
+        // Paper start
+        unregisterPlayer(other);
+    }
+
+    private void unregisterPlayer(EntityPlayerMP other) {
+        EntityTracker tracker = ((WorldServer) entity.world).entityTracker;
+        // Paper end
         EntityTrackerEntry entry = tracker.trackedEntityHashTable.lookup(other.getEntityId());
         if (entry != null) {
             entry.removeTrackedPlayerSymmetric(getHandle());
@@ -1031,9 +998,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
         hiddenPlayers.remove(player.getUniqueId());
 
-        EntityTracker tracker = ((WorldServer) entity.world).entityTracker;
+        // Paper start
         EntityPlayerMP other = ((CraftPlayer) player).getHandle();
+        registerPlayer(other);
+    }
 
+    private void registerPlayer(EntityPlayerMP other) {
+        EntityTracker tracker = ((WorldServer) entity.world).entityTracker;
+        // Paper end
         getHandle().connection.sendPacket(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, other));
 
         EntityTrackerEntry entry = tracker.trackedEntityHashTable.lookup(other.getEntityId());
@@ -1041,6 +1013,45 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             entry.updatePlayerEntity(getHandle());
         }
     }
+
+    // Paper start
+    private void reregisterPlayer(EntityPlayerMP player) {
+        if (!hiddenPlayers.containsKey(player.getUniqueID())) {
+                unregisterPlayer(player);
+                registerPlayer(player);
+            }
+    }
+    public void setPlayerProfile(PlayerProfile profile) {
+        EntityPlayer self = getHandle();
+        self.setProfile(CraftPlayerProfile.asAuthlibCopy(profile));
+        List<EntityPlayerMP> players = server.getServer().getPlayerList().playerEntityList;
+        for (EntityPlayer player : players) {
+                player.getBukkitEntity().reregisterPlayer(self);
+            }
+        refreshPlayer();
+    }
+    public PlayerProfile getPlayerProfile() {
+        return new CraftPlayerProfile(this).clone();
+    }
+
+    private void refreshPlayer() {
+        EntityPlayerMP handle = getHandle();
+        Location loc = getLocation();
+        NetHandlerPlayServer connection = handle.connection;
+        reregisterPlayer(handle);
+
+        //Respawn the player then update their position and selected slot
+        connection.sendPacket(new SPacketRespawn(handle.dimension, handle.world.getDifficulty(), handle.world.getWorldData().getType(), handle.playerInteractManager.getGameMode()));
+        handle.sendPlayerAbilities();
+        connection.sendPacket(new SPacketPlayerPosLook(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(), new HashSet<>(), 0));
+        MinecraftServer.getServerInst().getPlayerList().updateClient(handle);
+
+        if (this.isOp()) {
+            this.setOp(false);
+            this.setOp(true);
+        }
+    }
+    // Paper end
 
     public void removeDisconnectingPlayer(Player player) {
         hiddenPlayers.remove(player.getUniqueId());

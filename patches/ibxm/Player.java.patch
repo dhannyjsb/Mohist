@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/ibxm/Player.java
++++ ../src-work/minecraft/ibxm/Player.java
+@@ -1,8 +1,14 @@
+ 
+ package ibxm;
+ 
+-import java.io.*;
+-import javax.sound.sampled.*;
++import javax.sound.sampled.AudioFormat;
++import javax.sound.sampled.AudioSystem;
++import javax.sound.sampled.LineUnavailableException;
++import javax.sound.sampled.SourceDataLine;
++import java.io.DataInputStream;
++import java.io.FileInputStream;
++import java.io.IOException;
++import java.io.InputStream;
+ 
+ public class Player {
+ 	private Thread play_thread;
