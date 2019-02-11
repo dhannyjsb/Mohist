@@ -164,14 +164,19 @@
          if (flag1)
          {
              double d0 = p_70972_1_.minX + (p_70972_1_.maxX - p_70972_1_.minX) * (double)this.rand.nextFloat();
-@@ -638,7 +683,23 @@
+@@ -638,7 +683,28 @@
  
              if (this.deathTicks == 1)
              {
 -                this.world.playBroadcastSound(1028, new BlockPos(this), 0);
 +                // CraftBukkit start - Use relative location for far away sounds
-+                int viewDistance = this.world.getServer().getViewDistance() * 16;
-+                for (EntityPlayerMP player : this.world.getMinecraftServer().getPlayerList().playerEntityList) {
++                // Paper start
++                //int viewDistance = ((WorldServer) this.world).spigotConfig.viewDistance * 16;
++                // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
++                for (EntityPlayer human : world.playerEntities) {
++                    EntityPlayerMP player = (EntityPlayerMP) human;
++                    int viewDistance = player.getViewDistance();
++                    // Paper end
 +                    double deltaX = this.posX - player.posX;
 +                    double deltaZ = this.posZ - player.posZ;
 +                    double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;

@@ -59,7 +59,7 @@
          this.tasks.addTask(1, new EntityAISwimming(this));
          this.tasks.addTask(2, new EntityAIAttackRanged(this, 1.0D, 40, 20.0F));
          this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
-@@ -255,15 +247,37 @@
+@@ -255,15 +247,41 @@
  
              if (j1 <= 0)
              {
@@ -73,8 +73,12 @@
 +                    this.world.newExplosion(this, this.posX, this.posY + (double) this.getEyeHeight(), this.posZ, event.getRadius(), event.getFire(), net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this));
 +                }
 +                // CraftBukkit start - Use relative location for far away sounds
-+                int viewDistance = this.world.getServer().getViewDistance() * 16;
-+                for (EntityPlayerMP player : world.getMinecraftServer().getServer().getPlayerList().playerEntityList) {
++                // Paper start
++                //int viewDistance = ((WorldServer) this.world).spigotConfig.viewDistance * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
++                for (EntityPlayer human : world.playerEntities) {
++                    EntityPlayerMP player = (EntityPlayerMP) human;
++                    int viewDistance = player.getViewDistance();
++                    // Paper end
 +                    double deltaX = this.posX - player.posX;
 +                    double deltaZ = this.posZ - player.posZ;
 +                    double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;
@@ -100,7 +104,7 @@
              }
          }
          else
-@@ -384,6 +398,9 @@
+@@ -384,6 +402,9 @@
  
                                  if (!block.isAir(iblockstate, this.world, blockpos) && block.canEntityDestroy(iblockstate, world, blockpos, this) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, iblockstate))
                                  {
@@ -110,7 +114,7 @@
                                      flag = this.world.destroyBlock(blockpos, true) || flag;
                                  }
                              }
-@@ -399,7 +416,7 @@
+@@ -399,7 +420,7 @@
  
              if (this.ticksExisted % 20 == 0)
              {

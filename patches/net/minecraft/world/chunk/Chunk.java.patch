@@ -220,7 +220,7 @@
 +        // Paper start
 +        this.markDirty();
 +        entityIn.setCurrentChunk(this);
-+        entityCounts.increment(entityIn.getResourceLocationString());
++        entityCounts.increment(entityIn.getResourceLocation().toString());
 +        // Paper end
 +        if (entityIn instanceof EntityItem) {
 +        ++this.itemCounts[k];
@@ -252,7 +252,7 @@
 +        // Paper start
 +        this.markDirty();
 +        entityIn.setCurrentChunk(null);
-+        entityCounts.decrement(entityIn.getResourceLocationString());
++        entityCounts.decrement(entityIn.getResourceLocation().toString());
 +        // Paper end
 +        if (entityIn instanceof EntityItem) {
 +            --this.itemCounts[index];
