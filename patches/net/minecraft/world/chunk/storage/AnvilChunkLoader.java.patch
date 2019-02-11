@@ -1,8 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
-@@ -1,19 +1,9 @@
+@@ -1,21 +1,13 @@
  package net.minecraft.world.chunk.storage;
  
++import com.destroystokyo.paper.exception.ServerInternalException;
  import com.google.common.collect.Maps;
 -import java.io.DataInputStream;
 -import java.io.DataOutputStream;
@@ -19,23 +20,36 @@
 -import net.minecraft.nbt.CompressedStreamTools;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTTagList;
++import net.minecraft.server.MinecraftServer;
  import net.minecraft.tileentity.TileEntity;
-@@ -34,6 +24,14 @@
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.util.datafix.DataFixer;
+@@ -33,16 +25,31 @@
+ import net.minecraft.world.storage.ThreadedFileIOBase;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
++import org.spigotmc.SupplierUtils;
  
 +import javax.annotation.Nullable;
 +import java.io.File;
 +import java.io.IOException;
 +import java.util.Collections;
 +import java.util.List;
-+import java.util.Map;
 +import java.util.Set;
++import java.util.concurrent.ConcurrentLinkedQueue;
++import java.util.concurrent.ConcurrentMap;
++import java.util.concurrent.atomic.AtomicLong;
++import java.util.function.Supplier;
 +
  public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
  {
++    public ConcurrentLinkedQueue<QueuedChunk> queue = new ConcurrentLinkedQueue<>(); // Paper - Chunk queue improvements
++    private final Object lock = new Object(); // Paper - Chunk queue improvements
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -43,6 +41,7 @@
+-    private final Map<ChunkPos, NBTTagCompound> chunksToSave = Maps.<ChunkPos, NBTTagCompound>newConcurrentMap();
++    private final ConcurrentMap<ChunkPos, Supplier<NBTTagCompound>> chunksToSave = Maps.newConcurrentMap();
+     private final Set<ChunkPos> chunksBeingSaved = Collections.<ChunkPos>newSetFromMap(Maps.newConcurrentMap());
+     public final File chunkSaveLocation;
      private final DataFixer fixer;
      private boolean flushing;
  
@@ -43,7 +57,7 @@
      public AnvilChunkLoader(File chunkSaveLocationIn, DataFixer dataFixerIn)
      {
          this.chunkSaveLocation = chunkSaveLocationIn;
-@@ -79,14 +78,14 @@
+@@ -79,14 +86,14 @@
  
          if (nbttagcompound == null)
          {
@@ -61,11 +75,13 @@
          }
  
          return this.checkedReadChunkFromNBT__Async(worldIn, x, z, nbttagcompound);
-@@ -106,9 +105,23 @@
+@@ -106,9 +113,25 @@
          return data != null ? (Chunk)data[0] : null;
      }
  
 +    // Paper start
++    private long queuedSaves = 0L;
++    private final AtomicLong processedSaves = new AtomicLong(0L);
 +    private static final int CURRENT_DATA_VERSION = 1343; // Paper
 +    private static final boolean JUST_CORRUPT_IT = Boolean.valueOf("Paper.ignoreWorldDataVersion");
 +    // Paper end
@@ -85,7 +101,105 @@
          if (!compound.hasKey("Level", 10))
          {
              LOGGER.error("Chunk file at {},{} is missing level data, skipping", Integer.valueOf(x), Integer.valueOf(z));
-@@ -237,9 +250,10 @@
+@@ -181,65 +204,80 @@
+         }
+     }
+ 
+-    protected void addChunkToPending(ChunkPos pos, NBTTagCompound compound)
++    protected void addChunkToPending(ChunkPos pos, Supplier<NBTTagCompound> compound)
+     {
+-        if (!this.chunksBeingSaved.contains(pos))
++        synchronized (this.lock)
+         {
+             this.chunksToSave.put(pos, compound);
+         }
+-
++        this.queue.add(new QueuedChunk(pos, compound));
+         ThreadedFileIOBase.getThreadedIOInstance().queueIO(this);
+     }
+ 
+     public boolean writeNextIO()
+     {
+-        if (this.chunksToSave.isEmpty())
++        return processSaveQueueEntry(false);
++    }
++
++    public boolean processSaveQueueEntry(boolean logCompletion)
++    {
++        QueuedChunk chunk = this.queue.poll(); // Paper - Chunk queue improvements
++        if (chunk == null)
+         {
+-            if (this.flushing)
+-            {
+-                LOGGER.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", (Object)this.chunkSaveLocation.getName());
++            if (logCompletion) {
++                LOGGER.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", this.chunkSaveLocation.getName());
+             }
+-
+             return false;
+         }
+-        else
+-        {
+-            ChunkPos chunkpos = this.chunksToSave.keySet().iterator().next();
+-            boolean lvt_3_1_;
++        ChunkPos chunkcoordintpair = chunk.coords;
++        this.processedSaves.incrementAndGet();
+ 
+-            try
++        NBTTagCompound nbttagcompound = SupplierUtils.getIfExists(chunk.compoundSupplier); // Spigot // Paper
++        if (nbttagcompound != null)
++        {
++            int attempts = 0;
++            for (Exception laste = null; attempts++ < 5;)
+             {
+-                this.chunksBeingSaved.add(chunkpos);
+-                NBTTagCompound nbttagcompound = this.chunksToSave.remove(chunkpos);
+-
+-                if (nbttagcompound != null)
++                try
+                 {
++                    writeChunkData(chunkcoordintpair, nbttagcompound);
++                    laste = null;
++                }
++                catch (Exception exception)
++                {
++                    laste = exception;
+                     try
+                     {
+-                        this.writeChunkData(chunkpos, nbttagcompound);
++                        Thread.sleep(10L);
+                     }
+-                    catch (Exception exception)
+-                    {
+-                        LOGGER.error("Failed to save chunk", (Throwable)exception);
+-                    }
++                    catch (InterruptedException e) {}
+                 }
+-
+-                lvt_3_1_ = true;
++                e.printStackTrace();
+             }
+-            finally
++            if (laste != null)
+             {
+-                this.chunksBeingSaved.remove(chunkpos);
++                ServerInternalException.reportInternalException(laste);
++                MinecraftServer.LOGGER.error("Failed to save chunk", laste);
+             }
+-
+-            return lvt_3_1_;
+         }
++        // Paper - This will not equal if a newer version is still pending
++        synchronized (this.lock)
++        {
++            if (this.chunksToSave.get(chunkcoordintpair) == chunk.compoundSupplier) {
++                this.chunksToSave.remove(chunkcoordintpair);
++            }
++        }
++        boolean flag = true;
++
++        return flag;
+     }
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -99,7 +213,7 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -366,7 +380,7 @@
+@@ -366,7 +404,7 @@
                  }
                  catch (Exception e)
                  {
@@ -108,7 +222,7 @@
                              entity.getClass().getName(), e);
                  }
              }
-@@ -384,7 +398,7 @@
+@@ -384,7 +422,7 @@
              }
              catch (Exception e)
              {
@@ -117,7 +231,7 @@
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +435,7 @@
+@@ -421,7 +459,7 @@
              }
              catch (Exception exception)
              {
@@ -126,7 +240,7 @@
              }
          }
      }
-@@ -485,7 +499,6 @@
+@@ -485,7 +523,6 @@
              readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
@@ -134,7 +248,7 @@
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +511,6 @@
+@@ -498,7 +535,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
@@ -142,7 +256,7 @@
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -608,8 +620,11 @@
+@@ -608,8 +644,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {
@@ -156,3 +270,22 @@
              for (Entity entity : entityIn.getPassengers())
              {
                  spawnEntity(entity, worldIn);
+@@ -655,4 +694,18 @@
+     {
+         return this.chunksToSave.size();
+     }
++
++    // Paper start - Chunk queue improvements
++    private static class QueuedChunk
++    {
++        public ChunkPos coords;
++        public Supplier<NBTTagCompound> compoundSupplier;
++
++        public QueuedChunk(ChunkPos coords, Supplier<NBTTagCompound> compoundSupplier)
++        {
++            this.coords = coords;
++            this.compoundSupplier = compoundSupplier;
++        }
++    }
++    // Paper end
+ }

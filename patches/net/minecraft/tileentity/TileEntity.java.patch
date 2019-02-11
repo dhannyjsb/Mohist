@@ -1,20 +1,13 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntity.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntity.java
-@@ -1,6 +1,5 @@
+@@ -1,6 +1,6 @@
  package net.minecraft.tileentity;
  
 -import javax.annotation.Nullable;
++import com.destroystokyo.paper.KeyedObject;
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockJukebox;
  import net.minecraft.block.state.IBlockState;
-@@ -9,6 +8,7 @@
- import net.minecraft.init.Blocks;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-+import net.minecraft.util.KeyedObject;
- import net.minecraft.util.Mirror;
- import net.minecraft.util.ResourceLocation;
- import net.minecraft.util.Rotation;
 @@ -16,16 +16,20 @@
  import net.minecraft.util.registry.RegistryNamespaced;
  import net.minecraft.util.text.ITextComponent;

@@ -8,3 +8,26 @@
  import java.util.Collections;
  import java.util.List;
  
+@@ -45,14 +46,15 @@
+                 ++this.savedIOCounter;
+             }
+ 
+-            try
+-            {
+-                Thread.sleep(this.isThreadWaiting ? 0L : 10L);
++            // Paper start - Add toggle
++            if (com.destroystokyo.paper.PaperConfig.enableFileIOThreadSleep) {
++                try {
++                    Thread.sleep(this.isThreadWaiting ? 0L : 2L);
++                } catch (InterruptedException interruptedexception) {
++                    interruptedexception.printStackTrace();
++                }
+             }
+-            catch (InterruptedException interruptedexception1)
+-            {
+-                interruptedexception1.printStackTrace();
+-            }
++            // Paper end
+         }
+ 
+         if (this.threadedIOQueue.isEmpty())

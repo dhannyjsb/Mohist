@@ -82,6 +82,15 @@
      public IPlayerFileData getPlayerNBTManager()
      {
          return this;
+@@ -267,7 +290,7 @@
+         return this.structureTemplateManager;
+     }
+ 
+-    public NBTTagCompound getPlayerNBT(net.minecraft.entity.player.EntityPlayerMP player)
++    public NBTTagCompound getPlayerNBT(EntityPlayerMP player)
+     {
+         try
+         {
 @@ -284,4 +307,48 @@
          }
          return null;

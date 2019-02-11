@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit;
 
+import com.destroystokyo.paper.MCUtil;
 import com.google.common.base.Preconditions;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
@@ -12,6 +13,7 @@ import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.*;
 import net.minecraft.entity.monster.*;
+import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.*;
@@ -24,7 +26,6 @@ import net.minecraft.network.play.server.SPacketTimeUpdate;
 import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MCUtil;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
