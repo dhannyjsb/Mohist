@@ -38,7 +38,7 @@
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.ReportedException;
  import net.minecraft.util.math.AxisAlignedBB;
-@@ -40,23 +42,66 @@
+@@ -40,26 +42,70 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -109,7 +109,11 @@
      private boolean isTerrainPopulated;
      private boolean isLightPopulated;
      private boolean ticked;
-@@ -68,14 +113,49 @@
++    private boolean isTicked() { return ticked; } // Paper - OBFHELPER
+     private boolean dirty;
+     private boolean hasEntities;
+     private long lastSaveTime;
+@@ -68,14 +114,49 @@
      private int queuedLightChecks;
      private final ConcurrentLinkedQueue<BlockPos> tileEntityPosQueue;
      public boolean unloadQueued;
@@ -160,7 +164,7 @@
          this.queuedLightChecks = 4096;
          this.tileEntityPosQueue = Queues.<BlockPos>newConcurrentLinkedQueue();
          this.entityLists = (ClassInheritanceMultiMap[])(new ClassInheritanceMultiMap[16]);
-@@ -92,8 +172,15 @@
+@@ -92,8 +173,15 @@
          Arrays.fill(this.precipitationHeightMap, -999);
          Arrays.fill(this.blockBiomeArray, (byte) - 1);
          capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
@@ -176,7 +180,7 @@
      public Chunk(World worldIn, ChunkPrimer primer, int x, int z)
      {
          this(worldIn, x, z);
-@@ -565,12 +652,12 @@
+@@ -565,12 +653,12 @@
                  {
                      if (block1 != block) //Only fire block breaks when the block changes.
                      block1.breakBlock(this.world, pos, iblockstate);
@@ -191,7 +195,7 @@
                      if (te != null && te.shouldRefresh(this.world, pos, iblockstate, state))
                      this.world.removeTileEntity(pos);
                  }
-@@ -608,6 +695,7 @@
+@@ -608,6 +696,7 @@
                      }
                  }
  
@@ -199,7 +203,7 @@
                  // If capturing blocks, only run block physics for TE's. Non-TE's are handled in ForgeHooks.onPlaceItemIntoWorld
                  if (!this.world.isRemote && block1 != block && (!this.world.captureBlockSnapshots || block.hasTileEntity(state)))
                  {
-@@ -616,7 +704,7 @@
+@@ -616,7 +705,7 @@
  
                  if (block.hasTileEntity(state))
                  {
@@ -208,7 +212,7 @@
  
                      if (tileentity1 == null)
                      {
-@@ -742,7 +830,30 @@
+@@ -742,7 +831,30 @@
          entityIn.chunkCoordY = k;
          entityIn.chunkCoordZ = this.z;
          this.entityLists[k].add(entityIn);
@@ -240,7 +244,7 @@
      }
  
      public void removeEntity(Entity entityIn)
-@@ -763,7 +874,30 @@
+@@ -763,7 +875,30 @@
          }
  
          this.entityLists[index].remove(entityIn);
@@ -272,7 +276,7 @@
      }
  
      public boolean canSeeSky(BlockPos pos)
-@@ -783,9 +917,17 @@
+@@ -783,9 +918,17 @@
      }
  
      @Nullable
@@ -292,7 +296,7 @@
  
          if (tileentity != null && tileentity.isInvalid())
          {
-@@ -795,12 +937,12 @@
+@@ -795,12 +938,12 @@
  
          if (tileentity == null)
          {
@@ -307,7 +311,7 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -829,12 +971,25 @@
+@@ -829,12 +972,25 @@
          {
              if (this.tileEntities.containsKey(pos))
              {
@@ -334,7 +338,7 @@
      }
  
      public void removeTileEntity(BlockPos pos)
-@@ -864,7 +1019,7 @@
+@@ -864,7 +1020,7 @@
  
      public void onUnload()
      {
@@ -343,7 +347,7 @@
          this.loaded = false;
  
          for (TileEntity tileentity : this.tileEntities.values())
-@@ -874,7 +1029,14 @@
+@@ -874,7 +1030,14 @@
  
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
          {
@@ -359,7 +363,7 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -893,7 +1055,7 @@
+@@ -893,7 +1056,7 @@
  
          for (int k = i; k <= j; ++k)
          {
@@ -368,7 +372,7 @@
              {
                  for (Entity entity : this.entityLists[k])
                  {
-@@ -928,14 +1090,22 @@
+@@ -928,14 +1091,22 @@
          int j = MathHelper.floor((aabb.maxY + World.MAX_ENTITY_RADIUS) / 16.0D);
          i = MathHelper.clamp(i, 0, this.entityLists.length - 1);
          j = MathHelper.clamp(j, 0, this.entityLists.length - 1);
@@ -396,7 +400,7 @@
                  }
              }
          }
-@@ -1001,6 +1171,63 @@
+@@ -1001,6 +1172,63 @@
          }
      }
  
@@ -460,7 +464,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1244,26 @@
+@@ -1017,6 +1245,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -487,7 +491,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1322,7 @@
+@@ -1075,7 +1323,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -496,16 +500,20 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1333,7 @@
+@@ -1086,7 +1334,11 @@
  
      public boolean isPopulated()
      {
 -        return this.ticked && this.isTerrainPopulated && this.isLightPopulated;
-+        return this.ticked && this.isTerrainPopulated;  // Mohist - remove light populated check
++        // Paper Start
++        // if randomLightUpdates are disabled, we should always return true, otherwise chunks may never send
++        // to the client due to not being lit, otherwise retain standard behavior and only send properly lit chunks.
++        return !this.world.spigotConfig.randomLightUpdates || (this.isTicked() && this.isTerrainPopulated && this.isLightPopulated);
++        // Paper End
      }
  
      public boolean wasTicked()
-@@ -1414,11 +1661,6 @@
+@@ -1414,11 +1666,6 @@
          return true;
      }
  
@@ -517,7 +525,7 @@
      @SideOnly(Side.CLIENT)
      public void markLoaded(boolean loaded)
      {
-@@ -1500,7 +1742,7 @@
+@@ -1500,7 +1747,7 @@
  
      public long getInhabitedTime()
      {
@@ -526,7 +534,7 @@
      }
  
      public void setInhabitedTime(long newInhabitedTime)
-@@ -1540,11 +1782,11 @@
+@@ -1540,11 +1787,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.

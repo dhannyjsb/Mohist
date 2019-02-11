@@ -1,9 +1,8 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
-@@ -1,19 +1,10 @@
+@@ -1,19 +1,9 @@
  package net.minecraft.world.chunk.storage;
  
-+import cn.pfcraft.server.Mohist;
  import com.google.common.collect.Maps;
 -import java.io.DataInputStream;
 -import java.io.DataOutputStream;
@@ -21,7 +20,7 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTTagList;
  import net.minecraft.tileentity.TileEntity;
-@@ -34,6 +25,14 @@
+@@ -34,6 +24,14 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -36,7 +35,7 @@
  public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -43,6 +42,7 @@
+@@ -43,6 +41,7 @@
      private final DataFixer fixer;
      private boolean flushing;
  
@@ -44,7 +43,7 @@
      public AnvilChunkLoader(File chunkSaveLocationIn, DataFixer dataFixerIn)
      {
          this.chunkSaveLocation = chunkSaveLocationIn;
-@@ -79,14 +79,14 @@
+@@ -79,14 +78,14 @@
  
          if (nbttagcompound == null)
          {
@@ -62,7 +61,31 @@
          }
  
          return this.checkedReadChunkFromNBT__Async(worldIn, x, z, nbttagcompound);
-@@ -237,9 +237,10 @@
+@@ -106,9 +105,23 @@
+         return data != null ? (Chunk)data[0] : null;
+     }
+ 
++    // Paper start
++    private static final int CURRENT_DATA_VERSION = 1343; // Paper
++    private static final boolean JUST_CORRUPT_IT = Boolean.valueOf("Paper.ignoreWorldDataVersion");
++    // Paper end
++
+     @Nullable
+     protected Object[] checkedReadChunkFromNBT__Async(World worldIn, int x, int z, NBTTagCompound compound)
+     {
++        // Paper start - Do NOT attempt to load chunks saved with newer versions
++        if (compound.hasKey("DataVersion", 3)) {
++            int dataVersion = compound.getInteger("DataVersion");
++            if (!JUST_CORRUPT_IT && dataVersion > CURRENT_DATA_VERSION) {
++                new RuntimeException("Server attempted to load chunk saved with newer version of minecraft! " + dataVersion + " > " + CURRENT_DATA_VERSION).printStackTrace();
++                System.exit(1);
++            }
++        }
++        // Paper end
+         if (!compound.hasKey("Level", 10))
+         {
+             LOGGER.error("Chunk file at {},{} is missing level data, skipping", Integer.valueOf(x), Integer.valueOf(z));
+@@ -237,9 +250,10 @@
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -76,34 +99,34 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -366,7 +367,7 @@
+@@ -366,7 +380,7 @@
                  }
                  catch (Exception e)
                  {
 -                    net.minecraftforge.fml.common.FMLLog.log.error("An Entity type {} has thrown an exception trying to write state. It will not persist. Report this to the mod author",
-+                    Mohist.LOGGER.error("An Entity type {} has thrown an exception trying to write state. It will not persist. Report this to the mod author",
++                    LOGGER.error("An Entity type {} has thrown an exception trying to write state. It will not persist. Report this to the mod author",
                              entity.getClass().getName(), e);
                  }
              }
-@@ -384,7 +385,7 @@
+@@ -384,7 +398,7 @@
              }
              catch (Exception e)
              {
 -                net.minecraftforge.fml.common.FMLLog.log.error("A TileEntity type {} has throw an exception trying to write state. It will not persist. Report this to the mod author",
-+                Mohist.LOGGER.error("A TileEntity type {} has throw an exception trying to write state. It will not persist. Report this to the mod author",
++                LOGGER.error("A TileEntity type {} has throw an exception trying to write state. It will not persist. Report this to the mod author",
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +422,7 @@
+@@ -421,7 +435,7 @@
              }
              catch (Exception exception)
              {
 -                net.minecraftforge.fml.common.FMLLog.log.error("A capability provider has thrown an exception trying to write state. It will not persist. Report this to the mod author", exception);
-+                Mohist.LOGGER.error("A capability provider has thrown an exception trying to write state. It will not persist. Report this to the mod author", exception);
++                LOGGER.error("A capability provider has thrown an exception trying to write state. It will not persist. Report this to the mod author", exception);
              }
          }
      }
-@@ -485,7 +486,6 @@
+@@ -485,7 +499,6 @@
              readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
@@ -111,7 +134,7 @@
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +498,6 @@
+@@ -498,7 +511,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
@@ -119,7 +142,7 @@
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -608,8 +607,11 @@
+@@ -608,8 +620,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {

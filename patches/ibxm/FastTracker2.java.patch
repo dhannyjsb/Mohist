@@ -12,3 +12,8 @@
  
  public class FastTracker2 {
  	public static boolean is_xm( byte[] header_60_bytes ) {
+@@ -254,4 +257,3 @@
+ 		return string;
+ 	}
+ }
+-

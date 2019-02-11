@@ -196,7 +196,7 @@
                  {
                      Thread thread1 = new Thread(new ServerHangWatchdog(this));
                      thread1.setName("Server Watchdog");
-@@ -427,11 +471,17 @@
+@@ -427,11 +471,19 @@
  
      public void executePendingCommands()
      {
@@ -204,8 +204,10 @@
 -        {
 -            PendingCommand pendingcommand = this.pendingCommandList.remove(0);
 -            this.getCommandManager().executeCommand(pendingcommand.sender, pendingcommand.command);
++        // Paper - use proper queue
 +        PendingCommand pendingcommand;
-+        while ((pendingcommand = this.pendingCommandList.poll()) != null) {  // Paper - use proper queue
++        while ((pendingcommand = this.pendingCommandList.poll()) != null) {
++            // Paper end
 +            // CraftBukkit start - ServerCommand for preprocessing
 +            ServerCommandEvent event = new ServerCommandEvent(console, pendingcommand.command);
 +            server.getPluginManager().callEvent(event);
@@ -218,7 +220,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -497,8 +547,8 @@
+@@ -497,8 +549,8 @@
  
      public void setGuiEnabled()
      {
@@ -229,7 +231,7 @@
      }
  
      public boolean getGuiEnabled()
-@@ -684,13 +734,65 @@
+@@ -684,13 +736,65 @@
  
      public String getPlugins()
      {

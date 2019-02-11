@@ -46,6 +46,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.*;
+import org.bukkit.World;
 import org.bukkit.Warning.WarningState;
 import org.bukkit.World.Environment;
 import org.bukkit.boss.BarColor;
@@ -670,6 +671,29 @@ public final class CraftServer implements Server {
     public boolean dispatchCommand(CommandSender sender, String commandLine) {
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(commandLine, "CommandLine cannot be null");
+
+        // Paper Start
+        if (!org.spigotmc.AsyncCatcher.shuttingDown && !Bukkit.isPrimaryThread()) {
+            final CommandSender fSender = sender;
+            final String fCommandLine = commandLine;
+            Bukkit.getLogger().log(Level.SEVERE, "Command Dispatched Async: " + commandLine);
+            Bukkit.getLogger().log(Level.SEVERE, "Please notify author of plugin causing this execution to fix this bug! see: http://bit.ly/1oSiM6C", new Throwable());
+            org.bukkit.craftbukkit.util.Waitable<Boolean> wait = new org.bukkit.craftbukkit.util.Waitable<Boolean>() {
+                @Override
+                protected Boolean evaluate() {
+                    return dispatchCommand(fSender, fCommandLine);
+                }
+            };
+            net.minecraft.server.MinecraftServer.getServerInst().processQueue.add(wait);
+            try {
+                return wait.get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // This is proper habit for java. If we aren't handling it, pass it on!
+            } catch (Exception e) {
+                throw new RuntimeException("Exception processing dispatch command", e.getCause());
+            }
+        }
+        // Paper End
 
         if (commandMap.dispatch(sender, commandLine)) {
             return true;
@@ -1480,7 +1504,7 @@ public final class CraftServer implements Server {
             offers = tabCompleteChat(player, message);
         }
 
-        TabCompleteEvent tabEvent = new TabCompleteEvent(player, message, offers);
+        TabCompleteEvent tabEvent = new TabCompleteEvent(player, message, offers, message.startsWith("/") || forceCommand, pos != null ? MCUtil.toLocation(((CraftWorld) player.getWorld()).getHandle(), pos) : null); // Paper
         getPluginManager().callEvent(tabEvent);
 
         return tabEvent.isCancelled() ? Collections.EMPTY_LIST : tabEvent.getCompletions();
@@ -1579,7 +1603,7 @@ public final class CraftServer implements Server {
         ImageIO.write(image, "PNG", new ByteBufOutputStream(bytebuf));
         ByteBuf bytebuf1 = Base64.encode(bytebuf);
 
-        return new CraftIconCache("data:image/png;base64," + bytebuf1.toString(Charsets.UTF_8));
+        return new CraftIconCache("data:image/png;base64," + bytebuf1.toString(Charsets.UTF_8).replace("\n", "")); // Paper - Fix encoding for 1.13+ clients, still compat w/ 1.12 clients
     }
 
     @Override
@@ -1633,6 +1657,7 @@ public final class CraftServer implements Server {
         return CraftMagicNumbers.INSTANCE;
     }
 
+    // Paper - Add getTPS API - Further improve tick loop
     @Override
     public double[] getTPS() {
         return new double[] {
@@ -1641,6 +1666,8 @@ public final class CraftServer implements Server {
                 MinecraftServer.getServerInst().tps15.getAverage()
         };
     }
+    // Paper end
+
     private final Spigot spigot = new Spigot()
     {
 

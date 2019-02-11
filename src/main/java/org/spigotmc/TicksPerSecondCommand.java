@@ -23,6 +23,7 @@ public class TicksPerSecondCommand extends Command
             return true;
         }
 
+        // Paper start - Further improve tick handling
         double[] tps = org.bukkit.Bukkit.getTPS();
         String[] tpsAvg = new String[tps.length];
         for ( int i = 0; i < tps.length; i++) {
@@ -33,7 +34,7 @@ public class TicksPerSecondCommand extends Command
         return true;
     }
 
-    private static String format(double tps)
+    private static String format(double tps)  // Paper - Made static
     {
         return ( ( tps > 18.0 ) ? ChatColor.GREEN : ( tps > 16.0 ) ? ChatColor.YELLOW : ChatColor.RED ).toString()
                 + ( ( tps > 20.0 ) ? "*" : "" ) + Math.min( Math.round( tps * 100.0 ) / 100.0, 20.0 );

@@ -12,3 +12,8 @@
  
  public class ScreamTracker3 {
  	private static final int[] effect_map = new int[] {
+@@ -487,4 +490,3 @@
+ 		return string;
+ 	}
+ }
+-

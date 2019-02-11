@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/network/LegacyPingHandler.java
 +++ ../src-work/minecraft/net/minecraft/network/LegacyPingHandler.java
-@@ -1,16 +1,18 @@
+@@ -1,20 +1,23 @@
  package net.minecraft.network;
  
 +import com.destroystokyo.paper.network.PaperLegacyStatusClient;
@@ -21,7 +21,29 @@
  public class LegacyPingHandler extends ChannelInboundHandlerAdapter
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -34,12 +36,20 @@
+     private final NetworkSystem networkSystem;
++    private ByteBuf buf; // Paper
+ 
+     public LegacyPingHandler(NetworkSystem networkSystemIn)
+     {
+@@ -24,6 +27,16 @@
+     public void channelRead(ChannelHandlerContext p_channelRead_1_, Object p_channelRead_2_) throws Exception
+     {
+         ByteBuf bytebuf = (ByteBuf)p_channelRead_2_;
++        // Paper start - Make legacy ping handler more reliable
++        if (this.buf != null) {
++            try {
++                readLegacy1_6(p_channelRead_1_, bytebuf);
++            } finally {
++                bytebuf.release();
++            }
++            return;
++        }
++        // Paper end
+         bytebuf.markReaderIndex();
+         boolean flag = true;
+ 
+@@ -34,12 +47,20 @@
                  InetSocketAddress inetsocketaddress = (InetSocketAddress)p_channelRead_1_.channel().remoteAddress();
                  MinecraftServer minecraftserver = this.networkSystem.getServer();
                  int i = bytebuf.readableBytes();
@@ -35,7 +57,7 @@
 +                        // Paper start - Call PaperServerListPingEvent and use results
 +                        event = PaperLegacyStatusClient.processRequest(minecraftserver, inetsocketaddress, 39, null);
 +                        if (event == null) {
-+                            channelhandlercontext.close();
++                            p_channelRead_1_.close();
 +                            break;
 +                        }
 +                        String s2 = String.format("%s\u00a7%d\u00a7%d", PaperLegacyStatusClient.getUnformattedMotd(event), event.getNumPlayers(), event.getMaxPlayers());
@@ -43,7 +65,7 @@
                          this.writeAndFlush(p_channelRead_1_, this.getStringBuffer(s2));
                          break;
                      case 1:
-@@ -50,7 +60,15 @@
+@@ -50,10 +71,22 @@
                          }
  
                          LOGGER.debug("Ping: (1.4-1.5.x) from {}:{}", inetsocketaddress.getAddress(), Integer.valueOf(inetsocketaddress.getPort()));
@@ -51,7 +73,7 @@
 +                        // Paper start - Call PaperServerListPingEvent and use results
 +                        event = PaperLegacyStatusClient.processRequest(minecraftserver, inetsocketaddress, 61, null);
 +                        if (event == null) {
-+                            channelhandlercontext.close();
++                            p_channelRead_1_.close();
 +                            break;
 +                        }
 +                        String s = String.format("\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d", event.getProtocolVersion(), event.getVersion(),
@@ -60,7 +82,14 @@
                          this.writeAndFlush(p_channelRead_1_, this.getStringBuffer(s));
                          break;
                      default:
-@@ -69,7 +87,15 @@
++                        // Paper start - Replace with improved version below
++                        if (bytebuf.readUnsignedByte() != 0x01 || bytebuf.readUnsignedByte() != 0xFA) return;
++                        readLegacy1_6(p_channelRead_1_, bytebuf);
++                        /*
+                         boolean flag1 = bytebuf.readUnsignedByte() == 1;
+                         flag1 = flag1 & bytebuf.readUnsignedByte() == 250;
+                         flag1 = flag1 & "MC|PingHost".equals(new String(bytebuf.readBytes(bytebuf.readShort() * 2).array(), StandardCharsets.UTF_16BE));
+@@ -69,7 +102,15 @@
                          }
  
                          LOGGER.debug("Ping: (1.6) from {}:{}", inetsocketaddress.getAddress(), Integer.valueOf(inetsocketaddress.getPort()));
@@ -77,3 +106,101 @@
                          ByteBuf bytebuf1 = this.getStringBuffer(s1);
  
                          try
+@@ -80,6 +121,8 @@
+                         {
+                             bytebuf1.release();
+                         }
++                        */
++                        // Paper end
+                 }
+ 
+                 bytebuf.release();
+@@ -102,6 +145,88 @@
+         }
+     }
+ 
++    // Paper start
++    private static String readLegacyString(ByteBuf buf) {
++        int size = buf.readShort() * Character.BYTES;
++        if (!buf.isReadable(size)) {
++            return null;
++        }
++
++        String result = buf.toString(buf.readerIndex(), size, StandardCharsets.UTF_16BE);
++        buf.skipBytes(size); // toString doesn't increase readerIndex automatically
++        return result;
++    }
++
++    private void readLegacy1_6(ChannelHandlerContext ctx, ByteBuf part) {
++        ByteBuf buf = this.buf;
++
++        if (buf == null) {
++            this.buf = buf = ctx.alloc().buffer();
++            buf.markReaderIndex();
++        } else {
++            buf.resetReaderIndex();
++        }
++
++        buf.writeBytes(part);
++
++        if (!buf.isReadable(Short.BYTES + Short.BYTES + Byte.BYTES + Short.BYTES + Integer.BYTES)) {
++            return;
++        }
++
++        String s = readLegacyString(buf);
++        if (s == null) {
++            return;
++        }
++
++        if (!s.equals("MC|PingHost")) {
++            removeHandler(ctx);
++            return;
++        }
++
++        if (!buf.isReadable(Short.BYTES) || !buf.isReadable(buf.readShort())) {
++            return;
++        }
++
++        MinecraftServer server = this.networkSystem.getServer();
++        int protocolVersion = buf.readByte();
++        String host = readLegacyString(buf);
++        if (host == null) {
++            removeHandler(ctx);
++            return;
++        }
++        int port = buf.readInt();
++        if (buf.isReadable()) {
++            removeHandler(ctx);
++            return;
++        }
++
++        buf.release();
++        this.buf = null;
++
++        LOGGER.debug("Ping: (1.6) from {}", ctx.channel().remoteAddress());
++
++        String response = String.format("\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d",
++                Byte.MAX_VALUE, server.getMinecraftVersion(), server.getMOTD(), server.getCurrentPlayerCount(), server.getMaxPlayers());
++        this.writeAndFlush(ctx, this.getStringBuffer(response));
++    }
++
++    private void removeHandler(ChannelHandlerContext ctx) {
++        ByteBuf buf = this.buf;
++        this.buf = null;
++        buf.resetReaderIndex();
++        ctx.pipeline().remove(this);
++        ctx.fireChannelRead(buf);
++    }
++
++    @Override
++    public void handlerRemoved(ChannelHandlerContext ctx) {
++        if (this.buf != null) {
++            this.buf.release();
++            this.buf = null;
++        }
++    }
++    // Paper end
++
+     private void writeAndFlush(ChannelHandlerContext ctx, ByteBuf data)
+     {
+         ctx.pipeline().firstContext().writeAndFlush(data).addListener(ChannelFutureListener.CLOSE);

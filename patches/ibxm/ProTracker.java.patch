@@ -11,3 +11,8 @@
  
  public class ProTracker {
  	public static boolean is_mod( byte[] header_1084_bytes ) {
+@@ -231,4 +234,3 @@
+ 		return string;
+ 	}
+ }
+-

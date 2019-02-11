@@ -1,5 +1,6 @@
 package com.destroystokyo.paper;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
@@ -205,5 +206,10 @@ public class PaperConfig {
         if (useAlternativeLuckFormula) {
             Bukkit.getLogger().log(Level.INFO, "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
         }
+    }
+
+    public static String authenticationServersDownKickMessage = ""; // empty = use translatable message
+    private static void authenticationServersDownKickMessage() {
+        authenticationServersDownKickMessage = Strings.emptyToNull(getString("messages.kick.authentication-servers-down", authenticationServersDownKickMessage));
     }
 }
