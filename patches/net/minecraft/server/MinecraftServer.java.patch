@@ -399,9 +399,9 @@
 +        }
 +
 +        if (!com.destroystokyo.paper.PaperConfig.enablePlayerCollisions) {
-+            this.getPlayerList().collideRuleTeamName = org.apache.commons.lang3.StringUtils.left("collideRule_" + this.getWorld().random.nextInt(), 16);
++            this.getPlayerList().collideRuleTeamName = org.apache.commons.lang3.StringUtils.left("collideRule_" + this.getEntityWorld().rand.nextInt(), 16);
 +            ScorePlayerTeam collideTeam = scoreboard.createTeam(this.getPlayerList().collideRuleTeamName);
-+            collideTeam.setCanSeeFriendlyInvisibles(false); // Because we want to mimic them not being on a team at all
++            collideTeam.setSeeFriendlyInvisiblesEnabled(false); // Because we want to mimic them not being on a team at all
 +        }
 +        // Paper end
      }

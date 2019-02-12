@@ -35,3 +35,21 @@
  
      @SideOnly(Side.CLIENT)
      private void remove(Advancement advancementIn)
+@@ -84,7 +85,7 @@
+ 
+             while (iterator.hasNext())
+             {
+-                Entry<ResourceLocation, Advancement.Builder> entry = (Entry)iterator.next();
++                Entry<ResourceLocation, Advancement.Builder> entry = iterator.next();
+                 ResourceLocation resourcelocation = entry.getKey();
+                 Advancement.Builder advancement$builder = entry.getValue();
+ 
+@@ -133,7 +134,7 @@
+             }
+         }
+ 
+-        LOGGER.info("Loaded " + this.advancements.size() + " advancements");
++       // LOGGER.info("Loaded " + this.advancements.size() + " advancements"); // CraftBukkit - moved to AdvancementDataWorld#reload
+     }
+ 
+     public void clear()

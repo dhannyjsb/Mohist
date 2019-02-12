@@ -231,7 +231,15 @@
      }
  
      public boolean getGuiEnabled()
-@@ -684,13 +736,65 @@
+@@ -597,6 +649,7 @@
+ 
+     protected boolean convertFiles() throws IOException
+     {
++        server.getLogger().info( "**** Beginning UUID conversion, this may take A LONG time ****"); // Spigot, let the user know whats up!
+         boolean flag = false;
+ 
+         for (int i = 0; !flag && i <= 2; ++i)
+@@ -684,13 +737,65 @@
  
      public String getPlugins()
      {

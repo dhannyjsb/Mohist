@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/advancements/AdvancementRewards.java
 +++ ../src-work/minecraft/net/minecraft/advancements/AdvancementRewards.java
-@@ -1,14 +1,6 @@
+@@ -1,20 +1,11 @@
  package net.minecraft.advancements;
  
 -import com.google.gson.JsonArray;
@@ -16,7 +16,13 @@
  import net.minecraft.command.CommandResultStats;
  import net.minecraft.command.FunctionObject;
  import net.minecraft.command.ICommandSender;
-@@ -30,6 +22,9 @@
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.item.EntityItem;
+-import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.init.SoundEvents;
+ import net.minecraft.item.ItemStack;
+@@ -30,6 +21,9 @@
  import net.minecraft.world.World;
  import net.minecraft.world.storage.loot.LootContext;
  
@@ -26,7 +32,16 @@
  public class AdvancementRewards
  {
      public static final AdvancementRewards EMPTY = new AdvancementRewards(0, new ResourceLocation[0], new ResourceLocation[0], FunctionObject.CacheableFunction.EMPTY);
-@@ -89,56 +84,67 @@
+@@ -58,7 +52,7 @@
+             {
+                 if (player.addItemStackToInventory(itemstack))
+                 {
+-                    player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
++                    player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                     flag = true;
+                 }
+                 else
+@@ -89,64 +83,77 @@
  
          if (functionobject != null)
          {
@@ -76,6 +91,7 @@
 -                    return player.getServer();
 -                }
 -            };
++            // CraftBukkit start
 +            ICommandSender icommandsender = new AdvancementCommandListener(player, minecraftserver);
 +
              minecraftserver.getFunctionManager().execute(functionobject, icommandsender);
@@ -136,7 +152,18 @@
 +            return player.getServer();
 +        }
 +    }
++    // CraftBukkit end
 +
      public String toString()
      {
-         return "AdvancementRewards{experience=" + this.experience + ", loot=" + Arrays.toString((Object[])this.loot) + ", recipes=" + Arrays.toString((Object[])this.recipes) + ", function=" + this.function + '}';
+-        return "AdvancementRewards{experience=" + this.experience + ", loot=" + Arrays.toString((Object[])this.loot) + ", recipes=" + Arrays.toString((Object[])this.recipes) + ", function=" + this.function + '}';
++        return "AdvancementRewards{experience=" + this.experience + ", loot=" + Arrays.toString(this.loot) + ", recipes=" + Arrays.toString(this.recipes) + ", function=" + this.function + '}';
+     }
+ 
+     public static class Deserializer implements JsonDeserializer<AdvancementRewards>
+         {
+-            public AdvancementRewards deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
++            public AdvancementRewards deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException  // CraftBukkit - decompile error
+             {
+                 JsonObject jsonobject = JsonUtils.getJsonObject(p_deserialize_1_, "rewards");
+                 int i = JsonUtils.getInt(jsonobject, "experience", 0);

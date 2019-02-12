@@ -57,7 +57,12 @@
      public AnvilChunkLoader(File chunkSaveLocationIn, DataFixer dataFixerIn)
      {
          this.chunkSaveLocation = chunkSaveLocationIn;
-@@ -79,14 +86,14 @@
+@@ -75,27 +82,27 @@
+     public Object[] loadChunk__Async(World worldIn, int x, int z) throws IOException
+     {
+         ChunkPos chunkpos = new ChunkPos(x, z);
+-        NBTTagCompound nbttagcompound = this.chunksToSave.get(chunkpos);
++        Supplier<NBTTagCompound> nbttagcompound = this.chunksToSave.get(chunkpos);
  
          if (nbttagcompound == null)
          {
@@ -71,10 +76,21 @@
              }
  
 -            nbttagcompound = this.fixer.process(FixTypes.CHUNK, CompressedStreamTools.read(datainputstream));
-+            nbttagcompound = this.fixer.process(FixTypes.CHUNK, nbtTagCompound);
++            nbttagcompound = (Supplier<NBTTagCompound>) this.fixer.process(FixTypes.CHUNK, nbtTagCompound);
          }
  
-         return this.checkedReadChunkFromNBT__Async(worldIn, x, z, nbttagcompound);
+-        return this.checkedReadChunkFromNBT__Async(worldIn, x, z, nbttagcompound);
++        return this.checkedReadChunkFromNBT__Async(worldIn, x, z, (NBTTagCompound) nbttagcompound);
+     }
+ 
+     public boolean isChunkGeneratedAt(int x, int z)
+     {
+         ChunkPos chunkpos = new ChunkPos(x, z);
+-        NBTTagCompound nbttagcompound = this.chunksToSave.get(chunkpos);
++        NBTTagCompound nbttagcompound = (NBTTagCompound) this.chunksToSave.get(chunkpos);
+         return nbttagcompound != null ? true : RegionFileCache.chunkExists(this.chunkSaveLocation, x, z);
+     }
+ 
 @@ -106,9 +113,25 @@
          return data != null ? (Chunk)data[0] : null;
      }
@@ -101,6 +117,15 @@
          if (!compound.hasKey("Level", 10))
          {
              LOGGER.error("Chunk file at {},{} is missing level data, skipping", Integer.valueOf(x), Integer.valueOf(z));
+@@ -173,7 +196,7 @@
+             this.writeChunkToNBT(chunkIn, worldIn, nbttagcompound1);
+             net.minecraftforge.common.ForgeChunkManager.storeChunkNBT(chunkIn, nbttagcompound1);
+             net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkDataEvent.Save(chunkIn, nbttagcompound));
+-            this.addChunkToPending(chunkIn.getPos(), nbttagcompound);
++            this.addChunkToPending(chunkIn.getPos(), (Supplier<NBTTagCompound>) nbttagcompound);
+         }
+         catch (Exception exception)
+         {
 @@ -181,65 +204,80 @@
          }
      }

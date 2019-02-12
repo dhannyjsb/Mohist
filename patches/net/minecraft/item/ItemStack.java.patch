@@ -206,7 +206,7 @@
 +        return CraftItemStack.asCraftMirror(this);
 +    }
 +    public org.bukkit.inventory.ItemStack asBukkitCopy() {
-+        return CraftItemStack.asCraftMirror(this.cloneItemStack());
++        return CraftItemStack.asCraftMirror(this.copy());
 +    }
 +    public static ItemStack fromBukkitCopy(org.bukkit.inventory.ItemStack itemstack) {
 +        return CraftItemStack.asNMSCopy(itemstack);

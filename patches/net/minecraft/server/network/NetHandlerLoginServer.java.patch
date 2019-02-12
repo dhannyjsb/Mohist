@@ -85,7 +85,7 @@
          {
 -            this.tryAcceptPlayer();
 +            // Paper start - prevent logins to be processed even though disconnect was called
-+            if (networkManager.isConnected()) {
++            if (networkManager.isChannelOpen()) {
 +                this.tryAcceptPlayer();
 +            }
 +            // Paper end

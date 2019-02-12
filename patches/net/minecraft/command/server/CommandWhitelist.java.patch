@@ -35,7 +35,7 @@
  
                  server.getPlayerList().addWhitelistedPlayer(gameprofile);
 +                */
-+                this.whitelist(server, astring[1], true);
++                this.whitelist(server, args[1], true);
 +                // Paper end
                  notifyCommandListener(sender, this, "commands.whitelist.add.success", new Object[] {args[1]});
              }
@@ -54,7 +54,7 @@
  
                  server.getPlayerList().removePlayerFromWhitelist(gameprofile1);
 +                */
-+                this.whitelist(server, astring[1], false);
++                this.whitelist(server, args[1], false);
 +                // Paper end
                  notifyCommandListener(sender, this, "commands.whitelist.remove.success", new Object[] {args[1]});
              }
@@ -73,11 +73,11 @@
 +     * @param add whether we're adding or removing from the whitelist
 +     */
 +    private void whitelist(MinecraftServer mcserver, String playerName, boolean add) throws CommandException {
-+        if (mcserver.getOnlineMode()) {
++        if (mcserver.isServerInOnlineMode()) {
 +            // The reason we essentially copy/pasta NMS code here is because the NMS online-only version
 +            // is capable of providing feedback to the person running the command based on whether or
 +            // not the player is a real online-mode account
-+            GameProfile gameprofile = mcserver.getUserCache().getProfile(playerName);
++            GameProfile gameprofile = mcserver.getPlayerProfileCache().getGameProfileForUsername(playerName);
 +            if (gameprofile == null) {
 +                if (add) {
 +                    throw new CommandException("commands.whitelist.add.failed", new Object[] { playerName});

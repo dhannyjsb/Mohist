@@ -19,7 +19,7 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.network.play.server.SPacketAdvancementInfo;
  import net.minecraft.network.play.server.SPacketSelectAdvancementsTab;
-@@ -30,6 +18,18 @@
+@@ -30,16 +18,28 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -38,7 +38,10 @@
  public class PlayerAdvancements
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -39,7 +39,7 @@
+     private static final Gson GSON = (new GsonBuilder()).registerTypeAdapter(AdvancementProgress.class, new AdvancementProgress.Serializer()).registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).setPrettyPrinting().create();
+-    private static final TypeToken<Map<ResourceLocation, AdvancementProgress>> MAP_TOKEN = new TypeToken<Map<ResourceLocation, AdvancementProgress>>()
++    private static final TypeToken<Map<ResourceLocation, AdvancementProgress>> MAP_TOKEN = new TypeToken<Map<ResourceLocation, AdvancementProgress>>() // CraftBukkit - decompile error
+     {
      };
      private final MinecraftServer server;
      private final File progressFile;
@@ -47,7 +50,55 @@
      private final Set<Advancement> visible = Sets.<Advancement>newLinkedHashSet();
      private final Set<Advancement> visibilityChanged = Sets.<Advancement>newLinkedHashSet();
      private final Set<Advancement> progressChanged = Sets.<Advancement>newLinkedHashSet();
-@@ -167,6 +167,7 @@
+@@ -93,9 +93,9 @@
+     {
+         List<Advancement> list = Lists.<Advancement>newArrayList();
+ 
+-        for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet())
++        for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet()) // CraftBukkit - decompile error
+         {
+-            if (((AdvancementProgress)entry.getValue()).isDone())
++            if (entry.getValue().isDone())
+             {
+                 list.add(entry.getKey());
+                 this.progressChanged.add(entry.getKey());
+@@ -127,7 +127,7 @@
+             try
+             {
+                 String s = Files.toString(this.progressFile, StandardCharsets.UTF_8);
+-                Map<ResourceLocation, AdvancementProgress> map = (Map)JsonUtils.gsonDeserialize(GSON, s, MAP_TOKEN.getType());
++                Map<ResourceLocation, AdvancementProgress> map = JsonUtils.gsonDeserialize(GSON, s, MAP_TOKEN.getType()); // CraftBukkit
+ 
+                 if (map == null)
+                 {
+@@ -142,7 +142,11 @@
+ 
+                     if (advancement == null)
+                     {
+-                        LOGGER.warn("Ignored advancement '" + entry.getKey() + "' in progress file " + this.progressFile + " - it doesn't exist anymore?");
++                        // CraftBukkit start
++                        if (entry.getKey().toString().equals("minecraft")) {
++                            LOGGER.warn("Ignored advancement '" + entry.getKey() + "' in progress file " + this.progressFile + " - it doesn't exist anymore?");
++                        }
++                        // CraftBukkit end
+                     }
+                     else
+                     {
+@@ -152,11 +156,11 @@
+             }
+             catch (JsonParseException jsonparseexception)
+             {
+-                LOGGER.error("Couldn't parse player advancements in " + this.progressFile, (Throwable)jsonparseexception);
++                LOGGER.error("Couldn't parse player advancements in " + this.progressFile, jsonparseexception);
+             }
+             catch (IOException ioexception)
+             {
+-                LOGGER.error("Couldn't access player advancements in " + this.progressFile, (Throwable)ioexception);
++                LOGGER.error("Couldn't access player advancements in " + this.progressFile, ioexception);
+             }
+         }
+ 
+@@ -167,6 +171,7 @@
  
      public void save()
      {
@@ -55,7 +106,21 @@
          Map<ResourceLocation, AdvancementProgress> map = Maps.<ResourceLocation, AdvancementProgress>newHashMap();
  
          for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet())
-@@ -194,37 +195,44 @@
+@@ -175,7 +180,7 @@
+ 
+             if (advancementprogress.hasProgress())
+             {
+-                map.put(((Advancement)entry.getKey()).getId(), advancementprogress);
++                map.put(entry.getKey().getId(), advancementprogress);
+             }
+         }
+ 
+@@ -190,41 +195,48 @@
+         }
+         catch (IOException ioexception)
+         {
+-            LOGGER.error("Couldn't save player advancements to " + this.progressFile, (Throwable)ioexception);
++            LOGGER.error("Couldn't save player advancements to " + this.progressFile, ioexception);
          }
      }
  
@@ -87,7 +152,7 @@
              if (!flag1 && advancementprogress.isDone())
              {
 -                p_192750_1_.getRewards().apply(this.player);
-+                this.player.world.getServer().getPluginManager().callEvent(new org.bukkit.event.player.PlayerAdvancementDoneEvent(this.player.getBukkitEntity(), advancement.bukkit));
++                this.player.world.getServer().getPluginManager().callEvent(new org.bukkit.event.player.PlayerAdvancementDoneEvent(this.player.getBukkitEntity(), advancement.bukkit)); // CraftBukkit
 +                advancement.getRewards().apply(this.player);
  
 -                if (p_192750_1_.getDisplay() != null && p_192750_1_.getDisplay().shouldAnnounceToChat() && this.player.world.getGameRules().getBoolean("announceAdvancements"))
@@ -109,3 +174,26 @@
          }
  
          return flag;
+@@ -262,7 +274,7 @@
+ 
+                 if (criterionprogress != null && !criterionprogress.isObtained())
+                 {
+-                    ICriterionInstance icriterioninstance = ((Criterion)entry.getValue()).getCriterionInstance();
++                    ICriterionInstance icriterioninstance = entry.getValue().getCriterionInstance();
+ 
+                     if (icriterioninstance != null)
+                     {
+@@ -288,11 +300,11 @@
+ 
+             if (criterionprogress != null && (criterionprogress.isObtained() || advancementprogress.isDone()))
+             {
+-                ICriterionInstance icriterioninstance = ((Criterion)entry.getValue()).getCriterionInstance();
++                ICriterionInstance icriterioninstance = entry.getValue().getCriterionInstance();
+ 
+                 if (icriterioninstance != null)
+                 {
+-                    ICriterionTrigger<ICriterionInstance> icriteriontrigger = CriteriaTriggers.<ICriterionInstance>get(icriterioninstance.getId());
++                    ICriterionTrigger<ICriterionInstance> icriteriontrigger = CriteriaTriggers.get(icriterioninstance.getId());
+ 
+                     if (icriteriontrigger != null)
+                     {
