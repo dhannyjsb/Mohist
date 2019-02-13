@@ -41,11 +41,38 @@
  public class NetworkSystem
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -165,6 +161,13 @@
+@@ -71,6 +67,16 @@
+     private final List<ChannelFuture> endpoints = Collections.<ChannelFuture>synchronizedList(Lists.newArrayList());
+     private final List<NetworkManager> networkManagers = Collections.<NetworkManager>synchronizedList(Lists.newArrayList());
+ 
++    // Paper start - prevent blocking on adding a new network manager while the server is ticking
++    private final List<NetworkManager> pending = Collections.synchronizedList(Lists.<NetworkManager>newArrayList());
++    private void addPending() {
++        synchronized (pending) {
++            this.networkManagers.addAll(pending); // Paper - OBFHELPER - List of network managers
++            pending.clear();
++        }
++    }
++    // Paper end
++
+     public NetworkSystem(MinecraftServer server)
+     {
+         this.mcServer = server;
+@@ -113,7 +119,7 @@
+ 
+                     p_initChannel_1_.pipeline().addLast("timeout", new ReadTimeoutHandler(net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.READ_TIMEOUT)).addLast("legacy_query", new LegacyPingHandler(NetworkSystem.this)).addLast("splitter", new NettyVarint21FrameDecoder()).addLast("decoder", new NettyPacketDecoder(EnumPacketDirection.SERVERBOUND)).addLast("prepender", new NettyVarint21FrameEncoder()).addLast("encoder", new NettyPacketEncoder(EnumPacketDirection.CLIENTBOUND));
+                     NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.SERVERBOUND);
+-                    NetworkSystem.this.networkManagers.add(networkmanager);
++                    pending.add(networkmanager); // Paper
+                     p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
+                     networkmanager.setNetHandler(new NetHandlerHandshakeTCP(NetworkSystem.this.mcServer, networkmanager));
+                 }
+@@ -165,6 +171,14 @@
      {
          synchronized (this.networkManagers)
          {
 +            // Spigot Start
++            addPending(); // Paper
 +            // This prevents players from 'gaming' the server, and strategically relogging to increase their position in the tick order
 +            if (org.spigotmc.SpigotConfig.playerShuffle > 0 && MinecraftServer.currentTick % org.spigotmc.SpigotConfig.playerShuffle == 0)
 +            {
@@ -55,7 +82,7 @@
              Iterator<NetworkManager> iterator = this.networkManagers.iterator();
  
              while (iterator.hasNext())
-@@ -209,6 +212,9 @@
+@@ -209,6 +223,9 @@
                      }
                      else
                      {

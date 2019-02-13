@@ -43,7 +43,12 @@
              public String getName()
              {
                  return "Sign";
-@@ -79,19 +83,38 @@
+@@ -75,23 +79,42 @@
+             }
+             public MinecraftServer getServer()
+             {
+-                return TileEntitySign.this.world.getMinecraftServer();
++                return MinecraftServer.getServerInst(); // Paper - world may be null
              }
          };
  

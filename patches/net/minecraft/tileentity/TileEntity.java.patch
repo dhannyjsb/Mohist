@@ -8,7 +8,7 @@
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockJukebox;
  import net.minecraft.block.state.IBlockState;
-@@ -16,16 +16,20 @@
+@@ -16,16 +16,22 @@
  import net.minecraft.util.registry.RegistryNamespaced;
  import net.minecraft.util.text.ITextComponent;
  import net.minecraft.world.World;
@@ -17,10 +17,12 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
++import org.bukkit.Bukkit;
 +import org.bukkit.inventory.InventoryHolder;
  
 -public abstract class TileEntity implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
 +import javax.annotation.Nullable;
++import java.util.logging.Level;
 +
 +public abstract class TileEntity implements KeyedObject, net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
  {
@@ -31,7 +33,7 @@
      protected BlockPos pos = BlockPos.ORIGIN;
      protected boolean tileEntityInvalid;
      private int blockMetadata = -1;
-@@ -36,9 +40,40 @@
+@@ -36,9 +42,40 @@
          REGISTRY.putObject(new ResourceLocation(id), clazz);
      }
  
@@ -74,7 +76,7 @@
          return REGISTRY.getNameForObject(clazz);
      }
  
-@@ -108,7 +143,7 @@
+@@ -108,7 +145,7 @@
          catch (Throwable throwable1)
          {
              LOGGER.error("Failed to create block entity {}", s, throwable1);
@@ -83,7 +85,7 @@
                      s, oclass == null ? null : oclass.getName(), throwable1);
          }
  
-@@ -122,7 +157,7 @@
+@@ -122,7 +159,7 @@
              catch (Throwable throwable)
              {
                  LOGGER.error("Failed to load data for block entity {}", s, throwable);
@@ -92,7 +94,7 @@
                          s, oclass.getName(), throwable);
                  tileentity = null;
              }
-@@ -243,7 +278,13 @@
+@@ -243,7 +280,13 @@
  
          if (this.world != null)
          {
@@ -107,7 +109,7 @@
              reportCategory.addDetail("Actual block type", new ICrashReportDetail<String>()
              {
                  public String call() throws Exception
-@@ -315,7 +356,7 @@
+@@ -315,7 +358,7 @@
       * @param net The NetworkManager the packet originated from
       * @param pkt The data packet
       */
@@ -116,7 +118,7 @@
      {
      }
  
-@@ -339,16 +380,7 @@
+@@ -339,16 +382,7 @@
      }
  
      private boolean isVanilla = getClass().getName().startsWith("net.minecraft.");
@@ -134,7 +136,7 @@
      public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
      {
          return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
-@@ -359,17 +391,8 @@
+@@ -359,17 +393,8 @@
          return pass == 0;
      }
  
@@ -153,15 +155,28 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +554,12 @@
+@@ -531,4 +556,25 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }
 +
-+    @Nullable
++    // CraftBukkit start - add method
++    // Paper start
 +    public InventoryHolder getOwner() {
++        return getOwner(true);
++    }
++
++    public InventoryHolder getOwner(boolean useSnapshot) {
++        // Paper end
 +        if (world == null) return null;
-+        org.bukkit.block.BlockState state = world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()).getState();
++        // Spigot start
++        final org.bukkit.block.Block block = this.world.getWorld().getBlockAt(this.pos.getX(), this.pos.getY(), this.pos.getZ());
++        if (block == null) {
++            Bukkit.getLogger().log(Level.WARNING, "No block for owner at %s %d %d %d", new Object[] { this.world.getWorld(), this.pos.getX(), this.pos.getY(), this.pos.getZ() });
++            return null;
++        }
++        // Spigot end
++        org.bukkit.block.BlockState state = block.getState(useSnapshot); // Paper
 +        if (state instanceof InventoryHolder) return (InventoryHolder) state;
 +        return null;
 +    }

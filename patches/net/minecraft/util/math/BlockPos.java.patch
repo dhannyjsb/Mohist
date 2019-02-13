@@ -21,7 +21,131 @@
  @Immutable
  public class BlockPos extends Vec3i
  {
-@@ -238,30 +239,30 @@
+@@ -74,72 +75,109 @@
+ 
+     public BlockPos up()
+     {
+-        return this.up(1);
++        return new BlockPos(this.getX(), this.getY() + 1, this.getZ()); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos up(int n)
+     {
+-        return this.offset(EnumFacing.UP, n);
++        return n == 0 ? this : new BlockPos(this.getX(), this.getY() + n, this.getZ()); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos down()
+     {
+-        return this.down(1);
++        return new BlockPos(this.getX(), this.getY() - 1, this.getZ()); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos down(int n)
+     {
+-        return this.offset(EnumFacing.DOWN, n);
++        return n == 0 ? this : new BlockPos(this.getX(), this.getY() - n, this.getZ()); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos north()
+     {
+-        return this.north(1);
++        return new BlockPos(this.getX(), this.getY(), this.getZ() - 1); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos north(int n)
+     {
+-        return this.offset(EnumFacing.NORTH, n);
++        return n == 0 ? this : new BlockPos(this.getX(), this.getY(), this.getZ() - n); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos south()
+     {
+-        return this.south(1);
++        return new BlockPos(this.getX(), this.getY(), this.getZ() + 1); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos south(int n)
+     {
+-        return this.offset(EnumFacing.SOUTH, n);
++        return n == 0 ? this : new BlockPos(this.getX(), this.getY(), this.getZ() + n); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos west()
+     {
+-        return this.west(1);
++        return new BlockPos(this.getX() - 1, this.getY(), this.getZ()); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos west(int n)
+     {
+-        return this.offset(EnumFacing.WEST, n);
++        return n == 0 ? this : new BlockPos(this.getX() - n, this.getY(), this.getZ()); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos east()
+     {
+-        return this.east(1);
++        return new BlockPos(this.getX() + 1, this.getY(), this.getZ()); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos east(int n)
+     {
+-        return this.offset(EnumFacing.EAST, n);
++        return n == 0 ? this : new BlockPos(this.getX() + n, this.getY(), this.getZ()); // Paper - Optimize BlockPos
+     }
+ 
+     public BlockPos offset(EnumFacing facing)
+     {
+-        return this.offset(facing, 1);
++        // Paper Start - Optimize BlockPos
++        switch(facing) {
++            case UP:
++                return new BlockPos(this.getX(), this.getY() + 1, this.getZ());
++                case DOWN:
++                    return new BlockPos(this.getX(), this.getY() - 1, this.getZ());
++                    case NORTH:
++                        return new BlockPos(this.getX(), this.getY(), this.getZ() - 1);
++                        case SOUTH:
++                            return new BlockPos(this.getX(), this.getY(), this.getZ() + 1);
++                            case WEST:
++                                return new BlockPos(this.getX() - 1, this.getY(), this.getZ());
++                                case EAST:
++                                    return new BlockPos(this.getX() + 1, this.getY(), this.getZ());
++                                    default:
++                                        return new BlockPos(this.getX() + facing.getFrontOffsetX(), this.getY() + facing.getFrontOffsetY(), this.getZ() + facing.getFrontOffsetZ());
++        }
++        // Paper End
+     }
+ 
+     public BlockPos offset(EnumFacing facing, int n)
+     {
+-        return n == 0 ? this : new BlockPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n);
++        // Paper Start - Optimize BlockPos
++        if (n == 0) {
++            return this;
++        }
++        switch(facing) {
++            case UP:
++                return new BlockPos(this.getX(), this.getY() + n, this.getZ());
++                case DOWN:
++                    return new BlockPos(this.getX(), this.getY() - n, this.getZ());
++                    case NORTH:
++                        return new BlockPos(this.getX(), this.getY(), this.getZ() - n);
++                        case SOUTH:
++                            return new BlockPos(this.getX(), this.getY(), this.getZ() + n);
++                            case WEST:
++                                return new BlockPos(this.getX() - n, this.getY(), this.getZ());
++                                case EAST:
++                                    return new BlockPos(this.getX() + n, this.getY(), this.getZ());
++                                    default:
++                                        return new BlockPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n);
++        }
++        // Paper End
+     }
+ 
+     public BlockPos rotate(Rotation rotationIn)
+@@ -238,30 +276,31 @@
          return this;
      }
  
@@ -54,23 +178,68 @@
 +                            this.pos = new MutableBlockPos(x1, y1, z1);
                              return this.pos;
                          }
++                        // Paper start - Make mutable and protected for MutableBlockPos and PooledBlockPos
                          else if (this.pos.x == x2 && this.pos.y == y2 && this.pos.z == z2)
                          {
 -                            return (BlockPos.MutableBlockPos)this.endOfData();
-+                            return (MutableBlockPos)this.endOfData();
++                            return this.endOfData();
                          }
                          else
                          {
-@@ -348,7 +349,7 @@
-                 return this.z;
+@@ -280,6 +319,7 @@
+                                 this.pos.y = y1;
+                                 ++this.pos.z;
+                             }
++                            // Paper end
+ 
+                             return this.pos;
+                         }
+@@ -290,11 +330,7 @@
+     }
+ 
+     public static class MutableBlockPos extends BlockPos
+-        {
+-            protected int x;
+-            protected int y;
+-            protected int z;
+-
++    {
+             public MutableBlockPos()
+             {
+                 this(0, 0, 0);
+@@ -308,6 +344,7 @@
+             public MutableBlockPos(int x_, int y_, int z_)
+             {
+                 super(0, 0, 0);
++                // Paper start - Modify base position variables
+                 this.x = x_;
+                 this.y = y_;
+                 this.z = z_;
+@@ -333,30 +370,15 @@
+                 return super.rotate(rotationIn).toImmutable();
              }
  
--            public BlockPos.MutableBlockPos setPos(int xIn, int yIn, int zIn)
+-            public int getX()
 +            public MutableBlockPos setPos(int xIn, int yIn, int zIn)
              {
+-                return this.x;
+-            }
+-
+-            public int getY()
+-            {
+-                return this.y;
+-            }
+-
+-            public int getZ()
+-            {
+-                return this.z;
+-            }
+-
+-            public BlockPos.MutableBlockPos setPos(int xIn, int yIn, int zIn)
+-            {
                  this.x = xIn;
                  this.y = yIn;
-@@ -356,7 +357,7 @@
+                 this.z = zIn;
                  return this;
              }
  
@@ -79,7 +248,7 @@
              {
                  return this.setPos(MathHelper.floor(xIn), MathHelper.floor(yIn), MathHelper.floor(zIn));
              }
-@@ -367,17 +368,17 @@
+@@ -367,19 +389,19 @@
                  return this.setPos(entityIn.posX, entityIn.posY, entityIn.posZ);
              }
  
@@ -98,9 +267,12 @@
 -            public BlockPos.MutableBlockPos move(EnumFacing facing, int n)
 +            public MutableBlockPos move(EnumFacing facing, int n)
              {
-                 return this.setPos(this.x + facing.getFrontOffsetX() * n, this.y + facing.getFrontOffsetY() * n, this.z + facing.getFrontOffsetZ() * n);
+-                return this.setPos(this.x + facing.getFrontOffsetX() * n, this.y + facing.getFrontOffsetY() * n, this.z + facing.getFrontOffsetZ() * n);
++                return this.setPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n); // Paper - USE THE BLEEPING GETTERS
              }
-@@ -393,22 +394,22 @@
+ 
+             public void setY(int yIn)
+@@ -393,22 +415,22 @@
              }
          }
  
@@ -127,7 +299,7 @@
              {
                  return retain(MathHelper.floor(xIn), MathHelper.floor(yIn), MathHelper.floor(zIn));
              }
-@@ -419,13 +420,13 @@
+@@ -419,13 +441,13 @@
                  return retain(vec.getX(), vec.getY(), vec.getZ());
              }
  
@@ -143,7 +315,7 @@
  
                          if (blockpos$pooledmutableblockpos != null && blockpos$pooledmutableblockpos.released)
                          {
-@@ -436,7 +437,7 @@
+@@ -436,7 +458,7 @@
                      }
                  }
  
@@ -152,7 +324,7 @@
              }
  
              public void release()
-@@ -452,7 +453,7 @@
+@@ -452,41 +474,41 @@
                  }
              }
  
@@ -161,7 +333,8 @@
              {
                  if (this.released)
                  {
-@@ -460,33 +461,33 @@
+-                    BlockPos.LOGGER.error("PooledMutableBlockPosition modified after it was released.", new Throwable());
++                    BlockPos.LOGGER.error("PooledMutableBlockPos modified after it was released.", new Throwable());
                      this.released = false;
                  }
  
