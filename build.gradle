@@ -1,7 +1,15 @@
 buildscript {
     repositories {
+        maven {
+            name 'aliyun'
+            url 'https://maven.aliyun.com/repository/public'
+        }
         mavenLocal()
         mavenCentral()
+        maven {
+            name 'lliiooll'
+            url 'https://maven.lliiooll.cn/'
+        }
         maven {
             name 'prok'
             url 'https://repo.prok.pw/'
@@ -14,6 +22,10 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name 'spigot'
+            url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -21,6 +33,8 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: "idea"
 apply plugin: 'net.minecraftforge.gradle.patcher'
 apply plugin: 'net.minecraftforge.gradle.launch4j'
 
@@ -29,7 +43,14 @@ version = '0.0.1'
 
 repositories {
     clear()
-    mavenCentral()
+    maven {
+        name 'aliyun'
+        url 'https://maven.aliyun.com/repository/public'
+    }
+    maven {
+        name 'lliiooll'
+        url 'https://maven.lliiooll.cn/'
+    }
     maven {
         name = "forge"
         url = "https://files.minecraftforge.net/maven"
@@ -58,19 +79,21 @@ repositories {
         name 'prok'
         url 'https://repo.prok.pw/'
     }
-    flatDir {
-        dirs 'src/main/resources'
-    }
+    mavenCentral()
 }
 
 configurations{
-    compile.extendsFrom libraries
+    compile.extendsFrom exported
     libraries
 }
 
 dependencies {
     libraries 'org.avaje:ebean:2.8.1'
-    libraries fileTree(dir:'src/main/resources',include:['*.jar'])
+    libraries 'org.bukkit:mohist-bukkit:1.12.2'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 jar{
@@ -87,8 +110,8 @@ minecraft {
     mappings = 'snapshot_nodoc_20171003'
     workspaceDir = "projects"
     versionJson = "jsons/1.12.2-dev.json"
-    buildUserdev = false
-    buildInstaller = false
+    buildUserdev = true
+    buildInstaller = true
     installerVersion = '1.5'
 
     def common = {
@@ -130,14 +153,20 @@ installer {
 }
 
 launch4j {
+    jar = installer.archivePath.canonicalPath
+    outfile = file("build/distributions/${project.name}-${project.version}-installer-win.exe").canonicalPath
+    icon = file('icon.ico').canonicalPath
+    manifest = file('l4jManifest.xml').canonicalPath
     jreMinVersion = '1.8.0'
+    initialHeapPercent = 5;
+    maxHeapPercent = 100;
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+
 tasks.generateXmlConfig.dependsOn installer
+tasks.build.dependsOn 'launch4j'
 tasks.compileJava.enabled = false
-compileJava.options.encoding = 'UTF-8'
 tasks.reobfuscate.setProperty("extraSrg",["PK: org/bukkit/craftbukkit org/bukkit/craftbukkit/v1_12_R1"])
+
 task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     onlyIf {
         project.hasProperty('jarsigner')

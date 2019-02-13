@@ -139,6 +139,11 @@
       "url" : "https://papermc.io/repo/repository/maven-public/"
     },
     {
+      "name": "org.bukkit:mohist-bukkit:1.12.2",
+      "children" : ["sources"],
+      "url" : "https://maven.lliiooll.cn/"
+    },
+    {
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "children" : ["sources"],
       "url" : "http://repo.maven.apache.org/maven2"
