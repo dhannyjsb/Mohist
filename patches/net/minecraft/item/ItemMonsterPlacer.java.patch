@@ -44,7 +44,23 @@
  public class ItemMonsterPlacer extends Item
  {
      public ItemMonsterPlacer()
-@@ -220,6 +212,11 @@
+@@ -152,7 +144,14 @@
+ 
+                 NBTTagCompound nbttagcompound1 = targetEntity.writeToNBT(new NBTTagCompound());
+                 UUID uuid = targetEntity.getUniqueID();
+-                nbttagcompound1.merge(nbttagcompound.getCompoundTag("EntityTag"));
++                // Paper start - Filter out position and motion information
++                NBTTagCompound entityTag = nbttagcompound.getCompoundTag("EntityTag");
++                if (entityWorld.paperConfig.filterNBTFromSpawnEgg) {
++                    entityTag.removeTag("Pos");
++                    entityTag.removeTag("Motion");
++                }
++                nbttagcompound1.merge(entityTag);
++                // Paper end
+                 targetEntity.setUniqueId(uuid);
+                 targetEntity.readFromNBT(nbttagcompound1);
+             }
+@@ -220,6 +219,11 @@
      @Nullable
      public static Entity spawnCreature(World worldIn, @Nullable ResourceLocation entityID, double x, double y, double z)
      {
@@ -56,7 +72,7 @@
          if (entityID != null && EntityList.ENTITY_EGGS.containsKey(entityID))
          {
              Entity entity = null;
-@@ -235,8 +232,15 @@
+@@ -235,8 +239,15 @@
                      entityliving.rotationYawHead = entityliving.rotationYaw;
                      entityliving.renderYawOffset = entityliving.rotationYaw;
                      entityliving.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData)null);

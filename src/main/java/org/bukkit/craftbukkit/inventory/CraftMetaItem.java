@@ -105,6 +105,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
                     .put(CraftMetaFirework.class, "FIREWORK")
                     .put(CraftMetaCharge.class, "FIREWORK_EFFECT")
                     .put(CraftMetaKnowledgeBook.class, "KNOWLEDGE_BOOK")
+                    .put(CraftMetaArmorStand.class, "ARMOR_STAND")
                     .put(CraftMetaItem.class, "UNSPECIFIC")
                     .build();
 
@@ -886,7 +887,15 @@ class CraftMetaItem implements ItemMeta, Repairable {
                         CraftMetaEnchantedBook.STORED_ENCHANTMENTS.NBT,
                         CraftMetaCharge.EXPLOSION.NBT,
                         CraftMetaBlockState.BLOCK_ENTITY_TAG.NBT,
-                        CraftMetaKnowledgeBook.BOOK_RECIPES.NBT
+                        CraftMetaKnowledgeBook.BOOK_RECIPES.NBT,
+                        // Paper start
+                        CraftMetaArmorStand.ENTITY_TAG.NBT,
+                        CraftMetaArmorStand.INVISIBLE.NBT,
+                        CraftMetaArmorStand.NO_BASE_PLATE.NBT,
+                        CraftMetaArmorStand.SHOW_ARMS.NBT,
+                        CraftMetaArmorStand.SMALL.NBT,
+                        CraftMetaArmorStand.MARKER.NBT
+                        // Paper end
                 ));
             }
             return HANDLED_TAGS;

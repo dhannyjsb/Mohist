@@ -233,7 +233,7 @@
      {
      }
  
-@@ -980,4 +1012,13 @@
+@@ -980,4 +1012,18 @@
      {
          return false;
      }
@@ -244,6 +244,11 @@
 +        if (this.canMove) {
 +            super.move(moveType, x, y, z);
 +        }
++    }
++
++    @Override
++    public boolean canBreatheUnderwater() { // Skips a bit of damage handling code, probably a micro-optimization
++        return true;
 +    }
 +    // Paper end
  }

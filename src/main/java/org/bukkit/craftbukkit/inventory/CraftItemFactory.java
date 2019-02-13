@@ -97,6 +97,8 @@ public final class CraftItemFactory implements ItemFactory {
             return meta instanceof CraftMetaSpawnEgg ? meta : new CraftMetaSpawnEgg(meta);
         case KNOWLEDGE_BOOK:
             return meta instanceof CraftMetaKnowledgeBook ? meta : new CraftMetaKnowledgeBook(meta);
+            case ARMOR_STAND:
+                return meta instanceof CraftMetaArmorStand ? meta : new CraftMetaArmorStand(meta); // Paper
         case FURNACE:
         case CHEST:
         case TRAPPED_CHEST:
@@ -211,7 +213,7 @@ public final class CraftItemFactory implements ItemFactory {
         if (nms == null) {
             nms = CraftItemStack.asNMSCopy(item);
         }
-        return nms != null ? nms.getName() : null;
+        return nms != null ? nms.getDisplayName() : null;
     }
     // Paper end
 }

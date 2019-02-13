@@ -49,9 +49,9 @@
 +            // Paper start - Configurable EntityFallingBlock height nerf
 +            if (this.world.paperConfig.fallingBlockHeightNerf != 0 && this.posY > this.world.paperConfig.fallingBlockHeightNerf) {
 +                if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
-+                    this.dropItem(new ItemStack(block, 1, block.getDropData(this.getBlock())), 0.0F);
++                    this.dropItem(new ItemStack(block, 1, block.damageDropped(this.getBlock())), 0.0F);
 +                }
-+                this.die();
++                this.setDead();
 +            }
 +            // Paper end
 +
@@ -91,7 +91,22 @@
                  }
  
                  if (flag && (double)this.rand.nextFloat() < 0.05000000074505806D + (double)i * 0.05D)
-@@ -336,6 +352,14 @@
+@@ -308,6 +324,14 @@
+             this.fallTile = Block.getBlockById(compound.getByte("Tile") & 255).getStateFromMeta(i);
+         }
+ 
++        // Paper start - Block FallingBlocks with Command Blocks
++        // Check mappings on update - dc = "repeating_command_block" - dd = "chain_command_block"
++        final Block b = this.fallTile.getBlock();
++        if (this.world.paperConfig.filterNBTFromSpawnEgg && (b == Blocks.COMMAND_BLOCK || b == Blocks.REPEATING_COMMAND_BLOCK || b == Blocks.CHAIN_COMMAND_BLOCK)) {
++            this.fallTile = Blocks.STONE.getDefaultState();
++        }
++        // Paper end
++
+         this.fallTime = compound.getInteger("Time");
+         Block block = this.fallTile.getBlock();
+ 
+@@ -336,6 +360,14 @@
          {
              this.fallTile = Blocks.SAND.getDefaultState();
          }
