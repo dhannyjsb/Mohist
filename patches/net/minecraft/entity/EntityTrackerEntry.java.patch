@@ -84,7 +84,7 @@
  public class EntityTrackerEntry
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -94,7 +56,12 @@
+@@ -94,10 +56,16 @@
      private boolean ridingEntity;
      private boolean onGround;
      public boolean playerEntitiesUpdated;
@@ -98,7 +98,11 @@
  
      public EntityTrackerEntry(Entity entityIn, int rangeIn, int maxRangeIn, int updateFrequencyIn, boolean sendVelocityUpdatesIn)
      {
-@@ -148,19 +115,19 @@
++        entityIn.tracker = this; // Paper
+         this.trackedEntity = entityIn;
+         this.range = rangeIn;
+         this.maxRange = maxRangeIn;
+@@ -148,19 +116,19 @@
          if (!list.equals(this.passengers))
          {
              this.passengers = list;
@@ -122,7 +126,7 @@
                  {
                      EntityPlayerMP entityplayermp = (EntityPlayerMP)entityplayer;
                      mapdata.updateVisiblePlayers(entityplayermp, itemstack);
-@@ -211,9 +178,22 @@
+@@ -211,9 +179,22 @@
                  Packet<?> packet1 = null;
                  boolean flag = j * j + k * k + l * l >= 128L || this.updateCounter % 60 == 0;
                  boolean flag1 = Math.abs(k2 - this.encodedRotationYaw) >= 1 || Math.abs(i - this.encodedRotationPitch) >= 1;
@@ -146,7 +150,7 @@
                      if (j >= -32768L && j < 32768L && k >= -32768L && k < 32768L && l >= -32768L && l < 32768L && this.ticksSinceLastForcedTeleport <= 400 && !this.ridingEntity && this.onGround == this.trackedEntity.onGround)
                      {
                          if ((!flag || !flag1) && !(this.trackedEntity instanceof EntityArrow))
-@@ -236,6 +216,11 @@
+@@ -236,6 +217,11 @@
                      {
                          this.onGround = this.trackedEntity.onGround;
                          this.ticksSinceLastForcedTeleport = 0;
@@ -158,7 +162,7 @@
                          this.resetPlayerVisibility();
                          packet1 = new SPacketEntityTeleport(this.trackedEntity);
                      }
-@@ -267,11 +252,30 @@
+@@ -267,11 +253,30 @@
  
                  if (packet1 != null)
                  {
@@ -190,7 +194,7 @@
                  if (flag)
                  {
                      this.encodedPosX = i1;
-@@ -284,7 +288,7 @@
+@@ -284,7 +289,7 @@
                      this.encodedRotationYaw = k2;
                      this.encodedRotationPitch = i;
                  }
@@ -199,7 +203,7 @@
                  this.ridingEntity = false;
              }
  
-@@ -303,7 +307,28 @@
+@@ -303,7 +308,28 @@
  
          if (this.trackedEntity.velocityChanged)
          {
@@ -229,7 +233,7 @@
              this.trackedEntity.velocityChanged = false;
          }
      }
-@@ -324,6 +349,11 @@
+@@ -324,6 +350,11 @@
  
              if (!set.isEmpty())
              {
@@ -241,7 +245,7 @@
                  this.sendToTrackingAndSelf(new SPacketEntityProperties(this.trackedEntity.getEntityId(), set));
              }
  
-@@ -376,7 +406,17 @@
+@@ -376,7 +407,17 @@
              {
                  if (!this.trackingPlayers.contains(playerMP) && (this.isPlayerWatchingThisChunk(playerMP) || this.trackedEntity.forceSpawn))
                  {
@@ -260,7 +264,7 @@
                      Packet<?> packet = this.createSpawnPacket();
                      playerMP.connection.sendPacket(packet);
  
-@@ -392,6 +432,14 @@
+@@ -392,6 +433,14 @@
                          AttributeMap attributemap = (AttributeMap)((EntityLivingBase)this.trackedEntity).getAttributeMap();
                          Collection<IAttributeInstance> collection = attributemap.getWatchedAttributes();
  
@@ -275,7 +279,7 @@
                          if (!collection.isEmpty())
                          {
                              playerMP.connection.sendPacket(new SPacketEntityProperties(this.trackedEntity.getEntityId(), collection));
-@@ -435,6 +483,11 @@
+@@ -435,6 +484,11 @@
                          }
                      }
  
@@ -287,7 +291,73 @@
                      if (this.trackedEntity instanceof EntityLivingBase)
                      {
                          EntityLivingBase entitylivingbase = (EntityLivingBase)this.trackedEntity;
-@@ -491,11 +544,14 @@
+@@ -457,6 +511,7 @@
+ 
+                     this.trackedEntity.addTrackingPlayer(playerMP);
+                     playerMP.addEntity(this.trackedEntity);
++                    updatePassengers(playerMP); // Paper
+                     net.minecraftforge.event.ForgeEventFactory.onStartEntityTracking(trackedEntity, playerMP);
+                 }
+             }
+@@ -465,6 +520,7 @@
+                 this.trackingPlayers.remove(playerMP);
+                 this.trackedEntity.removeTrackingPlayer(playerMP);
+                 playerMP.removeEntity(this.trackedEntity);
++                updatePassengers(playerMP); // Paper
+                 net.minecraftforge.event.ForgeEventFactory.onStopEntityTracking(trackedEntity, playerMP);
+             }
+         }
+@@ -472,6 +528,49 @@
+ 
+     public boolean isVisibleTo(EntityPlayerMP playerMP)
+     {
++        // Paper start
++        if (trackedEntity.isRiding()) {
++            return isTrackedBy(trackedEntity.getLowestRidingEntity(), playerMP);
++        } else if (hasPassengerInRange(trackedEntity, playerMP)) {
++            return true;
++        }
++        return isInRangeOfPlayer(playerMP);
++    }
++
++    private static boolean hasPassengerInRange(Entity entity, EntityPlayerMP playerMP) {
++        if (!entity.isBeingRidden()) {
++            return false;
++        }
++        for (Entity passenger : entity.getPassengers()) {
++            if (passenger.tracker != null && passenger.tracker.isInRangeOfPlayer(playerMP)) {
++                return true;
++            }
++            if (passenger.isBeingRidden()) {
++                if (hasPassengerInRange(passenger, playerMP)) {
++                    return true;
++                }
++            }
++        }
++        return false;
++    }
++
++    private static boolean isTrackedBy(Entity entity, EntityPlayerMP playerMP) {
++        return entity == playerMP || entity.tracker != null && entity.tracker.trackingPlayers.contains(playerMP);
++    }
++
++    private void updatePassengers(EntityPlayerMP player) {
++        if (trackedEntity.isBeingRidden()) {
++            trackedEntity.getPassengers().forEach((e) -> {
++                if (e.tracker != null) {
++                    e.tracker.updatePlayerEntity(player);
++                }
++            });
++            player.connection.sendPacket(new SPacketSetPassengers(this.trackedEntity));
++        }
++    }
++
++   private boolean isInRangeOfPlayer(EntityPlayerMP playerMP) {
++        // Paper end
+         double d0 = playerMP.posX - (double)this.encodedPosX / 4096.0D;
+         double d1 = playerMP.posZ - (double)this.encodedPosZ / 4096.0D;
+         int i = Math.min(this.range, this.maxRange);
+@@ -491,11 +590,14 @@
          }
      }
  
@@ -303,3 +373,11 @@
          }
  
          Packet pkt = net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.getEntitySpawningPacket(this.trackedEntity);
+@@ -667,6 +769,7 @@
+             this.trackingPlayers.remove(playerMP);
+             this.trackedEntity.removeTrackingPlayer(playerMP);
+             playerMP.removeEntity(this.trackedEntity);
++            updatePassengers(playerMP); // Paper
+         }
+     }
+ 

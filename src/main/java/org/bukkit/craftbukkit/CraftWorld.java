@@ -678,6 +678,7 @@ public class CraftWorld implements World {
         for (Object o : world.loadedEntityList) {
             if (o instanceof net.minecraft.entity.Entity) {
                 net.minecraft.entity.Entity mcEnt = (net.minecraft.entity.Entity) o;
+                if (mcEnt.shouldBeRemoved) continue; // Paper
                 Entity bukkitEntity = mcEnt.getBukkitEntity();
 
                 // Assuming that bukkitEntity isn't null
@@ -696,6 +697,7 @@ public class CraftWorld implements World {
         for (Object o : world.loadedEntityList) {
             if (o instanceof net.minecraft.entity.Entity) {
                 net.minecraft.entity.Entity mcEnt = (net.minecraft.entity.Entity) o;
+                if (mcEnt.shouldBeRemoved) continue; // Paper
                 Entity bukkitEntity = mcEnt.getBukkitEntity();
 
                 // Assuming that bukkitEntity isn't null
@@ -720,6 +722,7 @@ public class CraftWorld implements World {
 
         for (Object entity: world.loadedEntityList) {
             if (entity instanceof net.minecraft.entity.Entity) {
+                if (((net.minecraft.entity.Entity) entity).shouldBeRemoved) continue; // Paper
                 Entity bukkitEntity = ((net.minecraft.entity.Entity) entity).getBukkitEntity();
 
                 if (bukkitEntity == null) {
@@ -742,6 +745,7 @@ public class CraftWorld implements World {
 
         for (Object entity: world.loadedEntityList) {
             if (entity instanceof net.minecraft.entity.Entity) {
+                if (((net.minecraft.entity.Entity) entity).shouldBeRemoved) continue; // Paper
                 Entity bukkitEntity = ((net.minecraft.entity.Entity) entity).getBukkitEntity();
 
                 if (bukkitEntity == null) {

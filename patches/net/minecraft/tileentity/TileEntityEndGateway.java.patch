@@ -38,10 +38,11 @@
  
      public NBTTagCompound writeToNBT(NBTTagCompound compound)
      {
-@@ -171,6 +178,22 @@
+@@ -171,7 +178,33 @@
              if (this.exitPortal != null)
              {
                  BlockPos blockpos = this.exactTeleport ? this.exitPortal : this.findExitPosition();
+-                entityIn.setPositionAndUpdate((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D);
 +                if (entityIn instanceof EntityPlayerMP) {
 +                    org.bukkit.craftbukkit.entity.CraftPlayer player = (CraftPlayer) entityIn.getBukkitEntity();
 +                    org.bukkit.Location location = new Location(world.getWorld(), (double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D);
@@ -58,6 +59,17 @@
 +                    this.triggerCooldown(); // CraftBukkit - call at end of method
 +                    return;
 +                }
-                 entityIn.setPositionAndUpdate((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D);
++                // Paper start - EntityTeleportEndGatewayEvent - replicated from above
++                org.bukkit.craftbukkit.entity.CraftEntity bukkitEntity = entityIn.getBukkitEntity();
++                org.bukkit.Location location = new Location(world.getWorld(), (double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D);
++                location.setPitch(bukkitEntity.getLocation().getPitch());
++                location.setYaw(bukkitEntity.getLocation().getYaw());
++                com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent event = new com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent(bukkitEntity, bukkitEntity.getLocation(), location, new org.bukkit.craftbukkit.block.CraftEndGateway(MCUtil.toLocation(world, this.getPos()).getBlock()));
++                if (!event.callEvent()) {
++                    return;
++                }
++                entityIn.setPositionAndUpdate(event.getTo().getX(), event.getTo().getY(), event.getTo().getZ());
++                // Paper end - EntityTeleportEndGatewayEvent
              }
  
+             this.triggerCooldown();

@@ -124,12 +124,12 @@ public class CraftLootableInventoryData {
             }
         if (comp.hasKey("lootedPlayers", 9)) { // 9 = list
                 NBTTagList list = comp.getTagList("lootedPlayers", 10); // 10 = compound
-                final int size = list.size();
+                final int size = list.tagCount();
                 if (size > 0) {
-                        this.lootedPlayers = new HashMap<>(list.size());
+                        this.lootedPlayers = new HashMap<UUID, Long>(list.tagCount());
                     }
                 for (int i = 0; i < size; i++) {
-                        final NBTTagCompound cmp = list.get(i);
+                        final NBTTagCompound cmp = list.getCompoundTagAt(i);
                         lootedPlayers.put(cmp.getUUID("UUID"), cmp.getLong("Time"));
                     }
             }
@@ -156,7 +156,7 @@ public class CraftLootableInventoryData {
                 comp.setTag("lootedPlayers", list);
             }
 
-                if (!comp.isEmpty()) {
+                if (!comp.hasNoTags()) {
                 base.setTag("Paper.LootableData", comp);
             }
     }

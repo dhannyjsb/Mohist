@@ -1,8 +1,8 @@
 package com.destroystokyo.paper.utils;
 
+import com.destroystokyo.paper.MCUtil;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.MCUtil;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;

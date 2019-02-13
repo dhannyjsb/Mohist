@@ -51,7 +51,12 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
  import net.minecraft.util.datafix.walkers.ItemStackDataLists;
-@@ -57,7 +39,20 @@
+@@ -53,11 +35,25 @@
+ import net.minecraft.world.EnumDifficulty;
+ import net.minecraft.world.World;
+ import net.minecraft.world.WorldServer;
++import net.minecraft.world.chunk.Chunk;
+ import net.minecraft.world.storage.loot.LootContext;
  import net.minecraft.world.storage.loot.LootTable;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -72,7 +77,7 @@
  public abstract class EntityLiving extends EntityLivingBase
  {
      private static final DataParameter<Byte> AI_FLAGS = EntityDataManager.<Byte>createKey(EntityLiving.class, DataSerializers.BYTE);
-@@ -68,22 +63,24 @@
+@@ -68,22 +64,24 @@
      protected EntityJumpHelper jumpHelper;
      private final EntityBodyHelper bodyHelper;
      protected PathNavigate navigator;
@@ -103,7 +108,7 @@
  
      public EntityLiving(World worldIn)
      {
-@@ -171,8 +168,40 @@
+@@ -171,8 +169,40 @@
      {
          this.attackTarget = entitylivingbaseIn;
          net.minecraftforge.common.ForgeHooks.onLivingSetAttackTarget(this, entitylivingbaseIn);
@@ -144,7 +149,7 @@
      public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
      {
          return cls != EntityGhast.class;
-@@ -447,12 +476,21 @@
+@@ -447,12 +477,21 @@
      {
          super.readEntityFromNBT(compound);
  
@@ -168,7 +173,7 @@
  
          if (compound.hasKey("ArmorItems", 9))
          {
-@@ -581,6 +619,11 @@
+@@ -581,6 +620,11 @@
          {
              for (EntityItem entityitem : this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D)))
              {
@@ -180,7 +185,7 @@
                  if (!entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup())
                  {
                      this.updateEquipmentIfNeeded(entityitem);
-@@ -653,8 +696,14 @@
+@@ -653,8 +697,14 @@
              }
          }
  
@@ -197,7 +202,7 @@
              double d0;
  
              switch (entityequipmentslot.getSlotType())
-@@ -671,7 +720,9 @@
+@@ -671,7 +721,9 @@
  
              if (!itemstack1.isEmpty() && (double)(this.rand.nextFloat() - 0.1F) < d0)
              {
@@ -207,7 +212,7 @@
              }
  
              this.setItemStackToSlot(entityequipmentslot, itemstack);
-@@ -696,7 +747,7 @@
+@@ -696,7 +748,7 @@
          return true;
      }
  
@@ -216,11 +221,13 @@
      {
          return true;
      }
-@@ -721,26 +772,23 @@
+@@ -721,26 +773,25 @@
          }
          else
          {
 -            Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
++            Chunk currentChunk = getChunkAtLocation(); // Paper
++            if (currentChunk != null && (currentChunk.isUnloading() || currentChunk.scheduledForUnload != null)) return; // Paper
 +            EntityPlayer entity = this.world.getClosestPlayerToEntity(this, -1.0D);
  
 -            if (entity != null)
@@ -248,7 +255,7 @@
                      this.idleTime = 0;
                  }
              }
-@@ -753,6 +801,18 @@
+@@ -753,6 +804,18 @@
          this.world.profiler.startSection("checkDespawn");
          this.despawnEntity();
          this.world.profiler.endSection();
@@ -267,7 +274,7 @@
          this.world.profiler.startSection("sensing");
          this.senses.clearSensingCache();
          this.world.profiler.endSection();
-@@ -1209,6 +1269,10 @@
+@@ -1209,6 +1272,10 @@
      {
          if (this.getLeashed() && this.getLeashHolder() == player)
          {
@@ -278,7 +285,7 @@
              this.clearLeashed(true, !player.capabilities.isCreativeMode);
              return true;
          }
-@@ -1218,6 +1282,10 @@
+@@ -1218,6 +1285,10 @@
  
              if (itemstack.getItem() == Items.LEAD && this.canBeLeashedTo(player))
              {
@@ -289,7 +296,7 @@
                  this.setLeashHolder(player, true);
                  itemstack.shrink(1);
                  return true;
-@@ -1245,11 +1313,13 @@
+@@ -1245,11 +1316,13 @@
          {
              if (!this.isEntityAlive())
              {
@@ -303,7 +310,7 @@
                  this.clearLeashed(true, true);
              }
          }
-@@ -1264,7 +1334,9 @@
+@@ -1264,7 +1337,9 @@
  
              if (!this.world.isRemote && dropLead)
              {
@@ -313,7 +320,7 @@
              }
  
              if (!this.world.isRemote && sendPacket && this.world instanceof WorldServer)
-@@ -1348,6 +1420,7 @@
+@@ -1348,6 +1423,7 @@
              }
              else
              {
@@ -321,7 +328,7 @@
                  this.clearLeashed(false, true);
              }
          }
-@@ -1448,7 +1521,6 @@
+@@ -1448,7 +1524,6 @@
          ON_GROUND,
          IN_AIR,
          IN_WATER;
