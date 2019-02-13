@@ -22,7 +22,7 @@
  import net.minecraft.entity.effect.EntityLightningBolt;
  import net.minecraft.entity.passive.EntityOcelot;
  import net.minecraft.entity.player.EntityPlayer;
-@@ -36,7 +26,12 @@
+@@ -36,16 +26,22 @@
  import net.minecraft.world.storage.loot.LootTableList;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,8 +35,9 @@
  public class EntityCreeper extends EntityMob
  {
      private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityCreeper.class, DataSerializers.VARINT);
-@@ -44,8 +39,8 @@
+     private static final DataParameter<Boolean> POWERED = EntityDataManager.<Boolean>createKey(EntityCreeper.class, DataSerializers.BOOLEAN);
      private static final DataParameter<Boolean> IGNITED = EntityDataManager.<Boolean>createKey(EntityCreeper.class, DataSerializers.BOOLEAN);
++    private static final DataParameter<Boolean> isIgnitedDW = IGNITED; // Paper OBFHELPER
      private int lastActiveTime;
      private int timeSinceIgnited;
 -    private int fuseTime = 30;
@@ -46,7 +47,16 @@
      private int droppedSkulls;
  
      public EntityCreeper(World worldIn)
-@@ -184,7 +179,7 @@
+@@ -106,7 +102,7 @@
+     {
+         super.writeEntityToNBT(compound);
+ 
+-        if (((Boolean)this.dataManager.get(POWERED)).booleanValue())
++        if (this.dataManager.get(POWERED).booleanValue())
+         {
+             compound.setBoolean("powered", true);
+         }
+@@ -184,7 +180,7 @@
  
      public void onDeath(DamageSource cause)
      {
@@ -55,7 +65,7 @@
  
          if (this.world.getGameRules().getBoolean("doMobLoot"))
          {
-@@ -201,6 +196,7 @@
+@@ -201,6 +197,7 @@
                  this.entityDropItem(new ItemStack(Items.SKULL, 1, 4), 0.0F);
              }
          }
@@ -63,7 +73,25 @@
      }
  
      public boolean attackEntityAsMob(Entity entityIn)
-@@ -235,12 +231,23 @@
+@@ -210,7 +207,7 @@
+ 
+     public boolean getPowered()
+     {
+-        return ((Boolean)this.dataManager.get(POWERED)).booleanValue();
++        return this.dataManager.get(POWERED).booleanValue();
+     }
+ 
+     @SideOnly(Side.CLIENT)
+@@ -227,7 +224,7 @@
+ 
+     public int getCreeperState()
+     {
+-        return ((Integer)this.dataManager.get(STATE)).intValue();
++        return this.dataManager.get(STATE).intValue();
+     }
+ 
+     public void setCreeperState(int state)
+@@ -235,12 +232,23 @@
          this.dataManager.set(STATE, Integer.valueOf(state));
      }
  
@@ -89,7 +117,7 @@
      protected boolean processInteract(EntityPlayer player, EnumHand hand)
      {
          ItemStack itemstack = player.getHeldItem(hand);
-@@ -267,10 +274,20 @@
+@@ -267,10 +275,21 @@
          {
              boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this);
              float f = this.getPowered() ? 2.0F : 1.0F;
@@ -110,11 +138,12 @@
 +                this.spawnLingeringCloud();
 +            } else {
 +                timeSinceIgnited = 0;
++                this.dataManager.set(isIgnitedDW, Boolean.valueOf(false)); // Paper
 +            }
          }
      }
  
-@@ -281,6 +298,7 @@
+@@ -281,6 +300,7 @@
          if (!collection.isEmpty())
          {
              EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.world, this.posX, this.posY, this.posZ);
@@ -122,3 +151,12 @@
              entityareaeffectcloud.setRadius(2.5F);
              entityareaeffectcloud.setRadiusOnUse(-0.5F);
              entityareaeffectcloud.setWaitTime(10);
+@@ -298,7 +318,7 @@
+ 
+     public boolean hasIgnited()
+     {
+-        return ((Boolean)this.dataManager.get(IGNITED)).booleanValue();
++        return this.dataManager.get(IGNITED).booleanValue();
+     }
+ 
+     public void ignite()

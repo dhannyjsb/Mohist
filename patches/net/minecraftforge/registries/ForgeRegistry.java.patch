@@ -8,7 +8,7 @@
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
-@@ -16,34 +16,11 @@
+@@ -16,46 +16,26 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
   */
@@ -45,14 +45,15 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTTagList;
  import net.minecraft.nbt.NBTTagString;
-@@ -51,11 +28,17 @@
+ import net.minecraft.util.ResourceLocation;
  import net.minecraftforge.event.RegistryEvent;
  import net.minecraftforge.event.RegistryEvent.MissingMappings;
- import net.minecraftforge.fml.common.FMLContainer;
+-import net.minecraftforge.fml.common.FMLContainer;
 -import net.minecraftforge.fml.common.FMLLog;
- import net.minecraftforge.fml.common.InjectedModContainer;
- import net.minecraftforge.fml.common.Loader;
- import net.minecraftforge.fml.common.ModContainer;
+-import net.minecraftforge.fml.common.InjectedModContainer;
+-import net.minecraftforge.fml.common.Loader;
+-import net.minecraftforge.fml.common.ModContainer;
++import net.minecraftforge.fml.common.*;
 +import org.apache.commons.lang3.Validate;
  
 +import javax.annotation.Nonnull;
@@ -64,16 +65,7 @@
  public class ForgeRegistry<V extends IForgeRegistryEntry<V>> implements IForgeRegistryInternal<V>, IForgeRegistryModifiable<V>
  {
      public static final boolean DEBUG = Boolean.parseBoolean(System.getProperty("forge.debugRegistryEntries", "false"));
-@@ -297,7 +280,7 @@
-         V oldEntry = getRaw(key);
-         if (oldEntry == value) // already registered, return prev registration's id
-         {
--            FMLLog.bigWarning("Registry {}: The object {} has been registered twice for the same name {}.", this.superType.getSimpleName(), value, key);
-+            Mohist.bigWarning("Registry {}: The object {} has been registered twice for the same name {}.", this.superType.getSimpleName(), value, key);
-             return this.getID(value);
-         }
-         if (oldEntry != null) // duplicate name
-@@ -307,7 +290,7 @@
+@@ -307,7 +287,7 @@
              if (owner == null)
                  throw new IllegalStateException(String.format("Could not determine owner for the override on %s. Value: %s", key, value));
              if (DEBUG)
@@ -82,7 +74,7 @@
              idToUse = this.getID(oldEntry);
          }
  
-@@ -350,10 +333,10 @@
+@@ -350,10 +330,10 @@
              this.add.onAdd(this, this.stage, idToUse, value, oldEntry);
  
          if (this.dummies.remove(key) && DEBUG)
@@ -95,7 +87,7 @@
  
          return idToUse;
      }
-@@ -382,7 +365,7 @@
+@@ -382,7 +362,7 @@
              throw new IllegalStateException(String.format("Attempted to register the alias %s -> %s to late", from, to));
          this.aliases.put(from, to);
          if (DEBUG)
@@ -104,7 +96,7 @@
      }
  
      void addDummy(ResourceLocation key)
-@@ -391,7 +374,7 @@
+@@ -391,7 +371,7 @@
              throw new IllegalStateException(String.format("Attempted to register the dummy %s to late", key));
          this.dummies.add(key);
          if (DEBUG)
@@ -113,7 +105,7 @@
      }
  
      private RegistryDelegate<V> getDelegate(V thing)
-@@ -478,7 +461,7 @@
+@@ -478,7 +458,7 @@
      void sync(ResourceLocation name, ForgeRegistry<V> from)
      {
          if (DEBUG)
@@ -122,7 +114,7 @@
          if (this == from)
              throw new IllegalArgumentException("WTF We are the same!?!?!");
          if (from.superType != this.superType)
-@@ -515,7 +498,7 @@
+@@ -515,7 +495,7 @@
                  int realId = add(id, entry.getValue());
                  if (id != realId && id != -1)
                  {
@@ -131,7 +123,7 @@
                      errored = true;
                  }
              }
-@@ -527,14 +510,14 @@
+@@ -527,14 +507,14 @@
                      OverrideOwner owner = from.owners.inverse().get(value);
                      if (owner == null)
                      {
@@ -148,7 +140,7 @@
                          errored = true;
                      }
                  }
-@@ -589,7 +572,7 @@
+@@ -589,7 +569,7 @@
                  throw new IllegalStateException("Removed a entry that did not have an associated id: " + key + " " + value.toString() + " This should never happen unless hackery!");
  
              if (DEBUG)
@@ -157,7 +149,7 @@
          }
  
          return value;
-@@ -613,7 +596,6 @@
+@@ -613,7 +593,6 @@
       */
      public void freeze()
      {
@@ -165,7 +157,7 @@
      }
  
      public void unfreeze()
-@@ -633,8 +615,8 @@
+@@ -633,8 +612,8 @@
  
          Collections.sort(ids);
  
@@ -176,7 +168,7 @@
      }
  
      public void loadIds(Map<ResourceLocation, Integer> ids, Map<ResourceLocation, String> overrides, Map<ResourceLocation, Integer> missing, Map<ResourceLocation, Integer[]> remapped, ForgeRegistry<V> old, ResourceLocation name)
-@@ -648,13 +630,13 @@
+@@ -648,13 +627,13 @@
  
              if (currId == -1)
              {
@@ -192,7 +184,7 @@
                  remapped.put(itemName, new Integer[] {currId, newId});
              }
  
-@@ -680,7 +662,7 @@
+@@ -680,7 +659,7 @@
                  OverrideOwner owner = old.owners.inverse().get(value);
                  if (owner == null)
                  {
@@ -201,7 +193,7 @@
                      continue;
                  }
  
-@@ -689,12 +671,12 @@
+@@ -689,12 +668,12 @@
  
                  int realId = add(newId, value, owner.owner);
                  if (newId != realId)
@@ -216,7 +208,7 @@
              ovs.remove(itemName);
          }
  
-@@ -708,16 +690,16 @@
+@@ -708,16 +687,16 @@
                  V _new = this.owners.get(new OverrideOwner(owner, itemName));
                  if (_new == null)
                  {
@@ -236,7 +228,7 @@
              }
          }
      }
-@@ -729,7 +711,7 @@
+@@ -729,7 +708,7 @@
  
          V dummy = this.dummyFactory.createDummy(key);
          if (DEBUG)
@@ -245,7 +237,7 @@
  
          //It was blocked before so we need to unset the blocking map
          this.availabilityMap.clear(id);
-@@ -746,15 +728,15 @@
+@@ -746,15 +725,15 @@
                  throw new IllegalStateException("Removed a entry that did not have an associated id: " + key + " " + value.toString() + " This should never happen unless hackery!");
  
              if (oldid != id)
@@ -264,7 +256,7 @@
          this.dummies.add(key);
  
          return true;
-@@ -780,7 +762,7 @@
+@@ -780,7 +759,7 @@
              V obj = this.names.get(key);
              OverrideOwner owner = this.owners.inverse().get(obj);
              if (owner == null && DEBUG)
@@ -273,7 +265,7 @@
              ret.put(key, owner.owner);
          }
          return ret;
-@@ -868,7 +850,7 @@
+@@ -868,7 +847,7 @@
                      ResourceLocation aliasv = new ResourceLocation(v);
                      if (aliasv.equals(aliask))
                      {
@@ -282,7 +274,7 @@
                      }
                      else
                      {
-@@ -910,7 +892,7 @@
+@@ -910,7 +889,7 @@
  
      void processMissingEvent(ResourceLocation name, ForgeRegistry<V> pool, List<MissingMappings.Mapping<V>> mappings, Map<ResourceLocation, Integer> missing, Map<ResourceLocation, Integer[]> remaps, Collection<ResourceLocation> defaulted, Collection<ResourceLocation> failed, boolean injectNetworkDummies)
      {
@@ -291,7 +283,7 @@
          int ignored = 0;
  
          for (MissingMappings.Mapping<V> remap : mappings)
-@@ -922,19 +904,19 @@
+@@ -922,19 +901,19 @@
                  // entry re-mapped, finish the registration with the new name/object, but the old id
                  int currId = getID(remap.getTarget());
                  ResourceLocation newName = pool.getKey(remap.getTarget());
@@ -314,7 +306,7 @@
                      remaps.put(newName, new Integer[] {currId, realId});
                  }
              }
-@@ -951,24 +933,24 @@
+@@ -951,24 +930,24 @@
                  }
                  else if (action == MissingMappings.Action.IGNORE)
                  {

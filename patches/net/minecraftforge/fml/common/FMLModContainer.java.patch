@@ -224,14 +224,7 @@
                      }
                  }
              }
-@@ -445,13 +419,13 @@
-                 owner = ASMDataTable.getOwnerModID(mods, targets);
-                 if (Strings.isNullOrEmpty(owner))
-                 {
--                    FMLLog.bigWarning("Could not determine owning mod for @{} on {} for mod {}", annotationClassName, targets.getClassName(), this.getModId());
-+                    Mohist.bigWarning("Could not determine owning mod for @{} on {} for mod {}", annotationClassName, targets.getClassName(), this.getModId());
-                     continue;
-                 }
+@@ -451,7 +425,7 @@
              }
              if (!this.getModId().equals(owner))
              {

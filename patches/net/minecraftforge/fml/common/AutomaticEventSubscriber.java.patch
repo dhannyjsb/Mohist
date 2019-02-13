@@ -34,7 +34,7 @@
          SetMultimap<String, ASMData> modData = data.getAnnotationsFor(mod);
          Set<ASMDataTable.ASMData> mods = modData.get(Mod.class.getName());
          Set<ASMDataTable.ASMData> targets = modData.get(Mod.EventBusSubscriber.class.getName());
-@@ -63,29 +62,29 @@
+@@ -63,7 +62,7 @@
                      }
                  }
                  if (sides == DEFAULT || sides.contains(side)) {
@@ -43,11 +43,7 @@
                      String amodid = (String)targ.getAnnotationInfo().get("modid");
                      if (Strings.isNullOrEmpty(amodid)) {
                          amodid = ASMDataTable.getOwnerModID(mods, targ);
-                         if (Strings.isNullOrEmpty(amodid)) {
--                            FMLLog.bigWarning("Could not determine owning mod for @EventBusSubscriber on {} for mod {}", targ.getClassName(), mod.getModId());
-+                            Mohist.bigWarning("Could not determine owning mod for @EventBusSubscriber on {} for mod {}", targ.getClassName(), mod.getModId());
-                             continue;
-                         }
+@@ -74,18 +73,18 @@
                      }
                      if (!mod.getModId().equals(amodid))
                      {

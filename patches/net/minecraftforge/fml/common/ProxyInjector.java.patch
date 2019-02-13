@@ -43,14 +43,7 @@
          SetMultimap<String, ASMData> modData = data.getAnnotationsFor(mod);
          Set<ASMData> mods = modData.get(Mod.class.getName());
          Set<ASMData> targets = modData.get(SidedProxy.class.getName());
-@@ -56,13 +54,13 @@
-                     amodid = ASMDataTable.getOwnerModID(mods, targ);
-                     if (Strings.isNullOrEmpty(amodid))
-                     {
--                        FMLLog.bigWarning("Could not determine owning mod for @SidedProxy on {} for mod {}", targ.getClassName(), mod.getModId());
-+                        Mohist.bigWarning("Could not determine owning mod for @SidedProxy on {} for mod {}", targ.getClassName(), mod.getModId());
-                         continue;
-                     }
+@@ -62,7 +60,7 @@
                  }
                  if (!mod.getModId().equals(amodid))
                  {

@@ -17,11 +17,10 @@
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.EntityList.EntityEggInfo;
  import net.minecraft.entity.EntityLiving;
-@@ -29,21 +31,16 @@
- import net.minecraft.world.biome.Biome;
+@@ -30,20 +32,16 @@
  import net.minecraft.world.biome.Biome.SpawnListEntry;
  import net.minecraftforge.fml.common.FMLCommonHandler;
--import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.FMLLog;
 +import net.minecraftforge.fml.common.Loader;
  import net.minecraftforge.fml.common.ModContainer;
  import net.minecraftforge.fml.common.network.internal.FMLMessage.EntitySpawnMessage;
@@ -41,7 +40,7 @@
  public class EntityRegistry
  {
      public class EntityRegistration
-@@ -60,7 +57,6 @@
+@@ -60,7 +58,6 @@
          private boolean sendsVelocityUpdates;
          private Function<EntitySpawnMessage, Entity> customSpawnCallback;
          private boolean usesVanillaSpawning;
@@ -49,7 +48,7 @@
          @Deprecated //1.13
          public EntityRegistration(ModContainer mc, ResourceLocation registryName, Class<? extends Entity> entityClass, String entityName, int id, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
          {
-@@ -78,12 +74,12 @@
+@@ -78,12 +75,12 @@
              this.updateFrequency = updateFrequency;
              this.sendsVelocityUpdates = sendsVelocityUpdates;
              this.factory = factory != null ? factory :
@@ -68,7 +67,7 @@
          }
          public ResourceLocation getRegistryName()
          {
-@@ -143,10 +139,11 @@
+@@ -143,10 +140,11 @@
      }
  
      private static final EntityRegistry INSTANCE = new EntityRegistry();
@@ -81,7 +80,7 @@
  
      public static EntityRegistry instance()
      {
-@@ -171,6 +168,7 @@
+@@ -171,6 +169,7 @@
      public static void registerModEntity(ResourceLocation registryName, Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
      {
          instance().doModEntityRegistration(registryName, entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
@@ -89,7 +88,7 @@
      }
  
      /**
-@@ -191,6 +189,7 @@
+@@ -191,6 +190,7 @@
      {
          instance().doModEntityRegistration(registryName, entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
          EntityRegistry.registerEgg(registryName, eggPrimary, eggSecondary);
@@ -97,7 +96,7 @@
      }
  
      private void doModEntityRegistration(ResourceLocation registryName, Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
-@@ -204,16 +203,16 @@
+@@ -204,16 +204,16 @@
              {
                  EntityEntry entry = new EntityEntry(entityClass, entityName).setRegistryName(registryName);
                  ForgeRegistries.ENTITIES.register(entry);
@@ -117,16 +116,7 @@
              return;
          }
          entityRegistrations.put(mc, er);
-@@ -236,7 +235,7 @@
-         EntityEntry entry = ForgeRegistries.ENTITIES.getValue(name);
-         if (entry == null)
-         {
--            FMLLog.bigWarning("Attempted to registry a entity egg for entity ({}) that is not in the Entity Registry", name);
-+            Mohist.bigWarning("Attempted to registry a entity egg for entity ({}) that is not in the Entity Registry", name);
-             return;
-         }
-         entry.setEgg(new EntityEggInfo(name, primary, secondary));
-@@ -385,4 +384,23 @@
+@@ -385,4 +385,23 @@
          this.entityClassRegistrations.put(entity, registration);
          this.entityRegistrations.put(registration.container, registration);
      }

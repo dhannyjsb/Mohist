@@ -963,7 +963,7 @@ public class CraftWorld implements World {
             entity.setLocationAndAngles(x, y, z, yaw, pitch);
             // Paper start
         } else if (org.bukkit.entity.Item.class.isAssignableFrom(clazz)) {
-            entity = new EntityItem(world, x, y, z, new net.minecraft.item.ItemStack(net.minecraft.item.Item.getItemFromBlock(net.minecraft.block.Blocks.DIRT)));
+            entity = new EntityItem(world, x, y, z, new net.minecraft.item.ItemStack(net.minecraft.item.Item.getItemFromBlock(Blocks.DIRT)));
             // Paper end
         } else if (FallingBlock.class.isAssignableFrom(clazz)) {
             entity = new EntityFallingBlock(world, x, y, z, world.getBlockState(new BlockPos(x, y, z)));

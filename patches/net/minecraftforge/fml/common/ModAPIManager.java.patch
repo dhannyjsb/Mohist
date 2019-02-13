@@ -47,15 +47,6 @@
  
  public class ModAPIManager {
      public static final ModAPIManager INSTANCE = new ModAPIManager();
-@@ -111,7 +111,7 @@
-         public void validate(String providedAPI, String apiOwner, String apiVersion)
-         {
-             if (Loader.instance().getModClassLoader().containsSource(this.getSource())) {
--                FMLLog.bigWarning("The API {} from source {} is loaded from an incompatible classloader. THIS WILL NOT WORK!", providedAPI, this.getSource().getAbsolutePath());
-+                Mohist.bigWarning("The API {} from source {} is loaded from an incompatible classloader. THIS WILL NOT WORK!", providedAPI, this.getSource().getAbsolutePath());
-             }
-             // TODO Compare this annotation data to the one we first found. Maybe barf if there is inconsistency?
-         }
 @@ -181,7 +181,7 @@
                  {
                      continue;
