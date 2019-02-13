@@ -1027,7 +1027,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         self.setProfile(CraftPlayerProfile.asAuthlibCopy(profile));
         List<EntityPlayerMP> players = server.getServer().getPlayerList().playerEntityList;
         for (EntityPlayer player : players) {
-                player.getBukkitEntity().reregisterPlayer(self);
+                player.getBukkitEntity().setHandle(self);
             }
         refreshPlayer();
     }
@@ -1042,7 +1042,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         reregisterPlayer(handle);
 
         //Respawn the player then update their position and selected slot
-        connection.sendPacket(new SPacketRespawn(handle.dimension, handle.world.getDifficulty(), handle.world.getWorldData().getType(), handle.playerInteractManager.getGameMode()));
+        connection.sendPacket(new SPacketRespawn(handle.dimension, handle.world.getDifficulty(), handle.world.getWorldInfo().getWorldName(), handle.playerInteractManager.getGameMode()));
         handle.sendPlayerAbilities();
         connection.sendPacket(new SPacketPlayerPosLook(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(), new HashSet<>(), 0));
         MinecraftServer.getServerInst().getPlayerList().updateClient(handle);

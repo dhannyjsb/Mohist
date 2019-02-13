@@ -40,14 +40,10 @@ public final class CraftMagicNumbers implements UnsafeValues {
         return getBlock(block.getType());
     }
 
-    @Deprecated
-    // A bad method for bad magic.
     public static Block getBlock(int id) {
         return getBlock(Material.getMaterial(id));
     }
 
-    @Deprecated
-    // A bad method for bad magic.
     public static int getId(Block block) {
         return Block.getIdFromBlock(block);
     }
@@ -62,14 +58,10 @@ public final class CraftMagicNumbers implements UnsafeValues {
         return item;
     }
 
-    @Deprecated
-    // A bad method for bad magic.
     public static Item getItem(int id) {
         return Item.getItemById(id);
     }
 
-    @Deprecated
-    // A bad method for bad magic.
     public static int getId(Item item) {
         return Item.getIdFromItem(item);
     }

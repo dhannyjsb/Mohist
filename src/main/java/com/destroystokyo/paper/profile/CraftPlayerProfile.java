@@ -141,7 +141,7 @@ public class CraftPlayerProfile implements PlayerProfile {
         PlayerProfileCache userCache = server.getPlayerProfileCache();
         if (profile.getId() == null) {
                 final GameProfile profile;
-                boolean isOnlineMode = server.getOnlineMode() || (SpigotConfig.bungee && PaperConfig.bungeeOnlineMode);
+                boolean isOnlineMode = server.isServerInOnlineMode() || (SpigotConfig.bungee && PaperConfig.bungeeOnlineMode);
                 if (isOnlineMode) {
                         profile = lookupName ? userCache.getGameProfileForUsername(name) : userCache.getProfileIfCached(name);
                     } else {
@@ -166,7 +166,7 @@ public class CraftPlayerProfile implements PlayerProfile {
     public boolean complete(boolean textures) {
         MinecraftServer server = MinecraftServer.getServerInst();
 
-                boolean isOnlineMode = server.getOnlineMode() || (SpigotConfig.bungee && PaperConfig.bungeeOnlineMode);
+                boolean isOnlineMode = server.isServerInOnlineMode() || (SpigotConfig.bungee && PaperConfig.bungeeOnlineMode);
         boolean isCompleteFromCache = this.completeFromCache(true);
         if (isOnlineMode && (!isCompleteFromCache || textures && !hasTextures())) {
                 GameProfile result = server.getSessionService().fillProfileProperties(profile, true);

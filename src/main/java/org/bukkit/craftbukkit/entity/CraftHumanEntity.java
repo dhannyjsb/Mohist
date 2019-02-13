@@ -495,7 +495,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         net.minecraft.tileentity.TileEntitySign teSign = craftSign.getTileEntity();
         // Make sign editable temporarily, will be set back to false in PlayerConnection later
         teSign.isEditable = true;
-        getHandle().openSign(teSign);
+        getHandle().openEditSign(teSign);
     }
     // Paper end
 }

@@ -465,7 +465,7 @@
 +    private IBlockState getCapturedBlockType(final int x, final int y, final int z) {
 +        for (BlockState previous : this.capturedBlockStates) {
 +            if (previous.getX() == x && previous.getY() == y && previous.getZ() == z) {
-+                return CraftMagicNumbers.getBlock(previous.getTypeId()).fromLegacyData(previous.getRawData());
++                return CraftMagicNumbers.getBlock(previous.getTypeId()).getStateFromMeta(previous.getRawData());
 +            }
 +        }
 +        return null;
@@ -492,7 +492,7 @@
                  int j1 = MathHelper.floor(vec31.z);
                  BlockPos blockpos = new BlockPos(l, i1, j1);
 -                IBlockState iblockstate = this.getBlockState(blockpos);
-+                IProperty iblockstate = this.getTypeIfLoaded(blockpos); // Paper
++                IBlockState iblockstate = this.getTypeIfLoaded(blockpos); // Paper
 +                if (iblockstate == null) return null; // Paper
                  Block block = iblockstate.getBlock();
  

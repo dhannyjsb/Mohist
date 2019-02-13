@@ -60,7 +60,7 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
 
         if (tag.hasKey(ENTITY_TAG.NBT)) {
             entityTag = tag.getCompoundTag(ENTITY_TAG.NBT);
-            MinecraftServer.getServerCB().getDataFixer().process(FixTypes.ENTITY, entityTag); // PAIL: convert TODO: identify DataConverterTypes after implementation
+            MinecraftServer.getServerInst().getDataFixer().process(FixTypes.ENTITY, entityTag); // PAIL: convert TODO: identify DataConverterTypes after implementation
 
             if (entityTag.hasKey(ENTITY_ID.NBT)) {
                 this.spawnedType = EntityType.fromName(new ResourceLocation(entityTag.getString(ENTITY_ID.NBT)).getResourcePath());

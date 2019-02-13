@@ -66,8 +66,8 @@ public class CraftFish extends AbstractProjectile implements Fish {
     @Override
     public void remove() {
         super.remove();
-        if (getHandle().owner != null) {
-            getHandle().owner.hookedFish = null;
+        if (getHandle().angler != null) {
+            getHandle().angler.fishEntity = null;
         }
     }
     // Paper end

@@ -86,7 +86,7 @@
      }
  
      public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-@@ -229,9 +223,51 @@
+@@ -229,42 +223,57 @@
      }
  
      @Nullable
@@ -94,6 +94,28 @@
 +    public static BlockPos getSafeExitLocation(World worldIn, BlockPos pos, int i)
      {
          EnumFacing enumfacing = (EnumFacing)worldIn.getBlockState(pos).getValue(FACING);
+-        int i = pos.getX();
+-        int j = pos.getY();
+-        int k = pos.getZ();
+-
+-        for (int l = 0; l <= 1; ++l)
+-        {
+-            int i1 = i - enumfacing.getFrontOffsetX() * l - 1;
+-            int j1 = k - enumfacing.getFrontOffsetZ() * l - 1;
+-            int k1 = i1 + 2;
+-            int l1 = j1 + 2;
+-
+-            for (int i2 = i1; i2 <= k1; ++i2)
+-            {
+-                for (int j2 = j1; j2 <= l1; ++j2)
+-                {
+-                    BlockPos blockpos = new BlockPos(i2, j, j2);
+-
+-                    if (hasRoomForPlayer(worldIn, blockpos))
+-                    {
+-                        if (tries <= 0)
+-                        {
+-                            return blockpos;
 +        // Paper - replace whole method
 +        int radius = worldIn.paperConfig.bedSearchRadius;
 +        for (int r = 1; r <= radius; r++) {
@@ -106,8 +128,10 @@
 +                    if (isSafeRespawn(worldIn, pos1)) {
 +                        if (i-- <= 0) {
 +                            return pos1;
-+                        }
-+                    }
+                         }
+-
+-                        --tries;
+                     }
 +                    pos1 = pos.add(-x, y, -z);
 +                    if (isSafeRespawn(worldIn, pos1)) {
 +                        if (i-- <= 0) {
@@ -126,25 +150,16 @@
 +                            return pos1;
 +                        }
 +                     }
-+                }
+                 }
 +                if (x < r) {
 +                    x++;
 +                } else {
 +                    z--;
 +                }
-+            }
-+        }
-+
-+        return null; /* // Paper comment out
-         int i = pos.getX();
-         int j = pos.getY();
-         int k = pos.getZ();
-@@ -262,9 +298,13 @@
              }
          }
  
--        return null;
-+        return null;*/ // Paper
+         return null;
      }
  
 +    protected static boolean isSafeRespawn(World world, BlockPos blockposition) { // Paper - OBFHELPER + behavior improvement
@@ -154,7 +169,7 @@
      protected static boolean hasRoomForPlayer(World worldIn, BlockPos pos)
      {
          return worldIn.getBlockState(pos.down()).isTopSolid() && !worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
-@@ -272,7 +312,7 @@
+@@ -272,7 +281,7 @@
  
      public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
      {
@@ -163,7 +178,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
              EnumDyeColor enumdyecolor = tileentity instanceof TileEntityBed ? ((TileEntityBed)tileentity).getColor() : EnumDyeColor.RED;
-@@ -300,7 +340,7 @@
+@@ -300,7 +309,7 @@
      {
          BlockPos blockpos = pos;
  
@@ -172,7 +187,7 @@
          {
              blockpos = pos.offset((EnumFacing)state.getValue(FACING));
          }
-@@ -312,7 +352,7 @@
+@@ -312,7 +321,7 @@
  
      public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
      {
@@ -181,7 +196,7 @@
          {
              BlockPos blockpos = pos.offset((EnumFacing)state.getValue(FACING));
  
-@@ -325,7 +365,7 @@
+@@ -325,7 +334,7 @@
  
      public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
      {
@@ -190,7 +205,7 @@
          {
              TileEntityBed tileentitybed = (TileEntityBed)te;
              ItemStack itemstack = tileentitybed.getItemStack();
-@@ -346,12 +386,12 @@
+@@ -346,12 +355,12 @@
      public IBlockState getStateFromMeta(int meta)
      {
          EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
@@ -205,7 +220,7 @@
          {
              IBlockState iblockstate = worldIn.getBlockState(pos.offset((EnumFacing)state.getValue(FACING)));
  
-@@ -379,7 +419,7 @@
+@@ -379,7 +388,7 @@
          int i = 0;
          i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
  

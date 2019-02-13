@@ -1,10 +1,11 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntityHopper.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntityHopper.java
-@@ -1,19 +1,14 @@
+@@ -1,19 +1,15 @@
  package net.minecraft.tileentity;
  
 -import java.util.List;
 -import javax.annotation.Nullable;
++import cn.pfcraft.server.CraftInventoryWrapper;
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockChest;
  import net.minecraft.block.BlockHopper;
@@ -22,7 +23,7 @@
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.util.EntitySelectors;
-@@ -27,13 +22,45 @@
+@@ -27,13 +23,45 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.World;
@@ -70,7 +71,7 @@
      public static void registerFixesHopper(DataFixer fixer)
      {
          fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityHopper.class, new String[] {"Items"}));
-@@ -106,7 +133,7 @@
+@@ -106,7 +134,7 @@
  
      public int getInventoryStackLimit()
      {
@@ -79,7 +80,7 @@
      }
  
      public void update()
-@@ -144,7 +171,7 @@
+@@ -144,7 +172,7 @@
  
                  if (flag)
                  {
@@ -88,7 +89,7 @@
                      this.markDirty();
                      return true;
                  }
-@@ -213,11 +240,11 @@
+@@ -213,11 +241,11 @@
                      if (!this.getStackInSlot(i).isEmpty())
                      {
                          ItemStack itemstack = this.getStackInSlot(i).copy();
@@ -102,30 +103,37 @@
                              return true;
                          }
  
-@@ -351,6 +378,7 @@
-         return false;
-     }
- 
-+    // Mohist - TODO: move into Forge, support handle Forge container
-     private static boolean pullItemFromSlot(IHopper hopper, IInventory inventoryIn, int index, EnumFacing direction)
-     {
-         ItemStack itemstack = inventoryIn.getStackInSlot(index);
-@@ -358,14 +386,48 @@
+@@ -358,14 +386,63 @@
          if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction))
          {
              ItemStack itemstack1 = itemstack.copy();
 -            ItemStack itemstack2 = putStackInInventoryAllSlots(inventoryIn, hopper, inventoryIn.decrStackSize(index, 1), (EnumFacing)null);
-+            // ItemStack itemstack2 = putStackInInventoryAllSlots(inventoryIn, hopper, inventoryIn.decrStackSize(index, 1), (EnumFacing)null);
 +            // CraftBukkit start - Call event on collection of items from inventories into the hopper
 +            CraftItemStack oitemstack = CraftItemStack.asCraftMirror(inventoryIn.decrStackSize(index, hopper.getWorld().spigotConfig.hopperAmount));
  
-+            Inventory sourceInventory;
++            Inventory sourceInventory = null;
 +            // Have to special case large chests as they work oddly
 +            if (inventoryIn instanceof InventoryLargeChest) {
 +                sourceInventory = new org.bukkit.craftbukkit.inventory.CraftInventoryDoubleChest((InventoryLargeChest) inventoryIn);
 +            } else {
-+                sourceInventory = inventoryIn.getOwner() != null ? inventoryIn.getOwner().getInventory() : new CustomInventory(inventoryIn).getInventory(); // Mohist
-+
++                // Mohist start - support mod inventories, with no owners
++                try
++                {
++                    if (inventoryIn.getOwner() != null)
++                    {
++                        sourceInventory = inventoryIn.getOwner().getInventory();
++                    }
++                    else
++                        {
++                            // TODO: create a mod inventory for passing to the event, instead of null
++                            sourceInventory = null;
++                        }
++                }
++                catch (AbstractMethodError e) {
++                    sourceInventory = null;
++                }
++                finally { if (sourceInventory == null) { sourceInventory = new CraftInventoryWrapper(inventoryIn); } }
++                // Mohist end
 +            }
 +
 +            InventoryMoveItemEvent event = new InventoryMoveItemEvent(sourceInventory, oitemstack.clone(), hopper.getOwner().getInventory(), false);
@@ -162,7 +170,7 @@
              inventoryIn.setInventorySlotContents(index, itemstack1);
          }
  
-@@ -382,6 +444,11 @@
+@@ -382,6 +459,11 @@
          }
          else
          {
@@ -174,7 +182,7 @@
              ItemStack itemstack = entity.getItem().copy();
              ItemStack itemstack1 = putStackInInventoryAllSlots(source, destination, itemstack, (EnumFacing)null);
  
-@@ -491,7 +558,7 @@
+@@ -491,7 +573,7 @@
                              }
                          }
  
@@ -183,7 +191,7 @@
                      }
                  }
  
-@@ -525,6 +592,7 @@
+@@ -525,6 +607,7 @@
          int j = MathHelper.floor(y);
          int k = MathHelper.floor(z);
          BlockPos blockpos = new BlockPos(i, j, k);

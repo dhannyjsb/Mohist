@@ -221,8 +221,8 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public void setKiller(Player killer) {
         net.minecraft.entity.player.EntityPlayerMP entityPlayer = killer == null ? null : ((CraftPlayer) killer).getHandle();
         getHandle().attackingPlayer = entityPlayer;
-        getHandle().lastDamager = entityPlayer;
-        getHandle().lastDamageByPlayerTime = entityPlayer == null ? 0 : 100; // 100 value taken from EntityLiving#damageEntity
+        getHandle().revengeTarget = entityPlayer;
+        getHandle().revengeTimer = entityPlayer == null ? 0 : 100; // 100 value taken from EntityLiving#damageEntity
     }
     // Paper end
 
@@ -354,11 +354,13 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public EntityType getType() {
+        // Cauldron start
         EntityType type = EntityType.fromName(this.entityName);
         if (type != null) {
             return type;
         }
-        return EntityType.MOD_CUSTOM;
+        return EntityType.UNKNOWN;
+        // Cauldron end
     }
 
     public boolean hasLineOfSight(Entity other) {
@@ -511,7 +513,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public boolean isHandRaised() {
-        return getHandle().isHandRaised();
+        return getHandle().isRiding();
     }
     // Paper end
 }
