@@ -12,7 +12,15 @@
  
  public class FastTracker2 {
  	public static boolean is_xm( byte[] header_60_bytes ) {
-@@ -254,4 +257,3 @@
+@@ -224,7 +227,6 @@
+ 		value = value | ( ( buffer[ offset + 1 ] & 0xFF ) << 8 );
+ 		return value;
+ 	}
+-
+ 	private static int int_le( byte[] buffer, int offset ) {
+ 		int value;
+ 		value = buffer[ offset ] & 0xFF;
+@@ -254,4 +256,3 @@
  		return string;
  	}
  }

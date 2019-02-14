@@ -12,7 +12,15 @@
  
  public class ScreamTracker3 {
  	private static final int[] effect_map = new int[] {
-@@ -487,4 +490,3 @@
+@@ -466,7 +469,6 @@
+ 		value = value | ( ( buffer[ offset + 1 ] & 0xFF ) << 8 );
+ 		return value;
+ 	}
+-
+ 	private static String ascii_text( byte[] buffer, int offset, int length ) {
+ 		int idx, chr;
+ 		byte[] string_buffer;
+@@ -487,4 +489,3 @@
  		return string;
  	}
  }

@@ -1042,7 +1042,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         reregisterPlayer(handle);
 
         //Respawn the player then update their position and selected slot
-        connection.sendPacket(new SPacketRespawn(handle.dimension, handle.world.getDifficulty(), handle.world.getWorldInfo().getWorldName(), handle.playerInteractManager.getGameMode()));
+        connection.sendPacket(new SPacketRespawn(handle.dimension, handle.world.getDifficulty(), handle.world.getWorldInfo().getTerrainType(), handle.playerInteractManager.getGameMode()));
         handle.sendPlayerAbilities();
         connection.sendPacket(new SPacketPlayerPosLook(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(), new HashSet<>(), 0));
         MinecraftServer.getServerInst().getPlayerList().updateClient(handle);
@@ -1456,7 +1456,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public void sendHealthUpdate() {
-        getHandle().connection.sendPacket(new SPacketUpdateHealth(getScaledHealth(), getHandle().getFoodStats().getFoodLevel(), getHandle().getFoodStats().getSaturationLevel()));
+        // Paper start - cancellable death event
+        SPacketUpdateHealth packet = new SPacketUpdateHealth(getScaledHealth(), getHandle().getFoodStats().getFoodLevel(), getHandle().getFoodStats().getSaturationLevel());
+        if (this.getHandle().queueHealthUpdatePacket) {
+            this.getHandle().queuedHealthUpdatePacket = packet;
+        } else {
+            this.getHandle().connection.sendPacket(packet);
+        }
+        // Paper end
     }
 
     public void injectScaledMaxHealth(Collection<IAttributeInstance> collection, boolean force) {

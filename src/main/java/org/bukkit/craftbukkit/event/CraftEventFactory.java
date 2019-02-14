@@ -407,8 +407,14 @@ public class CraftEventFactory {
     public static EntityDeathEvent callEntityDeathEvent(EntityLivingBase victim, List<org.bukkit.inventory.ItemStack> drops) {
         CraftLivingEntity entity = (CraftLivingEntity) victim.getBukkitEntity();
         EntityDeathEvent event = new EntityDeathEvent(entity, drops, victim.getExpReward());
+        populateFields(victim, event); // Paper - make cancellable
         Bukkit.getServer().getPluginManager().callEvent(event);
-
+        // Paper start - make cancellable
+        if (event.isCancelled()) {
+            return event;
+        }
+        playDeathSound(victim, event);
+        // Paper end
         victim.expToDrop = event.getDroppedExp();
 
 		victim.capturedDrops.clear();
@@ -426,8 +432,14 @@ public class CraftEventFactory {
         CraftPlayer entity = victim.getBukkitEntity();
         PlayerDeathEvent event = new PlayerDeathEvent(entity, drops, victim.getExpReward(), 0, deathMessage);
         event.setKeepInventory(keepInventory);
+        populateFields(victim, event); // Paper - make cancellable
         Bukkit.getServer().getPluginManager().callEvent(event);
-
+        // Paper start - make cancellable
+        if (event.isCancelled()) {
+            return event;
+        }
+        playDeathSound(victim, event);
+        // Paper end
         victim.keepLevel = event.getKeepLevel();
         victim.newLevel = event.getNewLevel();
         victim.newTotalExp = event.getNewTotalExp();
@@ -455,6 +467,32 @@ public class CraftEventFactory {
         }
         return event;
     }
+
+    // Paper start - helper methods for making death event cancellable
+    // Add information to death event
+    private static void populateFields(EntityLivingBase victim, EntityDeathEvent event) {
+        event.setReviveHealth(event.getEntity().getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue());
+        event.setShouldPlayDeathSound(!victim.silentDeath && !victim.isSilent());
+        SoundEvent soundEffect = victim.getDeathSoundEffect();
+        event.setDeathSound(soundEffect != null ? org.bukkit.craftbukkit.CraftSound.getSoundByEffect(soundEffect) : null);
+        event.setDeathSoundCategory(org.bukkit.SoundCategory.valueOf(victim.getDeathSoundCategory().name()));
+        event.setDeathSoundVolume(victim.getDeathSoundVolume());
+        event.setDeathSoundPitch(victim.getDeathSoundPitch());
+    }
+
+    // Play death sound manually
+    private static void playDeathSound(EntityLivingBase victim, EntityDeathEvent event) {
+        if (event.shouldPlayDeathSound() && event.getDeathSound() != null && event.getDeathSoundCategory() != null) {
+            EntityPlayer source = victim instanceof EntityPlayer ? (EntityPlayer) victim : null;
+            double x = event.getEntity().getLocation().getX();
+            double y = event.getEntity().getLocation().getY();
+            double z = event.getEntity().getLocation().getZ();
+            SoundEvent soundEffect = org.bukkit.craftbukkit.CraftSound.getSoundEffect(event.getDeathSound());
+            SoundCategory soundCategory = SoundCategory.valueOf(event.getDeathSoundCategory().name());
+            victim.world.sendSoundEffect(source, x, y, z, soundEffect, soundCategory, event.getDeathSoundVolume(), event.getDeathSoundPitch());
+        }
+    }
+    // Paper end
 
     /**
      * Server methods

@@ -11,7 +11,15 @@
  
  public class ProTracker {
  	public static boolean is_mod( byte[] header_1084_bytes ) {
-@@ -231,4 +234,3 @@
+@@ -203,7 +206,6 @@
+ 		}
+ 		return ( byte ) key;
+ 	}
+-
+ 	private static int unsigned_short_be( byte[] buf, int offset ) {
+ 		int value;
+ 		value = ( buf[ offset ] & 0xFF ) << 8;
+@@ -231,4 +233,3 @@
  		return string;
  	}
  }

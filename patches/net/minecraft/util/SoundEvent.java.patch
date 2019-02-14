@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/util/SoundEvent.java
++++ ../src-work/minecraft/net/minecraft/util/SoundEvent.java
+@@ -7,6 +7,7 @@
+ public class SoundEvent extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<SoundEvent>
+ {
+     public static final RegistryNamespaced<ResourceLocation, SoundEvent> REGISTRY = net.minecraftforge.registries.GameData.getWrapper(SoundEvent.class);
++    public static RegistryNamespaced<ResourceLocation, SoundEvent> getRegistry() { return REGISTRY; }// Paper - OBFHELPER
+     private final ResourceLocation soundName;
+     private static int soundEventId;
+ 

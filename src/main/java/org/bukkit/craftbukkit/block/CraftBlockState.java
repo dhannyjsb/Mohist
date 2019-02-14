@@ -1,7 +1,10 @@
 package org.bukkit.craftbukkit.block;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.BlockSnapshot;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,6 +30,7 @@ public class CraftBlockState implements BlockState {
     protected int type;
     protected MaterialData data;
     protected int flag;
+    private final NBTTagCompound nbt;
 
     public CraftBlockState(final Block block) {
         this.world = (CraftWorld) block.getWorld();
@@ -38,6 +42,27 @@ public class CraftBlockState implements BlockState {
         this.flag = 3;
 
         createData(block.getData());
+        TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
+        if (te != null)
+        {
+            nbt = new NBTTagCompound();
+            te.writeToNBT(nbt);
+        }
+        else nbt = null;
+    }
+
+    public CraftBlockState(BlockSnapshot blocksnapshot)
+    {
+        this.world = blocksnapshot.getWorld().getWorld();
+        this.x = blocksnapshot.getPos().getX();
+        this.y = blocksnapshot.getPos().getY();
+        this.z = blocksnapshot.getPos().getZ();
+        this.type = net.minecraft.block.Block.getIdFromBlock(blocksnapshot.getReplacedBlock().getBlock());
+        this.chunk = (CraftChunk) this.world.getBlockAt(this.x, this.y, this.z).getChunk();
+        this.flag = 3;
+        this.nbt = blocksnapshot.getNbt();
+
+        this.createData((byte) blocksnapshot.getMeta());
     }
 
     public CraftBlockState(final Block block, int flag) {
@@ -50,6 +75,7 @@ public class CraftBlockState implements BlockState {
         type = material.getId();
         chunk = null;
         x = y = z = 0;
+        this.nbt = null;
     }
 
     public static CraftBlockState getBlockState(net.minecraft.world.World world, int x, int y, int z) {
@@ -174,6 +200,14 @@ public class CraftBlockState implements BlockState {
             world.getHandle().notifyNeighborsOfStateChange(pos.offset(CraftBlock.blockFaceToNotch(((Attachable) getData()).getAttachedFace())), newBlock.getBlock(), false);
         }
 
+        if (nbt != null)
+        {
+            TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
+            if (te != null)
+            {
+                te.readFromNBT(nbt);
+            }
+        }
         return true;
     }
 
@@ -238,6 +272,9 @@ public class CraftBlockState implements BlockState {
         if (this.data != other.data && (this.data == null || !this.data.equals(other.data))) {
             return false;
         }
+        if (this.nbt != other.nbt && (this.nbt == null || !this.nbt.equals(other.nbt))) {
+            return false;
+        }
         return true;
     }
 
@@ -250,7 +287,14 @@ public class CraftBlockState implements BlockState {
         hash = 73 * hash + this.z;
         hash = 73 * hash + this.type;
         hash = 73 * hash + (this.data != null ? this.data.hashCode() : 0);
+ 		hash = 73 * hash + (this.nbt != null ? this.nbt.hashCode() : 0);
         return hash;
+    }
+
+    public TileEntity getTileEntity() {
+        if (nbt != null)
+            return TileEntity.create(this.world.getHandle(), nbt);
+        else return null;
     }
 
     public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {

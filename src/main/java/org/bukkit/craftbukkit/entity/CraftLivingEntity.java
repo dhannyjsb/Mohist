@@ -222,7 +222,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         net.minecraft.entity.player.EntityPlayerMP entityPlayer = killer == null ? null : ((CraftPlayer) killer).getHandle();
         getHandle().attackingPlayer = entityPlayer;
         getHandle().revengeTarget = entityPlayer;
-        getHandle().revengeTimer = entityPlayer == null ? 0 : 100; // 100 value taken from EntityLiving#damageEntity
+        getHandle().recentlyHit = entityPlayer == null ? 0 : 100; // 100 value taken from EntityLiving#damageEntity
     }
     // Paper end
 

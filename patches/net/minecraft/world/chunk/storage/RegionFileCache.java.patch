@@ -37,7 +37,7 @@
              }
  
              RegionFile regionfile1 = new RegionFile(file2);
-@@ -39,6 +45,22 @@
+@@ -39,6 +45,21 @@
          }
      }
  
@@ -50,7 +50,6 @@
 +                        itr.next().getValue().close();
 +                    } catch (IOException ioexception) {
 +                        ioexception.printStackTrace();
-+                        ServerInternalException.reportInternalException(ioexception);
 +                    }
 +                    itr.remove();
 +                }
@@ -60,6 +59,14 @@
      public static synchronized RegionFile getRegionFileIfExists(File worldDir, int chunkX, int chunkZ)
      {
          File file1 = new File(worldDir, "region");
+@@ -80,6 +101,7 @@
+             catch (IOException ioexception)
+             {
+                 ioexception.printStackTrace();
++                ServerInternalException.reportInternalException(ioexception);
+             }
+         }
+ 
 @@ -92,12 +114,33 @@
          return regionfile.getChunkDataInputStream(chunkX & 31, chunkZ & 31);
      }

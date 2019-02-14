@@ -1,5 +1,8 @@
 package org.bukkit.craftbukkit.scheduler;
 
+import com.destroystokyo.paper.ServerSchedulerReportingWrapper;
+import com.destroystokyo.paper.event.server.ServerExceptionEvent;
+import com.destroystokyo.paper.exception.ServerSchedulerException;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.Plugin;
@@ -341,17 +344,23 @@ public class CraftScheduler implements BukkitScheduler {
                 try {
                     task.run();
                 } catch (final Throwable throwable) {
+                    // Paper start
+                    String msg = String.format(
+                            "Task #%s for %s generated an exception",
+                            task.getTaskId(),
+                            task.getOwner().getDescription().getFullName());
                     task.getOwner().getLogger().log(
                             Level.WARNING,
-                            String.format(
-                                "Task #%s for %s generated an exception",
-                                task.getTaskId(),
-                                task.getOwner().getDescription().getFullName()),
+                            msg,
                             throwable);
+                    task.getOwner().getServer().getPluginManager().callEvent(
+                            new ServerExceptionEvent(new ServerSchedulerException(msg, throwable, task))
+                    );
+                    // Paper end
                 }
                 parsePending();
             } else {
-                executor.execute(task);
+                executor.execute(new ServerSchedulerReportingWrapper(task)); // Paper
                 // We don't need to parse pending
                 // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
             }

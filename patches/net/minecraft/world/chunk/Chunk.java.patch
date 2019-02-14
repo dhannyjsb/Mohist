@@ -312,7 +312,7 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -829,12 +973,25 @@
+@@ -829,12 +973,29 @@
          {
              if (this.tileEntities.containsKey(pos))
              {
@@ -325,11 +325,15 @@
          }
 +        else if (tileEntityIn instanceof TileEntityMobSpawner && CraftMagicNumbers.getMaterial(this.getBlockState(pos).getBlock()) != org.bukkit.Material.MOB_SPAWNER) {
 +            this.tileEntities.remove(pos);
++            // Paper end
 +        }
 +        else {
-+            final ServerInternalException e = new ServerInternalException("Attempted to place a tile entity (" + tileEntityIn + ") at " + tileEntityIn.getPos().getX() + "," + tileEntityIn.getPos().getY() + "," + tileEntityIn.getPos().getZ() + " (" + CraftMagicNumbers.getMaterial(this.getBlockState(pos).getBlock()) + ") where there was no entity tile!\nChunk coordinates: " + this.x * 16 + "," + this.z * 16);
++            // Paper start
++            ServerInternalException e = new ServerInternalException("Attempted to place a tile entity (" + tileEntityIn + ") at " + tileEntityIn.getPos().getX() + "," + tileEntityIn.getPos().getY() + "," + tileEntityIn.getPos().getZ() + " (" + CraftMagicNumbers.getMaterial(this.getBlockState(pos).getBlock()) + ") where there was no entity tile!\nChunk coordinates: " + this.x * 16 + "," + this.z * 16);
 +            e.printStackTrace();
 +            ServerInternalException.reportInternalException(e);
++            // Paper end
++            // CraftBukkit end
 +            if (this.world.paperConfig.removeCorruptTEs) {
 +                this.removeTileEntity(tileEntityIn.getPos());
 +                this.markDirty();
@@ -339,7 +343,7 @@
      }
  
      public void removeTileEntity(BlockPos pos)
-@@ -864,7 +1021,7 @@
+@@ -864,7 +1025,7 @@
  
      public void onUnload()
      {
@@ -348,7 +352,7 @@
          this.loaded = false;
  
          for (TileEntity tileentity : this.tileEntities.values())
-@@ -874,7 +1031,14 @@
+@@ -874,7 +1035,14 @@
  
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
          {
@@ -364,7 +368,7 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -893,7 +1057,7 @@
+@@ -893,7 +1061,7 @@
  
          for (int k = i; k <= j; ++k)
          {
@@ -373,7 +377,7 @@
              {
                  for (Entity entity : this.entityLists[k])
                  {
-@@ -928,14 +1092,22 @@
+@@ -928,14 +1096,22 @@
          int j = MathHelper.floor((aabb.maxY + World.MAX_ENTITY_RADIUS) / 16.0D);
          i = MathHelper.clamp(i, 0, this.entityLists.length - 1);
          j = MathHelper.clamp(j, 0, this.entityLists.length - 1);
@@ -401,7 +405,7 @@
                  }
              }
          }
-@@ -1001,6 +1173,63 @@
+@@ -1001,6 +1177,63 @@
          }
      }
  
@@ -465,7 +469,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1246,26 @@
+@@ -1017,6 +1250,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -492,7 +496,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1324,7 @@
+@@ -1075,7 +1328,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -501,7 +505,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1335,11 @@
+@@ -1086,7 +1339,11 @@
  
      public boolean isPopulated()
      {
@@ -514,7 +518,7 @@
      }
  
      public boolean wasTicked()
-@@ -1414,11 +1667,6 @@
+@@ -1414,11 +1671,6 @@
          return true;
      }
  
@@ -526,7 +530,7 @@
      @SideOnly(Side.CLIENT)
      public void markLoaded(boolean loaded)
      {
-@@ -1500,7 +1748,7 @@
+@@ -1500,7 +1752,7 @@
  
      public long getInhabitedTime()
      {
@@ -535,7 +539,7 @@
      }
  
      public void setInhabitedTime(long newInhabitedTime)
-@@ -1540,11 +1788,11 @@
+@@ -1540,11 +1792,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.

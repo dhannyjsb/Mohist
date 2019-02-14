@@ -1,7 +1,6 @@
 package com.destroystokyo.paper.network;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.entity.Player;

@@ -1,18 +1,16 @@
 --- ../src-base/minecraft/net/minecraft/server/management/PlayerInteractionManager.java
 +++ ../src-work/minecraft/net/minecraft/server/management/PlayerInteractionManager.java
-@@ -1,19 +1,25 @@
+@@ -1,19 +1,23 @@
  package net.minecraft.server.management;
  
 -import net.minecraft.block.Block;
 -import net.minecraft.block.BlockChest;
 -import net.minecraft.block.BlockCommandBlock;
 -import net.minecraft.block.BlockStructure;
-+import net.minecraft.advancements.critereon.EnchantmentPredicate;
 +import net.minecraft.block.*;
  import net.minecraft.block.material.Material;
  import net.minecraft.block.state.IBlockState;
 +import net.minecraft.enchantment.EnchantmentHelper;
-+import net.minecraft.enchantment.EnumEnchantmentType;
 +import net.minecraft.entity.item.EntityItem;
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,7 +28,7 @@
  import net.minecraft.tileentity.TileEntity;
  import net.minecraft.tileentity.TileEntityChest;
  import net.minecraft.util.ActionResult;
-@@ -25,7 +31,14 @@
+@@ -25,7 +29,14 @@
  import net.minecraft.world.ILockableContainer;
  import net.minecraft.world.World;
  import net.minecraft.world.WorldServer;
@@ -45,7 +43,7 @@
  public class PlayerInteractionManager
  {
      public World world;
-@@ -50,7 +63,7 @@
+@@ -50,7 +61,7 @@
          this.gameType = type;
          type.configurePlayerCapabilities(this.player.capabilities);
          this.player.sendPlayerAbilities();
@@ -54,7 +52,7 @@
          this.world.updateAllPlayersSleepingFlag();
      }
  
-@@ -81,7 +94,7 @@
+@@ -81,7 +92,7 @@
  
      public void updateBlockRemoving()
      {
@@ -63,7 +61,7 @@
  
          if (this.receivedFinishDiggingPacket)
          {
-@@ -100,6 +113,7 @@
+@@ -100,6 +111,7 @@
                  if (j != this.durabilityRemainingOnBlock)
                  {
                      this.world.sendBlockBreakProgress(this.player.getEntityId(), this.delayedDestroyPos, j);
@@ -71,7 +69,7 @@
                      this.durabilityRemainingOnBlock = j;
                  }
  
-@@ -137,6 +151,20 @@
+@@ -137,6 +149,20 @@
  
      public void onBlockClicked(BlockPos pos, EnumFacing side)
      {
@@ -92,7 +90,7 @@
          double reachDist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
          net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock event = net.minecraftforge.common.ForgeHooks.onLeftClickBlock(player, pos, side, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
          if (event.isCanceled())
-@@ -149,7 +177,7 @@
+@@ -149,7 +175,7 @@
  
          if (this.isCreative())
          {
@@ -101,7 +99,7 @@
              {
                  this.tryHarvestBlock(pos);
              }
-@@ -185,12 +213,25 @@
+@@ -185,12 +211,25 @@
              this.initialDamage = this.curblockDamage;
              float f = 1.0F;
  
@@ -130,7 +128,7 @@
                  }
                  else
                  {
-@@ -200,6 +241,26 @@
+@@ -200,6 +239,26 @@
                  }
                  f = iblockstate.getPlayerRelativeBlockHardness(this.player, this.player.world, pos);
              }
@@ -157,7 +155,7 @@
              if (event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  if (f >= 1.0F)
-@@ -230,6 +291,7 @@
+@@ -230,6 +289,7 @@
      {
          if (pos.equals(this.destroyPos))
          {
@@ -165,7 +163,7 @@
              int i = this.curblockDamage - this.initialDamage;
              IBlockState iblockstate = this.world.getBlockState(pos);
  
-@@ -251,6 +313,15 @@
+@@ -251,6 +311,15 @@
                      this.initialBlockDamage = this.initialDamage;
                  }
              }
@@ -181,7 +179,7 @@
          }
      }
  
-@@ -328,6 +399,7 @@
+@@ -328,6 +397,7 @@
                      }
                  }
  
@@ -189,7 +187,7 @@
                  // Drop experience
                  if (!this.isCreative() && flag1 && exp > 0)
                  {
-@@ -338,6 +410,130 @@
+@@ -338,6 +408,130 @@
          }
      }
  
@@ -320,7 +318,7 @@
      public EnumActionResult processRightClick(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand)
      {
          if (this.gameType == GameType.SPECTATOR)
-@@ -396,9 +592,65 @@
+@@ -396,9 +590,65 @@
          }
      }
  
@@ -387,7 +385,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -433,7 +685,6 @@
+@@ -433,7 +683,6 @@
                      .onRightClickBlock(player, hand, pos, facing, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
              if (event.isCanceled()) return event.getCancellationResult();
  
@@ -395,7 +393,7 @@
              if (event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  result = stack.onItemUseFirst(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-@@ -446,10 +697,10 @@
+@@ -446,10 +695,10 @@
              {
                  IBlockState iblockstate = worldIn.getBlockState(pos);
                  if(event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
@@ -410,7 +408,7 @@
              }
  
              if (stack.isEmpty())
-@@ -478,10 +729,10 @@
+@@ -478,10 +727,10 @@
                      int i = stack.getCount();
                      if (result != EnumActionResult.SUCCESS && event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
                              || result == EnumActionResult.SUCCESS && event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW) {
@@ -425,7 +423,7 @@
                      } else return result;
                  }
                  else
-@@ -497,6 +748,7 @@
+@@ -497,6 +746,7 @@
          }
      }
  
