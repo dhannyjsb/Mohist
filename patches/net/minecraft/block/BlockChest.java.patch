@@ -47,7 +47,15 @@
      }
  
      public boolean isOpaqueCube(IBlockState state)
-@@ -424,11 +421,11 @@
+@@ -270,7 +267,6 @@
+         for (EnumFacing enumfacing1 : EnumFacing.Plane.HORIZONTAL)
+         {
+             IBlockState iblockstate = worldIn.getBlockState(pos.offset(enumfacing1));
+-
+             if (iblockstate.getBlock() == this)
+             {
+                 return state;
+@@ -424,11 +420,11 @@
              {
                  playerIn.displayGUIChest(ilockablecontainer);
  
@@ -61,7 +69,7 @@
                  {
                      playerIn.addStat(StatList.TRAPPED_CHEST_TRIGGERED);
                  }
-@@ -470,7 +467,7 @@
+@@ -470,7 +466,7 @@
  
                      if (block == this)
                      {
@@ -70,7 +78,7 @@
                          {
                              return null;
                          }
-@@ -503,7 +500,7 @@
+@@ -503,7 +499,7 @@
  
      public boolean canProvidePower(IBlockState state)
      {
@@ -79,7 +87,7 @@
      }
  
      public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-@@ -543,6 +540,11 @@
+@@ -543,6 +539,11 @@
  
      private boolean isOcelotSittingOnChest(World worldIn, BlockPos pos)
      {

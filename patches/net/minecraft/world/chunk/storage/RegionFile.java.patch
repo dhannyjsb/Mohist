@@ -74,11 +74,12 @@
      }
  
      protected synchronized void write(int x, int z, byte[] data, int length)
-@@ -296,6 +300,7 @@
+@@ -295,7 +299,7 @@
+         }
          catch (IOException ioexception)
          {
-             ioexception.printStackTrace();
-+            ServerInternalException.reportInternalException(ioexception); // Paper
+-            ioexception.printStackTrace();
++            org.spigotmc.SneakyThrow.sneaky(ioexception); // Paper - we want the upper try/catch to retry this
          }
      }
  

@@ -92,7 +92,15 @@
  
                  for (int k = -1; k <= 1; ++k)
                  {
-@@ -230,7 +234,26 @@
+@@ -210,6 +214,7 @@
+                                 }
+ 
+                                 BlockPos blockpos = pos.add(k, i1, l);
++                                if (!world.isLoaded(blockposition1)) continue; // Paper
+                                 int k1 = this.getNeighborEncouragement(worldIn, blockpos);
+ 
+                                 if (k1 > 0)
+@@ -230,7 +235,26 @@
                                              i2 = 15;
                                          }
  
@@ -120,7 +128,7 @@
                                      }
                                  }
                              }
-@@ -240,6 +263,7 @@
+@@ -240,6 +264,7 @@
              }
          }
      }
@@ -128,7 +136,7 @@
  
      protected boolean canDie(World worldIn, BlockPos pos)
      {
-@@ -302,6 +326,47 @@
+@@ -302,6 +327,47 @@
          }
      }
  
@@ -176,7 +184,7 @@
      private boolean canNeighborCatchFire(World worldIn, BlockPos pos)
      {
          for (EnumFacing enumfacing : EnumFacing.values())
-@@ -354,7 +419,7 @@
+@@ -354,7 +420,7 @@
      {
          if (!worldIn.getBlockState(pos.down()).isTopSolid() && !this.canNeighborCatchFire(worldIn, pos))
          {
@@ -185,7 +193,7 @@
          }
      }
  
-@@ -364,7 +429,7 @@
+@@ -364,7 +430,7 @@
          {
              if (!worldIn.getBlockState(pos.down()).isTopSolid() && !this.canNeighborCatchFire(worldIn, pos))
              {
@@ -194,7 +202,7 @@
              }
              else
              {
-@@ -495,4 +560,10 @@
+@@ -495,4 +561,10 @@
      {
          return BlockFaceShape.UNDEFINED;
      }

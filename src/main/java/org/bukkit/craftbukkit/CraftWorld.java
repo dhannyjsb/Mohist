@@ -1614,7 +1614,7 @@ public class CraftWorld implements World {
         ChunkProviderServer cps = world.getChunkProvider();
         for (net.minecraft.world.chunk.Chunk chunk : cps.id2ChunkMap.values()) {
             // If in use, skip it
-            if (isChunkInUse(chunk.x, chunk.z)) {
+            if (isChunkInUse(chunk.x, chunk.z) || chunk.scheduledForUnload != null) {  // Paper - delayed chunk unloads
                 continue;
             }
 

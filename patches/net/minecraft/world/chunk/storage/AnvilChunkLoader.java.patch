@@ -24,7 +24,7 @@
  import net.minecraft.tileentity.TileEntity;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.util.datafix.DataFixer;
-@@ -33,16 +25,31 @@
+@@ -33,16 +25,38 @@
  import net.minecraft.world.storage.ThreadedFileIOBase;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -53,11 +53,18 @@
      private final DataFixer fixer;
      private boolean flushing;
  
++    // Paper start
++    private long queuedSaves = 0;
++    private final java.util.concurrent.atomic.AtomicLong processedSaves = new java.util.concurrent.atomic.AtomicLong(0L);
++    public int getQueueSize() { return queue.size(); }
++    public long getQueuedSaves() { return queuedSaves; }
++    public long getProcessedSaves() { return processedSaves.longValue(); }
++    // Paper end
 +
      public AnvilChunkLoader(File chunkSaveLocationIn, DataFixer dataFixerIn)
      {
          this.chunkSaveLocation = chunkSaveLocationIn;
-@@ -75,27 +82,27 @@
+@@ -75,27 +89,27 @@
      public Object[] loadChunk__Async(World worldIn, int x, int z) throws IOException
      {
          ChunkPos chunkpos = new ChunkPos(x, z);
@@ -91,13 +98,11 @@
          return nbttagcompound != null ? true : RegionFileCache.chunkExists(this.chunkSaveLocation, x, z);
      }
  
-@@ -106,9 +113,25 @@
+@@ -106,9 +120,23 @@
          return data != null ? (Chunk)data[0] : null;
      }
  
 +    // Paper start
-+    private long queuedSaves = 0L;
-+    private final AtomicLong processedSaves = new AtomicLong(0L);
 +    private static final int CURRENT_DATA_VERSION = 1343; // Paper
 +    private static final boolean JUST_CORRUPT_IT = Boolean.valueOf("Paper.ignoreWorldDataVersion");
 +    // Paper end
@@ -117,7 +122,16 @@
          if (!compound.hasKey("Level", 10))
          {
              LOGGER.error("Chunk file at {},{} is missing level data, skipping", Integer.valueOf(x), Integer.valueOf(z));
-@@ -173,7 +196,7 @@
+@@ -162,7 +190,7 @@
+     public void saveChunk(World worldIn, Chunk chunkIn) throws MinecraftException, IOException
+     {
+         worldIn.checkSessionLock();
+-
++        int attempts = 0; Exception laste = null; while (attempts++ < 5) { // Paper
+         try
+         {
+             NBTTagCompound nbttagcompound = new NBTTagCompound();
+@@ -173,73 +201,90 @@
              this.writeChunkToNBT(chunkIn, worldIn, nbttagcompound1);
              net.minecraftforge.common.ForgeChunkManager.storeChunkNBT(chunkIn, nbttagcompound1);
              net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkDataEvent.Save(chunkIn, nbttagcompound));
@@ -126,8 +140,11 @@
          }
          catch (Exception exception)
          {
-@@ -181,65 +204,80 @@
+-            LOGGER.error("Failed to save chunk", (Throwable)exception);
++            laste = exception; // Paper
          }
++        try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();} } // Paper
++        if (laste != null) { com.destroystokyo.paper.exception.ServerInternalException.reportInternalException(laste); MinecraftServer.LOGGER.error("Failed to save chunk", laste); } // Paper
      }
  
 -    protected void addChunkToPending(ChunkPos pos, NBTTagCompound compound)
@@ -139,6 +156,7 @@
              this.chunksToSave.put(pos, compound);
          }
 -
++        queuedSaves++; // Paper
 +        this.queue.add(new QueuedChunk(pos, compound));
          ThreadedFileIOBase.getThreadedIOInstance().queueIO(this);
      }
@@ -164,16 +182,15 @@
              return false;
          }
 -        else
--        {
--            ChunkPos chunkpos = this.chunksToSave.keySet().iterator().next();
--            boolean lvt_3_1_;
 +        ChunkPos chunkcoordintpair = chunk.coords;
-+        this.processedSaves.incrementAndGet();
- 
--            try
++        this.processedSaves.incrementAndGet(); // Paper
 +        NBTTagCompound nbttagcompound = SupplierUtils.getIfExists(chunk.compoundSupplier); // Spigot // Paper
 +        if (nbttagcompound != null)
-+        {
+         {
+-            ChunkPos chunkpos = this.chunksToSave.keySet().iterator().next();
+-            boolean lvt_3_1_;
+-
+-            try
 +            int attempts = 0;
 +            for (Exception laste = null; attempts++ < 5;)
              {
@@ -238,16 +255,51 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -366,7 +404,7 @@
+@@ -349,13 +394,22 @@
+         compound.setByteArray("Biomes", chunkIn.getBiomeArray());
+         chunkIn.setHasEntities(false);
+         NBTTagList nbttaglist1 = new NBTTagList();
+-
++        List<Entity> toUpdate = new java.util.ArrayList<>(); // Paper
+         for (int i = 0; i < chunkIn.getEntityLists().length; ++i)
+         {
+             for (Entity entity : chunkIn.getEntityLists()[i])
+             {
+                 NBTTagCompound nbttagcompound2 = new NBTTagCompound();
+-
++                // Paper start
++                if ((int)Math.floor(entity.posX) >> 4 != chunkIn.x || (int)Math.floor(entity.posZ) >> 4 != chunkIn.z) {
++                    LogManager.getLogger().warn(entity + " is not in this chunk, skipping save. This a bug fix to a vanilla bug. Do not report this to PaperMC please.");
++                    toUpdate.add(entity);
++                    continue;
++                }
++                if (entity.isDead) {
++                    continue;
++                }
++                // Paper end
+                 try
+                 {
+                 if (entity.writeToNBTOptional(nbttagcompound2))
+@@ -366,12 +420,15 @@
                  }
                  catch (Exception e)
                  {
 -                    net.minecraftforge.fml.common.FMLLog.log.error("An Entity type {} has thrown an exception trying to write state. It will not persist. Report this to the mod author",
-+                    LOGGER.error("An Entity type {} has thrown an exception trying to write state. It will not persist. Report this to the mod author",
-                             entity.getClass().getName(), e);
+-                            entity.getClass().getName(), e);
++                    LOGGER.error("An Entity type {} has thrown an exception trying to write state. It will not persist. Report this to the mod author", entity.getClass().getName(), e);
                  }
              }
-@@ -384,7 +422,7 @@
+         }
+-
++        // Paper start - move entities to the correct chunk
++        for (Entity entity : toUpdate) {
++            worldIn.updateEntityWithOptionalForce(entity, false);
++        }
++        // Paper end
+         compound.setTag("Entities", nbttaglist1);
+         NBTTagList nbttaglist2 = new NBTTagList();
+ 
+@@ -384,7 +441,7 @@
              }
              catch (Exception e)
              {
@@ -256,7 +308,7 @@
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +459,7 @@
+@@ -421,7 +478,7 @@
              }
              catch (Exception exception)
              {
@@ -265,7 +317,7 @@
              }
          }
      }
-@@ -485,7 +523,6 @@
+@@ -485,7 +542,6 @@
              readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
@@ -273,7 +325,7 @@
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +535,6 @@
+@@ -498,7 +554,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
@@ -281,7 +333,7 @@
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -608,8 +644,11 @@
+@@ -608,8 +663,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {
@@ -295,7 +347,7 @@
              for (Entity entity : entityIn.getPassengers())
              {
                  spawnEntity(entity, worldIn);
-@@ -655,4 +694,18 @@
+@@ -655,4 +713,18 @@
      {
          return this.chunksToSave.size();
      }

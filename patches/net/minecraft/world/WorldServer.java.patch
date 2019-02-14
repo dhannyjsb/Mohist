@@ -665,15 +665,35 @@
              {
                  i += random.nextInt(64) - random.nextInt(64);
                  k += random.nextInt(64) - random.nextInt(64);
-@@ -992,6 +1230,7 @@
+@@ -992,6 +1230,8 @@
  
          if (chunkproviderserver.canSave())
          {
-+            org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(getWorld()));
++            if (all) org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(getWorld())); // CraftBukkit // Paper - Incremental Auto Saving - Only fire event on full save
++            if (all || mcServer.serverAutoSave) { // Paper
              if (progressCallback != null)
              {
                  progressCallback.displaySavingString("Saving level");
-@@ -1039,6 +1278,12 @@
+@@ -1003,17 +1243,8 @@
+             {
+                 progressCallback.displayLoadingString("Saving chunks");
+             }
+-
++            } // Paper
+             chunkproviderserver.saveChunks(all);
+-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.WorldEvent.Save(this));
+-
+-            for (Chunk chunk : Lists.newArrayList(chunkproviderserver.getLoadedChunks()))
+-            {
+-                if (chunk != null && !this.playerChunkMap.contains(chunk.x, chunk.z))
+-                {
+-                    chunkproviderserver.queueUnload(chunk);
+-                }
+-            }
+         }
+     }
+ 
+@@ -1039,6 +1270,12 @@
              }
          }
  
@@ -686,7 +706,7 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1058,6 +1303,12 @@
+@@ -1058,6 +1295,12 @@
          return this.canAddEntity(entityIn) ? super.spawnEntity(entityIn) : false;
      }
  
@@ -699,7 +719,7 @@
      public void loadEntities(Collection<Entity> entityCollection)
      {
          for (Entity entity : Lists.newArrayList(entityCollection))
-@@ -1074,7 +1325,7 @@
+@@ -1074,7 +1317,7 @@
      {
          if (entityIn.isDead)
          {
@@ -708,7 +728,7 @@
              return false;
          }
          else
-@@ -1085,7 +1336,7 @@
+@@ -1085,7 +1328,7 @@
              {
                  Entity entity = this.entitiesByUuid.get(uuid);
  
@@ -717,7 +737,7 @@
                  {
                      this.unloadedEntityList.remove(entity);
                  }
-@@ -1093,7 +1344,8 @@
+@@ -1093,7 +1336,8 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
@@ -727,7 +747,7 @@
                          return false;
                      }
  
-@@ -1141,9 +1393,15 @@
+@@ -1141,9 +1385,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -744,7 +764,7 @@
              return true;
          }
          else
-@@ -1164,11 +1422,18 @@
+@@ -1164,11 +1414,18 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -765,7 +785,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1476,8 @@
+@@ -1211,7 +1468,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -775,7 +795,7 @@
                  }
              }
  
-@@ -1298,11 +1564,22 @@
+@@ -1298,11 +1556,22 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
@@ -801,7 +821,7 @@
              this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
-@@ -1356,7 +1633,7 @@
+@@ -1356,7 +1625,7 @@
          return this.functionManager;
      }
  

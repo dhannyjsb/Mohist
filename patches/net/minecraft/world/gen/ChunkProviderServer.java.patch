@@ -18,7 +18,7 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.entity.EnumCreatureType;
-@@ -23,17 +18,45 @@
+@@ -23,17 +18,50 @@
  import net.minecraft.world.biome.Biome;
  import net.minecraft.world.chunk.Chunk;
  import net.minecraft.world.chunk.IChunkProvider;
@@ -43,6 +43,11 @@
      public final IChunkGenerator chunkGenerator;
      public final IChunkLoader chunkLoader;
 -    public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192);
++    // Paper start - chunk save stats
++    private long lastQueuedSaves = 0L; // Paper
++    private long lastProcessedSaves = 0L; // Paper
++    private long lastSaveStatPrinted = System.currentTimeMillis();
++    // Paper end
 +    // Paper start
 +    protected Chunk lastChunkByPos = null;
 +    public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192) {
@@ -66,7 +71,7 @@
      public final WorldServer world;
      private final Set<Long> loadingChunks = com.google.common.collect.Sets.newHashSet();
  
-@@ -69,11 +92,21 @@
+@@ -69,11 +97,21 @@
          }
      }
  
@@ -89,16 +94,24 @@
  
          if (chunk != null)
          {
-@@ -92,7 +125,7 @@
+@@ -89,10 +127,14 @@
+         return loadChunk(x, z, null);
+     }
+ 
++    public Chunk loadChunk(int i, int j, Runnable runnable) {
++            return loadChunk(i, j, runnable, true);
++    }
++
      @Nullable
-     public Chunk loadChunk(int x, int z, @Nullable Runnable runnable)
+-    public Chunk loadChunk(int x, int z, @Nullable Runnable runnable)
++    public Chunk loadChunk(int x, int z, @Nullable Runnable runnable, boolean generate)
      {
 -        Chunk chunk = this.getLoadedChunk(x, z);
 +        Chunk chunk = world.paperConfig.allowPermaChunkLoaders ? getLoadedChunk(x, z) : this.getChunkIfLoaded(x, z); // Paper - Configurable perma chunk loaders
          if (chunk == null)
          {
              long pos = ChunkPos.asLong(x, z);
-@@ -106,7 +139,7 @@
+@@ -106,7 +148,7 @@
                  {
                  this.id2ChunkMap.put(ChunkPos.asLong(x, z), chunk);
                  chunk.onLoad();
@@ -107,7 +120,7 @@
                  }
  
                  loadingChunks.remove(pos);
-@@ -154,7 +187,7 @@
+@@ -154,7 +196,7 @@
  
              this.id2ChunkMap.put(i, chunk);
              chunk.onLoad();
@@ -116,7 +129,7 @@
          }
  
          return chunk;
-@@ -177,7 +210,11 @@
+@@ -177,7 +219,11 @@
          }
          catch (Exception exception)
          {
@@ -129,7 +142,7 @@
              return null;
          }
      }
-@@ -190,7 +227,11 @@
+@@ -190,7 +236,11 @@
          }
          catch (Exception exception)
          {
@@ -142,7 +155,7 @@
          }
      }
  
-@@ -203,17 +244,29 @@
+@@ -203,17 +253,49 @@
          }
          catch (IOException ioexception)
          {
@@ -167,6 +180,26 @@
 +        // Paper start
 +        AnvilChunkLoader chunkLoader = (AnvilChunkLoader) world.getChunkProvider().chunkLoader;
 +        int queueSize = chunkLoader.getQueueSize();
++        final long now = System.currentTimeMillis();
++        final long timeSince = (now - lastSaveStatPrinted) / 1000;
++        final Integer printRateSecs = Integer.getInteger("printSaveStats");
++        if (printRateSecs != null && timeSince >= printRateSecs) {
++            final String timeStr = "/" + timeSince  +"s";
++            final long queuedSaves = chunkLoader.getQueuedSaves();
++            long queuedDiff = queuedSaves - lastQueuedSaves;
++            lastQueuedSaves = queuedSaves;
++            final long processedSaves = chunkLoader.getProcessedSaves();
++            long processedDiff = processedSaves - lastProcessedSaves;
++            lastProcessedSaves = processedSaves;
++            lastSaveStatPrinted = now;
++            if (processedDiff > 0 || queueSize > 0 || queuedDiff > 0) {
++                System.out.println("[Chunk Save Stats] " + world.getWorldInfo().getWorldName() +
++                        " - Current: " + queueSize +
++                        " - Queued: " + queuedDiff + timeStr +
++                        " - Processed: " +processedDiff + timeStr
++                );
++            }
++        }
 +        if (queueSize > world.paperConfig.queueSizeAutoSaveThreshold){
 +            return false;
 +        }
@@ -175,7 +208,7 @@
          List<Chunk> list = Lists.newArrayList(this.id2ChunkMap.values());
  
          for (int j = 0; j < list.size(); ++j)
-@@ -231,8 +284,7 @@
+@@ -231,8 +313,7 @@
                  chunk.setModified(false);
                  ++i;
  
@@ -185,7 +218,7 @@
                      return false;
                  }
              }
-@@ -262,28 +314,54 @@
+@@ -262,28 +343,70 @@
                  for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
                  {
                      Long olong = iterator.next();
@@ -199,6 +232,8 @@
 -                        this.saveChunkData(chunk);
 -                        this.saveChunkExtraData(chunk);
 -                        this.id2ChunkMap.remove(olong);
++                        // CraftBukkit start - move unload logic to own method
++                        chunk.setShouldUnload(false); // Paper
 +                        if (!unloadChunk(chunk, true)) {
 +                            continue;
 +                        }
@@ -209,12 +244,25 @@
 -
 -            if (this.id2ChunkMap.isEmpty()) net.minecraftforge.common.DimensionManager.unloadWorld(this.world.provider.getDimension());
 -
++            // Paper start - delayed chunk unloads
++            long now = System.currentTimeMillis();
++            long unloadAfter = this.world.paperConfig.delayChunkUnloadsBy;
++            if (unloadAfter > 0L) {
++                for (final Chunk chunk2 : this.id2ChunkMap.values()) {
++                    if (chunk2.scheduledForUnload != null && now - chunk2.scheduledForUnload > unloadAfter) {
++                        chunk2.scheduledForUnload = null;
++                        this.queueUnload(chunk2);
++                    }
++                }
++            }
++            // Paper end
              this.chunkLoader.chunkTick();
          }
  
          return false;
      }
  
++    // CraftBukkit start
 +    public boolean unloadChunk(Chunk chunk, boolean save) {
 +        ChunkUnloadEvent event = new ChunkUnloadEvent(chunk.bukkitChunk, save);
 +        this.world.getServer().getPluginManager().callEvent(event);
@@ -245,6 +293,7 @@
 +        this.id2ChunkMap.remove(chunk.chunkKey);
 +        return true;
 +    }
++    // CraftBukkit end
 +
      public boolean canSave()
      {

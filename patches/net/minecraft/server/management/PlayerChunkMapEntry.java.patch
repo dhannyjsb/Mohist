@@ -38,12 +38,56 @@
      private int changes;
      private int changedSectionFilter;
      private long lastUpdateInhabitedTime;
-@@ -41,7 +38,7 @@
+@@ -36,12 +33,20 @@
+     {
+         public void run()
+         {
+-            PlayerChunkMapEntry.this.chunk = PlayerChunkMapEntry.this.playerChunkMap.getWorldServer().getChunkProvider().loadChunk(PlayerChunkMapEntry.this.pos.x, PlayerChunkMapEntry.this.pos.z);
+             PlayerChunkMapEntry.this.loading = false;
++            PlayerChunkMapEntry.this.chunk = PlayerChunkMapEntry.this.playerChunkMap.getWorldServer().getChunkProvider().loadChunk(PlayerChunkMapEntry.this.pos.x, PlayerChunkMapEntry.this.pos.z);
++            markChunkUsed(); // Paper - delay chunk unloads
          }
      };
++    // Paper start - delay chunk unloads
++    public final void markChunkUsed() {
++        if (chunk != null && chunk.scheduledForUnload != null) {
++            chunk.scheduledForUnload = null;
++        }
++    }
++    // Paper end
      private boolean loading = true;
 -
 +    boolean chunkExists; // Paper
      public PlayerChunkMapEntry(PlayerChunkMap mapIn, int chunkX, int chunkZ)
      {
          this.playerChunkMap = mapIn;
+@@ -114,24 +119,16 @@
+ 
+     public boolean providePlayerChunk(boolean canGenerate)
+     {
+-        if (this.loading) return false;
+         if (this.chunk != null)
+         {
+             return true;
+         }
+-        else
+-        {
+-            if (canGenerate)
+-            {
+-                this.chunk = this.playerChunkMap.getWorldServer().getChunkProvider().provideChunk(this.pos.x, this.pos.z);
+-            }
+-            else
+-            {
+-                this.chunk = this.playerChunkMap.getWorldServer().getChunkProvider().loadChunk(this.pos.x, this.pos.z);
+-            }
+-
+-            return this.chunk != null;
++        if (!this.loading) {
++            PlayerChunkMapEntry.this.loading = true;
++            this.chunk = this.playerChunkMap.getWorldServer().getChunkProvider().getChunkAt(this.pos.x, this.pos.z, this.loadedRunnable, canGenerate);
++            this.markChunkUsed();
+         }
++        return this.chunk != null;
+     }
+ 
+     public boolean sendToPlayers()
