@@ -40,10 +40,8 @@
   */
  
  package net.minecraftforge.fml.repackage.com.nothome.delta;
-@@ -173,6 +168,4 @@
-         output.write(EOF);
-         output.close();
+@@ -175,4 +170,3 @@
      }
--
+ 
  }
 -

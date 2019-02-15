@@ -30,30 +30,7 @@
  public class ItemBow extends Item
  {
      public ItemBow()
-@@ -37,7 +36,7 @@
-                 }
-                 else
-                 {
--                    return entityIn.getActiveItemStack().getItem() != Items.BOW ? 0.0F : (float)(stack.getMaxItemUseDuration() - entityIn.getItemInUseCount()) / 20.0F;
-+                    return !(entityIn.getActiveItemStack().getItem() instanceof ItemBow) ? 0.0F : (float)(stack.getMaxItemUseDuration() - entityIn.getItemInUseCount()) / 20.0F;
-                 }
-             }
-         });
-@@ -106,11 +105,12 @@
-                 if ((double)f >= 0.1D)
-                 {
-                     boolean flag1 = entityplayer.capabilities.isCreativeMode || (itemstack.getItem() instanceof ItemArrow && ((ItemArrow) itemstack.getItem()).isInfinite(itemstack, stack, entityplayer));
--
-+                    boolean consumeArrow = true; // Paper
-                     if (!worldIn.isRemote)
-                     {
-                         ItemArrow itemarrow = (ItemArrow)(itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.ARROW);
-                         EntityArrow entityarrow = itemarrow.createArrow(worldIn, itemstack, entityplayer);
-+                        entityarrow = this.customizeArrow(entityarrow);
-                         entityarrow.shoot(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, f * 3.0F, 1.0F);
- 
-                         if (f == 1.0F)
-@@ -134,22 +134,41 @@
+@@ -135,22 +134,41 @@
  
                          if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, stack) > 0)
                          {
@@ -100,13 +77,15 @@
                      {
                          itemstack.shrink(1);
  
-@@ -211,4 +230,9 @@
+@@ -215,6 +233,11 @@
+ 
+     public EntityArrow customizeArrow(EntityArrow arrow)
      {
-         return 1;
-     }
++           return arrow;
++    }
 +
 +    public EntityArrow customizeArrow(EntityArrow arrow)
 +    {
-+           return arrow;
-+    }
+         return arrow;
+     }
  }
