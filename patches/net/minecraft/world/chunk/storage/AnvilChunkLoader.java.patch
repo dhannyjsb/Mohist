@@ -24,7 +24,7 @@
  import net.minecraft.tileentity.TileEntity;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.util.datafix.DataFixer;
-@@ -33,16 +25,38 @@
+@@ -33,16 +25,37 @@
  import net.minecraft.world.storage.ThreadedFileIOBase;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -38,7 +38,6 @@
 +import java.util.Set;
 +import java.util.concurrent.ConcurrentLinkedQueue;
 +import java.util.concurrent.ConcurrentMap;
-+import java.util.concurrent.atomic.AtomicLong;
 +import java.util.function.Supplier;
 +
  public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
@@ -64,7 +63,7 @@
      public AnvilChunkLoader(File chunkSaveLocationIn, DataFixer dataFixerIn)
      {
          this.chunkSaveLocation = chunkSaveLocationIn;
-@@ -75,27 +89,27 @@
+@@ -75,27 +88,27 @@
      public Object[] loadChunk__Async(World worldIn, int x, int z) throws IOException
      {
          ChunkPos chunkpos = new ChunkPos(x, z);
@@ -98,7 +97,7 @@
          return nbttagcompound != null ? true : RegionFileCache.chunkExists(this.chunkSaveLocation, x, z);
      }
  
-@@ -106,9 +120,23 @@
+@@ -106,9 +119,23 @@
          return data != null ? (Chunk)data[0] : null;
      }
  
@@ -122,7 +121,7 @@
          if (!compound.hasKey("Level", 10))
          {
              LOGGER.error("Chunk file at {},{} is missing level data, skipping", Integer.valueOf(x), Integer.valueOf(z));
-@@ -162,7 +190,7 @@
+@@ -162,7 +189,7 @@
      public void saveChunk(World worldIn, Chunk chunkIn) throws MinecraftException, IOException
      {
          worldIn.checkSessionLock();
@@ -131,7 +130,7 @@
          try
          {
              NBTTagCompound nbttagcompound = new NBTTagCompound();
-@@ -173,73 +201,90 @@
+@@ -173,73 +200,90 @@
              this.writeChunkToNBT(chunkIn, worldIn, nbttagcompound1);
              net.minecraftforge.common.ForgeChunkManager.storeChunkNBT(chunkIn, nbttagcompound1);
              net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkDataEvent.Save(chunkIn, nbttagcompound));
@@ -255,7 +254,7 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -349,13 +394,22 @@
+@@ -349,13 +393,22 @@
          compound.setByteArray("Biomes", chunkIn.getBiomeArray());
          chunkIn.setHasEntities(false);
          NBTTagList nbttaglist1 = new NBTTagList();
@@ -280,7 +279,7 @@
                  try
                  {
                  if (entity.writeToNBTOptional(nbttagcompound2))
-@@ -366,12 +420,15 @@
+@@ -366,12 +419,15 @@
                  }
                  catch (Exception e)
                  {
@@ -299,7 +298,7 @@
          compound.setTag("Entities", nbttaglist1);
          NBTTagList nbttaglist2 = new NBTTagList();
  
-@@ -384,7 +441,7 @@
+@@ -384,7 +440,7 @@
              }
              catch (Exception e)
              {
@@ -308,7 +307,7 @@
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +478,7 @@
+@@ -421,7 +477,7 @@
              }
              catch (Exception exception)
              {
@@ -317,7 +316,7 @@
              }
          }
      }
-@@ -485,7 +542,6 @@
+@@ -485,7 +541,6 @@
              readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
@@ -325,7 +324,7 @@
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +554,6 @@
+@@ -498,7 +553,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
@@ -333,7 +332,7 @@
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -608,8 +663,11 @@
+@@ -608,8 +662,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {
@@ -343,11 +342,11 @@
 +    }
 +
 +    public static void spawnEntity(Entity entityIn, World worldIn, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason reason) {
-+        if (worldIn.addEntity(entityIn, reason) && entityIn.isBeingRidden()) {
++        if (!entityIn.valid && worldIn.addEntity(entityIn, reason) && entityIn.isBeingRidden()) {
              for (Entity entity : entityIn.getPassengers())
              {
                  spawnEntity(entity, worldIn);
-@@ -655,4 +713,18 @@
+@@ -655,4 +712,18 @@
      {
          return this.chunksToSave.size();
      }

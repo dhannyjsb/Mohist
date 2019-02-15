@@ -203,6 +203,15 @@
  
          if (f > 0.1F)
          {
+@@ -578,7 +566,7 @@
+ 
+         if (!this.world.isRemote && (this.fallDistance > 0.5F || this.isInWater() || this.isRiding()) || this.capabilities.isFlying)
+         {
+-            this.spawnShoulderEntities();
++            if (!this.world.paperConfig.parrotsHangOnBetter) this.spawnShoulderEntities(); // Paper - Hang on!
+         }
+     }
+ 
 @@ -691,6 +679,7 @@
      @Nullable
      public EntityItem dropItem(boolean dropAll)

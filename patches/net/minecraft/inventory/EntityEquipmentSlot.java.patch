@@ -28,11 +28,13 @@
      {
          this.slotType = slotTypeIn;
          this.index = indexIn;
-@@ -22,7 +22,7 @@
+@@ -22,7 +22,9 @@
          this.name = nameIn;
      }
  
 -    public EntityEquipmentSlot.Type getSlotType()
++    public Type getType() { return this.getSlotType(); } // Paper - OBFHELPER
++
 +    public Type getSlotType()
      {
          return this.slotType;

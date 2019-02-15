@@ -262,11 +262,30 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public void setVelocity(Vector velocity) {
         Preconditions.checkArgument(velocity != null, "velocity");
         velocity.checkFinite();
+
+        // Paper start - Warn server owners when plugins try to set super high velocities
+        if (!(this instanceof org.bukkit.entity.Projectile) && isUnsafeVelocity(velocity)) {
+            CraftServer.excessiveVelEx = new Exception("Excessive velocity set detected: tried to set velocity of entity " + entity.getName() + " id #" + getEntityId() + " to (" + velocity.getX() + "," + velocity.getY() + "," + velocity.getZ() + ").");
+        }
+        // Paper end
+
         entity.motionX = velocity.getX();
         entity.motionY = velocity.getY();
         entity.motionZ = velocity.getZ();
         entity.velocityChanged = true;
     }
+
+    // Paper start
+    private static boolean isUnsafeVelocity(Vector vel) {
+        final double x = vel.getX();
+        final double y = vel.getY();
+        final double z = vel.getZ();
+        if (x > 4 || x < -4 || y > 4 || y < -4 || z > 4 || z < -4) {
+            return true;
+        }
+        return false;
+    }
+    // Paper end
 
     @Override
     public double getHeight() {

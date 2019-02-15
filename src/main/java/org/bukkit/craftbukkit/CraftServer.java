@@ -45,6 +45,7 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.*;
 import org.bukkit.World;
@@ -77,6 +78,7 @@ import org.bukkit.craftbukkit.util.*;
 import org.bukkit.craftbukkit.util.permissions.CraftDefaultPermissions;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.server.BroadcastMessageEvent;
@@ -152,6 +154,7 @@ public final class CraftServer implements Server {
     private boolean unrestrictedSignCommands; // Paper
     private final List<CraftPlayer> playerView;
     public int reloadCount;
+    public static Exception excessiveVelEx; // Paper - Velocity warnings
 
     public CraftSimpleCommandMap getCraftCommandMap() {
         return this.craftCommandMap;
@@ -712,8 +715,15 @@ public final class CraftServer implements Server {
         if (craftCommandMap.dispatch(sender, commandLine)) {
             return true;
         }
-
-        sender.sendMessage(org.spigotmc.SpigotConfig.unknownCommandMessage); // Spigot
+        if (StringUtils.isNotEmpty(org.spigotmc.SpigotConfig.unknownCommandMessage)) {
+            // Paper start
+            UnknownCommandEvent event = new UnknownCommandEvent(sender, commandLine, org.spigotmc.SpigotConfig.unknownCommandMessage);
+            Bukkit.getServer().getPluginManager().callEvent(event);
+            if (StringUtils.isNotEmpty(event.getMessage())) {
+                sender.sendMessage(event.getMessage());
+            }
+            // Paper end
+        }
 
         return false;
     }

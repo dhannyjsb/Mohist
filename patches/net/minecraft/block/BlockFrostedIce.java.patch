@@ -16,3 +16,19 @@
  public class BlockFrostedIce extends BlockIce
  {
      public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 3);
+@@ -32,13 +33,14 @@
+ 
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+     {
++        if (!worldIn.paperConfig.frostedIceEnabled) return; // Paper - add ability to disable frosted ice
+         if ((rand.nextInt(3) == 0 || this.countNeighbors(worldIn, pos) < 4) && worldIn.getLightFromNeighbors(pos) > 11 - ((Integer)state.getValue(AGE)).intValue() - state.getLightOpacity())
+         {
+             this.slightlyMelt(worldIn, pos, state, rand, true);
+         }
+         else
+         {
+-            worldIn.scheduleUpdate(pos, this, MathHelper.getInt(rand, 20, 40));
++            worldIn.scheduleUpdate(pos, this, MathHelper.getInt(rand, worldIn.paperConfig.frostedIceDelayMin, worldIn.paperConfig.frostedIceDelayMax));
+         }
+     }
+ 

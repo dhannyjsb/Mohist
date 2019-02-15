@@ -752,6 +752,17 @@ public class CraftEventFactory {
         return event;
     }
 
+    // Paper start - Add orb
+    public static PlayerExpChangeEvent callPlayerExpChangeEvent(EntityPlayer entity, EntityXPOrb entityOrb) {
+        Player player = (Player) entity.getBukkitEntity();
+        ExperienceOrb source = (ExperienceOrb) entityOrb.getBukkitEntity();
+        int expAmount = source.getExperience();
+        PlayerExpChangeEvent event = new PlayerExpChangeEvent(player, source, expAmount);
+        Bukkit.getPluginManager().callEvent(event);
+        return event;
+    }
+    // Paper end
+
     public static boolean handleBlockGrowEvent(World world, int x, int y, int z, net.minecraft.block.Block type, int data) {
         Block block = world.getWorld().getBlockAt(x, y, z);
         CraftBlockState state = (CraftBlockState) block.getState();
@@ -881,6 +892,16 @@ public class CraftEventFactory {
 
         return CraftItemStack.asNMSCopy(bitem);
     }
+
+    // Paper start
+    public static com.destroystokyo.paper.event.entity.ProjectileCollideEvent callProjectileCollideEvent(Entity entity, RayTraceResult position) {
+        Projectile projectile = (Projectile) entity.getBukkitEntity();
+        org.bukkit.entity.Entity collided = position.entityHit.getBukkitEntity();
+        com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = new com.destroystokyo.paper.event.entity.ProjectileCollideEvent(projectile, collided);
+        Bukkit.getPluginManager().callEvent(event);
+        return event;
+    }
+    // Paper end
 
     public static ProjectileLaunchEvent callProjectileLaunchEvent(Entity entity) {
         Projectile bukkitEntity = (Projectile) entity.getBukkitEntity();

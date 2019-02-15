@@ -111,7 +111,7 @@
                  if (this.xpValue > 0)
                  {
 -                    entityIn.addExperience(this.xpValue);
-+                    entityIn.addExperience(CraftEventFactory.callPlayerExpChangeEvent(entityIn, this.xpValue).getAmount()); // CraftBukkit - this.value -> event.getAmount()
++                    entityIn.addExperience(CraftEventFactory.callPlayerExpChangeEvent(entityIn, this).getAmount()); // CraftBukkit - this.value -> event.getAmount()
                  }
  
                  this.setDead();

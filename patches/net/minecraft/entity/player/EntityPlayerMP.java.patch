@@ -1058,7 +1058,7 @@
 +
 +    @Override
 +    public boolean isMovementBlocked() {
-+        return super.isMovementBlocked() || !getBukkitEntity().isOnline();
++        return super.isMovementBlocked() || (this.connection != null && this.connection.isDisconnected()); // Paper
 +    }
 +
 +    @Override

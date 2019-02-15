@@ -21,7 +21,8 @@
 +
  public class Teleporter implements net.minecraftforge.common.util.ITeleporter
  {
-     protected final WorldServer world;
+-    protected final WorldServer world;
++    protected final WorldServer world; // Paper - private -> protected
      protected final Random random;
 -    protected final Long2ObjectMap<Teleporter.PortalPosition> destinationCoordinateCache = new Long2ObjectOpenHashMap<Teleporter.PortalPosition>(4096);
 +    protected final Long2ObjectMap<PortalPosition> destinationCoordinateCache = new Long2ObjectOpenHashMap<PortalPosition>(4096);
@@ -112,7 +113,7 @@
      {
 -        int i = 128;
 +        // CraftBukkit start - Modularize portal search process and entity teleportation
-+        BlockPos found = this.findPortal(entityIn.posX, entityIn.posY, entityIn.posZ, 128);
++        BlockPos found = this.findPortal(entityIn.posX, entityIn.posY, entityIn.posZ, world.paperConfig.portalSearchRadius); // Paper - Configurable search radius
 +        if (found == null) {
 +            return false;
 +        }
