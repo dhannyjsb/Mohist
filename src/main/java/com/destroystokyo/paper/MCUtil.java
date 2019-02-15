@@ -1,6 +1,9 @@
 package com.destroystokyo.paper;
 
+import com.destroystokyo.paper.profile.CraftPlayerProfile;
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.mojang.authlib.GameProfile;
 import jline.internal.Nullable;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -53,6 +56,10 @@ public final class MCUtil {
                 return null;
             }
         return run.get();
+    }
+
+    public static PlayerProfile toBukkit(GameProfile profile) {
+        return CraftPlayerProfile.asBukkitMirror(profile);
     }
 
     /**

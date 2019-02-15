@@ -24,6 +24,15 @@
  public class ItemBlock extends Item
  {
      protected final Block block;
+@@ -46,7 +46,7 @@
+ 
+         ItemStack itemstack = player.getHeldItem(hand);
+ 
+-        if (!itemstack.isEmpty() && player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(this.block, pos, false, facing, (Entity)null))
++        if (!itemstack.isEmpty() && player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(this.block, pos, false, facing, player))  // Paper - Pass entityhuman instead of null
+         {
+             int i = this.getMetadata(itemstack.getMetadata());
+             IBlockState iblockstate1 = this.block.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, i, player, hand);
 @@ -55,7 +55,7 @@
              {
                  iblockstate1 = worldIn.getBlockState(pos);

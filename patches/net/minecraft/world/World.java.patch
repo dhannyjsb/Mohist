@@ -1015,7 +1015,37 @@
              {
                  entityIn.addedToChunk = false;
              }
-@@ -2449,6 +2846,7 @@
+@@ -2065,6 +2462,29 @@
+         return this.checkNoEntityCollision(bb, (Entity)null);
+     }
+ 
++    // Paper start - Based on method below
++    /**
++     * @param axisalignedbb area to search within
++     * @param entity causing the action ex. block placer
++     * @return if there are no visible players colliding
++     */
++    public boolean checkNoVisiblePlayerCollisions(AxisAlignedBB axisalignedbb, @Nullable Entity entity) {
++        List list = this.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
++        for (int i = 0; i < list.size(); ++i) {
++            Entity entity1 = (Entity) list.get(i);
++            if (entity instanceof EntityPlayer && entity1 instanceof EntityPlayer) {
++                if (!((EntityPlayer) entity).getBukkitEntity().canSee(((EntityPlayer) entity1).getBukkitEntity())) {
++                    continue;
++                }
++            }
++            if (!entity1.isDead && entity1.blocksEntitySpawning()) {
++                return false;
++            }
++        }
++        return true;
++    }
++    // Paper end
++
+     public boolean checkNoEntityCollision(AxisAlignedBB bb, @Nullable Entity entityIn)
+     {
+         List<Entity> list = this.getEntitiesWithinAABBExcludingEntity((Entity)null, bb);
+@@ -2449,6 +2869,7 @@
                          }
                      }
  
@@ -1023,7 +1053,7 @@
                      this.addedTileEntityList.add(tileEntityIn);
                  }
                  else
-@@ -2657,6 +3055,11 @@
+@@ -2657,6 +3078,11 @@
                  }
  
                  this.rainingStrength = MathHelper.clamp(this.rainingStrength, 0.0F, 1.0F);
@@ -1035,7 +1065,7 @@
              }
          }
      }
-@@ -2846,8 +3249,11 @@
+@@ -2846,8 +3272,11 @@
  
      public boolean checkLightFor(EnumSkyBlock lightType, BlockPos pos)
      {
@@ -1048,7 +1078,7 @@
              return false;
          }
          else
-@@ -3034,6 +3440,9 @@
+@@ -3034,6 +3463,9 @@
  
          for (Entity entity4 : this.loadedEntityList)
          {
@@ -1058,7 +1088,7 @@
              if (entityType.isAssignableFrom(entity4.getClass()) && filter.apply((T)entity4))
              {
                  list.add((T)entity4);
-@@ -3137,7 +3546,19 @@
+@@ -3137,7 +3569,19 @@
  
          for (Entity entity4 : this.loadedEntityList)
          {
@@ -1079,7 +1109,7 @@
              {
                  ++j2;
              }
-@@ -3146,12 +3567,19 @@
+@@ -3146,12 +3590,19 @@
          return j2;
      }
  
@@ -1099,12 +1129,13 @@
                  loadedEntityList.add(entity4);
                  this.onEntityAdded(entity4);
              }
-@@ -3168,18 +3596,23 @@
+@@ -3168,18 +3619,23 @@
          IBlockState iblockstate1 = this.getBlockState(pos);
          AxisAlignedBB axisalignedbb = skipCollisionCheck ? null : blockIn.getDefaultState().getCollisionBoundingBox(this, pos);
  
+-        if (axisalignedbb != Block.NULL_AABB && !this.checkNoEntityCollision(axisalignedbb.offset(pos), placer))
 +        boolean defaultReturn;
-         if (axisalignedbb != Block.NULL_AABB && !this.checkNoEntityCollision(axisalignedbb.offset(pos), placer))
++        if (axisalignedbb != Block.NULL_AABB && !this.checkNoVisiblePlayerCollisions(axisalignedbb.offset(pos), placer))
          {
 -            return false;
 +            defaultReturn = false;
@@ -1126,7 +1157,7 @@
      }
  
      public int getSeaLevel()
-@@ -3344,6 +3777,12 @@
+@@ -3344,6 +3800,12 @@
          {
              EntityPlayer entityplayer1 = this.playerEntities.get(j2);
  
@@ -1139,7 +1170,7 @@
              if (p_190525_9_.apply(entityplayer1))
              {
                  double d1 = entityplayer1.getDistanceSq(x, y, z);
-@@ -3365,8 +3804,7 @@
+@@ -3365,8 +3827,7 @@
          {
              EntityPlayer entityplayer = this.playerEntities.get(j2);
  
@@ -1149,7 +1180,7 @@
                  double d0 = entityplayer.getDistanceSq(x, y, z);
  
                  if (range < 0.0D || d0 < range * range)
-@@ -3591,6 +4029,16 @@
+@@ -3591,6 +4052,16 @@
      {
      }
  
@@ -1166,7 +1197,7 @@
      public float getThunderStrength(float delta)
      {
          return (this.prevThunderingStrength + (this.thunderingStrength - this.prevThunderingStrength) * delta) * this.getRainStrength(delta);
-@@ -3873,13 +4321,15 @@
+@@ -3873,13 +4344,15 @@
          return this.worldBorder;
      }
  

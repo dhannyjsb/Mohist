@@ -77,3 +77,11 @@
                      }
  
                      scoreplayerteam.setDeathMessageVisibility(team$enumvisible1);
+@@ -753,6 +744,7 @@
+                 {
+                     for (Entity entity : getEntityList(server, sender, s))
+                     {
++                        if (!entity.world.paperConfig.nonPlayerEntitiesOnScoreboards && !(entity instanceof EntityPlayer)) { continue; } // Paper
+                         String s2 = getEntityName(server, sender, entity.getCachedUniqueIdString());
+ 
+                         if (scoreboard.removePlayerFromTeams(s2))

@@ -1,11 +1,12 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.destroystokyo.paper.entity.CraftRangedEntity;
 import net.minecraft.entity.boss.EntityWither;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Wither;
 
-public class CraftWither extends CraftMonster implements Wither {
+public class CraftWither extends CraftMonster implements Wither, CraftRangedEntity<EntityWither> { // Paper
     public CraftWither(CraftServer server, EntityWither entity) {
         super(server, entity);
     }

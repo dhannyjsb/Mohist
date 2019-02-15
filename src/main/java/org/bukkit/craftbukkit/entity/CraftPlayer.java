@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.destroystokyo.paper.Title;
 import com.destroystokyo.paper.profile.CraftPlayerProfile;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.base.Preconditions;
@@ -10,6 +11,7 @@ import io.netty.buffer.Unpooled;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
@@ -18,9 +20,12 @@ import net.minecraft.entity.ai.attributes.AttributeMap;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
@@ -92,6 +97,10 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     private double health = 20;
     private boolean scaledHealth = false;
     private double healthScale = 20;
+    // Paper start
+    private org.bukkit.event.player.PlayerResourcePackStatusEvent.Status resourcePackStatus;
+    private String resourcePackHash;
+    // Paper end
     private static final boolean DISABLE_CHANNEL_LIMIT = System.getProperty("paper.disableChannelLimit") != null; // Paper - add a flag to disable the channel limit
 
     public CraftPlayer(CraftServer server, EntityPlayerMP entity) {
@@ -168,7 +177,84 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             sendMessage(message);
         }
     }
+    // Paper start
+    @Override
+    public void setPlayerListHeaderFooter(BaseComponent[] header, BaseComponent[] footer) {
+        SPacketPlayerListHeaderFooter packet = new SPacketPlayerListHeaderFooter();
+        packet.header1 = header;
+        packet.footer1 = footer;
+        getHandle().connection.sendPacket(packet);
+    }
 
+    @Override
+    public void setPlayerListHeaderFooter(BaseComponent header, BaseComponent footer) {
+        this.setPlayerListHeaderFooter(header == null ? null : new BaseComponent[]{header},
+                footer == null ? null : new BaseComponent[]{footer});
+    }
+
+
+    @Override
+    public void setTitleTimes(int fadeInTicks, int stayTicks, int fadeOutTicks) {
+        getHandle().connection.sendPacket(new SPacketTitle(SPacketTitle.Type.TIMES, (BaseComponent[]) null, fadeInTicks, stayTicks, fadeOutTicks));
+    }
+
+    @Override
+    public void setSubtitle(BaseComponent[] subtitle) {
+        getHandle().connection.sendPacket(new SPacketTitle(SPacketTitle.Type.SUBTITLE, subtitle, 0, 0, 0));
+    }
+
+    @Override
+    public void setSubtitle(BaseComponent subtitle) {
+        setSubtitle(new BaseComponent[]{subtitle});
+    }
+
+    @Override
+    public void showTitle(BaseComponent[] title) {
+        getHandle().connection.sendPacket(new SPacketTitle(SPacketTitle.Type.TITLE, title, 0, 0, 0));
+    }
+
+    @Override
+    public void showTitle(BaseComponent title) {
+        showTitle(new BaseComponent[]{title});
+    }
+
+    @Override
+    public void showTitle(BaseComponent[] title, BaseComponent[] subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks) {
+        setTitleTimes(fadeInTicks, stayTicks, fadeOutTicks);
+        setSubtitle(subtitle);
+        showTitle(title);
+    }
+
+    @Override
+    public void showTitle(BaseComponent title, BaseComponent subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks) {
+        setTitleTimes(fadeInTicks, stayTicks, fadeOutTicks);
+        setSubtitle(subtitle);
+        showTitle(title);
+    }
+
+    @Override
+    public void sendTitle(Title title) {
+        Preconditions.checkNotNull(title, "Title is null");
+        setTitleTimes(title.getFadeIn(), title.getStay(), title.getFadeOut());
+        setSubtitle(title.getSubtitle() == null ? new BaseComponent[0] : title.getSubtitle());
+        showTitle(title.getTitle());
+    }
+
+    @Override
+    public void updateTitle(Title title) {
+        Preconditions.checkNotNull(title, "Title is null");
+        setTitleTimes(title.getFadeIn(), title.getStay(), title.getFadeOut());
+        if (title.getSubtitle() != null) {
+            setSubtitle(title.getSubtitle());
+        }
+        showTitle(title.getTitle());
+    }
+
+    @Override
+    public void hideTitle() {
+        getHandle().connection.sendPacket(new SPacketTitle(SPacketTitle.Type.CLEAR, (BaseComponent[]) null, 0, 0, 0));
+    }
+    // Paper end
     @Override
     public String getDisplayName() {
         return getHandle().displayName;
@@ -535,7 +621,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
         // Close any foreign inventory
         if (getHandle().openContainer != getHandle().inventoryContainer) {
-            getHandle().closeScreen();
+            getHandle().closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.TELEPORT); // Paper
         }
 
         // Check if the fromWorld and toWorld are the same.
@@ -547,6 +633,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
         return true;
     }
+
+    // Paper start - Ugly workaround for SPIGOT-1915 & GH-114
+    @Override
+    public boolean setPassenger(org.bukkit.entity.Entity passenger) {
+        boolean wasSet = super.setPassenger(passenger);
+        if (wasSet) {
+            this.getHandle().connection.sendPacket(new SPacketSetPassengers(this.getHandle()));
+        }
+        return wasSet;
+    }
+    // Paper end
 
     @Override
     public void setSneaking(boolean sneak) {
@@ -813,8 +910,34 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return GameMode.getByValue(getHandle().interactionManager.getGameType().getID());
     }
 
+    public int applyMending(int amount) {
+        EntityPlayerMP handle = getHandle();
+        // Logic copied from EntityExperienceOrb and remapped to unobfuscated methods/properties
+        ItemStack itemstack = EnchantmentHelper.getRandomEquippedItemWithEnchant(Enchantments.MENDING, handle);
+        if (!itemstack.isEmpty() && itemstack.hasDamage()) {
+            EntityXPOrb orb = new EntityXPOrb(handle.world);
+            orb.xpValue = amount;
+            orb.spawnReason = org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM;
+            orb.posX = handle.posX;
+            orb.posY = handle.posY;
+            orb.posZ = handle.posZ;
+            int i = Math.min(orb.xpToDur(amount), itemstack.getDamage());
+            org.bukkit.event.player.PlayerItemMendEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerItemMendEvent(handle, orb, itemstack, i);
+            i = event.getRepairAmount();
+            orb.isDead = true;
+            if (!event.isCancelled()) {
+                amount -= orb.durToXp(i);
+                itemstack.setDamage(itemstack.getDamage() - i);
+            }
+        }
+        return amount;
+    }
+
     @Override
-    public void giveExp(int exp) {
+    public void giveExp(int exp, boolean applyMending) {
+        if (applyMending) {
+            exp = this.applyMending(exp);
+        }
         getHandle().addExperience(exp);
     }
 
@@ -1193,6 +1316,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
+    public int getViewDistance() {
+        return this.getHandle().getViewDistance();
+    }
+
+    @Override
+    public void setViewDistance(final int viewDistance) {
+        ((WorldServer)this.getHandle().world).getPlayerChunkMap().updateViewDistance(this.getHandle(), viewDistance);
+    }
+
+    @Override
     public void setTexturePack(String url) {
         setResourcePack(url);
     }
@@ -1298,7 +1431,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void setFlying(boolean value) {
-        boolean needsUpdate = getHandle().abilities.isFlying != value; // Paper - Only refresh abilities if needed
+        boolean needsUpdate = getHandle().capabilities.isFlying != value; // Paper - Only refresh abilities if needed
         if (!getAllowFlight() && value) {
             throw new IllegalArgumentException("Cannot make player fly if getAllowFlight() is false");
         }
@@ -1607,7 +1740,10 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public String getLocale() {
-        return getHandle().language;
+        // Paper start - Locale change event
+        String locale = getHandle().locale;
+        return locale != null ? locale : "en_us";
+        // Paper end
     }
 
     public void setAffectsSpawning(boolean affects) {
@@ -1629,6 +1765,32 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     public void sendActionBar(char alternateChar, String message) {
         if (message == null || message.isEmpty()) return;
         sendActionBar(org.bukkit.ChatColor.translateAlternateColorCodes(alternateChar, message));
+    }
+
+    @Override
+    public void setResourcePack(String url, String hash) {
+        Validate.notNull(url, "Resource pack URL cannot be null");
+        Validate.notNull(hash, "Hash cannot be null");
+        this.getHandle().setResourcePack(url, hash);
+    }
+
+    @Override
+    public org.bukkit.event.player.PlayerResourcePackStatusEvent.Status getResourcePackStatus() {
+        return this.resourcePackStatus;
+    }
+
+    @Override
+    public String getResourcePackHash() {
+        return this.resourcePackHash;
+    }
+
+    @Override
+    public boolean hasResourcePack() {
+        return this.resourcePackStatus == org.bukkit.event.player.PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED;
+    }
+
+    public void setResourcePackStatus(org.bukkit.event.player.PlayerResourcePackStatusEvent.Status status) {
+        this.resourcePackStatus = status;
     }
 
     // Spigot start
@@ -1751,7 +1913,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         @Override
         public String getLocale()
         {
-            return getHandle().language;
+            return CraftPlayer.this.getLocale(); // Paper
         }
 
         @Override

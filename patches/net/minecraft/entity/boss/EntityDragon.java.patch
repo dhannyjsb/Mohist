@@ -194,3 +194,12 @@
              }
          }
  
+@@ -668,7 +734,7 @@
+         {
+             int i = EntityXPOrb.getXPSplit(p_184668_1_);
+             p_184668_1_ -= i;
+-            this.world.spawnEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, i));
++            this.world.spawnEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, i, org.bukkit.entity.ExperienceOrb.SpawnReason.ENTITY_DEATH, this.killer, this)); // Paper
+         }
+     }
+ 

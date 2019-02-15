@@ -898,6 +898,11 @@ public class CraftEventFactory {
         Projectile projectile = (Projectile) entity.getBukkitEntity();
         org.bukkit.entity.Entity collided = position.entityHit.getBukkitEntity();
         com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = new com.destroystokyo.paper.event.entity.ProjectileCollideEvent(projectile, collided);
+        if (projectile.getShooter() instanceof Player && collided instanceof Player) {
+            if (!((Player) projectile.getShooter()).canSee((Player) collided)) {
+                event.setCancelled(true);
+            }
+        }
         Bukkit.getPluginManager().callEvent(event);
         return event;
     }
@@ -1009,6 +1014,11 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human) {
+        handleInventoryCloseEvent(human, org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNKNOWN);
+    }
+
+    public static void handleInventoryCloseEvent(EntityPlayer human, org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
+        // Paper end
         InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
         if(human.openContainer.getBukkitView() != null) human.world.getServer().getPluginManager().callEvent(event);
         human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());

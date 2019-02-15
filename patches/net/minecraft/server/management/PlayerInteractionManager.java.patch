@@ -309,7 +309,7 @@
 +        }
 +        // CraftBukkit start - Drop event experience
 +        if (flag && event != null) {
-+            iblockdata.getBlock().dropExperience(this.world, blockposition, event.getExpToDrop(), this.player);
++            iblockdata.getBlock().dropXpOnBlockBreak(this.world, blockposition, event.getExpToDrop(), this.player);
 +        }
 +        // CraftBukkit end
 +        return flag;

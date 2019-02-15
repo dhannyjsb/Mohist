@@ -9,7 +9,7 @@
  import net.minecraft.network.Packet;
  import net.minecraft.network.PacketBuffer;
  import net.minecraft.network.play.INetHandlerPlayClient;
-@@ -10,9 +7,13 @@
+@@ -10,29 +7,43 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -24,7 +24,19 @@
      private ITextComponent message;
      private int fadeInTime;
      private int displayTime;
-@@ -22,17 +23,17 @@
+     private int fadeOutTime;
++    // Paper start
++    public net.md_5.bungee.api.chat.BaseComponent[] components;
+ 
++    public SPacketTitle(Type action, net.md_5.bungee.api.chat.BaseComponent[] components, int fadeIn, int stay, int fadeOut) {
++        this.type = action;
++        this.components = components;
++        this.fadeInTime = fadeIn;
++        this.displayTime = stay;
++        this.fadeOutTime = fadeOut;
++    }
++    // Paper end
+     public SPacketTitle()
      {
      }
  
@@ -45,7 +57,7 @@
      {
          this.type = typeIn;
          this.message = messageIn;
-@@ -43,14 +44,14 @@
+@@ -43,14 +54,14 @@
  
      public void readPacketData(PacketBuffer buf) throws IOException
      {
@@ -63,14 +75,21 @@
          {
              this.fadeInTime = buf.readInt();
              this.displayTime = buf.readInt();
-@@ -62,12 +63,12 @@
+@@ -62,12 +73,18 @@
      {
          buf.writeEnumValue(this.type);
  
 -        if (this.type == SPacketTitle.Type.TITLE || this.type == SPacketTitle.Type.SUBTITLE || this.type == SPacketTitle.Type.ACTIONBAR)
 +        if (this.type == Type.TITLE || this.type == Type.SUBTITLE || this.type == Type.ACTIONBAR)
          {
-             buf.writeTextComponent(this.message);
+-            buf.writeTextComponent(this.message);
++            // Paper start
++            if (this.components != null) {
++                buf.writeString(net.md_5.bungee.chat.ComponentSerializer.toString(components));
++            } else {
++                buf.writeTextComponent(this.message);
++            }
++            // Paper end
          }
  
 -        if (this.type == SPacketTitle.Type.TIMES)
@@ -78,7 +97,7 @@
          {
              buf.writeInt(this.fadeInTime);
              buf.writeInt(this.displayTime);
-@@ -119,9 +120,9 @@
+@@ -119,9 +136,9 @@
          CLEAR,
          RESET;
  
@@ -90,7 +109,7 @@
              {
                  if (spackettitle$type.name().equalsIgnoreCase(name))
                  {
-@@ -137,7 +138,7 @@
+@@ -137,7 +154,7 @@
              String[] astring = new String[values().length];
              int i = 0;
  

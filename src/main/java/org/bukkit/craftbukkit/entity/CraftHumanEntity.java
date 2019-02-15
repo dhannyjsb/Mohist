@@ -29,6 +29,7 @@ import org.bukkit.craftbukkit.inventory.*;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Villager;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.bukkit.permissions.PermissibleBase;
@@ -406,9 +407,15 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     public void closeInventory() {
-        getHandle().closeScreen();
+        this.getHandle().closeInventory(InventoryCloseEvent.Reason.PLUGIN);
     }
 
+    @Override
+    public void closeInventory(final InventoryCloseEvent.Reason reason) {
+        this.getHandle().closeInventory(reason);
+    }
+
+    @Override
     public boolean isBlocking() {
         return getHandle().isActiveItemStackBlocking();
     }
@@ -418,10 +425,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         return getHandle().isHandActive();
     }
 
+    @Override
     public boolean setWindowProperty(InventoryView.Property prop, int value) {
         return false;
     }
 
+    @Override
     public int getExpToLevel() {
         return getHandle().xpBarCap();
     }
@@ -448,6 +457,30 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
         getHandle().getCooldownTracker().setCooldown(CraftMagicNumbers.getItem(material), ticks);
     }
+
+    // Paper start
+    @Override
+    public org.bukkit.entity.Entity releaseLeftShoulderEntity() {
+        if (!getHandle().getLeftShoulderEntity().hasNoTags()) {
+            Entity entity = getHandle().releaseLeftShoulderEntity();
+            if (entity != null) {
+                return entity.getBukkitEntity();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public org.bukkit.entity.Entity releaseRightShoulderEntity() {
+        if (!getHandle().getRightShoulderEntity().hasNoTags()) {
+            Entity entity = getHandle().releaseRightShoulderEntity();
+            if (entity != null) {
+                return entity.getBukkitEntity();
+            }
+        }
+        return null;
+    }
+    // Paper end
 
     @Override
     public org.bukkit.entity.Entity getShoulderEntityLeft() {

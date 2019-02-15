@@ -288,7 +288,7 @@
      protected void frostWalk(BlockPos pos)
      {
          int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FROST_WALKER, this);
-@@ -378,11 +394,10 @@
+@@ -378,19 +394,19 @@
      {
          ++this.deathTime;
  
@@ -303,16 +303,18 @@
                  i = net.minecraftforge.event.ForgeEventFactory.getExperienceDrop(this, this.attackingPlayer, i);
                  while (i > 0)
                  {
-@@ -390,7 +405,7 @@
+                     int j = EntityXPOrb.getXPSplit(i);
                      i -= j;
-                     this.world.spawnEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, j));
+-                    this.world.spawnEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, j));
++                    EntityLivingBase attacker = killer != null ? killer : lastDamager; // Paper
++                    this.world.addEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, j, this instanceof EntityPlayerMP ? org.bukkit.entity.ExperienceOrb.SpawnReason.PLAYER_DEATH : org.bukkit.entity.ExperienceOrb.SpawnReason.ENTITY_DEATH, attacker, this)); // Paper
                  }
 -            }
 +            this.expToDrop = 0;
  
              this.setDead();
  
-@@ -445,6 +460,7 @@
+@@ -445,6 +461,7 @@
      {
          this.revengeTarget = livingBase;
          this.revengeTimer = this.ticksExisted;
@@ -320,7 +322,7 @@
      }
  
      public EntityLivingBase getLastAttackedEntity()
-@@ -566,6 +582,15 @@
+@@ -566,6 +583,15 @@
              }
          }
  
@@ -336,7 +338,7 @@
          if (compound.hasKey("Health", 99))
          {
              this.setHealth(compound.getFloat("Health"));
-@@ -592,10 +617,13 @@
+@@ -592,10 +618,13 @@
          }
      }
  
@@ -351,7 +353,7 @@
          try
          {
              while (iterator.hasNext())
-@@ -622,6 +650,16 @@
+@@ -622,6 +651,16 @@
              ;
          }
  
@@ -368,7 +370,7 @@
          if (this.potionsNeedUpdate)
          {
              if (!this.world.isRemote)
-@@ -712,6 +750,7 @@
+@@ -712,6 +751,7 @@
                  if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent(this, effect))) continue;
  
                  this.onFinishedPotionEffect(effect);
@@ -376,7 +378,7 @@
                  iterator.remove();
              }
          }
-@@ -740,6 +779,10 @@
+@@ -740,6 +780,10 @@
  
      public void addPotionEffect(PotionEffect potioneffectIn)
      {
@@ -387,7 +389,7 @@
          if (this.isPotionApplicable(potioneffectIn))
          {
              PotionEffect potioneffect = this.activePotionsMap.get(potioneffectIn.getPotion());
-@@ -784,6 +827,10 @@
+@@ -784,6 +828,10 @@
      @Nullable
      public PotionEffect removeActivePotionEffect(@Nullable Potion potioneffectin)
      {
@@ -398,7 +400,7 @@
          return this.activePotionsMap.remove(potioneffectin);
      }
  
-@@ -830,25 +877,61 @@
+@@ -830,25 +878,61 @@
          }
      }
  
@@ -461,7 +463,7 @@
          this.dataManager.set(HEALTH, Float.valueOf(MathHelper.clamp(health, 0.0F, this.getMaxHealth())));
      }
  
-@@ -879,15 +962,17 @@
+@@ -879,15 +963,17 @@
              {
                  float f = amount;
  
@@ -482,7 +484,7 @@
                  {
                      this.damageShield(amount);
                      amount = 0.0F;
-@@ -912,22 +997,38 @@
+@@ -912,22 +998,38 @@
                  {
                      if (amount <= this.lastDamage)
                      {
@@ -523,7 +525,7 @@
                  this.attackedAtYaw = 0.0F;
                  Entity entity1 = source.getTrueSource();
  
-@@ -955,6 +1056,7 @@
+@@ -955,6 +1057,7 @@
                      }
                  }
  
@@ -531,7 +533,7 @@
                  if (flag1)
                  {
                      if (flag)
-@@ -981,8 +1083,9 @@
+@@ -981,8 +1084,9 @@
                          {
                              b0 = 2;
                          }
@@ -543,7 +545,7 @@
                      }
  
                      if (source != DamageSource.DROWN && (!flag || amount > 0.0F))
-@@ -1008,19 +1111,16 @@
+@@ -1008,19 +1112,16 @@
                          this.attackedAtYaw = (float)((int)(Math.random() * 2.0D) * 180);
                      }
                  }
@@ -568,7 +570,7 @@
                      }
                  }
                  else if (flag1)
-@@ -1065,22 +1165,28 @@
+@@ -1065,22 +1166,28 @@
          else
          {
              ItemStack itemstack = null;
@@ -603,7 +605,7 @@
                  {
                      EntityPlayerMP entityplayermp = (EntityPlayerMP)this;
                      entityplayermp.addStat(StatList.getObjectUseStats(Items.TOTEM_OF_UNDYING));
-@@ -1094,7 +1200,8 @@
+@@ -1094,7 +1201,8 @@
                  this.world.setEntityState(this, (byte)35);
              }
  
@@ -613,7 +615,7 @@
          }
      }
  
-@@ -1171,19 +1278,9 @@
+@@ -1171,19 +1279,9 @@
              Entity entity = cause.getTrueSource();
              EntityLivingBase entitylivingbase = this.getAttackingEntity();
  
@@ -635,7 +637,7 @@
              if (!this.world.isRemote)
              {
                  int i = net.minecraftforge.common.ForgeHooks.getLootingLevel(this, entity, cause);
-@@ -1201,6 +1298,21 @@
+@@ -1201,6 +1299,21 @@
  
                  if (!net.minecraftforge.common.ForgeHooks.onLivingDrops(this, cause, capturedDrops, i, recentlyHit > 0))
                  {
@@ -657,7 +659,7 @@
                      for (EntityItem item : capturedDrops)
                      {
                          world.spawnEntity(item);
-@@ -1208,7 +1320,24 @@
+@@ -1208,7 +1321,24 @@
                  }
              }
  
@@ -683,7 +685,7 @@
          }
      }
  
-@@ -1231,6 +1360,11 @@
+@@ -1231,6 +1361,11 @@
          {
              this.isAirBorne = true;
              float f = MathHelper.sqrt(xRatio * xRatio + zRatio * zRatio);
@@ -695,7 +697,7 @@
              this.motionX /= 2.0D;
              this.motionZ /= 2.0D;
              this.motionX -= xRatio / (double)f * (double)strength;
-@@ -1246,6 +1380,17 @@
+@@ -1246,6 +1381,17 @@
                      this.motionY = 0.4000000059604645D;
                  }
              }
@@ -713,7 +715,7 @@
          }
      }
  
-@@ -1256,6 +1401,12 @@
+@@ -1256,6 +1402,12 @@
      }
  
      @Nullable
@@ -726,7 +728,7 @@
      protected SoundEvent getDeathSound()
      {
          return SoundEvents.ENTITY_GENERIC_DEATH;
-@@ -1321,8 +1472,11 @@
+@@ -1321,8 +1473,11 @@
  
          if (i > 0)
          {
@@ -739,7 +741,7 @@
              int j = MathHelper.floor(this.posX);
              int k = MathHelper.floor(this.posY - 0.20000000298023224D);
              int l = MathHelper.floor(this.posZ);
-@@ -1362,7 +1516,7 @@
+@@ -1362,7 +1517,7 @@
      {
          if (!source.isUnblockable())
          {
@@ -748,7 +750,7 @@
              damage = CombatRules.getDamageAfterAbsorb(damage, (float)this.getTotalArmorValue(), (float)this.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
          }
  
-@@ -1377,7 +1531,8 @@
+@@ -1377,7 +1532,8 @@
          }
          else
          {
@@ -758,7 +760,7 @@
              {
                  int i = (this.getActivePotionEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
                  int j = 25 - i;
-@@ -1405,6 +1560,8 @@
+@@ -1405,6 +1561,8 @@
  
      protected void damageEntity(DamageSource damageSrc, float damageAmount)
      {
@@ -767,7 +769,7 @@
          if (!this.isEntityInvulnerable(damageSrc))
          {
              damageAmount = net.minecraftforge.common.ForgeHooks.onLivingHurt(this, damageSrc, damageAmount);
-@@ -1424,8 +1581,154 @@
+@@ -1424,8 +1582,154 @@
                  this.setAbsorptionAmount(this.getAbsorptionAmount() - damageAmount);
              }
          }
@@ -922,7 +924,7 @@
      public CombatTracker getCombatTracker()
      {
          return this._combatTracker;
-@@ -1455,7 +1758,7 @@
+@@ -1455,7 +1759,7 @@
  
      public final int getArrowCountInEntity()
      {
@@ -931,7 +933,7 @@
      }
  
      public final void setArrowCountInEntity(int count)
-@@ -1605,6 +1908,7 @@
+@@ -1605,6 +1909,7 @@
          if (this.attributeMap == null)
          {
              this.attributeMap = new AttributeMap();
@@ -939,7 +941,7 @@
          }
  
          return this.attributeMap;
-@@ -1685,11 +1989,12 @@
+@@ -1685,11 +1990,12 @@
          }
      }
  
@@ -953,7 +955,7 @@
      protected float getSoundPitch()
      {
          return this.isChild() ? (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.5F : (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F;
-@@ -1900,7 +2205,8 @@
+@@ -1900,7 +2206,8 @@
  
                          if (this.onGround && !this.world.isRemote)
                          {
@@ -963,7 +965,7 @@
                          }
                      }
                      else
-@@ -2136,6 +2442,13 @@
+@@ -2136,6 +2443,13 @@
                  if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
                  {
                      if (!ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack))
@@ -977,7 +979,7 @@
                      ((WorldServer)this.world).getEntityTracker().sendToTracking(this, new SPacketEntityEquipment(this.getEntityId(), entityequipmentslot, itemstack1));
                      net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent(this, entityequipmentslot, itemstack, itemstack1));
  
-@@ -2345,7 +2658,6 @@
+@@ -2345,7 +2659,6 @@
          }
  
          this.world.profiler.startSection("ai");
@@ -985,7 +987,7 @@
          if (this.isMovementBlocked())
          {
              this.isJumping = false;
-@@ -2426,7 +2738,8 @@
+@@ -2426,7 +2739,8 @@
  
          if (!this.world.isRemote)
          {
@@ -995,7 +997,7 @@
          }
      }
  
-@@ -2460,9 +2773,12 @@
+@@ -2460,9 +2774,12 @@
                  }
              }
  
@@ -1009,7 +1011,7 @@
                  this.collideWithEntity(entity);
              }
          }
-@@ -2560,12 +2876,12 @@
+@@ -2560,12 +2877,12 @@
  
      public boolean canBeCollidedWith()
      {
@@ -1024,7 +1026,7 @@
      }
  
      protected void markVelocityChanged()
-@@ -2629,7 +2945,7 @@
+@@ -2629,7 +2946,7 @@
          {
              PotionEffect effect = iterator.next();
  
@@ -1033,7 +1035,7 @@
              {
                  onFinishedPotionEffect(effect);
                  iterator.remove();
-@@ -2667,7 +2983,8 @@
+@@ -2667,7 +2984,8 @@
          if (this.isHandActive())
          {
              ItemStack itemstack = this.getHeldItem(this.getActiveHand());
@@ -1043,7 +1045,7 @@
  
              if (itemstack == this.activeItemStack)
              {
-@@ -2784,25 +3101,52 @@
+@@ -2784,25 +3102,52 @@
      {
          if (!this.activeItemStack.isEmpty() && this.isHandActive())
          {
@@ -1099,7 +1101,7 @@
      public int getItemInUseMaxCount()
      {
          return this.isHandActive() ? this.activeItemStack.getMaxItemUseDuration() - this.getItemInUseCount() : 0;
-@@ -2842,7 +3186,7 @@
+@@ -2842,7 +3187,7 @@
              }
              else
              {
@@ -1108,7 +1110,7 @@
              }
          }
          else
-@@ -2897,11 +3241,14 @@
+@@ -2897,11 +3242,14 @@
  
              if (flag1)
              {
@@ -1128,7 +1130,7 @@
                  }
              }
          }
-@@ -2936,6 +3283,11 @@
+@@ -2936,6 +3284,11 @@
          }
      }
  
@@ -1140,7 +1142,7 @@
      public boolean canBeHitWithPotion()
      {
          return true;
-@@ -2949,7 +3301,7 @@
+@@ -2949,7 +3302,7 @@
      @SuppressWarnings("unchecked")
      @Override
      @Nullable
@@ -1149,7 +1151,7 @@
      {
          if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
          {
-@@ -2961,7 +3313,7 @@
+@@ -2961,7 +3314,7 @@
      }
  
      @Override
@@ -1158,7 +1160,7 @@
      {
          return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
      }
-@@ -2975,7 +3327,7 @@
+@@ -2975,7 +3328,7 @@
      public void setPartying(BlockPos pos, boolean p_191987_2_)
      {
      }
@@ -1167,7 +1169,7 @@
      @Override
      public void moveRelative(float strafe, float up, float forward, float friction)
      {
-@@ -3001,4 +3353,16 @@
+@@ -3001,4 +3354,16 @@
              this.motionZ += (double)(forward * f2 + strafe * f1);
          }
      }

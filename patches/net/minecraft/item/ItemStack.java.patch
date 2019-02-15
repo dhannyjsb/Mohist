@@ -25,7 +25,7 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
  import net.minecraft.util.datafix.walkers.BlockEntityTag;
-@@ -49,14 +40,22 @@
+@@ -49,17 +40,26 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,8 +49,13 @@
 +    public Item item; // Mohist - private -> public
      private NBTTagCompound stackTagCompound;
      private boolean isEmpty;
-     int itemDamage;
-@@ -94,7 +93,21 @@
+-    int itemDamage;
++    public int itemDamage;
++    public void setDamage(int i) { this.itemDamage = i; } // Paper - OBFHELPER
+     private EntityItemFrame itemFrame;
+     private Block canDestroyCacheBlock;
+     private boolean canDestroyCacheResult;
+@@ -94,7 +94,21 @@
      {
          this(itemIn, amount, 0);
      }
@@ -73,7 +78,7 @@
      public ItemStack(Item itemIn, int amount, int meta){ this(itemIn, amount, meta, null); }
      public ItemStack(Item itemIn, int amount, int meta, @Nullable NBTTagCompound capNBT)
      {
-@@ -119,47 +132,45 @@
+@@ -119,47 +133,45 @@
  
      public ItemStack(NBTTagCompound compound)
      {
@@ -144,7 +149,7 @@
  
      public static void registerFixes(DataFixer fixer)
      {
-@@ -231,7 +242,8 @@
+@@ -231,7 +243,8 @@
  
          if (this.stackTagCompound != null)
          {
@@ -154,7 +159,21 @@
          }
  
          if (this.capabilities != null)
-@@ -291,6 +303,26 @@
+@@ -274,11 +287,13 @@
+         return this.getItem().getHasSubtypes();
+     }
+ 
++    public boolean hasDamage() { return isItemDamaged(); } // Paper OBFHELPER
+     public boolean isItemDamaged()
+     {
+         return this.isItemStackDamageable() && getItem().isDamaged(this);
+     }
+ 
++    public int getDamage() { return getItemDamage(); } // Paper OBFHELPER
+     public int getItemDamage()
+     {
+         return getItem().getDamage(this);
+@@ -291,6 +306,26 @@
  
      public void setItemDamage(int meta)
      {
@@ -181,7 +200,7 @@
          getItem().setDamage(this, meta);
      }
  
-@@ -322,6 +354,18 @@
+@@ -322,6 +357,18 @@
  
                  amount -= j;
  
@@ -200,7 +219,7 @@
                  if (amount <= 0)
                  {
                      return false;
-@@ -347,6 +391,11 @@
+@@ -347,6 +394,11 @@
                  if (this.attemptDamageItem(amount, entityIn.getRNG(), entityIn instanceof EntityPlayerMP ? (EntityPlayerMP)entityIn : null))
                  {
                      entityIn.renderBrokenItemStack(this);
@@ -212,7 +231,7 @@
                      this.shrink(1);
  
                      if (entityIn instanceof EntityPlayer)
-@@ -532,7 +581,7 @@
+@@ -532,7 +584,7 @@
          playerIn.addStat(StatList.getCraftStats(this.item), amount);
          this.getItem().onCreated(this, worldIn, playerIn);
      }
@@ -221,7 +240,7 @@
      public int getMaxItemUseDuration()
      {
          return this.getItem().getMaxItemUseDuration(this);
-@@ -592,9 +641,22 @@
+@@ -592,9 +644,22 @@
          return this.stackTagCompound != null ? this.stackTagCompound.getTagList("ench", 10) : new NBTTagList();
      }
  
@@ -244,7 +263,7 @@
      }
  
      public String getDisplayName()
-@@ -930,6 +992,7 @@
+@@ -930,6 +995,7 @@
          nbttagcompound.setShort("id", (short)Enchantment.getEnchantmentID(ench));
          nbttagcompound.setShort("lvl", (short)((byte)level));
          nbttaglist.appendTag(nbttagcompound);
@@ -252,7 +271,7 @@
      }
  
      public boolean isItemEnchanted()
-@@ -982,6 +1045,14 @@
+@@ -982,6 +1048,14 @@
  
      public void setRepairCost(int cost)
      {
@@ -267,7 +286,7 @@
          if (!this.hasTagCompound())
          {
              this.stackTagCompound = new NBTTagCompound();
-@@ -1042,6 +1113,14 @@
+@@ -1042,6 +1116,14 @@
          nbttaglist.appendTag(nbttagcompound);
      }
  
@@ -282,7 +301,7 @@
      public ITextComponent getTextComponent()
      {
          TextComponentString textcomponentstring = new TextComponentString(this.getDisplayName());
-@@ -1279,4 +1358,16 @@
+@@ -1279,4 +1361,16 @@
      {
          return this.isEmpty() || this.getItem().doesSneakBypassUse(this, world, pos, player);
      }

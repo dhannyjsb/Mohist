@@ -7,7 +7,7 @@
  import net.minecraft.network.Packet;
  import net.minecraft.network.PacketBuffer;
  import net.minecraft.network.play.INetHandlerPlayClient;
-@@ -8,6 +7,8 @@
+@@ -8,8 +7,12 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -15,4 +15,27 @@
 +
  public class SPacketPlayerListHeaderFooter implements Packet<INetHandlerPlayClient>
  {
++    public net.md_5.bungee.api.chat.BaseComponent[] header1, footer1; // Paper
++
      private ITextComponent header;
+     private ITextComponent footer;
+ 
+@@ -23,6 +26,18 @@
+     {
+         buf.writeTextComponent(this.header);
+         buf.writeTextComponent(this.footer);
++        // Paper start
++        if (this.header != null) {
++            buf.writeString(net.md_5.bungee.chat.ComponentSerializer.toString(this.header1));
++        } else {
++            buf.writeTextComponent(this.header);
++        }
++        if (this.footer != null) {
++            buf.writeString(net.md_5.bungee.chat.ComponentSerializer.toString(this.footer1));
++        } else {
++            buf.writeTextComponent(this.footer);
++        }
++        // Paper end
+     }
+ 
+     public void processPacket(INetHandlerPlayClient handler)

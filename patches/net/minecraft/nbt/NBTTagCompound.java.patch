@@ -41,7 +41,7 @@
  
      void write(DataOutput output) throws IOException
      {
-@@ -105,12 +97,14 @@
+@@ -105,18 +97,20 @@
          this.tagMap.put(key, new NBTTagLong(value));
      }
  
@@ -56,6 +56,13 @@
      @Nullable
      public UUID getUniqueId(String key)
      {
+         return new UUID(this.getLong(key + "Most"), this.getLong(key + "Least"));
+     }
+-
++    public boolean hasUUID(String s) { return hasUniqueId(s); }
+     public boolean hasUniqueId(String key)
+     {
+         return this.hasKey(key + "Most", 99) && this.hasKey(key + "Least", 99);
 @@ -395,7 +389,7 @@
          StringBuilder stringbuilder = new StringBuilder("{");
          Collection<String> collection = this.tagMap.keySet();
