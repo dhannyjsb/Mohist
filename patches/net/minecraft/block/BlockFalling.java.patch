@@ -16,3 +16,16 @@
  public class BlockFalling extends Block
  {
      public static boolean fallInstantly;
+@@ -88,6 +89,12 @@
+         return 2;
+     }
+ 
++    // Paper start - OBFHELPER
++    public static boolean canMoveThrough(IBlockState blockdata) {
++        return BlockFalling.canFallThrough(blockdata);
++    }
++   // Paper end
++
+     public static boolean canFallThrough(IBlockState state)
+     {
+         Block block = state.getBlock();

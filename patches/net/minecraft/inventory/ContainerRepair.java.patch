@@ -79,7 +79,7 @@
          if (this.world.getBlockState(this.selfPosition).getBlock() != Blocks.ANVIL)
          {
              return false;
-@@ -471,4 +482,30 @@
+@@ -471,4 +482,27 @@
  
          this.updateRepairOutput();
      }
@@ -89,10 +89,7 @@
 +        super.detectAndSendChanges();
 +        for (int i = 0; i < this.listeners.size(); ++i) {
 +            IContainerListener icrafting = this.listeners.get(i);
-+
-+            if (this.lastLevelCost != this.maximumCost) {
-+                icrafting.sendWindowProperty(this, 0, this.maximumCost);
-+            }
++            icrafting.sendWindowProperty(this, 0, this.maximumCost);
 +        }
 +
 +        this.lastLevelCost = this.maximumCost;

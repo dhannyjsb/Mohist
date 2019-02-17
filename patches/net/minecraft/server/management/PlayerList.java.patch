@@ -461,7 +461,7 @@
      }
  
      public String allowUserToConnect(SocketAddress address, GameProfile profile)
-@@ -463,6 +631,87 @@
+@@ -463,6 +631,85 @@
          }
      }
  
@@ -512,10 +512,8 @@
 +            // return s1;
 +            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, s1);
 +        }
-+        else if (!this.canJoin(profile))
++        else if (!this.isWhitelisted(profile, event))
 +        {
-+            // return "You are not white-listed on this server!";
-+            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot
 +        }
 +        else if (getBannedIPs().isBanned(socketaddress) && !getBannedIPs().getBanEntry(socketaddress).hasBanExpired())
 +        {
@@ -549,7 +547,7 @@
      public EntityPlayerMP createPlayerForUser(GameProfile profile)
      {
          UUID uuid = EntityPlayer.getUUID(profile);
-@@ -504,26 +753,37 @@
+@@ -504,26 +751,37 @@
          return new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(0), profile, playerinteractionmanager);
      }
  
@@ -591,7 +589,7 @@
          playerIn.dimension = dimension;
          PlayerInteractionManager playerinteractionmanager;
  
-@@ -537,6 +797,11 @@
+@@ -537,6 +795,11 @@
          }
  
          EntityPlayerMP entityplayermp = new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(playerIn.dimension), playerIn.getGameProfile(), playerinteractionmanager);
@@ -603,7 +601,7 @@
          entityplayermp.connection = playerIn.connection;
          entityplayermp.copyFrom(playerIn, conqueredEnd);
          entityplayermp.dimension = dimension;
-@@ -549,48 +814,177 @@
+@@ -549,48 +812,177 @@
              entityplayermp.addTag(s);
          }
  
@@ -802,7 +800,7 @@
      public void updatePermissionLevel(EntityPlayerMP player)
      {
          GameProfile gameprofile = player.getGameProfile();
-@@ -642,7 +1036,9 @@
+@@ -642,7 +1034,9 @@
  
      public void transferEntityToWorld(Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn)
      {
@@ -813,7 +811,7 @@
      }
  
      // TODO: Remove (1.13)
-@@ -729,11 +1125,155 @@
+@@ -729,11 +1123,155 @@
          entityIn.setWorld(toWorldIn);
      }
  
@@ -970,7 +968,7 @@
              this.playerPingIndex = 0;
          }
      }
-@@ -746,6 +1286,24 @@
+@@ -746,6 +1284,24 @@
          }
      }
  
@@ -995,7 +993,7 @@
      public void sendPacketToAllPlayersInDimension(Packet<?> packetIn, int dimension)
      {
          for (int i = 0; i < this.playerEntityList.size(); ++i)
-@@ -861,12 +1419,20 @@
+@@ -861,12 +1417,20 @@
          int i = this.mcServer.getOpPermissionLevel();
          this.ops.addEntry(new UserListOpsEntry(profile, this.mcServer.getOpPermissionLevel(), this.ops.bypassesPlayerLimit(profile)));
          this.sendPlayerPermissionLevel(this.getPlayerByUUID(profile.getId()), i);
@@ -1016,7 +1014,33 @@
      }
  
      private void sendPlayerPermissionLevel(EntityPlayerMP player, int permLevel)
-@@ -918,11 +1484,33 @@
+@@ -894,9 +1458,24 @@
+ 
+     public boolean canJoin(GameProfile profile)
+     {
+-        return !this.whiteListEnforced || this.ops.hasEntry(profile) || this.whiteListedPlayers.hasEntry(profile);
++        return isWhitelisted(profile, null);
+     }
+ 
++    public boolean isWhitelisted(GameProfile gameprofile, org.bukkit.event.player.PlayerLoginEvent loginEvent) {
++        boolean isOp = this.ops.hasEntry(gameprofile);
++        boolean isWhitelisted = !this.whiteListEnforced || isOp || this.whiteListedPlayers.hasEntry(gameprofile);
++        final com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent event;
++        event = new com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent(MCUtil.toBukkit(gameprofile), this.whiteListEnforced, isWhitelisted, isOp, org.spigotmc.SpigotConfig.whitelistMessage);
++        event.callEvent();
++        if (!event.isWhitelisted()) {
++            if (loginEvent != null) {
++                loginEvent.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, event.getKickMessage() == null ? org.spigotmc.SpigotConfig.whitelistMessage : event.getKickMessage());
++            }
++            return false;
++        }
++        return true;
++    }
++
+     public boolean canSendCommands(GameProfile profile)
+     {
+         return this.ops.hasEntry(profile) || this.mcServer.isSinglePlayer() && this.mcServer.worlds[0].getWorldInfo().areCommandsAllowed() && this.mcServer.getServerOwner().equalsIgnoreCase(profile.getName()) || this.commandsAllowedForAll;
+@@ -918,11 +1497,33 @@
  
      public void sendToAllNearExcept(@Nullable EntityPlayer except, double x, double y, double z, double radius, int dimension, Packet<?> packetIn)
      {
@@ -1054,7 +1078,7 @@
              {
                  double d0 = x - entityplayermp.posX;
                  double d1 = y - entityplayermp.posY;
-@@ -938,12 +1526,27 @@
+@@ -938,12 +1539,27 @@
  
      public void saveAllPlayerData()
      {
@@ -1086,7 +1110,7 @@
      public void addWhitelistedPlayer(GameProfile profile)
      {
          this.whiteListedPlayers.addEntry(new UserListWhitelistEntry(profile));
-@@ -988,16 +1591,21 @@
+@@ -988,16 +1604,21 @@
  
          if (worldIn.isRaining())
          {
@@ -1112,7 +1136,7 @@
          playerIn.connection.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
      }
  
-@@ -1077,19 +1685,42 @@
+@@ -1077,19 +1698,42 @@
          this.commandsAllowedForAll = p_72387_1_;
      }
  
@@ -1159,7 +1183,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -1097,10 +1728,19 @@
+@@ -1097,10 +1741,19 @@
          this.sendMessage(component, true);
      }
  
@@ -1181,7 +1205,7 @@
  
          if (statisticsmanagerserver == null)
          {
-@@ -1119,7 +1759,7 @@
+@@ -1119,7 +1772,7 @@
  
              statisticsmanagerserver = new StatisticsManagerServer(this.mcServer, file2);
              statisticsmanagerserver.readStatFile();
@@ -1190,7 +1214,7 @@
          }
  
          return statisticsmanagerserver;
-@@ -1128,14 +1768,14 @@
+@@ -1128,14 +1781,14 @@
      public PlayerAdvancements getPlayerAdvancements(EntityPlayerMP p_192054_1_)
      {
          UUID uuid = p_192054_1_.getUniqueID();
@@ -1207,7 +1231,7 @@
          }
  
          playeradvancements.setPlayer(p_192054_1_);
-@@ -1148,7 +1788,7 @@
+@@ -1148,7 +1801,7 @@
  
          if (this.mcServer.worlds != null)
          {
@@ -1216,7 +1240,7 @@
              {
                  if (worldserver != null)
                  {
-@@ -1176,9 +1816,10 @@
+@@ -1176,9 +1829,10 @@
  
      public void reloadResources()
      {

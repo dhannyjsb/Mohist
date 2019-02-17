@@ -143,8 +143,12 @@
          }
      }
  
-@@ -281,6 +300,7 @@
-         if (!collection.isEmpty())
+@@ -278,9 +297,10 @@
+     {
+         Collection<PotionEffect> collection = this.getActivePotionEffects();
+ 
+-        if (!collection.isEmpty())
++        if (!collection.isEmpty() && !world.paperConfig.disableCreeperLingeringEffect) // Paper
          {
              EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.world, this.posX, this.posY, this.posZ);
 +            entityareaeffectcloud.setOwner(this);

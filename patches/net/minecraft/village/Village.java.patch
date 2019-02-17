@@ -12,7 +12,7 @@
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockDoor;
  import net.minecraft.block.material.Material;
-@@ -18,7 +13,6 @@
+@@ -18,14 +13,20 @@
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTTagList;
@@ -20,9 +20,10 @@
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.math.AxisAlignedBB;
  import net.minecraft.util.math.BlockPos;
-@@ -26,6 +20,12 @@
+ import net.minecraft.util.math.MathHelper;
  import net.minecraft.util.math.Vec3d;
  import net.minecraft.world.World;
++import net.minecraft.world.chunk.Chunk;
  
 +import javax.annotation.Nullable;
 +import java.util.Iterator;
@@ -33,7 +34,7 @@
  public class Village implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
  {
      private World world;
-@@ -38,7 +38,7 @@
+@@ -38,7 +39,7 @@
      private int numVillagers;
      private int noBreedTicks;
      private final Map<UUID, Integer> playerReputation = Maps.<UUID, Integer>newHashMap();
@@ -42,7 +43,19 @@
      private int numIronGolems;
  
      public Village()
-@@ -83,7 +83,7 @@
+@@ -59,6 +60,11 @@
+ 
+     public void tick(int tickCounterIn)
+     {
++        Chunk chunk = this.world.getChunkIfLoaded(getCenter());
++        if (chunk == null || !chunk.areNeighborsLoaded(1)) {
++            return;
++        }
++        // Paper end
+         this.tickCounter = tickCounterIn;
+         this.removeDeadAndOutOfRangeDoors();
+         this.removeDeadAndOldAgressors();
+@@ -83,7 +89,7 @@
              {
                  EntityIronGolem entityirongolem = new EntityIronGolem(this.world);
                  entityirongolem.setPosition(vec3d.x, vec3d.y, vec3d.z);
@@ -51,7 +64,7 @@
                  ++this.numIronGolems;
              }
          }
-@@ -274,7 +274,7 @@
+@@ -274,7 +280,7 @@
  
      public void addOrRenewAgressor(EntityLivingBase entitylivingbaseIn)
      {
@@ -60,7 +73,7 @@
          {
              if (village$villageaggressor.agressor == entitylivingbaseIn)
              {
-@@ -283,18 +283,18 @@
+@@ -283,18 +289,18 @@
              }
          }
  
@@ -82,7 +95,7 @@
              double d1 = village$villageaggressor1.agressor.getDistanceSq(entitylivingbaseIn);
  
              if (d1 <= d0)
-@@ -336,11 +336,11 @@
+@@ -336,11 +342,11 @@
  
      private void removeDeadAndOldAgressors()
      {
@@ -96,7 +109,21 @@
  
              if (!village$villageaggressor.agressor.isEntityAlive() || Math.abs(this.tickCounter - village$villageaggressor.agressionTime) > 300)
              {
-@@ -382,7 +382,12 @@
+@@ -358,7 +364,12 @@
+         while (iterator.hasNext())
+         {
+             VillageDoorInfo villagedoorinfo = iterator.next();
+-
++            // Paper start- don't remove doors from unloaded chunks
++            if (!this.world.isBlockLoaded(villagedoorinfo.getDoorBlockPos())) {
++                villagedoorinfo.setLastActivityTimestamp(villagedoorinfo.getLastActivityTimestamp() + 1);
++                continue;
++            }
++            // Paper end
+             if (flag1)
+             {
+                 villagedoorinfo.resetDoorOpeningRestrictionCounter();
+@@ -382,7 +393,12 @@
  
      private boolean isWoodDoor(BlockPos pos)
      {
@@ -110,7 +137,7 @@
          Block block = iblockstate.getBlock();
  
          if (block instanceof BlockDoor)
-@@ -586,13 +591,13 @@
+@@ -586,13 +602,13 @@
  
      /* ======================================== FORGE START =====================================*/
      private net.minecraftforge.common.capabilities.CapabilityDispatcher capabilities;

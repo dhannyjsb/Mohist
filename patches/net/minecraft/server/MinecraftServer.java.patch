@@ -1048,7 +1048,7 @@
  
 +    public static MinecraftServer getServerInst()
 +    {
-+        return Bukkit.getServer() instanceof CraftServer ? ((CraftServer)Bukkit.getServer()).getServer() : null;
++        return SERVER;
 +    }
 +
      public int getMaxWorldSize()

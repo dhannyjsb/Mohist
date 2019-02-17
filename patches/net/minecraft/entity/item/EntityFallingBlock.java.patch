@@ -13,13 +13,22 @@
  import net.minecraft.block.material.Material;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.crash.CrashReportCategory;
-@@ -31,14 +28,18 @@
+@@ -24,21 +21,23 @@
+ import net.minecraft.util.EnumFacing;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.util.datafix.DataFixer;
+-import net.minecraft.util.math.BlockPos;
+-import net.minecraft.util.math.MathHelper;
+-import net.minecraft.util.math.RayTraceResult;
+-import net.minecraft.util.math.Vec3d;
++import net.minecraft.util.math.*;
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
  
 +import javax.annotation.Nullable;
++import java.util.ArrayList;
 +import java.util.List;
 +
  public class EntityFallingBlock extends Entity
@@ -33,7 +42,7 @@
      private int fallHurtMax = 40;
      private float fallHurtAmount = 2.0F;
      public NBTTagCompound tileEntityData;
-@@ -114,7 +115,7 @@
+@@ -114,7 +113,7 @@
              {
                  BlockPos blockpos = new BlockPos(this);
  
@@ -42,7 +51,7 @@
                  {
                      this.world.setBlockToAir(blockpos);
                  }
-@@ -132,6 +133,15 @@
+@@ -132,6 +131,15 @@
  
              this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
  
@@ -58,16 +67,21 @@
              if (!this.world.isRemote)
              {
                  BlockPos blockpos1 = new BlockPos(this);
-@@ -170,7 +180,7 @@
-                     if (!flag1 && BlockFalling.canFallThrough(this.world.getBlockState(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ))))
-                     {
-                         this.onGround = false;
+@@ -167,10 +175,9 @@
+                     IBlockState iblockstate = this.world.getBlockState(blockpos1);
+ 
+                     if (this.world.isAirBlock(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ))) //Forge: Don't indent below.
+-                    if (!flag1 && BlockFalling.canFallThrough(this.world.getBlockState(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ))))
+-                    {
+-                        this.onGround = false;
 -                        return;
-+                        // return; // CraftBukkit
++                         if (!isOnGround()) {
++                                this.onGround = false;
++                             if (this.world.paperConfig.altFallingBlockOnGround) return; // Paper
                      }
  
                      this.motionX *= 0.699999988079071D;
-@@ -183,8 +193,12 @@
+@@ -183,8 +190,12 @@
  
                          if (!this.dontSetBlock)
                          {
@@ -81,7 +95,37 @@
                                  if (block instanceof BlockFalling)
                                  {
                                      ((BlockFalling)block).onEndFalling(this.world, blockpos1, this.fallTile, iblockstate);
-@@ -248,7 +262,9 @@
+@@ -232,6 +243,29 @@
+         }
+     }
+ 
++    // Paper start
++    private boolean isOnGround() {
++        BlockPos where = new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ);
++        boolean cannotMoveThrough = !BlockFalling.canMoveThrough(this.world.getType(where));
++        if (!this.world.paperConfig.altFallingBlockOnGround) return cannotMoveThrough;
++        if (cannotMoveThrough) {
++            return true;
++        }
++        IBlockState blockData = this.world.getType(where.down());
++        if (BlockFalling.canMoveThrough(blockData)) {
++            return false;
++        }
++        List<AxisAlignedBB> list = new ArrayList<>();
++        addCollisions(blockData, getEntityWorld(), where, this.getEntityBoundingBox(), list, this);
++        return list.size() > 0;
++    }
++
++    // OBFHELPER
++    private void addCollisions(IBlockState blockData, World world, BlockPos where, AxisAlignedBB collider, List<AxisAlignedBB> list, Entity entity) {
++        blockData.addCollisionBoxToList(world, where, collider, list, entity, false);
++    }
++    // Paper end
++
+     public void fall(float distance, float damageMultiplier)
+     {
+         Block block = this.fallTile.getBlock();
+@@ -248,7 +282,9 @@
  
                  for (Entity entity : list)
                  {
@@ -91,7 +135,7 @@
                  }
  
                  if (flag && (double)this.rand.nextFloat() < 0.05000000074505806D + (double)i * 0.05D)
-@@ -308,6 +324,14 @@
+@@ -308,6 +344,14 @@
              this.fallTile = Block.getBlockById(compound.getByte("Tile") & 255).getStateFromMeta(i);
          }
  
@@ -106,7 +150,7 @@
          this.fallTime = compound.getInteger("Time");
          Block block = this.fallTile.getBlock();
  
-@@ -336,6 +360,14 @@
+@@ -336,6 +380,14 @@
          {
              this.fallTile = Blocks.SAND.getDefaultState();
          }

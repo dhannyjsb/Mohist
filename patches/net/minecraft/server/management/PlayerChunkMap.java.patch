@@ -150,7 +150,7 @@
              }
          }
      }
-@@ -443,11 +458,13 @@
+@@ -443,11 +458,27 @@
  
      public void entryChanged(PlayerChunkMapEntry entry)
      {
@@ -158,13 +158,27 @@
          this.dirtyEntries.add(entry);
      }
  
++    public void updateViewDistance(EntityPlayerMP player, final int distanceIn) {
++        int oldViewDistance = player.getViewDistance();
++        int toSet;
++        int playerViewDistance = toSet = MathHelper.clamp(distanceIn, 3, 32);
++        if (distanceIn < 0) {
++            playerViewDistance = -1;
++            toSet = this.world.getPlayerChunkMap().getViewDistance();
++        }
++        if (toSet != oldViewDistance) {
++            this.setViewDistance(player, toSet);
++            player.setViewDistance(playerViewDistance);
++        }
++    }
++
      public void removeEntry(PlayerChunkMapEntry entry)
      {
 +        org.spigotmc.AsyncCatcher.catchOp("Async Player Chunk Remove"); // Paper
          ChunkPos chunkpos = entry.getPos();
          long i = getIndex(chunkpos.x, chunkpos.z);
          entry.updateChunkInhabitedTime();
-@@ -460,7 +477,56 @@
+@@ -460,7 +491,56 @@
  
          if (chunk != null)
          {

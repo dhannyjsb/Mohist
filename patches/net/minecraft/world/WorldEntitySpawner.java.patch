@@ -11,7 +11,7 @@
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockRailBase;
  import net.minecraft.block.material.Material;
-@@ -21,12 +19,35 @@
+@@ -21,14 +19,47 @@
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.biome.Biome;
  import net.minecraft.world.chunk.Chunk;
@@ -28,6 +28,15 @@
 +    // Spigot start - get entity count only from chunks being processed in b
 +    private int getEntityCount(WorldServer server, Class oClass)
 +    {
++        // Paper start - use entire world, not just active chunks. Spigot broke vanilla expectations.
++        if (true) {
++            int sum = 0;
++            for (Chunk c : server.getChunkProvider().id2ChunkMap.values()) {
++                sum += c.entityCount.get(oClass);
++            }
++            return sum;
++        }
++        // Paper end
 +        int i = 0;
 +        Iterator<ChunkPos> it = this.eligibleChunksForSpawning.iterator();
 +        while ( it.hasNext() )
@@ -46,8 +55,11 @@
 +
      public int findChunksForSpawning(WorldServer worldServerIn, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate)
      {
++        org.spigotmc.AsyncCatcher.catchOp("check for eligible spawn chunks"); // Paper - At least until we figure out what is calling this async
          if (!spawnHostileMobs && !spawnPeacefulMobs)
-@@ -40,17 +61,29 @@
+         {
+             return 0;
+@@ -40,17 +71,29 @@
  
              for (EntityPlayer entityplayer : worldServerIn.playerEntities)
              {
@@ -83,7 +95,7 @@
                              ChunkPos chunkpos = new ChunkPos(i1 + j, j1 + k);
  
                              if (!this.eligibleChunksForSpawning.contains(chunkpos))
-@@ -77,20 +110,43 @@
+@@ -77,20 +120,40 @@
  
              for (EnumCreatureType enumcreaturetype : EnumCreatureType.values())
              {
@@ -113,11 +125,9 @@
                  {
 -                    int k4 = worldServerIn.countEntities(enumcreaturetype, true);
 -                    int l4 = enumcreaturetype.getMaxNumberOfCreature() * i / MOB_COUNT_DIV;
-+                    int k4 = worldServerIn.countEntities(enumcreaturetype.getCreatureClass());
-+                    int l4 = limit * i / MOB_COUNT_DIV; // CraftBukkit - use per-world limits
- 
+-
 -                    if (k4 <= l4)
-+                    if ((mobcnt = getEntityCount(worldServerIn, enumcreaturetype.getCreatureClass())) <= limit * i / 256)
++                    if ((mobcnt = getEntityCount(worldServerIn, enumcreaturetype.getCreatureClass())) <= limit * i / 289) // Paper - use 17x17 like vanilla (a at top of file)
                      {
 -                        java.util.ArrayList<ChunkPos> shuffled = com.google.common.collect.Lists.newArrayList(this.eligibleChunksForSpawning);
 -                        java.util.Collections.shuffle(shuffled);
@@ -133,7 +143,7 @@
                              BlockPos blockpos = getRandomChunkPosition(worldServerIn, chunkpos1.x, chunkpos1.z);
                              int k1 = blockpos.getX();
                              int l1 = blockpos.getY();
-@@ -143,6 +199,7 @@
+@@ -143,6 +206,7 @@
                                                  catch (Exception exception)
                                                  {
                                                      exception.printStackTrace();
@@ -141,7 +151,7 @@
                                                      return j4;
                                                  }
  
-@@ -156,15 +213,17 @@
+@@ -156,15 +220,17 @@
  
                                                      if (entityliving.isNotColliding())
                                                      {
@@ -162,7 +172,7 @@
                                                      {
                                                          continue label134;
                                                      }
-@@ -295,8 +354,11 @@
+@@ -295,8 +361,11 @@
  
                              if (net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(entityliving, worldIn, j + 0.5f, (float) blockpos.getY(), k +0.5f, false) == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY) continue;
                              entityliving.setLocationAndAngles((double)((float)j + 0.5F), (double)blockpos.getY(), (double)((float)k + 0.5F), randomIn.nextFloat() * 360.0F, 0.0F);

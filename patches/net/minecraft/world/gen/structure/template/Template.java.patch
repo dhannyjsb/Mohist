@@ -110,7 +110,18 @@
                  if (template$blockinfo1 != null)
                  {
                      Block block1 = template$blockinfo1.blockState.getBlock();
-@@ -257,7 +253,7 @@
+@@ -248,16 +244,18 @@
+                                 template$blockinfo1.tileentityData.setInteger("x", blockpos.getX());
+                                 template$blockinfo1.tileentityData.setInteger("y", blockpos.getY());
+                                 template$blockinfo1.tileentityData.setInteger("z", blockpos.getZ());
++                                tileentity2.isLoadingStructure = true; // Paper
+                                 tileentity2.readFromNBT(template$blockinfo1.tileentityData);
+                                 tileentity2.mirror(placementIn.getMirror());
+                                 tileentity2.rotate(placementIn.getRotation());
++                                tileentity2.isLoadingStructure = false; // Paper
+                             }
+                         }
+                     }
                  }
              }
  
@@ -119,7 +130,7 @@
              {
                  if (block == null || block != template$blockinfo2.blockState.getBlock())
                  {
-@@ -289,7 +285,7 @@
+@@ -289,7 +287,7 @@
  
      private void addEntitiesToWorld(World worldIn, BlockPos pos, Mirror mirrorIn, Rotation rotationIn, @Nullable StructureBoundingBox aabb)
      {
@@ -128,7 +139,7 @@
          {
              BlockPos blockpos = transformedBlockPos(template$entityinfo.blockPos, mirrorIn, rotationIn).add(pos);
  
-@@ -476,10 +472,10 @@
+@@ -476,10 +474,10 @@
  
      public NBTTagCompound writeToNBT(NBTTagCompound nbt)
      {
@@ -141,7 +152,7 @@
          {
              NBTTagCompound nbttagcompound = new NBTTagCompound();
              nbttagcompound.setTag("pos", this.writeInts(template$blockinfo.pos.getX(), template$blockinfo.pos.getY(), template$blockinfo.pos.getZ()));
-@@ -495,7 +491,7 @@
+@@ -495,7 +493,7 @@
  
          NBTTagList nbttaglist1 = new NBTTagList();
  
@@ -150,7 +161,7 @@
          {
              NBTTagCompound nbttagcompound1 = new NBTTagCompound();
              nbttagcompound1.setTag("pos", this.writeDoubles(template$entityinfo.pos.x, template$entityinfo.pos.y, template$entityinfo.pos.z));
-@@ -533,7 +529,7 @@
+@@ -533,7 +531,7 @@
          NBTTagList nbttaglist = compound.getTagList("size", 3);
          this.size = new BlockPos(nbttaglist.getIntAt(0), nbttaglist.getIntAt(1), nbttaglist.getIntAt(2));
          this.author = compound.getString("author");
@@ -159,7 +170,7 @@
          NBTTagList nbttaglist1 = compound.getTagList("palette", 10);
  
          for (int i = 0; i < nbttaglist1.tagCount(); ++i)
-@@ -560,7 +556,7 @@
+@@ -560,7 +558,7 @@
                  nbttagcompound1 = null;
              }
  
@@ -168,7 +179,7 @@
          }
  
          NBTTagList nbttaglist4 = compound.getTagList("entities", 10);
-@@ -576,7 +572,7 @@
+@@ -576,7 +574,7 @@
              if (nbttagcompound3.hasKey("nbt"))
              {
                  NBTTagCompound nbttagcompound2 = nbttagcompound3.getCompoundTag("nbt");

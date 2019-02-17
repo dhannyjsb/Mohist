@@ -299,6 +299,24 @@
      }
  
      public World init()
+@@ -215,14 +358,14 @@
+         return this.getBlockState(blockpos);
+     }
+ 
+-    public boolean isValid(BlockPos pos)
++    public static boolean isValid(BlockPos pos)
+     {
+-        return !this.isOutsideBuildHeight(pos) && pos.getX() >= -30000000 && pos.getZ() >= -30000000 && pos.getX() < 30000000 && pos.getZ() < 30000000;
++        return pos.isValidLocation(); // Paper
+     }
+ 
+     public boolean isOutsideBuildHeight(BlockPos pos)
+     {
+-        return pos.getY() < 0 || pos.getY() >= 256;
++        return pos.isInvalidYLocation(); // Paper
+     }
+ 
+     public boolean isAirBlock(BlockPos pos)
 @@ -232,7 +375,7 @@
  
      public boolean isBlockLoaded(BlockPos pos)
@@ -317,10 +335,11 @@
  
      public Chunk getChunkFromBlockCoords(BlockPos pos)
      {
-@@ -317,6 +460,26 @@
+@@ -317,7 +460,27 @@
  
      public boolean setBlockState(BlockPos pos, IBlockState newState, int flags)
      {
+-        if (this.isOutsideBuildHeight(pos))
 +        // Mohist start - tree generation
 +        if (this.captureTreeGeneration) {
 +            net.minecraftforge.common.util.BlockSnapshot blocksnapshot = null;
@@ -341,9 +360,10 @@
 +            return true;
 +        }
 +        // CraftBukkit end
-         if (this.isOutsideBuildHeight(pos))
++        if (pos.isInvalidYLocation()) // Paper
          {
              return false;
+         }
 @@ -336,6 +499,7 @@
                  blockSnapshot = net.minecraftforge.common.util.BlockSnapshot.getBlockSnapshot(this, pos, flags);
                  this.capturedBlockSnapshots.add(blockSnapshot);
@@ -434,7 +454,7 @@
 +    // Paper start - test if meets light level, return faster
 +    // logic copied from below
 +    public boolean isLightLevel(BlockPos blockposition, int level) {
-+        if (isValidLocation(blockposition)) {
++        if (blockposition.isValidLocation()) {
 +            if (this.getType(blockposition).f()) {
 +                if (this.c(blockposition.up(), false) >= level) {
 +                    return true;
@@ -456,7 +476,7 @@
 +                if (blockposition.getY() >= 256) {
 +                    blockposition = new BlockPos(blockposition.getX(), 255, blockposition.getZ());
 +                }
-+                Chunk chunk = this.getChunkAtWorldCoords(blockposition);
++                Chunk chunk = this.getChunkFromBlockCoords(blockposition);
 +                return chunk.getLightSubtracted(blockposition, this.getSkylightSubtracted()) >= level;
 +            }
 +        } else {
@@ -477,6 +497,33 @@
              return this.getChunkFromBlockCoords(pos).getLightSubtracted(pos, 0);
          }
      }
+@@ -792,7 +1010,7 @@
+                 pos = new BlockPos(pos.getX(), 0, pos.getZ());
+             }
+ 
+-            if (!this.isValid(pos))
++            if (!pos.isValidLocation()) // Paper
+             {
+                 return type.defaultLightValue;
+             }
+@@ -845,7 +1063,7 @@
+             pos = new BlockPos(pos.getX(), 0, pos.getZ());
+         }
+ 
+-        if (!this.isValid(pos))
++        if (!pos.isValidLocation())
+         {
+             return type.defaultLightValue;
+         }
+@@ -862,7 +1080,7 @@
+ 
+     public void setLightFor(EnumSkyBlock type, BlockPos pos, int lightValue)
+     {
+-        if (this.isValid(pos))
++        if (pos.isValidLocation())
+         {
+             if (this.isBlockLoaded(pos))
+             {
 @@ -900,8 +1118,58 @@
          return this.provider.getLightBrightnessTable()[this.getLightFromNeighbors(pos)];
      }
@@ -511,7 +558,7 @@
 +        return this.chunkProvider.getLoadedChunk(x >> 4, z >> 4).getBlockState(x, y, z);
 +    }
 +
-+    private IBlockState getCapturedBlockType(final int x, final int y, final int z) {
++    private IBlockState getCapturedBlockType(int x, int y, int z) {
 +        for (BlockState previous : this.capturedBlockStates) {
 +            if (previous.getX() == x && previous.getY() == y && previous.getZ() == z) {
 +                return CraftMagicNumbers.getBlock(previous.getTypeId()).getStateFromMeta(previous.getRawData());
@@ -1015,7 +1062,7 @@
              {
                  entityIn.addedToChunk = false;
              }
-@@ -2065,6 +2462,29 @@
+@@ -2065,9 +2462,32 @@
          return this.checkNoEntityCollision(bb, (Entity)null);
      }
  
@@ -1026,11 +1073,11 @@
 +     * @return if there are no visible players colliding
 +     */
 +    public boolean checkNoVisiblePlayerCollisions(AxisAlignedBB axisalignedbb, @Nullable Entity entity) {
-+        List list = this.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
++        List list = this.getEntitiesWithinAABBExcludingEntity( null, axisalignedbb);
 +        for (int i = 0; i < list.size(); ++i) {
 +            Entity entity1 = (Entity) list.get(i);
-+            if (entity instanceof EntityPlayer && entity1 instanceof EntityPlayer) {
-+                if (!((EntityPlayer) entity).getBukkitEntity().canSee(((EntityPlayer) entity1).getBukkitEntity())) {
++            if (entity instanceof EntityPlayerMP && entity1 instanceof EntityPlayerMP) {
++                if (!((EntityPlayerMP) entity).getBukkitEntity().canSee(((EntityPlayerMP) entity1).getBukkitEntity())) {
 +                    continue;
 +                }
 +            }
@@ -1044,7 +1091,29 @@
 +
      public boolean checkNoEntityCollision(AxisAlignedBB bb, @Nullable Entity entityIn)
      {
-         List<Entity> list = this.getEntitiesWithinAABBExcludingEntity((Entity)null, bb);
+-        List<Entity> list = this.getEntitiesWithinAABBExcludingEntity((Entity)null, bb);
++        List<Entity> list = this.getEntitiesWithinAABBExcludingEntity(null, bb);
+ 
+         for (int j2 = 0; j2 < list.size(); ++j2)
+         {
+@@ -2381,7 +2801,7 @@
+     @Nullable
+     public TileEntity getTileEntity(BlockPos pos)
+     {
+-        if (this.isOutsideBuildHeight(pos))
++        if (pos.isInvalidYLocation()) // Paper
+         {
+             return null;
+         }
+@@ -2427,7 +2847,7 @@
+     public void setTileEntity(BlockPos pos, @Nullable TileEntity tileEntityIn)
+     {
+         pos = pos.toImmutable(); // Forge - prevent mutable BlockPos leaks
+-        if (!this.isOutsideBuildHeight(pos))
++        if (!pos.isInvalidYLocation())
+         {
+             if (tileEntityIn != null && !tileEntityIn.isInvalid())
+             {
 @@ -2449,6 +2869,7 @@
                          }
                      }
@@ -1053,6 +1122,15 @@
                      this.addedTileEntityList.add(tileEntityIn);
                  }
                  else
+@@ -2499,7 +2920,7 @@
+ 
+     public boolean isBlockNormalCube(BlockPos pos, boolean _default)
+     {
+-        if (this.isOutsideBuildHeight(pos))
++        if (pos.isInvalidYLocation())
+         {
+             return false;
+         }
 @@ -2657,6 +3078,11 @@
                  }
  

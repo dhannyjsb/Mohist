@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/server/network/NetHandlerHandshakeTCP.java
 +++ ../src-work/minecraft/net/minecraft/server/network/NetHandlerHandshakeTCP.java
-@@ -9,41 +9,116 @@
+@@ -9,41 +9,117 @@
  import net.minecraft.util.text.ITextComponent;
  import net.minecraft.util.text.TextComponentTranslation;
  
@@ -12,6 +12,7 @@
 +public class NetHandlerHandshakeTCP implements INetHandlerHandshakeServer {
      private final MinecraftServer server;
      private final NetworkManager networkManager;
++    private NetworkManager getNetworkManager() { return networkManager; } // Paper - OBFHELPER
  
 -    public NetHandlerHandshakeTCP(MinecraftServer serverIn, NetworkManager netManager)
 -    {
@@ -135,8 +136,15 @@
                  }
  
                  break;
-@@ -56,7 +131,6 @@
+@@ -54,9 +130,13 @@
+             default:
+                 throw new UnsupportedOperationException("Invalid intention " + packetIn.getRequestedState());
          }
++
++        // Paper start - NetworkClient implementation
++        this.getNetworkManager().protocolVersion = packetIn.getProtocolVersion();
++        this.getNetworkManager().virtualHost = com.destroystokyo.paper.network.PaperNetworkClient.prepareVirtualHost(packetIn.ip, packetIn.port);
++        // Paper end
      }
  
 -    public void onDisconnect(ITextComponent reason)

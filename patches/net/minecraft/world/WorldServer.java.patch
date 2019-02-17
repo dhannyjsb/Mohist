@@ -747,7 +747,15 @@
                          return false;
                      }
  
-@@ -1141,9 +1385,15 @@
+@@ -1125,6 +1369,7 @@
+ 
+     public void onEntityRemoved(Entity entityIn)
+     {
++        if (!this.entitiesByUuid.containsKey(entityIn.getUniqueID()) && !entityIn.valid) return; // Paper - Already removed, dont fire twice - this looks like it can happen even without our changes
+         super.onEntityRemoved(entityIn);
+         this.entitiesById.removeObject(entityIn.getEntityId());
+         this.entitiesByUuid.remove(entityIn.getUniqueID());
+@@ -1141,9 +1386,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -764,7 +772,7 @@
              return true;
          }
          else
-@@ -1164,11 +1414,18 @@
+@@ -1164,11 +1415,18 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -785,7 +793,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1468,8 @@
+@@ -1211,7 +1469,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -795,7 +803,7 @@
                  }
              }
  
-@@ -1298,11 +1556,22 @@
+@@ -1298,11 +1557,22 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
@@ -821,7 +829,7 @@
              this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
-@@ -1356,7 +1625,7 @@
+@@ -1356,7 +1626,7 @@
          return this.functionManager;
      }
  

@@ -1811,7 +1811,7 @@
              {
 -                tileentitysign.signText[i] = new TextComponentString(TextFormatting.getTextWithoutFormattingCodes(astring[i]));
 +                // tileentitysign.signText[i] = new TextComponentString(TextFormatting.getTextWithoutFormattingCodes(astring[i]));
-+                lines[i] = TextFormatting.getTextWithoutFormattingCodes(new TextComponentString(TextFormatting.getTextWithoutFormattingCodes(astring[i])).getUnformattedText());
++                lines[i] = ChatAllowedCharacters.filterAllowedCharacters(astring[i]); //Paper - Replaced with anvil color stripping method to stop exploits that allow colored signs to be created.
              }
  
 +            SignChangeEvent event = new SignChangeEvent((org.bukkit.craftbukkit.block.CraftBlock) player.getWorld().getBlockAt(x, y, z), this.server.getPlayer(this.player), lines);

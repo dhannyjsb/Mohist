@@ -203,12 +203,12 @@
 +            boolean bottom = data.getValue(BlockDoublePlant.HALF) == BlockDoublePlant.EnumBlockHalf.LOWER;
 +            this.player.connection.sendPacket(new SPacketBlockChange(world, bottom ? position.up() : position.down()));
 +        } else if (block instanceof BlockPistonExtension) {
-+            BlockPos piston = position.shift(data.getValue(BlockPistonExtension.FACING).opposite());
++            BlockPos piston = position.offset(data.getValue(BlockPistonExtension.FACING).getOpposite());
 +            this.player.connection.sendPacket(new SPacketBlockChange(world, piston));
 +        } else if (block instanceof BlockBed) {
 +            if (data.getValue(BlockBed.PART) == BlockBed.EnumPartType.FOOT) {
 +                // Restore head of bed
-+                BlockPos head = position.shift(data.getValue(BlockBed.FACING));
++                BlockPos head = position.offset(data.getValue(BlockBed.FACING));
 +                this.player.connection.sendPacket(new SPacketBlockChange(world, head));
 +                TileEntity tileentity = this.world.getTileEntity(head);
 +                if (tileentity != null) {

@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/util/math/Vec3i.java
 +++ ../src-work/minecraft/net/minecraft/util/math/Vec3i.java
-@@ -1,16 +1,26 @@
+@@ -1,16 +1,28 @@
  package net.minecraft.util.math;
  
  import com.google.common.base.MoreObjects;
@@ -19,6 +19,7 @@
 +    protected int y;
 +    protected int z;
  
++    // Paper start
 +    public final boolean isValidLocation() {
 +        return this.x >= -30000000 && this.z >= -30000000 && this.x < 30000000 && this.z < 30000000 && this.y >= 0 && this.y < 256;
 +    }
@@ -26,11 +27,12 @@
 +    public boolean isInvalidYLocation() {
 +        return this.y < 0 || this.y >= 256;
 +    }
++    // Paper end
 +
      public Vec3i(int xIn, int yIn, int zIn)
      {
          this.x = xIn;
-@@ -69,20 +79,21 @@
+@@ -69,20 +81,21 @@
          }
      }
  

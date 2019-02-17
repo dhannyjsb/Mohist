@@ -9,7 +9,15 @@
  import net.minecraft.block.Block;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.Entity;
-@@ -15,18 +16,21 @@
+@@ -8,6 +9,7 @@
+ import net.minecraft.entity.SharedMonsterAttributes;
+ import net.minecraft.entity.ai.attributes.IAttributeInstance;
+ import net.minecraft.init.Blocks;
++import net.minecraft.server.MinecraftServer;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
+@@ -15,18 +17,21 @@
  import net.minecraft.world.ChunkCache;
  import net.minecraft.world.World;
  
@@ -34,7 +42,17 @@
      private long timeoutTimer;
      private long lastTimeoutCheck;
      private double timeoutLimit;
-@@ -99,6 +103,9 @@
+@@ -37,6 +42,9 @@
+     private BlockPos targetPos;
+     private final PathFinder pathFinder;
+ 
++    private int lastFailure = 0;
++    private int pathfindFailures = 0;
++
+     public PathNavigate(EntityLiving entityIn, World worldIn)
+     {
+         this.entity = entityIn;
+@@ -99,6 +107,9 @@
          }
          else
          {
@@ -44,7 +62,7 @@
              this.targetPos = pos;
              float f = this.getPathSearchRange();
              this.world.profiler.startSection("pathfind");
-@@ -128,6 +135,9 @@
+@@ -128,6 +139,9 @@
              }
              else
              {
@@ -54,3 +72,34 @@
                  this.targetPos = blockpos;
                  float f = this.getPathSearchRange();
                  this.world.profiler.startSection("pathfind");
+@@ -148,8 +162,21 @@
+ 
+     public boolean tryMoveToEntityLiving(Entity entityIn, double speedIn)
+     {
++        if (this.pathfindFailures > 10 && this.currentPath == null && MinecraftServer.currentTick < this.lastFailure + 40) {
++            return false;
++        }
++
+         Path path = this.getPathToEntityLiving(entityIn);
+-        return path != null && this.setPath(path, speedIn);
++
++        if (path != null && this.setPath(path, speedIn)) {
++            this.lastFailure = 0;
++            this.pathfindFailures = 0;
++            return true;
++        } else {
++            this.pathfindFailures++;
++            this.lastFailure = MinecraftServer.currentTick;
++            return false;
++        }
+     }
+ 
+     public boolean setPath(@Nullable Path pathentityIn, double speedIn)
+@@ -317,6 +344,7 @@
+ 
+     public void clearPath()
+     {
++        this.pathfindFailures = 0; this.lastFailure = 0; // Paper - Pathfinding optimizations
+         this.currentPath = null;
+     }
+ 

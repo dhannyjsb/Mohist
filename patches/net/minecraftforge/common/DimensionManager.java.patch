@@ -8,7 +8,50 @@
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
-@@ -83,6 +83,7 @@
+@@ -20,15 +20,10 @@
+ package net.minecraftforge.common;
+ 
+ import java.io.File;
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.Hashtable;
+-import java.util.IdentityHashMap;
+-import java.util.List;
+-import java.util.ListIterator;
+-import java.util.Map;
++import java.util.*;
+ import java.util.concurrent.ConcurrentMap;
+ 
++import cn.pfcraft.server.Mohist;
+ import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
+ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
+@@ -47,16 +42,17 @@
+ 
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.server.MinecraftServer;
+-import net.minecraft.world.DimensionType;
+-import net.minecraft.world.MinecraftException;
+-import net.minecraft.world.World;
+-import net.minecraft.world.ServerWorldEventHandler;
+-import net.minecraft.world.WorldProvider;
+-import net.minecraft.world.WorldServer;
+-import net.minecraft.world.WorldServerMulti;
++import net.minecraft.server.dedicated.DedicatedServer;
++import net.minecraft.world.*;
++import net.minecraft.world.chunk.storage.AnvilSaveHandler;
+ import net.minecraft.world.storage.ISaveHandler;
++import net.minecraft.world.storage.WorldInfo;
++import net.minecraftforge.common.util.EnumHelper;
+ import net.minecraftforge.event.world.WorldEvent;
++import net.minecraftforge.fml.common.FMLCommonHandler;
+ import net.minecraftforge.fml.common.FMLLog;
++import org.bukkit.WorldCreator;
++import org.bukkit.generator.ChunkGenerator;
+ 
+ import javax.annotation.Nullable;
+ 
+@@ -83,6 +79,7 @@
      private static final IntSet usedIds = new IntOpenHashSet();
      private static final ConcurrentMap<World, World> weakWorldMap = new MapMaker().weakKeys().weakValues().makeMap();
      private static final Multiset<Integer> leakedWorlds = HashMultiset.create();
@@ -16,7 +59,7 @@
  
      /**
       * Returns a list of dimensions associated with this DimensionType.
-@@ -138,6 +139,11 @@
+@@ -138,6 +135,11 @@
          {
              usedIds.add(id);
          }
@@ -28,7 +71,7 @@
      }
  
      /**
-@@ -187,17 +193,16 @@
+@@ -187,17 +189,16 @@
                  int leakCount = leakedWorlds.count(System.identityHashCode(w));
                  if (leakCount == 5)
                  {
@@ -48,7 +91,7 @@
      public static Integer[] getIDs()
      {
          return worlds.keySet().toArray(new Integer[0]); // Only loaded dims, since usually used to cycle through loaded worlds
-@@ -209,14 +214,20 @@
+@@ -209,14 +210,20 @@
          {
              worlds.put(id, world);
              weakWorldMap.put(world, world);
@@ -71,7 +114,7 @@
          }
  
          ArrayList<WorldServer> tmp = new ArrayList<WorldServer>();
-@@ -253,16 +264,45 @@
+@@ -253,16 +260,45 @@
          }
          catch (Exception e)
          {
@@ -85,7 +128,7 @@
 +        WorldSettings worldSettings = new WorldSettings(overworld.getWorldInfo());
 +        String worldType;
 +        String name;
-+        Environment env = Environment.getEnvironment(dim);
++        org.bukkit.World.Environment env = org.bukkit.World.Environment.getEnvironment(dim);
 +        if (dim >= -1 && dim <= 1)
 +        {
 +            if ((dim == -1 && !mcServer.getAllowNether()) || (dim == 1 && !mcServer.server.getAllowEnd()))
@@ -99,7 +142,7 @@
 +            worldType = worldType.replace("provider", "");
  
 -        WorldServer world = (dim == 0 ? overworld : (WorldServer)(new WorldServerMulti(mcServer, savehandler, dim, overworld, mcServer.profiler).init()));
-+            if(Environment.getEnvironment(DimensionManager.getProviderType(dim).getId()) == null){
++            if(org.bukkit.World.Environment.getEnvironment(DimensionManager.getProviderType(dim).getId()) == null){
 +                env = DimensionManager.registerBukkitDimension(DimensionManager.getProviderType(dim).getId(), worldType);
 +            }
 +
@@ -120,7 +163,7 @@
          if (!mcServer.isSinglePlayer())
          {
              world.getWorldInfo().setGameType(mcServer.getGameType());
-@@ -303,7 +343,6 @@
+@@ -303,7 +339,6 @@
      {
          return dimensions.keySet().toArray(new Integer[0]);
      }
@@ -128,7 +171,7 @@
      public static WorldProvider createProviderFor(int dim)
      {
          try
-@@ -321,7 +360,7 @@
+@@ -321,7 +356,7 @@
          }
          catch (Exception e)
          {
@@ -137,7 +180,7 @@
                      dim, getProviderType(dim), e);
              throw new RuntimeException(e);
          }
-@@ -357,7 +396,7 @@
+@@ -357,7 +392,7 @@
  
          if (unloadQueue.add(id))
          {
@@ -146,7 +189,7 @@
          }
      }
  
-@@ -387,23 +426,10 @@
+@@ -387,23 +422,10 @@
              // Don't unload the world if the status changed
              if (w == null || !canUnloadWorld(w))
              {
@@ -172,7 +215,7 @@
          }
      }
  
-@@ -499,4 +525,108 @@
+@@ -499,4 +521,108 @@
              return null;
          }
      }
@@ -198,7 +241,7 @@
 +            // do nothing
 +        }
 +
-+        Environment env = creator.environment();
++        org.bukkit.World.Environment env = creator.environment();
 +        name = creator.name();
 +        int dim = 0;
 +        // Use saved dimension from level.dat if it exists. This guarantees that after a world is created, the same dimension will be used. Fixes issues with MultiVerse
@@ -248,12 +291,12 @@
 +        return world;
 +    }
 +
-+    public static Environment registerBukkitDimension(int dim, String worldType) {
-+        Environment env = Environment.getEnvironment(dim);
++    public static org.bukkit.World.Environment registerBukkitDimension(int dim, String worldType) {
++        org.bukkit.World.Environment env = org.bukkit.World.Environment.getEnvironment(dim);
 +        if(env == null){
 +            worldType = worldType.replace("WorldProvider","");
 +            env = EnumHelper.addBukkitEnvironment(dim,worldType.toUpperCase());
-+            Environment.registerEnvironment(env);
++            org.bukkit.World.Environment.registerEnvironment(env);
 +        }
 +        return env;
 +    }

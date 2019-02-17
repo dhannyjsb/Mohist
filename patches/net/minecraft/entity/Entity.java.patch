@@ -1099,7 +1099,7 @@
 +            WorldServer worldserver1 = ((CraftWorld) exit.getWorld()).getHandle();
 +            int i = worldserver1.dimension;
 +            this.dimension = i;
-+            this.world.removeEntity(this);
++            this.world.removeEntity(this); // Paper - Fully remove entity, can't have dupes in the UUID map
 +            this.isDead = false;
 +            this.world.profiler.startSection("reposition");
 +            worldserver1.getMinecraftServer().getPlayerList().repositionEntity(this, exit, portal);

@@ -186,7 +186,7 @@
 +                flyAtPlayer = attemptEvent.getFlyAtPlayer();
 +                if (attemptEvent.isCancelled()) {
 +                    if (flyAtPlayer) {
-+                        entityIn.receive(this, i);
++                        entityIn.onItemPickup(this, i);
 +                    }
 +                    return;
 +                }
