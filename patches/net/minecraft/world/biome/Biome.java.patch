@@ -139,7 +139,17 @@
                  return this.modSpawnableLists.get(creatureType);
          }
      }
-@@ -336,15 +319,15 @@
+@@ -251,8 +234,7 @@
+ 
+         for (int j1 = 255; j1 >= 0; --j1)
+         {
+-            if (j1 <= rand.nextInt(5))
+-            {
++            if (j1 <= (worldIn.paperConfig.generateFlatBedrock ? 0 : rand.nextInt(5))) { // Paper - Configurable flat bedrock
+                 chunkPrimerIn.setBlockState(i1, j1, l, BEDROCK);
+             }
+             else
+@@ -336,15 +318,15 @@
          return this.getClass();
      }
  
@@ -158,7 +168,7 @@
          }
      }
  
-@@ -437,8 +420,8 @@
+@@ -437,8 +419,8 @@
       */
      public static class FlowerEntry extends WeightedRandom.Item
      {
@@ -169,7 +179,7 @@
          {
              super(weight);
              this.state = state;
-@@ -475,75 +458,76 @@
+@@ -475,75 +457,76 @@
              return;
          }
  
@@ -309,7 +319,7 @@
      }
  
      public static void registerBiome(int id, String name, Biome biome)
-@@ -574,7 +558,7 @@
+@@ -574,7 +557,7 @@
                  this.biomeName = nameIn;
              }
  
@@ -318,7 +328,7 @@
              {
                  if (temperatureIn > 0.1F && temperatureIn < 0.2F)
                  {
-@@ -587,43 +571,43 @@
+@@ -587,43 +570,43 @@
                  }
              }
  

@@ -32,3 +32,48 @@
  public class ChunkGeneratorFlat implements IChunkGenerator
  {
      private final World world;
+@@ -46,7 +42,7 @@
+         {
+             Map<String, Map<String, String>> map = this.flatWorldGenInfo.getWorldFeatures();
+ 
+-            if (map.containsKey("village"))
++            if (map.containsKey("village") && world.paperConfig.generateVillage)
+             {
+                 Map<String, String> map1 = (Map)map.get("village");
+ 
+@@ -58,22 +54,22 @@
+                 this.structureGenerators.put("Village", new MapGenVillage(map1));
+             }
+ 
+-            if (map.containsKey("biome_1"))
++            if (map.containsKey("biome_1") && world.paperConfig.generateTemple)
+             {
+                 this.structureGenerators.put("Temple", new MapGenScatteredFeature(map.get("biome_1")));
+             }
+ 
+-            if (map.containsKey("mineshaft"))
++            if (map.containsKey("mineshaft") && world.paperConfig.generateMineshaft)
+             {
+                 this.structureGenerators.put("Mineshaft", new MapGenMineshaft(map.get("mineshaft")));
+             }
+ 
+-            if (map.containsKey("stronghold"))
++            if (map.containsKey("stronghold") && world.paperConfig.generateStronghold)
+             {
+                 this.structureGenerators.put("Stronghold", new MapGenStronghold(map.get("stronghold")));
+             }
+ 
+-            if (map.containsKey("oceanmonument"))
++            if (map.containsKey("oceanmonument") && world.paperConfig.generateMonument)
+             {
+                 this.structureGenerators.put("Monument", new StructureOceanMonument(map.get("oceanmonument")));
+             }
+@@ -89,7 +85,7 @@
+             this.lavaLakeGenerator = new WorldGenLakes(Blocks.LAVA);
+         }
+ 
+-        this.hasDungeons = this.flatWorldGenInfo.getWorldFeatures().containsKey("dungeon");
++        this.hasDungeons = world.paperConfig.generateDungeon && this.flatWorldGenInfo.getWorldFeatures().containsKey("dungeon");  // Paper
+         int j = 0;
+         int k = 0;
+         boolean flag = true;

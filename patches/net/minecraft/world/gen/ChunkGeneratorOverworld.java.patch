@@ -28,6 +28,53 @@
  public class ChunkGeneratorOverworld implements IChunkGenerator
  {
      protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
+@@ -206,39 +202,39 @@
+         this.biomesForGeneration = this.world.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
+         this.replaceBiomeBlocks(x, z, chunkprimer, this.biomesForGeneration);
+ 
+-        if (this.settings.useCaves)
++        if (this.settings.useCaves && this.world.paperConfig.generateCaves)
+         {
+             this.caveGenerator.generate(this.world, x, z, chunkprimer);
+         }
+ 
+-        if (this.settings.useRavines)
++        if (this.settings.useRavines && this.world.paperConfig.generateCanyon)
+         {
+             this.ravineGenerator.generate(this.world, x, z, chunkprimer);
+         }
+ 
+         if (this.mapFeaturesEnabled)
+         {
+-            if (this.settings.useMineShafts)
++            if (this.settings.useMineShafts && this.world.paperConfig.generateMineshaft)
+             {
+                 this.mineshaftGenerator.generate(this.world, x, z, chunkprimer);
+             }
+ 
+-            if (this.settings.useVillages)
++            if (this.settings.useVillages && this.world.paperConfig.generateVillage)
+             {
+                 this.villageGenerator.generate(this.world, x, z, chunkprimer);
+             }
+ 
+-            if (this.settings.useStrongholds)
++            if (this.settings.useStrongholds && this.world.paperConfig.generateStronghold)
+             {
+                 this.strongholdGenerator.generate(this.world, x, z, chunkprimer);
+             }
+ 
+-            if (this.settings.useTemples)
++            if (this.settings.useTemples && this.world.paperConfig.generateTemple)
+             {
+                 this.scatteredFeatureGenerator.generate(this.world, x, z, chunkprimer);
+             }
+ 
+-            if (this.settings.useMonuments)
++            if (this.settings.useMonuments && this.world.paperConfig.generateMonument)
+             {
+                 this.oceanMonumentGenerator.generate(this.world, x, z, chunkprimer);
+             }
 @@ -296,6 +292,12 @@
                              f6 = 1.0F + f6 * 4.0F;
                          }
@@ -41,3 +88,78 @@
                          float f7 = this.biomeWeights[j1 + 2 + (k1 + 2) * 5] / (f5 + 2.0F);
  
                          if (biome1.getBaseHeight() > biome.getBaseHeight())
+@@ -396,27 +398,27 @@
+ 
+         if (this.mapFeaturesEnabled)
+         {
+-            if (this.settings.useMineShafts)
++            if (this.settings.useMineShafts && this.world.paperConfig.generateMineshaft)
+             {
+                 this.mineshaftGenerator.generateStructure(this.world, this.rand, chunkpos);
+             }
+ 
+-            if (this.settings.useVillages)
++            if (this.settings.useVillages && this.world.paperConfig.generateVillage)
+             {
+                 flag = this.villageGenerator.generateStructure(this.world, this.rand, chunkpos);
+             }
+ 
+-            if (this.settings.useStrongholds)
++            if (this.settings.useStrongholds && this.world.paperConfig.generateStronghold)
+             {
+                 this.strongholdGenerator.generateStructure(this.world, this.rand, chunkpos);
+             }
+ 
+-            if (this.settings.useTemples)
++            if (this.settings.useTemples && this.world.paperConfig.generateTemple)
+             {
+                 this.scatteredFeatureGenerator.generateStructure(this.world, this.rand, chunkpos);
+             }
+ 
+-            if (this.settings.useMonuments)
++            if (this.settings.useMonuments && this.world.paperConfig.generateMonument)
+             {
+                 this.oceanMonumentGenerator.generateStructure(this.world, this.rand, chunkpos);
+             }
+@@ -449,7 +451,7 @@
+             }
+         }
+ 
+-        if (this.settings.useDungeons)
++        if (this.settings.useDungeons && this.world.paperConfig.generateDungeon)
+         if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.world, this.rand, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.DUNGEON))
+         {
+             for (int j2 = 0; j2 < this.settings.dungeonChance; ++j2)
+@@ -594,27 +596,27 @@
+     {
+         if (this.mapFeaturesEnabled)
+         {
+-            if (this.settings.useMineShafts)
++            if (this.settings.useMineShafts && this.world.paperConfig.generateMineshaft)
+             {
+                 this.mineshaftGenerator.generate(this.world, x, z, (ChunkPrimer)null);
+             }
+ 
+-            if (this.settings.useVillages)
++            if (this.settings.useVillages && this.world.paperConfig.generateVillage)
+             {
+                 this.villageGenerator.generate(this.world, x, z, (ChunkPrimer)null);
+             }
+ 
+-            if (this.settings.useStrongholds)
++            if (this.settings.useStrongholds && this.world.paperConfig.generateStronghold)
+             {
+                 this.strongholdGenerator.generate(this.world, x, z, (ChunkPrimer)null);
+             }
+ 
+-            if (this.settings.useTemples)
++            if (this.settings.useTemples && this.world.paperConfig.generateTemple)
+             {
+                 this.scatteredFeatureGenerator.generate(this.world, x, z, (ChunkPrimer)null);
+             }
+ 
+-            if (this.settings.useMonuments)
++            if (this.settings.useMonuments && this.world.paperConfig.generateMonument)
+             {
+                 this.oceanMonumentGenerator.generate(this.world, x, z, (ChunkPrimer)null);
+             }

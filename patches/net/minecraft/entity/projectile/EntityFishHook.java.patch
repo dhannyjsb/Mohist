@@ -108,7 +108,19 @@
                  {
                      this.motionX *= 0.9D;
                      this.motionZ *= 0.9D;
-@@ -320,6 +318,14 @@
+@@ -262,6 +260,11 @@
+             this.motionY *= 0.92D;
+             this.motionZ *= 0.92D;
+             this.setPosition(this.posX, this.posY, this.posZ);
++            // Paper start - These shouldn't be going through portals
++            if (this.inPortal) {
++                this.setDead();
++            }
++            // Paper end
+         }
+     }
+ 
+@@ -320,6 +323,14 @@
          vec3d = new Vec3d(this.posX, this.posY, this.posZ);
          vec3d1 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
  
@@ -123,7 +135,7 @@
          if (raytraceresult != null)
          {
              vec3d1 = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
-@@ -356,6 +362,7 @@
+@@ -356,6 +367,7 @@
  
          if (raytraceresult != null && raytraceresult.typeOfHit != RayTraceResult.Type.MISS)
          {
@@ -131,7 +143,7 @@
              if (raytraceresult.typeOfHit == RayTraceResult.Type.ENTITY)
              {
                  this.caughtEntity = raytraceresult.entityHit;
-@@ -397,6 +404,8 @@
+@@ -397,6 +409,8 @@
              {
                  this.ticksCaughtDelay = 0;
                  this.ticksCatchableDelay = 0;
@@ -140,7 +152,7 @@
              }
              else
              {
-@@ -433,6 +442,11 @@
+@@ -433,6 +447,11 @@
              }
              else
              {
@@ -152,7 +164,7 @@
                  this.motionY = (double)(-0.4F * MathHelper.nextFloat(this.rand, 0.6F, 1.0F));
                  this.playSound(SoundEvents.ENTITY_BOBBER_SPLASH, 0.25F, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
                  double d3 = this.getEntityBoundingBox().minY + 0.5D;
-@@ -482,7 +496,7 @@
+@@ -482,7 +501,7 @@
          }
          else
          {
@@ -161,7 +173,7 @@
              this.ticksCaughtDelay -= this.lureSpeed * 20 * 5;
          }
      }
-@@ -509,6 +523,11 @@
+@@ -509,6 +528,11 @@
              net.minecraftforge.event.entity.player.ItemFishedEvent event = null;
              if (this.caughtEntity != null)
              {
@@ -173,7 +185,7 @@
                  this.bringInHookedEntity();
                  this.world.setEntityState(this, (byte)31);
                  i = this.caughtEntity instanceof EntityItem ? 3 : 5;
-@@ -529,6 +548,13 @@
+@@ -529,6 +553,13 @@
                  for (ItemStack itemstack : result)
                  {
                      EntityItem entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, itemstack);
@@ -187,7 +199,7 @@
                      double d0 = this.angler.posX - this.posX;
                      double d1 = this.angler.posY - this.posY;
                      double d2 = this.angler.posZ - this.posZ;
-@@ -538,7 +564,12 @@
+@@ -538,7 +569,12 @@
                      entityitem.motionY = d1 * 0.1D + (double)MathHelper.sqrt(d3) * 0.08D;
                      entityitem.motionZ = d2 * 0.1D;
                      this.world.spawnEntity(entityitem);
@@ -201,7 +213,7 @@
                      Item item = itemstack.getItem();
  
                      if (item == Items.FISH || item == Items.COOKED_FISH)
-@@ -552,8 +583,21 @@
+@@ -552,8 +588,21 @@
  
              if (this.inGround)
              {

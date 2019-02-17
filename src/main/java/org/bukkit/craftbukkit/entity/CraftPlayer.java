@@ -25,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerRepair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -145,6 +146,20 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             return null;
         }
     }
+
+    // Paper start - Implement NetworkClient
+    @Override
+    public int getProtocolVersion() {
+        if (getHandle().connection == null) return -1;
+        return getHandle().connection.netManager.protocolVersion;
+    }
+
+    @Override
+    public InetSocketAddress getVirtualHost() {
+        if (getHandle().connection == null) return null;
+        return getHandle().connection.netManager.virtualHost;
+    }
+    // Paper end
 
     @Override
     public double getEyeHeight(boolean ignorePose) {
@@ -675,7 +690,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         server.getHandle().playerDataManager.writePlayerData(getHandle());
     }
 
-    @Deprecated
     @Override
     public void updateInventory() {
         if (getHandle().connection == null) {
@@ -1165,10 +1179,10 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         reregisterPlayer(handle);
 
         //Respawn the player then update their position and selected slot
-        connection.sendPacket(new SPacketRespawn(handle.dimension, handle.world.getDifficulty(), handle.world.getWorldInfo().getTerrainType(), handle.playerInteractManager.getGameMode()));
+        connection.sendPacket(new SPacketRespawn(handle.dimension, handle.world.getDifficulty(), handle.world.getWorldInfo().getTerrainType(), handle.interactionManager.getGameType()));
         handle.sendPlayerAbilities();
         connection.sendPacket(new SPacketPlayerPosLook(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(), new HashSet<>(), 0));
-        MinecraftServer.getServerInst().getPlayerList().updateClient(handle);
+        MinecraftServer.getServerInst().getPlayerList().syncPlayerInventory(handle);
 
         if (this.isOp()) {
             this.setOp(false);
@@ -1415,6 +1429,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         if (container.getBukkitView().getType() != prop.getType()) {
             return false;
         }
+        // Paper start
+        if (prop == Property.REPAIR_COST && container instanceof ContainerRepair) {
+            ((ContainerRepair) container).maximumCost = value;
+        }
+        // Paper end
         getHandle().sendWindowProperty(container, prop.getId(), value);
         return true;
     }
@@ -1569,6 +1588,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public void setRealHealth(double health) {
+        if (Double.isNaN(health)) {return;} // Paper
         this.health = health;
     }
 

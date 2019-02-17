@@ -618,7 +618,7 @@
      public void playSound(@Nullable EntityPlayer player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch)
      {
          net.minecraftforge.event.entity.PlaySoundAtEntityEvent event = net.minecraftforge.event.ForgeEventFactory.onPlaySoundAtEntity(player, soundIn, category, volume, pitch);
-@@ -1178,14 +1456,77 @@
+@@ -1178,14 +1456,91 @@
  
      public boolean spawnEntity(Entity entityIn)
      {
@@ -661,16 +661,30 @@
 +            EntityXPOrb xp = (EntityXPOrb) entity;
 +            double radius = spigotConfig.expMerge;
 +            if (radius > 0) {
-+                List<Entity> entities = this.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().grow(radius, radius, radius));
-+                for (Entity e : entities) {
-+                    if (e instanceof EntityXPOrb) {
-+                        EntityXPOrb loopItem = (EntityXPOrb) e;
-+                        if (!loopItem.isDead) {
-+                            xp.xpValue += loopItem.xpValue;
-+                            loopItem.setDead();
++                // Paper start - Maximum exp value when merging - Whole section has been tweaked, see comments for specifics
++                final int maxValue = paperConfig.expMergeMaxValue;
++                final boolean mergeUnconditionally = paperConfig.expMergeMaxValue <= 0;
++                if (mergeUnconditionally || xp.xpValue < maxValue) { // Paper - Skip iteration if unnecessary
++                    List<Entity> entities = this.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().grow(radius, radius, radius));
++                    for (Entity e : entities) {
++                        if (e instanceof EntityXPOrb) {
++                            EntityXPOrb loopItem = (EntityXPOrb) e;
++                            // Paper start
++                            if (!loopItem.isDead && !(maxValue > 0 && loopItem.xpValue >= maxValue)&& new com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent((org.bukkit.entity.ExperienceOrb) entity.getBukkitEntity(), (org.bukkit.entity.ExperienceOrb) loopItem.getBukkitEntity()).callEvent()) {
++                                long newTotal = (long)xp.xpValue + (long)loopItem.xpValue;
++                                if ((int) newTotal < 0) continue; // Overflow
++                                if (maxValue > 0 && newTotal > (long)maxValue) {
++                                    loopItem.xpValue = (int) (newTotal - maxValue);
++                                 xp.xpValue = maxValue;
++                                } else {
++                                    xp.xpValue += loopItem.xpValue;
++                                    loopItem.setDead();
++                                }
++                                // Paper end
++                            }
 +                        }
 +                    }
-+                }
++                } // Paper end - End iteration skip check - All tweaking ends here
 +            }
 +        } // Spigot end
 +
@@ -701,7 +715,7 @@
          {
              flag = true;
          }
-@@ -1196,18 +1537,21 @@
+@@ -1196,18 +1551,21 @@
          }
          else
          {
@@ -729,7 +743,7 @@
              return true;
          }
      }
-@@ -1216,18 +1560,23 @@
+@@ -1216,18 +1574,23 @@
      {
          for (int i = 0; i < this.eventListeners.size(); ++i)
          {
@@ -755,7 +769,7 @@
      }
  
      public void removeEntity(Entity entityIn)
-@@ -1270,8 +1619,18 @@
+@@ -1270,8 +1633,18 @@
          {
              this.getChunkFromChunkCoords(i, j).removeEntity(entityIn);
          }
@@ -776,7 +790,7 @@
          this.onEntityRemoved(entityIn);
      }
  
-@@ -1363,6 +1722,7 @@
+@@ -1363,6 +1736,7 @@
  
          if (entityIn != null)
          {
@@ -784,7 +798,7 @@
              List<Entity> list1 = this.getEntitiesWithinAABBExcludingEntity(entityIn, aabb.grow(0.25D));
  
              for (int i = 0; i < list1.size(); ++i)
-@@ -1674,7 +2034,11 @@
+@@ -1674,7 +2048,11 @@
          for (int i = 0; i < this.weatherEffects.size(); ++i)
          {
              Entity entity = this.weatherEffects.get(i);
@@ -797,7 +811,7 @@
              try
              {
                  if(entity.updateBlocked) continue;
-@@ -1697,7 +2061,7 @@
+@@ -1697,7 +2075,7 @@
  
                  if (net.minecraftforge.common.ForgeModContainer.removeErroringEntities)
                  {
@@ -806,7 +820,7 @@
                      removeEntity(entity);
                  }
                  else
-@@ -1712,31 +2076,31 @@
+@@ -1712,31 +2090,28 @@
  
          this.profiler.endStartSection("remove");
          this.loadedEntityList.removeAll(this.unloadedEntityList);
@@ -845,17 +859,14 @@
 +        org.spigotmc.ActivationRange.activateEntities(this); // Spigot
 +
 +        int entitiesThisCycle = 0;
-+        if (tickPosition < 0) tickPosition = 0;
-+        for (entityLimiter.initTick();
-+             entitiesThisCycle < loadedEntityList.size() && (entitiesThisCycle % 10 != 0 || entityLimiter.shouldContinue());
-+             tickPosition++, entitiesThisCycle++) {
++        for (tickPosition = 0; tickPosition < loadedEntityList.size(); tickPosition++) {
 +            tickPosition = (tickPosition < loadedEntityList.size()) ? tickPosition : 0;
 +            Entity entity2 = (Entity) this.loadedEntityList.get(this.tickPosition);
 +            // CraftBukkit end
              Entity entity3 = entity2.getRidingEntity();
  
              if (entity3 != null)
-@@ -1762,15 +2126,15 @@
+@@ -1762,15 +2137,15 @@
                  catch (Throwable throwable1)
                  {
                      CrashReport crashreport1 = CrashReport.makeCrashReport(throwable1, "Ticking entity");
@@ -880,7 +891,7 @@
                  }
              }
  
-@@ -1779,15 +2143,10 @@
+@@ -1779,15 +2154,10 @@
  
              if (entity2.isDead)
              {
@@ -900,7 +911,7 @@
                  this.onEntityRemoved(entity2);
              }
  
-@@ -1806,30 +2165,45 @@
+@@ -1806,30 +2176,43 @@
              }
  
              // forge: faster "contains" makes this removal much more efficient
@@ -920,9 +931,7 @@
 -            TileEntity tileentity = iterator.next();
 -
 +        int tilesThisCycle = 0;
-+        for (tileLimiter.initTick();
-+             tilesThisCycle < this.tickableTileEntities.size() && (tilesThisCycle % 10 != 0 || tileLimiter.shouldContinue());
-+             tileTickPosition++, tilesThisCycle++) {
++        for (tileTickPosition = 0; tileTickPosition < tickableTileEntities.size(); tileTickPosition++) { // Paper - Disable tick limiters
 +            tileTickPosition = (tileTickPosition < tickableTileEntities.size()) ? tileTickPosition : 0;
 +            TileEntity tileentity = this.tickableTileEntities.get(tileTickPosition);
 +            // Spigot start
@@ -955,7 +964,7 @@
                          });
                          net.minecraftforge.server.timings.TimeTracker.TILE_ENTITY_UPDATE.trackStart(tileentity);
                          ((ITickable)tileentity).update();
-@@ -1841,28 +2215,34 @@
+@@ -1841,28 +2224,34 @@
                          CrashReport crashreport2 = CrashReport.makeCrashReport(throwable, "Ticking block entity");
                          CrashReportCategory crashreportcategory2 = crashreport2.makeCategory("Block entity being ticked");
                          tileentity.addInfoToCrashReport(crashreportcategory2);
@@ -995,7 +1004,7 @@
                          chunk.removeTileEntity(tileentity.getPos());
                  }
              }
-@@ -1879,10 +2259,12 @@
+@@ -1879,10 +2268,12 @@
  
                  if (!tileentity1.isInvalid())
                  {
@@ -1008,7 +1017,7 @@
  
                      if (this.isBlockLoaded(tileentity1.getPos()))
                      {
-@@ -1890,6 +2272,12 @@
+@@ -1890,6 +2281,12 @@
                          IBlockState iblockstate = chunk.getBlockState(tileentity1.getPos());
                          chunk.addTileEntity(tileentity1.getPos(), tileentity1);
                          this.notifyBlockUpdate(tileentity1.getPos(), iblockstate, iblockstate, 3);
@@ -1021,7 +1030,7 @@
                      }
                  }
              }
-@@ -1973,6 +2361,14 @@
+@@ -1973,6 +2370,14 @@
              }
          }
  
@@ -1036,7 +1045,7 @@
          entityIn.lastTickPosX = entityIn.posX;
          entityIn.lastTickPosY = entityIn.posY;
          entityIn.lastTickPosZ = entityIn.posZ;
-@@ -1991,6 +2387,7 @@
+@@ -1991,6 +2396,7 @@
              {
                  if(!entityIn.updateBlocked)
                  entityIn.onUpdate();
@@ -1044,7 +1053,7 @@
              }
          }
  
-@@ -2022,7 +2419,7 @@
+@@ -2022,7 +2428,7 @@
          }
  
          int i3 = MathHelper.floor(entityIn.posX / 16.0D);
@@ -1053,7 +1062,7 @@
          int k3 = MathHelper.floor(entityIn.posZ / 16.0D);
  
          if (!entityIn.addedToChunk || entityIn.chunkCoordX != i3 || entityIn.chunkCoordY != j3 || entityIn.chunkCoordZ != k3)
-@@ -2032,7 +2429,7 @@
+@@ -2032,7 +2438,7 @@
                  this.getChunkFromChunkCoords(entityIn.chunkCoordX, entityIn.chunkCoordZ).removeEntityAtIndex(entityIn, entityIn.chunkCoordY);
              }
  
@@ -1062,7 +1071,7 @@
              {
                  entityIn.addedToChunk = false;
              }
-@@ -2065,9 +2462,32 @@
+@@ -2065,9 +2471,32 @@
          return this.checkNoEntityCollision(bb, (Entity)null);
      }
  
@@ -1096,7 +1105,7 @@
  
          for (int j2 = 0; j2 < list.size(); ++j2)
          {
-@@ -2381,7 +2801,7 @@
+@@ -2381,7 +2810,7 @@
      @Nullable
      public TileEntity getTileEntity(BlockPos pos)
      {
@@ -1105,7 +1114,7 @@
          {
              return null;
          }
-@@ -2427,7 +2847,7 @@
+@@ -2427,7 +2856,7 @@
      public void setTileEntity(BlockPos pos, @Nullable TileEntity tileEntityIn)
      {
          pos = pos.toImmutable(); // Forge - prevent mutable BlockPos leaks
@@ -1114,7 +1123,7 @@
          {
              if (tileEntityIn != null && !tileEntityIn.isInvalid())
              {
-@@ -2449,6 +2869,7 @@
+@@ -2449,6 +2878,7 @@
                          }
                      }
  
@@ -1122,7 +1131,7 @@
                      this.addedTileEntityList.add(tileEntityIn);
                  }
                  else
-@@ -2499,7 +2920,7 @@
+@@ -2499,7 +2929,7 @@
  
      public boolean isBlockNormalCube(BlockPos pos, boolean _default)
      {
@@ -1131,7 +1140,7 @@
          {
              return false;
          }
-@@ -2657,6 +3078,11 @@
+@@ -2657,6 +3087,11 @@
                  }
  
                  this.rainingStrength = MathHelper.clamp(this.rainingStrength, 0.0F, 1.0F);
@@ -1143,7 +1152,7 @@
              }
          }
      }
-@@ -2846,8 +3272,11 @@
+@@ -2846,8 +3281,11 @@
  
      public boolean checkLightFor(EnumSkyBlock lightType, BlockPos pos)
      {
@@ -1156,7 +1165,7 @@
              return false;
          }
          else
-@@ -3034,6 +3463,9 @@
+@@ -3034,6 +3472,9 @@
  
          for (Entity entity4 : this.loadedEntityList)
          {
@@ -1166,7 +1175,7 @@
              if (entityType.isAssignableFrom(entity4.getClass()) && filter.apply((T)entity4))
              {
                  list.add((T)entity4);
-@@ -3137,7 +3569,19 @@
+@@ -3137,7 +3578,19 @@
  
          for (Entity entity4 : this.loadedEntityList)
          {
@@ -1187,7 +1196,7 @@
              {
                  ++j2;
              }
-@@ -3146,12 +3590,19 @@
+@@ -3146,12 +3599,19 @@
          return j2;
      }
  
@@ -1207,7 +1216,7 @@
                  loadedEntityList.add(entity4);
                  this.onEntityAdded(entity4);
              }
-@@ -3168,18 +3619,23 @@
+@@ -3168,18 +3628,23 @@
          IBlockState iblockstate1 = this.getBlockState(pos);
          AxisAlignedBB axisalignedbb = skipCollisionCheck ? null : blockIn.getDefaultState().getCollisionBoundingBox(this, pos);
  
@@ -1235,7 +1244,7 @@
      }
  
      public int getSeaLevel()
-@@ -3344,6 +3800,12 @@
+@@ -3344,6 +3809,12 @@
          {
              EntityPlayer entityplayer1 = this.playerEntities.get(j2);
  
@@ -1248,7 +1257,7 @@
              if (p_190525_9_.apply(entityplayer1))
              {
                  double d1 = entityplayer1.getDistanceSq(x, y, z);
-@@ -3365,8 +3827,7 @@
+@@ -3365,8 +3836,7 @@
          {
              EntityPlayer entityplayer = this.playerEntities.get(j2);
  
@@ -1258,7 +1267,7 @@
                  double d0 = entityplayer.getDistanceSq(x, y, z);
  
                  if (range < 0.0D || d0 < range * range)
-@@ -3591,6 +4052,16 @@
+@@ -3591,6 +4061,16 @@
      {
      }
  
@@ -1275,7 +1284,7 @@
      public float getThunderStrength(float delta)
      {
          return (this.prevThunderingStrength + (this.thunderingStrength - this.prevThunderingStrength) * delta) * this.getRainStrength(delta);
-@@ -3873,13 +4344,15 @@
+@@ -3873,13 +4353,15 @@
          return this.worldBorder;
      }
  

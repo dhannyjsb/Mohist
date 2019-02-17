@@ -47,7 +47,7 @@
  public class EntityArmorStand extends EntityLivingBase
  {
      private static final Rotations DEFAULT_HEAD_ROTATION = new Rotations(0.0F, 0.0F, 0.0F);
-@@ -67,13 +69,16 @@
+@@ -67,13 +69,17 @@
      public long punchCooldown;
      private int disabledSlots;
      private boolean wasMarker;
@@ -64,13 +64,22 @@
 +    public Rotations leftLegRotation;
 +    public Rotations rightLegRotation;
 +    public boolean canMove = true; // Paper
++    public boolean canTick = true; // Paper - armour stand ticking
  
 +    private java.util.ArrayList<org.bukkit.inventory.ItemStack> drops = new java.util.ArrayList<>(); // Mohist
 +
      public EntityArmorStand(World worldIn)
      {
          super(worldIn);
-@@ -95,6 +100,13 @@
+@@ -87,6 +93,7 @@
+         this.rightLegRotation = DEFAULT_RIGHTLEG_ROTATION;
+         this.noClip = this.hasNoGravity();
+         this.setSize(0.5F, 1.975F);
++        if (world != null) this.canTick = world.paperConfig.armorStandTick; // Paper - armour stand ticking
+     }
+ 
+     public EntityArmorStand(World worldIn, double posX, double posY, double posZ)
+@@ -95,6 +102,13 @@
          this.setPosition(posX, posY, posZ);
      }
  
@@ -84,7 +93,26 @@
      protected final void setSize(float width, float height)
      {
          double d0 = this.posX;
-@@ -457,6 +469,19 @@
+@@ -254,6 +268,7 @@
+         }
+ 
+         compound.setTag("Pose", this.readPoseFromNBT());
++        compound.setBoolean("Paper.CanTick", this.canTick); // Paper - persist no tick setting
+     }
+ 
+     public void readEntityFromNBT(NBTTagCompound compound)
+@@ -288,6 +303,10 @@
+         this.setMarker(compound.getBoolean("Marker"));
+         this.wasMarker = !this.hasMarker();
+         this.noClip = this.hasNoGravity();
++        // Paper - persist no tick
++        if (compound.hasKey("Paper.CanTick")) {
++            this.canTick = compound.getBoolean("Paper.CanTick");
++        }
+         NBTTagCompound nbttagcompound = compound.getCompoundTag("Pose");
+         this.writePoseToNBT(nbttagcompound);
+     }
+@@ -457,6 +476,19 @@
          {
              if (!itemstack.isEmpty() || (this.disabledSlots & 1 << p_184795_2_.getSlotIndex() + 16) == 0)
              {
@@ -104,7 +132,7 @@
                  if (player.capabilities.isCreativeMode && itemstack.isEmpty() && !p_184795_3_.isEmpty())
                  {
                      ItemStack itemstack2 = p_184795_3_.copy();
-@@ -484,11 +509,14 @@
+@@ -484,11 +516,14 @@
  
      public boolean attackEntityFrom(DamageSource source, float amount)
      {
@@ -120,7 +148,7 @@
                  return false;
              }
              else if (!this.isEntityInvulnerable(source) && !this.canInteract && !this.hasMarker())
-@@ -496,7 +524,7 @@
+@@ -496,7 +531,7 @@
                  if (source.isExplosion())
                  {
                      this.dropContents();
@@ -129,7 +157,7 @@
                      return false;
                  }
                  else if (DamageSource.IN_FIRE.equals(source))
-@@ -541,7 +569,7 @@
+@@ -541,7 +576,7 @@
                          {
                              this.playBrokenSound();
                              this.playParticles();
@@ -138,7 +166,7 @@
                              return false;
                          }
                          else
-@@ -557,7 +585,7 @@
+@@ -557,7 +592,7 @@
                              {
                                  this.dropBlock();
                                  this.playParticles();
@@ -147,7 +175,7 @@
                              }
  
                              return false;
-@@ -623,7 +651,7 @@
+@@ -623,7 +658,7 @@
          if (f <= 0.5F)
          {
              this.dropContents();
@@ -156,7 +184,7 @@
          }
          else
          {
-@@ -634,6 +662,7 @@
+@@ -634,6 +669,7 @@
      private void dropBlock()
      {
          Block.spawnAsEntity(this.world, new BlockPos(this), new ItemStack(Items.ARMOR_STAND));
@@ -164,7 +192,7 @@
          this.dropContents();
      }
  
-@@ -648,6 +677,7 @@
+@@ -648,6 +684,7 @@
              if (!itemstack.isEmpty())
              {
                  Block.spawnAsEntity(this.world, (new BlockPos(this)).up(), itemstack);
@@ -172,7 +200,7 @@
                  this.handItems.set(i, ItemStack.EMPTY);
              }
          }
-@@ -659,6 +689,7 @@
+@@ -659,6 +696,7 @@
              if (!itemstack1.isEmpty())
              {
                  Block.spawnAsEntity(this.world, (new BlockPos(this)).up(), itemstack1);
@@ -180,7 +208,15 @@
                  this.armorItems.set(j, ItemStack.EMPTY);
              }
          }
-@@ -791,6 +822,8 @@
+@@ -708,6 +746,7 @@
+ 
+     public void onUpdate()
+     {
++        if (!this.canTick) return;// Paper
+         super.onUpdate();
+         Rotations rotations = (Rotations)this.dataManager.get(HEAD_ROTATION);
+ 
+@@ -791,6 +830,8 @@
  
      public void onKillCommand()
      {
@@ -189,7 +225,7 @@
          this.setDead();
      }
  
-@@ -804,7 +837,7 @@
+@@ -804,7 +845,7 @@
          return this.hasMarker() ? EnumPushReaction.IGNORE : super.getPushReaction();
      }
  
@@ -198,7 +234,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 1, small)));
          this.setSize(0.5F, 1.975F);
-@@ -815,7 +848,7 @@
+@@ -815,7 +856,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 1) != 0;
      }
  
@@ -207,7 +243,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 4, showArms)));
      }
-@@ -825,7 +858,7 @@
+@@ -825,7 +866,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 4) != 0;
      }
  
@@ -216,7 +252,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 8, noBasePlate)));
      }
-@@ -835,7 +868,7 @@
+@@ -835,7 +876,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 8) != 0;
      }
  
@@ -225,7 +261,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 16, marker)));
          this.setSize(0.5F, 1.975F);
-@@ -957,7 +990,7 @@
+@@ -957,7 +998,7 @@
          return SoundEvents.ENTITY_ARMORSTAND_BREAK;
      }
  
@@ -234,7 +270,7 @@
      {
      }
  
-@@ -980,4 +1013,18 @@
+@@ -980,4 +1021,18 @@
      {
          return false;
      }

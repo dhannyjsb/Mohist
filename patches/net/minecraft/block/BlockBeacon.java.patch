@@ -13,3 +13,61 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.world.World;
  import net.minecraft.world.WorldServer;
+@@ -106,41 +102,27 @@
+ 
+     public static void updateColorAsync(final World worldIn, final BlockPos glassPos)
+     {
+-        HttpUtil.DOWNLOADER_EXECUTOR.submit(new Runnable()
++        Chunk chunk = worldIn.getChunkFromBlockCoords(glassPos);
++
++        for (int i = glassPos.getY() - 1; i >= 0; --i)
+         {
+-            public void run()
++            final BlockPos blockpos = new BlockPos(glassPos.getX(), i, glassPos.getZ());
++
++            if (!chunk.canSeeSky(blockpos))
+             {
+-                Chunk chunk = worldIn.getChunkFromBlockCoords(glassPos);
++                break;
++            }
+ 
+-                for (int i = glassPos.getY() - 1; i >= 0; --i)
+-                {
+-                    final BlockPos blockpos = new BlockPos(glassPos.getX(), i, glassPos.getZ());
++            IBlockState iblockstate = worldIn.getBlockState(blockpos);
+ 
+-                    if (!chunk.canSeeSky(blockpos))
+-                    {
+-                        break;
+-                    }
++            if (iblockstate.getBlock() == Blocks.BEACON)
++            {
++                TileEntity tileentity = worldIn.getTileEntity(blockpos);
+ 
+-                    IBlockState iblockstate = worldIn.getBlockState(blockpos);
+-
+-                    if (iblockstate.getBlock() == Blocks.BEACON)
+-                    {
+-                        ((WorldServer)worldIn).addScheduledTask(new Runnable()
+-                        {
+-                            public void run()
+-                            {
+-                                TileEntity tileentity = worldIn.getTileEntity(blockpos);
+-
+-                                if (tileentity instanceof TileEntityBeacon)
+-                                {
+-                                    ((TileEntityBeacon)tileentity).updateBeacon();
+-                                    worldIn.addBlockEvent(blockpos, Blocks.BEACON, 1, 0);
+-                                }
+-                            }
+-                        });
+-                    }
+-                }
++                if (tileentity instanceof TileEntityBeacon)
++                    ((TileEntityBeacon)tileentity).updateBeacon();
++                worldIn.addBlockEvent(blockpos, Blocks.BEACON, 1, 0);
+             }
+-        });
++        }
+     }
+ }

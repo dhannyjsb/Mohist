@@ -158,3 +158,12 @@
      private void setStructureStart(int chunkX, int chunkZ, StructureStart start)
      {
          this.structureData.writeInstance(start.writeStructureComponentsToNBT(chunkX, chunkZ), chunkX, chunkZ);
+@@ -271,7 +273,7 @@
+ 
+                         MapGenBase.setupChunkSeed(worldIn.getSeed(), random, l1, i2);
+                         random.nextInt();
+-
++                        if (!worldIn.getWorldBorder().isChunkInBounds(l1, i2)) { continue; } // Paper
+                         if (p_191069_1_.canSpawnStructureAtCoords(l1, i2))
+                         {
+                             if (!findUnexplored || !worldIn.isChunkGeneratedAt(l1, i2))

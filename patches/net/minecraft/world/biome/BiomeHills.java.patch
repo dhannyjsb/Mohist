@@ -36,6 +36,29 @@
          this.type = p_i46710_1_;
      }
  
+@@ -44,14 +45,14 @@
+         WorldGenerator emeralds = new EmeraldGenerator();
+         if (net.minecraftforge.event.terraingen.TerrainGen.generateOre(worldIn, rand, emeralds, pos, net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType.EMERALD))
+             emeralds.generate(worldIn, rand, pos);
+-
+-        for (int j1 = 0; j1 < 7; ++j1)
+-        {
+-            int k1 = rand.nextInt(16);
+-            int l1 = rand.nextInt(64);
+-            int i2 = rand.nextInt(16);
+-            if (net.minecraftforge.event.terraingen.TerrainGen.generateOre(worldIn, rand, silverfishSpawner, pos.add(j1, k1, l1), net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType.SILVERFISH))
+-            this.silverfishSpawner.generate(worldIn, rand, pos.add(k1, l1, i2));
++        if (!worldIn.paperConfig.disableExtremeHillsMonsterEggs) {
++            for (int j1 = 0; j1 < 7; ++j1) {
++                int k1 = rand.nextInt(16);
++                int l1 = rand.nextInt(64);
++                int i2 = rand.nextInt(16);
++                if (net.minecraftforge.event.terraingen.TerrainGen.generateOre(worldIn, rand, silverfishSpawner, pos.add(j1, k1, l1), net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType.SILVERFISH))
++                    this.silverfishSpawner.generate(worldIn, rand, pos.add(k1, l1, i2));
++            }
+         }
+         net.minecraftforge.common.MinecraftForge.ORE_GEN_BUS.post(new net.minecraftforge.event.terraingen.OreGenEvent.Post(worldIn, rand, pos));
+     }
 @@ -61,12 +62,12 @@
          this.topBlock = Blocks.GRASS.getDefaultState();
          this.fillerBlock = Blocks.DIRT.getDefaultState();

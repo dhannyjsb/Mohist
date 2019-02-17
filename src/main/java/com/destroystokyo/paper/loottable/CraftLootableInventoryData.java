@@ -47,44 +47,44 @@ public class CraftLootableInventoryData {
     public boolean shouldReplenish(@Nullable EntityPlayer player) {
         String tableName = this.lootable.getLootTableName();
 
-                // No Loot Table associated
-                        if (tableName == null) {
-                return false;
-            }
+        // No Loot Table associated
+        if (tableName == null) {
+            return false;
+        }
 
-                // ALWAYS process the first fill
-                        if (this.lastFill == -1) {
-                return true;
-            }
+        // ALWAYS process the first fill or if the feature is disabled
+        if (this.lastFill == -1 || !this.lootable.getNMSWorld().paperConfig.autoReplenishLootables) {
+            return true;
+        }
 
-                // Only process refills when a player is set
-                        if (player == null) {
-                return false;
-            }
+        // Only process refills when a player is set
+        if (player == null) {
+            return false;
+        }
 
-                // Chest is not scheduled for refill
-                        if (this.nextRefill == -1) {
-                return false;
-            }
+        // Chest is not scheduled for refill
+        if (this.nextRefill == -1) {
+            return false;
+        }
 
-                final PaperWorldConfig paperConfig = this.lootable.getNMSWorld().paperConfig;
+        final PaperWorldConfig paperConfig = this.lootable.getNMSWorld().paperConfig;
 
-                // Check if max refills has been hit
-                        if (paperConfig.maxLootableRefills != -1 && this.numRefills >= paperConfig.maxLootableRefills) {
-                return false;
-            }
+        // Check if max refills has been hit
+        if (paperConfig.maxLootableRefills != -1 && this.numRefills >= paperConfig.maxLootableRefills) {
+            return false;
+        }
 
-                // Refill has not been reached
-                        if (this.nextRefill > System.currentTimeMillis()) {
-                return false;
-            }
+        // Refill has not been reached
+        if (this.nextRefill > System.currentTimeMillis()) {
+            return false;
+        }
 
         
-                        final Player bukkitPlayer = (Player) player.getBukkitEntity();
+        final Player bukkitPlayer = (Player) player.getBukkitEntity();
         LootableInventoryReplenishEvent event = new LootableInventoryReplenishEvent(bukkitPlayer, lootable.getAPILootableInventory());
         if (paperConfig.restrictPlayerReloot && hasPlayerLooted(player.getUniqueID())) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
+        }
         return event.callEvent();
     }
     public void processRefill(@Nullable EntityPlayer player) {
@@ -109,30 +109,31 @@ public class CraftLootableInventoryData {
 
     public void loadNbt(NBTTagCompound base) {
         if (!base.hasKey("Paper.LootableData", 10)) { // 10 = compound
-                return;
-            }
+            return;
+        }
         NBTTagCompound comp = base.getCompoundTag("Paper.LootableData");
         if (comp.hasKey("lastFill")) {
-                this.lastFill = comp.getLong("lastFill");
-            }
-        if (comp.hasKey("nextRefill")) {
-                this.nextRefill = comp.getLong("nextRefill");
-            }
+            this.lastFill = comp.getLong("lastFill");
+        }
 
-                if (comp.hasKey("numRefills")) {
-                this.numRefills = comp.getInteger("numRefills");
-            }
+        if (comp.hasKey("nextRefill")) {
+            this.nextRefill = comp.getLong("nextRefill");
+        }
+
+        if (comp.hasKey("numRefills")) {
+            this.numRefills = comp.getInteger("numRefills");
+        }
         if (comp.hasKey("lootedPlayers", 9)) { // 9 = list
                 NBTTagList list = comp.getTagList("lootedPlayers", 10); // 10 = compound
                 final int size = list.tagCount();
                 if (size > 0) {
-                        this.lootedPlayers = new HashMap<UUID, Long>(list.tagCount());
-                    }
+                    this.lootedPlayers = new HashMap<UUID, Long>(list.tagCount());
+                }
                 for (int i = 0; i < size; i++) {
-                        final NBTTagCompound cmp = list.getCompoundTagAt(i);
-                        lootedPlayers.put(cmp.getUUID("UUID"), cmp.getLong("Time"));
-                    }
-            }
+                    final NBTTagCompound cmp = list.getCompoundTagAt(i);
+                    lootedPlayers.put(cmp.getUUID("UUID"), cmp.getLong("Time"));
+                }
+        }
     }
     public void saveNbt(NBTTagCompound base) {
         NBTTagCompound comp = new NBTTagCompound();
@@ -156,9 +157,9 @@ public class CraftLootableInventoryData {
                 comp.setTag("lootedPlayers", list);
             }
 
-                if (!comp.hasNoTags()) {
-                base.setTag("Paper.LootableData", comp);
-            }
+        if (!comp.hasNoTags()) {
+            base.setTag("Paper.LootableData", comp);
+        }
     }
 
     void setPlayerLootedState(UUID player, boolean looted) {

@@ -288,6 +288,12 @@ public class PaperConfig
     private static void maxBookSize() {
         PaperConfig.maxBookPageSize = getInt("settings.book-size.page-max", PaperConfig.maxBookPageSize);
         PaperConfig.maxBookTotalSizeMultiplier = getDouble("settings.book-size.total-multiplier", PaperConfig.maxBookTotalSizeMultiplier);
+        if (maxBookPageSize == 1024 && maxBookTotalSizeMultiplier == 0.90D) {
+            config.set("settings.book-size.page-max", 2560);
+            config.set("settings.book-size.total-multiplier", 0.98D);
+            maxBookPageSize = 2560;
+            maxBookTotalSizeMultiplier = 0.98D;
+        }
     }
 
     static {
@@ -313,7 +319,7 @@ public class PaperConfig
         PaperConfig.watchdogPrintEarlyWarningDelay = 10000;
         PaperConfig.tabSpamIncrement = 10;
         PaperConfig.tabSpamLimit = 500;
-        PaperConfig.maxBookPageSize = 1024;
-        PaperConfig.maxBookTotalSizeMultiplier = 0.9;
+        PaperConfig.maxBookPageSize = 2560;
+        PaperConfig.maxBookTotalSizeMultiplier = 0.98D;
     }
 }

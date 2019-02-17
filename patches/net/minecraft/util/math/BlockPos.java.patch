@@ -194,7 +194,7 @@
  
                              return this.pos;
                          }
-@@ -290,11 +330,17 @@
+@@ -290,11 +330,7 @@
      }
  
      public static class MutableBlockPos extends BlockPos
@@ -204,20 +204,10 @@
 -            protected int z;
 -
 +    {
-+        // Paper start
-+        @Override
-+        public boolean isValidLocation() {
-+            return b >= -30000000 && d >= -30000000 && b < 30000000 && d < 30000000 && c >= 0 && c < 256;
-+        }
-+        @Override
-+        public boolean isInvalidYLocation() {
-+            return c < 0 || c >= 256;
-+        }
-+        // Paper end
              public MutableBlockPos()
              {
                  this(0, 0, 0);
-@@ -308,6 +354,7 @@
+@@ -308,6 +344,7 @@
              public MutableBlockPos(int x_, int y_, int z_)
              {
                  super(0, 0, 0);
@@ -225,18 +215,19 @@
                  this.x = x_;
                  this.y = y_;
                  this.z = z_;
-@@ -333,30 +380,15 @@
+@@ -333,30 +370,17 @@
                  return super.rotate(rotationIn).toImmutable();
              }
  
 -            public int getX()
-+            public MutableBlockPos setPos(int xIn, int yIn, int zIn)
-             {
+-            {
 -                return this.x;
 -            }
--
++            public void setValues(int x, int y, int z) { setPos(x, y, z); } // Paper - OBFHELPER
+ 
 -            public int getY()
--            {
++            public MutableBlockPos setPos(int xIn, int yIn, int zIn)
+             {
 -                return this.y;
 -            }
 -
@@ -258,7 +249,7 @@
              {
                  return this.setPos(MathHelper.floor(xIn), MathHelper.floor(yIn), MathHelper.floor(zIn));
              }
-@@ -367,19 +399,19 @@
+@@ -367,19 +391,19 @@
                  return this.setPos(entityIn.posX, entityIn.posY, entityIn.posZ);
              }
  
@@ -282,7 +273,7 @@
              }
  
              public void setY(int yIn)
-@@ -393,22 +425,22 @@
+@@ -393,22 +417,23 @@
              }
          }
  
@@ -299,6 +290,7 @@
              }
  
 -            public static BlockPos.PooledMutableBlockPos retain()
++            public static PooledMutableBlockPos aquire() { return retain(); } // Paper - OBFHELPER
 +            public static PooledMutableBlockPos retain()
              {
                  return retain(0, 0, 0);
@@ -309,7 +301,7 @@
              {
                  return retain(MathHelper.floor(xIn), MathHelper.floor(yIn), MathHelper.floor(zIn));
              }
-@@ -419,13 +451,13 @@
+@@ -419,13 +444,13 @@
                  return retain(vec.getX(), vec.getY(), vec.getZ());
              }
  
@@ -325,7 +317,7 @@
  
                          if (blockpos$pooledmutableblockpos != null && blockpos$pooledmutableblockpos.released)
                          {
-@@ -436,7 +468,7 @@
+@@ -436,9 +461,11 @@
                      }
                  }
  
@@ -333,8 +325,12 @@
 +                return new PooledMutableBlockPos(xIn, yIn, zIn);
              }
  
++            public void free() { release(); } // Paper - OBFHELPER
++
              public void release()
-@@ -452,41 +484,41 @@
+             {
+                 synchronized (POOL)
+@@ -452,41 +479,41 @@
                  }
              }
  

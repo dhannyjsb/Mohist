@@ -1,5 +1,6 @@
 package org.spigotmc;
 
+import com.destroystokyo.paper.MCUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.effect.EntityWeatherEffect;
@@ -113,6 +114,7 @@ public class ActivationRange
         maxRange = Math.max( maxRange, miscActivationRange );
         maxRange = Math.min( ( world.spigotConfig.viewDistance << 4 ) - 8, maxRange );
 
+        Chunk chunk; // Paper
         for ( EntityPlayer player : world.playerEntities )
         {
 
@@ -132,9 +134,9 @@ public class ActivationRange
             {
                 for ( int j1 = k; j1 <= l; ++j1 )
                 {
-                    if ( world.getWorld().isChunkLoaded( i1, j1 ) )
+                    if ( (chunk = MCUtil.getLoadedChunkWithoutMarkingActive(world, i1, j1 )) != null ) // Paper
                     {
-                        activateChunkEntities( world.getChunkFromChunkCoords( i1, j1 ) );
+                        activateChunkEntities( chunk );
                     }
                 }
             }
@@ -225,18 +227,29 @@ public class ActivationRange
         {
             EntityLiving living = (EntityLiving) entity;
 
-            if ( /*TODO: Missed mapping? living.attackTicks > 0 || */ living.hurtTime > 0 || living.activePotionsMap.size() > 0 )
+            if ( living.recentlyHit > 0 || living.hurtTime > 0 || living.activePotionsMap.size() > 0 )
             {
                 return true;
             }
-            if ( entity instanceof EntityCreature && ( (EntityCreature) entity ).getAttackTarget() != null )
+            if ( entity instanceof EntityCreature )
             {
-                return true;
+                // Paper start
+                EntityCreature creature = (EntityCreature) entity;
+                if (creature.getAttackTarget() != null || creature.getMovingTarget() != null) {
+                    return true;
+                }
+                // Paper end
             }
             if ( entity instanceof EntityVillager && ( (EntityVillager) entity ).isMating()/* Getter for first boolean */ )
             {
                 return true;
             }
+            // Paper start
+            if ( entity instanceof EntityLlama && ( (EntityLlama ) entity ).inCaravan() )
+            {
+                return true;
+            }
+            // Paper end
             if ( entity instanceof EntityAnimal)
             {
                 EntityAnimal animal = (EntityAnimal) entity;
@@ -290,10 +303,8 @@ public class ActivationRange
         {
             isActive = false;
         }
-        int x = MathHelper.floor( entity.posX );
-        int z = MathHelper.floor( entity.posZ );
         // Make sure not on edge of unloaded chunk
-        Chunk chunk = entity.world.getChunkIfLoaded( x >> 4, z >> 4 );
+        Chunk chunk = entity.getChunkAtLocation(); // Paper
         if ( isActive && !( chunk != null && chunk.areNeighborsLoaded( 1 ) ) )
         {
             isActive = false;

@@ -261,7 +261,7 @@ public class SpigotConfig
     public static int playerSample;
     private static void playerSample()
     {
-        playerSample = getInt( "settings.sample-count", 12 );
+        playerSample = Math.max(getInt( "settings.sample-count", 12 ), 0); // Paper - Avoid negative counts
         System.out.println( "Server Ping Player Sample Count: " + playerSample );
     }
 
