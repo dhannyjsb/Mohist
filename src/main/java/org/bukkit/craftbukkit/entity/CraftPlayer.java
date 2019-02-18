@@ -1791,7 +1791,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     public void setResourcePack(String url, String hash) {
         Validate.notNull(url, "Resource pack URL cannot be null");
         Validate.notNull(hash, "Hash cannot be null");
-        this.getHandle().setResourcePack(url, hash);
+        this.getHandle().loadResourcePack(url, hash);
     }
 
     @Override

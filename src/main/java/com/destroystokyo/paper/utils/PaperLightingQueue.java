@@ -44,12 +44,12 @@ public class PaperLightingQueue {
             }
 
         /**
- +         * Processes the lighting queue for this chunk
- +         *
- +         * @param startTime If start Time is 0, we will not limit execution time
- +         * @param maxTickTime Maximum time to spend processing lighting updates
- +         * @return true to abort processing furthur lighting updates
- +         */
+          * Processes the lighting queue for this chunk
+          *
+          * @param startTime If start Time is 0, we will not limit execution time
+          * @param maxTickTime Maximum time to spend processing lighting updates
+          * @return true to abort processing furthur lighting updates
+          */
         private boolean processQueue(long startTime, long maxTickTime) {
                 if (this.isEmpty()) {
                         return false;
@@ -58,9 +58,9 @@ public class PaperLightingQueue {
             }
 
         /**
- +         * Flushes lighting updates to unload the chunk
- +         */
-        public void processUnload() {
+          * Flushes lighting updates to unload the chunk
+          */
+        void processUnload() {
                 if (!chunk.world.paperConfig.queueLightUpdates) {
                         return;
                     }

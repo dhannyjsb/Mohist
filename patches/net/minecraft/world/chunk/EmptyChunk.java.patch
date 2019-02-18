@@ -21,7 +21,19 @@
  @SideOnly(Side.CLIENT)
  public class EmptyChunk extends Chunk
  {
-@@ -83,7 +84,7 @@
+@@ -41,11 +42,6 @@
+     {
+     }
+ 
+-    public IBlockState getBlockState(BlockPos pos)
+-    {
+-        return Blocks.AIR.getDefaultState();
+-    }
+-
+     public int getBlockLightOpacity(BlockPos pos)
+     {
+         return 255;
+@@ -83,7 +79,7 @@
      }
  
      @Nullable

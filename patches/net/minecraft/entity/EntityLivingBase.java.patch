@@ -308,7 +308,7 @@
                      i -= j;
 -                    this.world.spawnEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, j));
 +                    EntityLivingBase attacker = attackingPlayer != null ? attackingPlayer : revengeTarget; // Paper
-+                    this.world.addEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, j, (this instanceof EntityPlayerMP) ? org.bukkit.entity.ExperienceOrb.SpawnReason.PLAYER_DEATH : ExperienceOrb.SpawnReason.ENTITY_DEATH, attacker, this)); // Paper
++                    this.world.spawnEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, j, this instanceof EntityPlayerMP ? ExperienceOrb.SpawnReason.PLAYER_DEATH : ExperienceOrb.SpawnReason.ENTITY_DEATH, (Entity)attacker, this)); // Paper
                  }
 -            }
 +            this.expToDrop = 0;

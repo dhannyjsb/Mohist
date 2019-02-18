@@ -187,7 +187,7 @@
          ChunkPos chunkpos = entry.getPos();
          long i = getIndex(chunkpos.x, chunkpos.z);
          entry.updateChunkInhabitedTime();
-@@ -460,7 +491,79 @@
+@@ -460,7 +491,56 @@
  
          if (chunk != null)
          {
@@ -244,27 +244,4 @@
 +        }
 +    }
 +    // CraftBukkit end
-+
-+    // Paper start - Player view distance API
-+    public void updateViewDistance(EntityPlayerMP player, int distanceIn) {
-+        final int oldViewDistance = player.getViewDistance();
-+        // This represents the view distance that we will set on the player
-+        // It can exist as a negative value
-+        int playerViewDistance = MathHelper.clamp(distanceIn, 3, 32);
-+        // This value is the one we actually use to update the chunk map
-+        // We don't ever want this to be a negative
-+        int toSet = playerViewDistance;
-+
-+        if (distanceIn < 0) {
-+            playerViewDistance = -1;
-+            toSet = world.getPlayerChunkMap().getViewDistance();
-+        }
-+
-+        if (toSet != oldViewDistance) {
-+            // Order matters
-+            this.setViewDistance(player, toSet);
-+            player.setViewDistance(playerViewDistance);
-+        }
-+    }
-+    // Paper end
  }

@@ -71,7 +71,7 @@
 +        nbttagcompound.setTag("Paper.ExpData", comp);
 +    }
 +
-+    public EntityXPOrb(final World world, final double d0, final double d1, final double d2, final int i, final ExperienceOrb.SpawnReason reason, final Entity triggerId) {
++    public EntityXPOrb(World world, double d0, double d1, double d2, int i, ExperienceOrb.SpawnReason reason, Entity triggerId) {
 +        this(world, d0, d1, d2, i, reason, triggerId, null);
 +    }
 +

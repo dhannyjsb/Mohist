@@ -128,7 +128,7 @@
 +                    d1 += 0.5D;
 +                }
 +
-+                this.world.a(null, d1, (double) this.pos.getY() + 0.5D, d0, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
++                this.world.playSound(null, d1, (double) this.pos.getY() + 0.5D, d0, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 +            }
 +            // Paper end
 +            
@@ -171,7 +171,7 @@
 +                    d0 += 0.5D;
 +                }
 +
-+                this.world.a(null, d0, (double) yLoc + 0.5D, d2, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
++                this.world.playSound(null, d0, (double) yLoc + 0.5D, d2, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 +                this.lidAngle = 0.0F;
 +            }
 +            

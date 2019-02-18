@@ -270,6 +270,15 @@
  @SideOnly(Side.CLIENT)
  public class NetHandlerPlayClient implements INetHandlerPlayClient
  {
+@@ -486,7 +317,7 @@
+         double d0 = packetIn.getX();
+         double d1 = packetIn.getY();
+         double d2 = packetIn.getZ();
+-        Entity entity = new EntityXPOrb(this.clientWorldController, d0, d1, d2, packetIn.getXPValue());
++        Entity entity = new EntityXPOrb(this.clientWorldController, d0, d1, d2, packetIn.getXPValue(), null, null);
+         EntityTracker.updateServerPosition(entity, d0, d1, d2);
+         entity.rotationYaw = 0.0F;
+         entity.rotationPitch = 0.0F;
 @@ -840,7 +671,7 @@
      public void handleChat(SPacketChat packetIn)
      {

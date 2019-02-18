@@ -1407,7 +1407,7 @@
 +                    }
 +
 +                    if (event.isCancelled()) {
-+                        this.player.updateInventory(this.player.openContainer); // Paper - Refresh player inventory
++                        this.player.sendContainerToPlayer(this.player.openContainer); // Paper - Refresh player inventory
 +                        return;
 +                    }
 +                    // CraftBukkit end

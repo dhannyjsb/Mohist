@@ -163,7 +163,7 @@
      }
  
 +    protected static boolean isSafeRespawn(World world, BlockPos blockposition) { // Paper - OBFHELPER + behavior improvement
-+        return hasRoomForPlayer(world, blockposition) && world.getBlockState(blockposition.down()).getMaterial().isBuildable(); // Paper - ensure solid block
++        return hasRoomForPlayer(world, blockposition) && world.getBlockState(blockposition.down()).getMaterial().isSolid(); // Paper - ensure solid block
 +    }
 +
      protected static boolean hasRoomForPlayer(World worldIn, BlockPos pos)

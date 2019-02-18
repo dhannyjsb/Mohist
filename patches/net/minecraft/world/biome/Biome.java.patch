@@ -130,16 +130,18 @@
      {
          switch (creatureType)
          {
-@@ -182,7 +165,7 @@
+@@ -182,7 +165,9 @@
                  return this.spawnableCaveCreatureList;
              default:
                  // Forge: Return a non-empty list for non-vanilla EnumCreatureTypes
 -                if (!this.modSpawnableLists.containsKey(creatureType)) this.modSpawnableLists.put(creatureType, Lists.<Biome.SpawnListEntry>newArrayList());
-+                if (!this.modSpawnableLists.containsKey(creatureType)) this.modSpawnableLists.put(creatureType, Lists.<SpawnListEntry>newArrayList());
++                if (!this.modSpawnableLists.containsKey(creatureType)) {
++                    this.modSpawnableLists.put(creatureType, Lists.<SpawnListEntry>newArrayList());
++                }
                  return this.modSpawnableLists.get(creatureType);
          }
      }
-@@ -251,8 +234,7 @@
+@@ -251,8 +236,7 @@
  
          for (int j1 = 255; j1 >= 0; --j1)
          {
@@ -149,7 +151,7 @@
                  chunkPrimerIn.setBlockState(i1, j1, l, BEDROCK);
              }
              else
-@@ -336,15 +318,15 @@
+@@ -336,15 +320,15 @@
          return this.getClass();
      }
  
@@ -168,7 +170,7 @@
          }
      }
  
-@@ -437,8 +419,8 @@
+@@ -437,8 +421,8 @@
       */
      public static class FlowerEntry extends WeightedRandom.Item
      {
@@ -179,7 +181,7 @@
          {
              super(weight);
              this.state = state;
-@@ -475,75 +457,76 @@
+@@ -475,75 +459,76 @@
              return;
          }
  
@@ -319,7 +321,7 @@
      }
  
      public static void registerBiome(int id, String name, Biome biome)
-@@ -574,7 +557,7 @@
+@@ -574,7 +559,7 @@
                  this.biomeName = nameIn;
              }
  
@@ -328,7 +330,7 @@
              {
                  if (temperatureIn > 0.1F && temperatureIn < 0.2F)
                  {
-@@ -587,43 +570,43 @@
+@@ -587,43 +572,43 @@
                  }
              }
  

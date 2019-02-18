@@ -138,20 +138,20 @@
 +                        return false;
 +                    }
 +                }
-+                final ItemStack itemstack2 = addItem(this, iinventory, itemstack, enumdirection);
++                final ItemStack itemstack2 = putStackInInventoryAllSlots(this, iinventory, itemstack, enumdirection);
 +                final int remaining = itemstack2.getCount();
 +                if (remaining != moved) {
 +                    origItemStack = origItemStack.copy();
 +                    origItemStack.setCount(origCount - moved + remaining);
 +                    this.setInventorySlotContents(i, origItemStack);
-+                    iinventory.update();
++                    iinventory.markDirty();
 +                    return true;
 +                }
 +                origItemStack.setCount(origCount);
 +            }
 +        }
 +        if (foundItem && world.paperConfig.cooldownHopperWhenFull) { // Inventory was full - cooldown
-+            this.setCooldown(world.spigotConfig.hopperTransfer);
++            this.setTransferCooldown(world.spigotConfig.hopperTransfer);
 +        }
 +        return false;
 +    }
@@ -173,7 +173,7 @@
 +                return true;
 +            }
 +        }
-+        final ItemStack itemstack2 = addItem(iinventory, ihopper, itemstack, null);
++        final ItemStack itemstack2 = putStackInInventoryAllSlots(iinventory, ihopper, itemstack, null);
 +        final int remaining = itemstack2.getCount();
 +        if (remaining != moved) {
 +            origItemStack = origItemStack.copy();
@@ -181,7 +181,7 @@
 +            IGNORE_TILE_UPDATES = true;
 +            iinventory.setInventorySlotContents(i, origItemStack);
 +            IGNORE_TILE_UPDATES = false;
-+            iinventory.update();
++            iinventory.markDirty();
 +            return true;
 +        }
 +        origItemStack.setCount(origCount);
@@ -246,9 +246,9 @@
 +
 +    private static void cooldownHopper(IHopper hopper) {
 +        if (hopper instanceof TileEntityHopper) {
-+            ((TileEntityHopper) hopper).setCooldown(hopper.getWorld().spigotConfig.hopperTransfer);
++            ((TileEntityHopper) hopper).setTransferCooldown(hopper.getWorld().spigotConfig.hopperTransfer);
 +        } else if (hopper instanceof EntityMinecartHopper) {
-+            ((EntityMinecartHopper) hopper).setCooldown(hopper.getWorld().spigotConfig.hopperTransfer / 2);
++            ((EntityMinecartHopper) hopper).setTransferTicker(hopper.getWorld().spigotConfig.hopperTransfer / 2);
 +        }
 +    }
 +    // Paper end
