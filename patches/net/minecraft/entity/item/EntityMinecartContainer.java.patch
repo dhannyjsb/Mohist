@@ -44,8 +44,8 @@
 +    }
 +
 +    @Override
-+    public void B_() {
-+        super.B_();
++    public void onUpdate() {
++        super.onUpdate();
 +        tryPutInHopper();
 +    }
 +

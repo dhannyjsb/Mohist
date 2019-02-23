@@ -73,7 +73,7 @@
                  {
                      spawnAsEntity(worldIn, pos, drop);
                  }
-@@ -596,11 +584,21 @@
+@@ -596,19 +584,34 @@
              double d2 = (double)(worldIn.rand.nextFloat() * 0.5F) + 0.25D;
              EntityItem entityitem = new EntityItem(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, stack);
              entityitem.setDefaultPickupDelay();
@@ -86,18 +86,22 @@
          }
      }
  
--    public void dropXpOnBlockBreak(World worldIn, BlockPos pos, int amount)
 +    // CraftBukkit start
 +    public int getExpDrop(World world, IBlockState state, int enchantmentLevel) {
 +        return 0;
 +    }
 +    // CraftBukkit end
 +
-+    public void dropXpOnBlockBreak(World worldIn, BlockPos pos, int amount, EntityPlayerMP player)
+     public void dropXpOnBlockBreak(World worldIn, BlockPos pos, int amount)
      {
++        dropXpOnBlockBreak(worldIn, pos, amount, null);
++    }
++
++    public void dropXpOnBlockBreak(World worldIn, BlockPos pos, int amount, EntityPlayerMP player)
++    {
          if (!worldIn.isRemote && worldIn.getGameRules().getBoolean("doTileDrops"))
          {
-@@ -608,7 +606,7 @@
+             while (amount > 0)
              {
                  int i = EntityXPOrb.getXPSplit(amount);
                  amount -= i;
@@ -106,7 +110,7 @@
              }
          }
      }
-@@ -714,7 +712,7 @@
+@@ -714,7 +717,7 @@
  
          if (this.canSilkHarvest(worldIn, pos, state, player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0)
          {
@@ -115,7 +119,7 @@
              ItemStack itemstack = this.getSilkTouchDrop(state);
  
              if (!itemstack.isEmpty())
-@@ -915,24 +913,24 @@
+@@ -915,24 +918,24 @@
          return this.defaultBlockState;
      }
  
@@ -145,7 +149,7 @@
          }
      }
  
-@@ -956,7 +954,7 @@
+@@ -956,7 +959,7 @@
      //For ForgeInternal use Only!
      protected ThreadLocal<EntityPlayer> harvesters = new ThreadLocal();
      private ThreadLocal<IBlockState> silk_check_state = new ThreadLocal();
@@ -154,7 +158,7 @@
  
      /**
       * Gets the slipperiness at the given location at the given state. Normally
-@@ -1176,7 +1174,7 @@
+@@ -1176,7 +1179,7 @@
      public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
      {
          this.onBlockHarvested(world, pos, state, player);
@@ -163,7 +167,7 @@
      }
  
      /**
-@@ -1190,7 +1188,7 @@
+@@ -1190,7 +1193,7 @@
       */
      public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
      {
@@ -172,7 +176,7 @@
      }
  
      /**
-@@ -1218,7 +1216,7 @@
+@@ -1218,7 +1221,7 @@
       */
      public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
      {
@@ -181,7 +185,7 @@
      }
  
      /**
-@@ -1370,7 +1368,7 @@
+@@ -1370,7 +1373,7 @@
       */
      public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable Entity player)
      {
@@ -190,7 +194,7 @@
      }
  
      /**
-@@ -1606,7 +1604,7 @@
+@@ -1606,7 +1609,7 @@
       * particles, this is a server side method that spawns particles with
       * WorldServer.spawnParticle
       *
@@ -199,7 +203,7 @@
       * @param blockPosition of the block that the entity landed on.
       * @param iblockstate State at the specific world/pos
       * @param entity the entity that hit landed on the block.
-@@ -1642,7 +1640,7 @@
+@@ -1642,7 +1645,7 @@
       * texture sheets for different sides/locations in the world.
       *
       * @param state The current state
@@ -208,7 +212,7 @@
       * @param target The target the player is looking at {x/y/z/side/sub}
       * @param manager A reference to the current particle manager.
       * @return True to prevent vanilla digging particles form spawning.
-@@ -1693,12 +1691,12 @@
+@@ -1693,12 +1696,12 @@
          IBlockState plant = plantable.getPlant(world, pos.offset(direction));
          net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
  
@@ -224,7 +228,7 @@
          {
              return true;
          }
-@@ -1710,14 +1708,14 @@
+@@ -1710,14 +1713,14 @@
  
          switch (plantType)
          {
@@ -244,7 +248,7 @@
                  boolean hasWater = (world.getBlockState(pos.east()).getMaterial() == Material.WATER ||
                                      world.getBlockState(pos.west()).getMaterial() == Material.WATER ||
                                      world.getBlockState(pos.north()).getMaterial() == Material.WATER ||
-@@ -1744,9 +1742,9 @@
+@@ -1744,9 +1747,9 @@
       */
      public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
      {
@@ -256,7 +260,7 @@
          }
      }
  
-@@ -1761,7 +1759,7 @@
+@@ -1761,7 +1764,7 @@
       */
      public boolean isFertile(World world, BlockPos pos)
      {
@@ -265,7 +269,7 @@
          {
              return ((Integer)world.getBlockState(pos).getValue(BlockFarmland.MOISTURE)) > 0;
          }
-@@ -1799,17 +1797,17 @@
+@@ -1799,17 +1802,17 @@
      {
          if (entity instanceof net.minecraft.entity.boss.EntityDragon)
          {
@@ -294,7 +298,7 @@
          }
          else if ((entity instanceof net.minecraft.entity.boss.EntityWither) ||
                   (entity instanceof net.minecraft.entity.projectile.EntityWitherSkull))
-@@ -1823,14 +1821,14 @@
+@@ -1823,14 +1826,14 @@
      /**
       * Determines if this block can be used as the base of a beacon.
       *
@@ -311,7 +315,7 @@
      }
  
      /**
-@@ -1918,7 +1916,7 @@
+@@ -1918,7 +1921,7 @@
       */
      public float getEnchantPowerBonus(World world, BlockPos pos)
      {
@@ -320,7 +324,7 @@
      }
  
      /**
-@@ -1930,14 +1928,14 @@
+@@ -1930,14 +1933,14 @@
       * @return If the recoloring was successful
       */
      @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -338,7 +342,7 @@
                  if (current != color && prop.getAllowedValues().contains(color))
                  {
                      world.setBlockState(pos, state.withProperty(prop, color));
-@@ -2074,7 +2072,7 @@
+@@ -2074,7 +2077,7 @@
       */
      public boolean isToolEffective(String type, IBlockState state)
      {
@@ -347,7 +351,7 @@
              return false;
          return type != null && type.equals(getHarvestTool(state));
      }
-@@ -2272,11 +2270,12 @@
+@@ -2272,11 +2275,12 @@
          return false;
      }
  
@@ -363,7 +367,7 @@
          return isBurning(world, pos) ? net.minecraft.pathfinding.PathNodeType.DAMAGE_FIRE : null;
      }
  
-@@ -2628,6 +2627,18 @@
+@@ -2628,6 +2632,18 @@
          registerBlock(id, new ResourceLocation(textualID), block_);
      }
  

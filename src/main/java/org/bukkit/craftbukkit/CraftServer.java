@@ -112,8 +112,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import jline.console.ConsoleReader;
-
 public final class CraftServer implements Server {
     private final String serverName = Mohist.name;
     private final String serverVersion;
@@ -335,7 +333,6 @@ public final class CraftServer implements Server {
         }
     }
 
-    @Override
     public boolean reloadCommandAliases() {
         Set<String> removals = getCommandAliases().keySet().stream()
                 .map(key -> key.toLowerCase(java.util.Locale.ENGLISH))
@@ -354,7 +351,6 @@ public final class CraftServer implements Server {
         return true;
     }
 
-    @Override
     public void reloadPermissions() {
         pluginManager.clearPermissions();
         if (com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions();

@@ -165,7 +165,7 @@
 +        if (this.inWater) {
 +            // Send position and velocity updates to nearby players on every tick while the TNT is in water.
 +            // This does pretty well at keeping their clients in sync with the server.
-+            EntityTrackerEntry ete = ((WorldServer) this.getEntityWorld()).getEntityTracker().trackedEntityHashTable.get(this.getEntityId());
++            EntityTrackerEntry ete = ((WorldServer) this.getEntityWorld()).getEntityTracker().trackedEntityHashTable.lookup(this.getEntityId());
 +            if (ete != null) {
 +                SPacketEntityVelocity velocityPacket = new SPacketEntityVelocity(this);
 +                SPacketEntityVelocity positionPacket = new SPacketEntityVelocity(this);

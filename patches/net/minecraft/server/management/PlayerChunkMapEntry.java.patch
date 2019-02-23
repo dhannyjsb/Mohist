@@ -84,7 +84,7 @@
 -            return this.chunk != null;
 +        if (!this.loading) {
 +            PlayerChunkMapEntry.this.loading = true;
-+            this.chunk = this.playerChunkMap.getWorldServer().getChunkProvider().getChunkAt(this.pos.x, this.pos.z, this.loadedRunnable, canGenerate);
++            this.chunk = this.playerChunkMap.getWorldServer().getChunkProvider().loadChunk(this.pos.x, this.pos.z, this.loadedRunnable, canGenerate);
 +            this.markChunkUsed();
          }
 +        return this.chunk != null;

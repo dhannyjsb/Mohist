@@ -130,7 +130,7 @@
          try
          {
              NBTTagCompound nbttagcompound = new NBTTagCompound();
-@@ -173,73 +200,95 @@
+@@ -173,63 +200,67 @@
              this.writeChunkToNBT(chunkIn, worldIn, nbttagcompound1);
              net.minecraftforge.common.ForgeChunkManager.storeChunkNBT(chunkIn, nbttagcompound1);
              net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkDataEvent.Save(chunkIn, nbttagcompound));
@@ -183,67 +183,52 @@
              return false;
          }
 -        else
-+        ChunkPos chunkcoordintpair = chunk.coords; // Paper - Chunk queue improvements
-+        boolean flag;
-+        this.processedSaves.incrementAndGet(); // Paper
-+        NBTTagCompound nbttagcompound = SupplierUtils.getIfExists(chunk.compoundSupplier); // Spigot // Paper
-+        if (nbttagcompound != null)
-         {
+-        {
 -            ChunkPos chunkpos = this.chunksToSave.keySet().iterator().next();
--            boolean lvt_3_1_;
--
++        else {
++            ChunkPos chunkpos = chunk.coords; // Paper - Chunk queue improvements
+             boolean lvt_3_1_;
+ 
 -            try
-+            int attempts = 0;
-+            for (Exception laste = null; attempts++ < 5;)
-             {
+-            {
 -                this.chunksBeingSaved.add(chunkpos);
 -                NBTTagCompound nbttagcompound = this.chunksToSave.remove(chunkpos);
 -
 -                if (nbttagcompound != null)
-+                try
-                 {
-+                    writeChunkData(chunkcoordintpair, nbttagcompound);
-+                    laste = null;
-+                }
-+                catch (Exception exception)
-+                {
-+                    laste = exception;
-                     try
-                     {
--                        this.writeChunkData(chunkpos, nbttagcompound);
-+                        Thread.sleep(10L);
+-                {
+-                    try
+-                    {
++            try {
++                NBTTagCompound nbttagcompound = SupplierUtils.getIfExists(chunk.compoundSupplier); // Spigot // Paper
++                // CraftBukkit
++                if (nbttagcompound != null) {
++                    try {
+                         this.writeChunkData(chunkpos, nbttagcompound);
++                    } catch (Exception exception) {
++                        LOGGER.error("Failed to save chunk", exception);
                      }
 -                    catch (Exception exception)
-+                    catch (InterruptedException e)
-                     {
+-                    {
 -                        LOGGER.error("Failed to save chunk", (Throwable)exception);
-+                        e.printStackTrace();
++                }
++                // Paper - This will not equal if a newer version is still pending
++                synchronized (this.lock) {
++                    if (this.chunksToSave.get(chunkpos) == chunk.compoundSupplier) {
++                        this.chunksToSave.remove(chunkpos);
                      }
                  }
 -
--                lvt_3_1_ = true;
+                 lvt_3_1_ = true;
++            } finally {
              }
 -            finally
-+            if (laste != null)
-             {
+-            {
 -                this.chunksBeingSaved.remove(chunkpos);
-+                ServerInternalException.reportInternalException(laste);
-+                MinecraftServer.LOGGER.error("Failed to save chunk", laste);
-             }
--
--            return lvt_3_1_;
+-            }
+ 
+             return lvt_3_1_;
          }
-+        // Paper - This will not equal if a newer version is still pending
-+        synchronized (this.lock)
-+        {
-+            if (this.chunksToSave.get(chunkcoordintpair) == chunk.compoundSupplier) {
-+                this.chunksToSave.remove(chunkcoordintpair);
-+            }
-+        }
-+        boolean flag = true;
-+
-+        return flag;
-     }
+@@ -237,9 +268,10 @@
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -257,7 +242,7 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -349,13 +398,22 @@
+@@ -349,13 +381,22 @@
          compound.setByteArray("Biomes", chunkIn.getBiomeArray());
          chunkIn.setHasEntities(false);
          NBTTagList nbttaglist1 = new NBTTagList();
@@ -282,7 +267,7 @@
                  try
                  {
                  if (entity.writeToNBTOptional(nbttagcompound2))
-@@ -366,12 +424,15 @@
+@@ -366,12 +407,15 @@
                  }
                  catch (Exception e)
                  {
@@ -301,7 +286,7 @@
          compound.setTag("Entities", nbttaglist1);
          NBTTagList nbttaglist2 = new NBTTagList();
  
-@@ -384,7 +445,7 @@
+@@ -384,7 +428,7 @@
              }
              catch (Exception e)
              {
@@ -310,7 +295,7 @@
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +482,7 @@
+@@ -421,7 +465,7 @@
              }
              catch (Exception exception)
              {
@@ -319,7 +304,7 @@
              }
          }
      }
-@@ -485,7 +546,6 @@
+@@ -485,7 +529,6 @@
              readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
@@ -327,7 +312,7 @@
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +558,6 @@
+@@ -498,7 +541,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
@@ -335,7 +320,7 @@
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -608,8 +667,11 @@
+@@ -608,8 +650,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {
@@ -349,7 +334,7 @@
              for (Entity entity : entityIn.getPassengers())
              {
                  spawnEntity(entity, worldIn);
-@@ -655,4 +717,18 @@
+@@ -655,4 +700,18 @@
      {
          return this.chunksToSave.size();
      }

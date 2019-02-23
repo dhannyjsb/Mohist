@@ -166,6 +166,26 @@ public class CraftWorld implements World {
         }
     }
 
+    // Paper start - Async chunk load API
+    public void getChunkAtAsync(final int x, final int z, final ChunkLoadCallback callback) {
+        final ChunkProviderServer cps = this.world.getChunkProvider();
+        cps.loadChunk(x, z, new Runnable() {
+            @Override
+            public void run() {
+                callback.onLoad(cps.loadChunk(x, z).bukkitChunk);
+            }
+        });
+    }
+
+    public void getChunkAtAsync(Block block, ChunkLoadCallback callback) {
+        getChunkAtAsync(block.getX() >> 4, block.getZ() >> 4, callback);
+    }
+
+    public void getChunkAtAsync(Location location, ChunkLoadCallback callback) {
+        getChunkAtAsync(location.getBlockX() >> 4, location.getBlockZ() >> 4, callback);
+    }
+    // Paper end
+
     public Chunk getChunkAt(int x, int z) {
         return this.world.getChunkProvider().provideChunk(x, z).bukkitChunk;
     }
@@ -585,7 +605,7 @@ public class CraftWorld implements World {
 
     // Paper start
     public boolean createExplosion(Entity source, Location loc, float power, boolean setFire, boolean breakBlocks) {
-        return !world.createExplosion(source != null ? ((CraftEntity) source).getHandle() : null, loc.getX(), loc.getY(), loc.getZ(), power, setFire, breakBlocks).wasCanceled;
+        return !world.newExplosion(source != null ? ((CraftEntity) source).getHandle() : null, loc.getX(), loc.getY(), loc.getZ(), power, setFire, breakBlocks).wasCanceled;
     }
     // Paper end
 

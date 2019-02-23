@@ -12,9 +12,11 @@
  import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.block.Block;
  import net.minecraft.block.state.IBlockState;
-@@ -31,11 +26,7 @@
+@@ -30,12 +25,9 @@
+ import net.minecraft.nbt.NBTBase;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTTagList;
++import net.minecraft.server.MinecraftServer;
  import net.minecraft.stats.StatList;
 -import net.minecraft.util.ActionResult;
 -import net.minecraft.util.EnumActionResult;
@@ -25,7 +27,7 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
  import net.minecraft.util.datafix.walkers.BlockEntityTag;
-@@ -49,17 +40,26 @@
+@@ -49,17 +41,26 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -55,7 +57,7 @@
      private EntityItemFrame itemFrame;
      private Block canDestroyCacheBlock;
      private boolean canDestroyCacheResult;
-@@ -94,7 +94,21 @@
+@@ -94,7 +95,21 @@
      {
          this(itemIn, amount, 0);
      }
@@ -78,7 +80,7 @@
      public ItemStack(Item itemIn, int amount, int meta){ this(itemIn, amount, meta, null); }
      public ItemStack(Item itemIn, int amount, int meta, @Nullable NBTTagCompound capNBT)
      {
-@@ -119,47 +133,45 @@
+@@ -119,47 +134,81 @@
  
      public ItemStack(NBTTagCompound compound)
      {
@@ -86,6 +88,42 @@
 +
 +        this.updateEmptyState();
 +        this.forgeInit();
++    }
++
++    public ItemStack(final Item item, final int i, final int j, final boolean convert) {
++        this.item = item;
++        this.itemDamage = j;
++        this.stackSize = i;
++        if (MinecraftServer.getServerInst() != null) {
++            this.setItemDamage(j);
++        }
++        if (convert) {
++            this.convertStack();
++        }
++        if (this.itemDamage < 0) {}
++        this.F();
++    }
++
++    private void F() {
++        if (this.isEmpty && this == ItemStack.EMPTY) {
++            throw new AssertionError("TRAP");
++        }
++        this.isEmpty = this.isEmpty();
++    }
++
++    // Called to run this stack through the data converter to handle older storage methods and serialized items
++    public void convertStack() {
++        if (MinecraftServer.getServerInst() != null) {
++            // Don't convert beds - both the old and new data values are valid
++            // Conversion would make getting white beds (data value 0) impossible
++            if (this.item == Items.BED) {
++                return;
++            }
++            NBTTagCompound savedStack = new NBTTagCompound();
++            this.writeToNBT(savedStack);
++            MinecraftServer.getServerInst().dataFixer.process(FixTypes.ITEM_INSTANCE, savedStack); // PAIL: convert
++            this.load(savedStack);
++        }
 +    }
 +
 +    public void load(NBTTagCompound compound)
@@ -149,7 +187,7 @@
  
      public static void registerFixes(DataFixer fixer)
      {
-@@ -231,7 +243,8 @@
+@@ -231,7 +280,8 @@
  
          if (this.stackTagCompound != null)
          {
@@ -159,7 +197,7 @@
          }
  
          if (this.capabilities != null)
-@@ -274,11 +287,13 @@
+@@ -274,11 +324,13 @@
          return this.getItem().getHasSubtypes();
      }
  
@@ -173,7 +211,7 @@
      public int getItemDamage()
      {
          return getItem().getDamage(this);
-@@ -291,6 +306,26 @@
+@@ -291,6 +343,26 @@
  
      public void setItemDamage(int meta)
      {
@@ -200,7 +238,7 @@
          getItem().setDamage(this, meta);
      }
  
-@@ -322,6 +357,18 @@
+@@ -322,6 +394,18 @@
  
                  amount -= j;
  
@@ -219,7 +257,7 @@
                  if (amount <= 0)
                  {
                      return false;
-@@ -347,6 +394,11 @@
+@@ -347,6 +431,11 @@
                  if (this.attemptDamageItem(amount, entityIn.getRNG(), entityIn instanceof EntityPlayerMP ? (EntityPlayerMP)entityIn : null))
                  {
                      entityIn.renderBrokenItemStack(this);
@@ -231,7 +269,7 @@
                      this.shrink(1);
  
                      if (entityIn instanceof EntityPlayer)
-@@ -532,7 +584,7 @@
+@@ -532,7 +621,7 @@
          playerIn.addStat(StatList.getCraftStats(this.item), amount);
          this.getItem().onCreated(this, worldIn, playerIn);
      }
@@ -240,7 +278,7 @@
      public int getMaxItemUseDuration()
      {
          return this.getItem().getMaxItemUseDuration(this);
-@@ -592,9 +644,22 @@
+@@ -592,9 +681,22 @@
          return this.stackTagCompound != null ? this.stackTagCompound.getTagList("ench", 10) : new NBTTagList();
      }
  
@@ -263,7 +301,7 @@
      }
  
      public String getDisplayName()
-@@ -930,6 +995,7 @@
+@@ -930,6 +1032,7 @@
          nbttagcompound.setShort("id", (short)Enchantment.getEnchantmentID(ench));
          nbttagcompound.setShort("lvl", (short)((byte)level));
          nbttaglist.appendTag(nbttagcompound);
@@ -271,7 +309,7 @@
      }
  
      public boolean isItemEnchanted()
-@@ -982,6 +1048,14 @@
+@@ -982,6 +1085,14 @@
  
      public void setRepairCost(int cost)
      {
@@ -286,7 +324,7 @@
          if (!this.hasTagCompound())
          {
              this.stackTagCompound = new NBTTagCompound();
-@@ -1042,6 +1116,14 @@
+@@ -1042,6 +1153,14 @@
          nbttaglist.appendTag(nbttagcompound);
      }
  
@@ -301,7 +339,7 @@
      public ITextComponent getTextComponent()
      {
          TextComponentString textcomponentstring = new TextComponentString(this.getDisplayName());
-@@ -1279,4 +1361,16 @@
+@@ -1279,4 +1398,16 @@
      {
          return this.isEmpty() || this.getItem().doesSneakBypassUse(this, world, pos, player);
      }

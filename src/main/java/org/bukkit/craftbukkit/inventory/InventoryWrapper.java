@@ -7,7 +7,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -17,9 +19,11 @@ import java.util.List;
 public class InventoryWrapper implements IInventory {
 
     private final Inventory inventory;
+    private final List<HumanEntity> viewers;
 
     public InventoryWrapper(Inventory inventory) {
         this.inventory = inventory;
+        this.viewers = new ArrayList<HumanEntity>();
     }
 
     @Override
@@ -130,6 +134,21 @@ public class InventoryWrapper implements IInventory {
         }
 
         return items;
+    }
+
+    @Override
+    public void onOpen(final CraftHumanEntity who) {
+        this.viewers.add(who);
+    }
+
+    @Override
+    public void onClose(final CraftHumanEntity who) {
+        this.viewers.remove(who);
+    }
+
+    @Override
+    public List<HumanEntity> getViewers() {
+        return this.viewers;
     }
 
     @Override
