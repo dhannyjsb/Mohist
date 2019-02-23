@@ -116,7 +116,7 @@
 +    // Paper start - Optimize Hoppers
 +    private static boolean skipPullModeEventFire = false;
 +    private static boolean skipPushModeEventFire = false;
-+    static boolean skipHopperEvents = false;
++    public static boolean skipHopperEvents = false;
 +
 +    private boolean hopperPush(IInventory iinventory, EnumFacing enumdirection) {
 +        skipPushModeEventFire = skipHopperEvents;

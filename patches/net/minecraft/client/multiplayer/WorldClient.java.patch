@@ -44,3 +44,32 @@
      {
          return allowEmpty || !this.getChunkProvider().provideChunk(x, z).isEmpty();
      }
+@@ -367,19 +363,21 @@
+ 
+         for (int i = 0; i < this.unloadedEntityList.size(); ++i)
+         {
+-            Entity entity = this.unloadedEntityList.get(i);
+-            int j = entity.chunkCoordX;
+-            int k = entity.chunkCoordZ;
++            for (Entity entity : this.unloadedEntityList) {
++                int j = entity.chunkCoordX;
++                int k = entity.chunkCoordZ;
+ 
+-            if (entity.addedToChunk && this.isChunkLoaded(j, k, true))
+-            {
+-                this.getChunkFromChunkCoords(j, k).removeEntity(entity);
++                if (entity.addedToChunk && this.isChunkLoaded(j, k, true)) {
++                    this.getChunkFromChunkCoords(j, k).removeEntity(entity);
++                }
+             }
+         }
+ 
+         for (int i1 = 0; i1 < this.unloadedEntityList.size(); ++i1)
+         {
+-            this.onEntityRemoved(this.unloadedEntityList.get(i1));
++            for (Entity e : this.unloadedEntityList) {
++                this.onEntityRemoved(e);
++            }
+         }
+ 
+         this.unloadedEntityList.clear();

@@ -86,7 +86,7 @@
 +        // Paper start
 +        PortalCreateEvent event = new PortalCreateEvent(bukkitBlocks, this.world.getWorld(), PortalCreateEvent.CreateReason.OBC_DESTINATION);
 +        if(event.callEvent()){
-+            nmsBlocks.forEach(this.world::setTypeUpdate);
++            nmsBlocks.forEach(this.world::setBlockState);
 +        }
 +        // Paper end
 +        // CraftBukkit start
@@ -413,7 +413,7 @@
 +        // Paper start
 +        PortalCreateEvent event = new PortalCreateEvent(bukkitBlocks, this.world.getWorld(), PortalCreateEvent.CreateReason.OBC_DESTINATION);
 +        if(event.callEvent()){
-+            nmsBlocks.forEach((pos, data) -> this.world.setTypeAndData(pos, data, 2));
++            nmsBlocks.forEach((pos, data) -> this.world.setBlockState(pos, data, 2));
 +        }
 +        // Paper end
          return true;

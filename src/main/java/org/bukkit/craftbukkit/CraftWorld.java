@@ -42,7 +42,9 @@ import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.block.CraftBlock;
+import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftItem;
 import org.bukkit.craftbukkit.entity.CraftLightningStrike;
@@ -253,7 +255,7 @@ public class CraftWorld implements World {
 
     private boolean unloadChunk0(int x, int z, boolean save) {
         Boolean result = MCUtil.ensureMain("Unload Chunk", () -> { // Paper - Ensure never async
-        net.minecraft.world.chunk.Chunk chunk = world.getChunkProvider().getLoadedChunk(x, z);
+        net.minecraft.world.chunk.Chunk chunk = world.getChunkProvider().getChunkIfLoaded(x, z);
         if (chunk == null) {
             return true;
         }
@@ -518,25 +520,28 @@ public class CraftWorld implements World {
 
     public boolean generateTree(Location loc, TreeType type, BlockChangeDelegate delegate) {
         world.captureTreeGeneration = true;
-        world.captureBlockSnapshots = true;
+        world.captureBlockStates = true;
         boolean grownTree = generateTree(loc, type);
-        world.captureBlockSnapshots = false;
+        world.captureBlockStates = false;
         world.captureTreeGeneration = false;
         if (grownTree) { // Copy block data to delegate
-            for (BlockSnapshot blockSnapshot : world.capturedBlockSnapshots) {
-                BlockPos position = blockSnapshot.getPos();
-                net.minecraft.block.state.IBlockState oldBlock = world.getBlockState(position);
-                int typeId = net.minecraft.block.Block.getIdFromBlock(blockSnapshot.getReplacedBlock().getBlock());
-                int data = blockSnapshot.getMeta();
-                int flag = blockSnapshot.getFlag();
-                delegate.setTypeIdAndData(position.getX(), position.getY(), position.getZ(), typeId, data);
-                net.minecraft.block.state.IBlockState newBlock = world.getBlockState(position);
+            for (BlockState blockstate : world.capturedBlockStates) {
+                int x = blockstate.getX();
+                int y = blockstate.getY();
+                int z = blockstate.getZ();
+                BlockPos position = new BlockPos(x, y, z);
+                IBlockState oldBlock = world.getBlockState(position);
+                int typeId = blockstate.getTypeId();
+                int data = blockstate.getRawData();
+                int flag = ((CraftBlockState)blockstate).getFlag();
+                delegate.setTypeIdAndData(x, y, z, typeId, data);
+                IBlockState newBlock = world.getBlockState(position);
                 world.markAndNotifyBlock(position, null, oldBlock, newBlock, flag);
             }
-            world.capturedBlockSnapshots.clear();
+            world.capturedBlockStates.clear();
             return true;
         } else {
-            world.capturedBlockSnapshots.clear();
+            world.capturedBlockStates.clear();
             return false;
         }
     }
@@ -1218,7 +1223,7 @@ public class CraftWorld implements World {
                 if (nmsBlock.getDefaultState().getMaterial().isSolid() || BlockRedstoneDiode.isDiode(nmsBlock.getDefaultState())) {
                     boolean taken = false;
                     AxisAlignedBB bb = EntityHanging.calculateBoundingBox(null, pos, CraftBlock.blockFaceToNotch(dir).getOpposite(), width, height);
-                    List<net.minecraft.entity.Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, bb);
+                    List<net.minecraft.entity.Entity> list = world.getEntitiesWithinAABB(null, bb);
                     for (Iterator<net.minecraft.entity.Entity> it = list.iterator(); !taken && it.hasNext();) {
                         net.minecraft.entity.Entity e = it.next();
                         if (e instanceof EntityHanging) {

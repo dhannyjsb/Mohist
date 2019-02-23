@@ -88,6 +88,22 @@
              {
                  this.world.getChunkProvider().queueUnloadAll();
              }
+@@ -229,13 +219,13 @@
+     @Nullable
+     public PlayerChunkMapEntry getEntry(int x, int z)
+     {
+-        return (PlayerChunkMapEntry)this.entryMap.get(getIndex(x, z));
++        return this.entryMap.get(getIndex(x, z));
+     }
+ 
+     private PlayerChunkMapEntry getOrCreateEntry(int chunkX, int chunkZ)
+     {
+         long i = getIndex(chunkX, chunkZ);
+-        PlayerChunkMapEntry playerchunkmapentry = (PlayerChunkMapEntry)this.entryMap.get(i);
++        PlayerChunkMapEntry playerchunkmapentry = this.entryMap.get(i);
+ 
+         if (playerchunkmapentry == null)
+         {
 @@ -257,6 +247,14 @@
          return playerchunkmapentry;
      }
@@ -159,7 +175,53 @@
              }
          }
      }
-@@ -443,11 +458,27 @@
+@@ -425,6 +440,45 @@
+         }
+     }
+ 
++    public void setViewDistance(EntityPlayerMP entityplayer, int i) {
++        this.setViewDistance(entityplayer, i, true);
++    }
++
++    public void setViewDistance(EntityPlayerMP entityplayer, int i, boolean markSort) {
++        i = MathHelper.clamp(i, 3, 32);
++        int oldViewDistance = entityplayer.getViewDistance();
++        if (i != oldViewDistance) {
++            int j = i - oldViewDistance;
++            int k = (int)entityplayer.posX >> 4;
++            int l = (int)entityplayer.posZ >> 4;
++            int i1;
++            int j1;
++            if (j > 0) {
++                for(i1 = k - i; i1 <= k + i; ++i1) {
++                    for(j1 = l - i; j1 <= l + i; ++j1) {
++                        PlayerChunkMapEntry playerchunk = this.getOrCreateEntry(i1, j1);
++                        if (!playerchunk.containsPlayer(entityplayer)) {
++                            playerchunk.addPlayer(entityplayer);
++                        }
++                    }
++                }
++            } else {
++                for(i1 = k - oldViewDistance; i1 <= k + oldViewDistance; ++i1) {
++                    for(j1 = l - oldViewDistance; j1 <= l + oldViewDistance; ++j1) {
++                        if (!this.overlaps(i1, j1, k, l, i)) {
++                            this.getOrCreateEntry(i1, j1).removePlayer(entityplayer);
++                        }
++                    }
++                }
++
++                if (markSort) {
++                    this.markSortPending();
++                }
++            }
++        }
++
++    }
++
+     private void markSortPending()
+     {
+         this.sortMissingChunks = true;
+@@ -443,11 +497,27 @@
  
      public void entryChanged(PlayerChunkMapEntry entry)
      {
@@ -187,7 +249,7 @@
          ChunkPos chunkpos = entry.getPos();
          long i = getIndex(chunkpos.x, chunkpos.z);
          entry.updateChunkInhabitedTime();
-@@ -460,7 +491,56 @@
+@@ -460,7 +530,56 @@
  
          if (chunk != null)
          {

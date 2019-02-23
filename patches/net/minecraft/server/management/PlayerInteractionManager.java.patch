@@ -409,31 +409,31 @@
 +        final Block block2 = iblockdata.getBlock();
 +        if (iblockdata.getBlock() == Blocks.SKULL && !this.isCreative() && event.isDropItems()) {
 +            iblockdata.getBlock().dropBlockAsItemWithChance(this.world, blockposition, iblockdata, 1.0f, 0);
-+            return this.c(blockposition);
++            return this.removeBlock(blockposition);
 +        }
 +        if (iblockdata.getBlock() instanceof BlockShulkerBox && event.isDropItems()) {
 +            iblockdata.getBlock().dropBlockAsItemWithChance(this.world, blockposition, iblockdata, 1.0f, 0);
 +            return this.removeBlock(blockposition);
 +        }
 +        if ((block2 instanceof BlockCommandBlock || block2 instanceof BlockStructure) && !this.player.canUseCommandBlock()) {
-+            this.world.notify(blockposition, iblockdata, iblockdata, 3);
++            this.world.notifyBlockUpdate(blockposition, iblockdata, iblockdata, 3);
 +            return false;
 +        }
-+        if (this.gameType.c()) {
++        if (this.gameType.hasLimitedInteractions()) {
 +            if (this.gameType == GameType.SPECTATOR) {
 +                return false;
 +            }
-+            if (!this.player.dk()) {
++            if (!this.player.isAllowEdit()) {
 +                final ItemStack itemstack2 = this.player.getHeldItemMainhand();
 +                if (itemstack2.isEmpty()) {
 +                    return false;
 +                }
-+                if (!itemstack2.a(block2)) {
++                if (!itemstack2.canDestroy(block2)) {
 +                    return false;
 +                }
 +            }
 +        }
-+        this.world.a(this.player, 2001, blockposition, Block.getStateId(iblockdata));
++        this.world.playEvent(this.player, 2001, blockposition, Block.getStateId(iblockdata));
 +        this.world.captureDrops = new ArrayList<EntityItem>();
 +        final boolean flag = this.removeBlock(blockposition);
 +        if (event.isDropItems()) {
@@ -450,10 +450,10 @@
 +            final ItemStack itemstack4 = itemstack3.isEmpty() ? ItemStack.EMPTY : itemstack3.copy();
 +            final boolean flag2 = this.player.canHarvestBlock(iblockdata);
 +            if (!itemstack3.isEmpty()) {
-+                itemstack3.a(this.world, iblockdata, blockposition, this.player);
++                itemstack3.onBlockDestroyed(this.world, iblockdata, blockposition, this.player);
 +            }
 +            if (flag && flag2 && event.isDropItems()) {
-+                iblockdata.getBlock().a(this.world, this.player, blockposition, iblockdata, tileentity2, itemstack4);
++                iblockdata.getBlock().harvestBlock(this.world, this.player, blockposition, iblockdata, tileentity2, itemstack4);
 +            }
 +        }
 +        // CraftBukkit start - Drop event experience
