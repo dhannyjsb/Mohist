@@ -1,11 +1,10 @@
 buildscript {
     repositories {
+        mavenLocal()
         maven {
             name 'aliyun'
             url 'https://maven.aliyun.com/repository/public'
         }
-        mavenLocal()
-        mavenCentral()
         maven {
             name 'lliiooll'
             url 'https://maven.lliiooll.cn/'
@@ -26,6 +25,7 @@ buildscript {
             name 'spigot'
             url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
+        mavenCentral()
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -42,14 +42,10 @@ group = 'cn.pfcraft'
 version = '0.0.1'
 
 repositories {
-    clear()
+    mavenLocal()
     maven {
-        name 'aliyun'
+        name = 'aliyun'
         url 'https://maven.aliyun.com/repository/public'
-    }
-    maven {
-        name 'lliiooll'
-        url 'https://maven.lliiooll.cn/'
     }
     maven {
         name = "forge"
@@ -89,7 +85,7 @@ configurations{
 
 dependencies {
     libraries 'org.avaje:ebean:2.8.1'
-    libraries 'org.bukkit:mohist-bukkit:1.12.2'
+    libraries project(path: ':bukkit', configuration: 'default')
 }
 
 tasks.withType(JavaCompile) {
