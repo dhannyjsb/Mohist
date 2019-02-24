@@ -4,7 +4,6 @@ import com.destroystokyo.paper.entity.CraftSentientNPC;
 import net.minecraft.entity.EntityCreature;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Creature;
-import org.bukkit.entity.LivingEntity;
 
 public class CraftCreature extends CraftLivingEntity implements Creature, CraftSentientNPC { // Paper
     public CraftCreature(CraftServer server, EntityCreature entity) {

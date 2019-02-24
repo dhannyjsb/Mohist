@@ -172,8 +172,11 @@ public class Main {
                 System.err.println("Cannot run server in a directory with ! or + in the pathname. Please rename the affected folders and try again.");
                 return null;
             }
-
-            System.out.println("Loading libraries, please wait...");
+            try {
+                System.out.println("Loading libraries, please wait...");
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
             return options;
         }
         return null;
