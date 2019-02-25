@@ -129,12 +129,3 @@
                          }
  
                          if (!m.name.equals("*"))
-@@ -370,7 +351,7 @@
-             }
-             catch (IOException e)
-             {
--                System.out.println("Could not read Transformer Map: " + args[x]);
-+                System.out.println("Could not read ReflectionTransformer Map: " + args[x]);
-                 e.printStackTrace();
-             }
-         }

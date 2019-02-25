@@ -58,12 +58,3 @@
  public class MarkerTransformer implements IClassTransformer
  {
      private ListMultimap<String, String> markers = ArrayListMultimap.create();
-@@ -144,7 +135,7 @@
-             }
-             catch (IOException e)
-             {
--                System.out.println("Could not read Transformer Map: " + args[x]);
-+                System.out.println("Could not read ReflectionTransformer Map: " + args[x]);
-                 e.printStackTrace();
-             }
-         }

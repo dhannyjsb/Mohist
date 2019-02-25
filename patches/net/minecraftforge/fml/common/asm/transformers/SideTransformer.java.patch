@@ -42,15 +42,3 @@
  public class SideTransformer implements IClassTransformer
  {
      private static String SIDE = FMLLaunchHandler.side().name();
-@@ -96,10 +86,10 @@
-         for (List<Handle> dynamicLambdaHandles = lambdaGatherer.getDynamicLambdaHandles();
-              !dynamicLambdaHandles.isEmpty(); dynamicLambdaHandles = lambdaGatherer.getDynamicLambdaHandles())
-         {
--            lambdaGatherer = new LambdaGatherer();
-             methods = classNode.methods.iterator();
-             while (methods.hasNext())
-             {
-+                lambdaGatherer = new LambdaGatherer();
-                 MethodNode method = methods.next();
-                 if ((method.access & Opcodes.ACC_SYNTHETIC) == 0) continue;
-                 for (Handle dynamicLambdaHandle : dynamicLambdaHandles)

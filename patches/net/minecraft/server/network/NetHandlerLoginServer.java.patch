@@ -24,7 +24,7 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.network.NetworkManager;
  import net.minecraft.network.login.INetHandlerLoginServer;
-@@ -29,11 +19,27 @@
+@@ -29,11 +19,26 @@
  import net.minecraft.util.CryptManager;
  import net.minecraft.util.ITickable;
  import net.minecraft.util.text.ITextComponent;
@@ -33,7 +33,6 @@
  import org.apache.commons.lang3.Validate;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-+import org.bukkit.Bukkit;
 +import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
  
 +import javax.annotation.Nullable;
@@ -52,7 +51,7 @@
  public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
  {
      private static final AtomicInteger AUTHENTICATOR_THREAD_ID = new AtomicInteger(0);
-@@ -42,13 +48,17 @@
+@@ -42,13 +47,17 @@
      private final byte[] verifyToken = new byte[4];
      private final MinecraftServer server;
      public final NetworkManager networkManager;
@@ -71,7 +70,7 @@
      public NetHandlerLoginServer(MinecraftServer serverIn, NetworkManager networkManagerIn)
      {
          this.server = serverIn;
-@@ -58,17 +68,27 @@
+@@ -58,17 +67,27 @@
  
      public void update()
      {
@@ -103,7 +102,7 @@
                  net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.fmlServerHandshake(this.server.getPlayerList(), this.networkManager, this.player);
                  this.player = null;
              }
-@@ -80,6 +100,19 @@
+@@ -80,6 +99,19 @@
          }
      }
  
@@ -123,7 +122,7 @@
      public void disconnect(ITextComponent reason)
      {
          try
-@@ -94,22 +127,61 @@
+@@ -94,22 +126,61 @@
          }
      }
  
@@ -189,7 +188,7 @@
  
              if (this.server.getNetworkCompressionThreshold() >= 0 && !this.networkManager.isLocalChannel())
              {
-@@ -127,12 +199,12 @@
+@@ -127,12 +198,12 @@
  
              if (entityplayermp != null)
              {
@@ -205,7 +204,7 @@
              }
          }
      }
-@@ -149,23 +221,38 @@
+@@ -149,23 +220,38 @@
  
      public void processLoginStart(CPacketLoginStart packetIn)
      {
@@ -248,7 +247,7 @@
          PrivateKey privatekey = this.server.getKeyPair().getPrivate();
  
          if (!Arrays.equals(this.verifyToken, packetIn.getVerifyToken(privatekey)))
-@@ -175,10 +262,10 @@
+@@ -175,10 +261,10 @@
          else
          {
              this.secretKey = packetIn.getSecretKey(privatekey);
@@ -262,7 +261,7 @@
                  public void run()
                  {
                      GameProfile gameprofile = NetHandlerLoginServer.this.loginGameProfile;
-@@ -190,14 +277,18 @@
+@@ -190,14 +276,18 @@
  
                          if (NetHandlerLoginServer.this.loginGameProfile != null)
                          {
@@ -284,7 +283,7 @@
                          }
                          else
                          {
-@@ -211,13 +302,23 @@
+@@ -211,13 +301,23 @@
                          {
                              NetHandlerLoginServer.LOGGER.warn("Authentication servers are down but will let them in anyway!");
                              NetHandlerLoginServer.this.loginGameProfile = NetHandlerLoginServer.this.getOfflineProfile(gameprofile);
@@ -309,7 +308,7 @@
                      }
                  }
                  @Nullable
-@@ -226,10 +327,41 @@
+@@ -226,10 +326,41 @@
                      SocketAddress socketaddress = NetHandlerLoginServer.this.networkManager.getRemoteAddress();
                      return NetHandlerLoginServer.this.server.getPreventProxyConnections() && socketaddress instanceof InetSocketAddress ? ((InetSocketAddress)socketaddress).getAddress() : null;
                  }

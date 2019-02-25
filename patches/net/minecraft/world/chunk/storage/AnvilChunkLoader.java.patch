@@ -1,9 +1,8 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
-@@ -1,21 +1,13 @@
+@@ -1,21 +1,12 @@
  package net.minecraft.world.chunk.storage;
  
-+import com.destroystokyo.paper.exception.ServerInternalException;
  import com.google.common.collect.Maps;
 -import java.io.DataInputStream;
 -import java.io.DataOutputStream;
@@ -24,7 +23,7 @@
  import net.minecraft.tileentity.TileEntity;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.util.datafix.DataFixer;
-@@ -33,16 +25,37 @@
+@@ -33,16 +24,37 @@
  import net.minecraft.world.storage.ThreadedFileIOBase;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -63,7 +62,7 @@
      public AnvilChunkLoader(File chunkSaveLocationIn, DataFixer dataFixerIn)
      {
          this.chunkSaveLocation = chunkSaveLocationIn;
-@@ -75,27 +88,27 @@
+@@ -75,27 +87,27 @@
      public Object[] loadChunk__Async(World worldIn, int x, int z) throws IOException
      {
          ChunkPos chunkpos = new ChunkPos(x, z);
@@ -97,7 +96,7 @@
          return nbttagcompound != null ? true : RegionFileCache.chunkExists(this.chunkSaveLocation, x, z);
      }
  
-@@ -106,9 +119,23 @@
+@@ -106,9 +118,23 @@
          return data != null ? (Chunk)data[0] : null;
      }
  
@@ -121,7 +120,7 @@
          if (!compound.hasKey("Level", 10))
          {
              LOGGER.error("Chunk file at {},{} is missing level data, skipping", Integer.valueOf(x), Integer.valueOf(z));
-@@ -162,7 +189,7 @@
+@@ -162,7 +188,7 @@
      public void saveChunk(World worldIn, Chunk chunkIn) throws MinecraftException, IOException
      {
          worldIn.checkSessionLock();
@@ -130,7 +129,7 @@
          try
          {
              NBTTagCompound nbttagcompound = new NBTTagCompound();
-@@ -173,63 +200,67 @@
+@@ -173,63 +199,67 @@
              this.writeChunkToNBT(chunkIn, worldIn, nbttagcompound1);
              net.minecraftforge.common.ForgeChunkManager.storeChunkNBT(chunkIn, nbttagcompound1);
              net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkDataEvent.Save(chunkIn, nbttagcompound));
@@ -228,7 +227,7 @@
  
              return lvt_3_1_;
          }
-@@ -237,9 +268,10 @@
+@@ -237,9 +267,10 @@
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -242,7 +241,7 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -349,13 +381,22 @@
+@@ -349,13 +380,22 @@
          compound.setByteArray("Biomes", chunkIn.getBiomeArray());
          chunkIn.setHasEntities(false);
          NBTTagList nbttaglist1 = new NBTTagList();
@@ -267,7 +266,7 @@
                  try
                  {
                  if (entity.writeToNBTOptional(nbttagcompound2))
-@@ -366,12 +407,15 @@
+@@ -366,12 +406,15 @@
                  }
                  catch (Exception e)
                  {
@@ -286,7 +285,7 @@
          compound.setTag("Entities", nbttaglist1);
          NBTTagList nbttaglist2 = new NBTTagList();
  
-@@ -384,7 +428,7 @@
+@@ -384,7 +427,7 @@
              }
              catch (Exception e)
              {
@@ -295,7 +294,7 @@
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +465,7 @@
+@@ -421,7 +464,7 @@
              }
              catch (Exception exception)
              {
@@ -304,7 +303,7 @@
              }
          }
      }
-@@ -485,7 +529,6 @@
+@@ -485,7 +528,6 @@
              readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
@@ -312,7 +311,7 @@
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +541,6 @@
+@@ -498,7 +540,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
@@ -320,7 +319,7 @@
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -608,8 +650,11 @@
+@@ -608,8 +649,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {
@@ -334,7 +333,7 @@
              for (Entity entity : entityIn.getPassengers())
              {
                  spawnEntity(entity, worldIn);
-@@ -655,4 +700,18 @@
+@@ -655,4 +699,18 @@
      {
          return this.chunksToSave.size();
      }
