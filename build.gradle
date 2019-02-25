@@ -2,10 +2,6 @@ buildscript {
     repositories {
         mavenLocal()
         maven {
-            name 'aliyun'
-            url 'https://maven.aliyun.com/repository/public'
-        }
-        maven {
             name = "forge"
             url = "https://files.minecraftforge.net/maven"
         }
@@ -52,6 +48,10 @@ repositories {
         name 'maven'
         url 'https://mvnrepository.com/artifact/'
     }
+    maven {
+        name 'spigot'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
 }
 
 configurations{
@@ -61,7 +61,6 @@ configurations{
 
 dependencies {
     libraries 'org.avaje:ebean:2.8.1'
-    compile project(path: ':bukkit', configuration: 'default')
 }
 
 jar{

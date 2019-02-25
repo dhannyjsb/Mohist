@@ -1,8 +1,8 @@
 package com.destroystokyo.paper.network;
 
-import com.sun.istack.internal.Nullable;
 import net.minecraft.network.NetworkManager;
 
+import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
 
 public class PaperNetworkClient implements NetworkClient

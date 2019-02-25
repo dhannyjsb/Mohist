@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit.scheduler;
 
-import com.destroystokyo.paper.ServerSchedulerReportingWrapper;
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
 import com.destroystokyo.paper.exception.ServerSchedulerException;
 import org.apache.commons.lang3.Validate;
@@ -12,7 +11,9 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitWorker;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;

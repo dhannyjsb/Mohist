@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.init.Items;

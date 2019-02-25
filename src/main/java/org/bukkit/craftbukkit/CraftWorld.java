@@ -35,7 +35,6 @@ import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.gen.feature.*;
-import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.*;

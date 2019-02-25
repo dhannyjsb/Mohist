@@ -3,7 +3,6 @@ package org.bukkit.craftbukkit.entity;
 import net.minecraft.entity.passive.EntityHorse;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.inventory.CraftInventoryAbstractHorse;
 import org.bukkit.craftbukkit.inventory.CraftSaddledInventory;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.AnimalTamer;
