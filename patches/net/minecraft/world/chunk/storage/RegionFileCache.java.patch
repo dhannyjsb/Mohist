@@ -1,16 +1,13 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/storage/RegionFileCache.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/storage/RegionFileCache.java
-@@ -1,16 +1,27 @@
+@@ -1,16 +1,24 @@
  package net.minecraft.world.chunk.storage;
  
 -import com.google.common.collect.Maps;
 +import com.destroystokyo.paper.PaperConfig;
 +import com.destroystokyo.paper.exception.ServerInternalException;
 +import net.minecraft.nbt.CompressedStreamTools;
-+import net.minecraft.nbt.NBTBase;
 +import net.minecraft.nbt.NBTTagCompound;
-+import net.minecraft.nbt.NBTTagList;
-+import org.apache.commons.io.output.NullOutputStream;
 +
 +import javax.annotation.Nullable;
  import java.io.DataInputStream;
@@ -30,7 +27,7 @@
      public static synchronized RegionFile createOrLoadRegionFile(File worldDir, int chunkX, int chunkZ)
      {
          File file1 = new File(worldDir, "region");
-@@ -28,9 +39,8 @@
+@@ -28,9 +36,8 @@
                  file1.mkdirs();
              }
  
@@ -42,7 +39,7 @@
              }
  
              RegionFile regionfile1 = new RegionFile(file2);
-@@ -39,6 +49,21 @@
+@@ -39,6 +46,21 @@
          }
      }
  
@@ -64,7 +61,7 @@
      public static synchronized RegionFile getRegionFileIfExists(File worldDir, int chunkX, int chunkZ)
      {
          File file1 = new File(worldDir, "region");
-@@ -80,6 +105,7 @@
+@@ -80,6 +102,7 @@
              catch (IOException ioexception)
              {
                  ioexception.printStackTrace();
@@ -72,7 +69,7 @@
              }
          }
  
-@@ -92,12 +118,33 @@
+@@ -92,12 +115,33 @@
          return regionfile.getChunkDataInputStream(chunkX & 31, chunkZ & 31);
      }
  

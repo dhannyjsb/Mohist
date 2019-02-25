@@ -8,7 +8,7 @@
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
-@@ -19,60 +19,39 @@
+@@ -19,28 +19,10 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -41,9 +41,7 @@
  import net.minecraft.launchwrapper.ITweaker;
  import net.minecraft.launchwrapper.Launch;
  import net.minecraft.launchwrapper.LaunchClassLoader;
- import net.minecraftforge.fml.common.CertificateHelper;
--import net.minecraftforge.fml.common.FMLLog;
- import net.minecraftforge.fml.common.asm.ASMTransformerWrapper;
+@@ -50,29 +32,29 @@
  import net.minecraftforge.fml.common.asm.transformers.ModAccessTransformer;
  import net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker;
  import net.minecraftforge.fml.common.launcher.FMLTweaker;
@@ -56,7 +54,7 @@
  import net.minecraftforge.fml.relauncher.libraries.Artifact;
  import net.minecraftforge.fml.relauncher.libraries.LibraryManager;
  import net.minecraftforge.fml.relauncher.libraries.Repository;
- 
+-
 -import com.google.common.base.Strings;
 -import com.google.common.collect.ImmutableList;
 -import com.google.common.collect.Lists;
@@ -64,8 +62,9 @@
 -import com.google.common.collect.ObjectArrays;
 -import com.google.common.collect.Sets;
 -import com.google.common.primitives.Ints;
--import org.apache.logging.log4j.LogManager;
--import org.apache.logging.log4j.core.LoggerContext;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.core.LoggerContext;
+ 
 +import java.io.*;
 +import java.lang.reflect.Method;
 +import java.net.MalformedURLException;
@@ -77,16 +76,16 @@
 +import java.util.jar.Attributes;
 +import java.util.jar.JarFile;
 +import java.util.jar.Manifest;
- 
++
  public class CoreModManager {
      private static final Attributes.Name COREMODCONTAINSFMLMOD = new Attributes.Name("FMLCorePluginContainsFMLMod");
      private static final Attributes.Name MODTYPE = new Attributes.Name("ModType");
 -    private static String[] rootPlugins = { "net.minecraftforge.fml.relauncher.FMLCorePlugin", "net.minecraftforge.classloading.FMLForgePlugin" };
-+    private static String[] rootPlugins = { "net.minecraftforge.fml.relauncher.FMLCorePlugin", "net.minecraftforge.classloading.FMLForgePlugin", "cn.pfcraft.server.MohistCorePlugin"};
++    private static String[] rootPlugins = { "net.minecraftforge.fml.relauncher.FMLCorePlugin", "net.minecraftforge.classloading.FMLForgePlugin"};
      private static List<String> ignoredModFiles = Lists.newArrayList();
      private static Map<String, List<String>> transformers = Maps.newHashMap();
      private static List<FMLPluginWrapper> loadPlugins;
-@@ -124,11 +103,11 @@
+@@ -124,11 +106,11 @@
          @Override
          public void injectIntoClassLoader(LaunchClassLoader classLoader)
          {
@@ -100,7 +99,7 @@
                  classLoader.registerTransformer(ASMTransformerWrapper.getTransformerWrapper(classLoader, transformer, name));
                  ts.add(transformer);
              }
-@@ -139,14 +118,14 @@
+@@ -139,14 +121,14 @@
                  else loc = location.getName();
                  transformers.put(name + " (" + loc + ")", ts);
              }
@@ -118,7 +117,7 @@
              data.put("coremodLocation", location);
              coreModInstance.injectData(data);
              String setupClass = coreModInstance.getSetupClass();
-@@ -169,7 +148,7 @@
+@@ -169,7 +151,7 @@
                      throw new RuntimeException(e);
                  }
              }
@@ -127,7 +126,7 @@
  
              String modContainer = coreModInstance.getModContainerClass();
              if (modContainer != null)
-@@ -204,7 +183,7 @@
+@@ -204,7 +186,7 @@
              byte[] bs = classLoader.getClassBytes("net.minecraft.world.World");
              if (bs != null)
              {
@@ -136,27 +135,16 @@
                  deobfuscatedEnvironment = true;
              }
          }
-@@ -215,18 +194,8 @@
+@@ -215,7 +197,7 @@
  
          if (!deobfuscatedEnvironment)
          {
 -            FMLLog.log.debug("Enabling runtime deobfuscation");
 +            Mohist.LOGGER.debug("Enabling runtime deobfuscation");
          }
--        else
--        {
--            if (System.getProperty("log4j.configurationFile") == null)
--            {
--                FMLLog.log.info("Detected deobfuscated environment, loading log configs for colored console logs.");
--                // use server logging configs in deobfuscated environment so developers get nicely colored console logs
--                System.setProperty("log4j.configurationFile", "log4j2_server.xml");
--                ((LoggerContext) LogManager.getContext(false)).reconfigure();
--            }
--        }
- 
-         tweaker.injectCascadingTweak("net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker");
-         try
-@@ -249,7 +218,7 @@
+         else
+         {
+@@ -249,7 +231,7 @@
              throw new RuntimeException("A fatal error has occurred - no valid fml load plugin was found - this is a completely corrupt FML installation.");
          }
  
@@ -165,7 +153,7 @@
          // Now that we have the root plugins loaded - lets see what else might
          // be around
          String commandLineCoremods = System.getProperty("fml.coreMods.load", "");
-@@ -259,7 +228,7 @@
+@@ -259,7 +241,7 @@
              {
                  continue;
              }
@@ -174,7 +162,7 @@
              loadCoreMod(classLoader, coreModClassName, null);
          }
          discoverCoreMods(mcDir, classLoader);
-@@ -271,22 +240,22 @@
+@@ -271,22 +253,22 @@
          File[] derplist = listFiles(path -> path.getName().endsWith(".jar.zip"), modDir, modDirVer);
          if (derplist != null && derplist.length > 0)
          {
@@ -203,7 +191,7 @@
              }
  
              RuntimeException re = new RuntimeException("Extracted mod jars found, loading will NOT continue");
-@@ -298,10 +267,10 @@
+@@ -298,10 +280,10 @@
                  Object crashreport = crashreportclass.getMethod("a", Throwable.class, String.class).invoke(null, re, "FML has discovered extracted jar files in the mods directory.\nThis breaks mod loading functionality completely.\nRemove the directories and replace with the jar files originally provided.");
                  File crashreportfile = new File(new File(modDir.getParentFile(),"crash-reports"),String.format("fml-crash-%1$tY-%1$tm-%1$td_%1$tH.%1$tM.%1$tS.txt",Calendar.getInstance()));
                  crashreportclass.getMethod("a",File.class).invoke(crashreport, crashreportfile);
@@ -216,7 +204,7 @@
                  // NOOP - hopefully
              }
              throw re;
-@@ -334,7 +303,7 @@
+@@ -334,7 +316,7 @@
          //By the time we get here, all bundeled jars should be extracted to the proper repos.
          //As well as the mods folders being cleaned up {any files that have maven info being moved to maven folder}
  
@@ -225,7 +213,7 @@
          List<Artifact> maven_canidates = LibraryManager.flattenLists(mcDir);
          List<File> file_canidates = LibraryManager.gatherLegacyCanidates(mcDir);
  
-@@ -353,7 +322,7 @@
+@@ -353,7 +335,7 @@
  
          for (File coreMod : file_canidates)
          {
@@ -234,7 +222,7 @@
              JarFile jar = null;
              Attributes mfAttributes;
              String fmlCorePlugin;
-@@ -379,7 +348,7 @@
+@@ -379,7 +361,7 @@
                  String modSide = mfAttributes.getValue(LibraryManager.MODSIDE);
                  if (modSide != null && !"BOTH".equals(modSide) && !FMLLaunchHandler.side().name().equals(modSide))
                  {
@@ -243,7 +231,7 @@
                      ignoredModFiles.add(coreMod.getName());
                      continue;
                  }
-@@ -395,7 +364,7 @@
+@@ -395,7 +377,7 @@
                  String cascadedTweaker = mfAttributes.getValue("TweakClass");
                  if (cascadedTweaker != null)
                  {
@@ -252,7 +240,7 @@
                      Integer sortOrder = Ints.tryParse(Strings.nullToEmpty(mfAttributes.getValue("TweakOrder")));
                      sortOrder = (sortOrder == null ? Integer.valueOf(0) : sortOrder);
                      handleCascadingTweak(coreMod, jar, cascadedTweaker, classLoader, sortOrder);
-@@ -406,7 +375,7 @@
+@@ -406,7 +388,7 @@
  
                  if (!modTypes.contains("FML"))
                  {
@@ -261,7 +249,7 @@
                      ignoredModFiles.add(coreMod.getName());
                      continue;
                  }
-@@ -414,13 +383,13 @@
+@@ -414,13 +396,13 @@
                  if (fmlCorePlugin == null)
                  {
                      // Not a coremod
@@ -277,7 +265,7 @@
                  continue;
              }
              finally
-@@ -433,19 +402,19 @@
+@@ -433,19 +415,19 @@
                  classLoader.addURL(coreMod.toURI().toURL());
                  if (!mfAttributes.containsKey(COREMODCONTAINSFMLMOD))
                  {
@@ -300,7 +288,7 @@
                  continue;
              }
              loadCoreMod(classLoader, fmlCorePlugin, coreMod);
-@@ -471,7 +440,7 @@
+@@ -471,7 +453,7 @@
          }
          catch (Exception e)
          {
@@ -309,7 +297,7 @@
          }
      }
  
-@@ -522,30 +491,30 @@
+@@ -522,30 +504,30 @@
          String coreModName = coreModClass.substring(coreModClass.lastIndexOf('.') + 1);
          try
          {
@@ -345,7 +333,7 @@
                          requiredMCVersion.value(), FMLInjectionData.mccversion);
              }
              TransformerExclusions trExclusions = coreModClazz.getAnnotation(IFMLLoadingPlugin.TransformerExclusions.class);
-@@ -571,23 +540,23 @@
+@@ -571,23 +553,23 @@
              {
                  if (deobfuscatedEnvironment && Arrays.asList(rootPlugins).contains(coreModClass)) //This is probably a forge/mod dev environment - ignore missing forge certificates
                  {
@@ -374,7 +362,7 @@
                  }
              }
  
-@@ -595,32 +564,32 @@
+@@ -595,32 +577,32 @@
              String accessTransformerClass = plugin.getAccessTransformerClass();
              if (accessTransformerClass != null)
              {

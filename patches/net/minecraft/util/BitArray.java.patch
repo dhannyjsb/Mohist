@@ -1,6 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/util/BitArray.java
 +++ ../src-work/minecraft/net/minecraft/util/BitArray.java
-@@ -12,7 +12,6 @@
+@@ -1,7 +1,6 @@
+ package net.minecraft.util;
+ 
+ import net.minecraft.util.math.MathHelper;
+-import org.apache.commons.lang3.Validate;
+ 
+ public class BitArray
+ {
+@@ -12,7 +11,6 @@
  
      public BitArray(int bitsPerEntryIn, int arraySizeIn)
      {
@@ -8,7 +16,7 @@
          this.arraySize = arraySizeIn;
          this.bitsPerEntry = bitsPerEntryIn;
          this.maxEntryValue = (1L << bitsPerEntryIn) - 1L;
-@@ -21,8 +20,6 @@
+@@ -21,8 +19,6 @@
  
      public void setAt(int index, int value)
      {
@@ -17,7 +25,7 @@
          int i = index * this.bitsPerEntry;
          int j = i / 64;
          int k = ((index + 1) * this.bitsPerEntry - 1) / 64;
-@@ -39,7 +36,6 @@
+@@ -39,7 +35,6 @@
  
      public int getAt(int index)
      {

@@ -28,15 +28,7 @@
  public class FMLLaunchHandler
  {
      private static FMLLaunchHandler INSTANCE;
-@@ -73,6 +72,7 @@
-         this.classLoader.addClassLoaderExclusion("com.google.common.");
-         this.classLoader.addClassLoaderExclusion("org.objectweb.asm.");
-         this.classLoader.addClassLoaderExclusion("LZMA.");
-+        this.classLoader.addClassLoaderExclusion("jdk.nashorn.");
-     }
- 
-     private void setupClient()
-@@ -91,15 +91,15 @@
+@@ -91,15 +90,15 @@
      {
          FMLInjectionData.build(minecraftHome, classLoader);
          redirectStdOutputToLog();
@@ -58,7 +50,7 @@
  
          try
          {
-@@ -114,7 +114,7 @@
+@@ -114,7 +113,7 @@
  
      private void redirectStdOutputToLog()
      {

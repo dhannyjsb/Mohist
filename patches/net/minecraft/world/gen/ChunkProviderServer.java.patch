@@ -94,7 +94,27 @@
  
          if (chunk != null)
          {
-@@ -89,10 +127,14 @@
+@@ -83,16 +121,34 @@
+         return chunk;
+     }
+ 
++    // CraftBukkit start - loadChunk method aliases
++    public Chunk getChunkAt(int i, int j) {
++        return getChunkAt(i, j, null);
++    }
++
++    public Chunk getChunkAt(int i, int j, Runnable runnable) {
++        return getChunkAt(i, j, runnable, true);
++    }
++
++    public Chunk getChunkAt(int i, int j, Runnable runnable, boolean generate) {
++        return loadChunk(i, j, runnable, generate);
++    }
++    // CraftBukkit end
++
+     @Nullable
+     public Chunk loadChunk(int x, int z)
+     {
          return loadChunk(x, z, null);
      }
  
@@ -111,7 +131,7 @@
          if (chunk == null)
          {
              long pos = ChunkPos.asLong(x, z);
-@@ -106,7 +148,7 @@
+@@ -106,7 +162,7 @@
                  {
                  this.id2ChunkMap.put(ChunkPos.asLong(x, z), chunk);
                  chunk.onLoad();
@@ -120,7 +140,16 @@
                  }
  
                  loadingChunks.remove(pos);
-@@ -154,7 +196,7 @@
+@@ -121,6 +177,8 @@
+                     // We can only use the async queue for already generated chunks
+                     net.minecraftforge.common.chunkio.ChunkIOExecutor.queueChunkLoad(this.world, loader, this, x, z, runnable);
+                     return null;
++                } else if (generate) {
++                    chunk = provideChunk(x, z);
+                 }
+             }
+         }
+@@ -154,7 +212,7 @@
  
              this.id2ChunkMap.put(i, chunk);
              chunk.onLoad();
@@ -129,7 +158,7 @@
          }
  
          return chunk;
-@@ -177,7 +219,11 @@
+@@ -177,7 +235,11 @@
          }
          catch (Exception exception)
          {
@@ -142,7 +171,7 @@
              return null;
          }
      }
-@@ -190,7 +236,11 @@
+@@ -190,7 +252,11 @@
          }
          catch (Exception exception)
          {
@@ -155,7 +184,7 @@
          }
      }
  
-@@ -203,17 +253,49 @@
+@@ -203,17 +269,49 @@
          }
          catch (IOException ioexception)
          {
@@ -208,7 +237,7 @@
          List<Chunk> list = Lists.newArrayList(this.id2ChunkMap.values());
  
          for (int j = 0; j < list.size(); ++j)
-@@ -231,8 +313,7 @@
+@@ -231,8 +329,7 @@
                  chunk.setModified(false);
                  ++i;
  
@@ -218,7 +247,7 @@
                      return false;
                  }
              }
-@@ -262,28 +343,70 @@
+@@ -262,28 +359,70 @@
                  for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
                  {
                      Long olong = iterator.next();
