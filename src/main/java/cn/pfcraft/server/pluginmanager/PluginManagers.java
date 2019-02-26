@@ -64,9 +64,9 @@ public class PluginManagers {
 		Plugin p = null;
 		if ((p = Control.loadPlugin(toLoad)) != null) {
 			Control.enablePlugin(p);
-            sender.sendMessage(p.getDescription().getName()+p.getDescription().getVersion()+"加载成功");
+            sender.sendMessage(p.getDescription().getName()+p.getDescription().getVersion()+"Loaded successfully");
 		} else
-		sender.sendMessage(split[1]+"无法加载!(查看控制台了解详细信息.)");
+		sender.sendMessage(split[1]+"Unable to load! (View console for details.)");
 
 		return true;
 	}
@@ -76,19 +76,19 @@ public class PluginManagers {
 			return true;
 
 		if (split.length < 2) {
-			sender.sendMessage(ChatColor.GOLD + "/" + label + " unload <plugin> §b- 卸载插件");
+			sender.sendMessage(ChatColor.GOLD + "/" + label + " unload <plugin> §b- Uninstall plugin");
 			return true;
 		}
 
 		final Plugin p = Bukkit.getServer().getPluginManager().getPlugin(split[1]);
 
 		if (p == null)
-			sender.sendMessage("§7没有发现插件" + split[1]);
+			sender.sendMessage("§7No plugins found" + split[1]);
 		else {
 			if (Control.unloadPlugin(p, true))
-				sender.sendMessage(p.getDescription().getName()+p.getDescription().getVersion()+"卸载成功");
+				sender.sendMessage(p.getDescription().getName()+p.getDescription().getVersion()+"Unload successfully");
 			else
-				sender.sendMessage(split[1]+"无法卸载!(查看控制台了解详细信息.)");
+				sender.sendMessage(split[1]+"Unable to unload! (View console for details.)");
 		}
 
 		return true;
@@ -99,31 +99,31 @@ public class PluginManagers {
 			return true;
 
 		if (split.length < 2) {
-			sender.sendMessage(ChatColor.GOLD + "/" + label + " reload <plugin> §b- 重载插件");
+			sender.sendMessage(ChatColor.GOLD + "/" + label + " reload <plugin> §b- Reloaded plugin");
 			return true;
 		}
 
 		final Plugin p = Bukkit.getServer().getPluginManager().getPlugin(split[1]);
 
 		if (p == null)
-			sender.sendMessage("§7没有发现插件" + split[1]);
+			sender.sendMessage("§7No plugins found" + split[1]);
 		else {
 			final File file = Control.getFile((JavaPlugin) p);
 
 			if (file == null) {
-                sender.sendMessage(p.getName()+"jar文件丢失了");
+                sender.sendMessage(p.getName()+"jarFile is missing");
 				return true;
 			}
 
 			File name = new File("plugins" + File.separator + file.getName());
 			JavaPlugin loaded = null;
 			if (!Control.unloadPlugin(p, false))
-				sender.sendMessage(split[1]+"卸载时发生错误");
+				sender.sendMessage(split[1]+"An error occurred while uninstalling");
 			else if ((loaded = (JavaPlugin) Control.loadPlugin(name)) == null)
-				sender.sendMessage(split[1]+"重载时发生错误");
+				sender.sendMessage(split[1]+"An error occurred during overloading");
 
 			Control.enablePlugin(loaded);
-			sender.sendMessage(split[1]+"重载成功");
+			sender.sendMessage(split[1]+"Overload success");
 		}
 		return true;
 	}
