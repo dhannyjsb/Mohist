@@ -927,7 +927,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     public int applyMending(int amount) {
         EntityPlayerMP handle = getHandle();
         // Logic copied from EntityExperienceOrb and remapped to unobfuscated methods/properties
-        ItemStack itemstack = EnchantmentHelper.getRandomEquippedItemWithEnchant(Enchantments.MENDING, handle);
+        ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, handle);
         if (!itemstack.isEmpty() && itemstack.hasDamage()) {
             EntityXPOrb orb = new EntityXPOrb(handle.world);
             orb.xpValue = amount;
