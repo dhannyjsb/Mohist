@@ -21,7 +21,7 @@
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.world.World;
-+import net.minecraftforge.cauldron.inventory.CustomModRecipe;
++import cn.pfcraft.server.CustomModRecipe;
 +import org.bukkit.craftbukkit.inventory.CraftItemStack;
 +import org.bukkit.craftbukkit.inventory.CraftShapedRecipe;
 +import org.bukkit.inventory.Recipe;

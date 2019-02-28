@@ -26,7 +26,7 @@
  import net.minecraft.util.registry.RegistryNamespacedDefaultedByKey;
  import net.minecraft.world.World;
  import net.minecraft.world.biome.Biome;
-+import net.minecraftforge.cauldron.inventory.CustomModRecipe;
++import cn.pfcraft.server.CustomModRecipe;
  import net.minecraftforge.common.MinecraftForge;
  import net.minecraftforge.event.RegistryEvent;
  import net.minecraftforge.event.RegistryEvent.MissingMappings;

@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         mavenLocal()
+        mavenCentral()
         maven {
             name = "forge"
             url = "https://files.minecraftforge.net/maven"
@@ -9,21 +10,19 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
-        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3+'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: "idea"
 apply plugin: 'net.minecraftforge.gradle.patcher'
 apply plugin: 'net.minecraftforge.gradle.launch4j'
 
 group = 'cn.pfcraft'
-version = '0.0.1'
+version = '14.23.5.2815-0.0.1'
 
 repositories {
     clear()
@@ -72,11 +71,12 @@ jar{
     exclude "log4j2.xml"
 }
 
+minecraft.version = "1.12.2"
+
 minecraft {
-    version = "1.12.2"
-    mappings = "snapshot_nodoc_20171003"
+    mappings = 'snapshot_nodoc_20171003'
     workspaceDir = "projects"
-    versionJson = "jsons/1.12.2-dev.json"
+    versionJson = "jsons/${minecraft.version}-dev.json"
     buildUserdev = true
     buildInstaller = true
     installerVersion = "1.5"
@@ -134,7 +134,7 @@ launch4j {
     jreMinVersion = '1.8.0'
     initialHeapPercent = 5
     maxHeapPercent = 100
-}
+} 
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -169,12 +169,12 @@ outputJar {
             "Implementation-Version": version,
             "Main-Class": "net.minecraftforge.fml.relauncher.ServerLaunchWrapper",
             "TweakClass": "net.minecraftforge.fml.common.launcher.FMLTweaker",
-            "Class-Path": getServerClasspath(file("jsons/1.12.2-rel.json"))
+            "Class-Path": getServerClasspath(file("jsons/${minecraft.version}-rel.json"))
     ])
 }
 
 processJson {
-    releaseJson = "jsons/1.12.2-rel.json"
+    releaseJson = "jsons/${minecraft.version}-rel.json"
     addReplacements([
             "@minecraft_version@": project.minecraft.version,
             "@version@": project.version,
@@ -211,6 +211,6 @@ String getServerClasspath(File file) {
             out += "libraries/$group/$artifact/$version/$artifact-${version}.jar "
         }
     }
-    out += "minecraft_server.1.12.2.jar"
+    out += "minecraft_server.${minecraft.version}.jar"
     return out.toString()
 }

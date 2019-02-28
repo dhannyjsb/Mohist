@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/client/multiplayer/WorldClient.java
++++ ../src-work/minecraft/net/minecraft/client/multiplayer/WorldClient.java
+@@ -115,7 +115,7 @@
+         return this.clientChunkProvider;
+     }
+ 
+-    protected boolean isChunkLoaded(int x, int z, boolean allowEmpty)
++    public boolean isChunkLoaded(int x, int z, boolean allowEmpty)
+     {
+         return allowEmpty || !this.getChunkProvider().provideChunk(x, z).isEmpty();
+     }
+@@ -367,7 +367,7 @@
+ 
+         for (int i = 0; i < this.unloadedEntityList.size(); ++i)
+         {
+-            Entity entity = this.unloadedEntityList.get(i);
++            Entity entity = (Entity) this.unloadedEntityList.iterator();
+             int j = entity.chunkCoordX;
+             int k = entity.chunkCoordZ;
+ 
+@@ -379,7 +379,7 @@
+ 
+         for (int i1 = 0; i1 < this.unloadedEntityList.size(); ++i1)
+         {
+-            this.onEntityRemoved(this.unloadedEntityList.get(i1));
++            this.onEntityRemoved((Entity) this.unloadedEntityList.iterator());
+         }
+ 
+         this.unloadedEntityList.clear();
