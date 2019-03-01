@@ -136,7 +136,7 @@
     {
       "name": "co.aikar:fastutil-lite:1.0",
       "children" : ["sources"],
-      "url" : "https://papermc.io/repo/repository/maven-public/"
+      "url" : "https://ci.emc.gs/nexus/content/groups/aikar/"
     },
     {
       "name": "org.apache.maven:maven-artifact:3.5.3",

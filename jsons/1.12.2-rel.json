@@ -200,7 +200,7 @@
     },
     {
       "name": "co.aikar:fastutil-lite:1.0",
-      "url" : "https://papermc.io/repo/repository/maven-public/",
+      "url" : "https://ci.emc.gs/nexus/content/groups/aikar/",
       "clientreq":true,
       "serverreq":true
     },
