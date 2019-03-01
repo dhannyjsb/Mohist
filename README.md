@@ -1,14 +1,23 @@
+<img src="https://i.loli.net/2019/02/27/5c760f8570e8e.png">
+
 # Mohist Made in China
 
-## At present, Forge-1.13.2 has been released, we will follow the pace and start to try to make Mohist-1.13.2.
+At present, Forge-1.13.2 has been released, we will follow the pace and start to try to make Mohist-1.13.2.
 ## Mohist-1.12.2 will continue to be maintained..
 
-### Contact
+## Getting Help
    [**Discord**](https://discord.gg/HNmmrCV)
+   [**Home(Chinese)**](https://pfcraft.github.io)
+   [**QQ**](https://jq.qq.com/?_wv=1027&k=5q7lcCb)
 
-### Info
+## Info
 * jdk1.8.0_201
 * Forge-1.12.2 - 14.23.5.2815
 * Paper-1.12.2
 
-### Welcome everyone to participate in development, unity is power.
+## Building
+- `git clone https://github.com/PFCraft/Mohist.git`
+- `git submodule update --init --recursive`
+- `gradlew build`
+
+Welcome everyone to participate in development, unity is power.
