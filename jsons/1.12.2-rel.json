@@ -205,12 +205,6 @@
       "serverreq":true
     },
     {
-      "name": "org.bukkit:mohist-bukkit:1.12.2",
-      "url" : "https://maven.lliiooll.cn/",
-      "clientreq":true,
-      "serverreq":true
-    },
-    {
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "url" : "http://files.minecraftforge.net/maven/",
       "clientreq":true,
