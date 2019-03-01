@@ -179,7 +179,7 @@ processJson {
             "@minecraft_version@": project.minecraft.version,
             "@version@": project.version,
             "@project@": "mohist",
-            "@artifact@": "cn:pfcraft:${project.version}",
+            "@artifact@": "cn:pfcraft:mohist:${project.version}",
             "@universal_jar@": { outputJar.archiveName },
             "@timestamp@": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
     ])
