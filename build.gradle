@@ -100,7 +100,7 @@ minecraft {
             with common
         }
 
-        mohsit {
+        mohist {
             rootDir "."
             patchDir "patches/"
             patchAfter "forge"
