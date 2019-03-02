@@ -66,19 +66,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
         int j = 0;
         // Some commands use the worldserver variable but we leave it full of null values,
         // so we must temporarily populate it with the world of the commandsender
-        WorldServer[] prev = MinecraftServer.getServerInst().worlds;
         MinecraftServer server = MinecraftServer.getServerInst();
-        server.worlds = new WorldServer[server.worldServerList.size()];
-        server.worlds[0] = (WorldServer) icommandlistener.getEntityWorld();
-        int bpos = 0;
-        for (int pos = 1; pos < server.worlds.length; pos++) {
-            WorldServer world = server.worldServerList.get(bpos++);
-            if (server.worlds[0] == world) {
-                pos--;
-                continue;
-            }
-            server.worlds[pos] = world;
-        }
 
         try {
             if (vanillaCommand.checkPermission(server, icommandlistener)) {
@@ -139,7 +127,6 @@ public final class VanillaCommandWrapper extends BukkitCommand {
             }
         } finally {
             icommandlistener.setCommandStat(CommandResultStats.Type.SUCCESS_COUNT, j);
-            MinecraftServer.getServerInst().worlds = prev;
         }
         return j;
     }
