@@ -878,7 +878,7 @@
      }
  
      public File getFile(String fileName)
-@@ -835,11 +1017,22 @@
+@@ -835,6 +1017,17 @@
          return ret;
      }
  
@@ -896,12 +896,6 @@
      public String getMinecraftVersion()
      {
          return "1.12.2";
-     }
--
-+    public int getPlayerCount() { return getCurrentPlayerCount(); } // Paper - OBFHELPER
-     public int getCurrentPlayerCount()
-     {
-         return this.playerList.getCurrentPlayerCount();
 @@ -862,28 +1055,17 @@
  
      public String getServerModName()
@@ -1050,16 +1044,7 @@
      }
  
      public boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)
-@@ -1303,6 +1485,8 @@
-         this.maxPlayerIdleMinutes = idleTimeout;
-     }
- 
-+    public MinecraftSessionService getSessionService() { return getMinecraftSessionService(); } // Paper - OBFHELPER
-+
-     public MinecraftSessionService getMinecraftSessionService()
-     {
-         return this.sessionService;
-@@ -1331,7 +1515,7 @@
+@@ -1331,7 +1513,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -1068,7 +1053,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1349,7 +1533,8 @@
+@@ -1349,7 +1531,8 @@
  
      public boolean sendCommandFeedback()
      {
@@ -1078,7 +1063,7 @@
      }
  
      public MinecraftServer getServer()
-@@ -1357,6 +1542,11 @@
+@@ -1357,6 +1540,11 @@
          return this;
      }
  
@@ -1090,7 +1075,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1556,14 @@
+@@ -1366,15 +1554,14 @@
      {
          Validate.notNull(callable);
  
@@ -1111,7 +1096,7 @@
          }
          else
          {
-@@ -1412,11 +1601,13 @@
+@@ -1412,11 +1599,13 @@
  
      public AdvancementManager getAdvancementManager()
      {
@@ -1125,7 +1110,7 @@
          return this.worlds[0].getFunctionManager();
      }
  
-@@ -1425,6 +1616,7 @@
+@@ -1425,6 +1614,7 @@
          if (this.isCallingFromMinecraftThread())
          {
              this.getPlayerList().saveAllPlayerData();
@@ -1133,7 +1118,7 @@
              this.worlds[0].getLootTableManager().reloadLootTables();
              this.getAdvancementManager().reload();
              this.getFunctionManager().reload();
-@@ -1455,8 +1647,11 @@
+@@ -1455,8 +1645,11 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1146,7 +1131,7 @@
          //Forge: Copied from DedicatedServer.init as to run as early as possible, Old code left in place intentionally.
          //Done in good faith with permission: https://github.com/MinecraftForge/MinecraftForge/issues/3659#issuecomment-390467028
          ServerEula eula = new ServerEula(new File("eula.txt"));
-@@ -1466,119 +1661,32 @@
+@@ -1466,119 +1659,32 @@
              eula.createEULAFile();
              return;
          }
@@ -1278,7 +1263,7 @@
          }
          catch (Exception exception)
          {
-@@ -1595,7 +1703,8 @@
+@@ -1595,7 +1701,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {

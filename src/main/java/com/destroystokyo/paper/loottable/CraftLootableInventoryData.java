@@ -131,7 +131,7 @@ public class CraftLootableInventoryData {
                 }
                 for (int i = 0; i < size; i++) {
                     final NBTTagCompound cmp = list.getCompoundTagAt(i);
-                    lootedPlayers.put(cmp.getUUID("UUID"), cmp.getLong("Time"));
+                    lootedPlayers.put(cmp.getUniqueId("UUID"), cmp.getLong("Time"));
                 }
         }
     }
@@ -150,7 +150,7 @@ public class CraftLootableInventoryData {
                 NBTTagList list = new NBTTagList();
                 for (Map.Entry<UUID, Long> entry : this.lootedPlayers.entrySet()) {
                         NBTTagCompound cmp = new NBTTagCompound();
-                        cmp.setUUID("UUID", entry.getKey());
+                        cmp.setUniqueId("UUID", entry.getKey());
                         cmp.setLong("Time", entry.getValue());
                         list.appendTag(cmp);
                     }

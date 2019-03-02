@@ -138,7 +138,7 @@
 +     */
 +    public int getFlowSpeed(World world, BlockPos blockposition) {
 +        if (this.blockMaterial == Material.LAVA) {
-+            return world.provider.isSkyMissing() ? world.paperConfig.lavaFlowSpeedNether : world.paperConfig.lavaFlowSpeedNormal;
++            return world.provider.isNether() ? world.paperConfig.lavaFlowSpeedNether : world.paperConfig.lavaFlowSpeedNormal;
 +        }
 +        if (this.blockMaterial == Material.WATER && (
 +                world.getBlockState(blockposition.north(1)).getBlock().blockMaterial == Material.LAVA ||

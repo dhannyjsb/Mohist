@@ -155,7 +155,7 @@
                              int l1 = blockpos.getY();
                              int i2 = blockpos.getZ();
 -                            IBlockState iblockstate = worldServerIn.getBlockState(blockpos);
-+                            IBlockState iblockstate = worldServerIn.getWorldBorder().isInBounds(blockpos) ? worldServerIn.getTypeIfLoaded(blockpos) : null; // Paper
++                            IBlockState iblockstate = worldServerIn.getWorldBorder().contains(blockpos) ? worldServerIn.getTypeIfLoaded(blockpos) : null; // Paper
  
                              if (!iblockstate.isNormalCube())
                              {
@@ -165,7 +165,7 @@
  
 -                                        if (!worldServerIn.isAnyPlayerWithinRangeAt((double)f, (double)i3, (double)f1, 24.0D) && blockpos1.distanceSq((double)f, (double)i3, (double)f1) >= 576.0D)
 -                                        {
-+                                        if (worldServerIn.getWorldBorder().isInBounds( blockpos$mutableblockpos) && worldServerIn.getChunkIfLoaded( blockpos$mutableblockpos) != null && !worldServerIn.isAnyPlayerWithinRangeAt((double) f, (double) k3, (double) f1, 24.0D) && blockpos1.distanceSq((double) f, (double) k3, (double) f1) >= 576.0D) { // Paper - Prevent mob spawning from loading/generating chunks
++                                        if (worldServerIn.getWorldBorder().contains( blockpos$mutableblockpos) && worldServerIn.getChunkIfLoaded( blockpos$mutableblockpos) != null && !worldServerIn.isAnyPlayerWithinRangeAt((double) f, (double) k3, (double) f1, 24.0D) && blockpos1.distanceSq((double) f, (double) k3, (double) f1) >= 576.0D) { // Paper - Prevent mob spawning from loading/generating chunks
                                              if (biome$spawnlistentry == null)
                                              {
                                                  biome$spawnlistentry = worldServerIn.getSpawnListEntryForTypeAt(enumcreaturetype, blockpos$mutableblockpos);

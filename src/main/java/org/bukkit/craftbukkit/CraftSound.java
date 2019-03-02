@@ -561,7 +561,7 @@ public enum CraftSound {
 
     // Paper start - cancellable death event
     public static CraftSound getBySoundEffect(final SoundEvent effect) {
-        ResourceLocation key = SoundEvent.getRegistry().getByValue(effect);
+        ResourceLocation key = SoundEvent.getRegistry().getNameForObject(effect);
         Preconditions.checkArgument(key != null, "Key for sound effect %s not found?", effect.toString());
         return valueOf(key.getResourcePath().replace('.', '_').toUpperCase(java.util.Locale.ENGLISH));
     }

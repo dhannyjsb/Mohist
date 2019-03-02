@@ -550,18 +550,17 @@
          return new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(0), profile, playerinteractionmanager);
      }
  
--    public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP playerIn, int dimension, boolean conqueredEnd)
 +    public EntityPlayerMP createPlayerForUser(GameProfile profile, EntityPlayerMP entityPlayerMP)
-     {
++    {
 +        return entityPlayerMP;
 +    }
 +
-+    public EntityPlayerMP moveToWorld(EntityPlayerMP playerIn, int dimension, boolean conqueredEnd)
-+    {
-+        return this.moveToWorld(playerIn, dimension, conqueredEnd, null, true);
+     public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP playerIn, int dimension, boolean conqueredEnd)
+     {
++        return this.recreatePlayerEntity(playerIn, dimension, conqueredEnd, null, true);
 +    }
 +
-+    public EntityPlayerMP moveToWorld(EntityPlayerMP playerIn, int dimension, boolean conqueredEnd, Location location, boolean avoidSuffocation) {
++    public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP playerIn, int dimension, boolean conqueredEnd, Location location, boolean avoidSuffocation) {
 +        playerIn.dismountRidingEntity(); // CraftBukkit
          World world = mcServer.getWorld(dimension);
          if (world == null)
@@ -790,7 +789,7 @@
 +        exitWorld.getDefaultTeleporter().adjustExit(entityplayer, exit, velocity);
 +
 +        entityplayer.invulnerableDimensionChange = true; // CraftBukkit - Set teleport invulnerability only if player changing worlds
-+        this.moveToWorld(entityplayer, exitWorld.dimension, true, exit, !exitWorld.paperConfig.disableTeleportationSuffocationCheck); // SPIGOT-3864 // Paper GH-1149 - Tie suffocation check to config option
++        this.recreatePlayerEntity(entityplayer, exitWorld.dimension, true, exit, !exitWorld.paperConfig.disableTeleportationSuffocationCheck); // SPIGOT-3864 // Paper GH-1149 - Tie suffocation check to config option
 +        if (entityplayer.motionX != velocity.getX() || entityplayer.motionY != velocity.getY() || entityplayer.motionZ != velocity.getZ()) {
 +            entityplayer.getBukkitEntity().setVelocity(velocity);
 +        }

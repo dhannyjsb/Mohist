@@ -17,16 +17,3 @@
  public class RegistryNamespaced<K, V> extends RegistrySimple<K, V> implements IObjectIntIterable<V>
  {
      protected final IntIdentityHashBiMap<V> underlyingIntegerMap = new IntIdentityHashBiMap<V>(256);
-@@ -36,6 +37,12 @@
-     }
- 
-     @Nullable
-+    public K getByValue(V value)
-+    {
-+        return this.getNameForObject(value);
-+    } // Paper - OBFHELPER
-+
-+    @Nullable
-     public K getNameForObject(V value)
-     {
-         return this.inverseObjectRegistry.get(value);

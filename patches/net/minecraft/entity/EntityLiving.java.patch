@@ -227,7 +227,7 @@
          {
 -            Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
 +            Chunk currentChunk = getChunkAtLocation(); // Paper
-+            if (currentChunk != null && (currentChunk.isUnloading() || currentChunk.scheduledForUnload != null)) return; // Paper
++            if (currentChunk != null && (currentChunk.unloadQueued || currentChunk.scheduledForUnload != null)) return; // Paper
 +            EntityPlayer entity = this.world.getClosestPlayerToEntity(this, -1.0D);
  
 -            if (entity != null)
@@ -264,8 +264,8 @@
 +        {
 +            // Paper start - Allow nerfed mobs to jump and float
 +            if (goalFloat != null) {
-+                if (goalFloat.validConditions()) goalFloat.update();
-+                this.getJumpHelper().jumpIfSet();
++                if (goalFloat.shouldExecute()) goalFloat.updateTask();
++                this.getJumpHelper().doJump();
 +            }
 +            // Paper end
 +            return;

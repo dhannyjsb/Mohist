@@ -75,7 +75,7 @@
 +                                   CraftItemStack.asCraftMirror(bow),
 +                                   CraftItemStack.asCraftMirror(itemstack)
 +                           ).callEvent());
-+           // Paper end
++    // Paper end
      }
  
      public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)

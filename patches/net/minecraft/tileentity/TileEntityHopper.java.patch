@@ -313,7 +313,7 @@
                  {
                      return true;
                  }
-@@ -358,20 +519,73 @@
+@@ -358,14 +519,62 @@
          if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction))
          {
              ItemStack itemstack1 = itemstack.copy();
@@ -379,18 +379,7 @@
              inventoryIn.setInventorySlotContents(index, itemstack1);
          }
  
-         return false;
-     }
- 
-+    public static boolean putDropInInventory(IInventory iinventory, IInventory iinventory1, EntityItem entityitem)
-+    {
-+        return putDropInInventoryAllSlots(iinventory, iinventory1, entityitem);
-+    } // Paper - OBFHELPER
-+
-     public static boolean putDropInInventoryAllSlots(IInventory source, IInventory destination, EntityItem entity)
-     {
-         boolean flag = false;
-@@ -382,8 +596,13 @@
+@@ -382,8 +591,13 @@
          }
          else
          {
@@ -405,7 +394,7 @@
  
              if (itemstack1.isEmpty())
              {
-@@ -458,7 +677,9 @@
+@@ -458,7 +672,9 @@
  
              if (itemstack.isEmpty())
              {
@@ -415,7 +404,7 @@
                  stack = ItemStack.EMPTY;
                  flag = true;
              }
-@@ -491,7 +712,7 @@
+@@ -491,7 +707,7 @@
                              }
                          }
  
@@ -424,7 +413,7 @@
                      }
                  }
  
-@@ -505,26 +726,47 @@
+@@ -505,26 +721,47 @@
      private IInventory getInventoryForHopperTransfer()
      {
          EnumFacing enumfacing = BlockHopper.getFacing(this.getBlockMetadata());
@@ -474,7 +463,7 @@
          net.minecraft.block.state.IBlockState state = worldIn.getBlockState(blockpos);
          Block block = state.getBlock();
  
-@@ -543,7 +785,7 @@
+@@ -543,7 +780,7 @@
              }
          }
  

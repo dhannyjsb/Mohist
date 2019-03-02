@@ -143,7 +143,7 @@
  
          if (playerprofilecache$profileentry != null && (new Date()).getTime() >= playerprofilecache$profileentry.expirationDate.getTime())
          {
-@@ -177,26 +158,36 @@
+@@ -177,26 +158,33 @@
              }
          }
  
@@ -168,9 +168,6 @@
 +
      @Nullable
 -    public GameProfile getProfileByUUID(UUID uuid)
-+    public GameProfile getProfile(UUID uuid) { return getProfileByUUID(uuid);  } // Paper - OBFHELPER
-+
-+    @Nullable
 +    public synchronized GameProfile getProfileByUUID(UUID uuid) // Paper - synchronize
      {
 -        PlayerProfileCache.ProfileEntry playerprofilecache$profileentry = this.uuidToProfileEntryMap.get(uuid);
@@ -186,7 +183,7 @@
  
          if (playerprofilecache$profileentry != null)
          {
-@@ -215,14 +206,14 @@
+@@ -215,14 +203,14 @@
          try
          {
              bufferedreader = Files.newReader(this.usercacheFile, StandardCharsets.UTF_8);
@@ -203,7 +200,7 @@
                  {
                      if (playerprofilecache$profileentry != null)
                      {
-@@ -245,9 +236,12 @@
+@@ -245,9 +233,12 @@
          }
      }
  
@@ -219,7 +216,7 @@
          BufferedWriter bufferedwriter = null;
  
          try
-@@ -266,17 +260,25 @@
+@@ -266,17 +257,25 @@
          }
          finally
          {
@@ -249,7 +246,7 @@
  
              if (playerprofilecache$profileentry != null)
              {
-@@ -309,13 +311,13 @@
+@@ -309,13 +308,13 @@
          }
      }
  
@@ -265,7 +262,7 @@
          {
              JsonObject jsonobject = new JsonObject();
              jsonobject.addProperty("name", p_serialize_1_.getGameProfile().getName());
-@@ -325,7 +327,7 @@
+@@ -325,7 +324,7 @@
              return jsonobject;
          }
  

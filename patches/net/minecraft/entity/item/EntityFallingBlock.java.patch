@@ -102,13 +102,13 @@
 +    // Paper start
 +    private boolean isOnGround() {
 +        BlockPos where = new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ);
-+        boolean cannotMoveThrough = !BlockFalling.canMoveThrough(this.world.getType(where));
++        boolean cannotMoveThrough = !BlockFalling.canFallThrough(this.world.getType(where));
 +        if (!this.world.paperConfig.altFallingBlockOnGround) return cannotMoveThrough;
 +        if (cannotMoveThrough) {
 +            return true;
 +        }
 +        IBlockState blockData = this.world.getType(where.down());
-+        if (BlockFalling.canMoveThrough(blockData)) {
++        if (BlockFalling.canFallThrough(blockData)) {
 +            return false;
 +        }
 +        List<AxisAlignedBB> list = new ArrayList<>();

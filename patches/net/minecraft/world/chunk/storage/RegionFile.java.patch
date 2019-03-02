@@ -31,7 +31,7 @@
  
  public class RegionFile
  {
-@@ -24,9 +22,14 @@
+@@ -24,9 +22,13 @@
      private static final boolean FORGE_ENABLE_EXTENDED_SAVE = Boolean.parseBoolean(System.getProperty("forge.enableExtendedSave", "true"));
      private static final byte[] EMPTY_SECTOR = new byte[4096];
      private final File fileName;
@@ -39,14 +39,13 @@
 +        return this.fileName;
 +    }
      private RandomAccessFile dataFile;
-+    private RandomAccessFile getDataFile() { return dataFile; } // Paper - OBFHELPER
      private final int[] offsets = new int[1024];
      private final int[] chunkTimestamps = new int[1024];
 +    private int[] timestamps = chunkTimestamps; // Paper - OBFHELPER
      private List<Boolean> sectorFree;
      private int sizeDelta;
      private long lastModified;
-@@ -45,7 +48,7 @@
+@@ -45,7 +47,7 @@
  
              this.dataFile = new RandomAccessFile(fileNameIn, "rw");
  
@@ -55,7 +54,7 @@
              {
                  this.dataFile.write(EMPTY_SECTOR);
                  this.dataFile.write(EMPTY_SECTOR);
-@@ -71,42 +74,44 @@
+@@ -71,42 +73,44 @@
              this.sectorFree.set(0, Boolean.valueOf(false));
              this.sectorFree.set(1, Boolean.valueOf(false));
              this.dataFile.seek(0L);
@@ -118,23 +117,16 @@
          }
      }
  
-@@ -117,7 +122,9 @@
+@@ -117,7 +121,6 @@
      }
  
      @Nullable
-+    public synchronized DataInputStream getReadStream(int i, int j) { return getChunkDataInputStream(i, j); }
- 
-+    @Nullable
+-
      public synchronized DataInputStream getChunkDataInputStream(int x, int z)
      {
          if (this.outOfBounds(x, z))
-@@ -195,9 +202,12 @@
-     }
- 
+@@ -197,7 +200,7 @@
      @Nullable
-+    public DataOutputStream getWriteStream(int i, int j) { return getChunkDataOutputStream(i, j); }
-+
-+    @Nullable
      public DataOutputStream getChunkDataOutputStream(int x, int z)
      {
 -        return this.outOfBounds(x, z) ? null : new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(new RegionFile.ChunkBuffer(x, z))));
@@ -142,7 +134,7 @@
      }
  
      protected synchronized void write(int x, int z, byte[] data, int length)
-@@ -216,7 +226,7 @@
+@@ -216,7 +219,7 @@
  
              if (l >= 256)
              {
@@ -151,7 +143,7 @@
                  net.minecraftforge.fml.common.FMLLog.log.warn("Large Chunk Detected: ({}, {}) Size: {} {}", x, z, l, fileName);
              }
  
-@@ -295,7 +305,7 @@
+@@ -295,7 +298,7 @@
          }
          catch (IOException ioexception)
          {
@@ -160,7 +152,7 @@
          }
      }
  
-@@ -344,6 +354,146 @@
+@@ -344,6 +347,146 @@
          }
      }
  
@@ -226,7 +218,7 @@
 +    void writeOversizedData(int x, int z, NBTTagCompound oversizedData) throws IOException {
 +        File file = getOversizedFile(x, z);
 +        try (DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(new java.io.FileOutputStream(file), new java.util.zip.Deflater(java.util.zip.Deflater.BEST_COMPRESSION), 32 * 1024), 32 * 1024))) {
-+            CompressedStreamTools.writeNBT(oversizedData, out);
++            CompressedStreamTools.write(oversizedData, out);
 +        }
 +        this.setOversized(x, z, true);
 +    }
@@ -234,7 +226,7 @@
 +    synchronized NBTTagCompound getOversizedData(int x, int z) throws IOException {
 +        File file = getOversizedFile(x, z);
 +        try (DataInputStream out = new DataInputStream(new BufferedInputStream(new InflaterInputStream(new java.io.FileInputStream(file))))) {
-+            return CompressedStreamTools.readNBT(out);
++            return CompressedStreamTools.read(out);
 +        }
 +    }
 +
@@ -268,7 +260,7 @@
 +        org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger();
 +        String debug = "idx:" + + j1 + " - " + x + "," + z + " - offset: " + offset + " - len: " + len;
 +        try {
-+            RandomAccessFile file = getDataFile();
++            RandomAccessFile file = dataFile;
 +            file.seek(j1 * 4);
 +            file.writeInt(0);
 +            // clear the timestamp
@@ -307,7 +299,7 @@
      class ChunkBuffer extends ByteArrayOutputStream
      {
          private final int chunkX;
-@@ -358,7 +508,37 @@
+@@ -358,7 +501,37 @@
  
          public void close() throws IOException
          {

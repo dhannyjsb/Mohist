@@ -644,7 +644,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             entity.connection.teleport(to);
         } else {
             // Paper - Configurable suffocation check
-            server.getHandle().moveToWorld(entity, toWorld.dimension, true, to, !toWorld.paperConfig.disableTeleportationSuffocationCheck);
+            server.getHandle().recreatePlayerEntity(entity, toWorld.dimension, true, to, !toWorld.paperConfig.disableTeleportationSuffocationCheck);
         }
         return true;
     }
@@ -1837,7 +1837,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         {
             if ( getHealth() <= 0 && isOnline() )
             {
-                server.getServer().getPlayerList().moveToWorld( getHandle(), 0, false );
+                server.getServer().getPlayerList().recreatePlayerEntity( getHandle(), 0, false );
             }
         }
 

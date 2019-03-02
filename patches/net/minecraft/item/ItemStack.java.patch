@@ -242,15 +242,6 @@
                      this.shrink(1);
  
                      if (entityIn instanceof EntityPlayer)
-@@ -532,7 +616,7 @@
-         playerIn.addStat(StatList.getCraftStats(this.item), amount);
-         this.getItem().onCreated(this, worldIn, playerIn);
-     }
--
-+    public int getItemUseMaxDuration() { return getMaxItemUseDuration(); } // Paper - OBFHELPER
-     public int getMaxItemUseDuration()
-     {
-         return this.getItem().getMaxItemUseDuration(this);
 @@ -592,9 +676,22 @@
          return this.stackTagCompound != null ? this.stackTagCompound.getTagList("ench", 10) : new NBTTagList();
      }

@@ -56,7 +56,7 @@
      @Nullable
      public Path getPathToPos(BlockPos pos)
      {
-+        if (!getEntity().getEntityWorld().getWorldBorder().isInBounds(pos)) return null; // Paper - don't path out of world border
++        if (!getEntity().getEntityWorld().getWorldBorder().contains(pos)) return null; // Paper - don't path out of world border
          if (!this.canNavigate())
          {
              return null;
@@ -75,7 +75,7 @@
          {
              BlockPos blockpos = new BlockPos(entityIn);
 -
-+            if (!getEntity().getEntityWorld().getWorldBorder().isInBounds(blockpos)) return null; // Paper - don't path out of world border
++            if (!getEntity().getEntityWorld().getWorldBorder().contains(blockpos)) return null; // Paper - don't path out of world border
              if (this.currentPath != null && !this.currentPath.isFinished() && blockpos.equals(this.targetPos))
              {
                  return this.currentPath;

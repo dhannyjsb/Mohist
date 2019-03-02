@@ -116,13 +116,7 @@
          compound.setInteger("dimension", this.dimension);
          compound.setInteger("xCenter", this.xCenter);
          compound.setInteger("zCenter", this.zCenter);
-@@ -108,12 +167,12 @@
-         compound.setBoolean("unlimitedTracking", this.unlimitedTracking);
-         return compound;
-     }
--
-+    public void updateSeenPlayers(EntityPlayer entityhuman, ItemStack itemstack) { updateVisiblePlayers(entityhuman, itemstack); } // Paper - OBFHELPER
-     public void updateVisiblePlayers(EntityPlayer player, ItemStack mapStack)
+@@ -113,7 +172,7 @@
      {
          if (!this.playersHashMap.containsKey(player))
          {

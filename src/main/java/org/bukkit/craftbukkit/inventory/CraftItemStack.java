@@ -177,7 +177,7 @@ public final class CraftItemStack extends ItemStack {
     // Paper start
     @Override
     public int getMaxItemUseDuration() {
-        return handle == null ? 0 : handle.getItemUseMaxDuration();
+        return handle == null ? 0 : handle.getMaxItemUseDuration();
     }
     // Paper end
 

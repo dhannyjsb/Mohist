@@ -77,7 +77,7 @@
 +
 +        // Paper start
 +        if (spawningEntity != null) {
-+            compound.setUUID("SpawningEntity", spawningEntity);
++            compound.setUniqueId("SpawningEntity", spawningEntity);
 +        }
 +        // Paper end
      }
@@ -89,7 +89,7 @@
          }
 +        // Paper start
 +        if (nbttagcompound.hasUniqueId("SpawningEntity")) {
-+            spawningEntity = nbttagcompound.getUUID("SpawningEntity");
++            spawningEntity = nbttagcompound.getUniqueId("SpawningEntity");
 +        }
 +        // Paper end
      }

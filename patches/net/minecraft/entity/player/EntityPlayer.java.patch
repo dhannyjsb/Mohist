@@ -410,7 +410,7 @@
  
 +    // Paper start - send SoundEffect to everyone who can see fromEntity
 +    private static void sendSoundEffect(EntityPlayer fromEntity, double x, double y, double z, SoundEvent soundEffect, SoundCategory soundCategory, float volume, float pitch) {
-+        fromEntity.world.sendSoundEffect(fromEntity, x, y, z, soundEffect, soundCategory, volume, pitch); // This will not send the effect to the entity himself
++        fromEntity.world.playSound(fromEntity, x, y, z, soundEffect, soundCategory, volume, pitch); // This will not send the effect to the entity himself
 +        if (fromEntity instanceof EntityPlayerMP) {
 +            ((EntityPlayerMP) fromEntity).connection.sendPacket(new SPacketSoundEffect(soundEffect, soundCategory, x, y, z, volume, pitch));
 +        }

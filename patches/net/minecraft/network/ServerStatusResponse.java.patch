@@ -59,18 +59,16 @@
      {
          this.version = versionIn;
          invalidateJson();
-@@ -86,23 +80,23 @@
+@@ -86,23 +80,21 @@
              {
                  return this.onlinePlayerCount;
              }
 -
-+            public GameProfile[] getSample() { return getPlayers(); } // Paper - OBFHELPER
              public GameProfile[] getPlayers()
              {
                  return this.players;
              }
 -
-+            public void setSample(GameProfile[] sample) { setPlayers(sample); } // Paper - OBFHELPER
              public void setPlayers(GameProfile[] playersIn)
              {
                  this.players = playersIn;
@@ -88,7 +86,7 @@
  
                          if (JsonUtils.isJsonArray(jsonobject, "sample"))
                          {
-@@ -126,7 +120,7 @@
+@@ -126,7 +118,7 @@
                          return serverstatusresponse$players;
                      }
  
@@ -97,7 +95,7 @@
                      {
                          JsonObject jsonobject = new JsonObject();
                          jsonobject.addProperty("max", Integer.valueOf(p_serialize_1_.getMaxPlayers()));
-@@ -167,12 +161,12 @@
+@@ -167,12 +159,12 @@
  
                  if (jsonobject.has("players"))
                  {
@@ -112,7 +110,7 @@
                  }
  
                  if (jsonobject.has("favicon"))
-@@ -273,15 +267,15 @@
+@@ -273,15 +265,15 @@
                  return this.protocol;
              }
  

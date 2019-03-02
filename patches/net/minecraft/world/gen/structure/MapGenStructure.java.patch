@@ -69,10 +69,10 @@
 -                    }
 +        // Paper start - replace method
 +        StructureStart structureStart = allStructures.get(ChunkPos.asLong(pos));
-+        if (structureStart != null && structureStart.isSizeableStructure() && structureStart.getBoundingBox().contains(pos)) {
++        if (structureStart != null && structureStart.isSizeableStructure() && structureStart.getBoundingBox().isVecInside(pos)) {
 +            List<StructureComponent> structurePieces = structureStart.getComponents();
 +            for (StructureComponent piece : structurePieces) {
-+                if (piece.getBoundingBox().contains(pos)) {
++                if (piece.getBoundingBox().isVecInside(pos)) {
 +                    return structureStart;
                  }
 -
@@ -101,7 +101,7 @@
 -        return false;
 +        // Paper start - Replace method
 +        StructureStart structureStart = this.allStructures.get(ChunkPos.asLong(pos));
-+        return structureStart != null && structureStart.isSizeableStructure() && structureStart.getBoundingBox().contains(pos);
++        return structureStart != null && structureStart.isSizeableStructure() && structureStart.getBoundingBox().isVecInside(pos);
      }
  
      @Nullable

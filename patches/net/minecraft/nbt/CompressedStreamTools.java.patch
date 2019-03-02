@@ -30,19 +30,3 @@
  public class CompressedStreamTools
  {
      public static NBTTagCompound readCompressed(InputStream is) throws IOException
-@@ -77,6 +67,7 @@
-             file1.renameTo(fileIn);
-         }
-     }
-+    public static NBTTagCompound readNBT(DataInputStream datainputstream) throws IOException { return read(datainputstream); } // Paper - OBFHELPER
- 
-     public static NBTTagCompound read(DataInputStream inputStream) throws IOException
-     {
-@@ -96,6 +87,7 @@
-             throw new IOException("Root tag must be a named compound tag");
-         }
-     }
-+    public static void writeNBT(NBTTagCompound nbttagcompound, DataOutput dataoutput) throws IOException { write(nbttagcompound, dataoutput); } // Paper - OBFHELPER
- 
-     public static void write(NBTTagCompound compound, DataOutput output) throws IOException
-     {

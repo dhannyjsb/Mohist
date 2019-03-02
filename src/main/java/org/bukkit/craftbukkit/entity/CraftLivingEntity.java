@@ -498,17 +498,17 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public ItemStack getActiveItem() {
-        return getHandle().getActiveItem().asBukkitMirror();
+        return getHandle().getActiveItemStack().asBukkitMirror();
     }
 
     @Override
     public int getItemUseRemainingTime() {
-        return getHandle().getItemUseRemainingTime();
+        return getHandle().getItemInUseCount();
     }
 
     @Override
     public int getHandRaisedTime() {
-        return getHandle().getHandRaisedTime();
+        return getHandle().getItemInUseMaxCount();
     }
 
     @Override

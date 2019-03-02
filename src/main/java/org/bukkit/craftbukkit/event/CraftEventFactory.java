@@ -489,7 +489,7 @@ public class CraftEventFactory {
             double z = event.getEntity().getLocation().getZ();
             SoundEvent soundEffect = org.bukkit.craftbukkit.CraftSound.getSoundEffect(event.getDeathSound());
             SoundCategory soundCategory = SoundCategory.valueOf(event.getDeathSoundCategory().name());
-            victim.world.sendSoundEffect(source, x, y, z, soundEffect, soundCategory, event.getDeathSoundVolume(), event.getDeathSoundPitch());
+            victim.world.playSound(source, x, y, z, soundEffect, soundCategory, event.getDeathSoundVolume(), event.getDeathSoundPitch());
         }
     }
     // Paper end

@@ -28,7 +28,7 @@
      public WorldBorder()
      {
          this.endDiameter = this.startDiameter;
-@@ -34,6 +39,20 @@
+@@ -34,6 +39,18 @@
          this.warningDistance = 5;
      }
  
@@ -36,20 +36,18 @@
 +    private final BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos();
 +    public boolean isBlockInBounds(int chunkX, int chunkZ) {
 +        mutPos.setPos(chunkX, 64, chunkZ);
-+        return isInBounds(mutPos);
++        return contains(mutPos);
 +    }
 +    public boolean isChunkInBounds(int chunkX, int chunkZ) {
 +        mutPos.setPos(((chunkX << 4) + 15), 64, (chunkZ << 4) + 15);
-+        return isInBounds(mutPos);
++        return contains(mutPos);
 +    }
 +    // Paper end
-+
-+    public boolean isInBounds(BlockPos blockposition) { return contains(blockposition); }
 +
      public boolean contains(BlockPos pos)
      {
          return (double)(pos.getX() + 1) > this.minX() && (double)pos.getX() < this.maxX() && (double)(pos.getZ() + 1) > this.minZ() && (double)pos.getZ() < this.maxZ();
-@@ -206,6 +225,7 @@
+@@ -206,6 +223,7 @@
  
      public void addListener(IBorderListener listener)
      {

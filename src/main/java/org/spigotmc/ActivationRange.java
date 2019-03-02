@@ -310,7 +310,7 @@ public class ActivationRange
             isActive = false;
         }
         // Paper start - Skip ticking in chunks scheduled for unload
-        if(entity.world.paperConfig.skipEntityTickingInChunksScheduledForUnload && (chunk == null || chunk.isUnloading() || chunk.scheduledForUnload != null))
+        if(entity.world.paperConfig.skipEntityTickingInChunksScheduledForUnload && (chunk == null || chunk.unloadQueued || chunk.scheduledForUnload != null))
             isActive = false;
         // Paper end
         return isActive;

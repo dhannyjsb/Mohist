@@ -27,15 +27,7 @@
  public abstract class WorldProvider
  {
      public static final float[] MOON_PHASE_FACTORS = new float[] {1.0F, 0.75F, 0.5F, 0.25F, 0.0F, 0.25F, 0.5F, 0.75F};
-@@ -201,6 +198,7 @@
-         return this.hasSkyLight;
-     }
- 
-+    public final boolean isSkyMissing() { return this.isNether(); } // Paper - OBFHELPER
-     public boolean isNether()
-     {
-         return this.nether;
-@@ -412,7 +410,7 @@
+@@ -412,7 +409,7 @@
       */
      public WorldSleepResult canSleepAt(net.minecraft.entity.player.EntityPlayer player, BlockPos pos)
      {
@@ -44,7 +36,7 @@
      }
  
      public static enum WorldSleepResult
-@@ -565,10 +563,20 @@
+@@ -565,10 +562,20 @@
  
      public void resetRainAndThunder()
      {
@@ -67,12 +59,12 @@
      }
  
      public boolean canDoLightning(net.minecraft.world.chunk.Chunk chunk)
-@@ -601,6 +609,11 @@
+@@ -601,6 +608,11 @@
  
      public boolean canDropChunk(int x, int z)
      {
 -        return true;
-+        return !this.world.shouldStayLoaded(x, z); // Paper - Use shouldStayLoaded check for all worlds
++        return !this.world.isSpawnChunk(x, z); // Paper - Use shouldStayLoaded check for all worlds
      }
 +    // Mohist start
 +    public static WorldProvider getProviderForDimension(int dimensionId){

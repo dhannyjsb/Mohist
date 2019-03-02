@@ -32,7 +32,7 @@
  import net.minecraft.util.JsonUtils;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
-@@ -32,12 +10,22 @@
+@@ -32,12 +10,21 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -52,11 +52,10 @@
 -    private final Map<String, V> values = Maps.<String, V>newHashMap();
 +    // Paper - replace HashMap is ConcurrentHashMap
 +    private final Map<String, V> values = Maps.<String, V>newConcurrentMap();
-+    private final Map<String, V> getBackingMap() { return this.values; } // Paper - OBFHELPER
      private boolean lanServer = true;
      private static final ParameterizedType USER_LIST_ENTRY_TYPE = new ParameterizedType()
      {
-@@ -59,7 +47,7 @@
+@@ -59,7 +46,7 @@
      {
          this.saveFile = saveFile;
          GsonBuilder gsonbuilder = (new GsonBuilder()).setPrettyPrinting();
@@ -65,7 +64,7 @@
          this.gson = gsonbuilder.create();
      }
  
-@@ -89,10 +77,17 @@
+@@ -89,10 +76,17 @@
  
      public V getEntry(K obj)
      {
@@ -74,7 +73,7 @@
 +        // Paper start
 +        // this.h();
 +        // return (V) this.d.get(this.a(k0)); // CraftBukkit - fix decompile error
-+        return (V) this.getBackingMap().computeIfPresent(this.getMappingKey(obj), (k, v) -> {
++        return (V) this.values.computeIfPresent(this.getMappingKey(obj), (k, v) -> {
 +            return v.hasBanExpired() ? null : v;
 +        });
 +        // Paper end
@@ -85,7 +84,7 @@
      public void removeEntry(K entry)
      {
          this.values.remove(this.getObjectKey(entry));
-@@ -118,6 +113,11 @@
+@@ -118,6 +112,11 @@
          return (String[])this.values.keySet().toArray(new String[this.values.size()]);
      }
  
@@ -97,32 +96,29 @@
      protected String getObjectKey(K obj)
      {
          return obj.toString();
-@@ -128,9 +128,12 @@
-         return this.values.containsKey(this.getObjectKey(entry));
-     }
+@@ -130,20 +129,7 @@
  
-+    private void removeStaleEntries() { removeExpired(); } // Paper - OBFHELPER
-+
      private void removeExpired()
      {
 -        List<K> list = Lists.<K>newArrayList();
-+        // Paper start
-+        /*List<K> list = Lists.<K>newArrayList();
- 
-         for (V v : this.values.values())
-         {
-@@ -143,7 +146,9 @@
-         for (K k : list)
-         {
-             this.values.remove(k);
+-
+-        for (V v : this.values.values())
+-        {
+-            if (v.hasBanExpired())
+-            {
+-                list.add(v.getValue());
+-            }
 -        }
-+        }*/
-+        this.getBackingMap().values().removeIf((v) -> v.hasBanExpired());
-+        // Paper end
+-
+-        for (K k : list)
+-        {
+-            this.values.remove(k);
+-        }
++        this.values.values().removeIf((v) -> v.hasBanExpired());
      }
  
      protected UserListEntry<K> createEntry(JsonObject entryData)
-@@ -156,6 +161,10 @@
+@@ -156,6 +142,10 @@
          return this.values;
      }
  
@@ -133,18 +129,18 @@
      public void writeChanges() throws IOException
      {
          Collection<V> collection = this.values.values();
-@@ -176,12 +185,13 @@
+@@ -176,12 +166,13 @@
      @SideOnly(Side.SERVER)
      public boolean isEmpty()
      {
 -        return this.values.size() < 1;
-+        return this.getBackingMap().isEmpty(); // Paper - readability is the goal. As an aside, isEmpty() uses only sumCount() and a comparison. size() uses sumCount(), casts, and boolean logic
++        return this.values.isEmpty(); // Paper - readability is the goal. As an aside, isEmpty() uses only sumCount() and a comparison. size() uses sumCount(), casts, and boolean logic
      }
  
      @SideOnly(Side.SERVER)
      public void readSavedFile() throws IOException, FileNotFoundException
      {
-+        this.removeStaleEntries(); // Paper - remove expired values before saving
++        this.removeExpired(); // Paper - remove expired values before saving
          if (this.saveFile.exists())
          {
              Collection<UserListEntry<K>> collection = null;

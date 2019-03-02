@@ -169,7 +169,7 @@ public class CraftPlayerProfile implements PlayerProfile {
                 boolean isOnlineMode = server.isServerInOnlineMode() || (SpigotConfig.bungee && PaperConfig.bungeeOnlineMode);
         boolean isCompleteFromCache = this.completeFromCache(true);
         if (isOnlineMode && (!isCompleteFromCache || textures && !hasTextures())) {
-                GameProfile result = server.getSessionService().fillProfileProperties(profile, true);
+                GameProfile result = server.getMinecraftSessionService().fillProfileProperties(profile, true);
                 if (result != null) {
                         this.profile = result;
                     }
