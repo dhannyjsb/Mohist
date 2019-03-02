@@ -68,7 +68,7 @@
              dropper.setInventorySlotContents(slot, remainder);
              return false;
          }
-@@ -140,13 +158,32 @@
+@@ -140,13 +158,30 @@
                      if (!hopper.getStackInSlot(i).isEmpty())
                      {
                          ItemStack originalSlotContents = hopper.getStackInSlot(i).copy();
@@ -78,6 +78,7 @@
 +                        CraftItemStack remainder = CraftItemStack.asCraftMirror(hopper.decrStackSize(i, hopper.world.spigotConfig.hopperAmount)); // Spigot
  
 -                        if (remainder.isEmpty())
+-                        {
 +
 +                        TileEntity te = (TileEntity) destination;
 +                        Inventory destinationInventory = te.getOwner().getInventory();
@@ -86,21 +87,19 @@
 +                        if (event.isCancelled()) {
 +                            hopper.setInventorySlotContents(i, originalSlotContents);
 +                            hopper.setTransferCooldown(hopper.world.spigotConfig.hopperTransfer); // Spigot
-+                            return true;
-+                        }
-+                        int origCount = event.getItem().getAmount(); // Spigot
-+                        ItemStack itemstack1 = putStackInInventoryAllSlots(hopper, destination, itemHandler, CraftItemStack.asNMSCopy(event.getItem()));
-+                         if (itemstack1.isEmpty())
-                         {
-+                            if (event.getItem().equals(remainder)) {
-+                                te.markDirty();
-+                            } else {
-+                                hopper.setInventorySlotContents(i, originalSlotContents);
-+                            }
-+                            // Mohist end
                              return true;
                          }
-+                        originalSlotContents.stackSize -= origCount - itemstack1.stackSize; // Spigot
++                        int origCount = event.getItem().getAmount(); // Spigot
++                        ItemStack itemstack1 = putStackInInventoryAllSlots(hopper, destination, itemHandler, CraftItemStack.asNMSCopy(event.getItem()));
++                         if (itemstack1.isEmpty()) {
++                             if (event.getItem().equals(remainder)) {
++                                 te.markDirty();
++                             } else {
++                                 hopper.setInventorySlotContents(i, originalSlotContents);
++                             }
++                             // Mohist end
++                             return true;
++                         }
  
                          hopper.setInventorySlotContents(i, originalSlotContents);
                      }

@@ -1,11 +1,6 @@
 package org.bukkit.entity;
 
-import org.bukkit.Chunk;
-import org.bukkit.EntityEffect;
-import org.bukkit.Location;
-import org.bukkit.Nameable;
-import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.entity.EntityDamageEvent;

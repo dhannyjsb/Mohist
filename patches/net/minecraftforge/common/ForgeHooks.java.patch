@@ -242,7 +242,6 @@
 +        }
 +
 +        // CraftBukkit start
-+        int newCount = itemstack.stackSize;
 +        if (ret == EnumActionResult.SUCCESS && world.captureTreeGeneration && world.capturedBlockSnapshots.size() > 0) {
 +            world.captureTreeGeneration = false;
 +            Location location = new Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ());
@@ -257,8 +256,9 @@
 +            }
 +            if (event == null || !event.isCancelled()) {
 +                // Change the stack to its new contents if it hasn't been tampered with.
-+                if (itemstack.stackSize == size && itemstack.getMetadata() == data) {
-+                    itemstack.stackSize = newCount;
++                if (itemstack.getCount() == size && itemstack.getItemDamage() == meta) {
++                    itemstack.setItemDamage(meta);
++                    itemstack.setCount(meta);
 +                }
 +                for (BlockState blockstate : blocks) {
 +                    blockstate.update(true);
@@ -319,14 +319,14 @@
 +
 +                // Special case juke boxes as they update their tile entity. Copied from ItemRecord.
 +                // PAIL: checkme on updates.
-+                if (itemstack.item instanceof net.minecraft.item.ItemRecord) {
++                if (itemstack.getItem() instanceof net.minecraft.item.ItemRecord) {
 +                    ((net.minecraft.block.BlockJukebox) Blocks.JUKEBOX).insertRecord(world, pos, world.getBlockState(pos), itemstack);
-+                    world.playEvent((EntityPlayer) null, 1010, pos, Item.getIdFromItem(itemstack.item));
++                    world.playEvent((EntityPlayer) null, 1010, pos, Item.getIdFromItem(itemstack.getItem()));
 +                    itemstack.shrink(1);
 +                    player.addStat(StatList.RECORD_PLAYED);
 +                }
 +
-+                if (itemstack.item == Items.SKULL) { // Special case skulls to allow wither spawns to be cancelled
++                if (itemstack.getItem() == Items.SKULL) { // Special case skulls to allow wither spawns to be cancelled
 +                    BlockPos bp = pos;
 +                    if (!world.getBlockState(pos).getMaterial().isReplaceable()) {
 +                        if (!world.getBlockState(pos).getMaterial().isSolid()) {

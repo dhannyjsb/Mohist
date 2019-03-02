@@ -3,11 +3,7 @@ package org.bukkit.event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**

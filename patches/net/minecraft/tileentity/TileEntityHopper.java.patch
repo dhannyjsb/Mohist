@@ -313,7 +313,7 @@
                  {
                      return true;
                  }
-@@ -358,20 +519,74 @@
+@@ -358,20 +519,73 @@
          if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction))
          {
              ItemStack itemstack1 = itemstack.copy();
@@ -376,7 +376,6 @@
                  return true;
              }
 -
-+			itemstack1.stackSize -= origCount - itemstack2.stackSize; // Spigot
              inventoryIn.setInventorySlotContents(index, itemstack1);
          }
  
@@ -391,7 +390,7 @@
      public static boolean putDropInInventoryAllSlots(IInventory source, IInventory destination, EntityItem entity)
      {
          boolean flag = false;
-@@ -382,8 +597,13 @@
+@@ -382,8 +596,13 @@
          }
          else
          {
@@ -406,7 +405,7 @@
  
              if (itemstack1.isEmpty())
              {
-@@ -458,7 +678,9 @@
+@@ -458,7 +677,9 @@
  
              if (itemstack.isEmpty())
              {
@@ -416,7 +415,7 @@
                  stack = ItemStack.EMPTY;
                  flag = true;
              }
-@@ -491,7 +713,7 @@
+@@ -491,7 +712,7 @@
                              }
                          }
  
@@ -425,7 +424,7 @@
                      }
                  }
  
-@@ -505,26 +727,47 @@
+@@ -505,26 +726,47 @@
      private IInventory getInventoryForHopperTransfer()
      {
          EnumFacing enumfacing = BlockHopper.getFacing(this.getBlockMetadata());
@@ -475,7 +474,7 @@
          net.minecraft.block.state.IBlockState state = worldIn.getBlockState(blockpos);
          Block block = state.getBlock();
  
-@@ -543,7 +786,7 @@
+@@ -543,7 +785,7 @@
              }
          }
  

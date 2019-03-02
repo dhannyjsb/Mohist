@@ -34,7 +34,7 @@
      protected BlockPos pos = BlockPos.ORIGIN;
      protected boolean tileEntityInvalid;
      private int blockMetadata = -1;
-@@ -36,12 +43,44 @@
+@@ -36,12 +43,39 @@
          REGISTRY.putObject(new ResourceLocation(id), clazz);
      }
  
@@ -69,11 +69,6 @@
 -    public static ResourceLocation getKey(Class <? extends TileEntity > clazz)
 -    {
 +    public static ResourceLocation getKey(Class <? extends TileEntity > clazz) {
-+        return a(clazz);
-+    } // Paper - OBFHELPER
-+
-+    @Nullable
-+    public static ResourceLocation a(Class <? extends TileEntity > clazz) {
          return REGISTRY.getNameForObject(clazz);
      }
  
@@ -81,7 +76,7 @@
      public World getWorld()
      {
          return this.world;
-@@ -108,7 +147,7 @@
+@@ -108,7 +142,7 @@
          catch (Throwable throwable1)
          {
              LOGGER.error("Failed to create block entity {}", s, throwable1);
@@ -90,7 +85,7 @@
                      s, oclass == null ? null : oclass.getName(), throwable1);
          }
  
-@@ -122,7 +161,7 @@
+@@ -122,7 +156,7 @@
              catch (Throwable throwable)
              {
                  LOGGER.error("Failed to load data for block entity {}", s, throwable);
@@ -99,7 +94,7 @@
                          s, oclass.getName(), throwable);
                  tileentity = null;
              }
-@@ -154,6 +193,9 @@
+@@ -154,6 +188,9 @@
      {
          if (this.world != null)
          {
@@ -109,7 +104,7 @@
              IBlockState iblockstate = this.world.getBlockState(this.pos);
              this.blockMetadata = iblockstate.getBlock().getMetaFromState(iblockstate);
              this.world.markChunkDirty(this.pos, this);
-@@ -243,7 +285,13 @@
+@@ -243,7 +280,13 @@
  
          if (this.world != null)
          {
@@ -124,7 +119,7 @@
              reportCategory.addDetail("Actual block type", new ICrashReportDetail<String>()
              {
                  public String call() throws Exception
-@@ -315,7 +363,7 @@
+@@ -315,7 +358,7 @@
       * @param net The NetworkManager the packet originated from
       * @param pkt The data packet
       */
@@ -133,7 +128,7 @@
      {
      }
  
-@@ -339,16 +387,7 @@
+@@ -339,16 +382,7 @@
      }
  
      private boolean isVanilla = getClass().getName().startsWith("net.minecraft.");
@@ -151,7 +146,7 @@
      public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
      {
          return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
-@@ -359,17 +398,8 @@
+@@ -359,17 +393,8 @@
          return pass == 0;
      }
  
@@ -170,7 +165,7 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +561,25 @@
+@@ -531,4 +556,25 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }

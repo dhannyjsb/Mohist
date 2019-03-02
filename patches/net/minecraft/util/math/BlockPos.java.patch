@@ -21,131 +21,95 @@
  @Immutable
  public class BlockPos extends Vec3i
  {
-@@ -74,72 +75,109 @@
- 
-     public BlockPos up()
-     {
--        return this.up(1);
-+        return new BlockPos(this.getX(), this.getY() + 1, this.getZ()); // Paper - Optimize BlockPos
+@@ -72,73 +73,59 @@
+         return this.add(-vec.getX(), -vec.getY(), -vec.getZ());
      }
  
-     public BlockPos up(int n)
-     {
--        return this.offset(EnumFacing.UP, n);
-+        return n == 0 ? this : new BlockPos(this.getX(), this.getY() + n, this.getZ()); // Paper - Optimize BlockPos
+-    public BlockPos up()
+-    {
++    public BlockPos up() {
+         return this.up(1);
      }
  
-     public BlockPos down()
-     {
--        return this.down(1);
-+        return new BlockPos(this.getX(), this.getY() - 1, this.getZ()); // Paper - Optimize BlockPos
+-    public BlockPos up(int n)
+-    {
++    public BlockPos up(int n) {
+         return this.offset(EnumFacing.UP, n);
      }
  
-     public BlockPos down(int n)
-     {
--        return this.offset(EnumFacing.DOWN, n);
-+        return n == 0 ? this : new BlockPos(this.getX(), this.getY() - n, this.getZ()); // Paper - Optimize BlockPos
+-    public BlockPos down()
+-    {
++    public BlockPos down() {
+         return this.down(1);
      }
  
-     public BlockPos north()
-     {
--        return this.north(1);
-+        return new BlockPos(this.getX(), this.getY(), this.getZ() - 1); // Paper - Optimize BlockPos
+-    public BlockPos down(int n)
+-    {
++    public BlockPos down(int n) {
+         return this.offset(EnumFacing.DOWN, n);
      }
  
-     public BlockPos north(int n)
-     {
--        return this.offset(EnumFacing.NORTH, n);
-+        return n == 0 ? this : new BlockPos(this.getX(), this.getY(), this.getZ() - n); // Paper - Optimize BlockPos
+-    public BlockPos north()
+-    {
++    public BlockPos north() {
+         return this.north(1);
      }
  
-     public BlockPos south()
-     {
--        return this.south(1);
-+        return new BlockPos(this.getX(), this.getY(), this.getZ() + 1); // Paper - Optimize BlockPos
+-    public BlockPos north(int n)
+-    {
++    public BlockPos north(int n) {
+         return this.offset(EnumFacing.NORTH, n);
      }
  
-     public BlockPos south(int n)
-     {
--        return this.offset(EnumFacing.SOUTH, n);
-+        return n == 0 ? this : new BlockPos(this.getX(), this.getY(), this.getZ() + n); // Paper - Optimize BlockPos
+-    public BlockPos south()
+-    {
++    public BlockPos south() {
+         return this.south(1);
      }
  
-     public BlockPos west()
-     {
--        return this.west(1);
-+        return new BlockPos(this.getX() - 1, this.getY(), this.getZ()); // Paper - Optimize BlockPos
+-    public BlockPos south(int n)
+-    {
++    public BlockPos south(int n) {
+         return this.offset(EnumFacing.SOUTH, n);
      }
  
-     public BlockPos west(int n)
-     {
--        return this.offset(EnumFacing.WEST, n);
-+        return n == 0 ? this : new BlockPos(this.getX() - n, this.getY(), this.getZ()); // Paper - Optimize BlockPos
+-    public BlockPos west()
+-    {
++    public BlockPos west() {
+         return this.west(1);
      }
  
-     public BlockPos east()
-     {
--        return this.east(1);
-+        return new BlockPos(this.getX() + 1, this.getY(), this.getZ()); // Paper - Optimize BlockPos
+-    public BlockPos west(int n)
+-    {
++    public BlockPos west(int n) {
+         return this.offset(EnumFacing.WEST, n);
      }
  
-     public BlockPos east(int n)
-     {
--        return this.offset(EnumFacing.EAST, n);
-+        return n == 0 ? this : new BlockPos(this.getX() + n, this.getY(), this.getZ()); // Paper - Optimize BlockPos
+-    public BlockPos east()
+-    {
++    public BlockPos east() {
+         return this.east(1);
      }
  
-     public BlockPos offset(EnumFacing facing)
-     {
--        return this.offset(facing, 1);
-+        // Paper Start - Optimize BlockPos
-+        switch(facing) {
-+            case UP:
-+                return new BlockPos(this.getX(), this.getY() + 1, this.getZ());
-+                case DOWN:
-+                    return new BlockPos(this.getX(), this.getY() - 1, this.getZ());
-+                    case NORTH:
-+                        return new BlockPos(this.getX(), this.getY(), this.getZ() - 1);
-+                        case SOUTH:
-+                            return new BlockPos(this.getX(), this.getY(), this.getZ() + 1);
-+                            case WEST:
-+                                return new BlockPos(this.getX() - 1, this.getY(), this.getZ());
-+                                case EAST:
-+                                    return new BlockPos(this.getX() + 1, this.getY(), this.getZ());
-+                                    default:
-+                                        return new BlockPos(this.getX() + facing.getFrontOffsetX(), this.getY() + facing.getFrontOffsetY(), this.getZ() + facing.getFrontOffsetZ());
-+        }
-+        // Paper End
+-    public BlockPos east(int n)
+-    {
++    public BlockPos east(int n) {
+         return this.offset(EnumFacing.EAST, n);
      }
  
-     public BlockPos offset(EnumFacing facing, int n)
-     {
--        return n == 0 ? this : new BlockPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n);
-+        // Paper Start - Optimize BlockPos
-+        if (n == 0) {
-+            return this;
-+        }
-+        switch(facing) {
-+            case UP:
-+                return new BlockPos(this.getX(), this.getY() + n, this.getZ());
-+                case DOWN:
-+                    return new BlockPos(this.getX(), this.getY() - n, this.getZ());
-+                    case NORTH:
-+                        return new BlockPos(this.getX(), this.getY(), this.getZ() - n);
-+                        case SOUTH:
-+                            return new BlockPos(this.getX(), this.getY(), this.getZ() + n);
-+                            case WEST:
-+                                return new BlockPos(this.getX() - n, this.getY(), this.getZ());
-+                                case EAST:
-+                                    return new BlockPos(this.getX() + n, this.getY(), this.getZ());
-+                                    default:
-+                                        return new BlockPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n);
-+        }
-+        // Paper End
+-    public BlockPos offset(EnumFacing facing)
+-    {
++    public BlockPos offset(EnumFacing facing) {
+         return this.offset(facing, 1);
      }
  
-     public BlockPos rotate(Rotation rotationIn)
-@@ -238,30 +276,31 @@
+-    public BlockPos offset(EnumFacing facing, int n)
+-    {
++    public BlockPos offset(EnumFacing facing, int n) {
+         return n == 0 ? this : new BlockPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n);
+     }
+ 
+@@ -238,30 +225,31 @@
          return this;
      }
  
@@ -186,7 +150,7 @@
                          }
                          else
                          {
-@@ -280,6 +319,7 @@
+@@ -280,6 +268,7 @@
                                  this.pos.y = y1;
                                  ++this.pos.z;
                              }
@@ -194,20 +158,23 @@
  
                              return this.pos;
                          }
-@@ -290,11 +330,7 @@
+@@ -289,11 +278,10 @@
+         };
      }
  
-     public static class MutableBlockPos extends BlockPos
+-    public static class MutableBlockPos extends BlockPos
 -        {
 -            protected int x;
 -            protected int y;
 -            protected int z;
--
-+    {
++    public static class MutableBlockPos extends BlockPos {
++        protected int x;
++        protected int y;
++        protected int z;
+ 
              public MutableBlockPos()
              {
-                 this(0, 0, 0);
-@@ -308,6 +344,7 @@
+@@ -308,6 +296,7 @@
              public MutableBlockPos(int x_, int y_, int z_)
              {
                  super(0, 0, 0);
@@ -215,32 +182,34 @@
                  this.x = x_;
                  this.y = y_;
                  this.z = z_;
-@@ -333,30 +370,17 @@
+@@ -333,22 +322,19 @@
                  return super.rotate(rotationIn).toImmutable();
              }
  
 -            public int getX()
 -            {
--                return this.x;
--            }
-+            public void setValues(int x, int y, int z) { setPos(x, y, z); } // Paper - OBFHELPER
++            public int getX() {
+                 return this.x;
+             }
  
 -            public int getY()
-+            public MutableBlockPos setPos(int xIn, int yIn, int zIn)
-             {
--                return this.y;
--            }
--
+-            {
++            public int getY() {
+                 return this.y;
+             }
+ 
 -            public int getZ()
 -            {
--                return this.z;
--            }
--
++            public int getZ() {
+                 return this.z;
+             }
+ 
 -            public BlockPos.MutableBlockPos setPos(int xIn, int yIn, int zIn)
--            {
++            public MutableBlockPos setPos(int xIn, int yIn, int zIn)
+             {
                  this.x = xIn;
                  this.y = yIn;
-                 this.z = zIn;
+@@ -356,7 +342,7 @@
                  return this;
              }
  
@@ -249,7 +218,7 @@
              {
                  return this.setPos(MathHelper.floor(xIn), MathHelper.floor(yIn), MathHelper.floor(zIn));
              }
-@@ -367,19 +391,19 @@
+@@ -367,19 +353,19 @@
                  return this.setPos(entityIn.posX, entityIn.posY, entityIn.posZ);
              }
  
@@ -269,17 +238,17 @@
 +            public MutableBlockPos move(EnumFacing facing, int n)
              {
 -                return this.setPos(this.x + facing.getFrontOffsetX() * n, this.y + facing.getFrontOffsetY() * n, this.z + facing.getFrontOffsetZ() * n);
-+                return this.setPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n); // Paper - USE THE BLEEPING GETTERS
++                return this.setPos(this.x + facing.getFrontOffsetX() * n, this.y + facing.getFrontOffsetY() * n, this.z + facing.getFrontOffsetZ() * n); // Paper - USE THE BLEEPING GETTERS
              }
  
              public void setY(int yIn)
-@@ -393,22 +417,23 @@
+@@ -393,22 +379,21 @@
              }
          }
  
 -    public static final class PooledMutableBlockPos extends BlockPos.MutableBlockPos
-+    public static final class PooledMutableBlockPos extends MutableBlockPos
-         {
+-        {
++    public static final class PooledMutableBlockPos extends MutableBlockPos {
              private boolean released;
 -            private static final List<BlockPos.PooledMutableBlockPos> POOL = Lists.<BlockPos.PooledMutableBlockPos>newArrayList();
 +            private static final List<PooledMutableBlockPos> POOL = Lists.<PooledMutableBlockPos>newArrayList();
@@ -290,7 +259,6 @@
              }
  
 -            public static BlockPos.PooledMutableBlockPos retain()
-+            public static PooledMutableBlockPos aquire() { return retain(); } // Paper - OBFHELPER
 +            public static PooledMutableBlockPos retain()
              {
                  return retain(0, 0, 0);
@@ -301,7 +269,7 @@
              {
                  return retain(MathHelper.floor(xIn), MathHelper.floor(yIn), MathHelper.floor(zIn));
              }
-@@ -419,13 +444,13 @@
+@@ -419,13 +404,13 @@
                  return retain(vec.getX(), vec.getY(), vec.getZ());
              }
  
@@ -317,7 +285,7 @@
  
                          if (blockpos$pooledmutableblockpos != null && blockpos$pooledmutableblockpos.released)
                          {
-@@ -436,9 +461,11 @@
+@@ -436,7 +421,7 @@
                      }
                  }
  
@@ -325,12 +293,8 @@
 +                return new PooledMutableBlockPos(xIn, yIn, zIn);
              }
  
-+            public void free() { release(); } // Paper - OBFHELPER
-+
              public void release()
-             {
-                 synchronized (POOL)
-@@ -452,41 +479,41 @@
+@@ -452,41 +437,41 @@
                  }
              }
  

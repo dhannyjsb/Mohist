@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/util/math/Vec3i.java
 +++ ../src-work/minecraft/net/minecraft/util/math/Vec3i.java
-@@ -1,16 +1,28 @@
+@@ -1,6 +1,7 @@
  package net.minecraft.util.math;
  
  import com.google.common.base.MoreObjects;
@@ -8,48 +8,7 @@
  import javax.annotation.concurrent.Immutable;
  
  @Immutable
- public class Vec3i implements Comparable<Vec3i>
- {
-     public static final Vec3i NULL_VECTOR = new Vec3i(0, 0, 0);
--    private final int x;
--    private final int y;
--    private final int z;
-+    // Paper start - Make mutable and protected for MutableBlockPos and PooledBlockPos
-+    protected int x;
-+    protected int y;
-+    protected int z;
- 
-+    // Paper start
-+    public final boolean isValidLocation() {
-+        return this.x >= -30000000 && this.z >= -30000000 && this.x < 30000000 && this.z < 30000000 && this.y >= 0 && this.y < 256;
-+    }
-+
-+    public boolean isInvalidYLocation() {
-+        return this.y < 0 || this.y >= 256;
-+    }
-+    // Paper end
-+
-     public Vec3i(int xIn, int yIn, int zIn)
-     {
-         this.x = xIn;
-@@ -69,20 +81,21 @@
-         }
-     }
- 
--    public int getX()
-+    public final int getX()
-     {
-         return this.x;
-     }
- 
--    public int getY()
-+    public final int getY()
-     {
-         return this.y;
-     }
- 
--    public int getZ()
-+    public final int getZ()
+@@ -83,6 +84,7 @@
      {
          return this.z;
      }

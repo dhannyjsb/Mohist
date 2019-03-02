@@ -90,12 +90,12 @@
      {
 -        super.setAttackTarget(entitylivingbaseIn);
 +        // CraftBukkit start - fire event
-+        setGoalTarget(entitylivingbaseIn, EntityTargetEvent.TargetReason.UNKNOWN, true);
++        setAttackTarget(entitylivingbaseIn, EntityTargetEvent.TargetReason.UNKNOWN, true);
 +    }
 +
 +    @Override
-+    public boolean setGoalTarget(@Nullable EntityLivingBase entityliving, org.bukkit.event.entity.EntityTargetEvent.TargetReason reason, boolean fireEvent) {
-+        if (!super.setGoalTarget(entityliving, reason, fireEvent)) {
++    public boolean setAttackTarget(@Nullable EntityLivingBase entityliving, org.bukkit.event.entity.EntityTargetEvent.TargetReason reason, boolean fireEvent) {
++        if (!super.setAttackTarget(entityliving, reason, fireEvent)) {
 +            return false;
 +        }
 +        entityliving = getAttackTarget();
@@ -116,22 +116,7 @@
      }
  
      protected void entityInit()
-@@ -187,6 +197,14 @@
-         this.setHeldBlockState(iblockstate);
-     }
- 
-+    // Paper start - OBFHELPER - ok not really, but verify this on updates
-+    private boolean f(EntityPlayer player) {
-+        boolean shouldAttack = shouldAttackPlayer(player);
-+        com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent event = new com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent((org.bukkit.entity.Enderman) getBukkitEntity(), (org.bukkit.entity.Player) player.getBukkitEntity());
-+        event.setCancelled(!shouldAttack);
-+        return event.callEvent();
-+    }
-+    // Paper end
-     private boolean shouldAttackPlayer(EntityPlayer player)
-     {
-         ItemStack itemstack = player.inventory.armorInventory.get(3);
-@@ -236,9 +254,9 @@
+@@ -236,9 +246,9 @@
          {
              float f = this.getBrightness();
  
@@ -143,7 +128,7 @@
                  this.teleportRandomly();
              }
          }
-@@ -246,7 +264,7 @@
+@@ -246,7 +256,7 @@
          super.updateAITasks();
      }
  
@@ -152,7 +137,7 @@
      {
          double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * 64.0D;
          double d1 = this.posY + (double)(this.rand.nextInt(64) - 32);
-@@ -331,7 +349,7 @@
+@@ -331,7 +341,7 @@
          {
              return false;
          }
@@ -161,7 +146,7 @@
          {
              for (int i = 0; i < 64; ++i)
              {
-@@ -347,7 +365,7 @@
+@@ -347,7 +357,7 @@
          {
              boolean flag = super.attackEntityFrom(source, amount);
  
@@ -170,7 +155,7 @@
              {
                  this.teleportRandomly();
              }
-@@ -395,6 +413,7 @@
+@@ -395,6 +405,7 @@
      static class AIFindPlayer extends EntityAINearestAttackableTarget<EntityPlayer>
          {
              private final EntityEnderman enderman;
@@ -178,7 +163,7 @@
              private EntityPlayer player;
              private int aggroTime;
              private int teleportTime;
-@@ -465,16 +484,16 @@
+@@ -465,16 +476,16 @@
                  {
                      if (this.targetEntity != null)
                      {
@@ -198,7 +183,7 @@
                          {
                              this.teleportTime = 0;
                          }
-@@ -524,8 +543,11 @@
+@@ -524,8 +535,11 @@
  
                  if (iblockstate2 != null && this.canPlaceBlock(world, blockpos, iblockstate2.getBlock(), iblockstate, iblockstate1))
                  {
@@ -212,7 +197,7 @@
                  }
              }
  
-@@ -590,8 +612,14 @@
+@@ -590,8 +604,14 @@
  
                  if (EntityEnderman.CARRIABLE_BLOCKS.contains(block) && flag)
                  {

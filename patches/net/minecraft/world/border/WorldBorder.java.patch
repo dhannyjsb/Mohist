@@ -35,11 +35,11 @@
 +    // Paper start
 +    private final BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos();
 +    public boolean isBlockInBounds(int chunkX, int chunkZ) {
-+        mutPos.setValues(chunkX, 64, chunkZ);
++        mutPos.setPos(chunkX, 64, chunkZ);
 +        return isInBounds(mutPos);
 +    }
 +    public boolean isChunkInBounds(int chunkX, int chunkZ) {
-+        mutPos.setValues(((chunkX << 4) + 15), 64, (chunkZ << 4) + 15);
++        mutPos.setPos(((chunkX << 4) + 15), 64, (chunkZ << 4) + 15);
 +        return isInBounds(mutPos);
 +    }
 +    // Paper end

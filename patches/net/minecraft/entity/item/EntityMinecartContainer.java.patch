@@ -1,18 +1,17 @@
 --- ../src-base/minecraft/net/minecraft/entity/item/EntityMinecartContainer.java
 +++ ../src-work/minecraft/net/minecraft/entity/item/EntityMinecartContainer.java
-@@ -1,7 +1,9 @@
+@@ -1,7 +1,8 @@
  package net.minecraft.entity.item;
  
 -import java.util.Random;
 -import javax.annotation.Nullable;
-+import com.destroystokyo.paper.HopperPusher;
 +import com.destroystokyo.paper.loottable.CraftLootableInventory;
 +import com.destroystokyo.paper.loottable.CraftLootableInventoryData;
 +import com.destroystokyo.paper.loottable.LootableInventory;
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.inventory.Container;
-@@ -9,6 +11,7 @@
+@@ -9,6 +10,7 @@
  import net.minecraft.inventory.ItemStackHelper;
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +19,7 @@
  import net.minecraft.util.DamageSource;
  import net.minecraft.util.EnumHand;
  import net.minecraft.util.NonNullList;
-@@ -23,13 +26,75 @@
+@@ -23,13 +25,57 @@
  import net.minecraft.world.storage.loot.ILootContainer;
  import net.minecraft.world.storage.loot.LootContext;
  import net.minecraft.world.storage.loot.LootTable;
@@ -36,25 +35,7 @@
 +import java.util.List;
 +import java.util.Random;
 +
-+public abstract class EntityMinecartContainer extends EntityMinecart implements ILockableContainer, ILootContainer, CraftLootableInventory, HopperPusher { // Paper
-+
-+    @Override
-+    public boolean acceptItem(TileEntityHopper hopper) {
-+        return TileEntityHopper.acceptItem(hopper, this);
-+    }
-+
-+    @Override
-+    public void onUpdate() {
-+        super.onUpdate();
-+        tryPutInHopper();
-+    }
-+
-+    @Override
-+    public void inactiveTick() {
-+        super.inactiveTick();
-+        tryPutInHopper();
-+    }
-+    // Paper end
++public abstract class EntityMinecartContainer extends EntityMinecart implements ILockableContainer, ILootContainer, CraftLootableInventory {
 +
 +    private NonNullList<ItemStack> minecartContainerItems = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY); // CraftBukkit - SPIGOT-3513
      public boolean dropContentsWhenDead = true;
@@ -99,7 +80,7 @@
  
      public EntityMinecartContainer(World worldIn)
      {
-@@ -134,7 +199,7 @@
+@@ -134,7 +180,7 @@
  
      public int getInventoryStackLimit()
      {
@@ -108,7 +89,7 @@
      }
  
      @Nullable
-@@ -168,7 +233,7 @@
+@@ -168,7 +214,7 @@
      protected void writeEntityToNBT(NBTTagCompound compound)
      {
          super.writeEntityToNBT(compound);
@@ -117,7 +98,7 @@
          if (this.lootTable != null)
          {
              compound.setString("LootTable", this.lootTable.toString());
-@@ -177,9 +242,7 @@
+@@ -177,9 +223,7 @@
              {
                  compound.setLong("LootTableSeed", this.lootTableSeed);
              }
@@ -128,7 +109,7 @@
              ItemStackHelper.saveAllItems(compound, this.minecartContainerItems);
          }
      }
-@@ -187,15 +250,14 @@
+@@ -187,15 +231,14 @@
      protected void readEntityFromNBT(NBTTagCompound compound)
      {
          super.readEntityFromNBT(compound);
@@ -146,7 +127,7 @@
              ItemStackHelper.loadAllItems(compound, this.minecartContainerItems);
          }
      }
-@@ -256,10 +318,9 @@
+@@ -256,10 +299,9 @@
  
      public void addLoot(@Nullable EntityPlayer player)
      {
@@ -159,7 +140,7 @@
              Random random;
  
              if (this.lootTableSeed == 0L)
-@@ -318,4 +379,41 @@
+@@ -318,4 +360,41 @@
      {
          return this.lootTable;
      }

@@ -475,7 +475,7 @@ public class CraftEventFactory {
         event.setShouldPlayDeathSound(!victim.silentDeath && !victim.isSilent());
         SoundEvent soundEffect = victim.getDeathSoundEffect();
         event.setDeathSound(soundEffect != null ? org.bukkit.craftbukkit.CraftSound.getSoundByEffect(soundEffect) : null);
-        event.setDeathSoundCategory(org.bukkit.SoundCategory.valueOf(victim.getDeathSoundCategory().name()));
+        event.setDeathSoundCategory(org.bukkit.SoundCategory.valueOf(victim.getSoundCategory().name()));
         event.setDeathSoundVolume(victim.getDeathSoundVolume());
         event.setDeathSoundPitch(victim.getDeathSoundPitch());
     }

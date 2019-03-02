@@ -24,9 +24,9 @@ public class CraftSlime extends CraftLivingEntity implements Slime, CraftSentien
     @Override
     public void setTarget(LivingEntity target) {
         if (target == null) {
-            getHandle().setGoalTarget(null, null, false);
+            getHandle().setAttackTarget(null, null, false);
         } else if (target instanceof CraftLivingEntity) {
-            getHandle().setGoalTarget(((CraftLivingEntity) target).getHandle(), null, false);
+            getHandle().setAttackTarget(((CraftLivingEntity) target).getHandle(), null, false);
         }
     }
 

@@ -64,7 +64,7 @@
          {
 -            EntityVex.this.setAttackTarget(EntityVex.this.owner.getAttackTarget());
 +            // EntityVex.this.setAttackTarget(EntityVex.this.owner.getAttackTarget());
-+            EntityVex.this.setGoalTarget(EntityVex.this.owner.getAttackTarget(), EntityTargetEvent.TargetReason.OWNER_ATTACKED_TARGET, true);
++            EntityVex.this.setAttackTarget(EntityVex.this.owner.getAttackTarget(), EntityTargetEvent.TargetReason.OWNER_ATTACKED_TARGET, true);
              super.startExecuting();
          }
      }

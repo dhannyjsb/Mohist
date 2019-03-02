@@ -74,8 +74,8 @@
  
 +    // CraftBukkit - add overriden version
 +    @Override
-+    public boolean setGoalTarget(@Nullable EntityLivingBase entityliving, org.bukkit.event.entity.EntityTargetEvent.TargetReason reason, boolean fire) {
-+        if (!super.setGoalTarget(entityliving, reason, fire)) {
++    public boolean setAttackTarget(@Nullable EntityLivingBase entityliving, org.bukkit.event.entity.EntityTargetEvent.TargetReason reason, boolean fire) {
++        if (!super.setAttackTarget(entityliving, reason, fire)) {
 +            return false;
 +        }
 +        entityliving = getAttackTarget();
@@ -115,7 +115,7 @@
                  this.isJumping = false;
                  this.navigator.clearPath();
 -                this.setAttackTarget((EntityLivingBase)null);
-+                this.setGoalTarget((EntityLivingBase)null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true);
++                this.setAttackTarget((EntityLivingBase)null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true);
              }
          }
          else if (itemstack.getItem() == Items.BONE && !this.isAngry())

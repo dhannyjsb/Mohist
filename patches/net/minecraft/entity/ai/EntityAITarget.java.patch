@@ -29,7 +29,7 @@
                      else
                      {
 -                        this.taskOwner.setAttackTarget(entitylivingbase);
-+                        this.taskOwner.setGoalTarget(entitylivingbase, EntityTargetEvent.TargetReason.CLOSEST_ENTITY, true);
++                        this.taskOwner.setAttackTarget(entitylivingbase, EntityTargetEvent.TargetReason.CLOSEST_ENTITY, true);
                          return true;
                      }
                  }
@@ -38,7 +38,7 @@
      public void resetTask()
      {
 -        this.taskOwner.setAttackTarget((EntityLivingBase)null);
-+        this.taskOwner.setGoalTarget((EntityLivingBase)null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true);
++        this.taskOwner.setAttackTarget((EntityLivingBase)null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true);
          this.target = null;
      }
  

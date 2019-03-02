@@ -21,12 +21,7 @@
  public class BlockStem extends BlockBush implements IGrowable
  {
      public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 7);
-@@ -67,18 +68,19 @@
-         super.updateTick(worldIn, pos, state, rand);
- 
-         if (!worldIn.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light
--        if (worldIn.getLightFromNeighbors(pos.up()) >= 9)
-+        if (worldIn.isLightLevel(pos.up(), 9))
+@@ -71,14 +72,15 @@
          {
              float f = BlockCrops.getGrowthChance(this, worldIn, pos);
  

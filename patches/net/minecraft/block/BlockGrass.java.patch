@@ -81,8 +81,8 @@
 -                        if (iblockstate1.getBlock() == Blocks.DIRT && iblockstate1.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && worldIn.getLightFromNeighbors(blockpos.up()) >= 4 && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2)
 -                        {
 -                            worldIn.setBlockState(blockpos, Blocks.GRASS.getDefaultState());
-+                        if (iblockstate1.getBlock() == Blocks.DIRT && iblockstate1.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2 && worldIn.isLightLevel(blockpos.up(), 4)) { // Paper - move last check before isLightLevel to avoid unneeded light checks
-+//                            worldIn.setBlockState(blockpos, Blocks.GRASS.getDefaultState());
++                        if (iblockstate1.getBlock() == Blocks.DIRT && iblockstate1.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && worldIn.getLightFromNeighbors(blockpos.up()) >= 4 && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2) {
++                            //worldIn.setBlockState(blockpos, Blocks.GRASS.getDefaultState());
 +                            org.bukkit.World bworld = worldIn.getWorld();
 +                            BlockState blockState = bworld.getBlockAt(blockpos.getX(), blockpos.getY(), blockpos.getZ()).getState();
 +                            blockState.setType(CraftMagicNumbers.getMaterial(Blocks.GRASS));

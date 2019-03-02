@@ -38,13 +38,13 @@
  
      protected BlockSapling()
      {
-@@ -54,9 +53,32 @@
+@@ -54,9 +53,31 @@
              super.updateTick(worldIn, pos, state, rand);
  
              if (!worldIn.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light
 -            if (worldIn.getLightFromNeighbors(pos.up()) >= 9 && rand.nextInt(7) == 0)
-+            if (worldIn.isLightLevel(pos.up(), 9) && rand.nextInt(Math.max(2, (int) (((100.0F / worldIn.spigotConfig.saplingModifier) * 7) + 0.5F))) == 0) // Spigot // Paper
-             {
+-            {
++            if (worldIn.getLightFromNeighbors(pos.up()) >= 9 && rand.nextInt(7) == 0) {
 +                worldIn.captureTreeGeneration = true;
                  this.grow(worldIn, pos, state, rand);
 +                worldIn.captureTreeGeneration = false;
@@ -72,7 +72,7 @@
              }
          }
      }
-@@ -76,7 +98,17 @@
+@@ -76,7 +97,17 @@
      public void generateTree(World worldIn, BlockPos pos, IBlockState state, Random rand)
      {
          if (!net.minecraftforge.event.terraingen.TerrainGen.saplingGrowTree(worldIn, rand, pos)) return;
@@ -91,7 +91,7 @@
          int i = 0;
          int j = 0;
          boolean flag = false;
-@@ -92,6 +124,7 @@
+@@ -92,6 +123,7 @@
                      {
                          if (this.isTwoByTwoOfType(worldIn, pos, i, j, BlockPlanks.EnumType.SPRUCE))
                          {
@@ -99,7 +99,7 @@
                              worldgenerator = new WorldGenMegaPineTree(false, rand.nextBoolean());
                              flag = true;
                              break label68;
-@@ -103,11 +136,13 @@
+@@ -103,11 +135,13 @@
                  {
                      i = 0;
                      j = 0;
@@ -113,7 +113,7 @@
                  worldgenerator = new WorldGenBirchTree(true, false);
                  break;
              case JUNGLE:
-@@ -121,6 +156,7 @@
+@@ -121,6 +155,7 @@
                      {
                          if (this.isTwoByTwoOfType(worldIn, pos, i, j, BlockPlanks.EnumType.JUNGLE))
                          {
@@ -121,7 +121,7 @@
                              worldgenerator = new WorldGenMegaJungle(true, 10, 20, iblockstate, iblockstate1);
                              flag = true;
                              break label82;
-@@ -132,11 +168,13 @@
+@@ -132,11 +167,13 @@
                  {
                      i = 0;
                      j = 0;
@@ -135,7 +135,7 @@
                  worldgenerator = new WorldGenSavannaTree(true);
                  break;
              case DARK_OAK:
-@@ -148,6 +186,7 @@
+@@ -148,6 +185,7 @@
                      {
                          if (this.isTwoByTwoOfType(worldIn, pos, i, j, BlockPlanks.EnumType.DARK_OAK))
                          {

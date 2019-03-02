@@ -10,9 +10,9 @@ public interface CraftSentientNPC extends SentientNPC {
     default void setTarget(LivingEntity target) {
         EntityLiving entity = this.getHandle();
         if (target == null) {
-            entity.setGoalTarget(null, null, false);
+            entity.setAttackTarget(null, null, false);
         } else if (target instanceof CraftLivingEntity) {
-            entity.setGoalTarget(((CraftLivingEntity)target).getHandle(), null, false);
+            entity.setAttackTarget(((CraftLivingEntity)target).getHandle(), null, false);
         }
 
     }

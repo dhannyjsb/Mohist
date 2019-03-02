@@ -58,7 +58,7 @@
 +            // Paper start - Configurable EntityFallingBlock height nerf
 +            if (this.world.paperConfig.fallingBlockHeightNerf != 0 && this.posY > this.world.paperConfig.fallingBlockHeightNerf) {
 +                if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
-+                    this.dropItem(new ItemStack(block, 1, block.damageDropped(this.getBlock())), 0.0F);
++                    this.entityDropItem(new ItemStack(block, 1, block.damageDropped(this.getBlock())), 0.0F);
 +                }
 +                this.setDead();
 +            }

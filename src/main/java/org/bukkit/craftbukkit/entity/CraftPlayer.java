@@ -928,20 +928,20 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         EntityPlayerMP handle = getHandle();
         // Logic copied from EntityExperienceOrb and remapped to unobfuscated methods/properties
         ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, handle);
-        if (!itemstack.isEmpty() && itemstack.hasDamage()) {
+        if (!itemstack.isEmpty() && itemstack.isItemDamaged()) {
             EntityXPOrb orb = new EntityXPOrb(handle.world);
             orb.xpValue = amount;
             orb.spawnReason = org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM;
             orb.posX = handle.posX;
             orb.posY = handle.posY;
             orb.posZ = handle.posZ;
-            int i = Math.min(orb.xpToDur(amount), itemstack.getDamage());
+            int i = Math.min(orb.xpToDur(amount), itemstack.getItemDamage());
             org.bukkit.event.player.PlayerItemMendEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerItemMendEvent(handle, orb, itemstack, i);
             i = event.getRepairAmount();
             orb.isDead = true;
             if (!event.isCancelled()) {
                 amount -= orb.durToXp(i);
-                itemstack.setDamage(itemstack.getDamage() - i);
+                itemstack.setItemDamage(itemstack.getItemDamage() - i);
             }
         }
         return amount;
