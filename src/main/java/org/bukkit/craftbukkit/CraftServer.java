@@ -113,7 +113,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class CraftServer implements Server {
-    private final String serverName = Mohist.name;
+    private final String serverName = Mohist.getName();
     private final String serverVersion;
     private final String bukkitVersion = Versioning.getBukkitVersion();
     private final Logger logger = Logger.getLogger("Minecraft");
