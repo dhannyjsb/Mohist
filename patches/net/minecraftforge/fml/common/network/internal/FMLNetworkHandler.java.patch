@@ -1,13 +1,5 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/internal/FMLNetworkHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/internal/FMLNetworkHandler.java
-@@ -1,6 +1,6 @@
- /*
-  * Minecraft Forge
-- * Copyright (c) 2016-2018.
-+ * Copyright (c) 2016.
-  *
-  * This library is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU Lesser General Public
 @@ -19,34 +19,31 @@
  
  package net.minecraftforge.fml.common.network.internal;
@@ -70,12 +62,11 @@
  
  public class FMLNetworkHandler
  {
-@@ -88,6 +89,20 @@
+@@ -88,6 +89,18 @@
              Container remoteGuiContainer = NetworkRegistry.INSTANCE.getRemoteGuiContainer(mc, entityPlayerMP, modGuiId, world, x, y, z);
              if (remoteGuiContainer != null)
              {
-+                // Mohist start - create bukkitView for passed container then fire open event.
-+                if (remoteGuiContainer.getBukkitView() == null) {
++            	if (remoteGuiContainer.getBukkitView() == null) {
 +                    TileEntity te = entityPlayer.world.getTileEntity(new BlockPos(x, y, z));
 +                    if (te instanceof IInventory) {
 +                        remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), new CraftInventory((IInventory) te), remoteGuiContainer));
@@ -87,11 +78,10 @@
 +                if (remoteGuiContainer == null) {
 +                    return;
 +                }
-+                // CatSever end
                  entityPlayerMP.getNextWindowId();
                  entityPlayerMP.closeContainer();
                  int windowId = entityPlayerMP.currentWindowId;
-@@ -113,7 +128,7 @@
+@@ -113,7 +126,7 @@
          }
          else
          {
@@ -100,7 +90,7 @@
          }
  
      }
-@@ -167,7 +182,7 @@
+@@ -167,7 +180,7 @@
                  rejectStrings.add(modContainer.getName() + ": " + reject.getValue());
              }
              String rejectString = String.join("\n", rejectStrings);

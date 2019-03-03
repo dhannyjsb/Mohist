@@ -1,13 +1,5 @@
 --- ../src-base/minecraft/net/minecraftforge/registries/GameData.java
 +++ ../src-work/minecraft/net/minecraftforge/registries/GameData.java
-@@ -1,6 +1,6 @@
- /*
-  * Minecraft Forge
-- * Copyright (c) 2016-2018.
-+ * Copyright (c) 2016.
-  *
-  * This library is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU Lesser General Public
 @@ -19,11 +19,8 @@
  
  package net.minecraftforge.registries;
@@ -175,25 +167,27 @@
                  EntityList.ENTITY_EGGS.put(entry.getRegistryName(), entry.getEgg());
              }
 -            @SuppressWarnings("unchecked")
-+
++			@SuppressWarnings("unchecked")
              Map<Class<? extends Entity>, EntityEntry> map = owner.getSlaveMap(ENTITY_CLASS_TO_ENTRY, Map.class);
              if (oldEntry != null)
              {
-@@ -507,13 +500,11 @@
+@@ -507,13 +500,13 @@
              map.put(entry.getEntityClass(), entry);
          }
  
 -        @Override
++		@Override
          public void onClear(IForgeRegistryInternal<EntityEntry> owner, RegistryManager stage)
          {
              owner.getSlaveMap(ENTITY_CLASS_TO_ENTRY, Map.class).clear();
          }
  
 -        @Override
++		@Override
          public void onCreate(IForgeRegistryInternal<EntityEntry> owner, RegistryManager stage)
          {
              owner.setSlaveMap(ENTITY_CLASS_TO_ENTRY, new IdentityHashMap<>());
-@@ -563,7 +554,7 @@
+@@ -563,7 +556,7 @@
      @SuppressWarnings({ "unchecked", "rawtypes" })
      public static Multimap<ResourceLocation, ResourceLocation> injectSnapshot(Map<ResourceLocation, ForgeRegistry.Snapshot> snapshot, boolean injectFrozenData, boolean isLocalWorld)
      {
@@ -202,7 +196,7 @@
          RegistryManager.ACTIVE.registries.forEach((name, reg) -> reg.validateContent(name));
          RegistryManager.ACTIVE.registries.forEach((name, reg) -> reg.dump(name));
          RegistryManager.ACTIVE.registries.forEach((name, reg) -> reg.resetDelegates());
-@@ -613,14 +604,14 @@
+@@ -613,14 +606,14 @@
                  else if (isLocalWorld)
                  {
                      if (ForgeRegistry.DEBUG)
@@ -219,7 +213,7 @@
                      reg.markDummy(dummy, id);
                  }
              });
-@@ -629,7 +620,7 @@
+@@ -629,7 +622,7 @@
          int count = missing.values().stream().mapToInt(Map::size).sum();
          if (count > 0)
          {
@@ -228,7 +222,7 @@
              Multimap<ResourceLocation, ResourceLocation> defaulted = ArrayListMultimap.create();
              Multimap<ResourceLocation, ResourceLocation> failed = ArrayListMultimap.create();
  
-@@ -643,8 +634,8 @@
+@@ -643,8 +636,8 @@
                  List<MissingMappings.Mapping<?>> lst = event.getAllMappings().stream().filter(e -> e.getAction() == MissingMappings.Action.DEFAULT).sorted((a, b) -> a.toString().compareTo(b.toString())).collect(Collectors.toList());
                  if (!lst.isEmpty())
                  {
@@ -239,7 +233,7 @@
                  }
                  event.getAllMappings().stream().filter(e -> e.getAction() == MissingMappings.Action.FAIL).forEach(fail -> failed.put(name, fail.key));
  
-@@ -683,7 +674,7 @@
+@@ -683,7 +676,7 @@
                      else
                      {
                          for (int x = 0; x < 10; x++)
@@ -248,7 +242,7 @@
                      }
                  }
                  catch (IOException e)
-@@ -696,7 +687,7 @@
+@@ -696,7 +689,7 @@
              if (!defaulted.isEmpty())
              {
                  if (isLocalWorld)
@@ -257,7 +251,7 @@
              }
  
          }
-@@ -836,11 +827,11 @@
+@@ -836,11 +829,11 @@
      /**
       * Check a name for a domain prefix, and if not present infer it from the
       * current active mod container.
@@ -271,7 +265,7 @@
       * @return The {@link ResourceLocation} with given or inferred domain
       */
      public static ResourceLocation checkPrefix(String name, boolean warnOverrides)
-@@ -852,7 +843,7 @@
+@@ -852,7 +845,7 @@
          String prefix = mc == null || (mc instanceof InjectedModContainer && ((InjectedModContainer)mc).wrappedContainer instanceof FMLContainer) ? "minecraft" : mc.getModId().toLowerCase(Locale.ROOT);
          if (warnOverrides && !oldPrefix.equals(prefix) && oldPrefix.length() > 0)
          {
@@ -280,7 +274,7 @@
              prefix = oldPrefix;
          }
          return new ResourceLocation(prefix, name);
-@@ -870,8 +861,8 @@
+@@ -870,8 +863,8 @@
              }
              catch (NoSuchFieldException | SecurityException e)
              {
@@ -291,7 +285,7 @@
                  throw new RuntimeException(e);
              }
          }
-@@ -881,8 +872,8 @@
+@@ -881,8 +874,8 @@
          }
          catch (IllegalArgumentException | IllegalAccessException e)
          {

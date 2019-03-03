@@ -819,20 +819,19 @@
          this.openContainer.windowId = this.currentWindowId;
          this.openContainer.addListener(this);
      }
-@@ -988,6 +1203,12 @@
+@@ -988,6 +1203,11 @@
      {
          this.connection.sendPacket(new SPacketWindowItems(containerToSend.windowId, itemsList));
          this.connection.sendPacket(new SPacketSetSlot(-1, -1, this.inventory.getItemStack()));
 +        // CraftBukkit start - Send a Set Slot to update the crafting result slot
-+        InventoryView bukkitView = containerToSend.getBukkitView();
-+        if (bukkitView != null && java.util.EnumSet.of(InventoryType.CRAFTING,InventoryType.WORKBENCH).contains(bukkitView.getType())) { // CatServer - mods bypass
++        if (java.util.EnumSet.of(InventoryType.CRAFTING,InventoryType.WORKBENCH).contains(containerToSend.getBukkitView().getType())) {
 +            this.connection.sendPacket(new SPacketSetSlot(containerToSend.windowId, 0, containerToSend.getSlot(0).getStack()));
 +        }
 +        // CraftBukkit end
      }
  
      public void sendWindowProperty(Container containerIn, int varToUpdate, int newValue)
-@@ -1005,6 +1226,13 @@
+@@ -1005,6 +1225,13 @@
  
      public void closeScreen()
      {
@@ -846,7 +845,7 @@
          this.connection.sendPacket(new SPacketCloseWindow(this.openContainer.windowId));
          this.closeContainer();
      }
-@@ -1080,6 +1308,10 @@
+@@ -1080,6 +1307,10 @@
  
          for (ResourceLocation resourcelocation : p_193102_1_)
          {
@@ -857,7 +856,7 @@
              list.add(CraftingManager.getRecipe(resourcelocation));
          }
  
-@@ -1095,7 +1327,11 @@
+@@ -1095,7 +1326,11 @@
      {
          this.disconnected = true;
          this.removePassengers();
@@ -870,7 +869,7 @@
          if (this.sleeping)
          {
              this.wakeUpPlayer(true, false, false);
-@@ -1110,8 +1346,16 @@
+@@ -1110,8 +1345,16 @@
      public void setPlayerHealthUpdated()
      {
          this.lastHealth = -1.0E8F;
@@ -887,7 +886,7 @@
      public void sendStatusMessage(ITextComponent chatComponent, boolean actionBar)
      {
          this.connection.sendPacket(new SPacketChat(chatComponent, actionBar ? ChatType.GAME_INFO : ChatType.CHAT));
-@@ -1156,8 +1400,12 @@
+@@ -1156,8 +1399,12 @@
          this.lastExperience = -1;
          this.lastHealth = -1.0F;
          this.lastFoodLevel = -1;
@@ -902,7 +901,7 @@
          this.seenCredits = that.seenCredits;
          this.enteredNetherPosition = that.enteredNetherPosition;
          this.setLeftShoulderEntity(that.getLeftShoulderEntity());
-@@ -1246,6 +1494,15 @@
+@@ -1246,6 +1493,15 @@
  
      public void setGameType(GameType gameType)
      {
@@ -918,7 +917,7 @@
          this.interactionManager.setGameType(gameType);
          this.connection.sendPacket(new SPacketChangeGameState(3, (float)gameType.getID()));
  
-@@ -1280,6 +1537,7 @@
+@@ -1280,6 +1536,7 @@
  
      public boolean canUseCommand(int permLevel, String commandName)
      {
@@ -926,7 +925,7 @@
          if ("seed".equals(commandName) && !this.mcServer.isDedicatedServer())
          {
              return true;
-@@ -1308,6 +1566,15 @@
+@@ -1308,6 +1565,15 @@
          {
              return true;
          }
@@ -942,7 +941,7 @@
      }
  
      public String getPlayerIP()
-@@ -1320,14 +1587,32 @@
+@@ -1320,14 +1586,32 @@
  
      public void handleClientSettings(CPacketClientSettings packetIn)
      {
@@ -977,7 +976,7 @@
      {
          return this.chatVisibility;
      }
-@@ -1402,7 +1687,7 @@
+@@ -1402,7 +1686,7 @@
          if (entity != this.spectatingEntity)
          {
              this.connection.sendPacket(new SPacketCamera(this.spectatingEntity));
@@ -986,7 +985,7 @@
          }
      }
  
-@@ -1434,7 +1719,8 @@
+@@ -1434,7 +1718,8 @@
      @Nullable
      public ITextComponent getTabListDisplayName()
      {
@@ -996,7 +995,7 @@
      }
  
      public void swingArm(EnumHand hand)
-@@ -1455,13 +1741,16 @@
+@@ -1455,13 +1740,16 @@
  
      public void setElytraFlying()
      {
@@ -1016,7 +1015,7 @@
      }
  
      public PlayerAdvancements getAdvancements()
-@@ -1474,4 +1763,144 @@
+@@ -1474,4 +1762,144 @@
      {
          return this.enteredNetherPosition;
      }

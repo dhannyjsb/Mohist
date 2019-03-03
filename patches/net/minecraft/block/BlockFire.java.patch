@@ -10,7 +10,7 @@
  import net.minecraft.block.material.MapColor;
  import net.minecraft.block.material.Material;
  import net.minecraft.block.properties.IProperty;
-@@ -22,10 +19,15 @@
+@@ -22,10 +19,16 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.world.IBlockAccess;
  import net.minecraft.world.World;
@@ -19,6 +19,7 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
 +import org.bukkit.event.block.BlockBurnEvent;
++import org.bukkit.event.block.BlockSpreadEvent;
  
 +import javax.annotation.Nullable;
 +import java.util.Map;
@@ -27,13 +28,11 @@
  public class BlockFire extends Block
  {
      public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 15);
-@@ -131,14 +133,14 @@
-         return 30;
-     }
+@@ -133,12 +136,13 @@
  
--    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-+   /* public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
      {
++        /*
          if (worldIn.getGameRules().getBoolean("doFireTick"))
          {
              if (!worldIn.isAreaLoaded(pos, 2)) return; // Forge: prevent loading unloaded chunks when spreading fire
@@ -44,7 +43,7 @@
              }
  
              Block block = worldIn.getBlockState(pos.down()).getBlock();
-@@ -148,7 +150,7 @@
+@@ -148,7 +152,7 @@
  
              if (!flag && worldIn.isRaining() && this.canDie(worldIn, pos) && rand.nextFloat() < 0.2F + (float)i * 0.03F)
              {
@@ -53,7 +52,7 @@
              }
              else
              {
-@@ -166,7 +168,7 @@
+@@ -166,7 +170,7 @@
                      {
                          if (!worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos.down(), EnumFacing.UP) || i > 3)
                          {
@@ -62,7 +61,7 @@
                          }
  
                          return;
-@@ -174,7 +176,7 @@
+@@ -174,7 +178,7 @@
  
                      if (!this.canCatchFire(worldIn, pos.down(), EnumFacing.UP) && i == 15 && rand.nextInt(4) == 0)
                      {
@@ -71,7 +70,7 @@
                          return;
                      }
                  }
-@@ -187,12 +189,14 @@
+@@ -187,12 +191,14 @@
                      j = -50;
                  }
  
@@ -92,7 +91,7 @@
  
                  for (int k = -1; k <= 1; ++k)
                  {
-@@ -210,6 +214,7 @@
+@@ -210,6 +216,7 @@
                                  }
  
                                  BlockPos blockpos = pos.add(k, i1, l);
@@ -100,7 +99,7 @@
                                  int k1 = this.getNeighborEncouragement(worldIn, blockpos);
  
                                  if (k1 > 0)
-@@ -230,7 +235,26 @@
+@@ -230,7 +237,26 @@
                                              i2 = 15;
                                          }
  
@@ -128,15 +127,19 @@
                                      }
                                  }
                              }
-@@ -240,6 +264,7 @@
+@@ -238,9 +264,10 @@
+                     }
+                 }
              }
-         }
+-        }
++        }*/
      }
-+    */
  
++
      protected boolean canDie(World worldIn, BlockPos pos)
      {
-@@ -302,6 +327,47 @@
+         return worldIn.isRainingAt(pos) || worldIn.isRainingAt(pos.west()) || worldIn.isRainingAt(pos.east()) || worldIn.isRainingAt(pos.north()) || worldIn.isRainingAt(pos.south());
+@@ -302,6 +329,47 @@
          }
      }
  
@@ -184,7 +187,7 @@
      private boolean canNeighborCatchFire(World worldIn, BlockPos pos)
      {
          for (EnumFacing enumfacing : EnumFacing.values())
-@@ -354,7 +420,7 @@
+@@ -354,7 +422,7 @@
      {
          if (!worldIn.getBlockState(pos.down()).isTopSolid() && !this.canNeighborCatchFire(worldIn, pos))
          {
@@ -193,7 +196,7 @@
          }
      }
  
-@@ -364,7 +430,7 @@
+@@ -364,7 +432,7 @@
          {
              if (!worldIn.getBlockState(pos.down()).isTopSolid() && !this.canNeighborCatchFire(worldIn, pos))
              {
@@ -202,7 +205,7 @@
              }
              else
              {
-@@ -495,4 +561,10 @@
+@@ -495,4 +563,10 @@
      {
          return BlockFaceShape.UNDEFINED;
      }

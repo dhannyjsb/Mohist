@@ -1,13 +1,5 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
-@@ -1,6 +1,6 @@
- /*
-  * Minecraft Forge
-- * Copyright (c) 2016-2018.
-+ * Copyright (c) 2016.
-  *
-  * This library is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU Lesser General Public
 @@ -19,19 +19,17 @@
  
  package net.minecraftforge.fml.common.network.handshake;

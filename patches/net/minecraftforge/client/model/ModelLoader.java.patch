@@ -1,13 +1,5 @@
 --- ../src-base/minecraft/net/minecraftforge/client/model/ModelLoader.java
 +++ ../src-work/minecraft/net/minecraftforge/client/model/ModelLoader.java
-@@ -1,6 +1,6 @@
- /*
-  * Minecraft Forge
-- * Copyright (c) 2016-2018.
-+ * Copyright (c) 2016.
-  *
-  * This library is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU Lesser General Public
 @@ -19,44 +19,23 @@
  
  package net.minecraftforge.client.model;
