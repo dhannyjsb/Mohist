@@ -18,6 +18,6 @@ At present, Forge-1.13.2 has been released, we will follow the pace and start to
 ## Building
 - `git clone https://github.com/PFCraft/Mohist.git`
 - `git submodule update --init --recursive`
-- `gradlew build`
+- `gradlew launch4j`
 
 Welcome everyone to participate in development, unity is power.
