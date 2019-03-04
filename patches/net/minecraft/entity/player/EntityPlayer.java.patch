@@ -181,7 +181,7 @@
          if (!this.world.isRemote && this.openContainer != null && !this.openContainer.canInteractWith(this))
          {
 -            this.closeScreen();
-+            this.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
++            this.closeScreen(InventoryCloseEvent.Reason.CANT_USE);
              this.openContainer = this.inventoryContainer;
          }
  
@@ -198,7 +198,7 @@
          return this.getHealth() <= 0.0F || this.isPlayerSleeping();
      }
  
-+    public void closeInventory(final InventoryCloseEvent.Reason reason) {
++    public void closeScreen(InventoryCloseEvent.Reason reason) {
 +        this.closeScreen();
 +        this.openContainer = this.inventoryContainer;
 +    }

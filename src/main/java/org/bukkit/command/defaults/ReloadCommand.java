@@ -22,7 +22,7 @@ public class ReloadCommand extends BukkitCommand {
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
         if (!testPermission(sender)) return true;
 
-      Command.broadcastCommandMessage(sender, ChatColor.RED + "We do not recommend using /reload, please use /stop to shut down the server and then restart.");
+        Command.broadcastCommandMessage(sender, ChatColor.RED + "We do not recommend using /reload, please use /stop to shut down the server and then restart.");
 
         return true;
     }

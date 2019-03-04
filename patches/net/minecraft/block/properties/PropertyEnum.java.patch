@@ -28,7 +28,7 @@
          for (T t : allowedValues)
          {
 -            String s = ((IStringSerializable)t).getName();
-+            String s = t.getName();
++            String s = ((IStringSerializable) t).getName();
  
              if (this.nameToValue.containsKey(s))
              {
@@ -45,7 +45,7 @@
      public String getName(T value)
      {
 -        return ((IStringSerializable)value).getName();
-+        return value.getName();
++        return ((IStringSerializable) value).getName();
      }
  
 +    @Override // Paper - override equals as BlockStateEnum is a singleton

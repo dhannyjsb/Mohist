@@ -422,7 +422,7 @@
 +            if (tileentity instanceof IInventory) {
 +                for (final HumanEntity h : Lists.newArrayList((Iterable<? extends HumanEntity>)((IInventory)tileentity).getViewers())) {
 +                    if (h instanceof CraftHumanEntity) {
-+                        ((CraftHumanEntity)h).getHandle().closeInventory(InventoryCloseEvent.Reason.UNLOADED);
++                        ((CraftHumanEntity)h).getHandle().closeScreen(InventoryCloseEvent.Reason.UNLOADED);
 +                    }
 +                }
 +            }
@@ -436,7 +436,7 @@
 +            if (entityIn instanceof IInventory) {
 +                for (final HumanEntity h2 : Lists.newArrayList((Iterable<? extends HumanEntity>)((IInventory)entityIn).getViewers())) {
 +                    if (h2 instanceof CraftHumanEntity) {
-+                        ((CraftHumanEntity)h2).getHandle().closeInventory(InventoryCloseEvent.Reason.UNLOADED);
++                        ((CraftHumanEntity)h2).getHandle().closeScreen(InventoryCloseEvent.Reason.UNLOADED);
 +                    }
 +                }
 +            }

@@ -314,7 +314,7 @@
          if (!this.world.isRemote && this.openContainer != null && !this.openContainer.canInteractWith(this))
          {
 -            this.closeScreen();
-+            this.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
++            this.closeScreen(InventoryCloseEvent.Reason.CANT_USE);
              this.openContainer = this.inventoryContainer;
          }
  
@@ -482,7 +482,7 @@
          }
  
 -        for (ScoreObjective scoreobjective : this.world.getScoreboard().getObjectivesFromCriteria(IScoreCriteria.DEATH_COUNT))
-+        this.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
++        this.closeScreen(InventoryCloseEvent.Reason.CANT_USE);
 +        this.setSpectatingEntity(this); // Remove spectated target
 +
 +        // CraftBukkit - Get our scores instead
@@ -748,7 +748,7 @@
              if (this.openContainer != this.inventoryContainer)
              {
 -                this.closeScreen();
-+                this.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
++                this.closeScreen(InventoryCloseEvent.Reason.CANT_USE);
              }
  
              if (chestInventory instanceof ILockableContainer)
@@ -808,7 +808,7 @@
          if (this.openContainer != this.inventoryContainer)
          {
 -            this.closeScreen();
-+            this.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
++            this.closeScreen(InventoryCloseEvent.Reason.CANT_USE);
          }
  
          this.getNextWindowId();
@@ -836,12 +836,12 @@
      public void closeScreen()
      {
 +        // Paper start
-+        closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNKNOWN);
++        closeScreen(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNKNOWN);
 +    }
 +
-+    public void closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
++    public void closeScreen(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
 +        // Paper end
-+        CraftEventFactory.handleInventoryCloseEvent(this); // CraftBukkit
++        CraftEventFactory.handleInventoryCloseEvent(this, reason); // CraftBukkit
          this.connection.sendPacket(new SPacketCloseWindow(this.openContainer.windowId));
          this.closeContainer();
      }

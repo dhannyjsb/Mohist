@@ -150,7 +150,7 @@
          net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getValue(resourcelocation);
          if (entry != null) entry.setEgg(egg);
 -        return (EntityList.EntityEggInfo)ENTITY_EGGS.put(resourcelocation, egg);
-+        return ENTITY_EGGS.put(resourcelocation, egg);
++        return (EntityEggInfo) ENTITY_EGGS.put(resourcelocation, egg);
      }
  
      public static class EntityEggInfo

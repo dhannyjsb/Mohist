@@ -377,7 +377,7 @@ public class Potion {
      */
     public static void setPotionBrewer(PotionBrewer other) {
         if (brewer != null)
-            throw new IllegalArgumentException("brewer can only be set internally");
+            brewer = other;
         brewer = other;
     }
 

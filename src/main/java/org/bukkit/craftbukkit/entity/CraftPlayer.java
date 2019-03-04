@@ -636,7 +636,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
         // Close any foreign inventory
         if (getHandle().openContainer != getHandle().inventoryContainer) {
-            getHandle().closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.TELEPORT); // Paper
+            getHandle().closeScreen(org.bukkit.event.inventory.InventoryCloseEvent.Reason.TELEPORT); // Paper
         }
 
         // Check if the fromWorld and toWorld are the same.

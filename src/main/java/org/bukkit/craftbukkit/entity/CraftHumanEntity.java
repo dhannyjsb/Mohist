@@ -407,12 +407,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     public void closeInventory() {
-        this.getHandle().closeInventory(InventoryCloseEvent.Reason.PLUGIN);
+        this.getHandle().closeScreen(InventoryCloseEvent.Reason.PLUGIN);
     }
 
     @Override
     public void closeInventory(final InventoryCloseEvent.Reason reason) {
-        this.getHandle().closeInventory(reason);
+        this.getHandle().closeScreen(reason);
     }
 
     @Override
