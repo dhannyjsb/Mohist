@@ -22,7 +22,7 @@ apply plugin: 'net.minecraftforge.gradle.patcher'
 apply plugin: 'net.minecraftforge.gradle.launch4j'
 
 group = 'cn.pfcraft'
-version = '14.23.5.2815-0.0.1a'
+version = '14.23.5.2815-0.0.1b'
 
 repositories {
     clear()
