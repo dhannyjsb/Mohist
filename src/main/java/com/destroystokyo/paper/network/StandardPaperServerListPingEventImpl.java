@@ -22,7 +22,7 @@ public final class StandardPaperServerListPingEventImpl extends PaperServerListP
     private GameProfile[] originalSample;
 
     private StandardPaperServerListPingEventImpl(final MinecraftServer server, final NetworkManager networkManager, final ServerStatusResponse ping) {
-        super(server, new PaperStatusClient(networkManager), ping.getVersion().getProtocol(), server.server.getServerIcon());
+        super(server, new PaperStatusClient(networkManager), ping.getVersion() != null ? ping.getVersion().getProtocol() : -1, server.server.getServerIcon());
         this.originalSample = (ping.getPlayers() == null) ? null : ping.getPlayers().getPlayers();
     }
 

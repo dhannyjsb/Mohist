@@ -1062,7 +1062,7 @@
                  {
                      if (!ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack))
 +                        // Paper start - PlayerArmorChangeEvent
-+                        if (this instanceof EntityPlayer && entityequipmentslot.getSlotType() == EntityEquipmentSlot.Type.ARMOR && !itemstack.getItem().equals(itemstack1.getItem())) {
++                        if (this instanceof EntityPlayerMP && entityequipmentslot.getSlotType() == EntityEquipmentSlot.Type.ARMOR) {
 +                            final org.bukkit.inventory.ItemStack oldItem = CraftItemStack.asBukkitCopy(itemstack);
 +                            final org.bukkit.inventory.ItemStack newItem = CraftItemStack.asBukkitCopy(itemstack1);
 +                            new PlayerArmorChangeEvent((Player) this.getBukkitEntity(), PlayerArmorChangeEvent.SlotType.valueOf(entityequipmentslot.name()), oldItem, newItem).callEvent();
