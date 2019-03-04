@@ -20,7 +20,7 @@
          return new NonNullList<E>(Arrays.asList((E[])aobject), fill);
      }
  
-+    public static <E> NonNullList<E> with(int size, Object fill, boolean is) {
++    public static <E> NonNullList<E> withSize(int size, Object fill, boolean is) {
 +        Validate.notNull(fill);
 +        Object[] aobject = new Object[size];
 +        Arrays.fill(aobject, fill);

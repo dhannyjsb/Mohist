@@ -697,7 +697,7 @@
                              entityzombievillager.setForgeProfession(this.chooseForgeProfession(i, net.minecraftforge.fml.common.registry.VillagerRegistry.FARMER));
                              entityzombievillager.enablePersistence();
 -                            worldIn.spawnEntity(entityzombievillager);
-+                            worldIn.addEntity(entityzombievillager, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CHUNK_GEN);
++                            worldIn.spawnEntity(entityzombievillager, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CHUNK_GEN);
                          }
                          else
                          {
@@ -706,7 +706,7 @@
                              entityvillager.setProfession(this.chooseForgeProfession(i, entityvillager.getProfessionForge()));
                              entityvillager.finalizeMobSpawn(worldIn.getDifficultyForLocation(new BlockPos(entityvillager)), (IEntityLivingData)null, false);
 -                            worldIn.spawnEntity(entityvillager);
-+                            worldIn.addEntity(entityvillager, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CHUNK_GEN);
++                            worldIn.spawnEntity(entityvillager, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CHUNK_GEN);
                          }
                      }
                  }

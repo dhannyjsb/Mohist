@@ -80,7 +80,7 @@
          {
              double d0 = MathHelper.clamp((1.0D + GRASS_COLOR_NOISE.getValue((double)pos.getX() / 48.0D, (double)pos.getZ() / 48.0D)) / 2.0D, 0.0D, 0.9999D);
              BlockFlower.EnumFlowerType blockflower$enumflowertype = BlockFlower.EnumFlowerType.values()[(int)(d0 * (double)BlockFlower.EnumFlowerType.values().length)];
-@@ -91,7 +92,7 @@
+@@ -91,16 +92,16 @@
  
      public void decorate(World worldIn, Random rand, BlockPos pos)
      {
@@ -89,8 +89,10 @@
          {
              this.addMushrooms(worldIn, rand, pos);
          }
-@@ -100,7 +101,7 @@
-         { // no tab for patch
+ 
+         if(net.minecraftforge.event.terraingen.TerrainGen.decorate(worldIn, rand, new net.minecraft.util.math.ChunkPos(pos), net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.FLOWERS))
+-        { // no tab for patch
++        {
          int i = rand.nextInt(5) - 3;
  
 -        if (this.type == BiomeForest.Type.FLOWER)

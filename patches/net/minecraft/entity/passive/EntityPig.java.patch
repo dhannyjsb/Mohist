@@ -80,7 +80,7 @@
              }
  
 -            this.world.spawnEntity(entitypigzombie);
-+            this.world.addEntity(entitypigzombie, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING);
++            this.world.spawnEntity(entitypigzombie, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING);
              this.setDead();
          }
      }

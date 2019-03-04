@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/world/WorldType.java
++++ ../src-work/minecraft/net/minecraft/world/WorldType.java
+@@ -27,7 +27,8 @@
+ 
+     private WorldType(int id, String name, int version)
+     {
+-        if (name.length() > 16 && DEBUG_ALL_BLOCK_STATES != null) throw new IllegalArgumentException("World type names must not be longer then 16: " + name);
++        if (name.length() > 16 && DEBUG_ALL_BLOCK_STATES != null) 
++			throw new IllegalArgumentException("World type names must not be longer then 16: " + name);
+         this.name = name;
+         this.version = version;
+         this.canBeCreated = true;

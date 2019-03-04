@@ -72,7 +72,7 @@
              entityskeleton.onInitialSpawn(difficulty, (IEntityLivingData)null);
 -            this.world.spawnEntity(entityskeleton);
 +            // this.world.spawnEntity(entityskeleton);
-+            this.world.addEntity(entityskeleton, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.JOCKEY);
++            this.world.spawnEntity(entityskeleton, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.JOCKEY);
              entityskeleton.startRiding(this);
          }
  

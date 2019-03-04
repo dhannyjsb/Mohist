@@ -31,21 +31,7 @@
  
  public class RegionFile
  {
-@@ -24,9 +22,13 @@
-     private static final boolean FORGE_ENABLE_EXTENDED_SAVE = Boolean.parseBoolean(System.getProperty("forge.enableExtendedSave", "true"));
-     private static final byte[] EMPTY_SECTOR = new byte[4096];
-     private final File fileName;
-+    private File getFile() {
-+        return this.fileName;
-+    }
-     private RandomAccessFile dataFile;
-     private final int[] offsets = new int[1024];
-     private final int[] chunkTimestamps = new int[1024];
-+    private int[] timestamps = chunkTimestamps; // Paper - OBFHELPER
-     private List<Boolean> sectorFree;
-     private int sizeDelta;
-     private long lastModified;
-@@ -45,7 +47,7 @@
+@@ -45,7 +43,7 @@
  
              this.dataFile = new RandomAccessFile(fileNameIn, "rw");
  
@@ -54,7 +40,7 @@
              {
                  this.dataFile.write(EMPTY_SECTOR);
                  this.dataFile.write(EMPTY_SECTOR);
-@@ -71,42 +73,44 @@
+@@ -71,42 +69,44 @@
              this.sectorFree.set(0, Boolean.valueOf(false));
              this.sectorFree.set(1, Boolean.valueOf(false));
              this.dataFile.seek(0L);
@@ -107,7 +93,7 @@
 -                int l1 = this.dataFile.readInt();
 -                this.chunkTimestamps[k1] = l1;
 +                int l1 = headerAsInts.get(); // Paper
-+                if (offsets[k1] != 0) this.timestamps[k1] = l1; // Paper - don't set timestamp if it got 0'd above due to corruption
++                if (offsets[k1] != 0) this.chunkTimestamps[k1] = l1; // Paper - don't set timestamp if it got 0'd above due to corruption
              }
          }
          catch (IOException ioexception)
@@ -117,7 +103,7 @@
          }
      }
  
-@@ -117,7 +121,6 @@
+@@ -117,7 +117,6 @@
      }
  
      @Nullable
@@ -125,7 +111,7 @@
      public synchronized DataInputStream getChunkDataInputStream(int x, int z)
      {
          if (this.outOfBounds(x, z))
-@@ -197,7 +200,7 @@
+@@ -197,7 +196,7 @@
      @Nullable
      public DataOutputStream getChunkDataOutputStream(int x, int z)
      {
@@ -134,7 +120,7 @@
      }
  
      protected synchronized void write(int x, int z, byte[] data, int length)
-@@ -216,7 +219,7 @@
+@@ -216,7 +215,7 @@
  
              if (l >= 256)
              {
@@ -143,7 +129,7 @@
                  net.minecraftforge.fml.common.FMLLog.log.warn("Large Chunk Detected: ({}, {}) Size: {} {}", x, z, l, fileName);
              }
  
-@@ -295,7 +298,7 @@
+@@ -295,7 +294,7 @@
          }
          catch (IOException ioexception)
          {
@@ -152,7 +138,7 @@
          }
      }
  
-@@ -344,6 +347,146 @@
+@@ -344,6 +343,146 @@
          }
      }
  
@@ -208,11 +194,11 @@
 +    }
 +
 +    private File getOversizedMetaFile() {
-+        return new File(getFile().getParentFile(), getFile().getName().replaceAll("\\.mca$", "") + ".oversized.nbt");
++        return new File(fileName.getParentFile(), fileName.getName().replaceAll("\\.mca$", "") + ".oversized.nbt");
 +    }
 +
 +    private File getOversizedFile(int x, int z) {
-+        return new File(this.getFile().getParentFile(), this.getFile().getName().replaceAll("\\.mca$", "") + "_oversized_" + x + "_" + z + ".nbt");
++        return new File(fileName.getParentFile(), fileName.getName().replaceAll("\\.mca$", "") + "_oversized_" + x + "_" + z + ".nbt");
 +    }
 +
 +    void writeOversizedData(int x, int z, NBTTagCompound oversizedData) throws IOException {
@@ -232,7 +218,7 @@
 +
 +    public class ChunkTooLargeException extends RuntimeException {
 +       public ChunkTooLargeException(int x, int z, int sectors) {
-+           super("Chunk " + x + "," + z + " of " + getFile().toString() + " is too large (" + sectors + "/256)");
++           super("Chunk " + x + "," + z + " of " + fileName.toString() + " is too large (" + sectors + "/256)");
 +       }
 +    }
 +    private static class DirectByteArrayOutputStream extends ByteArrayOutputStream {
@@ -266,11 +252,11 @@
 +            // clear the timestamp
 +            file.seek(4096 + j1 * 4);
 +            file.writeInt(0);
-+            timestamps[j1] = 0;
++            chunkTimestamps[j1] = 0;
 +            offsets[j1] = 0;
-+            logger.error("Deleted corrupt chunk (" + debug + ") " + getFile().getAbsolutePath());
++            logger.error("Deleted corrupt chunk (" + debug + ") " + fileName.getAbsolutePath());
 +        } catch (IOException e) {
-+            logger.error("Error deleting corrupt chunk (" + debug + ") " + getFile().getAbsolutePath(), e);
++            logger.error("Error deleting corrupt chunk (" + debug + ") " + fileName.getAbsolutePath(), e);
 +        }
 +    }
 +    private boolean backedUp = false;
@@ -279,7 +265,7 @@
 +            return;
 +        }
 +        backedUp = true;
-+        File file = this.getFile();
++        File file = this.fileName;
 +        java.text.DateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 +        java.util.Date today = new java.util.Date();
 +        File corrupt = new File(file.getParentFile(), file.getName() + "." + formatter.format(today) + ".corrupt");
@@ -299,7 +285,7 @@
      class ChunkBuffer extends ByteArrayOutputStream
      {
          private final int chunkX;
-@@ -358,7 +501,37 @@
+@@ -358,7 +497,37 @@
  
          public void close() throws IOException
          {

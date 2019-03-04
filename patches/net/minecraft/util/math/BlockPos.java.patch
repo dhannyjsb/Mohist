@@ -146,7 +146,7 @@
                          else if (this.pos.x == x2 && this.pos.y == y2 && this.pos.z == z2)
                          {
 -                            return (BlockPos.MutableBlockPos)this.endOfData();
-+                            return this.endOfData();
++                            return (MutableBlockPos) this.endOfData();
                          }
                          else
                          {

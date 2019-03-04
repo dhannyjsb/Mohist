@@ -118,7 +118,7 @@
          return loadChunk(x, z, null);
      }
  
-+    public Chunk loadChunk(int i, int j, Runnable runnable) {
++    public Chunk loadChunk(int i, int j, @Nullable Runnable runnable) {
 +            return loadChunk(i, j, runnable, true);
 +    }
 +
@@ -274,7 +274,7 @@
 +                    continue;
 +                }
 +
-+                Chunk neighbor = this.getLoadedChunk(chunk.x + x, chunk.z + z);
++                Chunk neighbor = this.getChunkIfLoaded(chunk.x + x, chunk.z + z);
 +                if (neighbor != null) {
 +                    neighbor.setNeighborUnloaded(-x, -z);
 +                    chunk.setNeighborUnloaded(x, z);

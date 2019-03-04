@@ -70,7 +70,7 @@
          }
  
 -        this.world.spawnEntity(entityvillager);
-+        this.world.addEntity(entityvillager, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CURED);
++        this.world.spawnEntity(entityvillager, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CURED);
  
          if (this.converstionStarter != null)
          {

@@ -208,7 +208,7 @@ public final class MCUtil {
     public static TileEntityHopper getHopper(World world, BlockPos pos) {
         Chunk chunk = world.getChunkIfLoaded(pos.getX() >> 4, pos.getZ() >> 4);
         if (chunk != null && chunk.getBlockState(pos).getBlock() == Blocks.HOPPER) {
-                TileEntity tileEntity = chunk.getTileEntityImmediately(pos);
+                TileEntity tileEntity = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.IMMEDIATE);
                 if (tileEntity instanceof TileEntityHopper) {
                         return (TileEntityHopper) tileEntity;
                     }

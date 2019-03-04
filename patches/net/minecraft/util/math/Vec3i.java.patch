@@ -8,11 +8,3 @@
  import javax.annotation.concurrent.Immutable;
  
  @Immutable
-@@ -83,6 +84,7 @@
-     {
-         return this.z;
-     }
-+    // Paper end
- 
-     public Vec3i crossProduct(Vec3i vec)
-     {

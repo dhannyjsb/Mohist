@@ -249,7 +249,7 @@
 +    }
 +
 +    public static void spawnEntity(Entity entityIn, World worldIn, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason reason) {
-+        if (!entityIn.valid && worldIn.addEntity(entityIn, reason) && entityIn.isBeingRidden()) {
++        if (!entityIn.valid && worldIn.spawnEntity(entityIn, reason) && entityIn.isBeingRidden()) {
              for (Entity entity : entityIn.getPassengers())
              {
                  spawnEntity(entity, worldIn);
