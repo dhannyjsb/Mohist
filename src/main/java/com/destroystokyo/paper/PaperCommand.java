@@ -132,7 +132,7 @@ public class PaperCommand extends Command {
                     ResourceLocation key = EntityList.getKey(e);
                     if (e.shouldBeRemoved) return; // Paper
                     MutablePair<Integer, Map<ChunkPos, Integer>> info = list.computeIfAbsent(key, k -> MutablePair.of(0, Maps.newHashMap()));
-                    ChunkPos chunk = new ChunkPos(e.getChunkX(), e.getChunkZ());
+                    ChunkPos chunk = new ChunkPos(e.chunkCoordX, e.chunkCoordZ);
                     info.left++;
                     info.right.put(chunk, info.right.getOrDefault(chunk, 0) + 1);
                 });

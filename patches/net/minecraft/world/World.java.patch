@@ -1054,6 +1054,15 @@
  
          for (int j2 = 0; j2 < list.size(); ++j2)
          {
+@@ -2246,7 +2652,7 @@
+ 
+             blockpos$pooledmutableblockpos.release();
+ 
+-            if (vec3d.lengthVector() > 0.0D && entityIn.isPushedByWater())
++            if (vec3d.lengthVector() > 0.0D && entityIn.pushedByWater())
+             {
+                 vec3d = vec3d.normalize();
+                 double d1 = 0.014D;
 @@ -2378,29 +2784,28 @@
          return this.chunkProvider.makeString();
      }

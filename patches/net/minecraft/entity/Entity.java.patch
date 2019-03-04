@@ -179,19 +179,7 @@
      public int hurtResistantTime;
      protected boolean firstUpdate;
      protected boolean isImmuneToFire;
-@@ -151,8 +175,11 @@
-     private static final DataParameter<Boolean> NO_GRAVITY = EntityDataManager.<Boolean>createKey(Entity.class, DataSerializers.BOOLEAN);
-     public boolean addedToChunk;
-     public int chunkCoordX;
-+    public int getChunkX() { return chunkCoordX; }
-     public int chunkCoordY;
-+    public int getChunkY() { return chunkCoordY; }
-     public int chunkCoordZ;
-+    public int getChunkZ() { return chunkCoordZ; }
-     @SideOnly(Side.CLIENT)
-     public long serverPosX;
-     @SideOnly(Side.CLIENT)
-@@ -172,7 +199,7 @@
+@@ -172,7 +196,7 @@
      protected UUID entityUniqueID;
      protected String cachedUniqueIdString;
      private final CommandResultStats cmdResultStats;
@@ -200,7 +188,7 @@
      private final Set<String> tags;
      private boolean isPositionDirty;
      private final double[] pistonDeltas;
-@@ -182,6 +209,27 @@
+@@ -182,6 +206,27 @@
       */
      public boolean updateBlocked;
  
@@ -228,7 +216,7 @@
      public Entity(World worldIn)
      {
          this.entityId = nextEntityID++;
-@@ -191,7 +239,7 @@
+@@ -191,7 +236,7 @@
          this.height = 1.8F;
          this.nextStepDistance = 1;
          this.nextFlap = 1.0F;
@@ -237,7 +225,7 @@
          this.fire = -this.getFireImmuneTicks();
          this.firstUpdate = true;
          this.entityUniqueID = MathHelper.getRandomUUID(this.rand);
-@@ -205,7 +253,12 @@
+@@ -205,7 +250,12 @@
          if (worldIn != null)
          {
              this.dimension = worldIn.provider.getDimension();
@@ -250,7 +238,7 @@
  
          this.dataManager = new EntityDataManager(this);
          this.dataManager.register(FLAGS, Byte.valueOf((byte)0));
-@@ -215,15 +268,17 @@
+@@ -215,15 +265,17 @@
          this.dataManager.register(SILENT, Boolean.valueOf(false));
          this.dataManager.register(NO_GRAVITY, Boolean.valueOf(false));
          this.entityInit();
@@ -271,7 +259,7 @@
  
      public int getEntityId()
      {
-@@ -301,7 +356,7 @@
+@@ -301,7 +353,7 @@
                      break;
                  }
  
@@ -280,7 +268,7 @@
              }
  
              this.motionX = 0.0D;
-@@ -345,8 +400,35 @@
+@@ -345,8 +397,35 @@
          }
      }
  
@@ -317,7 +305,7 @@
          this.rotationYaw = yaw % 360.0F;
          this.rotationPitch = pitch % 360.0F;
      }
-@@ -389,72 +471,40 @@
+@@ -389,72 +468,40 @@
          this.onEntityUpdate();
      }
  
@@ -406,7 +394,7 @@
                      this.portalCounter = 0;
                  }
              }
-@@ -462,7 +512,28 @@
+@@ -462,7 +509,28 @@
              this.decrementTimeUntilPortal();
              this.world.profiler.endSection();
          }
@@ -435,7 +423,7 @@
          this.spawnRunningParticles();
          this.handleWaterMovement();
  
-@@ -498,10 +569,16 @@
+@@ -498,10 +566,16 @@
              this.fallDistance *= 0.5F;
          }
  
@@ -452,7 +440,7 @@
  
          if (!this.world.isRemote)
          {
-@@ -512,6 +589,18 @@
+@@ -512,6 +586,18 @@
          this.world.profiler.endSection();
      }
  
@@ -471,7 +459,7 @@
      protected void decrementTimeUntilPortal()
      {
          if (this.timeUntilPortal > 0)
-@@ -530,6 +619,28 @@
+@@ -530,6 +616,28 @@
          if (!this.isImmuneToFire)
          {
              this.attackEntityFrom(DamageSource.LAVA, 4.0F);
@@ -500,7 +488,7 @@
              this.setFire(15);
          }
      }
-@@ -579,6 +690,22 @@
+@@ -579,6 +687,22 @@
          }
          else
          {
@@ -523,7 +511,7 @@
              if (type == MoverType.PISTON)
              {
                  long i = this.world.getTotalWorldTime();
-@@ -912,6 +1039,26 @@
+@@ -912,6 +1036,26 @@
                  block.onLanded(this.world, this);
              }
  
@@ -550,7 +538,7 @@
              if (this.canTriggerWalking() && (!this.onGround || !this.isSneaking() || !(this instanceof EntityPlayer)) && !this.isRiding())
              {
                  double d15 = this.posX - d10;
-@@ -958,7 +1105,8 @@
+@@ -958,7 +1102,8 @@
                      this.nextFlap = this.playFlySound(this.distanceWalkedOnStepModified);
                  }
              }
@@ -560,7 +548,7 @@
              try
              {
                  this.doBlockCollisions();
-@@ -970,6 +1118,7 @@
+@@ -970,6 +1115,7 @@
                  this.addEntityCrashInfo(crashreportcategory);
                  throw new ReportedException(crashreport);
              }
@@ -568,7 +556,7 @@
  
              boolean flag1 = this.isWet();
  
-@@ -979,11 +1128,17 @@
+@@ -979,11 +1125,17 @@
  
                  if (!flag1)
                  {
@@ -588,7 +576,7 @@
                      }
                  }
              }
-@@ -1154,6 +1309,14 @@
+@@ -1154,6 +1306,14 @@
          }
      }
  
@@ -603,7 +591,7 @@
      public final boolean isImmuneToFire()
      {
          return this.isImmuneToFire;
-@@ -1203,8 +1366,12 @@
+@@ -1203,8 +1363,12 @@
          return this.world.handleMaterialAcceleration(this.getEntityBoundingBox().grow(0.0D, -20.0D, 0.0D).shrink(0.001D), Material.WATER, this);
      }
  
@@ -618,7 +606,7 @@
          if (this.getRidingEntity() instanceof EntityBoat)
          {
              this.inWater = false;
-@@ -1369,6 +1536,11 @@
+@@ -1369,6 +1533,11 @@
  
      public void setWorld(World worldIn)
      {
@@ -630,7 +618,7 @@
          this.world = worldIn;
      }
  
-@@ -1687,6 +1859,16 @@
+@@ -1687,6 +1856,16 @@
          {
              compound.setTag("Pos", this.newDoubleNBTList(this.posX, this.posY, this.posZ));
              compound.setTag("Motion", this.newDoubleNBTList(this.motionX, this.motionY, this.motionZ));
@@ -647,7 +635,7 @@
              compound.setTag("Rotation", this.newFloatNBTList(this.rotationYaw, this.rotationPitch));
              compound.setFloat("FallDistance", this.fallDistance);
              compound.setShort("Fire", (short)this.fire);
-@@ -1696,7 +1878,12 @@
+@@ -1696,7 +1875,12 @@
              compound.setBoolean("Invulnerable", this.invulnerable);
              compound.setInteger("PortalCooldown", this.timeUntilPortal);
              compound.setUniqueId("UUID", this.getUniqueID());
@@ -661,7 +649,7 @@
              if (this.hasCustomName())
              {
                  compound.setString("CustomName", this.getCustomNameTag());
-@@ -1761,7 +1948,6 @@
+@@ -1761,7 +1945,6 @@
                      compound.setTag("Passengers", nbttaglist1);
                  }
              }
@@ -669,7 +657,7 @@
              return compound;
          }
          catch (Throwable throwable)
-@@ -1784,21 +1970,6 @@
+@@ -1784,21 +1967,6 @@
              this.motionY = nbttaglist2.getDoubleAt(1);
              this.motionZ = nbttaglist2.getDoubleAt(2);
  
@@ -691,7 +679,7 @@
              this.posX = nbttaglist.getDoubleAt(0);
              this.posY = nbttaglist.getDoubleAt(1);
              this.posZ = nbttaglist.getDoubleAt(2);
-@@ -1869,6 +2040,57 @@
+@@ -1869,6 +2037,57 @@
              {
                  this.setPosition(this.posX, this.posY, this.posZ);
              }
@@ -749,7 +737,7 @@
          }
          catch (Throwable throwable)
          {
-@@ -1884,11 +2106,61 @@
+@@ -1884,11 +2103,61 @@
          return true;
      }
  
@@ -763,14 +751,14 @@
 +     */
 +    public Chunk getCurrentChunk() {
 +        final Chunk chunk = currentChunk != null ? currentChunk.get() : null;
-+        return chunk != null && chunk.isLoaded() ? chunk : (addedToChunk ? world.getChunkIfLoaded(getChunkX(), getChunkZ()) : null);
++        return chunk != null && chunk.isLoaded() ? chunk : (addedToChunk ? world.getChunkIfLoaded(chunkCoordX, chunkCoordZ) : null);
 +    }
 +   /**
 +    * Returns the chunk at the location, using the entities local cache if avail
 +    * Will only return null if the location specified is not loaded
 +    */
 +   public Chunk getCurrentChunkAt(int x, int z) {
-+        if (getChunkX() == x && getChunkZ() == z) {
++        if (chunkCoordX == x && chunkCoordZ == z) {
 +                Chunk chunk = getCurrentChunk();
 +                if (chunk != null) {
 +                        return chunk;
@@ -814,7 +802,7 @@
      }
  
      protected abstract void readEntityFromNBT(NBTTagCompound compound);
-@@ -2104,12 +2376,36 @@
+@@ -2104,12 +2373,36 @@
  
      protected void addPassenger(Entity passenger)
      {
@@ -851,7 +839,7 @@
              if (!this.world.isRemote && passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer))
              {
                  this.riddenByEntities.add(0, passenger);
-@@ -2129,7 +2425,26 @@
+@@ -2129,7 +2422,26 @@
          }
          else
          {
@@ -879,7 +867,7 @@
              passenger.rideCooldown = 60;
          }
      }
-@@ -2197,7 +2512,7 @@
+@@ -2197,7 +2509,7 @@
          return 300;
      }
  
@@ -888,7 +876,7 @@
      public void setVelocity(double x, double y, double z)
      {
          this.motionX = x;
-@@ -2307,6 +2622,7 @@
+@@ -2307,6 +2619,7 @@
      @Nullable
      public Team getTeam()
      {
@@ -896,7 +884,7 @@
          return this.world.getScoreboard().getPlayersTeam(this.getCachedUniqueIdString());
      }
  
-@@ -2325,12 +2641,12 @@
+@@ -2325,12 +2638,12 @@
          this.setFlag(5, invisible);
      }
  
@@ -911,7 +899,7 @@
      {
          byte b0 = ((Byte)this.dataManager.get(FLAGS)).byteValue();
  
-@@ -2351,20 +2667,59 @@
+@@ -2351,17 +2664,52 @@
  
      public void setAir(int air)
      {
@@ -966,23 +954,16 @@
          }
      }
  
-+    public void onKill(EntityLivingBase entityLivingBase){
-+        this.onKillEntity(entityLivingBase);
-+    }
-+
-     public void onKillEntity(EntityLivingBase entityLivingIn)
-     {
-     }
-@@ -2502,7 +2857,7 @@
+@@ -2502,7 +2850,7 @@
  
      public String toString()
      {
 -        return String.format("%s['%s'/%d, l='%s', x=%.2f, y=%.2f, z=%.2f]", this.getClass().getSimpleName(), this.getName(), this.entityId, this.world == null ? "~NULL~" : this.world.getWorldInfo().getWorldName(), this.posX, this.posY, this.posZ);
-+        return String.format("%s[\'%s\'/%d, uuid=\'%s\', l=\'%s\', x=%.2f, y=%.2f, z=%.2f, cx=%d, cd=%d, tl=%d, v=%b, d=%b]", new Object[] { this.getClass().getSimpleName(), this.getName(), Integer.valueOf(this.entityId), this.getUniqueID().toString(), this.world == null ? "~NULL~" : this.world.getWorldInfo().getWorldName(), Double.valueOf(this.posX), Double.valueOf(this.posY), Double.valueOf(this.posZ), getChunkX(), getChunkZ(), this.ticksExisted, this.valid, this.isDead}); // Paper - add more information
++        return String.format("%s[\'%s\'/%d, uuid=\'%s\', l=\'%s\', x=%.2f, y=%.2f, z=%.2f, cx=%d, cd=%d, tl=%d, v=%b, d=%b]", new Object[] { this.getClass().getSimpleName(), this.getName(), Integer.valueOf(this.entityId), this.getUniqueID().toString(), this.world == null ? "~NULL~" : this.world.getWorldInfo().getWorldName(), Double.valueOf(this.posX), Double.valueOf(this.posY), Double.valueOf(this.posZ), chunkCoordX, chunkCoordZ, this.ticksExisted, this.valid, this.isDead}); // Paper - add more information
      }
  
      public boolean isEntityInvulnerable(DamageSource source)
-@@ -2540,7 +2895,7 @@
+@@ -2540,7 +2888,7 @@
      public Entity changeDimension(int dimensionIn)
      {
          if (this.world.isRemote || this.isDead) return null;
@@ -991,7 +972,7 @@
      }
  
      @Nullable // Forge: Entities that require custom handling should override this method, not the other
-@@ -2551,53 +2906,67 @@
+@@ -2551,53 +2899,67 @@
              if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
              this.world.profiler.startSection("changeDimension");
              MinecraftServer minecraftserver = this.getServer();
@@ -1099,7 +1080,7 @@
              this.world.profiler.endStartSection("reloading");
              Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
  
-@@ -2605,28 +2974,26 @@
+@@ -2605,28 +2967,26 @@
              {
                  entity.copyDataFromOld(this);
  
@@ -1137,19 +1118,16 @@
              return entity;
          }
          else
-@@ -2730,6 +3097,11 @@
- 
-     public boolean isPushedByWater()
-     {
-+        return this.pushedByWater();
-+    }
-+
-+    public boolean pushedByWater()
-+    {
-         return true;
+@@ -2728,7 +3088,7 @@
+         return this.cachedUniqueIdString;
      }
  
-@@ -2755,6 +3127,11 @@
+-    public boolean isPushedByWater()
++    public boolean pushedByWater()
+     {
+         return true;
+     }
+@@ -2755,6 +3115,11 @@
  
      public void setCustomNameTag(String name)
      {
@@ -1161,7 +1139,7 @@
          this.dataManager.set(CUSTOM_NAME, name);
      }
  
-@@ -2838,7 +3215,25 @@
+@@ -2838,7 +3203,25 @@
  
      public void setEntityBoundingBox(AxisAlignedBB bb)
      {
@@ -1188,7 +1166,7 @@
      }
  
      public float getEyeHeight()
-@@ -2897,11 +3292,11 @@
+@@ -2897,11 +3280,11 @@
  
      public void setCommandStat(CommandResultStats.Type type, int amount)
      {
@@ -1204,7 +1182,7 @@
  
      @Nullable
      public MinecraftServer getServer()
-@@ -2974,7 +3369,6 @@
+@@ -2974,7 +3357,6 @@
      public void onRemovedFromWorld() {
          this.isAddedToWorld = false;
      }
@@ -1212,7 +1190,7 @@
      /**
       * Returns a NBTTagCompound that can be used to store custom data for this entity.
       * It will be written, and read from disc, so it persists over world saves.
-@@ -3030,7 +3424,7 @@
+@@ -3030,7 +3412,7 @@
          {
              return ((net.minecraft.entity.item.EntityMinecart)this).getCartItem();
          }
@@ -1221,7 +1199,7 @@
          {
              return new ItemStack(((EntityBoat)this).getItemBoat());
          }
-@@ -3109,14 +3503,14 @@
+@@ -3109,14 +3491,14 @@
      }
  
      @Override
@@ -1238,7 +1216,7 @@
      {
          return capabilities == null ? null : capabilities.getCapability(capability, facing);
      }
-@@ -3319,7 +3713,7 @@
+@@ -3319,7 +3701,7 @@
          return SoundCategory.NEUTRAL;
      }
  

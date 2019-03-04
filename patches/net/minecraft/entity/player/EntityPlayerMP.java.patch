@@ -924,7 +924,7 @@
 -        if ("seed".equals(commandName) && !this.mcServer.isDedicatedServer())
 -        {
 -            return true;
-+        // CraftBukkit start
++        
 +        if ("@".equals(commandName)) {
 +            return getBukkitEntity().hasPermission("minecraft.command.selector");
          }

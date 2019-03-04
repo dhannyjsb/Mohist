@@ -694,7 +694,7 @@
 +                    entitylivingbase.awardKillScore(this, this.scoreValue, cause);
 +                }
 +                if (entity != null) {
-+                    entity.onKill(this);
++                    entity.onKillEntity(this);
 +                }
 +
 +                this.getCombatTracker().reset();
