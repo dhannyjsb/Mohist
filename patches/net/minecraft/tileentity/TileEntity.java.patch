@@ -182,7 +182,7 @@
 +        // Spigot start
 +        final org.bukkit.block.Block block = this.world.getWorld().getBlockAt(this.pos.getX(), this.pos.getY(), this.pos.getZ());
 +        if (block == null) {
-+            Bukkit.getLogger().log(Level.WARNING, "No block for owner at %s %d %d %d", new Object[] { this.world.getWorld(), this.pos.getX(), this.pos.getY(), this.pos.getZ() });
++            Bukkit.getLogger1().warn("No block for owner at %s %d %d %d", new Object[] { this.world.getWorld(), this.pos.getX(), this.pos.getY(), this.pos.getZ() });
 +            return null;
 +        }
 +        // Spigot end

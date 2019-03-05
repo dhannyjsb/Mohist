@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * An implementation of {@link Configuration} which saves all files in Yaml.
@@ -178,9 +177,9 @@ public class YamlConfiguration extends FileConfiguration {
             config.load(file);
         } catch (FileNotFoundException ex) {
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+            Bukkit.getLogger1().error( "Cannot load " + file, ex);
         } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+            Bukkit.getLogger1().error( "Cannot load " + file, ex);
         }
 
         return config;
@@ -205,9 +204,9 @@ public class YamlConfiguration extends FileConfiguration {
         try {
             config.load(reader);
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
+            Bukkit.getLogger1().error( "Cannot load configuration from stream", ex);
         } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
+            Bukkit.getLogger1().error( "Cannot load configuration from stream", ex);
         }
 
         return config;

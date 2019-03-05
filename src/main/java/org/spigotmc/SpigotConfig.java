@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.logging.Level;
 
 public class SpigotConfig
 {
@@ -56,7 +55,7 @@ public class SpigotConfig
         {
         } catch ( InvalidConfigurationException ex )
         {
-            Bukkit.getLogger().log( Level.SEVERE, "Could not load spigot.yml, please correct your syntax errors", ex );
+            Bukkit.getLogger1().error( "Could not load spigot.yml, please correct your syntax errors", ex );
             throw Throwables.propagate( ex );
         }
 
@@ -96,7 +95,7 @@ public class SpigotConfig
                         throw Throwables.propagate( ex.getCause() );
                     } catch ( Exception ex )
                     {
-                        Bukkit.getLogger().log( Level.SEVERE, "Error invoking " + method, ex );
+                        Bukkit.getLogger1().error( "Error invoking " + method, ex );
                     }
                 }
             }
@@ -107,7 +106,7 @@ public class SpigotConfig
             config.save( CONFIG_FILE );
         } catch ( IOException ex )
         {
-            Bukkit.getLogger().log( Level.SEVERE, "Could not save " + CONFIG_FILE, ex );
+            Bukkit.getLogger1().error( "Could not save " + CONFIG_FILE, ex );
         }
     }
 
@@ -220,7 +219,7 @@ public class SpigotConfig
     {
         int count = getInt( "settings.netty-threads", 4 );
         System.setProperty( "io.netty.eventLoopThreads", Integer.toString( count ) );
-        Bukkit.getLogger().log( Level.INFO, "Using {0} threads for Netty based IO", count );
+        Bukkit.getLogger1().info( "Using {0} threads for Netty based IO", count );
     }
 
     public static boolean lateBind;
@@ -245,7 +244,7 @@ public class SpigotConfig
             {
                 if ( StatList.getOneShotStat(name) == null )
                 {
-                    Bukkit.getLogger().log(Level.WARNING, "Ignoring non existent stats.forced-stats " + name);
+                    Bukkit.getLogger1().warn( "Ignoring non existent stats.forced-stats " + name);
                     continue;
                 }
                 forcedStats.put( name, section.getInt( name ) );
@@ -363,10 +362,10 @@ public class SpigotConfig
 
         if ( LogManager.getRootLogger().isTraceEnabled() )
         {
-            Bukkit.getLogger().info( "Debug logging is enabled" );
+            Bukkit.getLogger1().info( "Debug logging is enabled" );
         } else
         {
-            Bukkit.getLogger().info( "Debug logging is disabled" );
+            Bukkit.getLogger1().info( "Debug logging is disabled" );
         }
     }
 

@@ -166,7 +166,7 @@
                  this.currentTime = getCurrentTimeMillis();
  
                  if (this.settings.hasProperty("announce-player-achievements"))
-@@ -292,9 +317,28 @@
+@@ -292,16 +317,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -174,14 +174,19 @@
                  }
  
 -                if (this.getMaxTickTime() > 0L)
+-                {
+-                    Thread thread1 = new Thread(new ServerHangWatchdog(this));
+-                    thread1.setName("Server Watchdog");
+-                    thread1.setDaemon(true);
+-                    thread1.start();
 +				if (this.server.getBukkitSpawnRadius() > -1) {
 +                    DedicatedServer.LOGGER.info("'settings.spawn-radius' in bukkit.yml has been moved to 'spawn-protection' in server.properties. I will move your config for you.");
 +                    this.settings.serverProperties.remove("spawn-protection");
 +                    this.settings.getIntProperty("spawn-protection", this.server.getBukkitSpawnRadius());
 +                    this.server.removeBukkitSpawnRadius();
 +                    this.settings.saveProperties();
-+                }
-+
+                 }
+ 
 +                if (SpigotConfig.lateBind) {
 +                    try {
 +                        this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
@@ -192,11 +197,11 @@
 +                        return false;
 +                    }
 +                }
-+                if (this.getMaxTickTime() > 0L && false)
-                 {
-                     Thread thread1 = new Thread(new ServerHangWatchdog(this));
-                     thread1.setName("Server Watchdog");
-@@ -427,11 +471,19 @@
++
+                 Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
+                 // <3 you Grum for this, saves us ~30 patch files! --^
+                 return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
+@@ -427,11 +464,19 @@
  
      public void executePendingCommands()
      {
@@ -220,7 +225,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -497,8 +549,8 @@
+@@ -497,8 +542,8 @@
  
      public void setGuiEnabled()
      {
@@ -231,7 +236,7 @@
      }
  
      public boolean getGuiEnabled()
-@@ -592,11 +644,15 @@
+@@ -592,11 +637,15 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -249,7 +254,7 @@
          boolean flag = false;
  
          for (int i = 0; !flag && i <= 2; ++i)
-@@ -684,13 +740,65 @@
+@@ -684,13 +733,65 @@
  
      public String getPlugins()
      {

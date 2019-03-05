@@ -282,7 +282,7 @@
 +
 +        if (yaw == Float.POSITIVE_INFINITY || yaw == Float.NEGATIVE_INFINITY) {
 +            if (this instanceof EntityPlayer) {
-+                this.world.getServer().getLogger().warning(this.getName() + " was caught trying to crash the server with an invalid yaw");
++                this.world.getServer().getLogger1().warn(this.getName() + " was caught trying to crash the server with an invalid yaw");
 +                ((CraftPlayer) this.getBukkitEntity()).kickPlayer("Nope");
 +            }
 +            yaw = 0;
@@ -295,7 +295,7 @@
 +
 +        if (pitch == Float.POSITIVE_INFINITY || pitch == Float.NEGATIVE_INFINITY) {
 +            if (this instanceof EntityPlayer) {
-+                this.world.getServer().getLogger().warning(this.getName() + " was caught trying to crash the server with an invalid pitch");
++                this.world.getServer().getLogger1().warn(this.getName() + " was caught trying to crash the server with an invalid pitch");
 +                ((CraftPlayer) this.getBukkitEntity()).kickPlayer("Nope");
 +            }
 +            pitch = 0;

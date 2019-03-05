@@ -70,7 +70,7 @@ public final class JavaPluginLoader implements PluginLoader {
         if (dataFolder.equals(oldDataFolder)) {
             // They are equal -- nothing needs to be done!
         } else if (dataFolder.isDirectory() && oldDataFolder.isDirectory()) {
-            server.getLogger().warning(String.format(
+            server.getLogger1().warn(String.format(
                 "While loading %s (%s) found old-data folder: `%s' next to the new one `%s'",
                 description.getFullName(),
                 file,
@@ -81,7 +81,7 @@ public final class JavaPluginLoader implements PluginLoader {
             if (!oldDataFolder.renameTo(dataFolder)) {
                 throw new InvalidPluginException("Unable to rename old data folder: `" + oldDataFolder + "' to: `" + dataFolder + "'");
             }
-            server.getLogger().log(Level.INFO, String.format(
+             server.getLogger1().info( String.format(
                 "While loading %s (%s) renamed data folder: `%s' to `%s'",
                 description.getFullName(),
                 file,
@@ -224,7 +224,7 @@ public final class JavaPluginLoader implements PluginLoader {
                 methods.add(method);
             }
         } catch (NoClassDefFoundError e) {
-            plugin.getLogger().severe("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
+            plugin.getLogger1().error("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
             return ret;
         }
 
@@ -238,7 +238,7 @@ public final class JavaPluginLoader implements PluginLoader {
             }
             final Class<?> checkClass;
             if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) {
-                plugin.getLogger().severe(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
+                plugin.getLogger1().error(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
                 continue;
             }
             final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
@@ -307,13 +307,13 @@ public final class JavaPluginLoader implements PluginLoader {
 
             if (!loaders.contains(pluginLoader)) {
                 loaders.add(pluginLoader);
-                server.getLogger().log(Level.WARNING, "Enabled plugin with unregistered PluginClassLoader " + plugin.getDescription().getFullName());
+                server.getLogger1().error( "Enabled plugin with unregistered PluginClassLoader " + plugin.getDescription().getFullName());
             }
 
             try {
                 jPlugin.setEnabled(true);
             } catch (Throwable ex) {
-                server.getLogger().log(Level.SEVERE, "Error occurred while enabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
+                server.getLogger1().error( "Error occurred while enabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
                 // Paper start - Disable plugins that fail to load
                 server.getPluginManager().disablePlugin(jPlugin, true); // Paper - close Classloader on disable - She's dead jim
                 return;
@@ -347,7 +347,7 @@ public final class JavaPluginLoader implements PluginLoader {
             try {
                 jPlugin.setEnabled(false);
             } catch (Throwable ex) {
-                server.getLogger().log(Level.SEVERE, "Error occurred while disabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
+                server.getLogger1().error( "Error occurred while disabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
             }
 
             if (cloader instanceof PluginClassLoader) {
@@ -365,7 +365,7 @@ public final class JavaPluginLoader implements PluginLoader {
                         loader.close();
                     }
                 } catch (IOException e) {
-                    server.getLogger().log(Level.WARNING, "Error closing the Plugin Class Loader for " + plugin.getDescription().getFullName());
+                    server.getLogger1().error( "Error closing the Plugin Class Loader for " + plugin.getDescription().getFullName());
                     e.printStackTrace();
                 }
                 // Paper end

@@ -160,7 +160,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
                 try {
                     Files.write(advancement, file, Charsets.UTF_8);
                 } catch (IOException ex) {
-                    Bukkit.getLogger().log(Level.SEVERE, "Error saving advancement " + key, ex);
+                    Bukkit.getLogger1().error( "Error saving advancement " + key, ex);
                 }
 
                 MinecraftServer.getServerInst().getPlayerList().reloadResources();

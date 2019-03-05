@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 
 public class ConsoleCommandCompleter implements Completer {
     private final CraftServer server;
@@ -77,7 +76,7 @@ public class ConsoleCommandCompleter implements Completer {
             }
         }
         catch (ExecutionException e2) {
-            server.getLogger().log(Level.WARNING, "Unhandled exception when tab completing", e2);
+            server.getLogger1().warn( "Unhandled exception when tab completing", e2);
         }
         catch (InterruptedException e3) {
             Thread.currentThread().interrupt();

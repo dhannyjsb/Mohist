@@ -10,7 +10,6 @@ import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.WorldServer;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Location;

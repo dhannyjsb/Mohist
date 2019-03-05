@@ -850,7 +850,7 @@
          for (ResourceLocation resourcelocation : p_193102_1_)
          {
 +            if (CraftingManager.getRecipe(resourcelocation) == null) {
-+                Bukkit.getLogger().warning("Ignoring grant of non existent recipe " + resourcelocation);
++                Bukkit.getLogger1().warn("Ignoring grant of non existent recipe " + resourcelocation);
 +                continue;
 +            }
              list.add(CraftingManager.getRecipe(resourcelocation));

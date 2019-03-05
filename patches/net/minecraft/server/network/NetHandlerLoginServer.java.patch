@@ -230,7 +230,7 @@
 +                        new LoginHandler().fireEvents();
 +                    } catch (Exception ex) {
 +                        disconnect("Failed to verify username!");
-+                        server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + loginGameProfile.getName(), ex);
++                        server.server.getLogger1().warn( "Exception verifying " + loginGameProfile.getName(), ex);
 +                    }
 +                }
 +            });
@@ -302,7 +302,7 @@
 +                        // CraftBukkit start - catch all exceptions
 +                    } catch (Exception exception) {
 +                        disconnect("Failed to verify username!");
-+                        server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + gameprofile.getName(), exception);
++                        server.server.getLogger1().warn("Exception verifying " + gameprofile.getName(), exception);
 +                        // CraftBukkit end
                      }
                  }

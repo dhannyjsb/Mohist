@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Level;
 
 public final class CraftProfileBanEntry implements org.bukkit.BanEntry {
     private final UserListBans list;
@@ -82,7 +81,7 @@ public final class CraftProfileBanEntry implements org.bukkit.BanEntry {
         try {
             this.list.writeChanges();
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Failed to save banned-players.json, {0}", ex.getMessage());
+            Bukkit.getLogger1().error("Failed to save banned-players.json, {0}", ex.getMessage());
         }
     }
 }

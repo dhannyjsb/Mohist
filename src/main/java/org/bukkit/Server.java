@@ -462,6 +462,8 @@ public interface Server extends PluginMessageRecipient {
      */
     public Logger getLogger();
 
+    public org.apache.logging.log4j.Logger getLogger1();
+
     /**
      * Gets a {@link PluginCommand} with the given name or alias.
      *

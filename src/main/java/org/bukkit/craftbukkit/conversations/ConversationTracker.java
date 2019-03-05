@@ -6,7 +6,6 @@ import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ManuallyAbandonedConversationCanceller;
 
 import java.util.LinkedList;
-import java.util.logging.Level;
 
 /**
  */
@@ -48,7 +47,7 @@ public class ConversationTracker {
             try {
                 conversation.abandon(new ConversationAbandonedEvent(conversation, new ManuallyAbandonedConversationCanceller()));
             } catch (Throwable t) {
-                Bukkit.getLogger().log(Level.SEVERE, "Unexpected exception while abandoning a conversation", t);
+                Bukkit.getLogger1().error("Unexpected exception while abandoning a conversation", t);
             }
         }
     }
@@ -59,7 +58,7 @@ public class ConversationTracker {
             try {
                 conversation.acceptInput(input);
             } catch (Throwable t) {
-                conversation.getContext().getPlugin().getLogger().log(Level.WARNING,
+                conversation.getContext().getPlugin().getLogger1().warn(
                     String.format("Plugin %s generated an exception whilst handling conversation input",
                         conversation.getContext().getPlugin().getDescription().getFullName()
                     ), t);

@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Date;
 import java.util.Set;
-import java.util.logging.Level;
 
 public class CraftIpBanList implements org.bukkit.BanList {
     private final UserListIPBans list;
@@ -45,7 +44,7 @@ public class CraftIpBanList implements org.bukkit.BanList {
         try {
             list.writeChanges();
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Failed to save banned-ips.json, {0}", ex.getMessage());
+            Bukkit.getLogger1().error("Failed to save banned-ips.json, {0}", ex.getMessage());
         }
 
         return new CraftIpBanEntry(target, entry, list);

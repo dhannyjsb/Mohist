@@ -227,7 +227,7 @@ public class SimpleCommandMap implements CommandMap {
         for (Map.Entry<String, String[]> entry : values.entrySet()) {
             String alias = entry.getKey();
             if (alias.contains(" ")) {
-                server.getLogger().warning("Could not register alias " + alias + " because it contains illegal characters");
+                server.getLogger1().warn("Could not register alias " + alias + " because it contains illegal characters");
                 continue;
             }
 
@@ -250,7 +250,7 @@ public class SimpleCommandMap implements CommandMap {
             }
 
             if (bad.length() > 0) {
-                server.getLogger().warning("Could not register alias " + alias + " because it contains commands that do not exist: " + bad);
+                server.getLogger1().warn("Could not register alias " + alias + " because it contains commands that do not exist: " + bad);
                 continue;
             }
 

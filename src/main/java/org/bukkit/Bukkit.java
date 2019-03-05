@@ -1,5 +1,6 @@
 package org.bukkit;
 
+import cn.pfcraft.server.Mohist;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Warning.WarningState;
 import org.bukkit.advancement.Advancement;
@@ -66,7 +67,7 @@ public final class Bukkit {
         }
 
         Bukkit.server = server;
-        server.getLogger().info("This server is running " + getName() + " version " + getVersion() + " (Implementing API version " + getBukkitVersion() + ")");
+        Mohist.LOGGER.info("This server is running " + getName() + " version " + getVersion() + " (Implementing API version " + getBukkitVersion() + ")");
     }
 
     /**
@@ -559,6 +560,10 @@ public final class Bukkit {
      */
     public static Logger getLogger() {
         return server.getLogger();
+    }
+
+    public static org.apache.logging.log4j.Logger getLogger1() {
+        return Mohist.LOGGER;
     }
 
     /**

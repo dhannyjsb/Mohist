@@ -157,6 +157,8 @@ public interface Plugin extends TabExecutor {
      */
     public Logger getLogger();
 
+    public org.apache.logging.log4j.Logger getLogger1();
+
     /**
      * Returns the name of the plugin.
      * <p>

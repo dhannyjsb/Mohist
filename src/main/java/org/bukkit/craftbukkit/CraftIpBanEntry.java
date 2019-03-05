@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Level;
 
 public final class CraftIpBanEntry implements org.bukkit.BanEntry {
     private final UserListIPBans list;
@@ -81,7 +80,7 @@ public final class CraftIpBanEntry implements org.bukkit.BanEntry {
         try {
             this.list.writeChanges();
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Failed to save banned-ips.json, {0}", ex.getMessage());
+            Bukkit.getLogger1().error("Failed to save banned-ips.json, {0}", ex.getMessage());
         }
     }
 }

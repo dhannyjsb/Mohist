@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.util;
 
+import cn.pfcraft.server.Mohist;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +25,7 @@ public class ForwardLogHandler extends ConsoleHandler {
 
     @Override
     public void publish(LogRecord record) {
-        Logger logger = getLogger(String.valueOf(record.getLoggerName())); // See SPIGOT-1230
+        Logger logger = Mohist.LOGGER;
         Throwable exception = record.getThrown();
         Level level = record.getLevel();
         String message = getFormatter().formatMessage(record);

@@ -12,14 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
-
-    public static boolean useJline = true;
-    public static boolean useConsole = true;
-
     public static OptionSet main(String[] args) {
         // Todo: Installation script
         OptionParser parser = new OptionParser() {
             {
+				allowsUnrecognizedOptions();
                 acceptsAll(asList("?", "help"), "Show the help");
 
                 acceptsAll(asList("c", "config"), "Properties file to use")

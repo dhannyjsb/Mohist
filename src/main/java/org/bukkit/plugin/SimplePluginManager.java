@@ -125,14 +125,14 @@ public final class SimplePluginManager implements PluginManager {
                 description = loader.getPluginDescription(file);
                 String name = description.getName();
                 if (name.equalsIgnoreCase("bukkit") || name.equalsIgnoreCase("minecraft") || name.equalsIgnoreCase("mojang")) {
-                    server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': Restricted Name");
+                    server.getLogger1().error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': Restricted Name");
                     continue;
                 } else if (description.rawName.indexOf(' ') != -1) {
-                    server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': uses the space-character (0x20) in its name");
+                    server.getLogger1().error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': uses the space-character (0x20) in its name");
                     continue;
                 }
             } catch (InvalidDescriptionException ex) {
-                server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                server.getLogger1().error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
                 continue;
             }
 
@@ -241,7 +241,7 @@ public final class SimplePluginManager implements PluginManager {
                         loadedPlugins.add(plugin);
                         continue;
                     } catch (InvalidPluginException ex) {
-                        server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                        server.getLogger1().error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
                     }
                 }
             }
@@ -266,7 +266,7 @@ public final class SimplePluginManager implements PluginManager {
                             loadedPlugins.add(plugin);
                             break;
                         } catch (InvalidPluginException ex) {
-                            server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                            server.getLogger1().error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
                         }
                     }
                 }
@@ -279,7 +279,7 @@ public final class SimplePluginManager implements PluginManager {
                     while (failedPluginIterator.hasNext()) {
                         File file = failedPluginIterator.next();
                         failedPluginIterator.remove();
-                        server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': circular dependency detected");
+                        server.getLogger1().error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': circular dependency detected");
                     }
                 }
             }
@@ -456,7 +456,7 @@ public final class SimplePluginManager implements PluginManager {
 
     // Paper start
     private void handlePluginException(String msg, Throwable ex, Plugin plugin) {
-        server.getLogger().log(Level.SEVERE, msg, ex);
+        server.getLogger1().error( msg, ex);
         callEvent(new ServerExceptionEvent(new ServerPluginEnableDisableException(msg, ex, plugin)));
     }
     // Paper end
@@ -500,7 +500,7 @@ public final class SimplePluginManager implements PluginManager {
                 if (plugin.isNaggable()) {
                     plugin.setNaggable(false);
 
-                    server.getLogger().log(Level.SEVERE, String.format(
+                    server.getLogger1().error( String.format(
                             "Nag author(s): '%s' of '%s' about the following: %s",
                             plugin.getDescription().getAuthors(),
                             plugin.getDescription().getFullName(),
@@ -510,7 +510,7 @@ public final class SimplePluginManager implements PluginManager {
             } catch (Throwable ex) {
                 // Paper start - error reporting
                 String msg = "Could not pass event " + event.getEventName() + " to " + registration.getPlugin().getDescription().getFullName();
-                server.getLogger().log(Level.SEVERE, msg, ex);
+                server.getLogger1().error( msg, ex);
                 if (!(event instanceof ServerExceptionEvent)) { // We don't want to cause an endless event loop
                     callEvent(new ServerExceptionEvent(new ServerEventException(msg, ex, registration.getPlugin(), registration.getListener(), event)));
                 }

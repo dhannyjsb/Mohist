@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Represents a unique permission that may be attached to a {@link
@@ -228,7 +227,7 @@ public class Permission {
             try {
                 result.add(Permission.loadPermission(entry.getKey().toString(), (Map<?, ?>) entry.getValue(), def, result));
             } catch (Throwable ex) {
-                Bukkit.getServer().getLogger().log(Level.SEVERE, String.format(error, entry.getKey()), ex);
+                Bukkit.getServer().getLogger1().error(String.format(error, entry.getKey()), ex);
             }
         }
 
