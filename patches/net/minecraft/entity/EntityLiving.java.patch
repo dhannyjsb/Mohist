@@ -92,10 +92,9 @@
 +    public float[] inventoryHandsDropChances = new float[2];
      private final NonNullList<ItemStack> inventoryArmor = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
 -    protected float[] inventoryArmorDropChances = new float[4];
--    private boolean canPickUpLoot;
--    private boolean persistenceRequired;
 +    public float[] inventoryArmorDropChances = new float[4];
-+    // private boolean canPickUpLoot; // CraftBukkit - moved up to EntityLivingBase
+     private boolean canPickUpLoot;
+-    private boolean persistenceRequired;
 +    public boolean persistenceRequired;
      private final Map<PathNodeType, Float> mapPathPriority = Maps.newEnumMap(PathNodeType.class);
      private ResourceLocation deathLootTable;
