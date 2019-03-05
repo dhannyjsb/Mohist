@@ -691,26 +691,16 @@
              if (progressCallback != null)
              {
                  progressCallback.displaySavingString("Saving level");
-@@ -1003,17 +1249,8 @@
+@@ -1003,7 +1249,7 @@
              {
                  progressCallback.displayLoadingString("Saving chunks");
              }
 -
 +            } // Paper
              chunkproviderserver.saveChunks(all);
--            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.WorldEvent.Save(this));
--
--            for (Chunk chunk : Lists.newArrayList(chunkproviderserver.getLoadedChunks()))
--            {
--                if (chunk != null && !this.playerChunkMap.contains(chunk.x, chunk.z))
--                {
--                    chunkproviderserver.queueUnload(chunk);
--                }
--            }
-         }
-     }
+             net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.WorldEvent.Save(this));
  
-@@ -1039,6 +1276,12 @@
+@@ -1039,6 +1285,12 @@
              }
          }
  
@@ -723,7 +713,7 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1058,6 +1301,12 @@
+@@ -1058,6 +1310,12 @@
          return this.canAddEntity(entityIn) ? super.spawnEntity(entityIn) : false;
      }
  
@@ -736,16 +726,15 @@
      public void loadEntities(Collection<Entity> entityCollection)
      {
          for (Entity entity : Lists.newArrayList(entityCollection))
-@@ -1074,7 +1323,7 @@
+@@ -1074,7 +1332,6 @@
      {
          if (entityIn.isDead)
          {
 -            LOGGER.warn("Tried to add entity {} but it was marked as removed already", (Object)EntityList.getKey(entityIn));
-+            LOGGER.warn("Tried to add entity {} but it was marked as removed already", EntityList.getKey(entityIn)); // CraftBukkit // Paper
              return false;
          }
          else
-@@ -1085,7 +1334,7 @@
+@@ -1085,7 +1342,7 @@
              {
                  Entity entity = this.entitiesByUuid.get(uuid);
  
@@ -754,17 +743,15 @@
                  {
                      this.unloadedEntityList.remove(entity);
                  }
-@@ -1093,7 +1342,8 @@
+@@ -1093,7 +1350,6 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
 -                        LOGGER.warn("Keeping entity {} that already exists with UUID {}", EntityList.getKey(entity), uuid.toString());
-+                        LOGGER.error("Keeping entity {} that already exists with UUID {} - " + entity, EntityList.getKey(entity), uuid.toString()); // CraftBukkit // Paper
-+                        LOGGER.error("Deleting duplicate entity {}", entity); // Paper
                          return false;
                      }
  
-@@ -1125,6 +1375,7 @@
+@@ -1125,6 +1381,7 @@
  
      public void onEntityRemoved(Entity entityIn)
      {
@@ -772,7 +759,7 @@
          super.onEntityRemoved(entityIn);
          this.entitiesById.removeObject(entityIn.getEntityId());
          this.entitiesByUuid.remove(entityIn.getUniqueID());
-@@ -1141,9 +1392,15 @@
+@@ -1141,9 +1398,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -789,24 +776,20 @@
              return true;
          }
          else
-@@ -1164,11 +1421,18 @@
+@@ -1164,11 +1427,12 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
 -        Explosion explosion = new Explosion(this, entityIn, x, y, z, strength, isFlaming, isSmoking);
+-        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this, explosion)) return explosion;
+-        explosion.doExplosionA();
+-        explosion.doExplosionB(false);
 +        Explosion explosion = super.newExplosion(entityIn, x, y, z, strength, isFlaming, isSmoking);
-+
+ 
 +        if (explosion.wasCanceled) {
 +            return explosion;
 +        }
-         if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this, explosion)) return explosion;
-+        /* Remove
-+        Explosion explosion = new Explosion(this, entityIn, x, y, z, strength, isFlaming, isSmoking);
-         explosion.doExplosionA();
-         explosion.doExplosionB(false);
--
-+        */
-+        // CraftBukkit - TODO: Check if explosions are still properly implemented
++        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this, explosion)) return explosion;
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
@@ -816,7 +799,7 @@
                  {
 -                    this.mcServer.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this.provider.getDimension(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
 +                    // CraftBukkit - this.provider.dimension -> this.dimension  // Paper - dimension -> world
-+                    this.mcServer.getPlayerList().sendToAllNearExcept(null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this, new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
++                    this.mcServer.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this, new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
                  }
              }
  

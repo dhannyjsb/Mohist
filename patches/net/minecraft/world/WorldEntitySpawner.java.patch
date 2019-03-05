@@ -21,7 +21,7 @@
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.init.Blocks;
  import net.minecraft.server.management.PlayerChunkMapEntry;
-@@ -21,14 +17,47 @@
+@@ -21,12 +17,44 @@
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.biome.Biome;
  import net.minecraft.world.chunk.Chunk;
@@ -65,11 +65,8 @@
 +
      public int findChunksForSpawning(WorldServer worldServerIn, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate)
      {
-+        org.spigotmc.AsyncCatcher.catchOp("check for eligible spawn chunks"); // Paper - At least until we figure out what is calling this async
          if (!spawnHostileMobs && !spawnPeacefulMobs)
-         {
-             return 0;
-@@ -40,17 +69,29 @@
+@@ -40,17 +68,29 @@
  
              for (EntityPlayer entityplayer : worldServerIn.playerEntities)
              {
@@ -105,7 +102,7 @@
                              ChunkPos chunkpos = new ChunkPos(i1 + j, j1 + k);
  
                              if (!this.eligibleChunksForSpawning.contains(chunkpos))
-@@ -77,25 +118,45 @@
+@@ -77,25 +117,45 @@
  
              for (EnumCreatureType enumcreaturetype : EnumCreatureType.values())
              {
@@ -159,7 +156,7 @@
  
                              if (!iblockstate.isNormalCube())
                              {
-@@ -120,8 +181,7 @@
+@@ -120,8 +180,7 @@
                                          float f = (float)l2 + 0.5F;
                                          float f1 = (float)j3 + 0.5F;
  
@@ -169,7 +166,7 @@
                                              if (biome$spawnlistentry == null)
                                              {
                                                  biome$spawnlistentry = worldServerIn.getSpawnListEntryForTypeAt(enumcreaturetype, blockpos$mutableblockpos);
-@@ -134,6 +194,25 @@
+@@ -134,6 +193,25 @@
  
                                              if (worldServerIn.canCreatureTypeSpawnHere(enumcreaturetype, biome$spawnlistentry, blockpos$mutableblockpos) && canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(biome$spawnlistentry.entityClass), worldServerIn, blockpos$mutableblockpos))
                                              {
@@ -195,15 +192,7 @@
                                                  EntityLiving entityliving;
  
                                                  try
-@@ -143,6 +222,7 @@
-                                                 catch (Exception exception)
-                                                 {
-                                                     exception.printStackTrace();
-+                                                    ServerInternalException.reportInternalException(exception); // Paper
-                                                     return j4;
-                                                 }
- 
-@@ -156,15 +236,17 @@
+@@ -156,15 +234,17 @@
  
                                                      if (entityliving.isNotColliding())
                                                      {
@@ -224,7 +213,7 @@
                                                      {
                                                          continue label134;
                                                      }
-@@ -295,8 +377,11 @@
+@@ -295,8 +375,11 @@
  
                              if (net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(entityliving, worldIn, j + 0.5f, (float) blockpos.getY(), k +0.5f, false) == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY) continue;
                              entityliving.setLocationAndAngles((double)((float)j + 0.5F), (double)blockpos.getY(), (double)((float)k + 0.5F), randomIn.nextFloat() * 360.0F, 0.0F);
