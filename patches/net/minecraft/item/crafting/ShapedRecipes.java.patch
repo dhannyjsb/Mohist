@@ -43,15 +43,12 @@
      public ShapedRecipes(String group, int width, int height, NonNullList<Ingredient> ingredients, ItemStack result)
      {
          this.group = group;
-@@ -373,6 +376,73 @@
+@@ -373,6 +376,67 @@
          }
      }
  
 +    @Override
 +    public Recipe toBukkitRecipe() {
-+        if (this.recipeHeight < 1 || this.recipeHeight > 3 || this.recipeWidth < 1 || this.recipeWidth > 3) {
-+            return new CustomModRecipe(this);
-+        }
 +        CraftItemStack result = CraftItemStack.asCraftMirror(this.recipeOutput);
 +        CraftShapedRecipe recipe = new CraftShapedRecipe(result, this);
 +        switch (this.recipeHeight) {
@@ -97,12 +94,9 @@
 +        }
 +        char c = 'a';
 +        for (Ingredient list : this.recipeItems) {
-+            if (list != null) { // Mohist - get recipe from OreDictionary
-+                ItemStack[] matchingStacks = list.getMatchingStacks();
-+                if (matchingStacks.length > 0) {
-+                    net.minecraft.item.ItemStack stack = matchingStacks[0];
-+                    recipe.setIngredient(c, org.bukkit.craftbukkit.util.CraftMagicNumbers.getMaterial(stack.getItem()), (matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
-+                }
++            if (list != null && list.matchingStacks.length > 0) {
++                net.minecraft.item.ItemStack stack = list.matchingStacks[0];
++                recipe.setIngredient(c, org.bukkit.craftbukkit.util.CraftMagicNumbers.getMaterial(stack.getItem()), (list.matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
 +            }
 +            c++;
 +        }

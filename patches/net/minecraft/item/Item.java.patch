@@ -56,16 +56,16 @@
  public class Item extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item>
  {
      public static final RegistryNamespaced<ResourceLocation, Item> REGISTRY = net.minecraftforge.registries.GameData.getWrapper(Item.class);
-@@ -519,12 +501,12 @@
-     }
+@@ -485,7 +467,6 @@
  
      /**
--     * Determines the amount of durability the mending enchantment
--     * will repair, on average, per point of experience.
--     */
-+     +     * Determines the amount of durability the mending enchantment
-+     +     * will repair, on average, per point of experience.
-+     +     */
+      * This is called when the item is used, before the block is activated.
+-     * @param stack The Item Stack
+      * @param player The Player that used the item
+      * @param world The Current World
+      * @param pos Target position
+@@ -524,7 +505,7 @@
+      */
      public float getXpRepairRatio(ItemStack stack)
      {
 -        return 2f;
@@ -73,7 +73,7 @@
      }
  
      /**
-@@ -549,7 +531,7 @@
+@@ -549,7 +530,7 @@
  
      /**
       * Override this method to decide what to do with the NBT data received from getNBTShareTag().
@@ -82,7 +82,7 @@
       * @param stack The stack that received NBT
       * @param nbt Received NBT, can be null
       */
-@@ -558,6 +540,7 @@
+@@ -558,6 +539,7 @@
          stack.setTagCompound(nbt);
      }
  
@@ -90,7 +90,7 @@
      /**
       * Called before a block is broken.  Return true to prevent default block harvesting.
       *
-@@ -634,7 +617,7 @@
+@@ -634,7 +616,7 @@
       */
      public int getEntityLifespan(ItemStack itemStack, World world)
      {
@@ -99,7 +99,16 @@
      }
  
      /**
-@@ -965,7 +948,7 @@
+@@ -933,7 +915,7 @@
+     /**
+      * Checked from {@link net.minecraft.client.multiplayer.PlayerControllerMP#onPlayerDestroyBlock(BlockPos pos) PlayerControllerMP.onPlayerDestroyBlock()}
+      * when a creative player left-clicks a block with this item.
+-     * Also checked from {@link net.minecraftforge.common.ForgeHooks#onBlockBreakEvent(World, GameType, EntityPlayerMP, BlockPos)  ForgeHooks.onBlockBreakEvent()}
++     * Also checked from
+      * to prevent sending an event.
+      * @return true if the given player can destroy specified block in creative mode with this item
+      */
+@@ -965,7 +947,7 @@
          return this.getItemStackLimit();
      }
  
@@ -108,7 +117,7 @@
      /**
       * Sets or removes the harvest level for the specified tool class.
       *
-@@ -1066,18 +1049,10 @@
+@@ -1066,17 +1048,9 @@
          return !(newStack.getItem() == oldStack.getItem() && ItemStack.areItemStackTagsEqual(newStack, oldStack) && (newStack.isItemStackDamageable() || newStack.getMetadata() == oldStack.getMetadata()));
      }
  
@@ -121,16 +130,21 @@
 -     * @return true to set the new stack to active and continue using it
 -     */
      public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack)
--    {
+     {
 -        return oldStack.equals(newStack);
--    }
-+   {
 +       return oldStack.equals(newStack);
-+   }
+     }
  
      /**
-      * Called to get the Mod ID of the mod that *created* the ItemStack,
-@@ -1520,9 +1495,9 @@
+@@ -1186,7 +1160,6 @@
+     }
+     
+     /**
+-     * Called every tick from {@link EntityHorse#onUpdate()} on the item in the armor slot.
+      * @param world the world the horse is in
+      * @param horse the horse wearing this armor
+      * @param armor the armor itemstack
+@@ -1520,9 +1493,9 @@
          registerItemBlock(Blocks.CONCRETE, (new ItemCloth(Blocks.CONCRETE)).setUnlocalizedName("concrete"));
          registerItemBlock(Blocks.CONCRETE_POWDER, (new ItemCloth(Blocks.CONCRETE_POWDER)).setUnlocalizedName("concrete_powder"));
          registerItemBlock(Blocks.STRUCTURE_BLOCK);
@@ -143,7 +157,7 @@
          registerItem(259, "flint_and_steel", (new ItemFlintAndSteel()).setUnlocalizedName("flintAndSteel"));
          registerItem(260, "apple", (new ItemFood(4, 0.3F, false)).setUnlocalizedName("apple"));
          registerItem(261, "bow", (new ItemBow()).setUnlocalizedName("bow"));
-@@ -1531,34 +1506,34 @@
+@@ -1531,34 +1504,34 @@
          registerItem(264, "diamond", (new Item()).setUnlocalizedName("diamond").setCreativeTab(CreativeTabs.MATERIALS));
          registerItem(265, "iron_ingot", (new Item()).setUnlocalizedName("ingotIron").setCreativeTab(CreativeTabs.MATERIALS));
          registerItem(266, "gold_ingot", (new Item()).setUnlocalizedName("ingotGold").setCreativeTab(CreativeTabs.MATERIALS));
