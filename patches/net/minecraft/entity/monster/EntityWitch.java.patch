@@ -58,7 +58,7 @@
                      this.potionUseTimer = this.getHeldItemMainhand().getMaxItemUseDuration();
                      this.setDrinkingPotion(true);
                      this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
-@@ -242,10 +244,18 @@
+@@ -242,7 +244,15 @@
                  potiontype = PotionTypes.WEAKNESS;
              }
  
@@ -74,8 +74,4 @@
 +            // Paper end
              entitypotion.rotationPitch -= -20.0F;
              entitypotion.shoot(d1, d2 + (double)(f * 0.2F), d3, 0.75F, 8.0F);
--            this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_THROW, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
-+            this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_THROW, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
-             this.world.spawnEntity(entitypotion);
-         }
-     }
+             this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_THROW, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);

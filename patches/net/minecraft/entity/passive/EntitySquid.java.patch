@@ -40,7 +40,7 @@
      {
 -        return this.posY > 45.0D && this.posY < (double)this.world.getSeaLevel() && super.getCanSpawnHere();
 +        // Paper - Make max spawn height configurable
-+        final double maxHeight = world.paperConfig.squidMaxSpawnHeight > 0 ? world.paperConfig.squidMaxSpawnHeight : world.getSeaLevel();
++        double maxHeight = world.paperConfig.squidMaxSpawnHeight > 0 ? world.paperConfig.squidMaxSpawnHeight : world.getSeaLevel();
 +        return this.posY > this.world.spigotConfig.squidSpawnRangeMin && this.posY < maxHeight && super.getCanSpawnHere(); // Spigot
      }
  

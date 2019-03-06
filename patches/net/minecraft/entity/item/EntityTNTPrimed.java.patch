@@ -126,15 +126,7 @@
      }
  
      protected void readEntityFromNBT(NBTTagCompound compound)
-@@ -141,11 +167,53 @@
- 
-     public int getFuseDataManager()
-     {
--        return ((Integer)this.dataManager.get(FUSE)).intValue();
-+        return this.dataManager.get(FUSE).intValue();
-     }
- 
-     public int getFuse()
+@@ -148,4 +174,46 @@
      {
          return this.fuse;
      }
@@ -149,14 +141,14 @@
 +     * Author: Jedediah Smith <jedediah@silencegreys.com>
 +     */
 +    @Override
-+    public boolean doWaterMovement() {
-+        if (!world.paperConfig.preventTntFromMovingInWater) return super.doWaterMovement();
++    public boolean handleWaterMovement() {
++        if (!world.paperConfig.preventTntFromMovingInWater) return super.handleWaterMovement();
 +        // Preserve velocity while calling the super method
 +        double oldMotX = this.motionX;
 +        double oldMotY = this.motionY;
 +        double oldMotZ = this.motionZ;
 +
-+        super.doWaterMovement();
++        super.handleWaterMovement();
 +
 +        this.motionX = oldMotX;
 +        this.motionY = oldMotY;
