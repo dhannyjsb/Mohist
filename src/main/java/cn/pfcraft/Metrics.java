@@ -1,4 +1,4 @@
-package cn.pfcraft.server;
+package cn.pfcraft;
 
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;

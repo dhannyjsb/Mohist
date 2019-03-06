@@ -23,7 +23,7 @@
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.world.World;
-+import cn.pfcraft.server.CustomModRecipe;
++import cn.pfcraft.CustomModRecipe;
  import net.minecraftforge.common.crafting.CraftingHelper;
  import net.minecraftforge.common.crafting.JsonContext;
  import net.minecraftforge.common.util.RecipeMatcher;

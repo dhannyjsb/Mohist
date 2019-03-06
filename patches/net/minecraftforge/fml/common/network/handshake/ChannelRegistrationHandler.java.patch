@@ -4,7 +4,7 @@
  
  package net.minecraftforge.fml.common.network.handshake;
  
-+import cn.pfcraft.server.Mohist;
++import cn.pfcraft.Mohist;
 +import com.google.common.collect.ImmutableSet;
  import io.netty.channel.ChannelHandlerContext;
  import io.netty.channel.SimpleChannelInboundHandler;

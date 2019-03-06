@@ -1,6 +1,6 @@
 package org.bukkit;
 
-import cn.pfcraft.server.Mohist;
+import cn.pfcraft.Mohist;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Warning.WarningState;
 import org.bukkit.advancement.Advancement;

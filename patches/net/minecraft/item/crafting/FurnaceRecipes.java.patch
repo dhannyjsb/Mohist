@@ -3,7 +3,7 @@
 @@ -1,8 +1,7 @@
  package net.minecraft.item.crafting;
  
-+import cn.pfcraft.server.Mohist;
++import cn.pfcraft.Mohist;
  import com.google.common.collect.Maps;
 -import java.util.Map;
 -import java.util.Map.Entry;

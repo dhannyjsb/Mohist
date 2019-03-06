@@ -1,4 +1,4 @@
-package cn.pfcraft.server;
+package cn.pfcraft;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.spigotmc.SpigotWorldConfig;

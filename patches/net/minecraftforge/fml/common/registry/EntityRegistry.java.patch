@@ -4,7 +4,7 @@
  
  package net.minecraftforge.fml.common.registry;
  
-+import cn.pfcraft.server.Mohist;
++import cn.pfcraft.Mohist;
 +import com.google.common.collect.*;
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.EntityList.EntityEggInfo;

@@ -1,6 +1,6 @@
 package org.spigotmc;
 
-import cn.pfcraft.server.Mohist;
+import cn.pfcraft.Mohist;
 import com.destroystokyo.paper.PaperConfig;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.Logger;

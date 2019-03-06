@@ -1,4 +1,4 @@
-package cn.pfcraft.server.command;
+package cn.pfcraft.command;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.common.FMLCommonHandler;

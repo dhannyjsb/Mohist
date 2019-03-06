@@ -10,7 +10,7 @@
 -import net.minecraft.world.gen.structure.template.TemplateManager;
 -import org.apache.logging.log4j.Level;
 -
-+import cn.pfcraft.server.Mohist;
++import cn.pfcraft.Mohist;
  import com.google.common.io.Files;
 -
 +import net.minecraft.nbt.NBTTagCompound;

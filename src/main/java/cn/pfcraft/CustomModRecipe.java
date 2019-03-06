@@ -1,4 +1,4 @@
-package cn.pfcraft.server;
+package cn.pfcraft;
 
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;

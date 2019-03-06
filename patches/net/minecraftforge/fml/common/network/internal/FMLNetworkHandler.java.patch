@@ -4,7 +4,7 @@
  
  package net.minecraftforge.fml.common.network.internal;
  
-+import cn.pfcraft.server.Mohist;
++import cn.pfcraft.Mohist;
 +import com.google.gson.JsonArray;
 +import com.google.gson.JsonObject;
  import io.netty.channel.ChannelPipeline;

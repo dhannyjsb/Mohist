@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit;
 
-import cn.pfcraft.server.Mohist;
+import cn.pfcraft.Mohist;
 import com.destroystokyo.paper.MCUtil;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;

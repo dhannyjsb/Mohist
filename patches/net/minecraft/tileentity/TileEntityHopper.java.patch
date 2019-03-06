@@ -5,7 +5,7 @@
  
 -import java.util.List;
 -import javax.annotation.Nullable;
-+import cn.pfcraft.server.CraftInventoryWrapper;
++import cn.pfcraft.CraftInventoryWrapper;
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockChest;
  import net.minecraft.block.BlockHopper;

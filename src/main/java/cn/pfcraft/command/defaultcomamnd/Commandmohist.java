@@ -1,6 +1,6 @@
-package cn.pfcraft.server.command.defaultcomamnd;
+package cn.pfcraft.command.defaultcomamnd;
 
-import cn.pfcraft.server.MohistConfig;
+import cn.pfcraft.MohistConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;

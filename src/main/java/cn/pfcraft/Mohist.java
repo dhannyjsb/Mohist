@@ -1,4 +1,4 @@
-package cn.pfcraft.server;
+package cn.pfcraft;
 
 
 import org.apache.logging.log4j.LogManager;

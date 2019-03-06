@@ -1,8 +1,8 @@
-package cn.pfcraft.server;
+package cn.pfcraft;
 
-import cn.pfcraft.server.command.defaultcomamnd.Commandmohist;
-import cn.pfcraft.server.command.defaultcomamnd.Commandunban;
-import cn.pfcraft.server.command.defaultcomamnd.VersionCommand;
+import cn.pfcraft.command.defaultcomamnd.Commandmohist;
+import cn.pfcraft.command.defaultcomamnd.Commandunban;
+import cn.pfcraft.command.defaultcomamnd.VersionCommand;
 import com.google.common.base.Throwables;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.command.Command;
