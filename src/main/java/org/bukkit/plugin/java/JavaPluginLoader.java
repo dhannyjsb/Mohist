@@ -225,7 +225,7 @@ public final class JavaPluginLoader implements PluginLoader {
                 methods.add(method);
             }
         } catch (NoClassDefFoundError e) {
-            plugin.getLogger().severe("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
+            Bukkit.getLogger1().error("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
             return ret;
         }
 
@@ -239,7 +239,7 @@ public final class JavaPluginLoader implements PluginLoader {
             }
             final Class<?> checkClass;
             if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) {
-                plugin.getLogger().severe(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
+                Bukkit.getLogger1().error(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
                 continue;
             }
             final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
@@ -258,9 +258,7 @@ public final class JavaPluginLoader implements PluginLoader {
                     if (!warningState.printFor(warning)) {
                         break;
                     }
-                    plugin.getLogger().log(
-                            Level.WARNING,
-                            String.format(
+                    Bukkit.getLogger1().warn(String.format(
                                     "\"%s\" has registered a listener for %s on method \"%s\", but the event is Deprecated." +
                                     " \"%s\"; please notify the authors %s.",
                                     plugin.getDescription().getFullName(),
@@ -338,7 +336,7 @@ public final class JavaPluginLoader implements PluginLoader {
 
         if (plugin.isEnabled()) {
             String message = String.format("Disabling %s", plugin.getDescription().getFullName());
-            plugin.getLogger().info(message);
+            Bukkit.getLogger1().info(message);
 
             server.getPluginManager().callEvent(new PluginDisableEvent(plugin));
 
