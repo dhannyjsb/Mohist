@@ -116,18 +116,15 @@
      }
  
      protected void entityInit()
-@@ -236,9 +246,9 @@
+@@ -236,7 +246,7 @@
          {
              float f = this.getBrightness();
  
 -            if (f > 0.5F && this.world.canSeeSky(new BlockPos(this)) && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F)
 +            if (f > 0.5F && this.world.canSeeSky(new BlockPos(this)) && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && tryEscape(EndermanEscapeEvent.Reason.RUNAWAY))
              {
--                this.setAttackTarget((EntityLivingBase)null);
-+                this.setAttackTarget(null);
+                 this.setAttackTarget((EntityLivingBase)null);
                  this.teleportRandomly();
-             }
-         }
 @@ -246,7 +256,7 @@
          super.updateAITasks();
      }
@@ -163,26 +160,15 @@
              private EntityPlayer player;
              private int aggroTime;
              private int teleportTime;
-@@ -465,16 +476,16 @@
-                 {
-                     if (this.targetEntity != null)
+@@ -467,7 +478,7 @@
                      {
--                        if (this.enderman.shouldAttackPlayer((EntityPlayer)this.targetEntity))
-+                        if (this.enderman.shouldAttackPlayer(this.targetEntity))
+                         if (this.enderman.shouldAttackPlayer((EntityPlayer)this.targetEntity))
                          {
 -                            if (((EntityPlayer)this.targetEntity).getDistanceSq(this.enderman) < 16.0D)
-+                            if (this.targetEntity.getDistanceSq(this.enderman) < 16.0D && this.getEnderman().tryEscape(EndermanEscapeEvent.Reason.STARE))
++                            if (((EntityPlayer)this.targetEntity).getDistanceSq(this.enderman) < 16.0D && this.getEnderman().tryEscape(EndermanEscapeEvent.Reason.STARE))
                              {
                                  this.enderman.teleportRandomly();
                              }
- 
-                             this.teleportTime = 0;
-                         }
--                        else if (((EntityPlayer)this.targetEntity).getDistanceSq(this.enderman) > 256.0D && this.teleportTime++ >= 30 && this.enderman.teleportToEntity(this.targetEntity))
-+                        else if (this.targetEntity.getDistanceSq(this.enderman) > 256.0D && this.teleportTime++ >= 30 && this.enderman.teleportToEntity(this.targetEntity))
-                         {
-                             this.teleportTime = 0;
-                         }
 @@ -524,8 +535,11 @@
  
                  if (iblockstate2 != null && this.canPlaceBlock(world, blockpos, iblockstate2.getBlock(), iblockstate, iblockstate1))

@@ -141,7 +141,7 @@
  
 +        // Paper start - Block FallingBlocks with Command Blocks
 +        // Check mappings on update - dc = "repeating_command_block" - dd = "chain_command_block"
-+        final Block b = this.fallTile.getBlock();
++        Block b = this.fallTile.getBlock();
 +        if (this.world.paperConfig.filterNBTFromSpawnEgg && (b == Blocks.COMMAND_BLOCK || b == Blocks.REPEATING_COMMAND_BLOCK || b == Blocks.CHAIN_COMMAND_BLOCK)) {
 +            this.fallTile = Blocks.STONE.getDefaultState();
 +        }

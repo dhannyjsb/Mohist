@@ -12,14 +12,3 @@
      }
  
      public IBlockState getDefaultDisplayTile()
-@@ -102,4 +102,10 @@
-         super.onUpdate();
-         this.mobSpawnerLogic.updateSpawner();
-     }
-+
-+    // CraftBukkit start
-+    public boolean bC() {
-+        return true;
-+    }
-+    // CraftBukkit end
- }

@@ -22,7 +22,7 @@
  import net.minecraft.entity.effect.EntityLightningBolt;
  import net.minecraft.entity.passive.EntityOcelot;
  import net.minecraft.entity.player.EntityPlayer;
-@@ -36,16 +26,22 @@
+@@ -36,7 +26,12 @@
  import net.minecraft.world.storage.loot.LootTableList;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,9 +35,8 @@
  public class EntityCreeper extends EntityMob
  {
      private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityCreeper.class, DataSerializers.VARINT);
-     private static final DataParameter<Boolean> POWERED = EntityDataManager.<Boolean>createKey(EntityCreeper.class, DataSerializers.BOOLEAN);
+@@ -44,8 +39,8 @@
      private static final DataParameter<Boolean> IGNITED = EntityDataManager.<Boolean>createKey(EntityCreeper.class, DataSerializers.BOOLEAN);
-+    private static final DataParameter<Boolean> isIgnitedDW = IGNITED; // Paper OBFHELPER
      private int lastActiveTime;
      private int timeSinceIgnited;
 -    private int fuseTime = 30;
@@ -47,16 +46,7 @@
      private int droppedSkulls;
  
      public EntityCreeper(World worldIn)
-@@ -106,7 +102,7 @@
-     {
-         super.writeEntityToNBT(compound);
- 
--        if (((Boolean)this.dataManager.get(POWERED)).booleanValue())
-+        if (this.dataManager.get(POWERED).booleanValue())
-         {
-             compound.setBoolean("powered", true);
-         }
-@@ -184,7 +180,7 @@
+@@ -184,7 +179,7 @@
  
      public void onDeath(DamageSource cause)
      {
@@ -65,7 +55,7 @@
  
          if (this.world.getGameRules().getBoolean("doMobLoot"))
          {
-@@ -201,6 +197,7 @@
+@@ -201,6 +196,7 @@
                  this.entityDropItem(new ItemStack(Items.SKULL, 1, 4), 0.0F);
              }
          }
@@ -73,35 +63,19 @@
      }
  
      public boolean attackEntityAsMob(Entity entityIn)
-@@ -210,7 +207,7 @@
- 
-     public boolean getPowered()
-     {
--        return ((Boolean)this.dataManager.get(POWERED)).booleanValue();
-+        return this.dataManager.get(POWERED).booleanValue();
-     }
- 
-     @SideOnly(Side.CLIENT)
-@@ -227,7 +224,7 @@
- 
-     public int getCreeperState()
-     {
--        return ((Integer)this.dataManager.get(STATE)).intValue();
-+        return this.dataManager.get(STATE).intValue();
-     }
- 
-     public void setCreeperState(int state)
-@@ -235,12 +232,23 @@
+@@ -235,12 +231,24 @@
          this.dataManager.set(STATE, Integer.valueOf(state));
      }
  
 -    public void onStruckByLightning(EntityLightningBolt lightningBolt)
 +    public void onStruckByLightning(@Nullable EntityLightningBolt lightningBolt)
      {
-+        if (lightningBolt == null)
-+            lightningBolt = new EntityLightningBolt(this.world, this.posX, this.posY, this.posZ, true); // Mohist - if null, create EntityLightningBolt for Bukkit
-         super.onStruckByLightning(lightningBolt);
+-        super.onStruckByLightning(lightningBolt);
 -        this.dataManager.set(POWERED, Boolean.valueOf(true));
++        if (lightningBolt == null) {
++            lightningBolt = new EntityLightningBolt(this.world, this.posX, this.posY, this.posZ, true); // Mohist - if null, create EntityLightningBolt for Bukkit
++        }
++		super.onStruckByLightning(lightningBolt);
 +
 +        if (CraftEventFactory.callCreeperPowerEvent(this, lightningBolt, org.bukkit.event.entity.CreeperPowerEvent.PowerCause.LIGHTNING).isCancelled()) {
 +            return;
@@ -138,7 +112,7 @@
 +                this.spawnLingeringCloud();
 +            } else {
 +                timeSinceIgnited = 0;
-+                this.dataManager.set(isIgnitedDW, Boolean.valueOf(false)); // Paper
++                this.dataManager.set(IGNITED, Boolean.valueOf(false)); // Paper
 +            }
          }
      }
@@ -155,12 +129,3 @@
              entityareaeffectcloud.setRadius(2.5F);
              entityareaeffectcloud.setRadiusOnUse(-0.5F);
              entityareaeffectcloud.setWaitTime(10);
-@@ -298,7 +318,7 @@
- 
-     public boolean hasIgnited()
-     {
--        return ((Boolean)this.dataManager.get(IGNITED)).booleanValue();
-+        return this.dataManager.get(IGNITED).booleanValue();
-     }
- 
-     public void ignite()
