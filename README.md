@@ -20,4 +20,12 @@ At present, Forge-1.13.2 has been released, we will follow the pace and start to
 - `git submodule update --init --recursive`
 - `gradlew launch4j`
 
+## The project address on which the project depends
+[**Bukkit**](https://hub.spigotmc.org/stash/scm/spigot/bukkit.git)
+[**Paper**](https://github.com/PaperMC/Paper.git)
+[**CraftBukkit**](https://hub.spigotmc.org/stash/scm/spigot/craftbukkit.git)
+[**Spigot**](https://hub.spigotmc.org/stash/scm/spigot/spigot.git)
+[**MinecraftForge**](https://github.com/MinecraftForge/MinecraftForge.git)
+[**Atom**](https://gitlab.com/AtomMC/Atom.git)
+
 Welcome everyone to participate in development, unity is power.
