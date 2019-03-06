@@ -2,6 +2,7 @@ package org.bukkit.craftbukkit;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.logging.log4j.LogManager;
 
 public class Main {
     public static OptionSet main(String[] args) {
@@ -172,7 +171,7 @@ public class Main {
                 return null;
             }
             try {
-            	LogManager.getLogger("CraftBukkit/Main").info("Loading libraries, please wait...");
+				LogManager.getLogger("CraftBukkit").info("Loading libraries, please wait...");
             } catch (Throwable t) {
                 t.printStackTrace();
             }

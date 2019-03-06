@@ -193,19 +193,13 @@
              for (int i = startY; i < endY; ++i)
              {
                  this.world.checkLightFor(EnumSkyBlock.SKY, new BlockPos(x, i, z));
-@@ -462,13 +548,22 @@
-         return !loaded ? state.getLightOpacity() : state.getLightOpacity(world, new BlockPos(this.x << 4 | x & 15, y, this.z << 4 | z & 15));
-     }
- 
--    public IBlockState getBlockState(BlockPos pos)
-+    public final IBlockState getBlockState(final BlockPos pos)
-     {
+@@ -467,8 +553,17 @@
          return this.getBlockState(pos.getX(), pos.getY(), pos.getZ());
      }
  
 -    public IBlockState getBlockState(final int x, final int y, final int z)
 -    {
-+    public final IBlockState getBlockState(final int x, final int y, final int z) {
++    public IBlockState getBlockState(final int x, final int y, final int z) {
 +        // Method body / logic copied from below
 +        final int i = y >> 4;
 +        if (y >= 0 && i < this.storageArrays.length && this.storageArrays[i] != null) {
@@ -371,14 +365,7 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -829,12 +988,34 @@
-         {
-             if (this.tileEntities.containsKey(pos))
-             {
--                ((TileEntity)this.tileEntities.get(pos)).invalidate();
-+                this.tileEntities.get(pos).invalidate();
-             }
- 
+@@ -835,6 +994,28 @@
              tileEntityIn.validate();
              this.tileEntities.put(pos, tileEntityIn);
          }

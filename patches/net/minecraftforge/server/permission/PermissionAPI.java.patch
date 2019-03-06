@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraftforge/server/permission/PermissionAPI.java
++++ ../src-work/minecraft/net/minecraftforge/server/permission/PermissionAPI.java
+@@ -27,7 +27,6 @@
+ import net.minecraftforge.fml.common.LoaderState;
+ import net.minecraftforge.server.permission.context.IContext;
+ import net.minecraftforge.server.permission.context.PlayerContext;
+-import org.apache.logging.log4j.Level;
+ 
+ import javax.annotation.Nullable;
+ 

@@ -2013,6 +2013,16 @@ public interface World extends PluginMessageRecipient, Metadatable {
         {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
+		
+		public LightningStrike strikeLightningEffect(Location loc, boolean isSilent)
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+		
+		public LightningStrike strikeLightning(Location loc, boolean isSilent)
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
     }
 
     Spigot spigot();

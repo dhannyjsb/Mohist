@@ -27,19 +27,3 @@
  public class MapStorage
  {
      private final ISaveHandler saveHandler;
-@@ -65,6 +63,7 @@
-                 catch (Exception exception1)
-                 {
-                     exception1.printStackTrace();
-+                    ServerInternalException.reportInternalException(exception1); // Paper
-                 }
-             }
- 
-@@ -123,6 +122,7 @@
-             catch (Exception exception)
-             {
-                 exception.printStackTrace();
-+                ServerInternalException.reportInternalException(exception); // Paper
-             }
-         }
-     }

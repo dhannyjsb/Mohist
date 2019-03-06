@@ -32,7 +32,7 @@ public class SpigotWorldConfig
     {
         if ( verbose )
         {
-        	LogManager.getLogger("Spigot").info(s);
+			LogManager.getLogger("Spigot").info(s);
         }
     }
 

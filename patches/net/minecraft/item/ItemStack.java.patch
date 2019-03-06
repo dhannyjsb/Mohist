@@ -44,10 +44,11 @@
  {
      public static final ItemStack EMPTY = new ItemStack((Item)null);
      public static final DecimalFormat DECIMALFORMAT = new DecimalFormat("#.##");
-     private int stackSize;
+-    private int stackSize;
++    public int stackSize;
      private int animationsToGo;
 -    private final Item item;
-+    private Item item;
++    public Item item;
      private NBTTagCompound stackTagCompound;
      private boolean isEmpty;
      int itemDamage;

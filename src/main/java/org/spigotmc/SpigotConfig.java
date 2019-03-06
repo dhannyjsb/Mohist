@@ -210,7 +210,7 @@ public class SpigotConfig
         if ( version < 4 )
         {
             set( "settings.bungeecord", false );
-            System.out.println( "Oudated config, disabling BungeeCord support!" );
+            LogManager.getLogger("Spigot").info( "Oudated config, disabling BungeeCord support!" );
         }
         bungee = getBoolean( "settings.bungeecord", false );
     }

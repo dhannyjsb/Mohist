@@ -234,6 +234,7 @@
 +        }
 +
 +        // CraftBukkit start
++		int newCount = itemstack.stackSize;
 +        if (ret == EnumActionResult.SUCCESS && world.captureTreeGeneration && world.capturedBlockSnapshots.size() > 0) {
 +            world.captureTreeGeneration = false;
 +            Location location = new Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ());
@@ -248,9 +249,8 @@
 +            }
 +            if (event == null || !event.isCancelled()) {
 +                // Change the stack to its new contents if it hasn't been tampered with.
-+                if (itemstack.getCount() == size && itemstack.getItemDamage() == meta) {
-+                    itemstack.setItemDamage(meta);
-+                    itemstack.setCount(meta);
++                if (itemstack.stackSize == size && itemstack.getMetadata() == data) {
++                    itemstack.stackSize = newCount;
 +                }
 +                for (BlockState blockstate : blocks) {
 +                    blockstate.update(true);

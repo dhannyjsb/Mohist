@@ -1198,9 +1198,8 @@
          IBlockState iblockstate1 = this.getBlockState(pos);
          AxisAlignedBB axisalignedbb = skipCollisionCheck ? null : blockIn.getDefaultState().getCollisionBoundingBox(this, pos);
  
--        if (axisalignedbb != Block.NULL_AABB && !this.checkNoEntityCollision(axisalignedbb.offset(pos), placer))
 +        boolean defaultReturn;
-+        if (axisalignedbb != Block.NULL_AABB && !this.checkNoVisiblePlayerCollisions(axisalignedbb.offset(pos), placer))
+         if (axisalignedbb != Block.NULL_AABB && !this.checkNoEntityCollision(axisalignedbb.offset(pos), placer))
          {
 -            return false;
 +            defaultReturn = false;

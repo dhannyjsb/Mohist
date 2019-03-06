@@ -2,6 +2,7 @@ package org.bukkit.plugin.java;
 
 import com.google.common.io.ByteStreams;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 
@@ -48,14 +49,14 @@ final class PluginClassLoader extends URLClassLoader {
                 method.setAccessible( true );
                 method.invoke( null );
                 method.setAccessible( oldAccessible );
-                org.bukkit.Bukkit.getLogger().log( java.util.logging.Level.INFO, "Set PluginClassLoader as parallel capable" );
+                Bukkit.getLogger1().info( "Set PluginClassLoader as parallel capable" );
             }
         } catch ( NoSuchMethodException ex )
         {
             // Ignore
         } catch ( Exception ex )
         {
-            org.bukkit.Bukkit.getLogger().log( java.util.logging.Level.WARNING, "Error setting PluginClassLoader as parallel capable", ex );
+            Bukkit.getLogger1().warn("Error setting PluginClassLoader as parallel capable", ex );
         }
     }
     // Spigot End
