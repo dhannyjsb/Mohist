@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.logging.log4j.LogManager;
+
 public class Main {
     public static OptionSet main(String[] args) {
         // Todo: Installation script
@@ -170,7 +172,7 @@ public class Main {
                 return null;
             }
             try {
-                System.out.println("Loading libraries, please wait...");
+            	LogManager.getLogger("CraftBukkit/Main").info("Loading libraries, please wait...");
             } catch (Throwable t) {
                 t.printStackTrace();
             }

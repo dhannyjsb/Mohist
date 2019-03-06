@@ -261,7 +261,7 @@ public class SpigotConfig
     private static void playerSample()
     {
         playerSample = Math.max(getInt( "settings.sample-count", 12 ), 0); // Paper - Avoid negative counts
-        System.out.println( "Server Ping Player Sample Count: " + playerSample );
+        LogManager.getLogger("Spigot").info( "Server Ping Player Sample Count: " + playerSample );
     }
 
     public static int playerShuffle;

@@ -1,5 +1,6 @@
 package org.spigotmc;
 
+import org.apache.logging.log4j.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -31,7 +32,7 @@ public class SpigotWorldConfig
     {
         if ( verbose )
         {
-            Bukkit.getLogger().info( s );
+        	LogManager.getLogger("Spigot").info(s);
         }
     }
 
