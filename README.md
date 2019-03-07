@@ -21,7 +21,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 - `gradlew launch4j`
 
 ## Installation
-* Read the wiki in detail [**WIKI**](https://github.com/PFCraft/Mohist/wiki/Install-and-use-Mohist)
+* Read the wiki in detail [**WIKI**](https://github.com/PFCraft/Mohist/wiki/Install-Mohist)
 
 ## The project address on which the project depends
 [**Bukkit**](https://hub.spigotmc.org/stash/scm/spigot/bukkit.git)
