@@ -2,7 +2,7 @@
 
 # Mohist Made in China
 
-At present, Forge-1.13.2 has been released, we will follow the pace and start to try to make Mohist-1.13.2.
+Since CraftBukkit has modified a lot of underlying layers, some of the core mods are not available, we are working hard to improve.
 ## Mohist-1.12.2 will continue to be maintained..
 
 ## Getting Help
@@ -19,6 +19,9 @@ At present, Forge-1.13.2 has been released, we will follow the pace and start to
 - `git clone https://github.com/PFCraft/Mohist.git`
 - `git submodule update --init --recursive`
 - `gradlew launch4j`
+
+## Installation
+* Read the wiki in detail [**WIKI**](https://github.com/PFCraft/Mohist/wiki/Install-and-use-Mohist)
 
 ## The project address on which the project depends
 [**Bukkit**](https://hub.spigotmc.org/stash/scm/spigot/bukkit.git)
