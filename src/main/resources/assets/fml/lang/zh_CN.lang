@@ -1,4 +1,4 @@
-commands.forge.usage=Use /forge <subcommand>
+commands.forge.usage=使用/forge <子指令>
 commands.forge.usage.tracking=Use /forge track <type> <duration>. Valid types are "te" (Tile Entities). Duration in seconds must be <= 60.
 commands.forge.usage.help=Use help [command] to view usages for that command.
 commands.forge.tps.summary=%s : Mean tick time: %d ms. Mean TPS: %d
