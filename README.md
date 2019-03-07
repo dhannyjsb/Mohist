@@ -30,5 +30,6 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 [**Spigot**](https://hub.spigotmc.org/stash/scm/spigot/spigot.git)
 [**MinecraftForge**](https://github.com/MinecraftForge/MinecraftForge.git)
 [**Atom**](https://gitlab.com/AtomMC/Atom.git)
+[**Thermos**](https://github.com/CyberdyneCC/Thermos.git)
 
 Welcome everyone to participate in development, unity is power.
