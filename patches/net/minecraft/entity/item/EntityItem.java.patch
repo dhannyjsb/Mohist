@@ -198,14 +198,14 @@
 +
 +                // Call newer event afterwards
 +                EntityPickupItemEvent entityEvent = new EntityPickupItemEvent(entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
-+                entityEvent.setCancelled(!entityIn.canPickUpLoot);
++                entityEvent.setCancelled(!entityIn.canPickUpLoot1);
 +                this.world.getServer().getPluginManager().callEvent(entityEvent);
 +                if (entityEvent.isCancelled()) {
 +                    return;
 +                }
 +
 +                PlayerPickupItemEvent playerEvent = new PlayerPickupItemEvent((org.bukkit.entity.Player)entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
-+                playerEvent.setCancelled(!entityIn.canPickUpLoot);
++                playerEvent.setCancelled(!entityIn.canPickUpLoot1);
 +                this.world.getServer().getPluginManager().callEvent(playerEvent);
 +                flyAtPlayer = playerEvent.getFlyAtPlayer(); // Paper
 +                if (playerEvent.isCancelled()) {

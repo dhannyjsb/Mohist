@@ -164,7 +164,7 @@
 +    public boolean forceDrops;
 +    public org.bukkit.craftbukkit.attribute.CraftAttributeMap craftAttributes;
 +    public boolean collides = true;
-+    public boolean canPickUpLoot;
++    public boolean canPickUpLoot1;
 +    public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
 +
 +    // Spigot start
