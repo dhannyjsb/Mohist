@@ -117,6 +117,7 @@ public final class CraftServer implements Server {
     private final String serverVersion;
     private final String bukkitVersion = Versioning.getBukkitVersion();
     private final Logger logger = Logger.getLogger("Minecraft");
+    private static CraftServer instance;
     private final ServicesManager servicesManager = new SimpleServicesManager();
     private final CraftScheduler scheduler = new CraftScheduler();
     private final CraftSimpleCommandMap craftCommandMap = new CraftSimpleCommandMap(this);
@@ -168,6 +169,7 @@ public final class CraftServer implements Server {
     }
 
     public CraftServer(MinecraftServer console, PlayerList playerList) {
+        this.instance = this;
         this.console = console;
         this.playerList = (DedicatedPlayerList) playerList;
         this.playerView = Collections.unmodifiableList(Lists.transform(playerList.getPlayers(), new Function<EntityPlayerMP, CraftPlayer>() {
@@ -1743,4 +1745,8 @@ public final class CraftServer implements Server {
         return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
     }
     // Paper end
+
+    public static CraftServer instance() {
+        return instance;
+    }
 }

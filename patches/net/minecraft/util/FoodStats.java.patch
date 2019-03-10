@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/util/FoodStats.java
 +++ ../src-work/minecraft/net/minecraft/util/FoodStats.java
-@@ -1,21 +1,33 @@
+@@ -1,21 +1,28 @@
  package net.minecraft.util;
  
  import net.minecraft.entity.player.EntityPlayer;
@@ -26,20 +26,15 @@
 +    public int foodTimer;
 +    public int prevFoodLevel = 20;
  
-+    private EntityPlayer entityplayer; // CraftBukkit
++    public EntityPlayer player; // CraftBukkit // Mohist private - public  entityplayer - player Fix mcp duplicate naming causes AppleCore to recognize errors
 +
 +    public FoodStats() {
-+    }
-+
-+    public FoodStats(EntityPlayer entityplayer) {
-+        org.apache.commons.lang3.Validate.notNull(entityplayer);
-+        this.entityplayer = entityplayer;
 +    }
 +
      public void addStats(int foodLevelIn, float foodSaturationModifier)
      {
          this.foodLevel = Math.min(foodLevelIn + this.foodLevel, 20);
-@@ -24,7 +36,17 @@
+@@ -24,7 +31,17 @@
  
      public void addStats(ItemFood foodItem, ItemStack stack)
      {
@@ -47,35 +42,35 @@
 +        // CraftBukkit start
 +        int oldFoodLevel = foodLevel;
 +
-+        org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callFoodLevelChangeEvent(entityplayer, foodItem.getHealAmount(stack) + oldFoodLevel);
++        org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callFoodLevelChangeEvent(player, foodItem.getHealAmount(stack) + oldFoodLevel);
 +
 +        if (!event.isCancelled()) {
 +            this.addStats(event.getFoodLevel() - oldFoodLevel, foodItem.getSaturationModifier(stack));
 +        }
 +
-+        ((EntityPlayerMP) entityplayer).getBukkitEntity().sendHealthUpdate();
++        ((EntityPlayerMP) player).getBukkitEntity().sendHealthUpdate();
 +        // CraftBukkit end
      }
  
      public void onUpdate(EntityPlayer player)
-@@ -42,7 +64,15 @@
+@@ -42,7 +59,15 @@
              }
              else if (enumdifficulty != EnumDifficulty.PEACEFUL)
              {
 -                this.foodLevel = Math.max(this.foodLevel - 1, 0);
 +                // CraftBukkit start
-+                org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callFoodLevelChangeEvent(entityplayer, Math.max(this.foodLevel - 1, 0));
++                org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callFoodLevelChangeEvent(player, Math.max(this.foodLevel - 1, 0));
 +
 +                if (!event.isCancelled()) {
 +                    this.foodLevel = event.getFoodLevel();
 +                }
 +
-+                ((EntityPlayerMP) entityplayer).connection.sendPacket(new SPacketUpdateHealth(((EntityPlayerMP) entityplayer).getBukkitEntity().getScaledHealth(), this.foodLevel, this.foodSaturationLevel));
++                ((EntityPlayerMP) player).connection.sendPacket(new SPacketUpdateHealth(((EntityPlayerMP) player).getBukkitEntity().getScaledHealth(), this.foodLevel, this.foodSaturationLevel));
 +                // CraftBukkit end
              }
          }
  
-@@ -55,7 +85,7 @@
+@@ -55,7 +80,7 @@
              if (this.foodTimer >= 10)
              {
                  float f = Math.min(this.foodSaturationLevel, 6.0F);
@@ -84,14 +79,14 @@
                  this.addExhaustion(f);
                  this.foodTimer = 0;
              }
-@@ -66,8 +96,8 @@
+@@ -66,8 +91,8 @@
  
              if (this.foodTimer >= 80)
              {
 -                player.heal(1.0F);
 -                this.addExhaustion(6.0F);
 +                player.heal(1.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.SATIATED); // CraftBukkit - added RegainReason
-+                this.addExhaustion(entityplayer == null ? 6.0F : entityplayer.world.spigotConfig.regenExhaustion); // Spigot - Change to use configurable value
++                this.addExhaustion(player == null ? 6.0F : player.world.spigotConfig.regenExhaustion); // Spigot - Change to use configurable value
                  this.foodTimer = 0;
              }
          }

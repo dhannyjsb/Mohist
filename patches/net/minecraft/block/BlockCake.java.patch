@@ -24,12 +24,12 @@
  public class BlockCake extends Block
  {
      public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 6);
-@@ -71,7 +73,16 @@
+@@ -71,7 +73,17 @@
          else
          {
              player.addStat(StatList.CAKE_SLICES_EATEN);
--            player.getFoodStats().addStats(2, 0.1F);
-+            // player.getFoodStats().addStats(2, 0.1F);
++            //Mohit Restore CraftBukkit changes,AppleCore recognition
+             player.getFoodStats().addStats(2, 0.1F);
 +            int oldFoodLevel = player.getFoodStats().foodLevel;
 +
 +            org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callFoodLevelChangeEvent(player, 2 + oldFoodLevel);
