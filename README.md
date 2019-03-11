@@ -9,6 +9,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**Discord**](https://discord.gg/HNmmrCV)
    [**Home(Chinese)**](https://pfcraft.github.io)
    [**QQ**](https://jq.qq.com/?_wv=1027&k=5q7lcCb)
+   [**Metrics**](https://bstats.org/plugin/bukkit/Mohist)
 
 ## Info
 * jdk1.8.0_201
