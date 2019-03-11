@@ -65,7 +65,7 @@ public class PaperConfig
         }
         catch (IOException ex2) {}
         catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not load paper.yml, please correct your syntax errors", ex);
+            Bukkit.getLogger1().error( "Could not load paper.yml, please correct your syntax errors", ex);
             throw Throwables.propagate(ex);
         }
         PaperConfig.config.options().header("This is the main configuration file for Paper.\nAs you can see, there's tons to configure. Some options may impact gameplay, so use\nwith caution, and make sure you know what each option does before configuring.\n\nIf you need help with the configuration or have any questions related to Paper,\njoin us in our IRC channel.\n\nIRC: #paper @ irc.spi.gt ( http://irc.spi.gt/iris/?channels=paper )\nWiki: https://paper.readthedocs.org/ \nPaper Forums: https://aquifermc.org/ \n");
@@ -78,12 +78,12 @@ public class PaperConfig
     }
 
     protected static void logError(final String s) {
-        Bukkit.getLogger().severe(s);
+        Bukkit.getLogger1().error(s);
     }
 
     protected static void log(final String s) {
         if (PaperConfig.verbose) {
-            Bukkit.getLogger().info(s);
+            Bukkit.getLogger1().info(s);
         }
     }
 
@@ -104,7 +104,7 @@ public class PaperConfig
                     throw Throwables.propagate(ex.getCause());
                 }
                 catch (Exception ex2) {
-                    Bukkit.getLogger().log(Level.SEVERE, "Error invoking " + method, ex2);
+                    Bukkit.getLogger1().error( "Error invoking " + method, ex2);
                 }
             }
         }
@@ -112,7 +112,7 @@ public class PaperConfig
             PaperConfig.config.save(PaperConfig.CONFIG_FILE);
         }
         catch (IOException ex3) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not save " + PaperConfig.CONFIG_FILE, ex3);
+            Bukkit.getLogger1().error( "Could not save " + PaperConfig.CONFIG_FILE, ex3);
         }
     }
 
@@ -237,14 +237,6 @@ public class PaperConfig
         PaperConfig.flyingKickVehicleMessage = getString("messages.kick.flying-vehicle", PaperConfig.flyingKickVehicleMessage);
     }
 
-    private static void playerAutoSaveRate() {
-        PaperConfig.playerAutoSaveRate = getInt("settings.player-auto-save-rate", -1);
-        PaperConfig.maxPlayerAutoSavePerTick = getInt("settings.max-player-auto-save-per-tick", -1);
-        if (PaperConfig.maxPlayerAutoSavePerTick == -1) {
-            PaperConfig.maxPlayerAutoSavePerTick = ((PaperConfig.playerAutoSaveRate == -1 || PaperConfig.playerAutoSaveRate > 100) ? 10 : 20);
-        }
-    }
-
     private static void removeInvalidStatistics() {
         if (PaperConfig.version < 12) {
             final boolean oldValue = getBoolean("remove-invalid-statistics", false);
@@ -263,14 +255,14 @@ public class PaperConfig
 
     private static void savePlayerData() {
         if (!(PaperConfig.savePlayerData = getBoolean("settings.save-player-data", PaperConfig.savePlayerData))) {
-            Bukkit.getLogger().log(Level.WARNING, "Player Data Saving is currently disabled. Any changes to your players data, such as inventories, experience points, advancements and the like will not be saved when they log out.");
+            Bukkit.getLogger1().warn( "Player Data Saving is currently disabled. Any changes to your players data, such as inventories, experience points, advancements and the like will not be saved when they log out.");
         }
     }
 
     private static void useAlternativeLuckFormula() {
         PaperConfig.useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", false);
         if (PaperConfig.useAlternativeLuckFormula) {
-            Bukkit.getLogger().log(Level.INFO, "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
+            Bukkit.getLogger1().info( "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
         }
     }
 
@@ -308,8 +300,6 @@ public class PaperConfig
         PaperConfig.packetInSpamThreshold = 300;
         PaperConfig.flyingKickPlayerMessage = "Flying is not enabled on this server";
         PaperConfig.flyingKickVehicleMessage = "Flying is not enabled on this server";
-        PaperConfig.playerAutoSaveRate = -1;
-        PaperConfig.maxPlayerAutoSavePerTick = 10;
         PaperConfig.removeInvalidStatistics = false;
         PaperConfig.suggestPlayersWhenNullTabCompletions = true;
         PaperConfig.authenticationServersDownKickMessage = "";

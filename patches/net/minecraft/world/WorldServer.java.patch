@@ -850,12 +850,3 @@
              this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
-@@ -1356,7 +1624,7 @@
-         return this.functionManager;
-     }
- 
--    public java.io.File getChunkSaveLocation()
-+    public File getChunkSaveLocation()
-     {
-         return ((net.minecraft.world.chunk.storage.AnvilChunkLoader)getChunkProvider().chunkLoader).chunkSaveLocation;
-     }

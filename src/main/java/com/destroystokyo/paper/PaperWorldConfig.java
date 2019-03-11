@@ -80,8 +80,6 @@ public class PaperWorldConfig
     public long delayChunkUnloadsBy;
     public boolean skipEntityTickingInChunksScheduledForUnload;
     public boolean elytraHitWallDamage;
-    public int autoSavePeriod;
-    public int maxAutoSaveChunksPerTick;
     public int queueSizeAutoSaveThreshold;
     public boolean removeCorruptTEs;
     public boolean filterNBTFromSpawnEgg;
@@ -125,8 +123,6 @@ public class PaperWorldConfig
         this.frostedIceDelayMax = 40;
         this.skipEntityTickingInChunksScheduledForUnload = true;
         this.elytraHitWallDamage = true;
-        this.autoSavePeriod = -1;
-        this.maxAutoSaveChunksPerTick = 24;
         this.queueSizeAutoSaveThreshold = 50;
         this.removeCorruptTEs = false;
         this.filterNBTFromSpawnEgg = true;
@@ -425,20 +421,6 @@ public class PaperWorldConfig
         this.elytraHitWallDamage = this.getBoolean("elytra-hit-wall-damage", true);
     }
 
-    private void autoSavePeriod() {
-        this.autoSavePeriod = this.getInt("auto-save-interval", -1);
-        if (this.autoSavePeriod > 0) {
-            PaperConfig.log("Auto Save Interval: " + this.autoSavePeriod + " (" + this.autoSavePeriod / 20 + "s)");
-        }
-        else if (this.autoSavePeriod < 0) {
-            this.autoSavePeriod = MinecraftServer.getServerInst().autosavePeriod;
-        }
-    }
-
-    private void maxAutoSaveChunksPerTick() {
-        this.maxAutoSaveChunksPerTick = this.getInt("max-auto-save-chunks-per-tick", 24);
-    }
-
     private void queueSizeAutoSaveThreshold() {
         this.queueSizeAutoSaveThreshold = this.getInt("save-queue-limit-for-auto-save", 50);
     }
@@ -449,7 +431,7 @@ public class PaperWorldConfig
 
     private void fitlerNBTFromSpawnEgg() {
         if (!(this.filterNBTFromSpawnEgg = this.getBoolean("filter-nbt-data-from-spawn-eggs-and-related", true))) {
-            Bukkit.getLogger().warning("Spawn Egg and Armor Stand NBT filtering disabled, this is a potential security risk");
+            Bukkit.getLogger1().warn("Spawn Egg and Armor Stand NBT filtering disabled, this is a potential security risk");
         }
     }
 

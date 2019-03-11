@@ -1058,39 +1058,7 @@
              {
                  double d0 = x - entityplayermp.posX;
                  double d1 = y - entityplayermp.posY;
-@@ -938,12 +1526,27 @@
- 
-     public void saveAllPlayerData()
-     {
--        for (int i = 0; i < this.playerEntityList.size(); ++i)
--        {
--            this.writePlayerData(this.playerEntityList.get(i));
--        }
-+        saveAllPlayerData(null);
-     }
- 
-+    public void saveAllPlayerData(Integer interval)
-+    {
-+        MCUtil.ensureMain("Save Players", () -> {
-+            long now = MinecraftServer.currentTick;
-+            int numSaved = 0;
-+            for (int i = 0; i < this.playerEntityList.size(); ++i) {
-+                EntityPlayerMP entityplayer = this.playerEntityList.get(i);
-+                if (interval == null || now - entityplayer.lastSave >= interval) {
-+                    this.writePlayerData(entityplayer);
-+                    if (interval != null && ++numSaved <= PaperConfig.maxPlayerAutoSavePerTick) {
-+                        break;
-+                    }
-+                }
-+            }
-+            return null;
-+        });
-+    }
-+
-     public void addWhitelistedPlayer(GameProfile profile)
-     {
-         this.whiteListedPlayers.addEntry(new UserListWhitelistEntry(profile));
-@@ -988,16 +1591,21 @@
+@@ -988,16 +1576,21 @@
  
          if (worldIn.isRaining())
          {
@@ -1116,7 +1084,7 @@
          playerIn.connection.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
      }
  
-@@ -1077,19 +1685,42 @@
+@@ -1077,19 +1670,42 @@
          this.commandsAllowedForAll = p_72387_1_;
      }
  
@@ -1163,7 +1131,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -1097,10 +1728,19 @@
+@@ -1097,10 +1713,19 @@
          this.sendMessage(component, true);
      }
  
@@ -1185,7 +1153,7 @@
  
          if (statisticsmanagerserver == null)
          {
-@@ -1119,7 +1759,7 @@
+@@ -1119,7 +1744,7 @@
  
              statisticsmanagerserver = new StatisticsManagerServer(this.mcServer, file2);
              statisticsmanagerserver.readStatFile();
@@ -1194,7 +1162,7 @@
          }
  
          return statisticsmanagerserver;
-@@ -1128,14 +1768,14 @@
+@@ -1128,14 +1753,14 @@
      public PlayerAdvancements getPlayerAdvancements(EntityPlayerMP p_192054_1_)
      {
          UUID uuid = p_192054_1_.getUniqueID();
@@ -1211,7 +1179,7 @@
          }
  
          playeradvancements.setPlayer(p_192054_1_);
-@@ -1148,7 +1788,7 @@
+@@ -1148,7 +1773,7 @@
  
          if (this.mcServer.worlds != null)
          {
@@ -1220,7 +1188,7 @@
              {
                  if (worldserver != null)
                  {
-@@ -1176,9 +1816,10 @@
+@@ -1176,9 +1801,10 @@
  
      public void reloadResources()
      {
