@@ -628,8 +628,8 @@
          } else {
 -            net.minecraftforge.fml.common.FMLLog.log.warn(format, activeModContainer.getName(), this.getPos(), this.world.provider.getDimension(), this.world.provider.getDimensionType().getName(), populating);
 -            net.minecraftforge.fml.common.FMLLog.log.warn("Please report this to the mod's issue tracker. This log can be disabled in the Forge config.");
-+            LOGGER.warn(format, activeModContainer.getName(), this.getPos(), this.world.provider.getDimension(), this.world.provider.getDimensionType().getName(), populating);
-+            LOGGER.warn("Please report this to the mod's issue tracker. This log can be disabled in the Forge config.");
++            LOGGER.debug(format, activeModContainer.getName(), this.getPos(), this.world.provider.getDimension(), this.world.provider.getDimensionType().getName(), populating);
++            LOGGER.debug("Please report this to the mod's issue tracker. This log can be disabled in the Forge config.");
          }
      }
  
