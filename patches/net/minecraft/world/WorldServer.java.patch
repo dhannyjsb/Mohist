@@ -682,25 +682,46 @@
              {
                  i += random.nextInt(64) - random.nextInt(64);
                  k += random.nextInt(64) - random.nextInt(64);
-@@ -992,6 +1236,8 @@
+@@ -986,31 +1230,25 @@
+         return this.provider.getSpawnCoordinate();
+     }
  
-         if (chunkproviderserver.canSave())
-         {
-+            if (all) org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(getWorld())); // CraftBukkit // Paper - Incremental Auto Saving - Only fire event on full save
-+            if (all || mcServer.serverAutoSave) { // Paper
-             if (progressCallback != null)
-             {
+-    public void saveAllChunks(boolean all, @Nullable IProgressUpdate progressCallback) throws MinecraftException
+-    {
++    public void saveAllChunks(boolean all, @Nullable IProgressUpdate progressCallback) throws MinecraftException {
+         ChunkProviderServer chunkproviderserver = this.getChunkProvider();
+ 
+-        if (chunkproviderserver.canSave())
+-        {
+-            if (progressCallback != null)
+-            {
++        if (chunkproviderserver.canSave()) {
++            org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(getWorld())); // CraftBukkit
++            if (progressCallback != null) {
                  progressCallback.displaySavingString("Saving level");
-@@ -1003,7 +1249,7 @@
-             {
+             }
+ 
+             this.saveLevel();
+ 
+-            if (progressCallback != null)
+-            {
++            if (progressCallback != null) {
                  progressCallback.displayLoadingString("Saving chunks");
              }
 -
-+            } // Paper
              chunkproviderserver.saveChunks(all);
              net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.WorldEvent.Save(this));
  
-@@ -1039,6 +1285,12 @@
+-            for (Chunk chunk : Lists.newArrayList(chunkproviderserver.getLoadedChunks()))
+-            {
+-                if (chunk != null && !this.playerChunkMap.contains(chunk.x, chunk.z))
+-                {
++            for (Chunk chunk : Lists.newArrayList(chunkproviderserver.getLoadedChunks())) {
++                if (chunk != null && !this.playerChunkMap.contains(chunk.x, chunk.z)) {
+                     chunkproviderserver.queueUnload(chunk);
+                 }
+             }
+@@ -1039,6 +1277,12 @@
              }
          }
  
@@ -713,7 +734,7 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1058,6 +1310,12 @@
+@@ -1058,6 +1302,12 @@
          return this.canAddEntity(entityIn) ? super.spawnEntity(entityIn) : false;
      }
  
@@ -726,7 +747,7 @@
      public void loadEntities(Collection<Entity> entityCollection)
      {
          for (Entity entity : Lists.newArrayList(entityCollection))
-@@ -1074,7 +1332,6 @@
+@@ -1074,7 +1324,6 @@
      {
          if (entityIn.isDead)
          {
@@ -734,7 +755,7 @@
              return false;
          }
          else
-@@ -1085,7 +1342,7 @@
+@@ -1085,7 +1334,7 @@
              {
                  Entity entity = this.entitiesByUuid.get(uuid);
  
@@ -743,7 +764,7 @@
                  {
                      this.unloadedEntityList.remove(entity);
                  }
-@@ -1093,7 +1350,6 @@
+@@ -1093,7 +1342,6 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
@@ -751,7 +772,7 @@
                          return false;
                      }
  
-@@ -1125,6 +1381,7 @@
+@@ -1125,6 +1373,7 @@
  
      public void onEntityRemoved(Entity entityIn)
      {
@@ -759,7 +780,7 @@
          super.onEntityRemoved(entityIn);
          this.entitiesById.removeObject(entityIn.getEntityId());
          this.entitiesByUuid.remove(entityIn.getUniqueID());
-@@ -1141,9 +1398,15 @@
+@@ -1141,9 +1390,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -772,11 +793,11 @@
          if (super.addWeatherEffect(entityIn))
          {
 -            this.mcServer.getPlayerList().sendToAllNearExcept((EntityPlayer)null, entityIn.posX, entityIn.posY, entityIn.posZ, 512.0D, this.provider.getDimension(), new SPacketSpawnGlobalEntity(entityIn));
-+            this.mcServer.getPlayerList().sendToAllNearExcept(null, entityIn.posX, entityIn.posY, entityIn.posZ, 512.0D, this, new SPacketSpawnGlobalEntity(entityIn)); // CraftBukkit - Use dimension  // Paper - use world instead of dimension
++            this.mcServer.getPlayerList().sendToAllNearExcept((EntityPlayer)null, entityIn.posX, entityIn.posY, entityIn.posZ, 512.0D, this, new SPacketSpawnGlobalEntity(entityIn)); // CraftBukkit - Use dimension  // Paper - use world instead of dimension
              return true;
          }
          else
-@@ -1164,11 +1427,12 @@
+@@ -1164,11 +1419,12 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -793,7 +814,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1475,8 @@
+@@ -1211,7 +1467,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -803,7 +824,7 @@
                  }
              }
  
-@@ -1298,11 +1563,22 @@
+@@ -1298,11 +1555,22 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
@@ -829,7 +850,7 @@
              this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
-@@ -1356,7 +1632,7 @@
+@@ -1356,7 +1624,7 @@
          return this.functionManager;
      }
  
