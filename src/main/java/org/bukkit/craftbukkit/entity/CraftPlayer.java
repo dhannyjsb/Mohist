@@ -1761,7 +1761,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     @Override
     public String getLocale() {
         // Paper start - Locale change event
-        String locale = getHandle().locale;
+        String locale = getHandle().language;
         return locale != null ? locale : "en_us";
         // Paper end
     }

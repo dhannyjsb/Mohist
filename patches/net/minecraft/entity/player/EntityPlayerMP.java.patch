@@ -145,7 +145,7 @@
  {
 -    private static final Logger LOGGER = LogManager.getLogger();
 -    private String language = "en_US";
-+    public String locale = null; // PAIL: private -> public // Paper - default to null
++    public String language = null; // PAIL: private -> public // Paper - default to null
      public NetHandlerPlayServer connection;
      public final MinecraftServer mcServer;
      public final PlayerInteractionManager interactionManager;
@@ -962,17 +962,16 @@
  
      public void handleClientSettings(CPacketClientSettings packetIn)
      {
--        this.language = packetIn.getLang();
 +        if (getPrimaryHand() != packetIn.getMainHand()) {
 +            PlayerChangedMainHandEvent event = new PlayerChangedMainHandEvent(getBukkitEntity(), getPrimaryHand() == EnumHandSide.LEFT ? MainHand.LEFT : MainHand.RIGHT);
 +            this.mcServer.server.getPluginManager().callEvent(event);
 +        }
 +        // Paper start - add PlayerLocaleChangeEvent
 +        // Since the field is initialized to null, this event should always fire the first time the packet is received
-+        String oldLocale = this.locale;
-+        this.locale = packetIn.getLang();
-+        if (!this.locale.equals(oldLocale)) {
-+            new com.destroystokyo.paper.event.player.PlayerLocaleChangeEvent(this.getBukkitEntity(), oldLocale, this.locale).callEvent();
++        String oldLocale = this.language;
+         this.language = packetIn.getLang();
++        if (!this.language.equals(oldLocale)) {
++            new com.destroystokyo.paper.event.player.PlayerLocaleChangeEvent(this.getBukkitEntity(), oldLocale, this.language).callEvent();
 +        }
 +        // Compat with Bukkit
 +        oldLocale = oldLocale != null ? oldLocale : "en_us";
