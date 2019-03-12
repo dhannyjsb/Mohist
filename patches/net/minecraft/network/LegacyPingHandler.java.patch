@@ -65,7 +65,7 @@
                          this.writeAndFlush(p_channelRead_1_, this.getStringBuffer(s2));
                          break;
                      case 1:
-@@ -50,10 +71,22 @@
+@@ -50,36 +71,22 @@
                          }
  
                          LOGGER.debug("Ping: (1.4-1.5.x) from {}:{}", inetsocketaddress.getAddress(), Integer.valueOf(inetsocketaddress.getPort()));
@@ -82,40 +82,40 @@
                          this.writeAndFlush(p_channelRead_1_, this.getStringBuffer(s));
                          break;
                      default:
+-                        boolean flag1 = bytebuf.readUnsignedByte() == 1;
+-                        flag1 = flag1 & bytebuf.readUnsignedByte() == 250;
+-                        flag1 = flag1 & "MC|PingHost".equals(new String(bytebuf.readBytes(bytebuf.readShort() * 2).array(), StandardCharsets.UTF_16BE));
+-                        int j = bytebuf.readUnsignedShort();
+-                        flag1 = flag1 & bytebuf.readUnsignedByte() >= 73;
+-                        flag1 = flag1 & 3 + bytebuf.readBytes(bytebuf.readShort() * 2).array().length + 4 == j;
+-                        flag1 = flag1 & bytebuf.readInt() <= 65535;
+-                        flag1 = flag1 & bytebuf.readableBytes() == 0;
+-
+-                        if (!flag1)
+-                        {
+-                            return;
+-                        }
+-
+-                        LOGGER.debug("Ping: (1.6) from {}:{}", inetsocketaddress.getAddress(), Integer.valueOf(inetsocketaddress.getPort()));
+-                        String s1 = String.format("\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d", Integer.valueOf(127), minecraftserver.getMinecraftVersion(), minecraftserver.getMOTD(), minecraftserver.getCurrentPlayerCount(), minecraftserver.getMaxPlayers());
+-                        ByteBuf bytebuf1 = this.getStringBuffer(s1);
+-
+-                        try
+-                        {
+-                            this.writeAndFlush(p_channelRead_1_, bytebuf1);
+-                        }
+-                        finally
+-                        {
+-                            bytebuf1.release();
+-                        }
 +                        // Paper start - Replace with improved version below
 +                        if (bytebuf.readUnsignedByte() != 0x01 || bytebuf.readUnsignedByte() != 0xFA) return;
 +                        readLegacy1_6(p_channelRead_1_, bytebuf);
-+                        /*
-                         boolean flag1 = bytebuf.readUnsignedByte() == 1;
-                         flag1 = flag1 & bytebuf.readUnsignedByte() == 250;
-                         flag1 = flag1 & "MC|PingHost".equals(new String(bytebuf.readBytes(bytebuf.readShort() * 2).array(), StandardCharsets.UTF_16BE));
-@@ -69,7 +102,15 @@
-                         }
- 
-                         LOGGER.debug("Ping: (1.6) from {}:{}", inetsocketaddress.getAddress(), Integer.valueOf(inetsocketaddress.getPort()));
--                        String s1 = String.format("\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d", Integer.valueOf(127), minecraftserver.getMinecraftVersion(), minecraftserver.getMOTD(), minecraftserver.getCurrentPlayerCount(), minecraftserver.getMaxPlayers());
-+                        InetSocketAddress virtualHost = com.destroystokyo.paper.network.PaperNetworkClient.prepareVirtualHost(host, port);
-+                        event = PaperLegacyStatusClient.processRequest(
-+                                server, (InetSocketAddress) ctx.channel().remoteAddress(), protocolVersion, virtualHost);
-+                        if (event == null) {
-+                            ctx.close();
-+                            return;
-+                        }
-+                        String s1 = String.format("\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d", event.getProtocolVersion(), event.getVersion(),
-+                                PaperLegacyStatusClient.getMotd(event), event.getNumPlayers(), event.getMaxPlayers());
-                         ByteBuf bytebuf1 = this.getStringBuffer(s1);
- 
-                         try
-@@ -80,6 +121,8 @@
-                         {
-                             bytebuf1.release();
-                         }
-+                        */
 +                        // Paper end
                  }
  
                  bytebuf.release();
-@@ -102,6 +145,88 @@
+@@ -102,6 +109,88 @@
          }
      }
  

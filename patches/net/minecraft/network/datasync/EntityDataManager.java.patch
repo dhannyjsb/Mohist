@@ -40,19 +40,22 @@
      public static <T> DataParameter<T> createKey(Class <? extends Entity > clazz, DataSerializer<T> serializer)
      {
 -        if (true || LOGGER.isDebugEnabled()) //Forge: This is very useful for mods that register keys on classes that are not their own
-+        if (true || LOGGER.isDebugEnabled())
++        if (LOGGER.isDebugEnabled())
          {
              try
              {
-@@ -46,7 +48,6 @@
+@@ -46,9 +48,7 @@
  
                  if (!oclass.equals(clazz))
                  {
 -                    //Forge: log at warn, mods should not add to classes that they don't own, and only add stacktrace when in debug is enabled as it is mostly not needed and consumes time
-                     if (LOGGER.isDebugEnabled()) LOGGER.warn("defineId called for: {} from {}", clazz, oclass, new RuntimeException());
-                     else LOGGER.warn("defineId called for: {} from {}", clazz, oclass);
+-                    if (LOGGER.isDebugEnabled()) LOGGER.warn("defineId called for: {} from {}", clazz, oclass, new RuntimeException());
+-                    else LOGGER.warn("defineId called for: {} from {}", clazz, oclass);
++                     LOGGER.debug("defineId called for: {} from {}", clazz, oclass, new RuntimeException());
                  }
-@@ -117,21 +118,21 @@
+             }
+             catch (ClassNotFoundException var5)
+@@ -117,21 +117,21 @@
  
      private <T> void setEntry(DataParameter<T> key, T value)
      {
@@ -78,7 +81,7 @@
          }
          catch (Throwable throwable)
          {
-@@ -152,7 +153,7 @@
+@@ -152,7 +152,7 @@
  
      public <T> void set(DataParameter<T> key, T value)
      {
@@ -87,7 +90,7 @@
  
          if (ObjectUtils.notEqual(value, dataentry.getValue()))
          {
-@@ -174,7 +175,7 @@
+@@ -174,7 +174,7 @@
          return this.dirty;
      }
  
@@ -96,7 +99,7 @@
      {
          if (entriesIn != null)
          {
-@@ -182,7 +183,7 @@
+@@ -182,7 +182,7 @@
  
              for (int j = entriesIn.size(); i < j; ++i)
              {
@@ -105,7 +108,7 @@
                  writeEntry(buf, dataentry);
              }
          }
-@@ -191,15 +192,15 @@
+@@ -191,15 +191,15 @@
      }
  
      @Nullable
@@ -124,7 +127,7 @@
              {
                  if (dataentry.isDirty())
                  {
-@@ -207,7 +208,7 @@
+@@ -207,7 +207,7 @@
  
                      if (list == null)
                      {
@@ -133,7 +136,7 @@
                      }
  
                      list.add(dataentry.copy());
-@@ -225,7 +226,7 @@
+@@ -225,7 +225,7 @@
      {
          this.lock.readLock().lock();
  
@@ -142,7 +145,7 @@
          {
              writeEntry(buf, dataentry);
          }
-@@ -235,16 +236,16 @@
+@@ -235,16 +235,16 @@
      }
  
      @Nullable
@@ -163,7 +166,7 @@
              }
  
              list.add(dataentry.copy());
-@@ -254,7 +255,7 @@
+@@ -254,7 +254,7 @@
          return list;
      }
  
@@ -172,7 +175,7 @@
      {
          DataParameter<T> dataparameter = entry.getKey();
          int i = DataSerializers.getSerializerId(dataparameter.getSerializer());
-@@ -272,16 +273,16 @@
+@@ -272,16 +272,16 @@
      }
  
      @Nullable
@@ -192,7 +195,7 @@
              }
  
              int j = buf.readVarInt();
-@@ -292,20 +293,20 @@
+@@ -292,20 +292,20 @@
                  throw new DecoderException("Unknown serializer type " + j);
              }
  
@@ -217,7 +220,7 @@
  
              if (dataentry1 != null)
              {
-@@ -319,7 +320,7 @@
+@@ -319,7 +319,7 @@
      }
  
      @SideOnly(Side.CLIENT)
@@ -226,7 +229,7 @@
      {
          target.setValue((T)source.getValue());
      }
-@@ -334,7 +335,7 @@
+@@ -334,7 +334,7 @@
          this.dirty = false;
          this.lock.readLock().lock();
  
@@ -235,7 +238,7 @@
          {
              dataentry.setDirty(false);
          }
-@@ -380,9 +381,9 @@
+@@ -380,9 +380,9 @@
                  this.dirty = dirtyIn;
              }
  
