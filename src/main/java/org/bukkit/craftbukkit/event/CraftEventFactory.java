@@ -26,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.network.play.server.SPacketSetSlot;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -422,7 +423,7 @@ public class CraftEventFactory {
             net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
             if (entityitem != null)
             {
-                victim.capturedDrops.add(entityitem);
+                victim.capturedDrops.add((EntityItem)entityitem);
             }
         }
         return event;
@@ -460,7 +461,7 @@ public class CraftEventFactory {
                     net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
                     if (entityitem != null)
                     {
-                        victim.capturedDrops.add(entityitem);
+                        victim.capturedDrops.add((EntityItem)entityitem);
                     }
                 }
             }
@@ -860,13 +861,18 @@ public class CraftEventFactory {
     }
 
     public static Container callInventoryOpenEvent(EntityPlayerMP player, Container container, boolean cancelled) {
+        if (Thread.currentThread() != MinecraftServer.getServerInst().primaryThread) {
+            return container;
+        }
         if (player.openContainer != player.inventoryContainer) { // fire INVENTORY_CLOSE if one already open
             player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
         }
 
         CraftServer server = player.world.getServer();
         CraftPlayer craftPlayer = player.getBukkitEntity();
-        player.openContainer.transferTo(container, craftPlayer);
+        try {
+            player.openContainer.transferTo(container, craftPlayer);
+        } catch (AbstractMethodError e) {}
 
         InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
         event.setCancelled(cancelled);
@@ -876,9 +882,8 @@ public class CraftEventFactory {
         if (event.isCancelled()) {
             container.transferTo(player.openContainer, craftPlayer);
             return null;
-        } else {
-            return container;
         }
+        return container;
     }
 
     public static ItemStack callPreCraftEvent(InventoryCrafting matrix, ItemStack result, InventoryView lastCraftView, boolean isRepair) {
@@ -1018,9 +1023,14 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human, org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
+        if (Thread.currentThread() != MinecraftServer.getServerInst().primaryThread) {
+            return;
+        }
         // Paper end
         InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
-        if(human.openContainer.getBukkitView() != null) human.world.getServer().getPluginManager().callEvent(event);
+        if(human.openContainer.getBukkitView() != null) {
+			human.world.getServer().getPluginManager().callEvent(event);
+		}
         human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
     }
 
