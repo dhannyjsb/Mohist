@@ -1,13 +1,12 @@
 --- ../src-base/minecraft/net/minecraft/init/Bootstrap.java
 +++ ../src-work/minecraft/net/minecraft/init/Bootstrap.java
-@@ -1,26 +1,11 @@
- package net.minecraft.init;
- 
+@@ -3,17 +3,11 @@
  import com.mojang.authlib.GameProfile;
--import java.io.File;
--import java.io.PrintStream;
--import java.util.Random;
--import java.util.UUID;
+ import java.io.File;
+ import java.io.PrintStream;
++import java.util.List;
+ import java.util.Random;
+ import java.util.UUID;
  import net.minecraft.advancements.AdvancementManager;
 -import net.minecraft.block.Block;
 -import net.minecraft.block.BlockDispenser;
@@ -20,53 +19,8 @@
 +import net.minecraft.block.*;
  import net.minecraft.block.material.Material;
  import net.minecraft.block.state.IBlockState;
--import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
--import net.minecraft.dispenser.BehaviorProjectileDispense;
--import net.minecraft.dispenser.IBehaviorDispenseItem;
--import net.minecraft.dispenser.IBlockSource;
--import net.minecraft.dispenser.IPosition;
-+import net.minecraft.dispenser.*;
- import net.minecraft.enchantment.Enchantment;
- import net.minecraft.entity.Entity;
- import net.minecraft.entity.EntityList;
-@@ -31,21 +16,8 @@
- import net.minecraft.entity.item.EntityFireworkRocket;
- import net.minecraft.entity.item.EntityTNTPrimed;
- import net.minecraft.entity.player.EntityPlayer;
--import net.minecraft.entity.player.EntityPlayerMP;
--import net.minecraft.entity.projectile.EntityArrow;
--import net.minecraft.entity.projectile.EntityEgg;
--import net.minecraft.entity.projectile.EntityPotion;
--import net.minecraft.entity.projectile.EntitySmallFireball;
--import net.minecraft.entity.projectile.EntitySnowball;
--import net.minecraft.entity.projectile.EntitySpectralArrow;
--import net.minecraft.entity.projectile.EntityTippedArrow;
--import net.minecraft.item.EnumDyeColor;
--import net.minecraft.item.Item;
--import net.minecraft.item.ItemArmor;
--import net.minecraft.item.ItemBucket;
--import net.minecraft.item.ItemDye;
--import net.minecraft.item.ItemMonsterPlacer;
--import net.minecraft.item.ItemStack;
-+import net.minecraft.entity.projectile.*;
-+import net.minecraft.item.*;
- import net.minecraft.item.crafting.CraftingManager;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraft.nbt.NBTUtil;
-@@ -58,11 +30,7 @@
- import net.minecraft.tileentity.TileEntityDispenser;
- import net.minecraft.tileentity.TileEntityShulkerBox;
- import net.minecraft.tileentity.TileEntitySkull;
--import net.minecraft.util.EnumFacing;
--import net.minecraft.util.LoggingPrintStream;
--import net.minecraft.util.SoundCategory;
--import net.minecraft.util.SoundEvent;
--import net.minecraft.util.StringUtils;
-+import net.minecraft.util.*;
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.world.World;
- import net.minecraft.world.biome.Biome;
-@@ -71,7 +39,19 @@
+ import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+@@ -71,6 +65,12 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -77,16 +31,9 @@
 +import org.bukkit.event.block.BlockDispenseEvent;
 +import org.bukkit.event.world.StructureGrowEvent;
  
-+import java.io.File;
-+import java.io.PrintStream;
-+import java.util.List;
-+import java.util.Random;
-+import java.util.UUID;
-+
  public class Bootstrap
  {
-     public static final PrintStream SYSOUT = System.out;
-@@ -193,15 +173,41 @@
+@@ -193,15 +193,41 @@
                  double d0 = source.getX() + (double)enumfacing.getFrontOffsetX();
                  double d1 = (double)((float)(source.getBlockPos().getY() + enumfacing.getFrontOffsetY()) + 0.2F);
                  double d2 = source.getZ() + (double)enumfacing.getFrontOffsetZ();
@@ -130,7 +77,7 @@
                  return stack;
              }
          });
-@@ -213,7 +219,33 @@
+@@ -213,7 +239,33 @@
                  double d0 = source.getX() + (double)enumfacing.getFrontOffsetX();
                  double d1 = (double)((float)source.getBlockPos().getY() + 0.2F);
                  double d2 = source.getZ() + (double)enumfacing.getFrontOffsetZ();
@@ -165,7 +112,7 @@
                  source.getWorld().spawnEntity(entityfireworkrocket);
                  stack.shrink(1);
                  return stack;
-@@ -237,8 +269,34 @@
+@@ -237,8 +289,34 @@
                  double d3 = random.nextGaussian() * 0.05D + (double)enumfacing.getFrontOffsetX();
                  double d4 = random.nextGaussian() * 0.05D + (double)enumfacing.getFrontOffsetY();
                  double d5 = random.nextGaussian() * 0.05D + (double)enumfacing.getFrontOffsetZ();
@@ -202,7 +149,7 @@
                  return stack;
              }
              protected void playDispenseSound(IBlockSource source)
-@@ -246,20 +304,63 @@
+@@ -246,20 +324,63 @@
                  source.getWorld().playEvent(1018, source.getBlockPos(), 0);
              }
          });
@@ -275,7 +222,7 @@
              }
          };
          BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(Items.LAVA_BUCKET, ibehaviordispenseitem);
-@@ -293,6 +394,26 @@
+@@ -293,6 +414,26 @@
                      item = Items.LAVA_BUCKET;
                  }
  
@@ -302,7 +249,7 @@
                  world.setBlockToAir(blockpos);
                  stack.shrink(1);
  
-@@ -311,21 +432,42 @@
+@@ -311,21 +452,42 @@
                  }
              }
          });
@@ -352,7 +299,7 @@
                      }
                  }
                  else if (world.getBlockState(blockpos).getBlock() == Blocks.TNT)
-@@ -341,7 +483,7 @@
+@@ -341,7 +503,7 @@
                  return stack;
              }
          });
@@ -361,7 +308,7 @@
          {
              protected ItemStack dispenseStack(IBlockSource source, ItemStack stack)
              {
-@@ -351,7 +493,28 @@
+@@ -351,7 +513,28 @@
                  {
                      World world = source.getWorld();
                      BlockPos blockpos = source.getBlockPos().offset((EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING));
@@ -390,36 +337,33 @@
                      if (ItemDye.applyBonemeal(stack, world, blockpos))
                      {
                          if (!world.isRemote)
-@@ -364,6 +527,28 @@
+@@ -364,6 +547,25 @@
                          this.successful = false;
                      }
  
 +                    world.captureTreeGeneration = false;
-+                    if (world.capturedBlockSnapshots.size() > 0) {
++                    if (world.capturedBlockStates.size() > 0) {
 +                        TreeType treeType = BlockSapling.treeType;
 +                        BlockSapling.treeType = null;
 +                        Location location = new Location(world.getWorld(), blockpos.getX(), blockpos.getY(), blockpos.getZ());
-+                        List<net.minecraftforge.common.util.BlockSnapshot> blocks = (List) world.capturedBlockSnapshots.clone();
-+                        List<BlockState> blockstates = new java.util.ArrayList();
-+                        for (net.minecraftforge.common.util.BlockSnapshot snapshot : blocks) {
-+                            blockstates.add(new org.bukkit.craftbukkit.block.CraftBlockState(snapshot));
-+                        }
-+                        world.capturedBlockSnapshots.clear();
++                        List<BlockState> blocks = (List<BlockState>) world.capturedBlockStates.clone();
++                        world.capturedBlockStates.clear();
 +                        StructureGrowEvent structureEvent = null;
 +                        if (treeType != null) {
-+                            structureEvent = new StructureGrowEvent(location, treeType, false, null, blockstates);
++                            structureEvent = new StructureGrowEvent(location, treeType, false, null, blocks);
 +                            org.bukkit.Bukkit.getPluginManager().callEvent(structureEvent);
 +                        }
 +                        if (structureEvent == null || !structureEvent.isCancelled()) {
-+                            for (org.bukkit.block.BlockState blockstate : blockstates) {
++                            for (BlockState blockstate : blocks) {
 +                                blockstate.update(true);
 +                            }
 +                        }
 +                    }
++
                      return stack;
                  }
                  else
-@@ -378,14 +563,38 @@
+@@ -378,14 +580,38 @@
              {
                  World world = source.getWorld();
                  BlockPos blockpos = source.getBlockPos().offset((EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING));
@@ -461,7 +405,7 @@
          {
              protected ItemStack dispenseStack(IBlockSource source, ItemStack stack)
              {
-@@ -393,6 +602,27 @@
+@@ -393,6 +619,27 @@
                  EnumFacing enumfacing = (EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING);
                  BlockPos blockpos = source.getBlockPos().offset(enumfacing);
                  BlockSkull blockskull = Blocks.SKULL;
@@ -489,7 +433,7 @@
                  this.successful = true;
  
                  if (world.isAirBlock(blockpos) && blockskull.canDispenserPlace(world, blockpos, stack))
-@@ -449,13 +679,34 @@
+@@ -449,13 +696,34 @@
                  return stack;
              }
          });
@@ -525,7 +469,7 @@
                  this.successful = true;
  
                  if (world.isAirBlock(blockpos) && blockpumpkin.canDispenserPlace(world, blockpos))
-@@ -483,7 +734,7 @@
+@@ -483,7 +751,7 @@
  
          for (EnumDyeColor enumdyecolor : EnumDyeColor.values())
          {
@@ -534,7 +478,7 @@
          }
      }
  
-@@ -588,11 +839,37 @@
+@@ -588,11 +856,37 @@
                      d3 = 0.0D;
                  }
  
@@ -575,7 +519,7 @@
                  return stack;
              }
  
-@@ -612,7 +889,7 @@
+@@ -612,7 +906,7 @@
              }
          }
  
@@ -584,7 +528,7 @@
          {
              private BehaviorDispenseShulkerBox()
              {
-@@ -624,6 +901,27 @@
+@@ -624,6 +918,27 @@
                  World world = source.getWorld();
                  EnumFacing enumfacing = (EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING);
                  BlockPos blockpos = source.getBlockPos().offset(enumfacing);
