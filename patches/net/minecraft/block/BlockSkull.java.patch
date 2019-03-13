@@ -1,40 +1,27 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockSkull.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockSkull.java
-@@ -1,8 +1,6 @@
- package net.minecraft.block;
- 
- import com.google.common.base.Predicate;
--import java.util.Random;
--import javax.annotation.Nullable;
- import net.minecraft.advancements.CriteriaTriggers;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.properties.IProperty;
-@@ -40,7 +38,12 @@
+@@ -40,6 +40,8 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.util.BlockStateListPopulator;
 +import org.bukkit.event.entity.CreatureSpawnEvent;
  
-+import javax.annotation.Nullable;
-+import java.util.Random;
-+
  public class BlockSkull extends BlockContainer
  {
-     public static final PropertyDirection FACING = BlockDirectional.FACING;
-@@ -128,6 +131,30 @@
+@@ -128,6 +130,30 @@
          return new ItemStack(Items.SKULL, 1, i);
      }
  
 +    // CraftBukkit start - Special case dropping so we can get info from the tile entity
 +    @Override
-+    public void dropBlockAsItemWithChance(World world, BlockPos blockposition, IBlockState iblockdata, float f, int i) {
-+        if (world.rand.nextFloat() < f) {
-+            TileEntity tileentity = world.getTileEntity(blockposition);
++    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
++        if (worldIn.rand.nextFloat() < chance) {
++            TileEntity tileentity = worldIn.getTileEntity(pos);
 +
 +            if (tileentity instanceof TileEntitySkull) {
 +                TileEntitySkull tileentityskull = (TileEntitySkull) tileentity;
-+                ItemStack itemstack = this.getItem(world, blockposition, iblockdata);
++                ItemStack itemstack = this.getItem(worldIn, pos, state);
 +
 +                if (tileentityskull.getSkullType() == 3 && tileentityskull.getPlayerProfile() != null) {
 +                    itemstack.setTagCompound(new NBTTagCompound());
@@ -44,7 +31,7 @@
 +                    itemstack.getTagCompound().setTag("SkullOwner", nbttagcompound);
 +                }
 +
-+                spawnAsEntity(world, blockposition, itemstack);
++                spawnAsEntity(worldIn, pos, itemstack);
 +            }
 +        }
 +    }
@@ -53,15 +40,16 @@
      public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
      {
          if (player.capabilities.isCreativeMode)
-@@ -135,7 +162,6 @@
+@@ -135,8 +161,6 @@
              state = state.withProperty(NODROP, Boolean.valueOf(true));
              worldIn.setBlockState(pos, state, 4);
          }
 -        this.dropBlockAsItem(worldIn, pos, state, 0);
- 
+-
          super.onBlockHarvested(worldIn, pos, state, player);
      }
-@@ -147,7 +173,9 @@
+ 
+@@ -147,7 +171,9 @@
      public void getDrops(net.minecraft.util.NonNullList<ItemStack> drops, IBlockAccess worldIn, BlockPos pos, IBlockState state, int fortune)
      {
          {
@@ -72,15 +60,15 @@
              {
                  TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -189,6 +217,7 @@
+@@ -189,6 +215,7 @@
  
      public void checkWitherSpawn(World worldIn, BlockPos pos, TileEntitySkull te)
      {
-+        if (worldIn.captureBlockSnapshots) return;
++        if (worldIn.captureBlockStates) return;
          if (te.getSkullType() == 1 && pos.getY() >= 2 && worldIn.getDifficulty() != EnumDifficulty.PEACEFUL && !worldIn.isRemote)
          {
              BlockPattern blockpattern = this.getWitherPattern();
-@@ -196,10 +225,14 @@
+@@ -196,10 +223,14 @@
  
              if (blockpattern$patternhelper != null)
              {
@@ -96,7 +84,7 @@
                  }
  
                  for (int j = 0; j < blockpattern.getPalmLength(); ++j)
-@@ -207,7 +240,10 @@
+@@ -207,7 +238,10 @@
                      for (int k = 0; k < blockpattern.getThumbLength(); ++k)
                      {
                          BlockWorldState blockworldstate1 = blockpattern$patternhelper.translateOffset(j, k, 0);
@@ -108,7 +96,7 @@
                      }
                  }
  
-@@ -217,25 +253,24 @@
+@@ -217,25 +251,24 @@
                  entitywither.setLocationAndAngles((double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 0.55D, (double)blockpos1.getZ() + 0.5D, blockpattern$patternhelper.getForwards().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F, 0.0F);
                  entitywither.renderYawOffset = blockpattern$patternhelper.getForwards().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F;
                  entitywither.ignite();

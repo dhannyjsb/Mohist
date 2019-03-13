@@ -54,15 +54,6 @@
  public class Block extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block>
  {
      private static final ResourceLocation AIR_ID = new ResourceLocation("air");
-@@ -84,7 +71,7 @@
- 
-     public static int getIdFromBlock(Block blockIn)
-     {
--        return REGISTRY.getIDForObject(blockIn);
-+        return REGISTRY.getIDForObject(blockIn); // CraftBukkit - decompile error
-     }
- 
-     public static int getStateId(IBlockState state)
 @@ -573,7 +560,8 @@
  
              for (ItemStack drop : drops)
@@ -194,7 +185,29 @@
      }
  
      /**
-@@ -1606,7 +1609,7 @@
+@@ -1564,18 +1567,13 @@
+      */
+     public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+     {
+-        if (this == Blocks.END_GATEWAY || this == Blocks.LIT_PUMPKIN)
++        if (state.isTopSolid() || state.getBlockFaceShape(world, pos, EnumFacing.UP) == BlockFaceShape.SOLID)
+         {
+-            return false;
++            return this != Blocks.END_GATEWAY && this != Blocks.LIT_PUMPKIN;
+         }
+-        else if (state.isTopSolid() || this instanceof BlockFence || this == Blocks.GLASS || this == Blocks.COBBLESTONE_WALL || this == Blocks.STAINED_GLASS)
+-        {
+-            return true;
+-        }
+         else
+         {
+-            BlockFaceShape shape = state.getBlockFaceShape(world, pos, EnumFacing.UP);
+-            return (shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG) && !isExceptionBlockForAttaching(this);
++            return this instanceof BlockFence || this == Blocks.GLASS || this == Blocks.COBBLESTONE_WALL || this == Blocks.STAINED_GLASS;
+         }
+     }
+ 
+@@ -1606,7 +1604,7 @@
       * particles, this is a server side method that spawns particles with
       * WorldServer.spawnParticle
       *
@@ -203,7 +216,7 @@
       * @param blockPosition of the block that the entity landed on.
       * @param iblockstate State at the specific world/pos
       * @param entity the entity that hit landed on the block.
-@@ -1642,7 +1645,7 @@
+@@ -1642,7 +1640,7 @@
       * texture sheets for different sides/locations in the world.
       *
       * @param state The current state
@@ -212,7 +225,7 @@
       * @param target The target the player is looking at {x/y/z/side/sub}
       * @param manager A reference to the current particle manager.
       * @return True to prevent vanilla digging particles form spawning.
-@@ -1693,12 +1696,12 @@
+@@ -1693,12 +1691,12 @@
          IBlockState plant = plantable.getPlant(world, pos.offset(direction));
          net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
  
@@ -228,7 +241,7 @@
          {
              return true;
          }
-@@ -1710,14 +1713,14 @@
+@@ -1710,14 +1708,14 @@
  
          switch (plantType)
          {
@@ -248,7 +261,7 @@
                  boolean hasWater = (world.getBlockState(pos.east()).getMaterial() == Material.WATER ||
                                      world.getBlockState(pos.west()).getMaterial() == Material.WATER ||
                                      world.getBlockState(pos.north()).getMaterial() == Material.WATER ||
-@@ -1744,9 +1747,9 @@
+@@ -1744,9 +1742,9 @@
       */
      public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
      {
@@ -260,7 +273,7 @@
          }
      }
  
-@@ -1761,7 +1764,7 @@
+@@ -1761,7 +1759,7 @@
       */
      public boolean isFertile(World world, BlockPos pos)
      {
@@ -269,7 +282,7 @@
          {
              return ((Integer)world.getBlockState(pos).getValue(BlockFarmland.MOISTURE)) > 0;
          }
-@@ -1799,17 +1802,17 @@
+@@ -1799,17 +1797,17 @@
      {
          if (entity instanceof net.minecraft.entity.boss.EntityDragon)
          {
@@ -298,7 +311,7 @@
          }
          else if ((entity instanceof net.minecraft.entity.boss.EntityWither) ||
                   (entity instanceof net.minecraft.entity.projectile.EntityWitherSkull))
-@@ -1823,14 +1826,14 @@
+@@ -1823,14 +1821,14 @@
      /**
       * Determines if this block can be used as the base of a beacon.
       *
@@ -315,7 +328,7 @@
      }
  
      /**
-@@ -1918,7 +1921,7 @@
+@@ -1918,7 +1916,7 @@
       */
      public float getEnchantPowerBonus(World world, BlockPos pos)
      {
@@ -324,7 +337,7 @@
      }
  
      /**
-@@ -1930,14 +1933,14 @@
+@@ -1930,14 +1928,14 @@
       * @return If the recoloring was successful
       */
      @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -342,7 +355,7 @@
                  if (current != color && prop.getAllowedValues().contains(color))
                  {
                      world.setBlockState(pos, state.withProperty(prop, color));
-@@ -2074,7 +2077,7 @@
+@@ -2074,7 +2072,7 @@
       */
      public boolean isToolEffective(String type, IBlockState state)
      {
@@ -351,7 +364,7 @@
              return false;
          return type != null && type.equals(getHarvestTool(state));
      }
-@@ -2272,11 +2275,12 @@
+@@ -2272,11 +2270,12 @@
          return false;
      }
  
@@ -367,7 +380,7 @@
          return isBurning(world, pos) ? net.minecraft.pathfinding.PathNodeType.DAMAGE_FIRE : null;
      }
  
-@@ -2628,6 +2632,18 @@
+@@ -2628,6 +2627,18 @@
          registerBlock(id, new ResourceLocation(textualID), block_);
      }
  

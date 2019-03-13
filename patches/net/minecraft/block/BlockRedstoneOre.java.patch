@@ -1,25 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockRedstoneOre.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockRedstoneOre.java
-@@ -1,6 +1,5 @@
- package net.minecraft.block;
- 
--import java.util.Random;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.state.IBlockState;
- import net.minecraft.entity.Entity;
-@@ -16,7 +15,11 @@
+@@ -16,6 +16,8 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
 +import org.bukkit.event.entity.EntityInteractEvent;
  
-+import java.util.Random;
-+
  public class BlockRedstoneOre extends Block
  {
-     private final boolean isOn;
-@@ -40,19 +43,33 @@
+@@ -40,19 +42,33 @@
  
      public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
      {
@@ -57,7 +47,7 @@
          return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
      }
  
-@@ -66,10 +83,26 @@
+@@ -66,10 +82,26 @@
          }
      }
  

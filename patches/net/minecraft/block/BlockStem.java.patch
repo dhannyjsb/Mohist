@@ -1,35 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockStem.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockStem.java
-@@ -1,8 +1,5 @@
- package net.minecraft.block;
- 
--import java.util.Random;
--import javax.annotation.Nullable;
--import net.minecraft.block.material.Material;
- import net.minecraft.block.properties.IProperty;
- import net.minecraft.block.properties.PropertyDirection;
- import net.minecraft.block.properties.PropertyInteger;
-@@ -19,7 +16,11 @@
+@@ -19,6 +19,7 @@
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.IBlockAccess;
  import net.minecraft.world.World;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
  
-+import javax.annotation.Nullable;
-+import java.util.Random;
-+
  public class BlockStem extends BlockBush implements IGrowable
  {
-     public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 7);
-@@ -71,14 +72,15 @@
-         {
-             float f = BlockCrops.getGrowthChance(this, worldIn, pos);
- 
--            if(net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt((int)(25.0F / f) + 1) == 0))
-+            if(net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt((int) ((100.0F / (this == Blocks.PUMPKIN_STEM ? worldIn.spigotConfig.pumpkinModifier : worldIn.spigotConfig.melonModifier)) * (25.0F / f)) + 1) == 0)) // Spigot
-             {
-                 int i = ((Integer)state.getValue(AGE)).intValue();
- 
+@@ -78,7 +79,8 @@
                  if (i < 7)
                  {
                      IBlockState newState = state.withProperty(AGE, Integer.valueOf(i + 1));

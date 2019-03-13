@@ -1,49 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockPortal.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockPortal.java
-@@ -1,8 +1,6 @@
- package net.minecraft.block;
- 
- import com.google.common.cache.LoadingCache;
--import java.util.Random;
--import javax.annotation.Nullable;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.properties.IProperty;
- import net.minecraft.block.properties.PropertyEnum;
-@@ -18,18 +16,19 @@
- import net.minecraft.init.SoundEvents;
- import net.minecraft.item.ItemMonsterPlacer;
- import net.minecraft.item.ItemStack;
--import net.minecraft.util.BlockRenderLayer;
--import net.minecraft.util.EnumFacing;
--import net.minecraft.util.EnumParticleTypes;
--import net.minecraft.util.Rotation;
--import net.minecraft.util.SoundCategory;
-+import net.minecraft.util.*;
- import net.minecraft.util.math.AxisAlignedBB;
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.world.IBlockAccess;
+@@ -29,6 +29,8 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.event.entity.EntityPortalEnterEvent;
 +import org.bukkit.event.world.PortalCreateEvent;
  
-+import javax.annotation.Nullable;
-+import java.util.Random;
-+
  public class BlockPortal extends BlockBreakable
  {
-     public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.<EnumFacing.Axis>create("axis", EnumFacing.Axis.class, EnumFacing.Axis.X, EnumFacing.Axis.Z);
-@@ -62,7 +61,7 @@
-     {
-         super.updateTick(worldIn, pos, state, rand);
- 
--        if (worldIn.provider.isSurfaceWorld() && worldIn.getGameRules().getBoolean("doMobSpawning") && rand.nextInt(2000) < worldIn.getDifficulty().getDifficultyId())
-+        if (worldIn.spigotConfig.enableZombiePigmenPortalSpawns && worldIn.provider.isSurfaceWorld() && worldIn.getGameRules().getBoolean("doMobSpawning") && rand.nextInt(2000) < worldIn.getDifficulty().getDifficultyId()) // Spigot
-         {
-             int i = pos.getY();
-             BlockPos blockpos;
-@@ -74,7 +73,7 @@
+@@ -74,7 +76,7 @@
  
              if (i > 0 && !worldIn.getBlockState(blockpos.up()).isNormalCube())
              {
@@ -52,7 +18,7 @@
  
                  if (entity != null)
                  {
-@@ -109,21 +108,21 @@
+@@ -109,21 +111,21 @@
  
      public boolean trySpawnPortal(World worldIn, BlockPos pos)
      {
@@ -82,7 +48,7 @@
              }
              else
              {
-@@ -138,7 +137,7 @@
+@@ -138,7 +140,7 @@
  
          if (enumfacing$axis == EnumFacing.Axis.X)
          {
@@ -91,7 +57,7 @@
  
              if (!blockportal$size.isValid() || blockportal$size.portalBlockCount < blockportal$size.width * blockportal$size.height)
              {
-@@ -147,7 +146,7 @@
+@@ -147,7 +149,7 @@
          }
          else if (enumfacing$axis == EnumFacing.Axis.Z)
          {
@@ -100,7 +66,7 @@
  
              if (!blockportal$size1.isValid() || blockportal$size1.portalBlockCount < blockportal$size1.width * blockportal$size1.height)
              {
-@@ -216,6 +215,8 @@
+@@ -216,6 +218,8 @@
      {
          if (!entityIn.isRiding() && !entityIn.isBeingRidden() && entityIn.isNonBoss())
          {
@@ -109,7 +75,7 @@
              entityIn.setPortal(pos);
          }
      }
-@@ -304,13 +305,13 @@
+@@ -304,13 +308,13 @@
      public BlockPattern.PatternHelper createPatternHelper(World worldIn, BlockPos p_181089_2_)
      {
          EnumFacing.Axis enumfacing$axis = EnumFacing.Axis.Z;
@@ -125,7 +91,7 @@
          }
  
          if (!blockportal$size.isValid())
-@@ -370,6 +371,7 @@
+@@ -370,6 +374,7 @@
              private BlockPos bottomLeft;
              private int height;
              private int width;
@@ -133,7 +99,7 @@
  
              public Size(World worldIn, BlockPos p_i45694_2_, EnumFacing.Axis p_i45694_3_)
              {
-@@ -442,6 +444,8 @@
+@@ -442,6 +447,8 @@
  
              protected int calculatePortalHeight()
              {
@@ -142,7 +108,7 @@
                  label56:
  
                  for (this.height = 0; this.height < 21; ++this.height)
-@@ -468,6 +472,9 @@
+@@ -468,6 +475,9 @@
                              if (block != Blocks.OBSIDIAN)
                              {
                                  break label56;
@@ -152,7 +118,7 @@
                              }
                          }
                          else if (i == this.width - 1)
-@@ -477,6 +484,9 @@
+@@ -477,6 +487,9 @@
                              if (block != Blocks.OBSIDIAN)
                              {
                                  break label56;
@@ -162,7 +128,7 @@
                              }
                          }
                      }
-@@ -488,6 +498,9 @@
+@@ -488,6 +501,9 @@
                      {
                          this.height = 0;
                          break;
@@ -172,7 +138,7 @@
                      }
                  }
  
-@@ -526,5 +539,38 @@
+@@ -526,5 +542,38 @@
                      }
                  }
              }

@@ -1,26 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockPumpkin.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockPumpkin.java
-@@ -1,7 +1,6 @@
- package net.minecraft.block;
- 
- import com.google.common.base.Predicate;
--import javax.annotation.Nullable;
- import net.minecraft.advancements.CriteriaTriggers;
- import net.minecraft.block.material.MapColor;
- import net.minecraft.block.material.Material;
-@@ -25,7 +24,11 @@
+@@ -25,6 +25,8 @@
  import net.minecraft.util.Rotation;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.world.World;
 +import org.bukkit.craftbukkit.util.BlockStateListPopulator;
 +import org.bukkit.event.entity.CreatureSpawnEvent;
  
-+import javax.annotation.Nullable;
-+
  public class BlockPumpkin extends BlockHorizontal
  {
-     private BlockPattern snowmanBasePattern;
-@@ -62,34 +65,35 @@
+@@ -62,34 +64,35 @@
      private void trySpawnGolem(World worldIn, BlockPos pos)
      {
          BlockPattern.PatternHelper blockpattern$patternhelper = this.getSnowmanPattern().match(worldIn, pos);
@@ -71,7 +60,7 @@
              }
          }
          else
-@@ -102,7 +106,9 @@
+@@ -102,7 +105,9 @@
                  {
                      for (int k = 0; k < this.getGolemPattern().getThumbLength(); ++k)
                      {
@@ -82,7 +71,7 @@
                      }
                  }
  
-@@ -110,24 +116,22 @@
+@@ -110,24 +115,22 @@
                  EntityIronGolem entityirongolem = new EntityIronGolem(worldIn);
                  entityirongolem.setPlayerCreated(true);
                  entityirongolem.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.05D, (double)blockpos.getZ() + 0.5D, 0.0F, 0.0F);

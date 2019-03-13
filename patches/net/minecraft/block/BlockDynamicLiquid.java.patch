@@ -23,15 +23,6 @@
  public class BlockDynamicLiquid extends BlockLiquid
  {
      int adjacentSourceBlocks;
-@@ -27,7 +31,7 @@
-     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-     {
-         if (!worldIn.isAreaLoaded(pos, this.getSlopeFindDistance(worldIn))) return; // Forge: avoid loading unloaded chunks
--        int i = ((Integer)state.getValue(LEVEL)).intValue();
-+        int i = (state.getValue(LEVEL)).intValue();
-         int j = 1;
- 
-         if (this.blockMaterial == Material.LAVA && !worldIn.provider.doesWaterVaporize())
 @@ -35,7 +39,7 @@
              j = 2;
          }
@@ -41,19 +32,12 @@
  
          if (i > 0)
          {
-@@ -76,13 +80,13 @@
-                 {
-                     i1 = 0;
-                 }
--                else if (iblockstate.getMaterial() == this.blockMaterial && ((Integer)iblockstate.getValue(LEVEL)).intValue() == 0)
-+                else if (iblockstate.getMaterial() == this.blockMaterial && (iblockstate.getValue(LEVEL)).intValue() == 0)
-                 {
-                     i1 = 0;
+@@ -82,7 +86,7 @@
                  }
              }
  
 -            if (this.blockMaterial == Material.LAVA && i < 8 && i1 < 8 && i1 > i && rand.nextInt(4) != 0)
-+            if (!worldIn.paperConfig.fastDrainLava && this.blockMaterial == Material.LAVA && i < 8 && i1 < 8 && i1 > i && rand.nextInt(4) != 0) // Paper
++            if (this.blockMaterial == Material.LAVA && i < 8 && i1 < 8 && i1 > i && rand.nextInt(4) != 0) // Paper
              {
                  k *= 4;
              }
@@ -66,7 +50,7 @@
                  {
                      worldIn.setBlockToAir(pos);
                  }
-@@ -113,14 +117,25 @@
+@@ -113,14 +117,26 @@
              this.placeStaticBlock(worldIn, pos, state);
          }
  
@@ -86,15 +70,15 @@
 +            }
              if (this.blockMaterial == Material.LAVA && worldIn.getBlockState(pos.down()).getMaterial() == Material.WATER)
              {
--                worldIn.setBlockState(pos.down(), net.minecraftforge.event.ForgeEventFactory.fireFluidPlaceBlockEvent(worldIn, pos.down(), pos, Blocks.STONE.getDefaultState()));
+                 worldIn.setBlockState(pos.down(), net.minecraftforge.event.ForgeEventFactory.fireFluidPlaceBlockEvent(worldIn, pos.down(), pos, Blocks.STONE.getDefaultState()));
 -                this.triggerMixEffects(worldIn, pos.down());
-+                if (org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(worldIn, pos.down(), net.minecraftforge.event.ForgeEventFactory.fireFluidPlaceBlockEvent(worldIn, pos.down(), pos, Blocks.STONE.getDefaultState()), null)) {
++                if (org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(worldIn, pos.down(), Blocks.STONE.getDefaultState(), null)) {
 +                    this.triggerMixEffects(worldIn, pos.down());
 +                }
                  return;
              }
  
-@@ -150,14 +165,27 @@
+@@ -150,14 +166,27 @@
  
              for (EnumFacing enumfacing1 : set)
              {
@@ -124,7 +108,7 @@
          {
              if (state.getMaterial() != Material.AIR)
              {
-@@ -303,7 +331,77 @@
+@@ -303,7 +332,77 @@
      {
          if (!this.checkForMixing(worldIn, pos, state))
          {

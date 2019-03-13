@@ -1,28 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockTripWire.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockTripWire.java
-@@ -1,8 +1,5 @@
- package net.minecraft.block;
- 
--import java.util.List;
--import java.util.Random;
--import javax.annotation.Nullable;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.properties.IProperty;
- import net.minecraft.block.properties.PropertyBool;
-@@ -25,7 +22,12 @@
+@@ -25,6 +25,7 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.event.entity.EntityInteractEvent;
  
-+import javax.annotation.Nullable;
-+import java.util.List;
-+import java.util.Random;
-+
  public class BlockTripWire extends Block
  {
-     public static final PropertyBool POWERED = PropertyBool.create("powered");
-@@ -181,6 +183,40 @@
+@@ -181,6 +182,40 @@
              }
          }
  

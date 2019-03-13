@@ -1,34 +1,27 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockRailPowered.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockRailPowered.java
-@@ -1,7 +1,6 @@
- package net.minecraft.block;
- 
- import com.google.common.base.Predicate;
--import javax.annotation.Nullable;
- import net.minecraft.block.properties.IProperty;
- import net.minecraft.block.properties.PropertyBool;
- import net.minecraft.block.properties.PropertyEnum;
-@@ -11,14 +10,17 @@
+@@ -11,14 +11,17 @@
  import net.minecraft.util.Rotation;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.world.World;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
  
-+import javax.annotation.Nullable;
++import net.minecraft.block.BlockRailBase.EnumRailDirection;
 +
  public class BlockRailPowered extends BlockRailBase
  {
 -    public static final PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE = PropertyEnum.<BlockRailBase.EnumRailDirection>create("shape", BlockRailBase.EnumRailDirection.class, new Predicate<BlockRailBase.EnumRailDirection>()
 +    public static final PropertyEnum<EnumRailDirection> SHAPE = PropertyEnum.<EnumRailDirection>create("shape", EnumRailDirection.class, new Predicate<EnumRailDirection>()
      {
-         public boolean apply(@Nullable BlockRailBase.EnumRailDirection p_apply_1_)
+-        public boolean apply(@Nullable BlockRailBase.EnumRailDirection p_apply_1_)
++        public boolean apply(@Nullable EnumRailDirection p_apply_1_)
          {
 -            return p_apply_1_ != BlockRailBase.EnumRailDirection.NORTH_EAST && p_apply_1_ != BlockRailBase.EnumRailDirection.NORTH_WEST && p_apply_1_ != BlockRailBase.EnumRailDirection.SOUTH_EAST && p_apply_1_ != BlockRailBase.EnumRailDirection.SOUTH_WEST;
 +            return p_apply_1_ != EnumRailDirection.NORTH_EAST && p_apply_1_ != EnumRailDirection.NORTH_WEST && p_apply_1_ != EnumRailDirection.SOUTH_EAST && p_apply_1_ != EnumRailDirection.SOUTH_WEST;
          }
      });
      public static final PropertyBool POWERED = PropertyBool.create("powered");
-@@ -34,7 +36,7 @@
+@@ -34,7 +37,7 @@
      {
          super(true);
          this.isActivator = isActivator;
@@ -37,7 +30,7 @@
      }
  
      @SuppressWarnings("incomplete-switch")
-@@ -50,7 +52,7 @@
+@@ -50,7 +53,7 @@
              int j = pos.getY();
              int k = pos.getZ();
              boolean flag = true;
@@ -46,7 +39,7 @@
  
              switch (blockrailbase$enumraildirection)
              {
-@@ -91,7 +93,7 @@
+@@ -91,7 +94,7 @@
                          flag = false;
                      }
  
@@ -55,7 +48,7 @@
                      break;
                  case ASCENDING_WEST:
  
-@@ -106,7 +108,7 @@
+@@ -106,7 +109,7 @@
                          ++i;
                      }
  
@@ -64,7 +57,7 @@
                      break;
                  case ASCENDING_NORTH:
  
-@@ -121,7 +123,7 @@
+@@ -121,7 +124,7 @@
                          flag = false;
                      }
  
@@ -73,7 +66,7 @@
                      break;
                  case ASCENDING_SOUTH:
  
-@@ -136,7 +138,7 @@
+@@ -136,7 +139,7 @@
                          --k;
                      }
  
@@ -82,7 +75,7 @@
              }
  
              if (this.isSameRailWithPower(worldIn, new BlockPos(i, j, k), p_176566_4_, p_176566_5_, blockrailbase$enumraildirection))
-@@ -150,7 +152,7 @@
+@@ -150,7 +153,7 @@
          }
      }
  
@@ -91,7 +84,7 @@
      {
          IBlockState iblockstate = worldIn.getBlockState(pos);
  
-@@ -160,11 +162,11 @@
+@@ -160,11 +163,11 @@
          }
          else
          {
@@ -106,7 +99,7 @@
                  {
                      if (((Boolean)iblockstate.getValue(POWERED)).booleanValue())
                      {
-@@ -194,30 +196,35 @@
+@@ -194,30 +197,35 @@
  
          if (flag1 != flag)
          {
@@ -146,7 +139,7 @@
  
          if (((Boolean)state.getValue(POWERED)).booleanValue())
          {
-@@ -234,76 +241,76 @@
+@@ -234,76 +242,76 @@
          {
              case CLOCKWISE_180:
  
@@ -254,7 +247,7 @@
                  }
  
              default:
-@@ -314,7 +321,7 @@
+@@ -314,7 +322,7 @@
      @SuppressWarnings("incomplete-switch")
      public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
      {
@@ -263,7 +256,7 @@
  
          switch (mirrorIn)
          {
-@@ -323,17 +330,17 @@
+@@ -323,17 +331,17 @@
                  switch (blockrailbase$enumraildirection)
                  {
                      case ASCENDING_NORTH:
@@ -287,7 +280,7 @@
                      default:
                          return super.withMirror(state, mirrorIn);
                  }
-@@ -343,21 +350,21 @@
+@@ -343,21 +351,21 @@
                  switch (blockrailbase$enumraildirection)
                  {
                      case ASCENDING_EAST:

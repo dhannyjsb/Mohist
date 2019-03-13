@@ -18,24 +18,9 @@
  public class BlockObserver extends BlockDirectional
  {
      public static final PropertyBool POWERED = PropertyBool.create("powered");
-@@ -33,22 +35,32 @@
- 
-     public IBlockState withRotation(IBlockState state, Rotation rot)
+@@ -45,10 +47,20 @@
      {
--        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
-+        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
-     }
- 
-     public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-     {
--        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
-+        return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
-     }
- 
-     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-     {
--        if (((Boolean)state.getValue(POWERED)).booleanValue())
-+        if (state.getValue(POWERED).booleanValue())
+         if (((Boolean)state.getValue(POWERED)).booleanValue())
          {
 +            // Paper start
 +            if (CraftEventFactory.callRedstoneChange(worldIn, pos.getX(), pos.getY(), pos.getZ(), 15, 0).getNewCurrent() != 0) {
@@ -53,69 +38,4 @@
 +            // Paper end
              worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(true)), 2);
              worldIn.scheduleUpdate(pos, this, 2);
-         }
-@@ -62,7 +74,7 @@
- 
-     public void observedNeighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-     {
--        if (!worldIn.isRemote && pos.offset((EnumFacing)state.getValue(FACING)).equals(fromPos))
-+        if (!worldIn.isRemote && pos.offset(state.getValue(FACING)).equals(fromPos))
-         {
-             this.startSignal(state, worldIn, pos);
-         }
-@@ -70,7 +82,7 @@
- 
-     private void startSignal(IBlockState p_190960_1_, World p_190960_2_, BlockPos pos)
-     {
--        if (!((Boolean)p_190960_1_.getValue(POWERED)).booleanValue())
-+        if (!p_190960_1_.getValue(POWERED).booleanValue())
-         {
-             if (!p_190960_2_.isUpdateScheduled(pos, this))
-             {
-@@ -81,7 +93,7 @@
- 
-     protected void updateNeighborsInFront(World worldIn, BlockPos pos, IBlockState state)
-     {
--        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
-+        EnumFacing enumfacing = state.getValue(FACING);
-         BlockPos blockpos = pos.offset(enumfacing.getOpposite());
-         worldIn.neighborChanged(blockpos, this, pos);
-         worldIn.notifyNeighborsOfStateExcept(blockpos, this, enumfacing);
-@@ -99,14 +111,14 @@
- 
-     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-     {
--        return ((Boolean)blockState.getValue(POWERED)).booleanValue() && blockState.getValue(FACING) == side ? 15 : 0;
-+        return blockState.getValue(POWERED).booleanValue() && blockState.getValue(FACING) == side ? 15 : 0;
-     }
- 
-     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
-     {
-         if (!worldIn.isRemote)
-         {
--            if (((Boolean)state.getValue(POWERED)).booleanValue())
-+            if (state.getValue(POWERED).booleanValue())
-             {
-                 this.updateTick(worldIn, pos, state, worldIn.rand);
-             }
-@@ -117,7 +129,7 @@
- 
-     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-     {
--        if (((Boolean)state.getValue(POWERED)).booleanValue() && worldIn.isUpdateScheduled(pos, this))
-+        if (state.getValue(POWERED).booleanValue() && worldIn.isUpdateScheduled(pos, this))
-         {
-             this.updateNeighborsInFront(worldIn, pos, state.withProperty(POWERED, Boolean.valueOf(false)));
-         }
-@@ -131,9 +143,9 @@
-     public int getMetaFromState(IBlockState state)
-     {
-         int i = 0;
--        i = i | ((EnumFacing)state.getValue(FACING)).getIndex();
-+        i = i | state.getValue(FACING).getIndex();
- 
--        if (((Boolean)state.getValue(POWERED)).booleanValue())
-+        if (state.getValue(POWERED).booleanValue())
-         {
-             i |= 8;
          }
