@@ -1,14 +1,5 @@
 --- ../src-base/minecraft/net/minecraft/enchantment/EnchantmentFrostWalker.java
 +++ ../src-work/minecraft/net/minecraft/enchantment/EnchantmentFrostWalker.java
-@@ -15,7 +15,7 @@
- 
- public class EnchantmentFrostWalker extends Enchantment
- {
--    public EnchantmentFrostWalker(Enchantment.Rarity rarityIn, EntityEquipmentSlot... slots)
-+    public EnchantmentFrostWalker(Rarity rarityIn, EntityEquipmentSlot... slots)
-     {
-         super(rarityIn, EnumEnchantmentType.ARMOR_FEET, slots);
-         this.setName("frostWalker");
 @@ -59,10 +59,15 @@
                      {
                          IBlockState iblockstate1 = worldIn.getBlockState(blockpos$mutableblockpos1);

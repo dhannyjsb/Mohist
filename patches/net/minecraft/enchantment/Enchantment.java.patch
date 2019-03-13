@@ -1,49 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/enchantment/Enchantment.java
 +++ ../src-work/minecraft/net/minecraft/enchantment/Enchantment.java
-@@ -1,8 +1,6 @@
- package net.minecraft.enchantment;
- 
- import com.google.common.collect.Lists;
--import java.util.List;
--import javax.annotation.Nullable;
- import net.minecraft.entity.Entity;
- import net.minecraft.entity.EntityLivingBase;
- import net.minecraft.entity.EnumCreatureAttribute;
-@@ -14,11 +12,14 @@
- import net.minecraft.util.text.TextFormatting;
- import net.minecraft.util.text.translation.I18n;
- 
-+import javax.annotation.Nullable;
-+import java.util.List;
-+
- public abstract class Enchantment extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<Enchantment>
- {
-     public static final RegistryNamespaced<ResourceLocation, Enchantment> REGISTRY = net.minecraftforge.registries.GameData.getWrapper(Enchantment.class);
-     private final EntityEquipmentSlot[] applicableEquipmentTypes;
--    private final Enchantment.Rarity rarity;
-+    private final Rarity rarity;
-     @Nullable
-     public EnumEnchantmentType type;
-     protected String name;
-@@ -40,7 +41,7 @@
-         return REGISTRY.getObject(new ResourceLocation(location));
-     }
- 
--    protected Enchantment(Enchantment.Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot[] slots)
-+    protected Enchantment(Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot[] slots)
-     {
-         this.rarity = rarityIn;
-         this.type = typeIn;
-@@ -64,7 +65,7 @@
-         return list;
-     }
- 
--    public Enchantment.Rarity getRarity()
-+    public Rarity getRarity()
-     {
-         return this.rarity;
-     }
-@@ -178,36 +179,36 @@
+@@ -178,36 +178,39 @@
      public static void registerEnchantments()
      {
          EntityEquipmentSlot[] aentityequipmentslot = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
@@ -107,6 +64,9 @@
 +        REGISTRY.register(62, new ResourceLocation("lure"), new EnchantmentFishingSpeed(Rarity.RARE, EnumEnchantmentType.FISHING_ROD, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND}));
 +        REGISTRY.register(70, new ResourceLocation("mending"), new EnchantmentMending(Rarity.RARE, EntityEquipmentSlot.values()));
 +        REGISTRY.register(71, new ResourceLocation("vanishing_curse"), new EnchantmentVanishingCurse(Rarity.VERY_RARE, EntityEquipmentSlot.values()));
++        for (Object enchantment : Enchantment.REGISTRY) {
++            org.bukkit.enchantments.Enchantment.registerEnchantment(new org.bukkit.craftbukkit.enchantments.CraftEnchantment((Enchantment) enchantment));
++        }
      }
  
      public static enum Rarity
