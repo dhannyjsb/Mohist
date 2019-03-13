@@ -5,7 +5,7 @@
       */
      ITypeAdapter getTypeAdapter();
 -    
-+
++	
      /**
       * @return a list of fully qualified property keys handled by this field
       */

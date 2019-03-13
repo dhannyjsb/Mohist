@@ -73,10 +73,10 @@
 +                    } else {
 +                        remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), Bukkit.createInventory(entityPlayer.getBukkitEntity(), InventoryType.CHEST), remoteGuiContainer));
 +                    }
-+                }
-+                remoteGuiContainer = CraftEventFactory.callInventoryOpenEvent((EntityPlayerMP) entityPlayer, remoteGuiContainer, false);
-+                if (remoteGuiContainer == null) {
-+                    return;
++                	remoteGuiContainer = CraftEventFactory.callInventoryOpenEvent((EntityPlayerMP) entityPlayer, remoteGuiContainer, false);
++                	if (remoteGuiContainer == null) {
++                    	return;
++					}
 +                }
                  entityPlayerMP.getNextWindowId();
                  entityPlayerMP.closeContainer();

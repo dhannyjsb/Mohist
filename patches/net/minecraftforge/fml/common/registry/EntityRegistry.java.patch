@@ -1,78 +1,26 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/registry/EntityRegistry.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/registry/EntityRegistry.java
-@@ -19,6 +19,8 @@
+@@ -19,6 +19,9 @@
  
  package net.minecraftforge.fml.common.registry;
  
-+import cn.pfcraft.Mohist;
-+import com.google.common.collect.*;
++import com.google.common.collect.Maps;
++import net.minecraftforge.fml.common.Loader;
++
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.EntityList.EntityEggInfo;
  import net.minecraft.entity.EntityLiving;
-@@ -30,20 +32,16 @@
- import net.minecraft.world.biome.Biome.SpawnListEntry;
- import net.minecraftforge.fml.common.FMLCommonHandler;
- import net.minecraftforge.fml.common.FMLLog;
-+import net.minecraftforge.fml.common.Loader;
- import net.minecraftforge.fml.common.ModContainer;
- import net.minecraftforge.fml.common.network.internal.FMLMessage.EntitySpawnMessage;
- import net.minecraftforge.registries.GameData;
- 
-+import javax.annotation.Nullable;
- import java.util.List;
- import java.util.Map;
- import java.util.function.Function;
--import com.google.common.collect.ArrayListMultimap;
--import com.google.common.collect.BiMap;
--import com.google.common.collect.HashBiMap;
--import com.google.common.collect.ListMultimap;
- 
--import javax.annotation.Nullable;
--
- public class EntityRegistry
- {
-     public class EntityRegistration
-@@ -60,7 +58,6 @@
-         private boolean sendsVelocityUpdates;
-         private Function<EntitySpawnMessage, Entity> customSpawnCallback;
-         private boolean usesVanillaSpawning;
--
-         @Deprecated //1.13
-         public EntityRegistration(ModContainer mc, ResourceLocation registryName, Class<? extends Entity> entityClass, String entityName, int id, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
-         {
-@@ -78,12 +75,12 @@
-             this.updateFrequency = updateFrequency;
-             this.sendsVelocityUpdates = sendsVelocityUpdates;
-             this.factory = factory != null ? factory :
--                new EntityEntryBuilder.ConstructorFactory<Entity>(entityClass) {
--                    @Override
--                    protected String describeEntity() {
--                        return String.valueOf(EntityRegistration.this.getRegistryName());
--                    }
--                };
-+                    new EntityEntryBuilder.ConstructorFactory<Entity>(entityClass) {
-+                        @Override
-+                        protected String describeEntity() {
-+                            return String.valueOf(EntityRegistration.this.getRegistryName());
-+                        }
-+                    };
-         }
-         public ResourceLocation getRegistryName()
-         {
-@@ -143,10 +140,11 @@
-     }
- 
-     private static final EntityRegistry INSTANCE = new EntityRegistry();
--
-     private final ListMultimap<ModContainer, EntityRegistration> entityRegistrations = ArrayListMultimap.create();
+@@ -148,6 +151,9 @@
      private final BiMap<Class<? extends Entity>, EntityRegistration> entityClassRegistrations = HashBiMap.create();
      private final Map<Class<? extends Entity>, EntityEntry> entityClassEntries = GameData.getEntityClassMap();
+ 
 +    public static Map<Class<? extends Entity>, String> entityTypeMap = Maps.newHashMap(); // used by CraftCustomEntity
 +    public static Map<String, Class<? extends Entity>> entityClassMap = Maps.newHashMap(); // user by CraftWorld
- 
++
      public static EntityRegistry instance()
      {
-@@ -171,6 +169,7 @@
+         return INSTANCE;
+@@ -171,6 +177,7 @@
      public static void registerModEntity(ResourceLocation registryName, Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
      {
          instance().doModEntityRegistration(registryName, entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
@@ -80,7 +28,7 @@
      }
  
      /**
-@@ -191,6 +190,7 @@
+@@ -191,6 +198,7 @@
      {
          instance().doModEntityRegistration(registryName, entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
          EntityRegistry.registerEgg(registryName, eggPrimary, eggSecondary);
@@ -88,27 +36,7 @@
      }
  
      private void doModEntityRegistration(ResourceLocation registryName, Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
-@@ -204,16 +204,16 @@
-             {
-                 EntityEntry entry = new EntityEntry(entityClass, entityName).setRegistryName(registryName);
-                 ForgeRegistries.ENTITIES.register(entry);
--                FMLLog.log.trace("Automatically registered mod {} entity {} as {}", mc.getModId(), entityName, entry.getRegistryName());
-+                Mohist.LOGGER.trace("Automatically registered mod {} entity {} as {}", mc.getModId(), entityName, entry.getRegistryName());
-             }
-             else
-             {
--                FMLLog.log.debug("Skipping automatic mod {} entity registration for already registered entry {} class {}", mc.getModId(), registryName, entityClass.getName());
-+                Mohist.LOGGER.debug("Skipping automatic mod {} entity registration for already registered entry {} class {}", mc.getModId(), registryName, entityClass.getName());
-             }
-         }
-         catch (IllegalArgumentException e)
-         {
--            FMLLog.log.warn("The mod {} tried to register the entity (registry,name,class) ({},{},{}) one or both of which are already registered", mc.getModId(), registryName, entityName, entityClass.getName(), e);
-+            Mohist.LOGGER.warn("The mod {} tried to register the entity (registry,name,class) ({},{},{}) one or both of which are already registered", mc.getModId(), registryName, entityName, entityClass.getName(), e);
-             return;
-         }
-         entityRegistrations.put(mc, er);
-@@ -385,4 +385,23 @@
+@@ -385,4 +393,23 @@
          this.entityClassRegistrations.put(entity, registration);
          this.entityRegistrations.put(registration.container, registration);
      }

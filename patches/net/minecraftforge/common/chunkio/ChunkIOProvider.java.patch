@@ -1,19 +1,5 @@
 --- ../src-base/minecraft/net/minecraftforge/common/chunkio/ChunkIOProvider.java
 +++ ../src-work/minecraft/net/minecraftforge/common/chunkio/ChunkIOProvider.java
-@@ -19,11 +19,11 @@
- 
- package net.minecraftforge.common.chunkio;
- 
-+import net.minecraft.nbt.NBTTagCompound;
-+import net.minecraft.util.math.ChunkPos;
- import net.minecraft.world.chunk.Chunk;
- import net.minecraft.world.chunk.storage.AnvilChunkLoader;
- import net.minecraft.world.gen.ChunkProviderServer;
--import net.minecraft.nbt.NBTTagCompound;
--import net.minecraft.util.math.ChunkPos;
- import net.minecraftforge.common.MinecraftForge;
- import net.minecraftforge.event.world.ChunkDataEvent;
- 
 @@ -73,14 +73,14 @@
                  {
                      throw new RuntimeException(e); // Allow exception to bubble up to afterExecute
