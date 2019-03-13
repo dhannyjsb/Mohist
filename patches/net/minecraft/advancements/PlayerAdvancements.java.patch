@@ -50,24 +50,21 @@
      private final Set<Advancement> visible = Sets.<Advancement>newLinkedHashSet();
      private final Set<Advancement> visibilityChanged = Sets.<Advancement>newLinkedHashSet();
      private final Set<Advancement> progressChanged = Sets.<Advancement>newLinkedHashSet();
-@@ -93,9 +93,9 @@
+@@ -93,7 +93,7 @@
      {
          List<Advancement> list = Lists.<Advancement>newArrayList();
  
 -        for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet())
 +        for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet()) // CraftBukkit - decompile error
          {
--            if (((AdvancementProgress)entry.getValue()).isDone())
-+            if (entry.getValue().isDone())
+             if (((AdvancementProgress)entry.getValue()).isDone())
              {
-                 list.add(entry.getKey());
-                 this.progressChanged.add(entry.getKey());
 @@ -127,7 +127,7 @@
              try
              {
                  String s = Files.toString(this.progressFile, StandardCharsets.UTF_8);
 -                Map<ResourceLocation, AdvancementProgress> map = (Map)JsonUtils.gsonDeserialize(GSON, s, MAP_TOKEN.getType());
-+                Map<ResourceLocation, AdvancementProgress> map = JsonUtils.gsonDeserialize(GSON, s, MAP_TOKEN.getType()); // CraftBukkit
++                Map<ResourceLocation, AdvancementProgress> map = (Map)JsonUtils.gsonDeserialize(GSON, s, MAP_TOKEN.getType()); // CraftBukkit
  
                  if (map == null)
                  {
@@ -84,38 +81,7 @@
                      }
                      else
                      {
-@@ -152,11 +156,11 @@
-             }
-             catch (JsonParseException jsonparseexception)
-             {
--                LOGGER.error("Couldn't parse player advancements in " + this.progressFile, (Throwable)jsonparseexception);
-+                LOGGER.error("Couldn't parse player advancements in " + this.progressFile, jsonparseexception);
-             }
-             catch (IOException ioexception)
-             {
--                LOGGER.error("Couldn't access player advancements in " + this.progressFile, (Throwable)ioexception);
-+                LOGGER.error("Couldn't access player advancements in " + this.progressFile, ioexception);
-             }
-         }
- 
-@@ -167,6 +171,7 @@
- 
-     public void save()
-     {
-+        if (org.spigotmc.SpigotConfig.disableAdvancementSaving) return;
-         Map<ResourceLocation, AdvancementProgress> map = Maps.<ResourceLocation, AdvancementProgress>newHashMap();
- 
-         for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet())
-@@ -175,7 +180,7 @@
- 
-             if (advancementprogress.hasProgress())
-             {
--                map.put(((Advancement)entry.getKey()).getId(), advancementprogress);
-+                map.put(entry.getKey().getId(), advancementprogress);
-             }
-         }
- 
-@@ -190,41 +195,48 @@
+@@ -190,7 +194,7 @@
          }
          catch (IOException ioexception)
          {
@@ -124,76 +90,23 @@
          }
      }
  
--    public boolean grantCriterion(Advancement p_192750_1_, String p_192750_2_)
-+    public boolean grantCriterion(Advancement advancement, String p_192750_2_)
-     {
-         // Forge: don't grant advancements for fake players
-         if (this.player instanceof net.minecraftforge.common.util.FakePlayer) return false;
- 
-         boolean flag = false;
--        AdvancementProgress advancementprogress = this.getProgress(p_192750_1_);
-+        AdvancementProgress advancementprogress = this.getProgress(advancement);
-         boolean flag1 = advancementprogress.isDone();
+@@ -205,12 +209,19 @@
  
          if (advancementprogress.grantCriterion(p_192750_2_))
          {
--            this.unregisterListeners(p_192750_1_);
--            this.progressChanged.add(p_192750_1_);
 +            // Paper start
-+            if (!new com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent(this.player.getBukkitEntity(), advancement.bukkit, p_192750_2_).callEvent()) {
++            if (!new com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent(this.player.getBukkitEntity(), p_192750_1_.bukkit, p_192750_2_).callEvent()) {
 +                advancementprogress.getCriterionProgress(p_192750_2_);
 +                return false;
 +            }
 +            // Paper end
-+            this.unregisterListeners(advancement);
-+            this.progressChanged.add(advancement);
+             this.unregisterListeners(p_192750_1_);
+             this.progressChanged.add(p_192750_1_);
              flag = true;
  
              if (!flag1 && advancementprogress.isDone())
              {
--                p_192750_1_.getRewards().apply(this.player);
-+                this.player.world.getServer().getPluginManager().callEvent(new org.bukkit.event.player.PlayerAdvancementDoneEvent(this.player.getBukkitEntity(), advancement.bukkit)); // CraftBukkit
-+                advancement.getRewards().apply(this.player);
++                this.player.world.getServer().getPluginManager().callEvent(new org.bukkit.event.player.PlayerAdvancementDoneEvent(this.player.getBukkitEntity(), p_192750_1_.bukkit)); // CraftBukkit
+                 p_192750_1_.getRewards().apply(this.player);
  
--                if (p_192750_1_.getDisplay() != null && p_192750_1_.getDisplay().shouldAnnounceToChat() && this.player.world.getGameRules().getBoolean("announceAdvancements"))
-+                if (advancement.getDisplay() != null && advancement.getDisplay().shouldAnnounceToChat() && this.player.world.getGameRules().getBoolean("announceAdvancements"))
-                 {
--                    this.server.getPlayerList().sendMessage(new TextComponentTranslation("chat.type.advancement." + p_192750_1_.getDisplay().getFrame().getName(), new Object[] {this.player.getDisplayName(), p_192750_1_.getDisplayText()}));
-+                    this.server.getPlayerList().sendMessage(new TextComponentTranslation("chat.type.advancement." + advancement.getDisplay().getFrame().getName(), new Object[] {this.player.getDisplayName(), advancement.getDisplayText()}));
-                 }
- 
--                net.minecraftforge.common.ForgeHooks.onAdvancement(this.player, p_192750_1_);
-+                net.minecraftforge.common.ForgeHooks.onAdvancement(this.player, advancement);
-             }
-         }
- 
-         if (advancementprogress.isDone())
-         {
--            this.ensureVisibility(p_192750_1_);
-+            this.ensureVisibility(advancement);
-         }
- 
-         return flag;
-@@ -262,7 +274,7 @@
- 
-                 if (criterionprogress != null && !criterionprogress.isObtained())
-                 {
--                    ICriterionInstance icriterioninstance = ((Criterion)entry.getValue()).getCriterionInstance();
-+                    ICriterionInstance icriterioninstance = entry.getValue().getCriterionInstance();
- 
-                     if (icriterioninstance != null)
-                     {
-@@ -288,11 +300,11 @@
- 
-             if (criterionprogress != null && (criterionprogress.isObtained() || advancementprogress.isDone()))
-             {
--                ICriterionInstance icriterioninstance = ((Criterion)entry.getValue()).getCriterionInstance();
-+                ICriterionInstance icriterioninstance = entry.getValue().getCriterionInstance();
- 
-                 if (icriterioninstance != null)
-                 {
--                    ICriterionTrigger<ICriterionInstance> icriteriontrigger = CriteriaTriggers.<ICriterionInstance>get(icriterioninstance.getId());
-+                    ICriterionTrigger<ICriterionInstance> icriteriontrigger = CriteriaTriggers.get(icriterioninstance.getId());
- 
-                     if (icriteriontrigger != null)
-                     {
+                 if (p_192750_1_.getDisplay() != null && p_192750_1_.getDisplay().shouldAnnounceToChat() && this.player.world.getGameRules().getBoolean("announceAdvancements"))
