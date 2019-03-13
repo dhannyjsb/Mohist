@@ -1,49 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/entity/boss/EntityDragon.java
 +++ ../src-work/minecraft/net/minecraft/entity/boss/EntityDragon.java
-@@ -1,17 +1,9 @@
- package net.minecraft.entity.boss;
- 
--import java.util.List;
--import javax.annotation.Nullable;
- import net.minecraft.block.Block;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.state.IBlockState;
--import net.minecraft.entity.Entity;
--import net.minecraft.entity.EntityLiving;
--import net.minecraft.entity.EntityLivingBase;
--import net.minecraft.entity.IEntityMultiPart;
--import net.minecraft.entity.MoverType;
--import net.minecraft.entity.MultiPartEntityPart;
--import net.minecraft.entity.SharedMonsterAttributes;
-+import net.minecraft.entity.*;
- import net.minecraft.entity.boss.dragon.phase.IPhase;
- import net.minecraft.entity.boss.dragon.phase.PhaseList;
- import net.minecraft.entity.boss.dragon.phase.PhaseManager;
-@@ -19,27 +11,25 @@
- import net.minecraft.entity.item.EntityXPOrb;
- import net.minecraft.entity.monster.IMob;
- import net.minecraft.entity.player.EntityPlayer;
-+import net.minecraft.entity.player.EntityPlayerMP;
- import net.minecraft.init.Blocks;
- import net.minecraft.init.SoundEvents;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraft.network.datasync.DataParameter;
- import net.minecraft.network.datasync.DataSerializers;
- import net.minecraft.network.datasync.EntityDataManager;
-+import net.minecraft.network.play.server.SPacketEffect;
- import net.minecraft.pathfinding.Path;
- import net.minecraft.pathfinding.PathHeap;
- import net.minecraft.pathfinding.PathPoint;
- import net.minecraft.potion.PotionEffect;
--import net.minecraft.util.DamageSource;
--import net.minecraft.util.EntityDamageSource;
--import net.minecraft.util.EnumParticleTypes;
--import net.minecraft.util.ResourceLocation;
--import net.minecraft.util.SoundCategory;
--import net.minecraft.util.SoundEvent;
-+import net.minecraft.util.*;
- import net.minecraft.util.datafix.DataFixer;
- import net.minecraft.util.math.AxisAlignedBB;
+@@ -40,6 +40,7 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.util.math.Vec3d;
@@ -51,20 +8,16 @@
  import net.minecraft.world.World;
  import net.minecraft.world.WorldProviderEnd;
  import net.minecraft.world.end.DragonFightManager;
-@@ -49,7 +39,12 @@
+@@ -49,6 +50,8 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.event.entity.EntityExplodeEvent;
 +import org.bukkit.event.entity.EntityRegainHealthEvent;
  
-+import javax.annotation.Nullable;
-+import java.util.List;
-+
  public class EntityDragon extends EntityLiving implements IEntityMultiPart, IMob
  {
-     private static final Logger LOGGER = LogManager.getLogger();
-@@ -78,6 +73,8 @@
+@@ -78,6 +81,8 @@
      private final int[] neighbors = new int[24];
      private final PathHeap pathFindQueue = new PathHeap();
  
@@ -73,7 +26,7 @@
      public EntityDragon(World worldIn)
      {
          super(worldIn);
-@@ -241,7 +238,7 @@
+@@ -241,7 +246,7 @@
  
                      Vec3d vec3d = iphase.getTargetLocation();
  
@@ -82,7 +35,7 @@
                      {
                          double d6 = vec3d.x - this.posX;
                          double d7 = vec3d.y - this.posY;
-@@ -411,7 +408,13 @@
+@@ -411,7 +416,13 @@
              }
              else if (this.ticksExisted % 10 == 0 && this.getHealth() < this.getMaxHealth())
              {
@@ -97,7 +50,7 @@
              }
          }
  
-@@ -488,7 +491,10 @@
+@@ -488,7 +499,10 @@
          int j1 = MathHelper.floor(p_70972_1_.maxZ);
          boolean flag = false;
          boolean flag1 = false;
@@ -109,7 +62,7 @@
          for (int k1 = i; k1 <= l; ++k1)
          {
              for (int l1 = j; l1 <= i1; ++l1)
-@@ -509,7 +515,11 @@
+@@ -509,7 +523,11 @@
                          {
                              if (block != Blocks.COMMAND_BLOCK && block != Blocks.REPEATING_COMMAND_BLOCK && block != Blocks.CHAIN_COMMAND_BLOCK && block != Blocks.IRON_BARS && block != Blocks.END_GATEWAY)
                              {
@@ -122,7 +75,7 @@
                              }
                              else
                              {
-@@ -525,6 +535,41 @@
+@@ -525,6 +543,41 @@
              }
          }
  
@@ -164,7 +117,7 @@
          if (flag1)
          {
              double d0 = p_70972_1_.minX + (p_70972_1_.maxX - p_70972_1_.minX) * (double)this.rand.nextFloat();
-@@ -638,7 +683,28 @@
+@@ -638,7 +691,28 @@
  
              if (this.deathTicks == 1)
              {
@@ -194,7 +147,7 @@
              }
          }
  
-@@ -668,7 +734,7 @@
+@@ -668,7 +742,7 @@
          {
              int i = EntityXPOrb.getXPSplit(p_184668_1_);
              p_184668_1_ -= i;

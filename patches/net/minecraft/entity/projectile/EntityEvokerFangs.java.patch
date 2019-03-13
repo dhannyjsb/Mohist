@@ -1,24 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/entity/projectile/EntityEvokerFangs.java
 +++ ../src-work/minecraft/net/minecraft/entity/projectile/EntityEvokerFangs.java
-@@ -1,7 +1,5 @@
- package net.minecraft.entity.projectile;
- 
--import java.util.UUID;
--import javax.annotation.Nullable;
- import net.minecraft.entity.Entity;
- import net.minecraft.entity.EntityLivingBase;
- import net.minecraft.init.SoundEvents;
-@@ -13,6 +11,9 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import javax.annotation.Nullable;
-+import java.util.UUID;
-+
- public class EntityEvokerFangs extends Entity
- {
-     private int warmupDelayTicks;
-@@ -136,7 +137,9 @@
+@@ -136,7 +136,9 @@
          {
              if (entitylivingbase == null)
              {

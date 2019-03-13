@@ -1,55 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/entity/monster/EntitySlime.java
 +++ ../src-work/minecraft/net/minecraft/entity/monster/EntitySlime.java
-@@ -1,11 +1,6 @@
- package net.minecraft.entity.monster;
- 
--import javax.annotation.Nullable;
--import net.minecraft.entity.Entity;
--import net.minecraft.entity.EntityLiving;
--import net.minecraft.entity.EntityLivingBase;
--import net.minecraft.entity.IEntityLivingData;
--import net.minecraft.entity.SharedMonsterAttributes;
-+import net.minecraft.entity.*;
- import net.minecraft.entity.ai.EntityAIBase;
- import net.minecraft.entity.ai.EntityAIFindEntityNearest;
- import net.minecraft.entity.ai.EntityAIFindEntityNearestPlayer;
-@@ -31,11 +26,13 @@
- import net.minecraft.world.DifficultyInstance;
- import net.minecraft.world.EnumDifficulty;
- import net.minecraft.world.World;
--import net.minecraft.world.WorldType;
+@@ -35,6 +35,7 @@
  import net.minecraft.world.biome.Biome;
  import net.minecraft.world.chunk.Chunk;
  import net.minecraft.world.storage.loot.LootTableList;
 +import org.bukkit.event.entity.SlimeSplitEvent;
  
-+import javax.annotation.Nullable;
-+
  public class EntitySlime extends EntityLiving implements IMob
  {
-     private static final DataParameter<Integer> SLIME_SIZE = EntityDataManager.<Integer>createKey(EntitySlime.class, DataSerializers.VARINT);
-@@ -47,15 +44,15 @@
-     public EntitySlime(World worldIn)
-     {
-         super(worldIn);
--        this.moveHelper = new EntitySlime.SlimeMoveHelper(this);
-+        this.moveHelper = new SlimeMoveHelper(this);
-     }
- 
-     protected void initEntityAI()
-     {
--        this.tasks.addTask(1, new EntitySlime.AISlimeFloat(this));
--        this.tasks.addTask(2, new EntitySlime.AISlimeAttack(this));
--        this.tasks.addTask(3, new EntitySlime.AISlimeFaceRandom(this));
--        this.tasks.addTask(5, new EntitySlime.AISlimeHop(this));
-+        this.tasks.addTask(1, new AISlimeFloat(this));
-+        this.tasks.addTask(2, new AISlimeAttack(this));
-+        this.tasks.addTask(3, new AISlimeFaceRandom(this));
-+        this.tasks.addTask(5, new AISlimeHop(this));
-         this.targetTasks.addTask(1, new EntityAIFindEntityNearestPlayer(this));
-         this.targetTasks.addTask(3, new EntityAIFindEntityNearest(this, EntityIronGolem.class));
-     }
-@@ -66,7 +63,7 @@
+@@ -66,7 +67,7 @@
          this.dataManager.register(SLIME_SIZE, Integer.valueOf(1));
      }
  
@@ -58,7 +17,7 @@
      {
          this.dataManager.set(SLIME_SIZE, Integer.valueOf(size));
          this.setSize(0.51000005F * (float)size, 0.51000005F * (float)size);
-@@ -204,6 +201,16 @@
+@@ -204,6 +205,16 @@
          {
              int j = 2 + this.rand.nextInt(3);
  
@@ -75,7 +34,7 @@
              for (int k = 0; k < j; ++k)
              {
                  float f = ((float)(k % 2) - 0.5F) * (float)i / 4.0F;
-@@ -222,7 +229,7 @@
+@@ -222,7 +233,7 @@
  
                  entityslime.setSlimeSize(i / 2, true);
                  entityslime.setLocationAndAngles(this.posX + (double)f, this.posY + 0.5D, this.posZ + (double)f1, this.rand.nextFloat() * 360.0F, 0.0F);
@@ -84,7 +43,7 @@
              }
          }
  
-@@ -319,8 +326,8 @@
+@@ -319,8 +330,8 @@
                      return super.getCanSpawnHere();
                  }
  
@@ -95,64 +54,3 @@
                      return super.getCanSpawnHere();
                  }
              }
-@@ -438,7 +445,7 @@
-             public void updateTask()
-             {
-                 this.slime.faceEntity(this.slime.getAttackTarget(), 10.0F, 10.0F);
--                ((EntitySlime.SlimeMoveHelper)this.slime.getMoveHelper()).setDirection(this.slime.rotationYaw, this.slime.canDamagePlayer());
-+                ((SlimeMoveHelper)this.slime.getMoveHelper()).setDirection(this.slime.rotationYaw, this.slime.canDamagePlayer());
-             }
-         }
- 
-@@ -467,7 +474,7 @@
-                     this.chosenDegrees = (float)this.slime.getRNG().nextInt(360);
-                 }
- 
--                ((EntitySlime.SlimeMoveHelper)this.slime.getMoveHelper()).setDirection(this.chosenDegrees, false);
-+                ((SlimeMoveHelper)this.slime.getMoveHelper()).setDirection(this.chosenDegrees, false);
-             }
-         }
- 
-@@ -494,7 +501,7 @@
-                     this.slime.getJumpHelper().setJumping();
-                 }
- 
--                ((EntitySlime.SlimeMoveHelper)this.slime.getMoveHelper()).setSpeed(1.2D);
-+                ((SlimeMoveHelper)this.slime.getMoveHelper()).setSpeed(1.2D);
-             }
-         }
- 
-@@ -515,7 +522,7 @@
- 
-             public void updateTask()
-             {
--                ((EntitySlime.SlimeMoveHelper)this.slime.getMoveHelper()).setSpeed(1.0D);
-+                ((SlimeMoveHelper)this.slime.getMoveHelper()).setSpeed(1.0D);
-             }
-         }
- 
-@@ -542,7 +549,7 @@
-             public void setSpeed(double speedIn)
-             {
-                 this.speed = speedIn;
--                this.action = EntityMoveHelper.Action.MOVE_TO;
-+                this.action = Action.MOVE_TO;
-             }
- 
-             public void onUpdateMoveHelper()
-@@ -551,13 +558,13 @@
-                 this.entity.rotationYawHead = this.entity.rotationYaw;
-                 this.entity.renderYawOffset = this.entity.rotationYaw;
- 
--                if (this.action != EntityMoveHelper.Action.MOVE_TO)
-+                if (this.action != Action.MOVE_TO)
-                 {
-                     this.entity.setMoveForward(0.0F);
-                 }
-                 else
-                 {
--                    this.action = EntityMoveHelper.Action.WAIT;
-+                    this.action = Action.WAIT;
- 
-                     if (this.entity.onGround)
-                     {

@@ -1,22 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/entity/item/EntityItemFrame.java
 +++ ../src-work/minecraft/net/minecraft/entity/item/EntityItemFrame.java
-@@ -1,6 +1,5 @@
- package net.minecraft.entity.item;
- 
--import javax.annotation.Nullable;
- import net.minecraft.entity.Entity;
- import net.minecraft.entity.EntityHanging;
- import net.minecraft.entity.player.EntityPlayer;
-@@ -25,6 +24,8 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import javax.annotation.Nullable;
-+
- public class EntityItemFrame extends EntityHanging
- {
-     private static final DataParameter<ItemStack> ITEM = EntityDataManager.<ItemStack>createKey(EntityItemFrame.class, DataSerializers.ITEM_STACK);
-@@ -63,6 +64,9 @@
+@@ -63,6 +63,9 @@
          {
              if (!this.world.isRemote)
              {
@@ -26,20 +10,3 @@
                  this.dropItemOrSelf(source.getTrueSource(), false);
                  this.playSound(SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM, 1.0F, 1.0F);
                  this.setDisplayedItem(ItemStack.EMPTY);
-@@ -140,14 +144,14 @@
-     {
-         if (!stack.isEmpty())
-         {
--            if (stack.getItem() instanceof net.minecraft.item.ItemMap)
-+            if (stack.getItem() instanceof ItemMap)
-             {
-                 MapData mapdata = ((ItemMap)stack.getItem()).getMapData(stack, this.world);
-                 mapdata.mapDecorations.remove("frame-" + this.getEntityId());
-             }
- 
-             stack.setItemFrame((EntityItemFrame)null);
--            this.setDisplayedItem(ItemStack.EMPTY); //Forge: Fix MC-124833 Pistons duplicating Items.
-+            this.setDisplayedItem(ItemStack.EMPTY); //Forge and Paper: Fix MC-124833 Pistons duplicating Items.
-         }
-     }
- 

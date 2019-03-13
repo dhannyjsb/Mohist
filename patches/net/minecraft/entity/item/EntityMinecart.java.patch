@@ -58,15 +58,6 @@
      public EntityMinecart(World worldIn)
      {
          super(worldIn);
-@@ -80,7 +97,7 @@
-         this.setSize(0.98F, 0.7F);
-     }
- 
--    public static EntityMinecart create(World worldIn, double x, double y, double z, EntityMinecart.Type typeIn)
-+    public static EntityMinecart create(World worldIn, double x, double y, double z, Type typeIn)
-     {
-         switch (typeIn)
-         {
 @@ -162,6 +179,17 @@
              }
              else
@@ -301,33 +292,6 @@
                      double d0 = entityIn.posX - this.posX;
                      double d1 = entityIn.posZ - this.posZ;
                      double d2 = d0 * d0 + d1 * d1;
-@@ -1003,7 +1042,7 @@
-         return ((Integer)this.dataManager.get(ROLLING_DIRECTION)).intValue();
-     }
- 
--    public abstract EntityMinecart.Type getType();
-+    public abstract Type getType();
- 
-     public IBlockState getDisplayTile()
-     {
-@@ -1183,7 +1222,7 @@
-      */
-     public boolean isPoweredCart()
-     {
--        return getType() == EntityMinecart.Type.FURNACE;
-+        return getType() == Type.FURNACE;
-     }
- 
-     /**
-@@ -1192,7 +1231,7 @@
-      */
-     public boolean canBeRidden()
-     {
--        return this.getType() == EntityMinecart.Type.RIDEABLE;
-+        return this.getType() == Type.RIDEABLE;
-     }
- 
-     /**
 @@ -1260,6 +1299,9 @@
      public void setDragAir(double value)
      {
@@ -338,30 +302,7 @@
      }
  
      public double getSlopeAdjustment()
-@@ -1287,7 +1329,7 @@
-         HOPPER(5, "MinecartHopper"),
-         COMMAND_BLOCK(6, "MinecartCommandBlock");
- 
--        private static final Map<Integer, EntityMinecart.Type> BY_ID = Maps.<Integer, EntityMinecart.Type>newHashMap();
-+        private static final Map<Integer, Type> BY_ID = Maps.<Integer, Type>newHashMap();
-         private final int id;
-         private final String name;
- 
-@@ -1310,16 +1352,38 @@
-         @SideOnly(Side.CLIENT)
-         public static EntityMinecart.Type getById(int idIn)
-         {
--            EntityMinecart.Type entityminecart$type = BY_ID.get(Integer.valueOf(idIn));
-+            Type entityminecart$type = BY_ID.get(Integer.valueOf(idIn));
-             return entityminecart$type == null ? RIDEABLE : entityminecart$type;
-         }
- 
-         static
-         {
--            for (EntityMinecart.Type entityminecart$type : values())
-+            for (Type entityminecart$type : values())
-             {
-                 BY_ID.put(Integer.valueOf(entityminecart$type.getId()), entityminecart$type);
+@@ -1322,4 +1364,26 @@
              }
          }
      }

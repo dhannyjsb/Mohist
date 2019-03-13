@@ -1,34 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/entity/projectile/EntityFishHook.java
 +++ ../src-work/minecraft/net/minecraft/entity/projectile/EntityFishHook.java
-@@ -1,7 +1,5 @@
- package net.minecraft.entity.projectile;
- 
--import java.util.List;
--import net.minecraft.block.Block;
- import net.minecraft.block.BlockLiquid;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.state.IBlockState;
-@@ -10,7 +8,6 @@
- import net.minecraft.entity.item.EntityItem;
- import net.minecraft.entity.item.EntityXPOrb;
- import net.minecraft.entity.player.EntityPlayer;
--import net.minecraft.init.Blocks;
- import net.minecraft.init.Items;
- import net.minecraft.init.SoundEvents;
- import net.minecraft.item.Item;
-@@ -21,31 +18,32 @@
- import net.minecraft.network.datasync.EntityDataManager;
- import net.minecraft.stats.StatList;
- import net.minecraft.util.EnumParticleTypes;
--import net.minecraft.util.math.AxisAlignedBB;
--import net.minecraft.util.math.BlockPos;
--import net.minecraft.util.math.MathHelper;
--import net.minecraft.util.math.RayTraceResult;
--import net.minecraft.util.math.Vec3d;
-+import net.minecraft.util.math.*;
- import net.minecraft.world.World;
- import net.minecraft.world.WorldServer;
- import net.minecraft.world.storage.loot.LootContext;
+@@ -32,20 +32,23 @@
  import net.minecraft.world.storage.loot.LootTableList;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,8 +8,6 @@
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.player.PlayerFishEvent;
  
-+import java.util.List;
-+
  public class EntityFishHook extends Entity
  {
      private static final DataParameter<Integer> DATA_HOOKED_ENTITY = EntityDataManager.<Integer>createKey(EntityFishHook.class, DataSerializers.VARINT);
@@ -56,7 +26,7 @@
      private int luck;
      private int lureSpeed;
  
-@@ -169,14 +167,14 @@
+@@ -169,14 +172,14 @@
                  f = BlockLiquid.getBlockLiquidHeight(iblockstate, this.world, blockpos);
              }
  
@@ -73,7 +43,7 @@
                      return;
                  }
  
-@@ -185,7 +183,7 @@
+@@ -185,7 +188,7 @@
                      this.motionX *= 0.3D;
                      this.motionY *= 0.2D;
                      this.motionZ *= 0.3D;
@@ -82,7 +52,7 @@
                      return;
                  }
  
-@@ -208,14 +206,14 @@
+@@ -208,14 +211,14 @@
              }
              else
              {
@@ -99,7 +69,7 @@
                          }
                          else
                          {
-@@ -230,7 +228,7 @@
+@@ -230,7 +233,7 @@
                      return;
                  }
  
@@ -108,7 +78,7 @@
                  {
                      this.motionX *= 0.9D;
                      this.motionZ *= 0.9D;
-@@ -262,6 +260,11 @@
+@@ -262,6 +265,11 @@
              this.motionY *= 0.92D;
              this.motionZ *= 0.92D;
              this.setPosition(this.posX, this.posY, this.posZ);
@@ -120,7 +90,7 @@
          }
      }
  
-@@ -320,6 +323,14 @@
+@@ -320,6 +328,14 @@
          vec3d = new Vec3d(this.posX, this.posY, this.posZ);
          vec3d1 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
  
@@ -135,7 +105,7 @@
          if (raytraceresult != null)
          {
              vec3d1 = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
-@@ -356,6 +367,7 @@
+@@ -356,6 +372,7 @@
  
          if (raytraceresult != null && raytraceresult.typeOfHit != RayTraceResult.Type.MISS)
          {
@@ -143,7 +113,7 @@
              if (raytraceresult.typeOfHit == RayTraceResult.Type.ENTITY)
              {
                  this.caughtEntity = raytraceresult.entityHit;
-@@ -397,6 +409,8 @@
+@@ -397,6 +414,8 @@
              {
                  this.ticksCaughtDelay = 0;
                  this.ticksCatchableDelay = 0;
@@ -152,7 +122,7 @@
              }
              else
              {
-@@ -433,6 +447,11 @@
+@@ -433,6 +452,11 @@
              }
              else
              {
@@ -164,7 +134,7 @@
                  this.motionY = (double)(-0.4F * MathHelper.nextFloat(this.rand, 0.6F, 1.0F));
                  this.playSound(SoundEvents.ENTITY_BOBBER_SPLASH, 0.25F, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
                  double d3 = this.getEntityBoundingBox().minY + 0.5D;
-@@ -482,7 +501,7 @@
+@@ -482,7 +506,7 @@
          }
          else
          {
@@ -173,7 +143,7 @@
              this.ticksCaughtDelay -= this.lureSpeed * 20 * 5;
          }
      }
-@@ -509,6 +528,11 @@
+@@ -509,6 +533,11 @@
              net.minecraftforge.event.entity.player.ItemFishedEvent event = null;
              if (this.caughtEntity != null)
              {
@@ -185,7 +155,7 @@
                  this.bringInHookedEntity();
                  this.world.setEntityState(this, (byte)31);
                  i = this.caughtEntity instanceof EntityItem ? 3 : 5;
-@@ -529,6 +553,13 @@
+@@ -529,6 +558,13 @@
                  for (ItemStack itemstack : result)
                  {
                      EntityItem entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, itemstack);
@@ -199,7 +169,7 @@
                      double d0 = this.angler.posX - this.posX;
                      double d1 = this.angler.posY - this.posY;
                      double d2 = this.angler.posZ - this.posZ;
-@@ -538,7 +569,12 @@
+@@ -538,7 +574,12 @@
                      entityitem.motionY = d1 * 0.1D + (double)MathHelper.sqrt(d3) * 0.08D;
                      entityitem.motionZ = d2 * 0.1D;
                      this.world.spawnEntity(entityitem);
@@ -213,7 +183,7 @@
                      Item item = itemstack.getItem();
  
                      if (item == Items.FISH || item == Items.COOKED_FISH)
-@@ -552,8 +588,21 @@
+@@ -552,8 +593,21 @@
  
              if (this.inGround)
              {

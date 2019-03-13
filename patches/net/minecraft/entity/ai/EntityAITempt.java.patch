@@ -1,10 +1,8 @@
 --- ../src-base/minecraft/net/minecraft/entity/ai/EntityAITempt.java
 +++ ../src-work/minecraft/net/minecraft/entity/ai/EntityAITempt.java
-@@ -1,13 +1,18 @@
- package net.minecraft.entity.ai;
- 
+@@ -3,10 +3,14 @@
  import com.google.common.collect.Sets;
--import java.util.Set;
+ import java.util.Set;
  import net.minecraft.entity.EntityCreature;
 -import net.minecraft.entity.player.EntityPlayer;
 +import net.minecraft.entity.EntityLivingBase;
@@ -16,12 +14,9 @@
 +import org.bukkit.event.entity.EntityTargetEvent;
 +import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
  
-+import java.util.Set;
-+
  public class EntityAITempt extends EntityAIBase
  {
-     private final EntityCreature temptedEntity;
-@@ -17,7 +22,7 @@
+@@ -17,7 +21,7 @@
      private double targetZ;
      private double pitch;
      private double yaw;
@@ -30,7 +25,7 @@
      private int delayTemptCounter;
      private boolean isRunning;
      private final Set<Item> temptItem;
-@@ -52,15 +57,15 @@
+@@ -52,15 +56,15 @@
          else
          {
              this.temptingPlayer = this.temptedEntity.world.getClosestPlayerToEntity(this.temptedEntity, 10.0D);

@@ -1,31 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/entity/projectile/EntityTippedArrow.java
 +++ ../src-work/minecraft/net/minecraft/entity/projectile/EntityTippedArrow.java
-@@ -1,8 +1,6 @@
- package net.minecraft.entity.projectile;
- 
- import com.google.common.collect.Sets;
--import java.util.Collection;
--import java.util.Set;
- import net.minecraft.entity.EntityLivingBase;
- import net.minecraft.init.Items;
- import net.minecraft.init.PotionTypes;
-@@ -22,11 +20,14 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import java.util.Collection;
-+import java.util.Set;
-+
- public class EntityTippedArrow extends EntityArrow
+@@ -26,7 +26,7 @@
  {
      private static final DataParameter<Integer> COLOR = EntityDataManager.<Integer>createKey(EntityTippedArrow.class, DataSerializers.VARINT);
      private PotionType potion = PotionTypes.EMPTY;
 -    private final Set<PotionEffect> customPotionEffects = Sets.<PotionEffect>newHashSet();
-+    public final Set<PotionEffect> customPotionEffects = Sets.<PotionEffect>newHashSet();
++    public final Set<PotionEffect> customPotionEffects = Sets.<PotionEffect>newHashSet(); //CraftBukkit
      private boolean fixedColor;
  
      public EntityTippedArrow(World worldIn)
-@@ -146,12 +147,30 @@
+@@ -146,12 +146,30 @@
          }
      }
  

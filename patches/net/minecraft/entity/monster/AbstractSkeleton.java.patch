@@ -1,46 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/entity/monster/AbstractSkeleton.java
 +++ ../src-work/minecraft/net/minecraft/entity/monster/AbstractSkeleton.java
-@@ -1,25 +1,8 @@
- package net.minecraft.entity.monster;
- 
--import java.util.Calendar;
--import javax.annotation.Nullable;
- import net.minecraft.block.Block;
--import net.minecraft.entity.EntityCreature;
--import net.minecraft.entity.EntityLivingBase;
--import net.minecraft.entity.EnumCreatureAttribute;
--import net.minecraft.entity.IEntityLivingData;
--import net.minecraft.entity.IRangedAttackMob;
--import net.minecraft.entity.SharedMonsterAttributes;
--import net.minecraft.entity.ai.EntityAIAttackMelee;
--import net.minecraft.entity.ai.EntityAIAttackRangedBow;
--import net.minecraft.entity.ai.EntityAIAvoidEntity;
--import net.minecraft.entity.ai.EntityAIFleeSun;
--import net.minecraft.entity.ai.EntityAIHurtByTarget;
--import net.minecraft.entity.ai.EntityAILookIdle;
--import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
--import net.minecraft.entity.ai.EntityAIRestrictSun;
--import net.minecraft.entity.ai.EntityAISwimming;
--import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
--import net.minecraft.entity.ai.EntityAIWatchClosest;
-+import net.minecraft.entity.*;
-+import net.minecraft.entity.ai.*;
- import net.minecraft.entity.item.EntityBoat;
- import net.minecraft.entity.passive.EntityWolf;
- import net.minecraft.entity.player.EntityPlayer;
-@@ -42,7 +25,11 @@
+@@ -42,6 +42,7 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.event.entity.EntityCombustEvent;
  
-+import javax.annotation.Nullable;
-+import java.util.Calendar;
-+
  public abstract class AbstractSkeleton extends EntityMob implements IRangedAttackMob
  {
-     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.<Boolean>createKey(AbstractSkeleton.class, DataSerializers.BOOLEAN);
-@@ -136,7 +123,13 @@
+@@ -136,7 +137,13 @@
  
                  if (flag)
                  {
@@ -55,14 +23,14 @@
                  }
              }
          }
-@@ -214,15 +207,23 @@
+@@ -214,15 +221,23 @@
      public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)
      {
          EntityArrow entityarrow = this.getArrow(distanceFactor);
 -        if (this.getHeldItemMainhand().getItem() instanceof net.minecraft.item.ItemBow)
 -            entityarrow = ((net.minecraft.item.ItemBow) this.getHeldItemMainhand().getItem()).customizeArrow(entityarrow);
-+        if(this.activeItemStack.getItem() instanceof net.minecraft.item.ItemBow)
-+            entityarrow = ((net.minecraft.item.ItemBow)this.activeItemStack.getItem()).customizeArrow(entityarrow);
++        if(this.getHeldItemMainhand().getItem() instanceof net.minecraft.item.ItemBow)
++            entityarrow = ((net.minecraft.item.ItemBow)this.getHeldItemMainhand().getItem()).customizeArrow(entityarrow);
          double d0 = target.posX - this.posX;
          double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - entityarrow.posY;
          double d2 = target.posZ - this.posZ;

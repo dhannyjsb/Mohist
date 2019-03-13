@@ -1,50 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/entity/passive/AbstractHorse.java
 +++ ../src-work/minecraft/net/minecraft/entity/passive/AbstractHorse.java
-@@ -2,29 +2,13 @@
- 
- import com.google.common.base.Optional;
- import com.google.common.base.Predicate;
--import java.util.UUID;
--import javax.annotation.Nullable;
- import net.minecraft.advancements.CriteriaTriggers;
- import net.minecraft.block.Block;
- import net.minecraft.block.SoundType;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.state.IBlockState;
--import net.minecraft.entity.Entity;
--import net.minecraft.entity.EntityAgeable;
--import net.minecraft.entity.EntityLiving;
--import net.minecraft.entity.EntityLivingBase;
--import net.minecraft.entity.EnumCreatureAttribute;
--import net.minecraft.entity.IEntityLivingData;
--import net.minecraft.entity.IJumpingMount;
--import net.minecraft.entity.SharedMonsterAttributes;
--import net.minecraft.entity.ai.EntityAIFollowParent;
--import net.minecraft.entity.ai.EntityAILookIdle;
--import net.minecraft.entity.ai.EntityAIMate;
--import net.minecraft.entity.ai.EntityAIPanic;
--import net.minecraft.entity.ai.EntityAIRunAroundLikeCrazy;
--import net.minecraft.entity.ai.EntityAISwimming;
--import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
--import net.minecraft.entity.ai.EntityAIWatchClosest;
-+import net.minecraft.entity.*;
-+import net.minecraft.entity.ai.*;
- import net.minecraft.entity.ai.attributes.IAttribute;
- import net.minecraft.entity.ai.attributes.IAttributeInstance;
- import net.minecraft.entity.ai.attributes.RangedAttribute;
-@@ -56,7 +40,11 @@
+@@ -56,6 +56,7 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.event.entity.EntityRegainHealthEvent;
  
-+import javax.annotation.Nullable;
-+import java.util.UUID;
-+
  public abstract class AbstractHorse extends EntityAnimal implements IInventoryChangedListener, IJumpingMount
  {
-     private static final Predicate<Entity> IS_HORSE_BREEDING = new Predicate<Entity>()
-@@ -66,7 +54,7 @@
+@@ -66,7 +67,7 @@
              return p_apply_1_ instanceof AbstractHorse && ((AbstractHorse)p_apply_1_).isBreeding();
          }
      };
@@ -53,7 +17,7 @@
      private static final DataParameter<Byte> STATUS = EntityDataManager.<Byte>createKey(AbstractHorse.class, DataSerializers.BYTE);
      private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(AbstractHorse.class, DataSerializers.OPTIONAL_UNIQUE_ID);
      private int eatingCounter;
-@@ -75,7 +63,7 @@
+@@ -75,7 +76,7 @@
      public int tailCounter;
      public int sprintCounter;
      protected boolean horseJumping;
@@ -62,7 +26,7 @@
      protected int temper;
      protected float jumpPower;
      private boolean allowStandSliding;
-@@ -88,6 +76,8 @@
+@@ -88,6 +89,8 @@
      protected boolean canGallop = true;
      protected int gallopTime;
  
@@ -71,16 +35,7 @@
      public AbstractHorse(World worldIn)
      {
          super(worldIn);
-@@ -177,7 +167,7 @@
- 
-     public boolean canBeLeashedTo(EntityPlayer player)
-     {
--        return super.canBeLeashedTo(player) && this.getCreatureAttribute() != EnumCreatureAttribute.UNDEAD;
-+        return world.paperConfig.allowLeashingUndeadHorse ? super.canBeLeashedTo(player) : super.canBeLeashedTo(player) && this.getCreatureAttribute() != EnumCreatureAttribute.UNDEAD; // Paper
-     }
- 
-     protected void onLeashDistance(float p_142017_1_)
-@@ -288,10 +278,10 @@
+@@ -288,10 +291,10 @@
          return 2;
      }
  
@@ -93,7 +48,7 @@
          this.horseChest.setCustomName(this.getName());
  
          if (containerhorsechest != null)
-@@ -465,7 +455,7 @@
+@@ -465,7 +468,7 @@
  
      public int getMaxTemper()
      {
@@ -102,7 +57,7 @@
      }
  
      protected float getSoundVolume()
-@@ -545,7 +535,7 @@
+@@ -545,7 +548,7 @@
  
          if (this.getHealth() < this.getMaxHealth() && f > 0.0F)
          {
@@ -111,7 +66,7 @@
              flag = true;
          }
  
-@@ -609,7 +599,7 @@
+@@ -609,7 +612,7 @@
  
      public void onDeath(DamageSource cause)
      {
@@ -120,7 +75,7 @@
  
          if (!this.world.isRemote && this.horseChest != null)
          {
-@@ -623,6 +613,7 @@
+@@ -623,6 +626,7 @@
                  }
              }
          }
@@ -128,7 +83,7 @@
      }
  
      public void onLivingUpdate()
-@@ -638,7 +629,7 @@
+@@ -638,7 +642,7 @@
          {
              if (this.rand.nextInt(900) == 0 && this.deathTime == 0)
              {
@@ -137,16 +92,16 @@
              }
  
              if (this.canEatGrass())
-@@ -941,7 +932,7 @@
+@@ -941,7 +945,7 @@
          {
              compound.setString("OwnerUUID", this.getOwnerUniqueId().toString());
          }
 -
-+        compound.setInteger("Bukkit.MaxDomestication", this.maxDomestication);
++        compound.setInteger("Bukkit.MaxDomestication", this.maxDomestication); // CraftBukkit
          if (!this.horseChest.getStackInSlot(0).isEmpty())
          {
              compound.setTag("SaddleItem", this.horseChest.getStackInSlot(0).writeToNBT(new NBTTagCompound()));
-@@ -971,6 +962,9 @@
+@@ -971,6 +975,9 @@
          {
              this.setOwnerUniqueId(UUID.fromString(s));
          }
@@ -156,10 +111,11 @@
  
          IAttributeInstance iattributeinstance = this.getAttributeMap().getAttributeInstanceByName("Speed");
  
-@@ -1074,6 +1068,16 @@
+@@ -1074,6 +1081,18 @@
  
      public void handleStartJump(int p_184775_1_)
      {
++        // CraftBukkit start
 +        float power;
 +        if (p_184775_1_ >= 90) {
 +            power = 1.0F;
@@ -170,6 +126,7 @@
 +        if (event.isCancelled()) {
 +            return;
 +        }
++        // CraftBukkit end
          this.allowStandSliding = true;
          this.makeHorseRear();
      }

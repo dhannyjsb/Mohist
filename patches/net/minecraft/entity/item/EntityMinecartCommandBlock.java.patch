@@ -15,15 +15,3 @@
          public void updateCommand()
          {
              EntityMinecartCommandBlock.this.getDataManager().set(EntityMinecartCommandBlock.COMMAND, this.getCommand());
-@@ -121,9 +124,9 @@
-         this.commandBlockLogic.writeToNBT(compound);
-     }
- 
--    public EntityMinecart.Type getType()
-+    public Type getType()
-     {
--        return EntityMinecart.Type.COMMAND_BLOCK;
-+        return Type.COMMAND_BLOCK;
-     }
- 
-     public IBlockState getDefaultDisplayTile()

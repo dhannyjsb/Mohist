@@ -41,7 +41,7 @@
  public abstract class EntityArrow extends Entity implements IProjectile
  {
      private static final Predicate<Entity> ARROW_TARGETS = Predicates.and(EntitySelectors.NOT_SPECTATING, EntitySelectors.IS_ALIVE, new Predicate<Entity>()
-@@ -47,28 +49,40 @@
+@@ -47,21 +49,33 @@
          }
      });
      private static final DataParameter<Byte> CRITICAL = EntityDataManager.<Byte>createKey(EntityArrow.class, DataSerializers.BYTE);
@@ -81,15 +81,7 @@
      public EntityArrow(World worldIn)
      {
          super(worldIn);
-         this.xTile = -1;
-         this.yTile = -1;
-         this.zTile = -1;
--        this.pickupStatus = EntityArrow.PickupStatus.DISALLOWED;
-+        this.pickupStatus = PickupStatus.DISALLOWED;
-         this.damage = 2.0D;
-         this.setSize(0.5F, 0.5F);
-     }
-@@ -83,10 +97,11 @@
+@@ -83,6 +97,7 @@
      {
          this(worldIn, shooter.posX, shooter.posY + (double)shooter.getEyeHeight() - 0.10000000149011612D, shooter.posZ);
          this.shootingEntity = shooter;
@@ -97,11 +89,6 @@
  
          if (shooter instanceof EntityPlayer)
          {
--            this.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
-+            this.pickupStatus = PickupStatus.ALLOWED;
-         }
-     }
- 
 @@ -222,8 +237,7 @@
              {
                  ++this.ticksInGround;
@@ -151,29 +138,6 @@
              }
  
              if (entity.attackEntityFrom(damagesource, (float)i))
-@@ -419,7 +447,7 @@
- 
-                 if (!this.world.isRemote && this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ < 0.0010000000474974513D)
-                 {
--                    if (this.pickupStatus == EntityArrow.PickupStatus.ALLOWED)
-+                    if (this.pickupStatus == PickupStatus.ALLOWED)
-                     {
-                         this.entityDropItem(this.getArrowStack(), 0.1F);
-                     }
-@@ -556,11 +584,11 @@
- 
-         if (compound.hasKey("pickup", 99))
-         {
--            this.pickupStatus = EntityArrow.PickupStatus.getByOrdinal(compound.getByte("pickup"));
-+            this.pickupStatus = PickupStatus.getByOrdinal(compound.getByte("pickup"));
-         }
-         else if (compound.hasKey("player", 99))
-         {
--            this.pickupStatus = compound.getBoolean("player") ? EntityArrow.PickupStatus.ALLOWED : EntityArrow.PickupStatus.DISALLOWED;
-+            this.pickupStatus = compound.getBoolean("player") ? PickupStatus.ALLOWED : PickupStatus.DISALLOWED;
-         }
- 
-         this.setIsCritical(compound.getBoolean("crit"));
 @@ -570,9 +598,19 @@
      {
          if (!this.world.isRemote && this.inGround && this.arrowShake <= 0)
@@ -219,12 +183,3 @@
          }
      }
  
-@@ -665,7 +708,7 @@
-         ALLOWED,
-         CREATIVE_ONLY;
- 
--        public static EntityArrow.PickupStatus getByOrdinal(int ordinal)
-+        public static PickupStatus getByOrdinal(int ordinal)
-         {
-             if (ordinal < 0 || ordinal > values().length)
-             {

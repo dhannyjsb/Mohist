@@ -1,104 +1,32 @@
 --- ../src-base/minecraft/net/minecraft/entity/passive/EntityParrot.java
 +++ ../src-work/minecraft/net/minecraft/entity/passive/EntityParrot.java
-@@ -3,59 +3,15 @@
+@@ -3,8 +3,6 @@
  import com.google.common.base.Predicate;
  import com.google.common.collect.Maps;
  import com.google.common.collect.Sets;
 -import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 -import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
--import java.util.ArrayList;
--import java.util.List;
--import java.util.Random;
--import java.util.Set;
--import javax.annotation.Nullable;
- import net.minecraft.block.Block;
- import net.minecraft.block.BlockLeaves;
- import net.minecraft.block.BlockLog;
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Random;
+@@ -16,7 +14,6 @@
  import net.minecraft.block.state.IBlockState;
--import net.minecraft.entity.Entity;
--import net.minecraft.entity.EntityAgeable;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.EntityAgeable;
 -import net.minecraft.entity.EntityList;
--import net.minecraft.entity.EntityLiving;
--import net.minecraft.entity.IEntityLivingData;
--import net.minecraft.entity.SharedMonsterAttributes;
--import net.minecraft.entity.ai.EntityAIFollow;
--import net.minecraft.entity.ai.EntityAIFollowOwnerFlying;
--import net.minecraft.entity.ai.EntityAILandOnOwnersShoulder;
--import net.minecraft.entity.ai.EntityAIPanic;
--import net.minecraft.entity.ai.EntityAISit;
--import net.minecraft.entity.ai.EntityAISwimming;
--import net.minecraft.entity.ai.EntityAIWanderAvoidWaterFlying;
--import net.minecraft.entity.ai.EntityAIWatchClosest;
--import net.minecraft.entity.ai.EntityFlyHelper;
-+import net.minecraft.entity.*;
-+import net.minecraft.entity.ai.*;
- import net.minecraft.entity.boss.EntityDragon;
- import net.minecraft.entity.boss.EntityWither;
--import net.minecraft.entity.monster.EntityBlaze;
--import net.minecraft.entity.monster.EntityCaveSpider;
--import net.minecraft.entity.monster.EntityCreeper;
--import net.minecraft.entity.monster.EntityElderGuardian;
--import net.minecraft.entity.monster.EntityEnderman;
--import net.minecraft.entity.monster.EntityEndermite;
--import net.minecraft.entity.monster.EntityEvoker;
--import net.minecraft.entity.monster.EntityGhast;
--import net.minecraft.entity.monster.EntityHusk;
--import net.minecraft.entity.monster.EntityIllusionIllager;
--import net.minecraft.entity.monster.EntityMagmaCube;
--import net.minecraft.entity.monster.EntityPigZombie;
--import net.minecraft.entity.monster.EntityPolarBear;
--import net.minecraft.entity.monster.EntityShulker;
--import net.minecraft.entity.monster.EntitySilverfish;
--import net.minecraft.entity.monster.EntitySkeleton;
--import net.minecraft.entity.monster.EntitySlime;
--import net.minecraft.entity.monster.EntitySpider;
--import net.minecraft.entity.monster.EntityStray;
--import net.minecraft.entity.monster.EntityVex;
--import net.minecraft.entity.monster.EntityVindicator;
--import net.minecraft.entity.monster.EntityWitch;
--import net.minecraft.entity.monster.EntityWitherSkeleton;
--import net.minecraft.entity.monster.EntityZombie;
--import net.minecraft.entity.monster.EntityZombieVillager;
-+import net.minecraft.entity.monster.*;
- import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.init.Blocks;
- import net.minecraft.init.Items;
-@@ -70,11 +26,7 @@
- import net.minecraft.pathfinding.PathNavigate;
- import net.minecraft.pathfinding.PathNavigateFlying;
- import net.minecraft.potion.PotionEffect;
--import net.minecraft.util.DamageSource;
--import net.minecraft.util.EnumHand;
--import net.minecraft.util.ResourceLocation;
--import net.minecraft.util.SoundCategory;
--import net.minecraft.util.SoundEvent;
-+import net.minecraft.util.*;
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.util.math.MathHelper;
- import net.minecraft.world.DifficultyInstance;
-@@ -83,6 +35,12 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import javax.annotation.Nullable;
-+import java.util.ArrayList;
-+import java.util.List;
-+import java.util.Random;
-+import java.util.Set;
-+
- public class EntityParrot extends EntityShoulderRiding implements EntityFlying
- {
-     private static final DataParameter<Integer> VARIANT = EntityDataManager.<Integer>createKey(EntityParrot.class, DataSerializers.VARINT);
-@@ -247,7 +205,7 @@
+ import net.minecraft.entity.EntityLiving;
+ import net.minecraft.entity.IEntityLivingData;
+ import net.minecraft.entity.SharedMonsterAttributes;
+@@ -247,7 +244,7 @@
  
              if (!this.world.isRemote)
              {
 -                if (this.rand.nextInt(10) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player))
-+                if (this.rand.nextInt(10) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player) && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, player).isCancelled())
++                if (this.rand.nextInt(10) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player) && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, player).isCancelled()) // CraftBukkit
                  {
                      this.setTamedBy(player);
                      this.playTameEffect(true);
-@@ -420,7 +378,8 @@
+@@ -420,7 +417,8 @@
          {
              if (this.aiSit != null)
              {

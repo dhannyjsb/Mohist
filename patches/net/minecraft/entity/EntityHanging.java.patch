@@ -1,16 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/entity/EntityHanging.java
 +++ ../src-work/minecraft/net/minecraft/entity/EntityHanging.java
-@@ -1,8 +1,8 @@
- package net.minecraft.entity;
- 
+@@ -3,6 +3,7 @@
  import com.google.common.base.Predicate;
--import javax.annotation.Nullable;
+ import javax.annotation.Nullable;
  import net.minecraft.block.BlockRedstoneDiode;
 +import net.minecraft.block.material.Material;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.effect.EntityLightningBolt;
  import net.minecraft.entity.item.EntityItem;
-@@ -18,7 +18,12 @@
+@@ -18,6 +19,9 @@
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.World;
  import org.apache.commons.lang3.Validate;
@@ -18,12 +16,9 @@
 +import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 +import org.bukkit.event.hanging.HangingBreakEvent;
  
-+import javax.annotation.Nullable;
-+
  public abstract class EntityHanging extends Entity
  {
-     private static final Predicate<Entity> IS_HANGING_ENTITY = new Predicate<Entity>()
-@@ -29,7 +34,7 @@
+@@ -29,7 +33,7 @@
          }
      };
      private int tickCounter1;
@@ -32,7 +27,7 @@
      @Nullable
      public EnumFacing facingDirection;
  
-@@ -49,7 +54,7 @@
+@@ -49,7 +53,7 @@
      {
      }
  
@@ -41,7 +36,7 @@
      {
          Validate.notNull(facingDirectionIn);
          Validate.isTrue(facingDirectionIn.getAxis().isHorizontal());
-@@ -63,42 +68,50 @@
+@@ -63,42 +67,50 @@
      {
          if (this.facingDirection != null)
          {
@@ -123,14 +118,7 @@
      {
          return p_190202_1_ % 32 == 0 ? 0.5D : 0.0D;
      }
-@@ -109,12 +122,30 @@
-         this.prevPosY = this.posY;
-         this.prevPosZ = this.posZ;
- 
--        if (this.tickCounter1++ == 100 && !this.world.isRemote)
-+        if (this.tickCounter1++ == this.world.spigotConfig.hangingTickFrequency && !this.world.isRemote) // Spigot
-         {
-             this.tickCounter1 = 0;
+@@ -115,6 +127,24 @@
  
              if (!this.isDead && !this.onValidSurface())
              {
@@ -155,7 +143,7 @@
                  this.setDead();
                  this.onBroken((Entity)null);
              }
-@@ -183,6 +214,20 @@
+@@ -183,6 +213,20 @@
          {
              if (!this.isDead && !this.world.isRemote)
              {
@@ -176,7 +164,7 @@
                  this.setDead();
                  this.markVelocityChanged();
                  this.onBroken(source.getTrueSource());
-@@ -196,6 +241,15 @@
+@@ -196,6 +240,15 @@
      {
          if (!this.world.isRemote && !this.isDead && x * x + y * y + z * z > 0.0D)
          {
@@ -192,16 +180,16 @@
              this.setDead();
              this.onBroken((Entity)null);
          }
-@@ -203,7 +257,7 @@
+@@ -203,7 +256,7 @@
  
      public void addVelocity(double x, double y, double z)
      {
 -        if (!this.world.isRemote && !this.isDead && x * x + y * y + z * z > 0.0D)
-+        if (false && !this.world.isRemote && !this.isDead && x * x + y * y + z * z > 0.0D)
++        if (false && !this.world.isRemote && !this.isDead && x * x + y * y + z * z > 0.0D) // CraftBukkit - not needed
          {
              this.setDead();
              this.onBroken((Entity)null);
-@@ -296,7 +350,7 @@
+@@ -296,7 +349,7 @@
          return this.getRotatedYaw(transformMirror.toRotation(this.facingDirection));
      }
  

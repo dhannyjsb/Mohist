@@ -1,39 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/entity/monster/EntityWitch.java
 +++ ../src-work/minecraft/net/minecraft/entity/monster/EntityWitch.java
-@@ -1,20 +1,11 @@
- package net.minecraft.entity.monster;
- 
--import java.util.List;
--import java.util.UUID;
--import javax.annotation.Nullable;
- import net.minecraft.block.material.Material;
- import net.minecraft.entity.EntityLiving;
- import net.minecraft.entity.EntityLivingBase;
- import net.minecraft.entity.IRangedAttackMob;
- import net.minecraft.entity.SharedMonsterAttributes;
--import net.minecraft.entity.ai.EntityAIAttackRanged;
--import net.minecraft.entity.ai.EntityAIHurtByTarget;
--import net.minecraft.entity.ai.EntityAILookIdle;
--import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
--import net.minecraft.entity.ai.EntityAISwimming;
--import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
--import net.minecraft.entity.ai.EntityAIWatchClosest;
-+import net.minecraft.entity.ai.*;
- import net.minecraft.entity.ai.attributes.AttributeModifier;
- import net.minecraft.entity.ai.attributes.IAttributeInstance;
- import net.minecraft.entity.player.EntityPlayer;
-@@ -42,6 +33,10 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import javax.annotation.Nullable;
-+import java.util.List;
-+import java.util.UUID;
-+
- public class EntityWitch extends EntityMob implements IRangedAttackMob
- {
-     private static final UUID MODIFIER_UUID = UUID.fromString("5CD17E52-A79A-43D3-A529-90FDE04B181E");
-@@ -123,7 +118,10 @@
+@@ -123,7 +123,10 @@
  
                      if (itemstack.getItem() == Items.POTIONITEM)
                      {
@@ -45,7 +12,7 @@
  
                          if (list != null)
                          {
-@@ -160,7 +158,11 @@
+@@ -160,7 +163,11 @@
  
                  if (potiontype != null)
                  {
@@ -58,7 +25,7 @@
                      this.potionUseTimer = this.getHeldItemMainhand().getMaxItemUseDuration();
                      this.setDrinkingPotion(true);
                      this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F, 0.8F + this.rand.nextFloat() * 0.4F);
-@@ -242,7 +244,15 @@
+@@ -242,7 +249,15 @@
                  potiontype = PotionTypes.WEAKNESS;
              }
  

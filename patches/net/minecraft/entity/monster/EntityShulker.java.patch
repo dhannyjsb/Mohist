@@ -1,61 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/entity/monster/EntityShulker.java
 +++ ../src-work/minecraft/net/minecraft/entity/monster/EntityShulker.java
-@@ -2,25 +2,12 @@
- 
- import com.google.common.base.Optional;
- import com.google.common.base.Predicate;
--import java.util.List;
--import java.util.UUID;
--import javax.annotation.Nullable;
- import net.minecraft.block.BlockPistonBase;
- import net.minecraft.block.BlockPistonExtension;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.state.IBlockState;
--import net.minecraft.entity.Entity;
--import net.minecraft.entity.EntityBodyHelper;
--import net.minecraft.entity.EntityLiving;
--import net.minecraft.entity.EntityLivingBase;
--import net.minecraft.entity.IEntityLivingData;
--import net.minecraft.entity.MoverType;
--import net.minecraft.entity.SharedMonsterAttributes;
--import net.minecraft.entity.ai.EntityAIBase;
--import net.minecraft.entity.ai.EntityAIHurtByTarget;
--import net.minecraft.entity.ai.EntityAILookIdle;
--import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
--import net.minecraft.entity.ai.EntityAIWatchClosest;
-+import net.minecraft.entity.*;
-+import net.minecraft.entity.ai.*;
- import net.minecraft.entity.ai.attributes.AttributeModifier;
- import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.entity.projectile.EntityArrow;
-@@ -32,11 +19,7 @@
- import net.minecraft.network.datasync.DataParameter;
- import net.minecraft.network.datasync.DataSerializers;
- import net.minecraft.network.datasync.EntityDataManager;
--import net.minecraft.util.DamageSource;
--import net.minecraft.util.EnumFacing;
--import net.minecraft.util.ResourceLocation;
--import net.minecraft.util.SoundCategory;
--import net.minecraft.util.SoundEvent;
-+import net.minecraft.util.*;
- import net.minecraft.util.datafix.DataFixer;
- import net.minecraft.util.math.AxisAlignedBB;
- import net.minecraft.util.math.BlockPos;
-@@ -47,7 +30,13 @@
+@@ -47,6 +47,8 @@
  import net.minecraft.world.storage.loot.LootTableList;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.Location;
 +import org.bukkit.event.entity.EntityTeleportEvent;
  
-+import javax.annotation.Nullable;
-+import java.util.List;
-+import java.util.UUID;
-+
  public class EntityShulker extends EntityGolem implements IMob
  {
-     private static final UUID COVERED_ARMOR_BONUS_ID = UUID.fromString("7E0292F2-9434-48D5-A29F-9583AF7DF27F");
-@@ -55,7 +44,7 @@
+@@ -55,7 +57,7 @@
      protected static final DataParameter<EnumFacing> ATTACHED_FACE = EntityDataManager.<EnumFacing>createKey(EntityShulker.class, DataSerializers.FACING);
      protected static final DataParameter<Optional<BlockPos>> ATTACHED_BLOCK_POS = EntityDataManager.<Optional<BlockPos>>createKey(EntityShulker.class, DataSerializers.OPTIONAL_BLOCK_POS);
      protected static final DataParameter<Byte> PEEK_TICK = EntityDataManager.<Byte>createKey(EntityShulker.class, DataSerializers.BYTE);
@@ -64,33 +18,7 @@
      public static final EnumDyeColor DEFAULT_COLOR = EnumDyeColor.PURPLE;
      private float prevPeekAmount;
      private float peekAmount;
-@@ -88,12 +77,12 @@
-     protected void initEntityAI()
-     {
-         this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
--        this.tasks.addTask(4, new EntityShulker.AIAttack());
--        this.tasks.addTask(7, new EntityShulker.AIPeek());
-+        this.tasks.addTask(4, new AIAttack());
-+        this.tasks.addTask(7, new AIPeek());
-         this.tasks.addTask(8, new EntityAILookIdle(this));
-         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
--        this.targetTasks.addTask(2, new EntityShulker.AIAttackNearest(this));
--        this.targetTasks.addTask(3, new EntityShulker.AIDefenseAttack(this));
-+        this.targetTasks.addTask(2, new AIAttackNearest(this));
-+        this.targetTasks.addTask(3, new AIDefenseAttack(this));
-     }
- 
-     protected boolean canTriggerWalking()
-@@ -146,7 +135,7 @@
- 
-     protected EntityBodyHelper createBodyHelper()
-     {
--        return new EntityShulker.BodyHelper(this);
-+        return new BodyHelper(this);
-     }
- 
-     public static void registerFixesShulker(DataFixer fixer)
-@@ -419,9 +408,15 @@
+@@ -419,9 +421,15 @@
                      {
                          if (this.world.isBlockNormalCube(blockpos1.offset(enumfacing), false))
                          {

@@ -9,22 +9,20 @@
  
  public class EntityAIEatGrass extends EntityAIBase
  {
-@@ -78,7 +80,8 @@
+@@ -78,7 +80,7 @@
  
              if (IS_TALL_GRASS.apply(this.entityWorld.getBlockState(blockpos)))
              {
 -                if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity))
-+                // TODO: Needs testing
 +                if (!CraftEventFactory.callEntityChangeBlockEvent(this.grassEaterEntity, this.grassEaterEntity.world.getWorld().getBlockAt(blockpos.getX(), blockpos.getY(), blockpos.getZ()), Material.AIR, !net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity)).isCancelled())
                  {
                      this.entityWorld.destroyBlock(blockpos, false);
                  }
-@@ -91,7 +94,8 @@
+@@ -91,7 +93,7 @@
  
                  if (this.entityWorld.getBlockState(blockpos1).getBlock() == Blocks.GRASS)
                  {
 -                    if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity))
-+                    // TODO: Needs testing
 +                    if (!CraftEventFactory.callEntityChangeBlockEvent(this.grassEaterEntity, this.grassEaterEntity.world.getWorld().getBlockAt(blockpos.getX(), blockpos.getY(), blockpos.getZ()), Material.AIR, !net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity)).isCancelled())
                      {
                          this.entityWorld.playEvent(2001, blockpos1, Block.getIdFromBlock(Blocks.GRASS));
