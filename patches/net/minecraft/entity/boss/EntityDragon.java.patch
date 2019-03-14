@@ -1,6 +1,21 @@
 --- ../src-base/minecraft/net/minecraft/entity/boss/EntityDragon.java
 +++ ../src-work/minecraft/net/minecraft/entity/boss/EntityDragon.java
-@@ -40,6 +40,7 @@
+@@ -19,12 +19,14 @@
+ import net.minecraft.entity.item.EntityXPOrb;
+ import net.minecraft.entity.monster.IMob;
+ import net.minecraft.entity.player.EntityPlayer;
++import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.init.Blocks;
+ import net.minecraft.init.SoundEvents;
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.network.datasync.DataParameter;
+ import net.minecraft.network.datasync.DataSerializers;
+ import net.minecraft.network.datasync.EntityDataManager;
++import net.minecraft.network.play.server.SPacketEffect;
+ import net.minecraft.pathfinding.Path;
+ import net.minecraft.pathfinding.PathHeap;
+ import net.minecraft.pathfinding.PathPoint;
+@@ -40,6 +42,7 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.util.math.Vec3d;
@@ -8,7 +23,7 @@
  import net.minecraft.world.World;
  import net.minecraft.world.WorldProviderEnd;
  import net.minecraft.world.end.DragonFightManager;
-@@ -49,6 +50,8 @@
+@@ -49,6 +52,8 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -17,7 +32,7 @@
  
  public class EntityDragon extends EntityLiving implements IEntityMultiPart, IMob
  {
-@@ -78,6 +81,8 @@
+@@ -78,6 +83,8 @@
      private final int[] neighbors = new int[24];
      private final PathHeap pathFindQueue = new PathHeap();
  
@@ -26,7 +41,7 @@
      public EntityDragon(World worldIn)
      {
          super(worldIn);
-@@ -241,7 +246,7 @@
+@@ -241,7 +248,7 @@
  
                      Vec3d vec3d = iphase.getTargetLocation();
  
@@ -35,7 +50,7 @@
                      {
                          double d6 = vec3d.x - this.posX;
                          double d7 = vec3d.y - this.posY;
-@@ -411,7 +416,13 @@
+@@ -411,7 +418,13 @@
              }
              else if (this.ticksExisted % 10 == 0 && this.getHealth() < this.getMaxHealth())
              {
@@ -50,7 +65,7 @@
              }
          }
  
-@@ -488,7 +499,10 @@
+@@ -488,7 +501,10 @@
          int j1 = MathHelper.floor(p_70972_1_.maxZ);
          boolean flag = false;
          boolean flag1 = false;
@@ -62,7 +77,7 @@
          for (int k1 = i; k1 <= l; ++k1)
          {
              for (int l1 = j; l1 <= i1; ++l1)
-@@ -509,7 +523,11 @@
+@@ -509,7 +525,11 @@
                          {
                              if (block != Blocks.COMMAND_BLOCK && block != Blocks.REPEATING_COMMAND_BLOCK && block != Blocks.CHAIN_COMMAND_BLOCK && block != Blocks.IRON_BARS && block != Blocks.END_GATEWAY)
                              {
@@ -75,7 +90,7 @@
                              }
                              else
                              {
-@@ -525,6 +543,41 @@
+@@ -525,6 +545,41 @@
              }
          }
  
@@ -117,7 +132,7 @@
          if (flag1)
          {
              double d0 = p_70972_1_.minX + (p_70972_1_.maxX - p_70972_1_.minX) * (double)this.rand.nextFloat();
-@@ -638,7 +691,28 @@
+@@ -638,7 +693,28 @@
  
              if (this.deathTicks == 1)
              {
@@ -147,7 +162,7 @@
              }
          }
  
-@@ -668,7 +742,7 @@
+@@ -668,7 +744,7 @@
          {
              int i = EntityXPOrb.getXPSplit(p_184668_1_);
              p_184668_1_ -= i;

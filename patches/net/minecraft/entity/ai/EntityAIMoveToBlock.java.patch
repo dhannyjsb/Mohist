@@ -23,8 +23,8 @@
 +
 +    // Paper start
 +    @Override
-+    public void onTaskReset() {
-+        super.onTaskReset();
++    public void resetTask() {
++        super.resetTask();
 +        setTarget(BlockPos.ORIGIN);
 +    }
 +    // Paper end

@@ -1,6 +1,14 @@
 --- ../src-base/minecraft/net/minecraftforge/common/util/EnumHelper.java
 +++ ../src-work/minecraft/net/minecraftforge/common/util/EnumHelper.java
-@@ -423,4 +423,11 @@
+@@ -52,6 +52,7 @@
+ import net.minecraft.world.gen.structure.StructureStrongholdPieces.Stronghold.Door;
+ import net.minecraftforge.classloading.FMLForgePlugin;
+ import org.apache.commons.lang3.ArrayUtils;
++import org.bukkit.World;
+ 
+ import javax.annotation.Nullable;
+ 
+@@ -423,4 +424,11 @@
              setup();
          }
      }

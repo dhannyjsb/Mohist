@@ -9,11 +9,11 @@ public interface CraftRangedEntity<T extends IRangedAttackMob> extends RangedEnt
 
     @Override
     default void rangedAttack(LivingEntity target, float charge) {
-        getHandle().rangedAttack(((CraftLivingEntity) target).getHandle(), charge);
+        getHandle().attackEntityWithRangedAttack(((CraftLivingEntity) target).getHandle(), charge);
     }
 
     @Override
     default void setChargingAttack(boolean raiseHands) {
-        getHandle().setChargingAttack(raiseHands);
+        getHandle().setSwingingArms(raiseHands);
     }
 }

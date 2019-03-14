@@ -8,12 +8,18 @@
  import net.minecraft.world.World;
  
  public interface IRecipe extends net.minecraftforge.registries.IForgeRegistryEntry<IRecipe>
-@@ -34,4 +35,8 @@
+@@ -34,4 +35,14 @@
      {
          return "";
      }
 +
-+    org.bukkit.inventory.Recipe toBukkitRecipe(); // CraftBukkit
++    default org.bukkit.inventory.Recipe toBukkitRecipe() // CraftBukkit
++    {
++        return null;
++    }
 +
-+    void setKey(ResourceLocation key); // CraftBukkit
++    default void setKey(ResourceLocation key) // CraftBukkit
++    {
++
++    }
  }
