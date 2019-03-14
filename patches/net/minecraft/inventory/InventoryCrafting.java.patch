@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/inventory/InventoryCrafting.java
 +++ ../src-work/minecraft/net/minecraft/inventory/InventoryCrafting.java
-@@ -3,18 +3,75 @@
+@@ -3,18 +3,73 @@
  import net.minecraft.client.util.RecipeItemHelper;
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.item.ItemStack;
@@ -35,7 +35,6 @@
 +        return this.stackList;
 +    }
 +
-+    @Override
 +    public void onOpen(CraftHumanEntity who) {
 +        transaction.add(who);
 +    }
@@ -44,7 +43,6 @@
 +        return stackList.size() == 4 ? InventoryType.CRAFTING : InventoryType.WORKBENCH;
 +    }
 +    
-+    @Override
 +    public void onClose(CraftHumanEntity who) {
 +        transaction.remove(who);
 +    }

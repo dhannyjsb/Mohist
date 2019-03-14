@@ -46,8 +46,8 @@
                      if (l2 <= 0)
                      {
 -                        this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
-+//                        this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
-+                        if (getBukkitView() != null) org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.EMPTY);
++						//this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
++                        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.EMPTY);
                          this.maximumCost = 0;
                          return;
                      }
@@ -56,8 +56,8 @@
                      if (flag3 && !flag2)
                      {
 -                        this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
-+//                        this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
-+                        if (getBukkitView() != null) org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.EMPTY);
++						//this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
++                        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.EMPTY);
                          this.maximumCost = 0;
                          return;
                      }
@@ -66,8 +66,8 @@
              }
  
 -            this.outputSlot.setInventorySlotContents(0, itemstack1);
-+//            this.outputSlot.setInventorySlotContents(0, itemstack1);
-+            if (getBukkitView() != null) org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), itemstack1);
++			//this.outputSlot.setInventorySlotContents(0, itemstack1);
++            org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), itemstack1);
              this.detectAndSendChanges();
          }
      }

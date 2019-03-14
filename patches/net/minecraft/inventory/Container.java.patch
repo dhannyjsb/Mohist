@@ -117,15 +117,6 @@
      protected Slot addSlotToContainer(Slot slotIn)
      {
          slotIn.slotNumber = this.inventorySlots.size();
-@@ -60,7 +148,7 @@
- 
-         for (int i = 0; i < this.inventorySlots.size(); ++i)
-         {
--            nonnulllist.add(((Slot)this.inventorySlots.get(i)).getStack());
-+            nonnulllist.add(this.inventorySlots.get(i).getStack());
-         }
- 
-         return nonnulllist;
 @@ -79,7 +167,7 @@
              ItemStack itemstack = ((Slot)this.inventorySlots.get(i)).getStack();
              ItemStack itemstack1 = this.inventoryItemStacks.get(i);
@@ -135,12 +126,7 @@
              {
                  boolean clientStackChanged = !ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack);
                  itemstack1 = itemstack.isEmpty() ? ItemStack.EMPTY : itemstack.copy();
-@@ -88,10 +176,11 @@
-                 if (clientStackChanged)
-                 for (int j = 0; j < this.listeners.size(); ++j)
-                 {
--                    ((IContainerListener)this.listeners.get(j)).sendSlotContents(this, i, itemstack1);
-+                    this.listeners.get(j).sendSlotContents(this, i, itemstack1);
+@@ -92,6 +180,7 @@
                  }
              }
          }
@@ -239,7 +225,7 @@
 +                    if (player instanceof EntityPlayerMP && slot6.getSlotStackLimit() != 64) {
 +                        ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(this.windowId, slot6.slotNumber, slot6.getStack()));
 +                        // Updating a crafting inventory makes the client reset the result slot, have to send it again
-+                        if (getBukkitView() != null && (this.getBukkitView().getType() == InventoryType.WORKBENCH || this.getBukkitView().getType() == InventoryType.CRAFTING)) {  // mods bypass
++                        if (this.getBukkitView().getType() == InventoryType.WORKBENCH || this.getBukkitView().getType() == InventoryType.CRAFTING) {
 +                            ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(this.windowId, 0, this.getSlot(0).getStack()));
 +                        }
 +                    }
@@ -247,11 +233,10 @@
                  }
              }
          }
-@@ -798,6 +935,9 @@
+@@ -798,6 +935,8 @@
                  itemstack = irecipe.getCraftingResult(p_192389_3_);
              }
  
-+            if (p_192389_3_.resultInventory != null && getBukkitView() != null) // mods bypass
 +                itemstack = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(p_192389_3_, itemstack, getBukkitView(), false); // CraftBukkit
 +
              p_192389_4_.setInventorySlotContents(0, itemstack);
