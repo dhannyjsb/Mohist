@@ -103,7 +103,7 @@
  
          if (this.buyingPlayer instanceof EntityPlayerMP)
 @@ -654,7 +682,7 @@
-         return this.buyingList;
+         return net.minecraftforge.event.ForgeEventFactory.listTradeOffers(this, player, buyingList);
      }
  
 -    private void populateBuyingList()

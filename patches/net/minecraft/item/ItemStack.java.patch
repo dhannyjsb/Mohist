@@ -422,7 +422,7 @@
      }
  
      public String getDisplayName()
-@@ -930,6 +1162,7 @@
+@@ -931,6 +1163,7 @@
          nbttagcompound.setShort("id", (short)Enchantment.getEnchantmentID(ench));
          nbttagcompound.setShort("lvl", (short)((byte)level));
          nbttaglist.appendTag(nbttagcompound);
@@ -430,7 +430,7 @@
      }
  
      public boolean isItemEnchanted()
-@@ -982,6 +1215,14 @@
+@@ -983,6 +1216,14 @@
  
      public void setRepairCost(int cost)
      {
@@ -445,7 +445,7 @@
          if (!this.hasTagCompound())
          {
              this.stackTagCompound = new NBTTagCompound();
-@@ -1042,6 +1283,14 @@
+@@ -1043,6 +1284,14 @@
          nbttaglist.appendTag(nbttagcompound);
      }
  
@@ -460,7 +460,7 @@
      public ITextComponent getTextComponent()
      {
          TextComponentString textcomponentstring = new TextComponentString(this.getDisplayName());
-@@ -1279,4 +1528,16 @@
+@@ -1280,4 +1529,16 @@
      {
          return this.isEmpty() || this.getItem().doesSneakBypassUse(this, world, pos, player);
      }

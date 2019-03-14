@@ -23,7 +23,7 @@
  public class VillageSiege
  {
      private final World world;
-@@ -172,16 +173,17 @@
+@@ -173,16 +174,17 @@
              try
              {
                  entityzombie = new EntityZombie(this.world);

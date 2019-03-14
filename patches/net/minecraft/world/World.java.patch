@@ -1193,11 +1193,12 @@
                  loadedEntityList.add(entity4);
                  this.onEntityAdded(entity4);
              }
-@@ -3168,18 +3584,23 @@
+@@ -3168,19 +3584,24 @@
          IBlockState iblockstate1 = this.getBlockState(pos);
          AxisAlignedBB axisalignedbb = skipCollisionCheck ? null : blockIn.getDefaultState().getCollisionBoundingBox(this, pos);
  
 +        boolean defaultReturn;
+         if (!((placer instanceof EntityPlayer) || !net.minecraftforge.event.ForgeEventFactory.onBlockPlace(placer, new net.minecraftforge.common.util.BlockSnapshot(this, pos, blockIn.getDefaultState()), sidePlacedOn).isCanceled())) return false;
          if (axisalignedbb != Block.NULL_AABB && !this.checkNoEntityCollision(axisalignedbb.offset(pos), placer))
          {
 -            return false;
@@ -1210,8 +1211,8 @@
          }
          else
          {
--            return iblockstate1.getBlock().isReplaceable(this, pos) && blockIn.canPlaceBlockOnSide(this, pos, sidePlacedOn);
-+            defaultReturn = iblockstate1.getBlock().isReplaceable(this, pos) && blockIn.canPlaceBlockOnSide(this, pos, sidePlacedOn);
+-            return iblockstate1.getBlock().isReplaceable(this, pos);
++            defaultReturn = iblockstate1.getBlock().isReplaceable(this, pos);
          }
 +        BlockCanBuildEvent event = new BlockCanBuildEvent(this.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()), CraftMagicNumbers.getId(blockIn), defaultReturn);
 +        this.getServer().getPluginManager().callEvent(event);
@@ -1220,7 +1221,7 @@
      }
  
      public int getSeaLevel()
-@@ -3344,6 +3765,12 @@
+@@ -3345,6 +3766,12 @@
          {
              EntityPlayer entityplayer1 = this.playerEntities.get(j2);
  
@@ -1233,7 +1234,7 @@
              if (p_190525_9_.apply(entityplayer1))
              {
                  double d1 = entityplayer1.getDistanceSq(x, y, z);
-@@ -3365,8 +3792,7 @@
+@@ -3366,8 +3793,7 @@
          {
              EntityPlayer entityplayer = this.playerEntities.get(j2);
  
@@ -1243,7 +1244,7 @@
                  double d0 = entityplayer.getDistanceSq(x, y, z);
  
                  if (range < 0.0D || d0 < range * range)
-@@ -3591,6 +4017,16 @@
+@@ -3592,6 +4018,16 @@
      {
      }
  
@@ -1260,7 +1261,7 @@
      public float getThunderStrength(float delta)
      {
          return (this.prevThunderingStrength + (this.thunderingStrength - this.prevThunderingStrength) * delta) * this.getRainStrength(delta);
-@@ -3878,8 +4314,8 @@
+@@ -3879,8 +4315,8 @@
          BlockPos blockpos1 = this.getSpawnPoint();
          int j2 = x * 16 + 8 - blockpos1.getX();
          int k2 = z * 16 + 8 - blockpos1.getZ();

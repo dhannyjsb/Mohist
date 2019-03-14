@@ -8,22 +8,7 @@
  
  /**
   * INTERNAL ONLY
-@@ -572,10 +573,10 @@
-         if (missingRegs.size() > 0)
-         {
-             String text = "Forge Mod Loader detected missing/unknown registrie(s).\n\n" +
--                    "There are " + missingRegs.size() + " missing registries in this save.\n" +
--                    "If you continue the missing registries will get removed.\n" +
--                    "This may cause issues, it is advised that you create a world backup before continuing.\n\n" +
--                    "Missing Registries:\n";
-+                "There are " + missingRegs.size() + " missing registries in this save.\n" +
-+                "If you continue the missing registries will get removed.\n" +
-+                "This may cause issues, it is advised that you create a world backup before continuing.\n\n" +
-+                "Missing Registries:\n";
- 
-             for (ResourceLocation s : missingRegs)
-                 text += s.toString() + "\n";
-@@ -659,9 +660,9 @@
+@@ -662,9 +663,9 @@
              {
                  StringBuilder buf = new StringBuilder();
                  buf.append("Forge Mod Loader detected missing registry entries.\n\n")
@@ -36,7 +21,7 @@
  
                  defaulted.asMap().forEach((name, entries) ->
                  {
-@@ -836,11 +837,11 @@
+@@ -839,11 +840,11 @@
      /**
       * Check a name for a domain prefix, and if not present infer it from the
       * current active mod container.
@@ -50,7 +35,7 @@
       * @return The {@link ResourceLocation} with given or inferred domain
       */
      public static ResourceLocation checkPrefix(String name, boolean warnOverrides)
-@@ -852,7 +853,7 @@
+@@ -855,7 +856,7 @@
          String prefix = mc == null || (mc instanceof InjectedModContainer && ((InjectedModContainer)mc).wrappedContainer instanceof FMLContainer) ? "minecraft" : mc.getModId().toLowerCase(Locale.ROOT);
          if (warnOverrides && !oldPrefix.equals(prefix) && oldPrefix.length() > 0)
          {
