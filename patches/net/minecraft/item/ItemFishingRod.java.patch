@@ -1,33 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/item/ItemFishingRod.java
 +++ ../src-work/minecraft/net/minecraft/item/ItemFishingRod.java
-@@ -1,6 +1,5 @@
- package net.minecraft.item;
- 
--import javax.annotation.Nullable;
- import net.minecraft.creativetab.CreativeTabs;
- import net.minecraft.enchantment.EnchantmentHelper;
- import net.minecraft.entity.EntityLivingBase;
-@@ -8,15 +7,14 @@
- import net.minecraft.entity.projectile.EntityFishHook;
- import net.minecraft.init.SoundEvents;
- import net.minecraft.stats.StatList;
--import net.minecraft.util.ActionResult;
--import net.minecraft.util.EnumActionResult;
--import net.minecraft.util.EnumHand;
--import net.minecraft.util.ResourceLocation;
--import net.minecraft.util.SoundCategory;
-+import net.minecraft.util.*;
+@@ -16,6 +16,7 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.event.player.PlayerFishEvent;
  
-+import javax.annotation.Nullable;
-+
  public class ItemFishingRod extends Item
  {
-     public ItemFishingRod()
-@@ -74,7 +72,7 @@
+@@ -74,7 +75,7 @@
          }
          else
          {
@@ -36,7 +17,7 @@
  
              if (!worldIn.isRemote)
              {
-@@ -93,6 +91,15 @@
+@@ -93,6 +94,15 @@
                      entityfishhook.setLuck(k);
                  }
  

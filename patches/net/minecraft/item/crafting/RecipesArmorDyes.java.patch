@@ -1,10 +1,7 @@
 --- ../src-base/minecraft/net/minecraft/item/crafting/RecipesArmorDyes.java
 +++ ../src-work/minecraft/net/minecraft/item/crafting/RecipesArmorDyes.java
-@@ -1,17 +1,23 @@
- package net.minecraft.item.crafting;
- 
- import com.google.common.collect.Lists;
--import java.util.List;
+@@ -4,14 +4,19 @@
+ import java.util.List;
  import net.minecraft.init.Items;
  import net.minecraft.inventory.InventoryCrafting;
 -import net.minecraft.item.EnumDyeColor;
@@ -14,8 +11,6 @@
  import net.minecraft.world.World;
  
 -public class RecipesArmorDyes extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
-+import java.util.List;
-+
 +public class RecipesArmorDyes extends ShapelessRecipes implements IRecipe
  {
 +    // CraftBukkit start - Delegate to new parent class with bogus info

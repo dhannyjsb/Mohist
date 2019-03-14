@@ -1,24 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/item/ItemBucket.java
 +++ ../src-work/minecraft/net/minecraft/item/ItemBucket.java
-@@ -1,6 +1,5 @@
- package net.minecraft.item;
- 
--import javax.annotation.Nullable;
- import net.minecraft.advancements.CriteriaTriggers;
- import net.minecraft.block.Block;
- import net.minecraft.block.BlockLiquid;
-@@ -13,17 +12,17 @@
- import net.minecraft.init.Items;
- import net.minecraft.init.SoundEvents;
- import net.minecraft.stats.StatList;
--import net.minecraft.util.ActionResult;
--import net.minecraft.util.EnumActionResult;
--import net.minecraft.util.EnumFacing;
--import net.minecraft.util.EnumHand;
--import net.minecraft.util.EnumParticleTypes;
--import net.minecraft.util.SoundCategory;
--import net.minecraft.util.SoundEvent;
-+import net.minecraft.util.*;
+@@ -23,6 +23,10 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.RayTraceResult;
  import net.minecraft.world.World;
@@ -27,12 +9,9 @@
 +import org.bukkit.event.player.PlayerBucketEmptyEvent;
 +import org.bukkit.event.player.PlayerBucketFillEvent;
  
-+import javax.annotation.Nullable;
-+
  public class ItemBucket extends Item
  {
-     private final Block containedBlock;
-@@ -72,17 +71,27 @@
+@@ -72,17 +76,27 @@
  
                      if (material == Material.WATER && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
                      {
@@ -62,7 +41,7 @@
                      }
                      else
                      {
-@@ -99,7 +108,7 @@
+@@ -99,7 +113,7 @@
                  {
                      return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
                  }
@@ -71,7 +50,7 @@
                  {
                      if (playerIn instanceof EntityPlayerMP)
                      {
-@@ -143,8 +152,40 @@
+@@ -143,8 +157,40 @@
          }
      }
  
@@ -112,7 +91,7 @@
          if (this.containedBlock == Blocks.AIR)
          {
              return false;
-@@ -162,6 +203,14 @@
+@@ -162,6 +208,14 @@
              }
              else
              {

@@ -1,49 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/item/ItemArmor.java
 +++ ../src-work/minecraft/net/minecraft/item/ItemArmor.java
-@@ -2,8 +2,6 @@
- 
- import com.google.common.base.Predicates;
- import com.google.common.collect.Multimap;
--import java.util.List;
--import java.util.UUID;
- import net.minecraft.block.BlockDispenser;
- import net.minecraft.creativetab.CreativeTabs;
- import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-@@ -18,18 +16,18 @@
- import net.minecraft.init.SoundEvents;
- import net.minecraft.inventory.EntityEquipmentSlot;
- import net.minecraft.nbt.NBTTagCompound;
--import net.minecraft.util.ActionResult;
--import net.minecraft.util.EntitySelectors;
--import net.minecraft.util.EnumActionResult;
--import net.minecraft.util.EnumFacing;
--import net.minecraft.util.EnumHand;
--import net.minecraft.util.SoundEvent;
-+import net.minecraft.util.*;
- import net.minecraft.util.math.AxisAlignedBB;
- import net.minecraft.util.math.BlockPos;
+@@ -29,6 +29,8 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.inventory.CraftItemStack;
 +import org.bukkit.event.block.BlockDispenseEvent;
  
-+import java.util.List;
-+import java.util.UUID;
-+
  public class ItemArmor extends Item
  {
-     private static final int[] MAX_DAMAGE_ARRAY = new int[] {13, 15, 16, 11};
-@@ -47,7 +45,7 @@
-     public final int damageReduceAmount;
-     public final float toughness;
-     public final int renderIndex;
--    private final ItemArmor.ArmorMaterial material;
-+    private final ArmorMaterial material;
- 
-     public static ItemStack dispenseArmor(IBlockSource blockSource, ItemStack stack)
-     {
-@@ -63,6 +61,28 @@
+@@ -63,6 +65,28 @@
              EntityLivingBase entitylivingbase = list.get(0);
              EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(stack);
              ItemStack itemstack = stack.splitStack(1);
@@ -72,65 +38,3 @@
              entitylivingbase.setItemStackToSlot(entityequipmentslot, itemstack);
  
              if (entitylivingbase instanceof EntityLiving)
-@@ -74,7 +94,7 @@
-         }
-     }
- 
--    public ItemArmor(ItemArmor.ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn)
-+    public ItemArmor(ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn)
-     {
-         this.material = materialIn;
-         this.armorType = equipmentSlotIn;
-@@ -98,14 +118,14 @@
-         return this.material.getEnchantability();
-     }
- 
--    public ItemArmor.ArmorMaterial getArmorMaterial()
-+    public ArmorMaterial getArmorMaterial()
-     {
-         return this.material;
-     }
- 
-     public boolean hasColor(ItemStack stack)
-     {
--        if (this.material != ItemArmor.ArmorMaterial.LEATHER)
-+        if (this.material != ArmorMaterial.LEATHER)
-         {
-             return false;
-         }
-@@ -118,7 +138,7 @@
- 
-     public int getColor(ItemStack stack)
-     {
--        if (this.material != ItemArmor.ArmorMaterial.LEATHER)
-+        if (this.material != ArmorMaterial.LEATHER)
-         {
-             return 16777215;
-         }
-@@ -142,7 +162,7 @@
- 
-     public void removeColor(ItemStack stack)
-     {
--        if (this.material == ItemArmor.ArmorMaterial.LEATHER)
-+        if (this.material == ArmorMaterial.LEATHER)
-         {
-             NBTTagCompound nbttagcompound = stack.getTagCompound();
- 
-@@ -160,7 +180,7 @@
- 
-     public void setColor(ItemStack stack, int color)
-     {
--        if (this.material != ItemArmor.ArmorMaterial.LEATHER)
-+        if (this.material != ArmorMaterial.LEATHER)
-         {
-             throw new UnsupportedOperationException("Can't dye non-leather!");
-         }
-@@ -233,7 +253,7 @@
-      */
-     public boolean hasOverlay(ItemStack stack)
-     {
--        return this.material == ItemArmor.ArmorMaterial.LEATHER || getColor(stack) != 0x00FFFFFF;
-+        return this.material == ArmorMaterial.LEATHER || getColor(stack) != 0x00FFFFFF;
-     }
- 
-     public static enum ArmorMaterial

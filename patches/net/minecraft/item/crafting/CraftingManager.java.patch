@@ -1,49 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/item/crafting/CraftingManager.java
 +++ ../src-work/minecraft/net/minecraft/item/crafting/CraftingManager.java
-@@ -1,25 +1,6 @@
- package net.minecraft.item.crafting;
- 
--import com.google.gson.Gson;
--import com.google.gson.GsonBuilder;
--import com.google.gson.JsonObject;
--import com.google.gson.JsonParseException;
--import com.google.gson.JsonSyntaxException;
--import java.io.BufferedReader;
--import java.io.Closeable;
--import java.io.IOException;
--import java.io.Reader;
--import java.net.URI;
--import java.net.URISyntaxException;
--import java.net.URL;
--import java.nio.file.FileSystem;
--import java.nio.file.FileSystems;
--import java.nio.file.Files;
--import java.nio.file.Path;
--import java.nio.file.Paths;
--import java.util.Collections;
--import java.util.Iterator;
--import javax.annotation.Nullable;
-+import com.google.gson.*;
- import net.minecraft.inventory.InventoryCrafting;
- import net.minecraft.item.ItemStack;
- import net.minecraft.util.JsonUtils;
-@@ -32,16 +13,29 @@
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
- 
-+import javax.annotation.Nullable;
-+import java.io.BufferedReader;
-+import java.io.Closeable;
-+import java.io.IOException;
-+import java.io.Reader;
-+import java.net.URI;
-+import java.net.URISyntaxException;
-+import java.net.URL;
-+import java.nio.file.*;
-+import java.util.Collections;
-+import java.util.Iterator;
-+
- public class CraftingManager
+@@ -36,12 +36,13 @@
  {
      private static final Logger LOGGER = LogManager.getLogger();
      private static int nextAvailableId;
@@ -58,7 +15,7 @@
              register("armordye", new RecipesArmorDyes());
              register("bookcloning", new RecipeBookCloning());
              register("mapcloning", new RecipesMapCloning());
-@@ -188,6 +182,7 @@
+@@ -188,6 +189,7 @@
          }
          else
          {
@@ -66,7 +23,7 @@
              REGISTRY.register(nextAvailableId++, name, recipe);
          }
      }
-@@ -201,7 +196,7 @@
+@@ -201,7 +203,7 @@
                  return irecipe.getCraftingResult(craftMatrix);
              }
          }
@@ -75,7 +32,7 @@
          return ItemStack.EMPTY;
      }
  
-@@ -212,10 +207,12 @@
+@@ -212,10 +214,12 @@
          {
              if (irecipe.matches(craftMatrix, worldIn))
              {

@@ -58,14 +58,10 @@
                      return itemstack;
                  }
              }
-@@ -76,10 +75,16 @@
-             return ItemStack.EMPTY;
-         }
+@@ -82,13 +81,25 @@
+         return stack.getItem() instanceof ItemArrow;
      }
--
--    protected boolean isArrow(ItemStack stack)
--    {
--        return stack.getItem() instanceof ItemArrow;
+ 
 +    // Paper start
 +    protected boolean isArrow(EntityPlayer player, ItemStack bow, ItemStack itemstack) {
 +           return itemstack.getItem() instanceof ItemArrow && (
@@ -76,10 +72,11 @@
 +                                   CraftItemStack.asCraftMirror(itemstack)
 +                           ).callEvent());
 +    // Paper end
-     }
- 
++    }
++
      public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)
-@@ -88,7 +93,7 @@
+     {
+         if (entityLiving instanceof EntityPlayer)
          {
              EntityPlayer entityplayer = (EntityPlayer)entityLiving;
              boolean flag = entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0;
@@ -88,7 +85,7 @@
  
              int i = this.getMaxItemUseDuration(stack) - timeLeft;
              i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, entityplayer, i, !itemstack.isEmpty() || flag);
-@@ -106,7 +111,7 @@
+@@ -106,7 +117,7 @@
                  if ((double)f >= 0.1D)
                  {
                      boolean flag1 = entityplayer.capabilities.isCreativeMode || (itemstack.getItem() instanceof ItemArrow && ((ItemArrow) itemstack.getItem()).isInfinite(itemstack, stack, entityplayer));
@@ -97,7 +94,7 @@
                      if (!worldIn.isRemote)
                      {
                          ItemArrow itemarrow = (ItemArrow)(itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.ARROW);
-@@ -135,22 +140,41 @@
+@@ -135,22 +146,41 @@
  
                          if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, stack) > 0)
                          {
@@ -144,7 +141,7 @@
                      {
                          itemstack.shrink(1);
  
-@@ -192,7 +216,7 @@
+@@ -192,7 +222,7 @@
      public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
      {
          ItemStack itemstack = playerIn.getHeldItem(handIn);
@@ -153,7 +150,7 @@
  
          ActionResult<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, worldIn, playerIn, handIn, flag);
          if (ret != null) return ret;
-@@ -215,6 +239,6 @@
+@@ -215,6 +245,6 @@
  
      public EntityArrow customizeArrow(EntityArrow arrow)
      {

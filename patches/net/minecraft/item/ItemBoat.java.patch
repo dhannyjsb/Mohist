@@ -1,22 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/item/ItemBoat.java
 +++ ../src-work/minecraft/net/minecraft/item/ItemBoat.java
-@@ -1,6 +1,5 @@
- package net.minecraft.item;
- 
--import java.util.List;
- import net.minecraft.block.Block;
- import net.minecraft.creativetab.CreativeTabs;
- import net.minecraft.entity.Entity;
-@@ -17,6 +16,8 @@
- import net.minecraft.util.math.Vec3d;
- import net.minecraft.world.World;
- 
-+import java.util.List;
-+
- public class ItemBoat extends Item
- {
-     private final EntityBoat.Type type;
-@@ -84,6 +85,11 @@
+@@ -84,6 +84,11 @@
              }
              else
              {
@@ -28,7 +12,7 @@
                  Block block = worldIn.getBlockState(raytraceresult.getBlockPos()).getBlock();
                  boolean flag1 = block == Blocks.WATER || block == Blocks.FLOWING_WATER;
                  EntityBoat entityboat = new EntityBoat(worldIn, raytraceresult.hitVec.x, flag1 ? raytraceresult.hitVec.y - 0.12D : raytraceresult.hitVec.y, raytraceresult.hitVec.z);
-@@ -98,7 +104,9 @@
+@@ -98,7 +103,9 @@
                  {
                      if (!worldIn.isRemote)
                      {

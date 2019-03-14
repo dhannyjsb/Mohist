@@ -1,16 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/item/ItemDye.java
 +++ ../src-work/minecraft/net/minecraft/item/ItemDye.java
-@@ -11,15 +11,12 @@
- import net.minecraft.entity.passive.EntitySheep;
- import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.init.Blocks;
--import net.minecraft.util.EnumActionResult;
--import net.minecraft.util.EnumFacing;
--import net.minecraft.util.EnumHand;
--import net.minecraft.util.EnumParticleTypes;
--import net.minecraft.util.NonNullList;
-+import net.minecraft.util.*;
- import net.minecraft.util.math.BlockPos;
+@@ -20,6 +20,7 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,7 +8,7 @@
  
  public class ItemDye extends Item
  {
-@@ -175,6 +172,15 @@
+@@ -175,6 +176,15 @@
  
              if (!entitysheep.getSheared() && entitysheep.getFleeceColor() != enumdyecolor)
              {

@@ -1,18 +1,7 @@
 --- ../src-base/minecraft/net/minecraft/item/crafting/RecipesBanners.java
 +++ ../src-work/minecraft/net/minecraft/item/crafting/RecipesBanners.java
-@@ -1,6 +1,5 @@
- package net.minecraft.item.crafting;
+@@ -15,8 +15,14 @@
  
--import javax.annotation.Nullable;
- import net.minecraft.init.Items;
- import net.minecraft.inventory.InventoryCrafting;
- import net.minecraft.item.EnumDyeColor;
-@@ -13,10 +12,18 @@
- import net.minecraft.util.NonNullList;
- import net.minecraft.world.World;
- 
-+import javax.annotation.Nullable;
-+
  public class RecipesBanners
  {
 -    public static class RecipeAddPattern extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
@@ -27,7 +16,7 @@
              public boolean matches(InventoryCrafting inv, World worldIn)
              {
                  boolean flag = false;
-@@ -238,8 +245,14 @@
+@@ -238,8 +244,14 @@
              }
          }
  
