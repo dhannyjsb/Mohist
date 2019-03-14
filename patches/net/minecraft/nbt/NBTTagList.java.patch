@@ -1,12 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/nbt/NBTTagList.java
 +++ ../src-work/minecraft/net/minecraft/nbt/NBTTagList.java
-@@ -1,20 +1,27 @@
- package net.minecraft.nbt;
- 
- import com.google.common.collect.Lists;
-+import org.apache.logging.log4j.LogManager;
-+import org.apache.logging.log4j.Logger;
-+
+@@ -4,6 +4,8 @@
  import java.io.DataInput;
  import java.io.DataOutput;
  import java.io.IOException;
@@ -14,11 +8,9 @@
 +import java.util.Comparator;
  import java.util.List;
  import java.util.Objects;
--import org.apache.logging.log4j.LogManager;
--import org.apache.logging.log4j.Logger;
- 
--public class NBTTagList extends NBTBase implements java.lang.Iterable<NBTBase>
-+public class NBTTagList extends NBTBase implements Iterable<NBTBase>
+ import org.apache.logging.log4j.LogManager;
+@@ -12,9 +14,13 @@
+ public class NBTTagList extends NBTBase implements java.lang.Iterable<NBTBase>
  {
      private static final Logger LOGGER = LogManager.getLogger();
 -    private List<NBTBase> tagList = Lists.<NBTBase>newArrayList();
@@ -32,11 +24,3 @@
      void write(DataOutput output) throws IOException
      {
          if (this.tagList.isEmpty())
-@@ -147,6 +154,7 @@
-         return this.tagList.isEmpty();
-     }
- 
-+
-     public NBTTagCompound getCompoundTagAt(int i)
-     {
-         if (i >= 0 && i < this.tagList.size())
