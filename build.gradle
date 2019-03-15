@@ -127,9 +127,7 @@ launch4j {
     maxHeapPercent = 100
 } 
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+[compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
 
 task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     onlyIf {
