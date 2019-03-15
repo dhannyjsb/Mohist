@@ -440,7 +440,7 @@
  
 +    // Paper start
 +    public AxisAlignedBB getHopperLookupBoundingBox() {
-+            return getHopperLookupBoundingBox(this.getX(), this.getY(), this.getZ());
++            return getHopperLookupBoundingBox(this.getXPos(), this.getYPos(), this.getZPos());
 +    }
 +
 +    private static AxisAlignedBB getHopperLookupBoundingBox(double d0, double d1, double d2) {

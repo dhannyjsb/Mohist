@@ -20,16 +20,7 @@
  
  @SideOnly(Side.CLIENT)
  public class Session
-@@ -16,7 +18,7 @@
-     private final String username;
-     private final String playerID;
-     private final String token;
--    private final Session.Type sessionType;
-+    private final Type sessionType;
-     /** Forge: Cache of the local session's GameProfile properties. */
-     private com.mojang.authlib.properties.PropertyMap properties;
- 
-@@ -26,20 +28,19 @@
+@@ -26,14 +28,13 @@
          {
              usernameIn = "MissingName";
              playerIDIn = tokenIn = "NotValid";
@@ -51,28 +42,3 @@
          }
  
          this.username = usernameIn;
-         this.playerID = playerIDIn;
-         this.token = tokenIn;
--        this.sessionType = Session.Type.setSessionType(sessionTypeIn);
-+        this.sessionType = Type.setSessionType(sessionTypeIn);
-     }
- 
-     public String getSessionID()
-@@ -96,7 +97,7 @@
-         LEGACY("legacy"),
-         MOJANG("mojang");
- 
--        private static final Map<String, Session.Type> SESSION_TYPES = Maps.<String, Session.Type>newHashMap();
-+        private static final Map<String, Type> SESSION_TYPES = Maps.<String, Type>newHashMap();
-         private final String sessionType;
- 
-         private Type(String sessionTypeIn)
-@@ -112,7 +113,7 @@
- 
-         static
-         {
--            for (Session.Type session$type : values())
-+            for (Type session$type : values())
-             {
-                 SESSION_TYPES.put(session$type.sessionType, session$type);
-             }
