@@ -55,23 +55,7 @@
      public WorldServerMulti(MinecraftServer server, ISaveHandler saveHandlerIn, int dimensionId, WorldServer delegate, Profiler profilerIn)
      {
          super(server, saveHandlerIn, new DerivedWorldInfo(delegate.getWorldInfo()), dimensionId, profilerIn);
-@@ -51,10 +93,15 @@
-         this.delegate.getWorldBorder().addListener(this.borderListener);
-     }
- 
-+    /* we handle all saving including perWorldStorage in WorldServer.saveLevel. This needs to be disabled since we follow
-+    // bukkit's world saving methods by using a seperate save handler for each world. Each world folder needs to generate a corresponding 
-+    // level.dat for plugins that require it such as MultiWorld.
-+    /*
-     protected void saveLevel() throws MinecraftException
-     {
-         this.perWorldStorage.saveAllData();
-     }
-+    */
- 
-     public World init()
-     {
-@@ -77,7 +124,8 @@
+@@ -77,7 +119,8 @@
          }
  
          this.initCapabilities();

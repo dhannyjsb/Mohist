@@ -35,10 +35,10 @@
      protected StructureStart getStructureStart(int chunkX, int chunkZ)
      {
 -        MapGenStronghold.Start mapgenstronghold$start;
-+        Start mapgenstronghold$start;
++         MapGenStronghold.Start mapgenstronghold$start;
  
 -        for (mapgenstronghold$start = new MapGenStronghold.Start(this.world, this.rand, chunkX, chunkZ); mapgenstronghold$start.getComponents().isEmpty() || ((StructureStrongholdPieces.Stairs2)mapgenstronghold$start.getComponents().get(0)).strongholdPortalRoom == null; mapgenstronghold$start = new MapGenStronghold.Start(this.world, this.rand, chunkX, chunkZ))
-+        for (mapgenstronghold$start = new Start(this.world, this.rand, chunkX, chunkZ); mapgenstronghold$start.getComponents().isEmpty() || ((StructureStrongholdPieces.Stairs2)mapgenstronghold$start.getComponents().get(0)).strongholdPortalRoom == null; mapgenstronghold$start = new Start(this.world, this.rand, chunkX, chunkZ))
++        for (mapgenstronghold$start = new  MapGenStronghold.Start(this.world, this.rand, chunkX, chunkZ); mapgenstronghold$start.getComponents().isEmpty() || ((StructureStrongholdPieces.Stairs2)mapgenstronghold$start.getComponents().get(0)).strongholdPortalRoom == null; mapgenstronghold$start = new  MapGenStronghold.Start(this.world, this.rand, chunkX, chunkZ))
          {
              ;
          }

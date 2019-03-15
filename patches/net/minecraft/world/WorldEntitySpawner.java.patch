@@ -198,7 +198,7 @@
                                                      {
 -                                                        ++j2;
 -                                                        worldServerIn.spawnEntity(entityliving);
-+                                                        if (worldServerIn.addEntity(entityliving, CreatureSpawnEvent.SpawnReason.NATURAL)) {
++                                                        if (worldServerIn.spawnEntity(entityliving, CreatureSpawnEvent.SpawnReason.NATURAL)) {
 +                                                            ++j2;
 +                                                            moblimit--; // Spigot
 +                                                        }

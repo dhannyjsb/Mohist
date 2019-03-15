@@ -1,23 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/ISaveHandler.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/ISaveHandler.java
-@@ -1,13 +1,14 @@
- package net.minecraft.world.storage;
- 
--import java.io.File;
--import javax.annotation.Nullable;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraft.world.MinecraftException;
- import net.minecraft.world.WorldProvider;
- import net.minecraft.world.chunk.storage.IChunkLoader;
- import net.minecraft.world.gen.structure.template.TemplateManager;
- 
-+import javax.annotation.Nullable;
-+import java.io.File;
-+
- public interface ISaveHandler
- {
-     @Nullable
-@@ -30,4 +31,6 @@
+@@ -30,4 +30,6 @@
      File getMapFileFromName(String mapName);
  
      TemplateManager getStructureTemplateManager();

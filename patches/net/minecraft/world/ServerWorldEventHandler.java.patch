@@ -38,25 +38,17 @@
      }
  
      public void broadcastSound(int soundID, BlockPos pos, int data)
-@@ -87,14 +90,27 @@
+@@ -87,6 +90,9 @@
  
      public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress)
      {
--        for (EntityPlayerMP entityplayermp : this.mcServer.getPlayerList().getPlayers())
 +        EntityPlayer entityhuman = null;
 +        Entity entity = world.getEntityByID(breakerId);
 +        if (entity instanceof EntityPlayer) entityhuman = (EntityPlayer) entity;
-+
-+        java.util.List<? extends EntityPlayer> list = entity != null ? entity.world.playerEntities : this.mcServer.getPlayerList().getPlayers();
-+        Iterator<? extends EntityPlayer> iterator = list.iterator();
-+        while (iterator.hasNext())
+         for (EntityPlayerMP entityplayermp : this.mcServer.getPlayerList().getPlayers())
          {
-+            EntityPlayer human = iterator.next();
-+            if (!(human instanceof EntityPlayer)) continue;
-+            EntityPlayerMP entityplayermp = (EntityPlayerMP) human;
              if (entityplayermp != null && entityplayermp.world == this.world && entityplayermp.getEntityId() != breakerId)
-             {
-                 double d0 = (double)pos.getX() - entityplayermp.posX;
+@@ -95,6 +101,10 @@
                  double d1 = (double)pos.getY() - entityplayermp.posY;
                  double d2 = (double)pos.getZ() - entityplayermp.posZ;
  

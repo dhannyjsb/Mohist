@@ -1,52 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/world/BossInfoServer.java
 +++ ../src-work/minecraft/net/minecraft/world/BossInfoServer.java
-@@ -2,21 +2,22 @@
- 
- import com.google.common.base.Objects;
- import com.google.common.collect.Sets;
--import java.util.Collection;
--import java.util.Collections;
--import java.util.Set;
- import net.minecraft.entity.player.EntityPlayerMP;
- import net.minecraft.network.play.server.SPacketUpdateBossInfo;
- import net.minecraft.util.math.MathHelper;
- import net.minecraft.util.text.ITextComponent;
- 
-+import java.util.Collection;
-+import java.util.Collections;
-+import java.util.Set;
-+
- public class BossInfoServer extends BossInfo
+@@ -14,7 +14,7 @@
  {
      private final Set<EntityPlayerMP> players = Sets.<EntityPlayerMP>newHashSet();
      private final Set<EntityPlayerMP> readOnlyPlayers;
 -    private boolean visible;
 +    public boolean visible;
  
--    public BossInfoServer(ITextComponent nameIn, BossInfo.Color colorIn, BossInfo.Overlay overlayIn)
-+    public BossInfoServer(ITextComponent nameIn, Color colorIn, Overlay overlayIn)
+     public BossInfoServer(ITextComponent nameIn, BossInfo.Color colorIn, BossInfo.Overlay overlayIn)
      {
-         super(MathHelper.getRandomUUID(), nameIn, colorIn, overlayIn);
-         this.readOnlyPlayers = Collections.<EntityPlayerMP>unmodifiableSet(this.players);
-@@ -32,7 +33,7 @@
-         }
-     }
- 
--    public void setColor(BossInfo.Color colorIn)
-+    public void setColor(Color colorIn)
-     {
-         if (colorIn != this.color)
-         {
-@@ -41,7 +42,7 @@
-         }
-     }
- 
--    public void setOverlay(BossInfo.Overlay overlayIn)
-+    public void setOverlay(Overlay overlayIn)
-     {
-         if (overlayIn != this.overlay)
-         {
-@@ -92,7 +93,7 @@
+@@ -92,7 +92,7 @@
          }
      }
  
