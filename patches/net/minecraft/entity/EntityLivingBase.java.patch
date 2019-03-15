@@ -796,7 +796,7 @@
              {
                  int i = (this.getActivePotionEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
                  int j = 25 - i;
-@@ -1403,29 +1574,158 @@
+@@ -1403,29 +1574,150 @@
          }
      }
  
@@ -827,14 +827,6 @@
 +    protected boolean damageEntity_CB(final DamageSource damagesource, float f) { // void -> boolean, add final, rename **_CB
 +        if (!this.isEntityInvulnerable(damagesource)) {
 +            final boolean human = this instanceof EntityPlayer;
-+            // CatServer start - apply forge damage and armor
-+            f = net.minecraftforge.common.ForgeHooks.onLivingHurt(this, damagesource, f);
-+            if (f < 0) return true;
-+            if (human) {
-+                f = net.minecraftforge.common.ISpecialArmor.ArmorProperties.applyArmor(this, ((EntityPlayer)this).inventory.armorInventory, damagesource, f);
-+                if (f <= 0) return false;
-             }
-+            // CatServer end
 +            float originalDamage = f;
 +            Function<Double, Double> hardHat = new Function<Double, Double>() {
 +                @Override
@@ -902,7 +894,7 @@
 +            EntityDamageEvent event = CraftEventFactory.handleLivingEntityDamageEvent(this, damagesource, originalDamage, hardHatModifier, blockingModifier, armorModifier, resistanceModifier, magicModifier, absorptionModifier, hardHat, blocking, armor, resistance, magic, absorption);
 +            if (event.isCancelled()) {
 +                return false;
-+            }
+             }
 +
 +            f = (float) event.getFinalDamage();
 +
@@ -973,7 +965,7 @@
      public CombatTracker getCombatTracker()
      {
          return this._combatTracker;
-@@ -1605,6 +1905,7 @@
+@@ -1605,6 +1897,7 @@
          if (this.attributeMap == null)
          {
              this.attributeMap = new AttributeMap();
@@ -981,7 +973,7 @@
          }
  
          return this.attributeMap;
-@@ -1685,11 +1986,16 @@
+@@ -1685,11 +1978,16 @@
          }
      }
  
@@ -999,7 +991,7 @@
      protected float getSoundPitch()
      {
          return this.isChild() ? (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.5F : (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F;
-@@ -1842,10 +2148,9 @@
+@@ -1842,10 +2140,9 @@
              {
                  if (!this.isInLava() || this instanceof EntityPlayer && ((EntityPlayer)this).capabilities.isFlying)
                  {
@@ -1013,7 +1005,7 @@
                              this.fallDistance = 1.0F;
                          }
  
-@@ -1855,27 +2160,24 @@
+@@ -1855,27 +2152,24 @@
                          double d8 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
                          double d1 = vec3d.lengthVector();
                          float f4 = MathHelper.cos(f);
@@ -1048,7 +1040,7 @@
                              this.motionX += (vec3d.x / d6 * d8 - this.motionX) * 0.1D;
                              this.motionZ += (vec3d.z / d6 * d8 - this.motionZ) * 0.1D;
                          }
-@@ -1885,22 +2187,22 @@
+@@ -1885,22 +2179,22 @@
                          this.motionZ *= 0.9900000095367432D;
                          this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
  
@@ -1078,7 +1070,7 @@
                          }
                      }
                      else
-@@ -2136,6 +2438,13 @@
+@@ -2136,6 +2430,13 @@
                  if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
                  {
                      if (!ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack))
@@ -1092,7 +1084,7 @@
                      ((WorldServer)this.world).getEntityTracker().sendToTracking(this, new SPacketEntityEquipment(this.getEntityId(), entityequipmentslot, itemstack1));
                      net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent(this, entityequipmentslot, itemstack, itemstack1));
  
-@@ -2345,7 +2654,6 @@
+@@ -2345,7 +2646,6 @@
          }
  
          this.world.profiler.startSection("ai");
@@ -1100,7 +1092,7 @@
          if (this.isMovementBlocked())
          {
              this.isJumping = false;
-@@ -2426,7 +2734,8 @@
+@@ -2426,7 +2726,8 @@
  
          if (!this.world.isRemote)
          {
@@ -1110,7 +1102,7 @@
          }
      }
  
-@@ -2460,9 +2769,12 @@
+@@ -2460,9 +2761,12 @@
                  }
              }
  
@@ -1124,7 +1116,7 @@
                  this.collideWithEntity(entity);
              }
          }
-@@ -2560,12 +2872,12 @@
+@@ -2560,12 +2864,12 @@
  
      public boolean canBeCollidedWith()
      {
@@ -1139,7 +1131,7 @@
      }
  
      protected void markVelocityChanged()
-@@ -2595,7 +2907,7 @@
+@@ -2595,7 +2899,7 @@
  
      public void setAbsorptionAmount(float amount)
      {
@@ -1148,7 +1140,7 @@
          {
              amount = 0.0F;
          }
-@@ -2629,7 +2941,7 @@
+@@ -2629,7 +2933,7 @@
          {
              PotionEffect effect = iterator.next();
  
@@ -1157,7 +1149,7 @@
              {
                  onFinishedPotionEffect(effect);
                  iterator.remove();
-@@ -2667,7 +2979,8 @@
+@@ -2667,7 +2971,8 @@
          if (this.isHandActive())
          {
              ItemStack itemstack = this.getHeldItem(this.getActiveHand());
@@ -1167,7 +1159,7 @@
  
              if (itemstack == this.activeItemStack)
              {
-@@ -2784,12 +3097,37 @@
+@@ -2784,12 +3089,37 @@
      {
          if (!this.activeItemStack.isEmpty() && this.isHandActive())
          {
@@ -1207,7 +1199,7 @@
          }
      }
  
-@@ -2842,7 +3180,7 @@
+@@ -2842,7 +3172,7 @@
              }
              else
              {
@@ -1216,7 +1208,7 @@
              }
          }
          else
-@@ -2897,11 +3235,14 @@
+@@ -2897,11 +3227,14 @@
  
              if (flag1)
              {
@@ -1236,7 +1228,7 @@
                  }
              }
          }
-@@ -2936,6 +3277,11 @@
+@@ -2936,6 +3269,11 @@
          }
      }
  
@@ -1248,7 +1240,7 @@
      public boolean canBeHitWithPotion()
      {
          return true;
-@@ -2949,7 +3295,7 @@
+@@ -2949,7 +3287,7 @@
      @SuppressWarnings("unchecked")
      @Override
      @Nullable
@@ -1257,7 +1249,7 @@
      {
          if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
          {
-@@ -2961,7 +3307,7 @@
+@@ -2961,7 +3299,7 @@
      }
  
      @Override
@@ -1266,7 +1258,7 @@
      {
          return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
      }
-@@ -2975,7 +3321,7 @@
+@@ -2975,7 +3313,7 @@
      public void setPartying(BlockPos pos, boolean p_191987_2_)
      {
      }
@@ -1275,7 +1267,7 @@
      @Override
      public void moveRelative(float strafe, float up, float forward, float friction)
      {
-@@ -3001,4 +3347,16 @@
+@@ -3001,4 +3339,16 @@
              this.motionZ += (double)(forward * f2 + strafe * f1);
          }
      }
