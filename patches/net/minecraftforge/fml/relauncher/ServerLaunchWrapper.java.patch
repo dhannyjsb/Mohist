@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
++++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
+@@ -21,6 +21,7 @@
+ 
+ import java.lang.reflect.Method;
+ 
++import cn.pfcraft.i18n.Message;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.core.LoggerContext;
+ 
+@@ -54,8 +55,7 @@
+         }
+         catch (Exception e)
+         {
+-            System.err.printf("We appear to be missing one or more essential library files.\n" +
+-            		"You will need to add them to your server before FML and Forge will run successfully.");
++            System.err.printf(Message.getObject(Message.Not_Have_Library_1) + Message.getObject(Message.Not_Have_Library_2).toString());
+             e.printStackTrace(System.err);
+             System.exit(1);
+         }
+@@ -71,7 +71,7 @@
+         }
+         catch (Exception e)
+         {
+-            System.err.printf("A problem occurred running the Server launcher.");
++            System.err.printf(Message.rb.getString(Message.Mohist_Start_Error.toString()));
+             e.printStackTrace(System.err);
+             System.exit(1);
+         }
