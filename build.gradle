@@ -13,7 +13,6 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'net.minecraftforge.gradle.patcher'
-apply plugin: 'net.minecraftforge.gradle.launch4j'
 
 group = 'cn.pfcraft'
 version = '14.23.5.2821-0.0.4'
@@ -82,27 +81,9 @@ minecraft {
 
 sourceCompatibility = 1.8
 [compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
-tasks.generateXmlConfig.dependsOn installer
 tasks.compileJava.enabled = false
-tasks.build.dependsOn 'launch4j'
 
 tasks.reobfuscate.setProperty("extraSrg",["PK: org/bukkit/craftbukkit org/bukkit/craftbukkit/v1_12_R1"])
-
-installer {
-    classifier = 'installer'
-    from "src/main/resources/mohist_logo.png"
-    rename "mohist_logo\\.png", "big_logo.png"
-}
-
-launch4j {
-    jar = installer.archivePath.canonicalPath
-    outfile = file("build/distributions/${project.name}-${project.version}-installer-win.exe").canonicalPath
-    icon = file('icon.ico').canonicalPath
-    manifest = file('l4jManifest.xml').canonicalPath
-    jreMinVersion = '1.8.0'
-    initialHeapPercent = 5
-    maxHeapPercent = 100
-}
 
 task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     onlyIf {
@@ -122,9 +103,7 @@ task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     inputFile = outputJar.archivePath
     outputFile = outputJar.archivePath
 }
-uploadArchives.dependsOn signUniversal
 build.dependsOn signUniversal
-installer.dependsOn signUniversal
 
 outputJar {
     classifier = 'universal'
