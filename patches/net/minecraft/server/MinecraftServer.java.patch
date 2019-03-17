@@ -397,7 +397,7 @@
 +        for (int m = 0; m < worldServerList.size(); m++) {
 +            WorldServer worldserver = this.worldServerList.get(m);
 +            Object[] p = {m, worldserver.getSeed()};
-+            MinecraftServer.LOGGER.info(new MessageFormat(Message.getObject(Message.Mohist_Load_Map).toString()).format(p));
++            MinecraftServer.LOGGER.info(Message.getFormatString(Message.Mohist_Load_Map, p));
 +            //MinecraftServer.LOGGER.info("Preparing start region for level " + m + " (Seed: " + worldserver.getSeed() + ")");
  
 -        for (int l1 = -192; l1 <= 192 && this.isServerRunning(); l1 += 16)
@@ -427,7 +427,7 @@
 -                ++i1;
 -                worldserver.getChunkProvider().provideChunk(blockpos.getX() + l1 >> 4, blockpos.getZ() + i2 >> 4);
 +                    if (j2 - jk > 1000L) {
-+                        this.outputPercentRemaining(Message.getObject(Message.Mohist_Load_Map_Spawn).toString(), i * 100 / 625);
++                        this.outputPercentRemaining(Message.getString(Message.Mohist_Load_Map_Spawn), i * 100 / 625);
 +                        jk = j2;
 +                    }
 +                    ++i;
@@ -476,7 +476,7 @@
 +            hasStopped = true;
 +        }
 +        // CraftBukkit end
-+        LOGGER.info(Message.getObject(Message.Mohisy_Stop));
++        LOGGER.info(Message.getString(Message.Mohisy_Stop));
 +        if (this.server != null) {
 +            this.server.disablePlugins();
 +        }
@@ -488,7 +488,7 @@
          if (this.playerList != null)
          {
 -            LOGGER.info("Saving players");
-+            LOGGER.info(Message.getObject(Message.Mohisy_Save_Players));
++            LOGGER.info(Message.getString(Message.Mohisy_Save_Players));
              this.playerList.saveAllPlayerData();
 -            this.playerList.removeAllPlayers();
 +            this.playerList.removeAllPlayers(isRestarting);
@@ -498,7 +498,7 @@
          if (this.worlds != null)
          {
 -            LOGGER.info("Saving worlds");
-+            LOGGER.info(Message.getObject(Message.Mohisy_Save_Worlds));
++            LOGGER.info(Message.getString(Message.Mohisy_Save_Worlds));
  
              for (WorldServer worldserver : this.worlds)
              {
@@ -527,7 +527,7 @@
 +        // Spigot start
 +        if (org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly) {
 +            Object[] p = {"usercache.json"};
-+            LOGGER.info(new MessageFormat(Message.getObject(Message.Mohisy_Save_Other).toString()).format(p));
++            LOGGER.info(Message.getFormatString(Message.Mohisy_Save_Other, p));
 +
 +            //LOGGER.info("Saving usercache.json");
 +            this.profileCache.save(false); // Paper
@@ -690,7 +690,31 @@
                  this.stopServer();
              }
              catch (Throwable throwable)
-@@ -671,7 +799,7 @@
+@@ -607,8 +735,12 @@
+             try
+             {
+                 BufferedImage bufferedimage = ImageIO.read(file1);
+-                Validate.validState(bufferedimage.getWidth() == 64, "Must be 64 pixels wide");
+-                Validate.validState(bufferedimage.getHeight() == 64, "Must be 64 pixels high");
++                int i = 64;
++                //图片的宽和高(单位: 像素 )
++                //photo's wide and high(unit: pixels )
++                Object[] p = {i};
++                Validate.validState(bufferedimage.getWidth() == i, Message.getFormatString(Message.error_load_icon_wide,p));
++                Validate.validState(bufferedimage.getHeight() == i, Message.getFormatString(Message.error_load_icon_high,p));
+                 ImageIO.write(bufferedimage, "PNG", new ByteBufOutputStream(bytebuf));
+                 ByteBuf bytebuf1 = Base64.encode(bytebuf);
+                 response.setFavicon("data:image/png;base64," + bytebuf1.toString(StandardCharsets.UTF_8));
+@@ -616,7 +748,7 @@
+             }
+             catch (Exception exception)
+             {
+-                LOGGER.error("Couldn't load server icon", (Throwable)exception);
++                LOGGER.error(Message.getString(Message.error_load_icon), (Throwable)exception);
+             }
+             finally
+             {
+@@ -671,7 +803,7 @@
          {
              this.nanoTimeSinceStatusRefresh = i;
              this.statusResponse.setPlayers(new ServerStatusResponse.Players(this.getMaxPlayers(), this.getCurrentPlayerCount()));
@@ -699,7 +723,7 @@
              int j = MathHelper.getInt(this.random, 0, this.getCurrentPlayerCount() - agameprofile.length);
  
              for (int k = 0; k < agameprofile.length; ++k)
-@@ -683,8 +811,7 @@
+@@ -683,8 +815,7 @@
              this.statusResponse.getPlayers().setPlayers(agameprofile);
              this.statusResponse.invalidateJson();
          }
@@ -709,7 +733,7 @@
          {
              this.profiler.startSection("save");
              this.playerList.saveAllPlayerData();
-@@ -692,6 +819,7 @@
+@@ -692,6 +823,7 @@
              this.profiler.endSection();
          }
  
@@ -717,7 +741,7 @@
          this.profiler.startSection("tallying");
          this.tickTimeArray[this.tickCounter % 100] = System.nanoTime() - i;
          this.profiler.endSection();
-@@ -710,44 +838,53 @@
+@@ -710,44 +842,53 @@
          this.profiler.endSection();
          this.profiler.endSection();
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onPostServerTick();
@@ -794,7 +818,7 @@
                  this.profiler.startSection("tick");
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onPreWorldTick(worldserver);
  
-@@ -779,13 +916,12 @@
+@@ -779,13 +920,12 @@
                  worldserver.getEntityTracker().tick();
                  this.profiler.endSection();
                  this.profiler.endSection();
@@ -810,7 +834,7 @@
          this.profiler.endStartSection("connection");
          this.getNetworkSystem().networkTick();
          this.profiler.endStartSection("players");
-@@ -809,9 +945,11 @@
+@@ -809,9 +949,11 @@
  
      public void startServerThread()
      {
@@ -822,7 +846,7 @@
      }
  
      public File getFile(String fileName)
-@@ -835,6 +973,17 @@
+@@ -835,6 +977,17 @@
          return ret;
      }
  
@@ -840,7 +864,7 @@
      public String getMinecraftVersion()
      {
          return "1.12.2";
-@@ -862,28 +1011,17 @@
+@@ -862,28 +1015,17 @@
  
      public String getServerModName()
      {
@@ -872,7 +896,7 @@
          }
  
          return report;
-@@ -891,7 +1029,7 @@
+@@ -891,7 +1033,7 @@
  
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos, boolean hasTargetBlock)
      {
@@ -881,7 +905,7 @@
          boolean flag = input.startsWith("/");
  
          if (flag)
-@@ -908,11 +1046,9 @@
+@@ -908,11 +1050,9 @@
              {
                  if (CommandBase.doesStringStartWith(s2, s1))
                  {
@@ -894,7 +918,7 @@
          }
          else
          {
-@@ -925,22 +1061,24 @@
+@@ -925,22 +1065,24 @@
                  {
                      if (flag1 && !hasTargetBlock)
                      {
@@ -924,7 +948,7 @@
      }
  
      public String getName()
-@@ -993,13 +1131,11 @@
+@@ -993,13 +1135,11 @@
          this.folderName = name;
      }
  
@@ -938,7 +962,7 @@
      public String getWorldName()
      {
          return this.worldName;
-@@ -1012,7 +1148,7 @@
+@@ -1012,7 +1152,7 @@
  
      public void setDifficultyForAllWorlds(EnumDifficulty difficulty)
      {
@@ -947,7 +971,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1094,9 +1230,9 @@
+@@ -1094,9 +1234,9 @@
          playerSnooper.addClientStat("avg_tick_ms", Integer.valueOf((int)(MathHelper.average(this.tickTimeArray) * 1.0E-6D)));
          int l = 0;
  
@@ -959,7 +983,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -1134,7 +1270,8 @@
+@@ -1134,7 +1274,8 @@
  
      public boolean isServerInOnlineMode()
      {
@@ -969,7 +993,7 @@
      }
  
      public void setOnlineMode(boolean online)
-@@ -1228,7 +1365,7 @@
+@@ -1228,7 +1369,7 @@
  
      public void setGameType(GameType gameMode)
      {
@@ -978,7 +1002,7 @@
          {
              worldserver1.getWorldInfo().setGameType(gameMode);
          }
-@@ -1270,7 +1407,8 @@
+@@ -1270,7 +1411,8 @@
  
      public World getEntityWorld()
      {
@@ -988,7 +1012,7 @@
      }
  
      public boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)
-@@ -1331,7 +1469,7 @@
+@@ -1331,7 +1473,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -997,7 +1021,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1349,7 +1487,8 @@
+@@ -1349,7 +1491,8 @@
  
      public boolean sendCommandFeedback()
      {
@@ -1007,7 +1031,7 @@
      }
  
      public MinecraftServer getServer()
-@@ -1357,6 +1496,11 @@
+@@ -1357,6 +1500,11 @@
          return this;
      }
  
@@ -1019,7 +1043,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1510,14 @@
+@@ -1366,15 +1514,14 @@
      {
          Validate.notNull(callable);
  
@@ -1040,7 +1064,7 @@
          }
          else
          {
-@@ -1412,11 +1555,13 @@
+@@ -1412,11 +1559,13 @@
  
      public AdvancementManager getAdvancementManager()
      {
@@ -1054,7 +1078,7 @@
          return this.worlds[0].getFunctionManager();
      }
  
-@@ -1425,6 +1570,7 @@
+@@ -1425,6 +1574,7 @@
          if (this.isCallingFromMinecraftThread())
          {
              this.getPlayerList().saveAllPlayerData();
@@ -1062,7 +1086,7 @@
              this.worlds[0].getLootTableManager().reloadLootTables();
              this.getAdvancementManager().reload();
              this.getFunctionManager().reload();
-@@ -1455,8 +1601,11 @@
+@@ -1455,134 +1605,50 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1075,7 +1099,10 @@
          //Forge: Copied from DedicatedServer.init as to run as early as possible, Old code left in place intentionally.
          //Done in good faith with permission: https://github.com/MinecraftForge/MinecraftForge/issues/3659#issuecomment-390467028
          ServerEula eula = new ServerEula(new File("eula.txt"));
-@@ -1466,119 +1615,32 @@
+         if (!eula.hasAcceptedEULA())
+         {
+-            LOGGER.info("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.");
++            LOGGER.info(Message.getString(Message.EULA));
              eula.createEULAFile();
              return;
          }
@@ -1207,7 +1234,12 @@
          }
          catch (Exception exception)
          {
-@@ -1595,7 +1657,8 @@
+-            LOGGER.fatal("Failed to start the minecraft server", (Throwable)exception);
++            LOGGER.fatal(Message.getString(Message.Mohist_Start_Fail), (Throwable)exception);
+         }
+     }
+ 
+@@ -1595,7 +1661,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {

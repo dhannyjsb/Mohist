@@ -1,5 +1,7 @@
 package org.bukkit.craftbukkit;
 
+import cn.pfcraft.Mohist;
+import cn.pfcraft.i18n.Message;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.logging.log4j.LogManager;
@@ -167,11 +169,11 @@ public class Main {
             // Do you love Java using + and ! as string based identifiers? I sure do!
             String path = new File(".").getAbsolutePath();
             if (path.contains("!") || path.contains("+")) {
-                System.err.println("Cannot run server in a directory with ! or + in the pathname. Please rename the affected folders and try again.");
+                System.err.println(Message.getString(Message.ERROR_START_DIRECTORY));
                 return null;
             }
             try {
-				LogManager.getLogger("CraftBukkit").info("Loading libraries, please wait...");
+                Mohist.LOGGER.info(Message.getString(Message.Load_libraries));
             } catch (Throwable t) {
                 t.printStackTrace();
             }

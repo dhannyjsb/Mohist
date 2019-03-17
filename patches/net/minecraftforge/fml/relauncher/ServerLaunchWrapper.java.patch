@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -21,6 +21,7 @@
+@@ -21,25 +21,19 @@
  
  import java.lang.reflect.Method;
  
@@ -8,17 +8,38 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.core.LoggerContext;
  
-@@ -54,8 +55,7 @@
+ public class ServerLaunchWrapper {
+ 
+-    /**
+-     * @param args
+-     */
+-    public static void main(String[] args)
+-    {
+-        new ServerLaunchWrapper().run(args);
+-    }
+ 
+-    private ServerLaunchWrapper()
++    public ServerLaunchWrapper()
+     {
+ 
+     }
+ 
+-    private void run(String[] args)
++    public void run(String[] args)
+     {
+         if (System.getProperty("log4j.configurationFile") == null)
+         {
+@@ -54,8 +48,7 @@
          }
          catch (Exception e)
          {
 -            System.err.printf("We appear to be missing one or more essential library files.\n" +
 -            		"You will need to add them to your server before FML and Forge will run successfully.");
-+            System.err.printf(Message.getObject(Message.Not_Have_Library_1) + Message.getObject(Message.Not_Have_Library_2).toString());
++            System.err.printf(Message.getString(Message.Not_Have_Library_1) + Message.getString(Message.Not_Have_Library_2));
              e.printStackTrace(System.err);
              System.exit(1);
          }
-@@ -71,7 +71,7 @@
+@@ -71,7 +64,7 @@
          }
          catch (Exception e)
          {

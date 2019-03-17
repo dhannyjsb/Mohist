@@ -1,0 +1,39 @@
+--- ../src-base/minecraft/net/minecraft/server/ServerEula.java
++++ ../src-work/minecraft/net/minecraft/server/ServerEula.java
+@@ -6,6 +6,8 @@
+ import java.io.InputStream;
+ import java.io.OutputStream;
+ import java.util.Properties;
++
++import cn.pfcraft.i18n.Message;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.apache.commons.io.IOUtils;
+@@ -39,7 +41,8 @@
+         }
+         catch (Exception var8)
+         {
+-            LOG.warn("Failed to load {}", (Object)inFile);
++            Object[] p = {"{}"};
++            LOG.warn(Message.getFormatString(Message.EULA_LOAD_FAIL,p), (Object)inFile);
+             this.createEULAFile();
+         }
+         finally
+@@ -63,12 +66,15 @@
+         {
+             Properties properties = new Properties();
+             fileoutputstream = new FileOutputStream(this.eulaFile);
++            //properties;
+             properties.setProperty("eula", "false");
+-            properties.store(fileoutputstream, "By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).");
++            Object[] p = {"https://account.mojang.com/documents/minecraft_eula"};
++            properties.store(fileoutputstream, Message.getFormatString(Message.EULA_TEXT,p));
+         }
+         catch (Exception exception)
+         {
+-            LOG.warn("Failed to save {}", this.eulaFile, exception);
++            Object[] p = {"{}"};
++            LOG.warn(Message.getFormatString(Message.EULA_SAVE_FAIL,p), this.eulaFile, exception);
+         }
+         finally
+         {
