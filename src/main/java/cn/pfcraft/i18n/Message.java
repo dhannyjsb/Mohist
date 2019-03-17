@@ -33,7 +33,7 @@ public enum Message {
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
 
     public static String getString(Message key){
-        return rb.getString(key.toString()).replace("&","§");
+        return rb.getString(key.toString());
     }
 
     public static String getFormatString(Message key, Object[] f){
