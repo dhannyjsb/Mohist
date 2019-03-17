@@ -38,46 +38,11 @@ public class Mohist implements Runnable{
 		Thread t = new Thread(new Mohist(),"Mohist");
 		t.start();
 	}
-	public void run(String[] args)
-	{
-		if (System.getProperty("log4j.configurationFile") == null)
-		{
-			// Set this early so we don't need to reconfigure later
-			System.setProperty("log4j.configurationFile", "log4j2_server.xml");
-		}
-		System.out.println(Message.getObject(Message.Mohist_Start));
-		Class<?> launchwrapper = null;
-		try
-		{
-			launchwrapper = Class.forName("net.minecraft.launchwrapper.Launch",true,getClass().getClassLoader());
-			Class.forName("org.objectweb.asm.Type",true,getClass().getClassLoader());
-		}
-		catch (Exception e)
-		{
-			System.err.printf(Message.getObject(Message.Not_Have_Library_1) + Message.getObject(Message.Not_Have_Library_2).toString());
-			e.printStackTrace(System.err);
-			System.exit(1);
-		}
 
-		try
-		{
-			Method main = launchwrapper.getMethod("main", String[].class);
-			String[] allArgs = new String[args.length + 2];
-			allArgs[0] = "--tweakClass";
-			allArgs[1] = "net.minecraftforge.fml.common.launcher.FMLServerTweaker";
-			System.arraycopy(args, 0, allArgs, 2, args.length);
-			main.invoke(null,(Object)allArgs);
-		}
-		catch (Exception e)
-		{
-			System.err.printf(Message.rb.getString(Message.Mohist_Start_Error.toString()));
-			e.printStackTrace(System.err);
-			System.exit(1);
-		}
-	}
 
 	@Override
 	public void run() {
-		this.run(this.args);
+		Message.getString(Message.Mohist_Start);
+		new ServerLaunchWrapper().run(args);
 	}
 }

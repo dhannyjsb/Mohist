@@ -156,7 +156,7 @@ outputJar {
     manifest.attributes([
             "Implementation-Title": "Mohist",
             "Implementation-Version": version,
-            "Main-Class": "net.minecraftforge.fml.relauncher.ServerLaunchWrapper",
+            "Main-Class": "cn.pfcraft.Mohist",
             "TweakClass": "net.minecraftforge.fml.common.launcher.FMLTweaker",
             "Class-Path": getServerClasspath(file("jsons/${minecraft.version}-rel.json"))
     ])
