@@ -16,7 +16,7 @@ apply plugin: 'net.minecraftforge.gradle.patcher'
 apply plugin: 'net.minecraftforge.gradle.launch4j'
 
 group = 'cn.pfcraft'
-version = '14.23.5.2815-0.0.4'
+version = '14.23.5.2820-0.0.4'
 
 repositories {
     clear()
@@ -81,6 +81,7 @@ minecraft {
 }
 
 sourceCompatibility = 1.8
+[compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
 tasks.generateXmlConfig.dependsOn installer
 tasks.compileJava.enabled = false
 tasks.build.dependsOn 'launch4j'
@@ -101,9 +102,7 @@ launch4j {
     jreMinVersion = '1.8.0'
     initialHeapPercent = 5
     maxHeapPercent = 100
-} 
-
-[compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
+}
 
 task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     onlyIf {
