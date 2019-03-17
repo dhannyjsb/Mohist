@@ -147,6 +147,7 @@ task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     inputFile = outputJar.archivePath
     outputFile = outputJar.archivePath
 }
+uploadArchives.dependsOn signUniversal
 build.dependsOn signUniversal
 installer.dependsOn signUniversal
 
