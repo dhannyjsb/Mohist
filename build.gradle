@@ -2,14 +2,8 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        maven { url "https://files.minecraftforge.net/maven" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -27,30 +21,12 @@ version = '14.23.5.2815-0.0.4'
 repositories {
     clear()
     mavenCentral()
-    maven {
-        name = 'aliyun'
-        url 'https://maven.aliyun.com/repository/public'
-    }
-    maven {
-        name = "forge"
-        url = "https://files.minecraftforge.net/maven"
-    }
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-    maven {
-        name 'minecraft'
-        url 'https://libraries.minecraft.net/'
-    }
-    maven {
-        name 'maven'
-        url 'https://mvnrepository.com/artifact/'
-    }
-    maven {
-        name 'spigot'
-        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-    }
+    maven { url "https://maven.aliyun.com/repository/public" }
+    maven { url "https://files.minecraftforge.net/maven" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://libraries.minecraft.net/" }
+    maven { url "https://mvnrepository.com/artifact/" }
+    maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
 }
 
 configurations{
