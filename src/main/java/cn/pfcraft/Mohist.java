@@ -42,7 +42,7 @@ public class Mohist implements Runnable{
 
 	@Override
 	public void run() {
-		Message.getString(Message.Mohist_Start);
+		LOGGER.info(Message.getString(Message.Mohist_Start));
 		new ServerLaunchWrapper().run(args);
 	}
 }
