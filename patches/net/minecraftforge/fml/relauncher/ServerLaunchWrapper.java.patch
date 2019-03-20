@@ -1,13 +1,16 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -21,25 +21,19 @@
+@@ -19,32 +19,24 @@
  
- import java.lang.reflect.Method;
+ package net.minecraftforge.fml.relauncher;
  
 +import cn.pfcraft.i18n.Message;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.core.LoggerContext;
++
+ import java.lang.reflect.Method;
  
+-import org.apache.logging.log4j.LogManager;
+-import org.apache.logging.log4j.core.LoggerContext;
+-
  public class ServerLaunchWrapper {
  
 -    /**
@@ -29,7 +32,13 @@
      {
          if (System.getProperty("log4j.configurationFile") == null)
          {
-@@ -54,8 +48,7 @@
+             // Set this early so we don't need to reconfigure later
+-            System.setProperty("log4j.configurationFile", "log4j2_server.xml");
++            System.setProperty("log4j.configurationFile", "log4j2_mohist.xml");
+         }
+         Class<?> launchwrapper = null;
+         try
+@@ -54,8 +46,7 @@
          }
          catch (Exception e)
          {
@@ -39,7 +48,7 @@
              e.printStackTrace(System.err);
              System.exit(1);
          }
-@@ -71,7 +64,7 @@
+@@ -71,7 +62,7 @@
          }
          catch (Exception e)
          {
