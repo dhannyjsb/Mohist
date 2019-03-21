@@ -1,8 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/server/MinecraftServer.java
 +++ ../src-work/minecraft/net/minecraft/server/MinecraftServer.java
-@@ -1,7 +1,9 @@
+@@ -1,7 +1,10 @@
  package net.minecraft.server;
  
++import cn.pfcraft.Mohist;
 +import cn.pfcraft.i18n.Message;
 +import com.destroystokyo.paper.utils.CachedSizeConcurrentLinkedQueue;
  import com.google.common.collect.Lists;
@@ -11,7 +12,7 @@
  import com.google.common.util.concurrent.Futures;
  import com.google.common.util.concurrent.ListenableFuture;
  import com.google.common.util.concurrent.ListenableFutureTask;
-@@ -13,29 +15,7 @@
+@@ -13,29 +16,7 @@
  import io.netty.buffer.ByteBufOutputStream;
  import io.netty.buffer.Unpooled;
  import io.netty.handler.codec.base64.Base64;
@@ -42,7 +43,7 @@
  import net.minecraft.advancements.AdvancementManager;
  import net.minecraft.advancements.FunctionManager;
  import net.minecraft.command.CommandBase;
-@@ -43,7 +23,6 @@
+@@ -43,7 +24,6 @@
  import net.minecraft.command.ICommandSender;
  import net.minecraft.command.ServerCommandManager;
  import net.minecraft.crash.CrashReport;
@@ -50,7 +51,7 @@
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.entity.player.EntityPlayerMP;
-@@ -54,60 +33,77 @@
+@@ -54,60 +34,76 @@
  import net.minecraft.profiler.ISnooperInfo;
  import net.minecraft.profiler.Profiler;
  import net.minecraft.profiler.Snooper;
@@ -110,7 +111,6 @@
 +import java.net.URLEncoder;
 +import java.nio.charset.StandardCharsets;
 +import java.security.KeyPair;
-+import java.text.MessageFormat;
 +import java.text.SimpleDateFormat;
 +import java.util.List;
 +import java.util.Queue;
@@ -123,7 +123,7 @@
  {
 -    private static final Logger LOGGER = LogManager.getLogger();
 +    private static MinecraftServer SERVER;
-+    public static final Logger LOGGER = LogManager.getLogger();
++    public static final Logger LOGGER = Mohist.LOGGER;
      public static final File USER_CACHE_FILE = new File("usercache.json");
 -    private final ISaveFormat anvilConverterForAnvilFile;
 +    public ISaveFormat anvilConverterForAnvilFile;
@@ -385,7 +385,7 @@
      }
  
      public void initialWorldChunkLoad()
-@@ -323,28 +352,41 @@
+@@ -323,28 +352,40 @@
          int i1 = 0;
          this.setUserMessage("menu.generatingTerrain");
          int j1 = 0;
@@ -398,7 +398,6 @@
 +            WorldServer worldserver = this.worldServerList.get(m);
 +            Object[] p = {m, worldserver.getSeed()};
 +            MinecraftServer.LOGGER.info(Message.getFormatString(Message.Mohist_Load_Map, p));
-+            //MinecraftServer.LOGGER.info("Preparing start region for level " + m + " (Seed: " + worldserver.getSeed() + ")");
  
 -        for (int l1 = -192; l1 <= 192 && this.isServerRunning(); l1 += 16)
 -        {
@@ -443,7 +442,7 @@
          this.clearCurrentTask();
      }
  
-@@ -390,11 +432,12 @@
+@@ -390,11 +431,12 @@
      {
          this.currentTask = null;
          this.percentDone = 0;
@@ -457,7 +456,7 @@
          {
              if (worldserver != null)
              {
-@@ -415,10 +458,22 @@
+@@ -415,10 +457,22 @@
          }
      }
  
@@ -483,7 +482,7 @@
          if (this.getNetworkSystem() != null)
          {
              this.getNetworkSystem().terminateEndpoints();
-@@ -426,14 +481,15 @@
+@@ -426,14 +480,15 @@
  
          if (this.playerList != null)
          {
@@ -502,7 +501,7 @@
  
              for (WorldServer worldserver : this.worlds)
              {
-@@ -445,7 +501,8 @@
+@@ -445,7 +500,8 @@
  
              this.saveAllWorlds(false);
  
@@ -512,7 +511,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -453,6 +510,7 @@
+@@ -453,6 +509,7 @@
                      worldserver1.flush();
                  }
              }
@@ -520,7 +519,7 @@
  
              WorldServer[] tmp = worlds;
              for (WorldServer world : tmp)
-@@ -467,6 +525,15 @@
+@@ -467,6 +524,15 @@
          }
  
          CommandBase.setCommandListener(null); // Forge: fix MC-128561
@@ -536,7 +535,7 @@
      }
  
      public boolean isServerRunning()
-@@ -474,11 +541,64 @@
+@@ -474,11 +540,64 @@
          return this.serverRunning;
      }
  
@@ -602,7 +601,7 @@
      public void run()
      {
          try
-@@ -492,44 +612,51 @@
+@@ -492,44 +611,51 @@
                  this.statusResponse.setVersion(new ServerStatusResponse.Version("1.12.2", 340));
                  this.applyServerIconToResponse(this.statusResponse);
  
@@ -682,7 +681,7 @@
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStopping();
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
              }
-@@ -576,6 +703,7 @@
+@@ -576,6 +702,7 @@
          {
              try
              {
@@ -690,7 +689,7 @@
                  this.stopServer();
              }
              catch (Throwable throwable)
-@@ -607,8 +735,12 @@
+@@ -607,8 +734,12 @@
              try
              {
                  BufferedImage bufferedimage = ImageIO.read(file1);
@@ -705,7 +704,7 @@
                  ImageIO.write(bufferedimage, "PNG", new ByteBufOutputStream(bytebuf));
                  ByteBuf bytebuf1 = Base64.encode(bytebuf);
                  response.setFavicon("data:image/png;base64," + bytebuf1.toString(StandardCharsets.UTF_8));
-@@ -616,7 +748,7 @@
+@@ -616,7 +747,7 @@
              }
              catch (Exception exception)
              {
@@ -714,7 +713,7 @@
              }
              finally
              {
-@@ -671,7 +803,7 @@
+@@ -671,7 +802,7 @@
          {
              this.nanoTimeSinceStatusRefresh = i;
              this.statusResponse.setPlayers(new ServerStatusResponse.Players(this.getMaxPlayers(), this.getCurrentPlayerCount()));
@@ -723,7 +722,7 @@
              int j = MathHelper.getInt(this.random, 0, this.getCurrentPlayerCount() - agameprofile.length);
  
              for (int k = 0; k < agameprofile.length; ++k)
-@@ -683,8 +815,7 @@
+@@ -683,8 +814,7 @@
              this.statusResponse.getPlayers().setPlayers(agameprofile);
              this.statusResponse.invalidateJson();
          }
@@ -733,7 +732,7 @@
          {
              this.profiler.startSection("save");
              this.playerList.saveAllPlayerData();
-@@ -692,6 +823,7 @@
+@@ -692,6 +822,7 @@
              this.profiler.endSection();
          }
  
@@ -741,7 +740,7 @@
          this.profiler.startSection("tallying");
          this.tickTimeArray[this.tickCounter % 100] = System.nanoTime() - i;
          this.profiler.endSection();
-@@ -710,44 +842,53 @@
+@@ -710,44 +841,53 @@
          this.profiler.endSection();
          this.profiler.endSection();
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onPostServerTick();
@@ -818,7 +817,7 @@
                  this.profiler.startSection("tick");
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onPreWorldTick(worldserver);
  
-@@ -779,13 +920,12 @@
+@@ -779,13 +919,12 @@
                  worldserver.getEntityTracker().tick();
                  this.profiler.endSection();
                  this.profiler.endSection();
@@ -834,7 +833,7 @@
          this.profiler.endStartSection("connection");
          this.getNetworkSystem().networkTick();
          this.profiler.endStartSection("players");
-@@ -809,9 +949,11 @@
+@@ -809,9 +948,11 @@
  
      public void startServerThread()
      {
@@ -846,7 +845,7 @@
      }
  
      public File getFile(String fileName)
-@@ -835,6 +977,17 @@
+@@ -835,6 +976,17 @@
          return ret;
      }
  
@@ -864,7 +863,7 @@
      public String getMinecraftVersion()
      {
          return "1.12.2";
-@@ -862,28 +1015,17 @@
+@@ -862,28 +1014,17 @@
  
      public String getServerModName()
      {
@@ -896,7 +895,7 @@
          }
  
          return report;
-@@ -891,7 +1033,7 @@
+@@ -891,7 +1032,7 @@
  
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos, boolean hasTargetBlock)
      {
@@ -905,7 +904,7 @@
          boolean flag = input.startsWith("/");
  
          if (flag)
-@@ -908,11 +1050,9 @@
+@@ -908,11 +1049,9 @@
              {
                  if (CommandBase.doesStringStartWith(s2, s1))
                  {
@@ -918,7 +917,7 @@
          }
          else
          {
-@@ -925,22 +1065,24 @@
+@@ -925,22 +1064,24 @@
                  {
                      if (flag1 && !hasTargetBlock)
                      {
@@ -948,7 +947,7 @@
      }
  
      public String getName()
-@@ -993,13 +1135,11 @@
+@@ -993,13 +1134,11 @@
          this.folderName = name;
      }
  
@@ -962,7 +961,7 @@
      public String getWorldName()
      {
          return this.worldName;
-@@ -1012,7 +1152,7 @@
+@@ -1012,7 +1151,7 @@
  
      public void setDifficultyForAllWorlds(EnumDifficulty difficulty)
      {
@@ -971,7 +970,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1094,9 +1234,9 @@
+@@ -1094,9 +1233,9 @@
          playerSnooper.addClientStat("avg_tick_ms", Integer.valueOf((int)(MathHelper.average(this.tickTimeArray) * 1.0E-6D)));
          int l = 0;
  
@@ -983,7 +982,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -1134,7 +1274,8 @@
+@@ -1134,7 +1273,8 @@
  
      public boolean isServerInOnlineMode()
      {
@@ -993,7 +992,7 @@
      }
  
      public void setOnlineMode(boolean online)
-@@ -1228,7 +1369,7 @@
+@@ -1228,7 +1368,7 @@
  
      public void setGameType(GameType gameMode)
      {
@@ -1002,7 +1001,7 @@
          {
              worldserver1.getWorldInfo().setGameType(gameMode);
          }
-@@ -1270,7 +1411,8 @@
+@@ -1270,7 +1410,8 @@
  
      public World getEntityWorld()
      {
@@ -1012,7 +1011,7 @@
      }
  
      public boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)
-@@ -1331,7 +1473,7 @@
+@@ -1331,7 +1472,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -1021,7 +1020,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1349,7 +1491,8 @@
+@@ -1349,7 +1490,8 @@
  
      public boolean sendCommandFeedback()
      {
@@ -1031,7 +1030,7 @@
      }
  
      public MinecraftServer getServer()
-@@ -1357,6 +1500,11 @@
+@@ -1357,6 +1499,11 @@
          return this;
      }
  
@@ -1043,7 +1042,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1514,14 @@
+@@ -1366,15 +1513,14 @@
      {
          Validate.notNull(callable);
  
@@ -1064,7 +1063,7 @@
          }
          else
          {
-@@ -1412,11 +1559,13 @@
+@@ -1412,11 +1558,13 @@
  
      public AdvancementManager getAdvancementManager()
      {
@@ -1078,7 +1077,7 @@
          return this.worlds[0].getFunctionManager();
      }
  
-@@ -1425,6 +1574,7 @@
+@@ -1425,6 +1573,7 @@
          if (this.isCallingFromMinecraftThread())
          {
              this.getPlayerList().saveAllPlayerData();
@@ -1086,7 +1085,7 @@
              this.worlds[0].getLootTableManager().reloadLootTables();
              this.getAdvancementManager().reload();
              this.getFunctionManager().reload();
-@@ -1455,134 +1605,50 @@
+@@ -1455,134 +1604,50 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1239,7 +1238,7 @@
          }
      }
  
-@@ -1595,7 +1661,8 @@
+@@ -1595,7 +1660,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {
