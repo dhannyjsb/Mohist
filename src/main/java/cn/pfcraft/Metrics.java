@@ -61,7 +61,7 @@ public class Metrics {
         if (!config.isSet("serverUuid")) {
 
             // Add default values
-            config.addDefault("enabled", true);
+            config.addDefault("enabled", false);
             // Every server gets it's unique random id.
             config.addDefault("serverUuid", UUID.randomUUID().toString());
             // Should failed request be logged?
