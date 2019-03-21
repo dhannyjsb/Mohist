@@ -27,7 +27,9 @@ public enum Message {
     error_load_icon("error.load.icon"),
     error_load_icon_wide("error.load.icon.wide"),
     error_load_icon_high("error.load.icon.high"),
-    ;
+    Load_dimension("load.dimension"),
+    UnLoad_dimension("unload.dimension"),
+    World_settings("world.settings");
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());

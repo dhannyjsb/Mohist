@@ -1,5 +1,7 @@
 package org.spigotmc;
 
+import cn.pfcraft.Mohist;
+import cn.pfcraft.i18n.Message;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,7 +26,8 @@ public class SpigotWorldConfig
     {
         this.verbose = getBoolean( "verbose", true );
 
-        log( "-------- World Settings For [" + worldName + "] --------" );
+        Object[] p = {worldName};
+        Mohist.LOGGER.info(Message.getFormatString(Message.World_settings, p));
         SpigotConfig.readConfig( SpigotWorldConfig.class, this );
     }
 

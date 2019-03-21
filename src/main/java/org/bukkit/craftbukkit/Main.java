@@ -4,6 +4,7 @@ import cn.pfcraft.Mohist;
 import cn.pfcraft.i18n.Message;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;

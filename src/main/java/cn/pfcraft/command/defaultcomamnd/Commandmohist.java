@@ -57,10 +57,7 @@ public class Commandmohist extends Command {
         Command.broadcastCommandMessage(sender, ChatColor.RED + "If you encounter any issues please use the /stop command to restart your server.");
 
         MinecraftServer console = MinecraftServer.getServerInst();
-       MohistConfig.init((File) console.options.valueOf("mohist-settings"));
-        for (WorldServer world : console.worlds) {
-            world.mohistConfig.init();
-        }
+        MohistConfig.init((File) console.options.valueOf("mohist-settings"));
         console.server.reloadCount++;
 
         Command.broadcastCommandMessage(sender, ChatColor.GREEN + "mohist config reload complete.");

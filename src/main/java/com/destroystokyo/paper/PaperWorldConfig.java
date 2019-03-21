@@ -1,6 +1,7 @@
 package com.destroystokyo.paper;
 
-import net.minecraft.server.MinecraftServer;
+import cn.pfcraft.Mohist;
+import cn.pfcraft.i18n.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.spigotmc.SpigotWorldConfig;
@@ -148,7 +149,8 @@ public class PaperWorldConfig
     }
 
     public void init() {
-        PaperConfig.log("-------- World Settings For [" + this.worldName + "] --------");
+        Object[] p = {worldName};
+        PaperConfig.LOGGER.info(Message.getFormatString(Message.World_settings, p));
         PaperConfig.readConfig(PaperWorldConfig.class, this);
     }
 

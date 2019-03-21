@@ -3,6 +3,8 @@ package com.destroystokyo.paper;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import net.minecraft.server.MinecraftServer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -19,11 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 public class PaperConfig
 {
+    public static final Logger LOGGER = LogManager.getLogger("Paper");
     private static File CONFIG_FILE;
     private static final String HEADER = "This is the main configuration file for Paper.\nAs you can see, there's tons to configure. Some options may impact gameplay, so use\nwith caution, and make sure you know what each option does before configuring.\n\nIf you need help with the configuration or have any questions related to Paper,\njoin us in our IRC channel.\n\nIRC: #paper @ irc.spi.gt ( http://irc.spi.gt/iris/?channels=paper )\nWiki: https://paper.readthedocs.org/ \nPaper Forums: https://aquifermc.org/ \n";
     public static YamlConfiguration config;
@@ -78,12 +80,12 @@ public class PaperConfig
     }
 
     protected static void logError(final String s) {
-        Bukkit.getLogger1().error(s);
+        LOGGER.error(s);
     }
 
     protected static void log(final String s) {
         if (PaperConfig.verbose) {
-            Bukkit.getLogger1().info(s);
+            LOGGER.info(s);
         }
     }
 
@@ -104,7 +106,7 @@ public class PaperConfig
                     throw Throwables.propagate(ex.getCause());
                 }
                 catch (Exception ex2) {
-                    Bukkit.getLogger1().error( "Error invoking " + method, ex2);
+                    LOGGER.error( "Error invoking " + method, ex2);
                 }
             }
         }
@@ -112,7 +114,7 @@ public class PaperConfig
             PaperConfig.config.save(PaperConfig.CONFIG_FILE);
         }
         catch (IOException ex3) {
-            Bukkit.getLogger1().error( "Could not save " + PaperConfig.CONFIG_FILE, ex3);
+            LOGGER.error( "Could not save " + PaperConfig.CONFIG_FILE, ex3);
         }
     }
 
