@@ -1232,8 +1232,7 @@ public class CraftEventFactory {
             if (!isSwordNoBreak)
             {
                 int exp = 0;
-                if (!(block == null || !player.canHarvestBlock(block.getDefaultState()) || // Handle empty block or player unable to break block scenario
-                        block.canSilkHarvest(world, pos, block.getBlockState().getBaseState(), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH,player.getHeldItemMainhand()) > 0)) // If the block is being silk harvested, the exp dropped is 0
+                if (!(block == null || !player.canHarvestBlock(block.getDefaultState()) || block.canSilkHarvest(world, pos, block.getBlockState().getBaseState(), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH,player.getHeldItemMainhand()) > 0))
                 {
                     int meta = block.getMetaFromState(block.getBlockState().getBaseState());
                     int bonusLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, player.getHeldItemMainhand());

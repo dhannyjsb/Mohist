@@ -1144,7 +1144,7 @@ public final class CraftServer implements Server {
     @Override
     @Deprecated
     public CraftMapView getMap(short id) {
-        MapStorage collection = console.worldServerList.get(0).mapStorage;
+        MapStorage collection = console.worlds[0].mapStorage;
         MapData worldmap = (MapData) collection.getOrLoadData(MapData.class, "map_" + id);
         if (worldmap == null) {
             return null;
@@ -1337,7 +1337,7 @@ public final class CraftServer implements Server {
 
     @Override
     public GameMode getDefaultGameMode() {
-        return GameMode.getByValue(console.worldServerList.get(0).getWorldInfo().getGameType().getID());
+        return GameMode.getByValue(console.worlds[0].getWorldInfo().getGameType().getID());
     }
 
     @Override
@@ -1384,7 +1384,7 @@ public final class CraftServer implements Server {
 
     @Override
     public OfflinePlayer[] getOfflinePlayers() {
-        SaveHandler storage = (SaveHandler) console.worldServerList.get(0).getSaveHandler();
+        SaveHandler storage = (SaveHandler) console.worlds[0].getSaveHandler();
         String[] files = storage.getPlayerDir().list(new DatFileFilter());
         Set<OfflinePlayer> players = new HashSet<OfflinePlayer>();
 

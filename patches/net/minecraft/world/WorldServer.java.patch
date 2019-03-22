@@ -519,15 +519,6 @@
          NextTickListEntry nextticklistentry = new NextTickListEntry(pos, blockIn);
          nextticklistentry.setPriority(priority);
          Material material = blockIn.getDefaultState().getMaterial();
-@@ -597,7 +760,7 @@
- 
-     public void updateEntities()
-     {
--        if (this.playerEntities.isEmpty() && getPersistentChunks().isEmpty())
-+        if (this.playerEntities.isEmpty() && getPersistentChunks().isEmpty()) // Mohist - Use Forge logic here
-         {
-             if (this.updateEntityTick++ >= 300)
-             {
 @@ -611,6 +774,7 @@
  
          this.provider.onWorldUpdateEntities();

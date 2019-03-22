@@ -111,7 +111,7 @@ public class CraftBlock implements Block {
         net.minecraft.world.World world = chunk.getHandle().getWorld();
         BlockPos position = new BlockPos(x, y, z);
         IBlockState blockData = world.getBlockState(position);
-        world.setBlockState(position, blockData.getBlock().getDefaultState(), flag);
+        world.setBlockState(position, blockData.getBlock().getStateFromMeta(data), flag);
     }
 
     private IBlockState getData0() {
@@ -464,7 +464,7 @@ public class CraftBlock implements Block {
     }
 
     public PistonMoveReaction getPistonMoveReaction() {
-        return PistonMoveReaction.getById(getNMSBlock().getMobilityFlag(getNMSBlock().getDefaultState()).ordinal());
+        return PistonMoveReaction.getById(getNMSBlock().getMobilityFlag(getNMSBlock().getStateFromMeta(getData())).ordinal());
     }
 
     private boolean itemCausesDrops(ItemStack item) {
@@ -480,7 +480,7 @@ public class CraftBlock implements Block {
         boolean result = false;
 
         if (block != null && block != Blocks.AIR) {
-            block.dropBlockAsItemWithChance(chunk.getHandle().getWorld(), new BlockPos(x, y, z), block.getDefaultState(), 1.0F, 0);
+            block.dropBlockAsItemWithChance(chunk.getHandle().getWorld(), new BlockPos(x, y, z), block.getStateFromMeta(data), 1.0F, 0);
             result = true;
         }
 

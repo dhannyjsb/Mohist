@@ -155,29 +155,36 @@
  public class ForgeHooks
  {
      //TODO: Loot tables?
-@@ -813,7 +777,7 @@
+@@ -812,27 +776,8 @@
+ 
      public static int onBlockBreakEvent(World world, GameType gameType, EntityPlayerMP entityPlayer, BlockPos pos)
      {
-         // Logic from tryHarvestBlock for pre-canceling the event
+-        // Logic from tryHarvestBlock for pre-canceling the event
 -        boolean preCancelEvent = false;
-+        /*boolean preCancelEvent = false;
-         ItemStack itemstack = entityPlayer.getHeldItemMainhand();
-         if (gameType.isCreative() && !itemstack.isEmpty()
-                 && !itemstack.getItem().canDestroyBlockInCreative(world, pos, itemstack, entityPlayer))
-@@ -829,10 +793,10 @@
-                 if (itemstack.isEmpty() || !itemstack.canDestroy(world.getBlockState(pos).getBlock()))
-                     preCancelEvent = true;
-             }
+-        ItemStack itemstack = entityPlayer.getHeldItemMainhand();
+-        if (gameType.isCreative() && !itemstack.isEmpty()
+-                && !itemstack.getItem().canDestroyBlockInCreative(world, pos, itemstack, entityPlayer))
+-            preCancelEvent = true;
+-
+-        if (gameType.hasLimitedInteractions())
+-        {
+-            if (gameType == GameType.SPECTATOR)
+-                preCancelEvent = true;
+-
+-            if (!entityPlayer.isAllowEdit())
+-            {
+-                if (itemstack.isEmpty() || !itemstack.canDestroy(world.getBlockState(pos).getBlock()))
+-                    preCancelEvent = true;
+-            }
 -        }
-+        }*/
- 
+-
          // Tell client the block is gone immediately then process events
 -        if (world.getTileEntity(pos) == null)
 +        if (world.getTileEntity(pos) == null  && !(entityPlayer instanceof FakePlayer))
          {
              SPacketBlockChange packet = new SPacketBlockChange(world, pos);
              packet.blockState = Blocks.AIR.getDefaultState();
-@@ -842,11 +806,11 @@
+@@ -842,11 +787,11 @@
          // Post the block break event
          IBlockState state = world.getBlockState(pos);
          BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
@@ -191,12 +198,11 @@
          {
              // Let the client know the block still exists
              entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-@@ -861,83 +825,116 @@
+@@ -861,83 +806,115 @@
                      entityPlayer.connection.sendPacket(pkt);
                  }
              }
-+
-+            // Send other half of the door
++            // Update the visual error caused by the broken door
 +            if (state.getBlock() instanceof BlockDoor) {
 +                boolean bottom = state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER;
 +                entityPlayer.connection.sendPacket(new SPacketBlockChange(world, bottom ? pos.up() : pos.down()));
@@ -347,7 +353,7 @@
                      int updateFlag = snap.getFlag();
                      IBlockState oldBlock = snap.getReplacedBlock();
                      IBlockState newBlock = world.getBlockState(snap.getPos());
-@@ -948,14 +945,57 @@
+@@ -948,14 +925,57 @@
  
                      world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                  }
@@ -405,7 +411,7 @@
      public static boolean onAnvilChange(ContainerRepair container, @Nonnull ItemStack left, @Nonnull ItemStack right, IInventory outputSlot, String name, int baseCost)
      {
          AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
-@@ -1071,7 +1111,7 @@
+@@ -1071,7 +1091,7 @@
              // Revert variable back to true as it would have been set to false
              if (entity instanceof EntityMinecartContainer)
              {
@@ -414,7 +420,7 @@
              }
          }
          return !event.isCanceled();
-@@ -1344,45 +1384,45 @@
+@@ -1344,45 +1364,45 @@
      private static boolean loadAdvancements(Map<ResourceLocation, Advancement.Builder> map, ModContainer mod)
      {
          return CraftingHelper.findFiles(mod, "assets/" + mod.getModId() + "/advancements", null,
@@ -493,7 +499,7 @@
          );
      }
  
-@@ -1460,7 +1500,6 @@
+@@ -1460,7 +1480,6 @@
  
      public static boolean onFarmlandTrample(World world, BlockPos pos, IBlockState state, float fallDistance, Entity entity)
      {
@@ -501,7 +507,7 @@
          if (entity.canTrample(world, state.getBlock(), pos, fallDistance))
          {
              BlockEvent.FarmlandTrampleEvent event = new BlockEvent.FarmlandTrampleEvent(world, pos, state, fallDistance, entity);
-@@ -1469,5 +1508,4 @@
+@@ -1469,5 +1488,4 @@
          }
          return false;
      }

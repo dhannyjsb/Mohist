@@ -396,7 +396,7 @@
 +        // CraftBukkit start - fire WorldLoadEvent and handle whether or not to keep the spawn in memory
 +        for (int m = 0; m < worldServerList.size(); m++) {
 +            WorldServer worldserver = this.worldServerList.get(m);
-+            Object[] p = {m, worldserver.getSeed()};
++            Object[] p = {m, String.valueOf(worldserver.getSeed())};
 +            MinecraftServer.LOGGER.info(Message.getFormatString(Message.Mohist_Load_Map, p));
  
 -        for (int l1 = -192; l1 <= 192 && this.isServerRunning(); l1 += 16)
@@ -845,25 +845,19 @@
      }
  
      public File getFile(String fileName)
-@@ -835,6 +976,17 @@
+@@ -835,6 +976,11 @@
          return ret;
      }
  
 +    public WorldServer getWorldServer(int i) {
-+        // CraftBukkit start
-+        for (WorldServer world : worldServerList) {
-+            if (world.dimension == i) {
-+                return world;
-+            }
-+        }
-+        return worlds[0];
-+        // CraftBukkit end
++        WorldServer world = getWorld(i);
++        return world != null ? world : worlds[0];
 +    }
 +
      public String getMinecraftVersion()
      {
          return "1.12.2";
-@@ -862,28 +1014,17 @@
+@@ -862,28 +1008,17 @@
  
      public String getServerModName()
      {
@@ -895,7 +889,7 @@
          }
  
          return report;
-@@ -891,7 +1032,7 @@
+@@ -891,7 +1026,7 @@
  
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos, boolean hasTargetBlock)
      {
@@ -904,7 +898,7 @@
          boolean flag = input.startsWith("/");
  
          if (flag)
-@@ -908,11 +1049,9 @@
+@@ -908,11 +1043,9 @@
              {
                  if (CommandBase.doesStringStartWith(s2, s1))
                  {
@@ -917,7 +911,7 @@
          }
          else
          {
-@@ -925,22 +1064,24 @@
+@@ -925,22 +1058,24 @@
                  {
                      if (flag1 && !hasTargetBlock)
                      {
@@ -947,7 +941,7 @@
      }
  
      public String getName()
-@@ -993,13 +1134,11 @@
+@@ -993,13 +1128,11 @@
          this.folderName = name;
      }
  
@@ -961,7 +955,7 @@
      public String getWorldName()
      {
          return this.worldName;
-@@ -1012,7 +1151,7 @@
+@@ -1012,7 +1145,7 @@
  
      public void setDifficultyForAllWorlds(EnumDifficulty difficulty)
      {
@@ -970,7 +964,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1094,9 +1233,9 @@
+@@ -1094,9 +1227,9 @@
          playerSnooper.addClientStat("avg_tick_ms", Integer.valueOf((int)(MathHelper.average(this.tickTimeArray) * 1.0E-6D)));
          int l = 0;
  
@@ -982,7 +976,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -1134,7 +1273,8 @@
+@@ -1134,7 +1267,8 @@
  
      public boolean isServerInOnlineMode()
      {
@@ -992,7 +986,7 @@
      }
  
      public void setOnlineMode(boolean online)
-@@ -1228,7 +1368,7 @@
+@@ -1228,7 +1362,7 @@
  
      public void setGameType(GameType gameMode)
      {
@@ -1001,17 +995,7 @@
          {
              worldserver1.getWorldInfo().setGameType(gameMode);
          }
-@@ -1270,7 +1410,8 @@
- 
-     public World getEntityWorld()
-     {
--        return this.worlds[0];
-+        // return this.worlds[0];
-+        return this.worlds[0]; // CraftBukkit
-     }
- 
-     public boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)
-@@ -1331,7 +1472,7 @@
+@@ -1331,7 +1465,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -1020,17 +1004,16 @@
          {
              if (worldserver1 != null)
              {
-@@ -1349,7 +1490,8 @@
+@@ -1349,7 +1483,7 @@
  
      public boolean sendCommandFeedback()
      {
 -        return this.worlds[0].getGameRules().getBoolean("sendCommandFeedback");
-+        // return this.worlds[0].getGameRules().getBoolean("sendCommandFeedback");
 +        return worlds[0].getGameRules().getBoolean("sendCommandFeedback");
      }
  
      public MinecraftServer getServer()
-@@ -1357,6 +1499,11 @@
+@@ -1357,6 +1491,11 @@
          return this;
      }
  
@@ -1042,7 +1025,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1513,14 @@
+@@ -1366,15 +1505,14 @@
      {
          Validate.notNull(callable);
  
@@ -1063,29 +1046,7 @@
          }
          else
          {
-@@ -1412,11 +1558,13 @@
- 
-     public AdvancementManager getAdvancementManager()
-     {
-+        // return this.worlds[0].getAdvancementManager();
-         return this.worlds[0].getAdvancementManager();
-     }
- 
-     public FunctionManager getFunctionManager()
-     {
-+        // return this.worlds[0].getFunctionManager();
-         return this.worlds[0].getFunctionManager();
-     }
- 
-@@ -1425,6 +1573,7 @@
-         if (this.isCallingFromMinecraftThread())
-         {
-             this.getPlayerList().saveAllPlayerData();
-+            // this.worlds[0].getLootTableManager().reloadLootTables();
-             this.worlds[0].getLootTableManager().reloadLootTables();
-             this.getAdvancementManager().reload();
-             this.getFunctionManager().reload();
-@@ -1455,134 +1604,50 @@
+@@ -1455,134 +1593,50 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1238,7 +1199,7 @@
          }
      }
  
-@@ -1595,7 +1660,8 @@
+@@ -1595,7 +1649,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {

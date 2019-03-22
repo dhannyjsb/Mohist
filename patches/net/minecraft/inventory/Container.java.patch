@@ -31,7 +31,7 @@
  public abstract class Container
  {
      public NonNullList<ItemStack> inventoryItemStacks = NonNullList.<ItemStack>create();
-@@ -31,7 +41,85 @@
+@@ -31,7 +41,87 @@
      private final Set<Slot> dragSlots = Sets.<Slot>newHashSet();
      protected List<IContainerListener> listeners = Lists.<IContainerListener>newArrayList();
      private final Set<EntityPlayer> playerList = Sets.<EntityPlayer>newHashSet();
@@ -60,7 +60,9 @@
 +    private InventoryView computeBukkitView() {
 +        Set<IInventory> uniqueInventorySet = new HashSet<>();
 +        for(Slot slot : inventorySlots)
-+            if (slot.inventory != null) uniqueInventorySet.add(slot.inventory);
++            if (slot.inventory != null) {
++                uniqueInventorySet.add(slot.inventory);
++            }
 +        List<IInventory> inventories = new ArrayList<>(uniqueInventorySet);
 +        InventoryPlayer playerInv = null;
 +
@@ -117,7 +119,7 @@
      protected Slot addSlotToContainer(Slot slotIn)
      {
          slotIn.slotNumber = this.inventorySlots.size();
-@@ -79,7 +167,7 @@
+@@ -79,7 +169,7 @@
              ItemStack itemstack = ((Slot)this.inventorySlots.get(i)).getStack();
              ItemStack itemstack1 = this.inventoryItemStacks.get(i);
  
@@ -126,7 +128,7 @@
              {
                  boolean clientStackChanged = !ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack);
                  itemstack1 = itemstack.isEmpty() ? ItemStack.EMPTY : itemstack.copy();
-@@ -92,6 +180,7 @@
+@@ -92,6 +182,7 @@
                  }
              }
          }
@@ -134,16 +136,7 @@
      }
  
      public boolean enchantItem(EntityPlayer playerIn, int id)
-@@ -160,7 +249,7 @@
-             }
-             else if (this.dragEvent == 1)
-             {
--                Slot slot7 = this.inventorySlots.get(slotId);
-+                Slot slot7 = slotId < this.inventorySlots.size() ? this.inventorySlots.get(slotId) : null; // Paper - Ensure drag in bounds
-                 ItemStack itemstack12 = inventoryplayer.getItemStack();
- 
-                 if (slot7 != null && canAddItemToSlot(slot7, itemstack12, true) && slot7.isItemValid(itemstack12) && (this.dragMode == 2 || itemstack12.getCount() > this.dragSlots.size()) && this.canDragIntoSlot(slot7))
-@@ -174,7 +263,7 @@
+@@ -174,7 +265,7 @@
                  {
                      ItemStack itemstack9 = inventoryplayer.getItemStack().copy();
                      int k1 = inventoryplayer.getItemStack().getCount();
@@ -152,7 +145,7 @@
                      for (Slot slot8 : this.dragSlots)
                      {
                          ItemStack itemstack13 = inventoryplayer.getItemStack();
-@@ -192,12 +281,50 @@
+@@ -192,12 +283,50 @@
                              }
  
                              k1 -= itemstack14.getCount() - j3;
@@ -206,7 +199,7 @@
                  }
  
                  this.resetDrag();
-@@ -219,8 +346,9 @@
+@@ -219,8 +348,9 @@
                  {
                      if (dragType == 0)
                      {
@@ -217,7 +210,7 @@
                      }
  
                      if (dragType == 1)
-@@ -348,6 +476,15 @@
+@@ -348,6 +478,15 @@
                      }
  
                      slot6.onSlotChanged();
@@ -225,7 +218,7 @@
 +                    if (player instanceof EntityPlayerMP && slot6.getSlotStackLimit() != 64) {
 +                        ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(this.windowId, slot6.slotNumber, slot6.getStack()));
 +                        // Updating a crafting inventory makes the client reset the result slot, have to send it again
-+                        if (this.getBukkitView().getType() == InventoryType.WORKBENCH || this.getBukkitView().getType() == InventoryType.CRAFTING) {
++                        if (getBukkitView() != null && this.getBukkitView().getType() == InventoryType.WORKBENCH || this.getBukkitView().getType() == InventoryType.CRAFTING) {
 +                            ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(this.windowId, 0, this.getSlot(0).getStack()));
 +                        }
 +                    }
@@ -233,7 +226,7 @@
                  }
              }
          }
-@@ -798,6 +935,8 @@
+@@ -798,6 +937,8 @@
                  itemstack = irecipe.getCraftingResult(p_192389_3_);
              }
  
