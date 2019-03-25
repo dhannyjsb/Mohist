@@ -155,7 +155,169 @@
  public class ForgeHooks
  {
      //TODO: Loot tables?
-@@ -812,27 +776,8 @@
+@@ -346,161 +310,6 @@
+      */
+     public static boolean onPickBlock(RayTraceResult target, EntityPlayer player, World world)
+     {
+-        /*
+-            boolean flag = this.player.capabilities.isCreativeMode;
+-            TileEntity tileentity = null;
+-            ItemStack itemstack;
+-
+-            if (this.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
+-            {
+-                BlockPos blockpos = this.objectMouseOver.getBlockPos();
+-                IBlockState iblockstate = this.world.getBlockState(blockpos);
+-                Block block = iblockstate.getBlock();
+-
+-                if (iblockstate.getMaterial() == Material.AIR)
+-                {
+-                    return;
+-                }
+-
+-                itemstack = block.getItem(this.world, blockpos, iblockstate);
+-
+-                if (itemstack.isEmpty())
+-                {
+-                    return;
+-                }
+-
+-                if (flag && GuiScreen.isCtrlKeyDown() && block.hasTileEntity())
+-                {
+-                    tileentity = this.world.getTileEntity(blockpos);
+-                }
+-            }
+-            else
+-            {
+-                if (this.objectMouseOver.typeOfHit != RayTraceResult.Type.ENTITY || this.objectMouseOver.entityHit == null || !flag)
+-                {
+-                    return;
+-                }
+-
+-                if (this.objectMouseOver.entityHit instanceof EntityPainting)
+-                {
+-                    itemstack = new ItemStack(Items.PAINTING);
+-                }
+-                else if (this.objectMouseOver.entityHit instanceof EntityLeashKnot)
+-                {
+-                    itemstack = new ItemStack(Items.LEAD);
+-                }
+-                else if (this.objectMouseOver.entityHit instanceof EntityItemFrame)
+-                {
+-                    EntityItemFrame entityitemframe = (EntityItemFrame)this.objectMouseOver.entityHit;
+-                    ItemStack itemstack1 = entityitemframe.getDisplayedItem();
+-
+-                    if (itemstack1.isEmpty())
+-                    {
+-                        itemstack = new ItemStack(Items.ITEM_FRAME);
+-                    }
+-                    else
+-                    {
+-                        itemstack = itemstack1.copy();
+-                    }
+-                }
+-                else if (this.objectMouseOver.entityHit instanceof EntityMinecart)
+-                {
+-                    EntityMinecart entityminecart = (EntityMinecart)this.objectMouseOver.entityHit;
+-                    Item item;
+-
+-                    switch (entityminecart.getType())
+-                    {
+-                        case FURNACE:
+-                            item = Items.FURNACE_MINECART;
+-                            break;
+-                        case CHEST:
+-                            item = Items.CHEST_MINECART;
+-                            break;
+-                        case TNT:
+-                            item = Items.TNT_MINECART;
+-                            break;
+-                        case HOPPER:
+-                            item = Items.HOPPER_MINECART;
+-                            break;
+-                        case COMMAND_BLOCK:
+-                            item = Items.COMMAND_BLOCK_MINECART;
+-                            break;
+-                        default:
+-                            item = Items.MINECART;
+-                    }
+-
+-                    itemstack = new ItemStack(item);
+-                }
+-                else if (this.objectMouseOver.entityHit instanceof EntityBoat)
+-                {
+-                    itemstack = new ItemStack(((EntityBoat)this.objectMouseOver.entityHit).getItemBoat());
+-                }
+-                else if (this.objectMouseOver.entityHit instanceof EntityArmorStand)
+-                {
+-                    itemstack = new ItemStack(Items.ARMOR_STAND);
+-                }
+-                else if (this.objectMouseOver.entityHit instanceof EntityEnderCrystal)
+-                {
+-                    itemstack = new ItemStack(Items.END_CRYSTAL);
+-                }
+-                else
+-                {
+-                    ResourceLocation resourcelocation = EntityList.func_191301_a(this.objectMouseOver.entityHit);
+-
+-                    if (resourcelocation == null || !EntityList.ENTITY_EGGS.containsKey(resourcelocation))
+-                    {
+-                        return;
+-                    }
+-
+-                    itemstack = new ItemStack(Items.SPAWN_EGG);
+-                    ItemMonsterPlacer.applyEntityIdToItemStack(itemstack, resourcelocation);
+-                }
+-            }
+-
+-            if (itemstack.isEmpty())
+-            {
+-                String s = "";
+-
+-                if (this.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
+-                {
+-                    s = ((ResourceLocation)Block.REGISTRY.getNameForObject(this.world.getBlockState(this.objectMouseOver.getBlockPos()).getBlock())).toString();
+-                }
+-                else if (this.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY)
+-                {
+-                    s = EntityList.func_191301_a(this.objectMouseOver.entityHit).toString();
+-                }
+-
+-                LOGGER.warn("Picking on: [{}] {} gave null item", new Object[] {this.objectMouseOver.typeOfHit, s});
+-            }
+-            else
+-            {
+-                InventoryPlayer inventoryplayer = this.player.inventory;
+-
+-                if (tileentity != null)
+-                {
+-                    this.storeTEInStack(itemstack, tileentity);
+-                }
+-
+-                int i = inventoryplayer.getSlotFor(itemstack);
+-
+-                if (flag)
+-                {
+-                    inventoryplayer.setPickedItemStack(itemstack);
+-                    this.playerController.sendSlotPacket(this.player.getHeldItem(EnumHand.MAIN_HAND), 36 + inventoryplayer.currentItem);
+-                }
+-                else if (i != -1)
+-                {
+-                    if (InventoryPlayer.isHotbar(i))
+-                    {
+-                        inventoryplayer.currentItem = i;
+-                    }
+-                    else
+-                    {
+-                        this.playerController.pickItem(i);
+-                    }
+-                }
+-            }
+-         */
+         ItemStack result;
+         boolean isCreative = player.capabilities.isCreativeMode;
+         TileEntity te = null;
+@@ -812,27 +621,8 @@
  
      public static int onBlockBreakEvent(World world, GameType gameType, EntityPlayerMP entityPlayer, BlockPos pos)
      {
@@ -184,7 +346,7 @@
          {
              SPacketBlockChange packet = new SPacketBlockChange(world, pos);
              packet.blockState = Blocks.AIR.getDefaultState();
-@@ -842,11 +787,11 @@
+@@ -842,11 +632,11 @@
          // Post the block break event
          IBlockState state = world.getBlockState(pos);
          BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
@@ -198,7 +360,7 @@
          {
              // Let the client know the block still exists
              entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-@@ -861,83 +806,115 @@
+@@ -861,83 +651,115 @@
                      entityPlayer.connection.sendPacket(pkt);
                  }
              }
@@ -353,7 +515,7 @@
                      int updateFlag = snap.getFlag();
                      IBlockState oldBlock = snap.getReplacedBlock();
                      IBlockState newBlock = world.getBlockState(snap.getPos());
-@@ -948,14 +925,57 @@
+@@ -948,14 +770,57 @@
  
                      world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                  }
@@ -411,7 +573,7 @@
      public static boolean onAnvilChange(ContainerRepair container, @Nonnull ItemStack left, @Nonnull ItemStack right, IInventory outputSlot, String name, int baseCost)
      {
          AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
-@@ -1071,7 +1091,7 @@
+@@ -1071,7 +936,7 @@
              // Revert variable back to true as it would have been set to false
              if (entity instanceof EntityMinecartContainer)
              {
@@ -420,7 +582,7 @@
              }
          }
          return !event.isCanceled();
-@@ -1344,45 +1364,45 @@
+@@ -1344,45 +1209,45 @@
      private static boolean loadAdvancements(Map<ResourceLocation, Advancement.Builder> map, ModContainer mod)
      {
          return CraftingHelper.findFiles(mod, "assets/" + mod.getModId() + "/advancements", null,
@@ -499,7 +661,7 @@
          );
      }
  
-@@ -1460,7 +1480,6 @@
+@@ -1460,7 +1325,6 @@
  
      public static boolean onFarmlandTrample(World world, BlockPos pos, IBlockState state, float fallDistance, Entity entity)
      {
@@ -507,7 +669,7 @@
          if (entity.canTrample(world, state.getBlock(), pos, fallDistance))
          {
              BlockEvent.FarmlandTrampleEvent event = new BlockEvent.FarmlandTrampleEvent(world, pos, state, fallDistance, entity);
-@@ -1469,5 +1488,4 @@
+@@ -1469,5 +1333,4 @@
          }
          return false;
      }

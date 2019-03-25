@@ -271,7 +271,7 @@ public class PaperConfig
     private static void watchdogEarlyWarning() {
         PaperConfig.watchdogPrintEarlyWarningEvery = getInt("settings.watchdog.early-warning-every", 5000);
         PaperConfig.watchdogPrintEarlyWarningDelay = getInt("settings.watchdog.early-warning-delay", 10000);
-        WatchdogThread.doStart(SpigotConfig.timeoutTime, SpigotConfig.restartOnCrash);
+        WatchdogThread.doStart(SpigotConfig.timeoutTime, true);
     }
 
     private static void tabSpamLimiters() {

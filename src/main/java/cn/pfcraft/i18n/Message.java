@@ -29,7 +29,10 @@ public enum Message {
     error_load_icon_high("error.load.icon.high"),
     Load_dimension("load.dimension"),
     UnLoad_dimension("unload.dimension"),
-    World_settings("world.settings");
+    World_settings("world.settings"),
+    whitelistMessage("message.whitelist"),
+    serverFullMessage("message.serverfull"),
+    bungeecord("message.bungeecord");
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());

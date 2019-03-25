@@ -168,9 +168,7 @@ public class SpigotConfig
         tabComplete = getInt( "commands.tab-complete", 0 );
     }
 
-    public static String whitelistMessage;
     public static String unknownCommandMessage;
-    public static String serverFullMessage;
     public static String outdatedClientMessage = "Outdated client! Please use {0}";
     public static String outdatedServerMessage = "Outdated server! I\'m still on {0}";
     private static String transform(String s)
@@ -185,23 +183,15 @@ public class SpigotConfig
             set( "messages.outdated-server", outdatedServerMessage );
         }
 
-        whitelistMessage = transform( getString( "messages.whitelist", "You are not whitelisted on this server!" ) );
         unknownCommandMessage = transform( getString( "messages.unknown-command", "Unknown command. Type \"/help\" for help." ) );
-        serverFullMessage = transform( getString( "messages.server-full", "The server is full!" ) );
         outdatedClientMessage = transform( getString( "messages.outdated-client", outdatedClientMessage ) );
         outdatedServerMessage = transform( getString( "messages.outdated-server", outdatedServerMessage ) );
     }
 
     public static int timeoutTime = 60;
-    public static boolean restartOnCrash = true;
-    public static String restartScript = "./start.sh";
-    public static String restartMessage;
     private static void watchdog()
     {
         timeoutTime = getInt( "settings.timeout-time", timeoutTime );
-        restartOnCrash = getBoolean( "settings.restart-on-crash", restartOnCrash );
-        restartScript = getString( "settings.restart-script", restartScript );
-        restartMessage = transform( getString( "messages.restart", "Server is restarting" ) );
     }
 
     public static boolean bungee;
@@ -343,29 +333,6 @@ public class SpigotConfig
         ( (RangedAttribute) SharedMonsterAttributes.MOVEMENT_SPEED ).maximumValue = movementSpeed;
         attackDamage = getDouble( "settings.attribute.attackDamage.max", attackDamage );
         ( (RangedAttribute) SharedMonsterAttributes.ATTACK_DAMAGE ).maximumValue = attackDamage;
-    }
-
-    public static boolean debug;
-    private static void debug()
-    {
-        debug = getBoolean( "settings.debug", false );
-
-        if ( debug && !LogManager.getRootLogger().isTraceEnabled() )
-        {
-            // Enable debug logging
-            LoggerContext ctx = (LoggerContext) LogManager.getContext( false );
-            Configuration conf = ctx.getConfiguration();
-            conf.getLoggerConfig( LogManager.ROOT_LOGGER_NAME ).setLevel( org.apache.logging.log4j.Level.ALL );
-            ctx.updateLoggers( conf );
-        }
-
-        if ( LogManager.getRootLogger().isTraceEnabled() )
-        {
-            Bukkit.getLogger1().info( "Debug logging is enabled" );
-        } else
-        {
-            Bukkit.getLogger1().info( "Debug logging is disabled" );
-        }
     }
 
     public static int itemDirtyTicks;

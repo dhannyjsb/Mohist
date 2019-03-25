@@ -1,8 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/server/management/PlayerList.java
 +++ ../src-work/minecraft/net/minecraft/server/management/PlayerList.java
-@@ -1,18 +1,14 @@
+@@ -1,18 +1,15 @@
  package net.minecraft.server.management;
  
++import cn.pfcraft.i18n.Message;
 +import com.destroystokyo.paper.MCUtil;
 +import com.destroystokyo.paper.PaperConfig;
 +import com.google.common.base.Predicate;
@@ -23,7 +24,7 @@
  import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.advancements.PlayerAdvancements;
  import net.minecraft.entity.Entity;
-@@ -23,28 +19,11 @@
+@@ -23,28 +20,11 @@
  import net.minecraft.network.NetworkManager;
  import net.minecraft.network.Packet;
  import net.minecraft.network.PacketBuffer;
@@ -55,7 +56,7 @@
  import net.minecraft.stats.StatList;
  import net.minecraft.stats.StatisticsManagerServer;
  import net.minecraft.util.math.BlockPos;
-@@ -52,7 +31,7 @@
+@@ -52,7 +32,7 @@
  import net.minecraft.util.text.ChatType;
  import net.minecraft.util.text.ITextComponent;
  import net.minecraft.util.text.TextComponentTranslation;
@@ -64,7 +65,7 @@
  import net.minecraft.world.DimensionType;
  import net.minecraft.world.GameType;
  import net.minecraft.world.World;
-@@ -62,11 +41,34 @@
+@@ -62,11 +42,34 @@
  import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  import net.minecraft.world.storage.IPlayerFileData;
  import net.minecraft.world.storage.WorldInfo;
@@ -99,7 +100,7 @@
  public abstract class PlayerList
  {
      public static final File FILE_PLAYERBANS = new File("banned-players.json");
-@@ -76,30 +78,35 @@
+@@ -76,30 +79,35 @@
      private static final Logger LOGGER = LogManager.getLogger();
      private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
      private final MinecraftServer mcServer;
@@ -142,7 +143,7 @@
          this.mcServer = server;
          this.bannedPlayers.setLanServer(false);
          this.bannedIPs.setLanServer(false);
-@@ -125,6 +132,25 @@
+@@ -125,6 +133,25 @@
              playerIn.setPosition(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
          }
  
@@ -168,7 +169,7 @@
          playerIn.setWorld(playerWorld);
          playerIn.interactionManager.setWorld((WorldServer)playerIn.world);
          String s1 = "local";
-@@ -134,36 +160,63 @@
+@@ -134,36 +161,63 @@
              s1 = netManager.getRemoteAddress().toString();
          }
  
@@ -241,7 +242,7 @@
          nethandlerplayserver.setPlayerLocation(playerIn.posX, playerIn.posY, playerIn.posZ, playerIn.rotationYaw, playerIn.rotationPitch);
          this.updateTimeAndWeatherForPlayer(playerIn, worldserver);
  
-@@ -217,9 +270,17 @@
+@@ -217,9 +271,17 @@
  
          playerIn.addSelfToInternalCraftingInventory();
          net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerLoggedIn(playerIn);
@@ -260,7 +261,7 @@
      {
          Set<ScoreObjective> set = Sets.<ScoreObjective>newHashSet();
  
-@@ -246,28 +307,29 @@
+@@ -246,28 +308,29 @@
  
      public void setPlayerManager(WorldServer[] worldServers)
      {
@@ -295,7 +296,7 @@
              }
              public void onDamageAmountChanged(WorldBorder border, double newAmount)
              {
-@@ -346,14 +408,14 @@
+@@ -346,14 +409,14 @@
          if (playerIn.connection == null) return;
  
          this.playerDataManager.writePlayerData(playerIn);
@@ -312,7 +313,7 @@
  
          if (playeradvancements != null)
          {
-@@ -375,19 +437,96 @@
+@@ -375,19 +438,96 @@
  
          net.minecraftforge.common.chunkio.ChunkIOExecutor.adjustPoolSize(this.getCurrentPlayerCount());
          worldserver.spawnEntity(playerIn);
@@ -411,7 +412,7 @@
          this.writePlayerData(playerIn);
  
          if (playerIn.isRiding())
-@@ -420,11 +559,27 @@
+@@ -420,11 +560,27 @@
          if (entityplayermp == playerIn)
          {
              this.uuidToPlayerMap.remove(uuid);
@@ -442,7 +443,7 @@
      }
  
      public String allowUserToConnect(SocketAddress address, GameProfile profile)
-@@ -463,6 +618,85 @@
+@@ -463,6 +619,84 @@
          }
      }
  
@@ -511,15 +512,14 @@
 +        }
 +        else
 +        {
-+            // return this.playerEntityList.size() >= this.maxPlayers && !this.bypassesPlayerLimit(profile) ? "The server is full!" : null;
 +            if (this.playerEntityList.size() >= this.maxPlayers && !this.bypassesPlayerLimit(profile)) {
-+                event.disallow(PlayerLoginEvent.Result.KICK_FULL, org.spigotmc.SpigotConfig.serverFullMessage); // Spigot
++                event.disallow(PlayerLoginEvent.Result.KICK_FULL, Message.getString(Message.serverFullMessage)); // Spigot
 +            }
 +        }
 +
 +        Bukkit.getPluginManager().callEvent(event);
 +        if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
-+            loginServer.disconnect(event.getKickMessage());
++            loginServer.disconnect(new TextComponentTranslation(event.getKickMessage()));
 +            return null;
 +        }
 +        return entity;
@@ -1006,11 +1006,11 @@
 +        boolean isOp = this.ops.hasEntry(gameprofile);
 +        boolean isWhitelisted = !this.whiteListEnforced || isOp || this.whiteListedPlayers.hasEntry(gameprofile);
 +        final com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent event;
-+        event = new com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent(MCUtil.toBukkit(gameprofile), this.whiteListEnforced, isWhitelisted, isOp, org.spigotmc.SpigotConfig.whitelistMessage);
++        event = new com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent(MCUtil.toBukkit(gameprofile), this.whiteListEnforced, isWhitelisted, isOp, Message.getString(Message.whitelistMessage));
 +        event.callEvent();
 +        if (!event.isWhitelisted()) {
 +            if (loginEvent != null) {
-+                loginEvent.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, event.getKickMessage() == null ? org.spigotmc.SpigotConfig.whitelistMessage : event.getKickMessage());
++                loginEvent.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, event.getKickMessage() == null ? Message.getString(Message.whitelistMessage) : event.getKickMessage());
 +            }
 +            return false;
 +        }
@@ -1099,7 +1099,7 @@
 +    public void removeAllPlayers(boolean isRestarting) {
 +        // CraftBukkit start - disconnect safely
 +        for (EntityPlayerMP player : this.playerEntityList) {
-+            player.connection.disconnect(!isRestarting ? this.getServerInstance().server.getShutdownMessage() : org.spigotmc.SpigotConfig.restartMessage); // CraftBukkit - add custom shutdown message // Paper - add isRestarting flag
++            player.connection.disconnect(this.getServerInstance().server.getShutdownMessage()); // CraftBukkit - add custom shutdown message
          }
 +        // CraftBukkit end
 +
