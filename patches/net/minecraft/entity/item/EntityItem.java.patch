@@ -58,7 +58,7 @@
      }
  
      protected boolean canTriggerWalking()
-@@ -93,10 +102,12 @@
+@@ -93,10 +102,13 @@
          {
              super.onUpdate();
  
@@ -69,13 +69,14 @@
 +            // CraftBukkit start - Use wall time for pickup and despawn timers
 +            int elapsedTicks = MinecraftServer.currentTick - this.lastTick;
 +            if (this.pickupDelay != 32767) this.pickupDelay -= elapsedTicks;
++            this.pickupDelay = Math.max(0, this.pickupDelay); // Paper - don't go below 0
 +            if (this.age != -32768) this.age += elapsedTicks;
 +            this.lastTick = MinecraftServer.currentTick;
 +            // CraftBukkit end
  
              this.prevPosX = this.posX;
              this.prevPosY = this.posY;
-@@ -156,10 +167,12 @@
+@@ -156,10 +168,12 @@
                  this.motionY *= -0.5D;
              }
  
@@ -88,7 +89,7 @@
  
              this.handleWaterMovement();
  
-@@ -180,6 +193,10 @@
+@@ -180,6 +194,10 @@
  
              if (!this.world.isRemote && this.age >= lifespan)
              {
@@ -99,7 +100,7 @@
                  int hook = net.minecraftforge.event.ForgeEventFactory.onItemExpire(this, item);
                  if (hook < 0) this.setDead();
                  else          this.lifespan += hook;
-@@ -191,10 +208,39 @@
+@@ -191,10 +209,39 @@
          }
      }
  
@@ -141,7 +142,7 @@
              this.combineItems(entityitem);
          }
      }
-@@ -248,11 +294,14 @@
+@@ -248,11 +295,14 @@
                      }
                      else
                      {
@@ -161,7 +162,7 @@
                          return true;
                      }
                  }
-@@ -314,6 +363,9 @@
+@@ -314,6 +364,9 @@
          }
          else
          {
@@ -171,7 +172,7 @@
              this.markVelocityChanged();
              this.health = (int)((float)this.health - amount);
  
-@@ -393,6 +445,55 @@
+@@ -393,6 +446,55 @@
              Item item = itemstack.getItem();
              int i = itemstack.getCount();
  
@@ -227,7 +228,7 @@
              int hook = net.minecraftforge.event.ForgeEventFactory.onItemPickup(this, entityIn);
              if (hook < 0) return;
              ItemStack clone = itemstack.copy();
-@@ -401,10 +502,13 @@
+@@ -401,10 +503,13 @@
              {
                  clone.setCount(clone.getCount() - this.getItem().getCount());
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerItemPickupEvent(entityIn, this, clone);
