@@ -43,8 +43,6 @@ public class PaperConfig
     public static boolean saveEmptyScoreboardTeams;
     public static boolean bungeeOnlineMode;
     public static int packetInSpamThreshold;
-    public static String flyingKickPlayerMessage;
-    public static String flyingKickVehicleMessage;
     public static int playerAutoSaveRate;
     public static int maxPlayerAutoSavePerTick;
     public static boolean removeInvalidStatistics;
@@ -234,11 +232,6 @@ public class PaperConfig
         PaperConfig.packetInSpamThreshold = getInt("settings.incoming-packet-spam-threshold", 300);
     }
 
-    private static void flyingKickMessages() {
-        PaperConfig.flyingKickPlayerMessage = getString("messages.kick.flying-player", PaperConfig.flyingKickPlayerMessage);
-        PaperConfig.flyingKickVehicleMessage = getString("messages.kick.flying-vehicle", PaperConfig.flyingKickVehicleMessage);
-    }
-
     private static void removeInvalidStatistics() {
         if (PaperConfig.version < 12) {
             final boolean oldValue = getBoolean("remove-invalid-statistics", false);
@@ -300,8 +293,6 @@ public class PaperConfig
         PaperConfig.saveEmptyScoreboardTeams = false;
         PaperConfig.bungeeOnlineMode = true;
         PaperConfig.packetInSpamThreshold = 300;
-        PaperConfig.flyingKickPlayerMessage = "Flying is not enabled on this server";
-        PaperConfig.flyingKickVehicleMessage = "Flying is not enabled on this server";
         PaperConfig.removeInvalidStatistics = false;
         PaperConfig.suggestPlayersWhenNullTabCompletions = true;
         PaperConfig.authenticationServersDownKickMessage = "";

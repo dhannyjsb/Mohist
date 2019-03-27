@@ -1,18 +1,7 @@
 --- ../src-base/minecraft/net/minecraft/network/play/server/SPacketPlayerListHeaderFooter.java
 +++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketPlayerListHeaderFooter.java
-@@ -1,6 +1,5 @@
- package net.minecraft.network.play.server;
+@@ -10,6 +10,8 @@
  
--import java.io.IOException;
- import net.minecraft.network.Packet;
- import net.minecraft.network.PacketBuffer;
- import net.minecraft.network.play.INetHandlerPlayClient;
-@@ -8,8 +7,12 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import java.io.IOException;
-+
  public class SPacketPlayerListHeaderFooter implements Packet<INetHandlerPlayClient>
  {
 +    public net.md_5.bungee.api.chat.BaseComponent[] header1, footer1; // Paper
@@ -20,7 +9,7 @@
      private ITextComponent header;
      private ITextComponent footer;
  
-@@ -23,6 +26,18 @@
+@@ -23,6 +25,18 @@
      {
          buf.writeTextComponent(this.header);
          buf.writeTextComponent(this.footer);

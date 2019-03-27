@@ -1,26 +1,33 @@
 --- ../src-base/minecraft/net/minecraft/network/NetHandlerPlayServer.java
 +++ ../src-work/minecraft/net/minecraft/network/NetHandlerPlayServer.java
-@@ -1,15 +1,13 @@
+@@ -1,15 +1,25 @@
  package net.minecraft.network;
  
--import com.google.common.collect.Lists;
++import cn.pfcraft.Mohist;
++import cn.pfcraft.i18n.Message;
 +import com.destroystokyo.paper.MCUtil;
 +import com.destroystokyo.paper.event.player.IllegalPacketEvent;
 +import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 +import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent;
+ import com.google.common.collect.Lists;
  import com.google.common.primitives.Doubles;
  import com.google.common.primitives.Floats;
 -import com.google.common.util.concurrent.Futures;
  import io.netty.util.concurrent.Future;
  import io.netty.util.concurrent.GenericFutureListener;
--import java.io.IOException;
--import java.util.Collections;
--import java.util.List;
--import java.util.Set;
+ import java.io.IOException;
+ import java.util.Collections;
++import java.util.HashSet;
+ import java.util.List;
+ import java.util.Set;
++import java.util.ArrayList;
++import java.util.concurrent.ExecutionException;
++import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
++
  import net.minecraft.advancements.Advancement;
  import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.block.BlockCommandBlock;
-@@ -19,6 +17,7 @@
+@@ -19,6 +29,7 @@
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.crash.ICrashReportDetail;
  import net.minecraft.entity.Entity;
@@ -28,103 +35,41 @@
  import net.minecraft.entity.IJumpingMount;
  import net.minecraft.entity.MoverType;
  import net.minecraft.entity.item.EntityBoat;
-@@ -33,94 +32,57 @@
- import net.minecraft.init.Blocks;
- import net.minecraft.init.Items;
- import net.minecraft.init.MobEffects;
--import net.minecraft.inventory.Container;
--import net.minecraft.inventory.ContainerBeacon;
--import net.minecraft.inventory.ContainerMerchant;
--import net.minecraft.inventory.ContainerRepair;
--import net.minecraft.inventory.EntityEquipmentSlot;
--import net.minecraft.inventory.IInventory;
--import net.minecraft.inventory.Slot;
--import net.minecraft.item.ItemElytra;
--import net.minecraft.item.ItemStack;
--import net.minecraft.item.ItemWritableBook;
--import net.minecraft.item.ItemWrittenBook;
-+import net.minecraft.inventory.*;
-+import net.minecraft.item.*;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraft.nbt.NBTTagList;
- import net.minecraft.nbt.NBTTagString;
- import net.minecraft.network.play.INetHandlerPlayServer;
--import net.minecraft.network.play.client.CPacketAnimation;
--import net.minecraft.network.play.client.CPacketChatMessage;
--import net.minecraft.network.play.client.CPacketClickWindow;
--import net.minecraft.network.play.client.CPacketClientSettings;
--import net.minecraft.network.play.client.CPacketClientStatus;
--import net.minecraft.network.play.client.CPacketCloseWindow;
--import net.minecraft.network.play.client.CPacketConfirmTeleport;
--import net.minecraft.network.play.client.CPacketConfirmTransaction;
--import net.minecraft.network.play.client.CPacketCreativeInventoryAction;
--import net.minecraft.network.play.client.CPacketCustomPayload;
--import net.minecraft.network.play.client.CPacketEnchantItem;
--import net.minecraft.network.play.client.CPacketEntityAction;
--import net.minecraft.network.play.client.CPacketHeldItemChange;
--import net.minecraft.network.play.client.CPacketInput;
--import net.minecraft.network.play.client.CPacketKeepAlive;
--import net.minecraft.network.play.client.CPacketPlaceRecipe;
--import net.minecraft.network.play.client.CPacketPlayer;
--import net.minecraft.network.play.client.CPacketPlayerAbilities;
--import net.minecraft.network.play.client.CPacketPlayerDigging;
--import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
--import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
--import net.minecraft.network.play.client.CPacketRecipeInfo;
--import net.minecraft.network.play.client.CPacketResourcePackStatus;
--import net.minecraft.network.play.client.CPacketSeenAdvancements;
--import net.minecraft.network.play.client.CPacketSpectate;
--import net.minecraft.network.play.client.CPacketSteerBoat;
--import net.minecraft.network.play.client.CPacketTabComplete;
--import net.minecraft.network.play.client.CPacketUpdateSign;
--import net.minecraft.network.play.client.CPacketUseEntity;
--import net.minecraft.network.play.client.CPacketVehicleMove;
--import net.minecraft.network.play.server.SPacketBlockChange;
--import net.minecraft.network.play.server.SPacketChat;
--import net.minecraft.network.play.server.SPacketConfirmTransaction;
--import net.minecraft.network.play.server.SPacketDisconnect;
--import net.minecraft.network.play.server.SPacketHeldItemChange;
--import net.minecraft.network.play.server.SPacketKeepAlive;
--import net.minecraft.network.play.server.SPacketMoveVehicle;
--import net.minecraft.network.play.server.SPacketPlayerPosLook;
+@@ -40,6 +51,7 @@
+ import net.minecraft.inventory.EntityEquipmentSlot;
+ import net.minecraft.inventory.IInventory;
+ import net.minecraft.inventory.Slot;
++import net.minecraft.item.Item;
+ import net.minecraft.item.ItemElytra;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.item.ItemWritableBook;
+@@ -82,13 +94,16 @@
+ import net.minecraft.network.play.server.SPacketChat;
+ import net.minecraft.network.play.server.SPacketConfirmTransaction;
+ import net.minecraft.network.play.server.SPacketDisconnect;
++import net.minecraft.network.play.server.SPacketEntityAttach;
++import net.minecraft.network.play.server.SPacketEntityMetadata;
+ import net.minecraft.network.play.server.SPacketHeldItemChange;
+ import net.minecraft.network.play.server.SPacketKeepAlive;
+ import net.minecraft.network.play.server.SPacketMoveVehicle;
+ import net.minecraft.network.play.server.SPacketPlayerPosLook;
 -import net.minecraft.network.play.server.SPacketRespawn;
--import net.minecraft.network.play.server.SPacketSetSlot;
--import net.minecraft.network.play.server.SPacketTabComplete;
-+import net.minecraft.network.play.client.*;
-+import net.minecraft.network.play.server.*;
+ import net.minecraft.network.play.server.SPacketSetSlot;
++import net.minecraft.network.play.server.SPacketSpawnPosition;
+ import net.minecraft.network.play.server.SPacketTabComplete;
 +import net.minecraft.scoreboard.ScorePlayerTeam;
  import net.minecraft.server.MinecraftServer;
--import net.minecraft.tileentity.CommandBlockBaseLogic;
--import net.minecraft.tileentity.TileEntity;
--import net.minecraft.tileentity.TileEntityCommandBlock;
--import net.minecraft.tileentity.TileEntitySign;
--import net.minecraft.tileentity.TileEntityStructure;
--import net.minecraft.util.ChatAllowedCharacters;
--import net.minecraft.util.EnumFacing;
--import net.minecraft.util.EnumHand;
--import net.minecraft.util.ITickable;
--import net.minecraft.util.IntHashMap;
--import net.minecraft.util.Mirror;
--import net.minecraft.util.NonNullList;
--import net.minecraft.util.ReportedException;
--import net.minecraft.util.ResourceLocation;
--import net.minecraft.util.Rotation;
--import net.minecraft.util.ServerRecipeBookHelper;
-+import net.minecraft.tileentity.*;
-+import net.minecraft.util.*;
+ import net.minecraft.tileentity.CommandBlockBaseLogic;
+ import net.minecraft.tileentity.TileEntity;
+@@ -108,6 +123,7 @@
+ import net.minecraft.util.ServerRecipeBookHelper;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
 +import net.minecraft.util.math.RayTraceResult;
  import net.minecraft.util.math.Vec3d;
--import net.minecraft.util.text.ChatType;
--import net.minecraft.util.text.ITextComponent;
--import net.minecraft.util.text.TextComponentString;
--import net.minecraft.util.text.TextComponentTranslation;
--import net.minecraft.util.text.TextFormatting;
-+import net.minecraft.util.text.*;
- import net.minecraft.world.DimensionType;
- import net.minecraft.world.GameType;
- import net.minecraft.world.WorldServer;
+ import net.minecraft.util.text.ChatType;
+ import net.minecraft.util.text.ITextComponent;
+@@ -120,18 +136,63 @@
  import org.apache.commons.lang3.StringUtils;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -141,25 +86,36 @@
 +import org.bukkit.event.block.Action;
 +import org.bukkit.event.block.SignChangeEvent;
 +import org.bukkit.event.inventory.ClickType;
-+import org.bukkit.event.inventory.*;
-+import org.bukkit.event.player.*;
++import org.bukkit.event.inventory.CraftItemEvent;
++import org.bukkit.event.inventory.InventoryAction;
++import org.bukkit.event.inventory.InventoryClickEvent;
++import org.bukkit.event.inventory.InventoryCreativeEvent;
++import org.bukkit.event.inventory.InventoryType;
++import org.bukkit.event.player.AsyncPlayerChatEvent;
++import org.bukkit.event.player.PlayerAnimationEvent;
++import org.bukkit.event.player.PlayerChatEvent;
++import org.bukkit.event.player.PlayerCommandPreprocessEvent;
++import org.bukkit.event.player.PlayerInteractAtEntityEvent;
++import org.bukkit.event.player.PlayerInteractEntityEvent;
++import org.bukkit.event.player.PlayerItemHeldEvent;
++import org.bukkit.event.player.PlayerKickEvent;
++import org.bukkit.event.player.PlayerMoveEvent;
++import org.bukkit.event.player.PlayerResourcePackStatusEvent;
++import org.bukkit.event.player.PlayerSwapHandItemsEvent;
++import org.bukkit.event.player.PlayerTeleportEvent;
++import org.bukkit.event.player.PlayerToggleFlightEvent;
++import org.bukkit.event.player.PlayerToggleSneakEvent;
++import org.bukkit.event.player.PlayerToggleSprintEvent;
 +import org.bukkit.inventory.CraftingInventory;
 +import org.bukkit.inventory.EquipmentSlot;
 +import org.bukkit.inventory.InventoryView;
 +import org.bukkit.util.NumberConversions;
  
-+import java.io.IOException;
-+import java.util.ArrayList;
-+import java.util.Collections;
-+import java.util.HashSet;
-+import java.util.Set;
-+import java.util.concurrent.ExecutionException;
-+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
-+
  public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
  {
-     private static final Logger LOGGER = LogManager.getLogger();
-@@ -128,10 +90,18 @@
+-    private static final Logger LOGGER = LogManager.getLogger();
++    private static final Logger LOGGER = Mohist.LOGGER;
+     public final NetworkManager netManager;
      private final MinecraftServer serverController;
      public EntityPlayerMP player;
      private int networkTickCount;
@@ -180,7 +136,7 @@
      private int itemDropThreshold;
      private final IntHashMap<Short> pendingTransactions = new IntHashMap<Short>();
      private double firstGoodX;
-@@ -157,7 +127,30 @@
+@@ -157,7 +218,30 @@
      private int movePacketCounter;
      private int lastMovePacketCounter;
      private ServerRecipeBookHelper field_194309_H = new ServerRecipeBookHelper();
@@ -211,7 +167,7 @@
      public NetHandlerPlayServer(MinecraftServer server, NetworkManager networkManagerIn, EntityPlayerMP playerIn)
      {
          this.serverController = server;
-@@ -165,8 +158,13 @@
+@@ -165,8 +249,13 @@
          networkManagerIn.setNetHandler(this);
          this.player = playerIn;
          playerIn.connection = this;
@@ -225,25 +181,27 @@
      public void update()
      {
          this.captureCurrentPosition();
-@@ -180,7 +178,7 @@
+@@ -179,8 +268,7 @@
+         {
              if (++this.floatingTickCount > 80)
              {
-                 LOGGER.warn("{} was kicked for floating too long!", (Object)this.player.getName());
+-                LOGGER.warn("{} was kicked for floating too long!", (Object)this.player.getName());
 -                this.disconnect(new TextComponentTranslation("multiplayer.disconnect.flying", new Object[0]));
-+                this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickPlayerMessage); // Paper - use configurable kick message
++                this.disconnect(Message.getString(Message.disconnect_flying));
                  return;
              }
          }
-@@ -206,7 +204,7 @@
+@@ -205,8 +293,7 @@
+             {
                  if (++this.vehicleFloatingTickCount > 80)
                  {
-                     LOGGER.warn("{} was kicked for floating a vehicle too long!", (Object)this.player.getName());
+-                    LOGGER.warn("{} was kicked for floating a vehicle too long!", (Object)this.player.getName());
 -                    this.disconnect(new TextComponentTranslation("multiplayer.disconnect.flying", new Object[0]));
-+                    this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickVehicleMessage); // Paper - use configurable kick message
++                    this.disconnect(Message.getString(Message.disconnect_flying));
                      return;
                  }
              }
-@@ -224,29 +222,36 @@
+@@ -224,29 +311,36 @@
          }
  
          this.serverController.profiler.startSection("keepAlive");
@@ -295,7 +253,7 @@
  
          if (this.itemDropThreshold > 0)
          {
-@@ -255,11 +260,12 @@
+@@ -255,11 +349,12 @@
  
          if (this.player.getLastActiveTime() > 0L && this.serverController.getMaxPlayerIdleMinutes() > 0 && MinecraftServer.getCurrentTimeMillis() - this.player.getLastActiveTime() > (long)(this.serverController.getMaxPlayerIdleMinutes() * 1000 * 60))
          {
@@ -309,7 +267,7 @@
      {
          this.firstGoodX = this.player.posX;
          this.firstGoodY = this.player.posY;
-@@ -274,23 +280,48 @@
+@@ -274,23 +369,48 @@
          return this.netManager;
      }
  
@@ -321,8 +279,8 @@
 -            {
 -                NetHandlerPlayServer.this.netManager.closeChannel(textComponent);
 +    @Deprecated
-+    public void disconnect(ITextComponent ichatbasecomponent) {
-+        disconnect(CraftChatMessage.fromComponent(ichatbasecomponent, TextFormatting.WHITE));
++    public void disconnect(ITextComponent textComponent) {
++        disconnect(CraftChatMessage.fromComponent(textComponent, TextFormatting.WHITE));
 +    }
 +
 +    public void disconnect(String s) {
@@ -367,7 +325,7 @@
      }
  
      public void processInput(CPacketInput packetIn)
-@@ -345,9 +376,34 @@
+@@ -345,9 +465,34 @@
                  double d9 = entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ;
                  double d10 = d6 * d6 + d7 * d7 + d8 * d8;
  
@@ -405,7 +363,7 @@
                      this.netManager.sendPacket(new SPacketMoveVehicle(entity));
                      return;
                  }
-@@ -370,10 +426,9 @@
+@@ -370,10 +515,9 @@
                  d10 = d6 * d6 + d7 * d7 + d8 * d8;
                  boolean flag1 = false;
  
@@ -417,7 +375,7 @@
                  }
  
                  entity.setPositionAndRotation(d3, d4, d5, f, f1);
-@@ -388,6 +443,62 @@
+@@ -388,6 +532,62 @@
                      return;
                  }
  
@@ -480,7 +438,7 @@
                  this.serverController.getPlayerList().serverUpdateMovingPlayer(this.player);
                  this.player.addMovementStat(this.player.posX - d0, this.player.posY - d1, this.player.posZ - d2);
                  this.vehicleFloating = d11 >= -0.03125D && !this.serverController.isFlightAllowed() && !worldserver.checkBlockCollision(entity.getEntityBoundingBox().grow(0.0625D).expand(0.0D, -0.55D, 0.0D));
-@@ -402,7 +513,7 @@
+@@ -402,7 +602,7 @@
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
  
@@ -489,7 +447,7 @@
          {
              this.player.setPositionAndRotation(this.targetPos.x, this.targetPos.y, this.targetPos.z, this.player.rotationYaw, this.player.rotationPitch);
  
-@@ -461,7 +572,7 @@
+@@ -461,7 +661,7 @@
          {
              WorldServer worldserver = this.serverController.getWorld(this.player.dimension);
  
@@ -498,7 +456,7 @@
              {
                  if (this.networkTickCount == 0)
                  {
-@@ -475,6 +586,7 @@
+@@ -475,6 +675,7 @@
                          this.lastPositionUpdate = this.networkTickCount;
                          this.setPlayerLocation(this.targetPos.x, this.targetPos.y, this.targetPos.z, this.player.rotationYaw, this.player.rotationPitch);
                      }
@@ -506,7 +464,7 @@
                  }
                  else
                  {
-@@ -484,9 +596,17 @@
+@@ -484,9 +685,17 @@
                      {
                          this.player.setPositionAndRotation(this.player.posX, this.player.posY, this.player.posZ, packetIn.getYaw(this.player.rotationYaw), packetIn.getPitch(this.player.rotationPitch));
                          this.serverController.getPlayerList().serverUpdateMovingPlayer(this.player);
@@ -524,7 +482,7 @@
                          double d0 = this.player.posX;
                          double d1 = this.player.posY;
                          double d2 = this.player.posZ;
-@@ -514,19 +634,34 @@
+@@ -514,19 +723,34 @@
                              ++this.movePacketCounter;
                              int i = this.movePacketCounter - this.lastMovePacketCounter;
  
@@ -563,7 +521,7 @@
                                      this.setPlayerLocation(this.player.posX, this.player.posY, this.player.posZ, this.player.rotationYaw, this.player.rotationPitch);
                                      return;
                                  }
-@@ -539,7 +674,30 @@
+@@ -539,7 +763,30 @@
  
                              if (this.player.onGround && !packetIn.isOnGround() && d8 > 0.0D)
                              {
@@ -595,7 +553,7 @@
                              }
  
                              this.player.move(MoverType.PLAYER, d7, d8, d9);
-@@ -557,10 +715,9 @@
+@@ -557,10 +804,9 @@
                              d11 = d7 * d7 + d8 * d8 + d9 * d9;
                              boolean flag = false;
  
@@ -607,7 +565,7 @@
                              }
  
                              this.player.setPositionAndRotation(d4, d5, d6, f, f1);
-@@ -577,6 +734,69 @@
+@@ -577,6 +823,69 @@
                                  }
                              }
  
@@ -677,7 +635,7 @@
                              this.floating = d12 >= -0.03125D;
                              this.floating &= !this.serverController.isFlightAllowed() && !this.player.capabilities.allowFlying;
                              this.floating &= !this.player.isPotionActive(MobEffects.LEVITATION) && !this.player.isElytraFlying() && !worldserver.checkBlockCollision(this.player.getEntityBoundingBox().grow(0.0625D).expand(0.0D, -0.55D, 0.0D));
-@@ -598,8 +818,74 @@
+@@ -598,8 +907,74 @@
          this.setPlayerLocation(x, y, z, yaw, pitch, Collections.emptySet());
      }
  
@@ -752,7 +710,7 @@
          double d0 = relativeSet.contains(SPacketPlayerPosLook.EnumFlags.X) ? this.player.posX : 0.0D;
          double d1 = relativeSet.contains(SPacketPlayerPosLook.EnumFlags.Y) ? this.player.posY : 0.0D;
          double d2 = relativeSet.contains(SPacketPlayerPosLook.EnumFlags.Z) ? this.player.posZ : 0.0D;
-@@ -617,6 +903,14 @@
+@@ -617,6 +992,14 @@
              f1 = pitch + this.player.rotationPitch;
          }
  
@@ -767,7 +725,7 @@
          if (++this.teleportId == Integer.MAX_VALUE)
          {
              this.teleportId = 0;
-@@ -630,6 +924,7 @@
+@@ -630,6 +1013,7 @@
      public void processPlayerDigging(CPacketPlayerDigging packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -775,7 +733,7 @@
          WorldServer worldserver = this.serverController.getWorld(this.player.dimension);
          BlockPos blockpos = packetIn.getPosition();
          this.player.markPlayerActive();
-@@ -641,7 +936,16 @@
+@@ -641,7 +1025,16 @@
                  if (!this.player.isSpectator())
                  {
                      ItemStack itemstack = this.player.getHeldItem(EnumHand.OFF_HAND);
@@ -793,7 +751,7 @@
                      this.player.setHeldItem(EnumHand.MAIN_HAND, itemstack);
                  }
  
-@@ -650,6 +954,20 @@
+@@ -650,6 +1043,20 @@
  
                  if (!this.player.isSpectator())
                  {
@@ -814,7 +772,7 @@
                      this.player.dropItem(false);
                  }
  
-@@ -694,7 +1012,15 @@
+@@ -694,7 +1101,15 @@
                          }
                          else
                          {
@@ -830,57 +788,7 @@
                          }
                      }
                      else
-@@ -722,9 +1048,57 @@
-         }
-     }
- 
-+    // Paper start
-+    private boolean validateBook(ItemStack testStack) {
-+        NBTTagList pageList = testStack.getTagCompound().getTagList("pages", 8);
-+        long byteTotal = 0;
-+        int maxBookPageSize = com.destroystokyo.paper.PaperConfig.maxBookPageSize;
-+        double multiplier = Math.max(0.3D, Math.min(1D, com.destroystokyo.paper.PaperConfig.maxBookTotalSizeMultiplier));
-+        long byteAllowed = maxBookPageSize;
-+        for (int i = 0; i < pageList.tagCount(); ++i) {
-+            String testString = pageList.getStringTagAt(i);
-+            int byteLength = testString.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
-+            byteTotal += byteLength;
-+            int length = testString.length();
-+            int multibytes = 0;
-+            if (length != byteLength) {
-+                for (char c : testString.toCharArray()) {
-+                    if (c > 127) {
-+                        multibytes++;
-+                    }
-+                }
-+            }
-+            byteAllowed += (maxBookPageSize * Math.min(1, Math.max(0.1D, (double) length / 255D))) * multiplier;
-+            if (multibytes > 1) {
-+                // penalize MB
-+                byteAllowed -= multibytes;
-+            }
-+        }
-+        if (byteTotal > byteAllowed) {
-+           LOGGER.warn(this.player.getName() + " tried to send too large of a book. Book Size: " + byteTotal + " - Allowed:  "+ byteAllowed + " - Pages: " + pageList.tagCount());
-+            serverController.addScheduledTask(() -> this.disconnect("Book too large!"));
-+            return false;
-+        }
-+        return true;
-+    }
-+    // Paper end
-+
-+    private boolean checkLimit(final long timestamp) {
-+        if (this.lastLimitedPacket != -1L && timestamp - this.lastLimitedPacket < THRESHOLD && this.limitedPackets++ >= 8) {
-+            return false;
-+        }
-+        if (this.lastLimitedPacket == -1L || timestamp - this.lastLimitedPacket >= THRESHOLD) {
-+            this.lastLimitedPacket = timestamp;
-+            this.limitedPackets = 0;
-+            return true;
-+        }
-+        return true;
-+    }
-+
+@@ -725,6 +1140,7 @@
      public void processTryUseItemOnBlock(CPacketPlayerTryUseItemOnBlock packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -888,7 +796,7 @@
          WorldServer worldserver = this.serverController.getWorld(this.player.dimension);
          EnumHand enumhand = packetIn.getHand();
          ItemStack itemstack = this.player.getHeldItem(enumhand);
-@@ -738,6 +1112,13 @@
+@@ -738,6 +1154,13 @@
              dist *= dist;
              if (this.targetPos == null && this.player.getDistanceSq((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D) < dist && !this.serverController.isBlockProtected(worldserver, blockpos, this.player) && worldserver.getWorldBorder().contains(blockpos))
              {
@@ -902,7 +810,7 @@
                  this.player.interactionManager.processRightClickBlock(this.player, worldserver, itemstack, enumhand, blockpos, enumfacing, packetIn.getFacingX(), packetIn.getFacingY(), packetIn.getFacingZ());
              }
          }
-@@ -755,6 +1136,7 @@
+@@ -755,6 +1178,7 @@
      public void processTryUseItem(CPacketPlayerTryUseItem packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -910,7 +818,7 @@
          WorldServer worldserver = this.serverController.getWorld(this.player.dimension);
          EnumHand enumhand = packetIn.getHand();
          ItemStack itemstack = this.player.getHeldItem(enumhand);
-@@ -762,7 +1144,46 @@
+@@ -762,7 +1186,46 @@
  
          if (!itemstack.isEmpty())
          {
@@ -958,7 +866,7 @@
          }
      }
  
-@@ -774,7 +1195,8 @@
+@@ -774,7 +1237,8 @@
          {
              Entity entity = null;
  
@@ -968,7 +876,7 @@
              {
                  if (worldserver != null)
                  {
-@@ -792,6 +1214,7 @@
+@@ -792,6 +1256,7 @@
                  this.player.setSpectatingEntity(this.player);
                  this.player.dismountRidingEntity();
  
@@ -976,7 +884,7 @@
                  if (entity.world == this.player.world)
                  {
                      this.player.setPositionAndUpdate(entity.posX, entity.posY, entity.posZ);
-@@ -821,12 +1244,22 @@
+@@ -821,12 +1286,21 @@
                      this.serverController.getPlayerList().updateTimeAndWeatherForPlayer(this.player, worldserver2);
                      this.serverController.getPlayerList().syncPlayerInventory(this.player);
                  }
@@ -989,7 +897,6 @@
      public void handleResourcePackStatus(CPacketResourcePackStatus packetIn)
      {
 +        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
-+        this.server.getPluginManager().callEvent(new PlayerResourcePackStatusEvent(getPlayer(), PlayerResourcePackStatusEvent.Status.values()[packetIn.action.ordinal()]));
 +        // Paper start
 +        //this.server.getPluginManager().callEvent(new PlayerResourcePackStatusEvent(getPlayer(), PlayerResourcePackStatusEvent.Status.values()[packetIn.status.ordinal()]));
 +        PlayerResourcePackStatusEvent.Status status = PlayerResourcePackStatusEvent.Status.values()[packetIn.action.ordinal()];
@@ -999,7 +906,7 @@
      }
  
      public void processSteerBoat(CPacketSteerBoat packetIn)
-@@ -842,13 +1275,27 @@
+@@ -842,13 +1316,27 @@
  
      public void onDisconnect(ITextComponent reason)
      {
@@ -1029,7 +936,7 @@
  
          if (this.serverController.isSinglePlayer() && this.player.getName().equals(this.serverController.getServerOwner()))
          {
-@@ -875,6 +1322,13 @@
+@@ -875,6 +1363,13 @@
              }
          }
  
@@ -1043,7 +950,7 @@
          try
          {
              this.netManager.sendPacket(packetIn);
-@@ -897,23 +1351,42 @@
+@@ -897,23 +1392,42 @@
      public void processHeldItemChange(CPacketHeldItemChange packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1089,7 +996,7 @@
          {
              TextComponentTranslation textcomponenttranslation = new TextComponentTranslation("chat.cannotSend", new Object[0]);
              textcomponenttranslation.getStyle().setColor(TextFormatting.RED);
-@@ -929,14 +1402,54 @@
+@@ -929,14 +1443,54 @@
              {
                  if (!ChatAllowedCharacters.isAllowedCharacter(s.charAt(i)))
                  {
@@ -1148,7 +1055,7 @@
              }
              else
              {
-@@ -946,36 +1459,206 @@
+@@ -946,36 +1500,206 @@
                  this.serverController.getPlayerList().sendMessage(itextcomponent, false);
              }
  
@@ -1360,7 +1267,7 @@
                  break;
              case STOP_SNEAKING:
                  this.player.setSneaking(false);
-@@ -1051,6 +1734,7 @@
+@@ -1051,6 +1775,7 @@
      public void processUseEntity(CPacketUseEntity packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1368,7 +1275,7 @@
          WorldServer worldserver = this.serverController.getWorld(this.player.dimension);
          Entity entity = packetIn.getEntityFromWorld(worldserver);
          this.player.markPlayerActive();
-@@ -1067,20 +1751,59 @@
+@@ -1067,20 +1792,59 @@
  
              if (this.player.getDistanceSq(entity) < d0)
              {
@@ -1429,7 +1336,7 @@
                      {
                          this.disconnect(new TextComponentTranslation("multiplayer.disconnect.invalid_entity_attacked", new Object[0]));
                          this.serverController.logWarning("Player " + this.player.getName() + " tried to attack an invalid entity");
-@@ -1088,9 +1811,16 @@
+@@ -1088,9 +1852,16 @@
                      }
  
                      this.player.attackTargetEntityWithCurrentItem(entity);
@@ -1446,7 +1353,7 @@
      }
  
      public void processClientStatus(CPacketClientStatus packetIn)
-@@ -1106,7 +1836,8 @@
+@@ -1106,7 +1877,8 @@
                  if (this.player.queuedEndExit)
                  {
                      this.player.queuedEndExit = false;
@@ -1456,7 +1363,7 @@
                      CriteriaTriggers.CHANGED_DIMENSION.trigger(this.player, DimensionType.THE_END, DimensionType.OVERWORLD);
                  }
                  else
-@@ -1134,17 +1865,21 @@
+@@ -1134,17 +1906,21 @@
      public void processCloseWindow(CPacketCloseWindow packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1480,7 +1387,7 @@
              {
                  NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>create();
  
-@@ -1157,9 +1892,277 @@
+@@ -1157,9 +1933,281 @@
              }
              else
              {
@@ -1493,6 +1400,10 @@
 +                    return;
 +                }
 +                InventoryView inventory = this.player.openContainer.getBukkitView();
++                if(inventory == null){
++                    inventory = new CraftInventoryView(this.player.getBukkitEntity(), MinecraftServer.getServerInst().server.createInventory(this.player.getBukkitEntity(), InventoryType.CHEST), this.player.openContainer);
++                    this.player.openContainer.setBukkitView(inventory);
++                }
 +                InventoryType.SlotType type = CraftInventoryView.getSlotType(inventory, packetIn.getSlotId());
 +
 +                InventoryClickEvent event;
@@ -1760,7 +1671,7 @@
                  {
                      this.player.connection.sendPacket(new SPacketConfirmTransaction(packetIn.getWindowId(), packetIn.getActionNumber(), true));
                      this.player.isChangingQuantityOnly = true;
-@@ -1176,8 +2179,8 @@
+@@ -1176,8 +2224,8 @@
  
                      for (int j = 0; j < this.player.openContainer.inventorySlots.size(); ++j)
                      {
@@ -1771,7 +1682,7 @@
                          nonnulllist1.add(itemstack1);
                      }
  
-@@ -1201,6 +2204,7 @@
+@@ -1201,6 +2249,7 @@
      public void processEnchantItem(CPacketEnchantItem packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1779,7 +1690,7 @@
          this.player.markPlayerActive();
  
          if (this.player.openContainer.windowId == packetIn.getWindowId() && this.player.openContainer.getCanCraft(this.player) && !this.player.isSpectator())
-@@ -1240,8 +2244,47 @@
+@@ -1240,8 +2289,47 @@
              }
  
              boolean flag1 = packetIn.getSlotId() >= 1 && packetIn.getSlotId() <= 45;
@@ -1828,7 +1739,7 @@
              if (flag1 && flag2)
              {
                  if (itemstack.isEmpty())
-@@ -1271,6 +2314,7 @@
+@@ -1271,6 +2359,7 @@
      public void processConfirmTransaction(CPacketConfirmTransaction packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1836,7 +1747,7 @@
          Short oshort = this.pendingTransactions.lookup(this.player.openContainer.windowId);
  
          if (oshort != null && packetIn.getUid() == oshort.shortValue() && this.player.openContainer.windowId == packetIn.getWindowId() && !this.player.openContainer.getCanCraft(this.player) && !this.player.isSpectator())
-@@ -1282,6 +2326,7 @@
+@@ -1282,6 +2371,7 @@
      public void processUpdateSign(CPacketUpdateSign packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1844,7 +1755,7 @@
          this.player.markPlayerActive();
          WorldServer worldserver = this.serverController.getWorld(this.player.dimension);
          BlockPos blockpos = packetIn.getPosition();
-@@ -1301,16 +2346,32 @@
+@@ -1301,16 +2391,32 @@
              if (!tileentitysign.getIsEditable() || tileentitysign.getPlayer() != this.player)
              {
                  this.serverController.logWarning("Player " + this.player.getName() + " just tried to change non-editable sign");
@@ -1878,7 +1789,7 @@
              tileentitysign.markDirty();
              worldserver.notifyBlockUpdate(blockpos, iblockstate, iblockstate, 3);
          }
-@@ -1318,6 +2379,7 @@
+@@ -1318,6 +2424,7 @@
  
      public void processKeepAlive(CPacketKeepAlive packetIn)
      {
@@ -1886,7 +1797,7 @@
          if (this.field_194403_g && packetIn.getKey() == this.field_194404_h)
          {
              int i = (int)(this.currentTimeMillis() - this.field_194402_f);
-@@ -1326,7 +2388,13 @@
+@@ -1326,7 +2433,13 @@
          }
          else if (!this.player.getName().equals(this.serverController.getServerOwner()))
          {
@@ -1901,7 +1812,7 @@
          }
      }
  
-@@ -1338,21 +2406,55 @@
+@@ -1338,21 +2451,55 @@
      public void processPlayerAbilities(CPacketPlayerAbilities packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1965,7 +1876,7 @@
  
      public void processClientSettings(CPacketClientSettings packetIn)
      {
-@@ -1367,6 +2469,11 @@
+@@ -1367,6 +2514,11 @@
  
          if ("MC|BEdit".equals(s))
          {
@@ -1977,11 +1888,11 @@
              PacketBuffer packetbuffer = packetIn.getBufferData();
  
              try
-@@ -1392,16 +2499,23 @@
+@@ -1392,16 +2544,23 @@
  
                  if (itemstack.getItem() == Items.WRITABLE_BOOK && itemstack.getItem() == itemstack1.getItem())
                  {
-+                    if (!validateBook(itemstack)) return; // Paper
++                    itemstack1 = new ItemStack(Items.WRITABLE_BOOK);
                      itemstack1.setTagInfo("pages", itemstack.getTagCompound().getTagList("pages", 8));
 +                    CraftEventFactory.handleEditBookEvent(player, itemstack1);
                  }
@@ -2002,15 +1913,7 @@
              PacketBuffer packetbuffer1 = packetIn.getBufferData();
  
              try
-@@ -1427,6 +2541,7 @@
- 
-                 if (itemstack3.getItem() == Items.WRITABLE_BOOK && itemstack4.getItem() == Items.WRITABLE_BOOK)
-                 {
-+                    if (!validateBook(itemstack3)) return; // Paper
-                     ItemStack itemstack2 = new ItemStack(Items.WRITTEN_BOOK);
-                     itemstack2.setTagInfo("author", new NBTTagString(this.player.getName()));
-                     itemstack2.setTagInfo("title", new NBTTagString(itemstack3.getTagCompound().getString("title")));
-@@ -1441,12 +2556,13 @@
+@@ -1441,12 +2600,13 @@
                      }
  
                      itemstack2.setTagInfo("pages", nbttaglist);
@@ -2026,7 +1929,7 @@
              }
          }
          else if ("MC|TrSel".equals(s))
-@@ -1463,7 +2579,7 @@
+@@ -1463,7 +2623,7 @@
              }
              catch (Exception exception5)
              {
@@ -2035,7 +1938,7 @@
              }
          }
          else if ("MC|AdvCmd".equals(s))
-@@ -1526,6 +2642,7 @@
+@@ -1526,6 +2686,7 @@
              catch (Exception exception4)
              {
                  LOGGER.error("Couldn't set command block", (Throwable)exception4);
@@ -2043,7 +1946,7 @@
              }
          }
          else if ("MC|AutoCmd".equals(s))
-@@ -1604,6 +2721,7 @@
+@@ -1604,6 +2765,7 @@
              catch (Exception exception3)
              {
                  LOGGER.error("Couldn't set command block", (Throwable)exception3);
@@ -2051,7 +1954,7 @@
              }
          }
          else if ("MC|Beacon".equals(s))
-@@ -1629,7 +2747,7 @@
+@@ -1629,7 +2791,7 @@
                  }
                  catch (Exception exception2)
                  {
@@ -2060,7 +1963,7 @@
                  }
              }
          }
-@@ -1741,6 +2859,7 @@
+@@ -1741,6 +2903,7 @@
              catch (Exception exception1)
              {
                  LOGGER.error("Couldn't set structure block", (Throwable)exception1);
@@ -2068,7 +1971,7 @@
              }
          }
          else if ("MC|PickItem".equals(s))
-@@ -1757,8 +2876,43 @@
+@@ -1757,8 +2920,43 @@
              }
              catch (Exception exception)
              {

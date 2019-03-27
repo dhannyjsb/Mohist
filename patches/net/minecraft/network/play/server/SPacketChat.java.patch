@@ -1,19 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/network/play/server/SPacketChat.java
 +++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketChat.java
-@@ -1,6 +1,5 @@
- package net.minecraft.network.play.server;
- 
--import java.io.IOException;
- import net.minecraft.network.Packet;
- import net.minecraft.network.PacketBuffer;
- import net.minecraft.network.play.INetHandlerPlayClient;
-@@ -9,10 +8,13 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import java.io.IOException;
-+
- public class SPacketChat implements Packet<INetHandlerPlayClient>
+@@ -13,6 +13,7 @@
  {
      private ITextComponent chatComponent;
      private ChatType type;
@@ -21,7 +8,7 @@
  
      public SPacketChat()
      {
-@@ -29,6 +31,14 @@
+@@ -29,6 +30,14 @@
          this.type = type;
      }
  
@@ -36,7 +23,7 @@
      public void readPacketData(PacketBuffer buf) throws IOException
      {
          this.chatComponent = buf.readTextComponent();
-@@ -37,7 +47,20 @@
+@@ -37,7 +46,20 @@
  
      public void writePacketData(PacketBuffer buf) throws IOException
      {

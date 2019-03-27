@@ -1,26 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/network/play/server/SPacketTitle.java
 +++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketTitle.java
-@@ -1,8 +1,5 @@
- package net.minecraft.network.play.server;
- 
--import java.io.IOException;
--import java.util.Locale;
--import javax.annotation.Nullable;
- import net.minecraft.network.Packet;
- import net.minecraft.network.PacketBuffer;
- import net.minecraft.network.play.INetHandlerPlayClient;
-@@ -10,6 +7,10 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import javax.annotation.Nullable;
-+import java.io.IOException;
-+import java.util.Locale;
-+
- public class SPacketTitle implements Packet<INetHandlerPlayClient>
- {
-     private SPacketTitle.Type type;
-@@ -17,7 +18,17 @@
+@@ -17,7 +17,17 @@
      private int fadeInTime;
      private int displayTime;
      private int fadeOutTime;
@@ -38,7 +18,7 @@
      public SPacketTitle()
      {
      }
-@@ -64,7 +75,13 @@
+@@ -64,7 +74,13 @@
  
          if (this.type == SPacketTitle.Type.TITLE || this.type == SPacketTitle.Type.SUBTITLE || this.type == SPacketTitle.Type.ACTIONBAR)
          {

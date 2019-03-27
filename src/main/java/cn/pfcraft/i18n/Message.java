@@ -32,7 +32,8 @@ public enum Message {
     World_settings("world.settings"),
     whitelistMessage("message.whitelist"),
     serverFullMessage("message.serverfull"),
-    bungeecord("message.bungeecord");
+    bungeecord("message.bungeecord"),
+    disconnect_flying("disconnect.flying");
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());

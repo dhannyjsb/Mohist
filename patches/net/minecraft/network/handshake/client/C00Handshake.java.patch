@@ -1,18 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/network/handshake/client/C00Handshake.java
 +++ ../src-work/minecraft/net/minecraft/network/handshake/client/C00Handshake.java
-@@ -1,6 +1,5 @@
- package net.minecraft.network.handshake.client;
- 
--import java.io.IOException;
- import net.minecraft.network.EnumConnectionState;
- import net.minecraft.network.Packet;
- import net.minecraft.network.PacketBuffer;
-@@ -8,11 +7,13 @@
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import java.io.IOException;
-+
+@@ -11,8 +11,8 @@
  public class C00Handshake implements Packet<INetHandlerHandshakeServer>
  {
      private int protocolVersion;
@@ -23,7 +11,7 @@
      private EnumConnectionState requestedState;
      private boolean hasFMLMarker = false;
  
-@@ -38,11 +39,13 @@
+@@ -38,11 +38,13 @@
      public void readPacketData(PacketBuffer buf) throws IOException
      {
          this.protocolVersion = buf.readVarInt();

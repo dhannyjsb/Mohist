@@ -1,44 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/network/PacketBuffer.java
 +++ ../src-work/minecraft/net/minecraft/network/PacketBuffer.java
-@@ -7,6 +7,19 @@
- import io.netty.handler.codec.DecoderException;
- import io.netty.handler.codec.EncoderException;
- import io.netty.util.ByteProcessor;
-+import net.minecraft.item.Item;
-+import net.minecraft.item.ItemStack;
-+import net.minecraft.nbt.CompressedStreamTools;
-+import net.minecraft.nbt.NBTSizeTracker;
-+import net.minecraft.nbt.NBTTagCompound;
-+import net.minecraft.util.ResourceLocation;
-+import net.minecraft.util.math.BlockPos;
-+import net.minecraft.util.text.ITextComponent;
-+import net.minecraftforge.fml.relauncher.Side;
-+import net.minecraftforge.fml.relauncher.SideOnly;
+@@ -30,6 +30,7 @@
+ import net.minecraft.util.text.ITextComponent;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.inventory.CraftItemStack;
-+
-+import javax.annotation.Nullable;
- import java.io.IOException;
- import java.io.InputStream;
- import java.io.OutputStream;
-@@ -19,17 +32,6 @@
- import java.nio.charset.StandardCharsets;
- import java.util.Date;
- import java.util.UUID;
--import javax.annotation.Nullable;
--import net.minecraft.item.Item;
--import net.minecraft.item.ItemStack;
--import net.minecraft.nbt.CompressedStreamTools;
--import net.minecraft.nbt.NBTSizeTracker;
--import net.minecraft.nbt.NBTTagCompound;
--import net.minecraft.util.ResourceLocation;
--import net.minecraft.util.math.BlockPos;
--import net.minecraft.util.text.ITextComponent;
--import net.minecraftforge.fml.relauncher.Side;
--import net.minecraftforge.fml.relauncher.SideOnly;
  
  public class PacketBuffer extends ByteBuf
  {
-@@ -287,9 +289,9 @@
+@@ -287,9 +288,9 @@
              {
                  CompressedStreamTools.write(nbt, new ByteBufOutputStream(this));
              }
@@ -50,7 +20,7 @@
              }
          }
  
-@@ -323,7 +325,7 @@
+@@ -323,7 +324,7 @@
  
      public PacketBuffer writeItemStack(ItemStack stack)
      {
@@ -59,7 +29,7 @@
          {
              this.writeShort(-1);
          }
-@@ -359,6 +361,8 @@
+@@ -359,6 +360,8 @@
              int k = this.readShort();
              ItemStack itemstack = new ItemStack(Item.getItemById(i), j, k);
              itemstack.getItem().readNBTShareTag(itemstack, this.readCompoundTag());
@@ -68,7 +38,7 @@
              return itemstack;
          }
      }
-@@ -395,9 +399,9 @@
+@@ -395,9 +398,9 @@
      {
          byte[] abyte = string.getBytes(StandardCharsets.UTF_8);
  

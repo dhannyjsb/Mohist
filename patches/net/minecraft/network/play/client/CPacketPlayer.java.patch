@@ -1,17 +1,7 @@
 --- ../src-base/minecraft/net/minecraft/network/play/client/CPacketPlayer.java
 +++ ../src-work/minecraft/net/minecraft/network/play/client/CPacketPlayer.java
-@@ -1,22 +1,23 @@
- package net.minecraft.network.play.client;
+@@ -9,14 +9,14 @@
  
--import java.io.IOException;
- import net.minecraft.network.Packet;
- import net.minecraft.network.PacketBuffer;
- import net.minecraft.network.play.INetHandlerPlayServer;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- 
-+import java.io.IOException;
-+
  public class CPacketPlayer implements Packet<INetHandlerPlayServer>
  {
 -    protected double x;

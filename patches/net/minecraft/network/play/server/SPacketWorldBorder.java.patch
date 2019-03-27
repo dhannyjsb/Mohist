@@ -1,9 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/network/play/server/SPacketWorldBorder.java
 +++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketWorldBorder.java
-@@ -1,16 +1,18 @@
- package net.minecraft.network.play.server;
- 
--import java.io.IOException;
+@@ -4,13 +4,14 @@
  import net.minecraft.network.Packet;
  import net.minecraft.network.PacketBuffer;
  import net.minecraft.network.play.INetHandlerPlayClient;
@@ -12,8 +9,6 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
-+import java.io.IOException;
-+
  public class SPacketWorldBorder implements Packet<INetHandlerPlayClient>
  {
 -    private SPacketWorldBorder.Action action;
@@ -21,7 +16,7 @@
      private int size;
      private double centerX;
      private double centerZ;
-@@ -24,11 +26,15 @@
+@@ -24,11 +25,15 @@
      {
      }
  
@@ -40,7 +35,7 @@
          this.diameter = border.getDiameter();
          this.targetSize = border.getTargetSize();
          this.timeUntilTarget = border.getTimeUntilTarget();
-@@ -39,7 +45,7 @@
+@@ -39,7 +44,7 @@
  
      public void readPacketData(PacketBuffer buf) throws IOException
      {

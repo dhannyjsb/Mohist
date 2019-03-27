@@ -1,28 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/network/rcon/RConThreadMain.java
 +++ ../src-work/minecraft/net/minecraft/network/rcon/RConThreadMain.java
-@@ -1,17 +1,14 @@
- package net.minecraft.network.rcon;
- 
- import com.google.common.collect.Maps;
-+import net.minecraftforge.fml.relauncher.Side;
-+import net.minecraftforge.fml.relauncher.SideOnly;
-+
- import java.io.IOException;
--import java.net.InetAddress;
--import java.net.ServerSocket;
--import java.net.Socket;
--import java.net.SocketAddress;
--import java.net.SocketTimeoutException;
-+import java.net.*;
- import java.util.Iterator;
- import java.util.Map;
- import java.util.Map.Entry;
--import net.minecraftforge.fml.relauncher.Side;
--import net.minecraftforge.fml.relauncher.SideOnly;
- 
- @SideOnly(Side.SERVER)
- public class RConThreadMain extends RConThreadBase
-@@ -23,26 +20,26 @@
+@@ -23,26 +23,26 @@
      private final String rconPassword;
      private Map<SocketAddress, RConThreadClient> clientThreads;
  
