@@ -35,11 +35,9 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 [**Thermos**](https://github.com/CyberdyneCC/Thermos.git)
 
 ## User License
-1. Do not use Mohist for any commercial purpose (including: source code, binaries, servers built with Mohist).
-2. The source code is free to distribute and copy under the premise of complying with the GPL-3.0.
-3. We are not responsible for any legal disputes arising from your use of Mohist for commercial activities.
-1. 不要将Mohist用于任何商业目的（包括：源代码，二进制文件，使用Mohist构建的服务器）。
-2. 源代码可以在遵守GPL-3.0的前提下自由分发和复制。
-3. 对于因使用Mohist进行商业活动而引起的任何法律纠纷，我们概不负责。
+1. The source code is free to distribute and copy under the premise of complying with the GPL-3.0.
+2. We are not responsible for any legal disputes arising from your use of Mohist for commercial activities.
+1. 源代码可以在遵守GPL-3.0的前提下自由分发和复制。
+2. 对于因使用Mohist进行商业活动而引起的任何法律纠纷，我们概不负责。
 
 Welcome everyone to participate in development, unity is power.
