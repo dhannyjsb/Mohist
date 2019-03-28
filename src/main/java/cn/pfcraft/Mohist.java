@@ -6,8 +6,6 @@ import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Method;
-
 public class Mohist implements Runnable{
 
 	private static final String name = "Mohist";
