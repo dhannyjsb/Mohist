@@ -9,7 +9,7 @@
  import java.util.List;
  import java.util.Objects;
  import org.apache.logging.log4j.LogManager;
-@@ -12,9 +14,13 @@
+@@ -12,10 +14,14 @@
  public class NBTTagList extends NBTBase implements java.lang.Iterable<NBTBase>
  {
      private static final Logger LOGGER = LogManager.getLogger();
@@ -17,10 +17,12 @@
 +    public List<NBTBase> tagList = Lists.<NBTBase>newArrayList(); // Paper
      private byte tagType = 0;
  
+-    void write(DataOutput output) throws IOException
 +    public void sort(final Comparator<? extends NBTBase> comparator) {
 +        Collections.sort(this.tagList, (Comparator<? super NBTBase>)comparator);
 +    }
 +
-     void write(DataOutput output) throws IOException
++    public void write(DataOutput output) throws IOException
      {
          if (this.tagList.isEmpty())
+         {

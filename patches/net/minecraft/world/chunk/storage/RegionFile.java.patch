@@ -125,7 +125,7 @@
              if (l >= 256)
              {
 -                if (!FORGE_ENABLE_EXTENDED_SAVE) return;
-+                if (!FORGE_ENABLE_EXTENDED_SAVE) throw new ChunkTooLargeException(i, j, l); // Paper - throw error instead
++                if (!FORGE_ENABLE_EXTENDED_SAVE && !RegionFileCache.isOverzealous()) throw new ChunkTooLargeException(i, j, l); // Paper - throw error instead
                  net.minecraftforge.fml.common.FMLLog.log.warn("Large Chunk Detected: ({}, {}) Size: {} {}", x, z, l, fileName);
              }
  
@@ -285,7 +285,7 @@
      class ChunkBuffer extends ByteArrayOutputStream
      {
          private final int chunkX;
-@@ -358,7 +497,37 @@
+@@ -358,7 +497,34 @@
  
          public void close() throws IOException
          {
@@ -301,26 +301,23 @@
          }
      }
 +
++    private static final byte[] compressionBuffer = new byte[1024 * 64]; // 64k fits most standard chunks input size even, ideally 1 pass through zlib
++    private static final java.util.zip.Deflater deflater = new java.util.zip.Deflater();
++    // since file IO is single threaded, no benefit to using per-region file buffers/synchronization, we can change that later if it becomes viable.
 +    private static DirectByteArrayOutputStream compressData(byte[] buf, int length) throws IOException {
-+        final java.util.zip.Deflater deflater;
-+        if (length > 1024 * 512) {
-+            deflater = new java.util.zip.Deflater(9);
-+        } else if (length > 1024 * 128) {
-+            deflater = new java.util.zip.Deflater(8);
-+        } else {
-+            deflater = new java.util.zip.Deflater(6);
-+        }
++        synchronized (deflater) {
++            deflater.setInput(buf, 0, length);
++            deflater.finish();
 +
 +
-+        deflater.setInput(buf, 0, length);
-+        deflater.finish();
-+        DirectByteArrayOutputStream out = new DirectByteArrayOutputStream(length);
-+        byte[] buffer = new byte[1024 * (length > 1024 * 124 ? 32 : 16)];
-+        while (!deflater.finished()) {
-+            out.write(buffer, 0, deflater.deflate(buffer));
++            DirectByteArrayOutputStream out = new DirectByteArrayOutputStream(length);
++            while (!deflater.finished()) {
++                out.write(compressionBuffer, 0, deflater.deflate(compressionBuffer));
++            }
++            out.close();
++            deflater.reset();
++            return out;
 +        }
-+        out.close();
-+        deflater.end();
-+        return out;
 +    }
++    // Paper end
  }
