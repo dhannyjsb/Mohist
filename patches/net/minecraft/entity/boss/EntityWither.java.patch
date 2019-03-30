@@ -40,9 +40,9 @@
 +                // CraftBukkit start - Use relative location for far away sounds
 +                // Paper start
 +                //int viewDistance = ((WorldServer) this.world).spigotConfig.viewDistance * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
-+                for (EntityPlayer human : world.playerEntities) {
-+                    EntityPlayerMP player = (EntityPlayerMP) human;
-+                    int viewDistance = player.getViewDistance();
++                for (EntityPlayer player : world.playerEntities) {
++                    EntityPlayerMP playerMP = (EntityPlayerMP) player;
++                    int viewDistance = playerMP.getViewDistance();
 +                    // Paper end
 +                    double deltaX = this.posX - player.posX;
 +                    double deltaZ = this.posZ - player.posZ;
@@ -52,9 +52,9 @@
 +                        double deltaLength = Math.sqrt(distanceSquared);
 +                        double relativeX = player.posX + (deltaX / deltaLength) * viewDistance;
 +                        double relativeZ = player.posZ + (deltaZ / deltaLength) * viewDistance;
-+                        player.connection.sendPacket(new SPacketEffect(1013, new BlockPos((int) relativeX, (int) this.posY, (int) relativeZ), 0, true));
++                        playerMP.connection.sendPacket(new SPacketEffect(1013, new BlockPos((int) relativeX, (int) this.posY, (int) relativeZ), 0, true));
 +                    } else {
-+                        player.connection.sendPacket(new SPacketEffect(1013, new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ), 0, true));
++                        playerMP.connection.sendPacket(new SPacketEffect(1013, new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ), 0, true));
 +                    }
 +                }
 +                // CraftBukkit end

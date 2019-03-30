@@ -235,7 +235,7 @@ public class ActivationRange
             {
                 // Paper start
                 EntityCreature creature = (EntityCreature) entity;
-                if (creature.getAttackTarget() != null || creature.getMovingTarget() != null) {
+                if (creature.getAttackTarget() != null || creature.movingTarget != null) {
                     return true;
                 }
                 // Paper end
