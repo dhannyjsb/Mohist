@@ -25,6 +25,9 @@
 *.iws
 .idea/
 
+# patch
+*.rej
+
 #eclipse
 **/bin
 **/.settings
