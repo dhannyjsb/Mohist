@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntityLockableLoot.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntityLockableLoot.java
-@@ -1,31 +1,38 @@
+@@ -1,31 +1,37 @@
  package net.minecraft.tileentity;
  
 -import java.util.Random;
@@ -29,7 +29,6 @@
 +public abstract class TileEntityLockableLoot extends TileEntityLockable implements ILootContainer, CraftLootableInventory { // Paper
      protected ResourceLocation lootTable;
      protected long lootTableSeed;
-+    public long getLootTableSeed() { return lootTableSeed; } // Paper - OBFHELPER
      protected String customName;
  
      protected boolean checkLootAndRead(NBTTagCompound compound)
@@ -44,7 +43,7 @@
          }
          else
          {
-@@ -35,6 +42,7 @@
+@@ -35,6 +41,7 @@
  
      protected boolean checkLootAndWrite(NBTTagCompound compound)
      {
@@ -52,7 +51,7 @@
          if (this.lootTable != null)
          {
              compound.setString("LootTable", this.lootTable.toString());
-@@ -43,8 +51,7 @@
+@@ -43,8 +50,7 @@
              {
                  compound.setLong("LootTableSeed", this.lootTableSeed);
              }
@@ -62,7 +61,7 @@
          }
          else
          {
-@@ -54,10 +61,9 @@
+@@ -54,10 +60,9 @@
  
      public void fillWithLoot(@Nullable EntityPlayer player)
      {
@@ -75,7 +74,7 @@
              Random random;
  
              if (this.lootTableSeed == 0L)
-@@ -185,4 +191,41 @@
+@@ -185,4 +190,41 @@
      }
  
      protected abstract NonNullList<ItemStack> getItems();

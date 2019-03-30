@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/inventory/SlotFurnaceOutput.java
 +++ ../src-work/minecraft/net/minecraft/inventory/SlotFurnaceOutput.java
-@@ -4,11 +4,15 @@
+@@ -4,7 +4,10 @@
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.item.ItemStack;
  import net.minecraft.item.crafting.FurnaceRecipes;
@@ -11,16 +11,13 @@
  
  public class SlotFurnaceOutput extends Slot
  {
-     private final EntityPlayer player;
-+    public EntityPlayer getPlayer() { return player; } // Paper OBFHELPER
-     private int removeCount;
+@@ -69,12 +72,26 @@
  
-     public SlotFurnaceOutput(EntityPlayer player, IInventory inventoryIn, int slotIndex, int xPosition, int yPosition)
-@@ -70,11 +74,24 @@
                  i = j;
              }
- 
-+            if (this.inventory instanceof TileEntityFurnace) { // Mohist - mods bypass
++			
++			// Mohist - mods bypass
++            if (this.inventory instanceof TileEntityFurnace) {
 +                // CraftBukkit - fire FurnaceExtractEvent
 +                Player player = (Player) this.player.getBukkitEntity();
 +                TileEntityFurnace furnace = ((TileEntityFurnace) this.inventory);
@@ -32,13 +29,13 @@
 +                    i = event.getExpToDrop();
 +                }
 +            }
-+
+ 
              while (i > 0)
              {
                  int k = EntityXPOrb.getXPSplit(i);
                  i -= k;
 -                this.player.world.spawnEntity(new EntityXPOrb(this.player.world, this.player.posX, this.player.posY + 0.5D, this.player.posZ + 0.5D, k));
-+                this.player.world.spawnEntity(new EntityXPOrb(this.player.world, this.player.posX, this.player.posY + 0.5D, this.player.posZ + 0.5D, k, org.bukkit.entity.ExperienceOrb.SpawnReason.FURNACE, getPlayer())); // Paper
++                this.player.world.spawnEntity(new EntityXPOrb(this.player.world, this.player.posX, this.player.posY + 0.5D, this.player.posZ + 0.5D, k, org.bukkit.entity.ExperienceOrb.SpawnReason.FURNACE, player)); // Paper
              }
          }
  

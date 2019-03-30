@@ -82,7 +82,7 @@
              {
                  if (!this.worldPointer.isRemote)
                  {
-@@ -214,6 +234,41 @@
+@@ -214,6 +234,42 @@
                          }
                      }
  
@@ -96,8 +96,9 @@
 +
 +                    PrepareItemEnchantEvent event = new PrepareItemEnchantEvent(player, this.getBukkitView(), this.worldPointer.getWorld().getBlockAt(position.getX(), position.getY(), position.getZ()), item, offers, (int) power);
 +                    event.setCancelled(!itemstack.isItemEnchantable());
-+                    this.worldPointer.getServer().getPluginManager().callEvent(event);
-+
++					if (this.getBukkitView() != null) {
++                    	this.worldPointer.getServer().getPluginManager().callEvent(event);
++					}
 +                    if (event.isCancelled()) {
 +                        for (int j = 0; j < 3; ++j) {
 +                            this.enchantLevels[j] = 0;
@@ -124,7 +125,7 @@
                      this.detectAndSendChanges();
                  }
              }
-@@ -245,31 +300,63 @@
+@@ -245,31 +301,64 @@
              {
                  List<EnchantmentData> list = this.getEnchantmentList(itemstack, id, this.enchantLevels[id]);
  
@@ -143,8 +144,9 @@
 +                    CraftItemStack item = CraftItemStack.asCraftMirror(itemstack);
 +
 +                    EnchantItemEvent event = new EnchantItemEvent((Player) playerIn.getBukkitEntity(), this.getBukkitView(), this.worldPointer.getWorld().getBlockAt(position.getX(), position.getY(), position.getZ()), item, this.enchantLevels[id], enchants, id);
-+                    this.worldPointer.getServer().getPluginManager().callEvent(event);
-+
++                    if (this.getBukkitView() != null) {
++						this.worldPointer.getServer().getPluginManager().callEvent(event);
++                    }
 +                    int level = event.getExpLevelCost();
 +                    if (event.isCancelled() || (level > playerIn.experienceLevel && !playerIn.capabilities.isCreativeMode) || event.getEnchantsToAdd().isEmpty()) {
 +                        return false;
@@ -201,7 +203,7 @@
                      if (!playerIn.capabilities.isCreativeMode)
                      {
                          itemstack1.shrink(i);
-@@ -325,7 +412,11 @@
+@@ -325,7 +414,11 @@
      public void onContainerClosed(EntityPlayer playerIn)
      {
          super.onContainerClosed(playerIn);
@@ -214,7 +216,7 @@
          if (!this.worldPointer.isRemote)
          {
              this.clearContainer(playerIn, playerIn.world, this.tableInventory);
-@@ -334,6 +425,7 @@
+@@ -334,6 +427,7 @@
  
      public boolean canInteractWith(EntityPlayer playerIn)
      {
@@ -222,7 +224,7 @@
          if (this.worldPointer.getBlockState(this.position).getBlock() != Blocks.ENCHANTING_TABLE)
          {
              return false;
-@@ -412,4 +504,15 @@
+@@ -412,4 +506,15 @@
  
          return itemstack;
      }

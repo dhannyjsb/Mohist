@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntity.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntity.java
-@@ -1,6 +1,6 @@
+@@ -1,12 +1,13 @@
  package net.minecraft.tileentity;
  
 -import javax.annotation.Nullable;
@@ -8,7 +8,14 @@
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockJukebox;
  import net.minecraft.block.state.IBlockState;
-@@ -16,16 +16,23 @@
+ import net.minecraft.crash.CrashReportCategory;
+ import net.minecraft.crash.ICrashReportDetail;
+ import net.minecraft.init.Blocks;
++import net.minecraft.inventory.IInventory;
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+ import net.minecraft.util.Mirror;
+@@ -16,16 +17,25 @@
  import net.minecraft.util.registry.RegistryNamespaced;
  import net.minecraft.util.text.ITextComponent;
  import net.minecraft.world.World;
@@ -18,6 +25,8 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.block.CraftBlockEntityState;
++import org.bukkit.craftbukkit.inventory.CraftInventory;
 +import org.bukkit.inventory.InventoryHolder;
  
 -public abstract class TileEntity implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
@@ -34,7 +43,7 @@
      protected BlockPos pos = BlockPos.ORIGIN;
      protected boolean tileEntityInvalid;
      private int blockMetadata = -1;
-@@ -36,12 +43,39 @@
+@@ -36,12 +46,39 @@
          REGISTRY.putObject(new ResourceLocation(id), clazz);
      }
  
@@ -76,7 +85,7 @@
      public World getWorld()
      {
          return this.world;
-@@ -108,7 +142,7 @@
+@@ -108,7 +145,7 @@
          catch (Throwable throwable1)
          {
              LOGGER.error("Failed to create block entity {}", s, throwable1);
@@ -85,7 +94,7 @@
                      s, oclass == null ? null : oclass.getName(), throwable1);
          }
  
-@@ -122,7 +156,7 @@
+@@ -122,7 +159,7 @@
              catch (Throwable throwable)
              {
                  LOGGER.error("Failed to load data for block entity {}", s, throwable);
@@ -94,7 +103,7 @@
                          s, oclass.getName(), throwable);
                  tileentity = null;
              }
-@@ -154,6 +188,9 @@
+@@ -154,6 +191,9 @@
      {
          if (this.world != null)
          {
@@ -104,7 +113,7 @@
              IBlockState iblockstate = this.world.getBlockState(this.pos);
              this.blockMetadata = iblockstate.getBlock().getMetaFromState(iblockstate);
              this.world.markChunkDirty(this.pos, this);
-@@ -243,7 +280,13 @@
+@@ -243,7 +283,13 @@
  
          if (this.world != null)
          {
@@ -119,7 +128,7 @@
              reportCategory.addDetail("Actual block type", new ICrashReportDetail<String>()
              {
                  public String call() throws Exception
-@@ -315,7 +358,7 @@
+@@ -315,7 +361,7 @@
       * @param net The NetworkManager the packet originated from
       * @param pkt The data packet
       */
@@ -128,7 +137,7 @@
      {
      }
  
-@@ -339,16 +382,7 @@
+@@ -339,16 +385,7 @@
      }
  
      private boolean isVanilla = getClass().getName().startsWith("net.minecraft.");
@@ -146,7 +155,7 @@
      public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
      {
          return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
-@@ -359,17 +393,8 @@
+@@ -359,17 +396,8 @@
          return pass == 0;
      }
  
@@ -165,7 +174,7 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +556,25 @@
+@@ -531,4 +559,35 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }
@@ -187,7 +196,17 @@
 +        }
 +        // Spigot end
 +        org.bukkit.block.BlockState state = block.getState(useSnapshot); // Paper
-+        if (state instanceof InventoryHolder) return (InventoryHolder) state;
++        if (state instanceof InventoryHolder)
++        {
++            return (InventoryHolder) state;
++        }
++        else if (state instanceof CraftBlockEntityState)
++        {
++            TileEntity te = ((CraftBlockEntityState) state).getTileEntity();
++            if (te instanceof IInventory) {
++                return (InventoryHolder) new CraftInventory((IInventory) te);
++            }
++        }
 +        return null;
 +    }
  }

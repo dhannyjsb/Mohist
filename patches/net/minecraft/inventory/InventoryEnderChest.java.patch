@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/inventory/InventoryEnderChest.java
 +++ ../src-work/minecraft/net/minecraft/inventory/InventoryEnderChest.java
-@@ -5,14 +5,24 @@
+@@ -5,14 +5,23 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTTagList;
  import net.minecraft.tileentity.TileEntityEnderChest;
@@ -10,7 +10,6 @@
  public class InventoryEnderChest extends InventoryBasic
  {
      private TileEntityEnderChest associatedChest;
-+    public TileEntityEnderChest getTileEntity() { return associatedChest; } // Paper - OBFHELPER
 +    private final EntityPlayer owner;
  
      public InventoryEnderChest()
@@ -25,7 +24,7 @@
      }
  
      public void setChestTileEntity(TileEntityEnderChest chestTileEntity)
-@@ -84,4 +94,15 @@
+@@ -84,4 +93,15 @@
          super.closeInventory(player);
          this.associatedChest = null;
      }
@@ -36,7 +35,7 @@
 +
 +    @Override
 +    public Location getLocation() {
-+        if (getTileEntity() == null) return null; // Paper - return null if there is no TE bound (opened by plugin)
++        if (associatedChest == null) return null; // Paper - return null if there is no TE bound (opened by plugin)
 +        return new Location(this.associatedChest.getWorld().getWorld(), this.associatedChest.getPos().getX(), this.associatedChest.getPos().getY(), this.associatedChest.getPos().getZ());
 +    }
 +
