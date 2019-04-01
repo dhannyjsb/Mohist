@@ -46,7 +46,7 @@
                  {
                      this.doMove(worldIn, pos, enumfacing, false);
                  }
-@@ -349,6 +365,47 @@
+@@ -349,6 +365,71 @@
              IBlockState[] aiblockstate = new IBlockState[k];
              EnumFacing enumfacing = extending ? direction : direction.getOpposite();
  
@@ -71,6 +71,30 @@
 +                    return bblock.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 +                }
 +            };
++            boolean cancell = false;
++            for (BlockPos blockPos : moved) {
++                if (worldIn.getTileEntity(blockPos) != null) {
++                    cancell = true;
++                    break;
++                }
++            }
++            for (BlockPos blockPos : broken) {
++                if (worldIn.getTileEntity(blockPos) != null) {
++                    cancell = true;
++                    break;
++                }
++            }
++            if (cancell) {
++                for (BlockPos b : broken) {
++                    worldIn.notifyBlockUpdate(b, Blocks.AIR.getDefaultState(), worldIn.getBlockState(b), 3);
++                }
++                for (BlockPos b : moved) {
++                    worldIn.notifyBlockUpdate(b, Blocks.AIR.getDefaultState(), worldIn.getBlockState(b), 3);
++                    b = b.offset(enumfacing);
++                    worldIn.notifyBlockUpdate(b, Blocks.AIR.getDefaultState(), worldIn.getBlockState(b), 3);
++                }
++                return false;
++            }
 +            org.bukkit.event.block.BlockPistonEvent event;
 +            if (extending) {
 +                event = new BlockPistonExtendEvent(bblock, blocks, CraftBlock.notchToBlockFace(enumfacing));

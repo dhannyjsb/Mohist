@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/FMLCommonHandler.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/FMLCommonHandler.java
+@@ -405,7 +405,7 @@
+         {
+             return;
+         }
+-        if (handlerSet.contains(handler))
++        if (handlerSet.contains(handler) || worldInfo.getDimension() != 0)
+         {
+             return;
+         }

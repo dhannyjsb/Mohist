@@ -41,7 +41,7 @@
 -            {
 -                worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
 +                int lightLevel = -1; // Paper
-+                if (worldIn.getType(pos.up()).getLightOpacity() > 2 && (lightLevel = worldIn.getLightFromNeighbors(pos.up())) < 4) { // Paper - move light check to end to avoid unneeded light lookups
++                if (worldIn.getBlockState(pos.up()).getLightOpacity() > 2 && (lightLevel = worldIn.getLightFromNeighbors(pos.up())) < 4) { // Paper - move light check to end to avoid unneeded light lookups
 +                    org.bukkit.World bworld = worldIn.getWorld();
 +                    BlockState blockState = bworld.getBlockAt(pos.getX(), pos.getY(), pos.getZ()).getState();
 +                    blockState.setType(CraftMagicNumbers.getMaterial(Blocks.DIRT));
@@ -68,10 +68,9 @@
                      {
                          BlockPos blockpos = pos.add(rand.nextInt(3) - 1, rand.nextInt(5) - 3, rand.nextInt(3) - 1);
  
--                        if (blockpos.getY() >= 0 && blockpos.getY() < 256 && !worldIn.isBlockLoaded(blockpos))
+                         if (blockpos.getY() >= 0 && blockpos.getY() < 256 && !worldIn.isBlockLoaded(blockpos))
 -                        {
-+                        IBlockState iblockdata2 = worldIn.getTypeIfLoaded(blockpos); // Paper - moved up
-+                        if (iblockdata2 == null) { // Paper
++						{
                              return;
                          }
  

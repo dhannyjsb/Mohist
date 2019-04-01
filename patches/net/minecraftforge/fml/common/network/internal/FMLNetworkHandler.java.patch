@@ -62,26 +62,27 @@
  
  public class FMLNetworkHandler
  {
-@@ -88,6 +89,18 @@
+@@ -88,6 +89,19 @@
              Container remoteGuiContainer = NetworkRegistry.INSTANCE.getRemoteGuiContainer(mc, entityPlayerMP, modGuiId, world, x, y, z);
              if (remoteGuiContainer != null)
              {
 +            	if (remoteGuiContainer.getBukkitView() == null) {
-+                    TileEntity te = entityPlayer.world.getTileEntity(new BlockPos(x, y, z));
-+                    if (te instanceof IInventory) {
-+                        remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), new CraftInventory((IInventory) te), remoteGuiContainer));
++                    TileEntity tileEntity = entityPlayer.world.getTileEntity(new BlockPos(x, y, z));
++                    if (tileEntity instanceof IInventory) {
++                        remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), new CraftInventory((IInventory) tileEntity), remoteGuiContainer));
 +                    } else {
 +                        remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), Bukkit.createInventory(entityPlayer.getBukkitEntity(), InventoryType.CHEST), remoteGuiContainer));
 +                    }
-+                	remoteGuiContainer = CraftEventFactory.callInventoryOpenEvent((EntityPlayerMP) entityPlayer, remoteGuiContainer, false);
-+                	if (remoteGuiContainer == null) {
-+                    	return;
-+					}
 +                }
++            	remoteGuiContainer = CraftEventFactory.callInventoryOpenEvent((EntityPlayerMP) entityPlayer, remoteGuiContainer, false);
++            	if (remoteGuiContainer == null) {
++            	    return;
++            	}
++
                  entityPlayerMP.getNextWindowId();
                  entityPlayerMP.closeContainer();
                  int windowId = entityPlayerMP.currentWindowId;
-@@ -113,7 +126,7 @@
+@@ -113,7 +127,7 @@
          }
          else
          {
@@ -90,7 +91,7 @@
          }
  
      }
-@@ -167,7 +180,7 @@
+@@ -167,7 +181,7 @@
                  rejectStrings.add(modContainer.getName() + ": " + reject.getValue());
              }
              String rejectString = String.join("\n", rejectStrings);

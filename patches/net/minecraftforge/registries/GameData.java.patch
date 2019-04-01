@@ -1,14 +1,32 @@
 --- ../src-base/minecraft/net/minecraftforge/registries/GameData.java
 +++ ../src-work/minecraft/net/minecraftforge/registries/GameData.java
-@@ -83,6 +83,7 @@
+@@ -83,6 +83,8 @@
  
  import org.apache.commons.lang3.Validate;
  import org.apache.logging.log4j.Level;
++import org.bukkit.craftbukkit.inventory.CraftCustomModRecipe;
 +import org.bukkit.inventory.Recipe;
  
  /**
   * INTERNAL ONLY
-@@ -662,9 +663,9 @@
+@@ -458,6 +460,7 @@
+         {
+             private static ItemStack result = new ItemStack(Items.DIAMOND, 64);
+             private ResourceLocation name;
++            private Recipe bukkitRecip;
+ 
+             @Override
+             public IRecipe setRegistryName(ResourceLocation name) {
+@@ -471,6 +474,8 @@
+             @Override public boolean canFit(int width, int height) { return false; }
+             @Override public ItemStack getRecipeOutput() { return result; }
+             @Override public boolean isDynamic() { return true; }
++            @Override public Recipe toBukkitRecipe() { if (bukkitRecip == null) bukkitRecip = new CraftCustomModRecipe(this, this.getRegistryName()); return this.bukkitRecip; }
++            @Override public void setKey(ResourceLocation key) { }
+         }
+     }
+ 
+@@ -662,9 +667,9 @@
              {
                  StringBuilder buf = new StringBuilder();
                  buf.append("Forge Mod Loader detected missing registry entries.\n\n")
@@ -21,7 +39,7 @@
  
                  defaulted.asMap().forEach((name, entries) ->
                  {
-@@ -839,11 +840,11 @@
+@@ -839,11 +844,11 @@
      /**
       * Check a name for a domain prefix, and if not present infer it from the
       * current active mod container.
@@ -35,7 +53,7 @@
       * @return The {@link ResourceLocation} with given or inferred domain
       */
      public static ResourceLocation checkPrefix(String name, boolean warnOverrides)
-@@ -855,7 +856,7 @@
+@@ -855,7 +860,7 @@
          String prefix = mc == null || (mc instanceof InjectedModContainer && ((InjectedModContainer)mc).wrappedContainer instanceof FMLContainer) ? "minecraft" : mc.getModId().toLowerCase(Locale.ROOT);
          if (warnOverrides && !oldPrefix.equals(prefix) && oldPrefix.length() > 0)
          {

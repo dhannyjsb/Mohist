@@ -258,8 +258,6 @@ public interface Block extends Metadatable {
      * @return BlockState with the current state of this block.
      */
     BlockState getState();
-
-    BlockState getState(boolean useSnapshot);
     /**
      * Returns the biome that this block resides in
      *

@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/network/handshake/NetworkDispatcher.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/network/handshake/NetworkDispatcher.java
+@@ -597,7 +597,7 @@
+             }
+             else
+             {
+-                FMLLog.log.error("NetworkDispatcher exception", cause);
++                FMLLog.log.debug("NetworkDispatcher exception", cause);
+             }
+         }
+         super.exceptionCaught(ctx, cause);

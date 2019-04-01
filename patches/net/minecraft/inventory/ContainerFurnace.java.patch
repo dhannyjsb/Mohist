@@ -45,7 +45,7 @@
 +            return bukkitEntity;
 +        }
 +
-+        CraftInventoryFurnace inventory = new CraftInventoryFurnace((TileEntityFurnace) this.tileFurnace);
++        CraftInventoryFurnace inventory = new CraftInventoryFurnace(this.tileFurnace);
 +        bukkitEntity = new CraftInventoryView(this.player.player.getBukkitEntity(), inventory, this);
 +        return bukkitEntity;
 +    }

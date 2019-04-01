@@ -102,7 +102,7 @@
                              ChunkPos chunkpos = new ChunkPos(i1 + j, j1 + k);
  
                              if (!this.eligibleChunksForSpawning.contains(chunkpos))
-@@ -77,25 +117,45 @@
+@@ -77,20 +117,40 @@
  
              for (EnumCreatureType enumcreaturetype : EnumCreatureType.values())
              {
@@ -150,23 +150,7 @@
                              BlockPos blockpos = getRandomChunkPosition(worldServerIn, chunkpos1.x, chunkpos1.z);
                              int k1 = blockpos.getX();
                              int l1 = blockpos.getY();
-                             int i2 = blockpos.getZ();
--                            IBlockState iblockstate = worldServerIn.getBlockState(blockpos);
-+                            IBlockState iblockstate = worldServerIn.getWorldBorder().contains(blockpos) ? worldServerIn.getTypeIfLoaded(blockpos) : null; // Paper
- 
-                             if (!iblockstate.isNormalCube())
-                             {
-@@ -120,8 +180,7 @@
-                                         float f = (float)l2 + 0.5F;
-                                         float f1 = (float)j3 + 0.5F;
- 
--                                        if (!worldServerIn.isAnyPlayerWithinRangeAt((double)f, (double)i3, (double)f1, 24.0D) && blockpos1.distanceSq((double)f, (double)i3, (double)f1) >= 576.0D)
--                                        {
-+                                        if (worldServerIn.getWorldBorder().contains( blockpos$mutableblockpos) && worldServerIn.getChunkIfLoaded( blockpos$mutableblockpos) != null && !worldServerIn.isAnyPlayerWithinRangeAt((double) f, (double) k3, (double) f1, 24.0D) && blockpos1.distanceSq((double) f, (double) k3, (double) f1) >= 576.0D) { // Paper - Prevent mob spawning from loading/generating chunks
-                                             if (biome$spawnlistentry == null)
-                                             {
-                                                 biome$spawnlistentry = worldServerIn.getSpawnListEntryForTypeAt(enumcreaturetype, blockpos$mutableblockpos);
-@@ -134,6 +193,25 @@
+@@ -134,6 +194,25 @@
  
                                              if (worldServerIn.canCreatureTypeSpawnHere(enumcreaturetype, biome$spawnlistentry, blockpos$mutableblockpos) && canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(biome$spawnlistentry.entityClass), worldServerIn, blockpos$mutableblockpos))
                                              {
@@ -192,7 +176,7 @@
                                                  EntityLiving entityliving;
  
                                                  try
-@@ -156,15 +234,17 @@
+@@ -156,15 +235,17 @@
  
                                                      if (entityliving.isNotColliding())
                                                      {
@@ -213,7 +197,7 @@
                                                      {
                                                          continue label134;
                                                      }
-@@ -295,8 +375,11 @@
+@@ -295,8 +376,11 @@
  
                              if (net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(entityliving, worldIn, j + 0.5f, (float) blockpos.getY(), k +0.5f, false) == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY) continue;
                              entityliving.setLocationAndAngles((double)((float)j + 0.5F), (double)blockpos.getY(), (double)((float)k + 0.5F), randomIn.nextFloat() * 360.0F, 0.0F);

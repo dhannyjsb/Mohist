@@ -23,7 +23,7 @@
 +        int i = MathHelper.floor(this.posX);
 +        int j = MathHelper.floor(this.getEntityBoundingBox().minY); // minY of bounding box
 +        int k = MathHelper.floor(this.posZ);
-+        Block block = this.world.getType(new BlockPos(i, j, k)).getBlock();
++        Block block = this.world.getBlockState(new BlockPos(i, j, k)).getBlock();
 +        return block == Blocks.WATER || block == Blocks.FLOWING_WATER;
 +        // Paper end
      }

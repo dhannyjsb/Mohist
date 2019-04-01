@@ -41,7 +41,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     public static Block getBlock(int id) {
-        return getBlock(Material.getMaterial(id));
+        return getBlock(Material.getBlockMaterial(id));
     }
 
     public static int getId(Block block) {
@@ -49,7 +49,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     public static Material getMaterial(Block block) {
-        return Material.getMaterial(Block.getIdFromBlock(block));
+        return Material.getBlockMaterial(Block.getIdFromBlock(block));
     }
 
     public static Item getItem(Material material) {

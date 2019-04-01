@@ -47,19 +47,7 @@
      {
          this.capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
      }
-@@ -59,6 +60,11 @@
- 
-     public void tick(int tickCounterIn)
-     {
-+        Chunk chunk = this.world.getChunkIfLoaded(getCenter());
-+        if (chunk == null || !chunk.areNeighborsLoaded(1)) {
-+            return;
-+        }
-+        // Paper end
-         this.tickCounter = tickCounterIn;
-         this.removeDeadAndOutOfRangeDoors();
-         this.removeDeadAndOldAgressors();
-@@ -83,7 +89,7 @@
+@@ -83,7 +84,7 @@
              {
                  EntityIronGolem entityirongolem = new EntityIronGolem(this.world);
                  entityirongolem.setPosition(vec3d.x, vec3d.y, vec3d.z);
@@ -68,7 +56,7 @@
                  ++this.numIronGolems;
              }
          }
-@@ -274,7 +280,7 @@
+@@ -274,7 +275,7 @@
  
      public void addOrRenewAgressor(EntityLivingBase entitylivingbaseIn)
      {
@@ -77,7 +65,7 @@
          {
              if (village$villageaggressor.agressor == entitylivingbaseIn)
              {
-@@ -283,18 +289,18 @@
+@@ -283,18 +284,18 @@
              }
          }
  
@@ -99,7 +87,7 @@
              double d1 = village$villageaggressor1.agressor.getDistanceSq(entitylivingbaseIn);
  
              if (d1 <= d0)
-@@ -336,11 +342,11 @@
+@@ -336,11 +337,11 @@
  
      private void removeDeadAndOldAgressors()
      {
@@ -113,7 +101,7 @@
  
              if (!village$villageaggressor.agressor.isEntityAlive() || Math.abs(this.tickCounter - village$villageaggressor.agressionTime) > 300)
              {
-@@ -358,7 +364,12 @@
+@@ -358,7 +359,12 @@
          while (iterator.hasNext())
          {
              VillageDoorInfo villagedoorinfo = iterator.next();
@@ -127,21 +115,7 @@
              if (flag1)
              {
                  villagedoorinfo.resetDoorOpeningRestrictionCounter();
-@@ -382,7 +393,12 @@
- 
-     private boolean isWoodDoor(BlockPos pos)
-     {
--        IBlockState iblockstate = this.world.getBlockState(pos);
-+        // Paper start
-+        IBlockState iblockstate = this.world.getTypeIfLoaded(pos);
-+        if (iblockstate == null) {
-+            return false;
-+        }
-+        // Paper end
-         Block block = iblockstate.getBlock();
- 
-         if (block instanceof BlockDoor)
-@@ -586,13 +602,13 @@
+@@ -586,13 +592,13 @@
  
      /* ======================================== FORGE START =====================================*/
      private net.minecraftforge.common.capabilities.CapabilityDispatcher capabilities;

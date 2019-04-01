@@ -1,6 +1,5 @@
 package cn.pfcraft;
 
-
 import cn.pfcraft.i18n.Message;
 import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +35,6 @@ public class Mohist implements Runnable{
 		Thread t = new Thread(new Mohist(),"Mohist");
 		t.start();
 	}
-
 
 	@Override
 	public void run() {

@@ -29,7 +29,7 @@ public interface Tameable extends Entity {
      *
      * @return the owners UUID, or null if not owned
      */
-    public java.util.UUID getOwnerUniqueId();
+    public java.util.UUID getOwnerUUID();
     // Paper end
 
     /**

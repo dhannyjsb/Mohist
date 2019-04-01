@@ -168,7 +168,7 @@ public class CraftBlock implements Block {
     }
 
     public Material getType() {
-        return Material.getMaterial(getTypeId());
+        return Material.getBlockMaterial(getTypeId());
     }
 
     @Deprecated
@@ -270,21 +270,15 @@ public class CraftBlock implements Block {
     }
 
     public BlockState getState() {
-        // Paper start - allow disabling the use of snapshots
-        return getState(true);
-    }
-    public BlockState getState(boolean useSnapshot) {
-        boolean prev = CraftBlockEntityState.DISABLE_SNAPSHOT;
-        CraftBlockEntityState.DISABLE_SNAPSHOT = !useSnapshot;
-        try {
-            return getState0();
-        } finally {
-            CraftBlockEntityState.DISABLE_SNAPSHOT = prev;
-        }
-    }
-    public BlockState getState0() {
-        // Paper end
         Material material = getType();
+        if (material == null) {
+            TileEntity tileEntity = chunk.getCraftWorld().getTileEntityAt(x, y, z);
+            if (tileEntity != null) {
+                return new CraftBlockEntityState<TileEntity>(this, (Class<TileEntity>) tileEntity.getClass());
+            } else {
+                return new CraftBlockState(this);
+            }
+        }
         switch (material) {
         case SIGN:
         case SIGN_POST:
@@ -464,7 +458,7 @@ public class CraftBlock implements Block {
     }
 
     public PistonMoveReaction getPistonMoveReaction() {
-        return PistonMoveReaction.getById(getNMSBlock().getMobilityFlag(getNMSBlock().getStateFromMeta(getData())).ordinal());
+        return PistonMoveReaction.getById(getNMSBlock().getMobilityFlag(getNMSBlock().getStateFromMeta(this.getData())).ordinal());
     }
 
     private boolean itemCausesDrops(ItemStack item) {

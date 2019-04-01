@@ -16,15 +16,24 @@
  
  import com.google.common.collect.Maps;
  import com.google.common.collect.Sets;
-@@ -49,6 +47,7 @@
+@@ -49,6 +47,8 @@
  import com.google.gson.JsonElement;
  import com.google.gson.JsonObject;
  import com.google.gson.JsonSyntaxException;
++import org.bukkit.craftbukkit.inventory.CraftCustomModRecipe;
 +import org.bukkit.inventory.Recipe;
  
  public class ShapedOreRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IShapedRecipe
  {
-@@ -188,9 +187,9 @@
+@@ -64,6 +64,7 @@
+     protected int height = 0;
+     protected boolean mirrored = true;
+     protected ResourceLocation group;
++	private Recipe bukkitRecip;
+ 
+     public ShapedOreRecipe(ResourceLocation group, Block     result, Object... recipe){ this(group, new ItemStack(result), recipe); }
+     public ShapedOreRecipe(ResourceLocation group, Item      result, Object... recipe){ this(group, new ItemStack(result), recipe); }
+@@ -188,9 +189,9 @@
      }
  
      @Override
@@ -36,14 +45,16 @@
      }
  
      public static ShapedOreRecipe factory(JsonContext context, JsonObject json)
-@@ -254,4 +253,14 @@
+@@ -254,4 +255,16 @@
          ItemStack result = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "result"), context);
          return new ShapedOreRecipe(group.isEmpty() ? null : new ResourceLocation(group), result, primer);
      }
 +
 +    @Override
 +    public Recipe toBukkitRecipe() {
-+        throw new UnsupportedOperationException("Cannot get bukkit-recipe from ShapedOreRecipe!");
++        if (bukkitRecip == null)
++            bukkitRecip = new CraftCustomModRecipe(this, this.getRegistryName());
++        return this.bukkitRecip;
 +    }
 +
 +    @Override

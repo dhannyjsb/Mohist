@@ -113,16 +113,12 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
         contents.set(0, CraftItemStack.asNMSCopy(item));
     }
 
-    @Nullable
     public Recipe getRecipe() {
         IRecipe recipe = ((InventoryCrafting)getInventory()).currentRecipe;
-        if (recipe != null) {
-            if (recipe instanceof ShapedRecipe || recipe instanceof ShapelessRecipe) {
-                return recipe.toBukkitRecipe();
-            } else {
-                return new CraftCustomModRecipe(recipe);
-            }
+        try {
+            return recipe == null ? null : recipe.toBukkitRecipe();
+        } catch (AbstractMethodError ex) {
+            return recipe == null ? null : new CraftCustomModRecipe(recipe, recipe.getRegistryName());
         }
-        return null;
     }
 }

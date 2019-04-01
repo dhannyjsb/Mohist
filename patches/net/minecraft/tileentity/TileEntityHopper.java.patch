@@ -22,11 +22,12 @@
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.util.EntitySelectors;
-@@ -27,13 +22,53 @@
+@@ -27,13 +22,54 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.World;
 +import org.bukkit.craftbukkit.entity.CraftHumanEntity;
++import org.bukkit.craftbukkit.inventory.CraftCustomInventory;
 +import org.bukkit.craftbukkit.inventory.CraftInventory;
 +import org.bukkit.craftbukkit.inventory.CraftItemStack;
 +import org.bukkit.entity.HumanEntity;
@@ -77,7 +78,7 @@
      public static void registerFixesHopper(DataFixer fixer)
      {
          fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityHopper.class, new String[] {"Items"}));
-@@ -106,7 +141,7 @@
+@@ -106,7 +142,7 @@
  
      public int getInventoryStackLimit()
      {
@@ -86,7 +87,7 @@
      }
  
      public void update()
-@@ -126,6 +161,7 @@
+@@ -126,6 +162,7 @@
  
      protected boolean updateHopper()
      {
@@ -94,7 +95,7 @@
          if (this.world != null && !this.world.isRemote)
          {
              if (!this.isOnTransferCooldown() && BlockHopper.isEnabled(this.getBlockMetadata()))
-@@ -139,12 +175,13 @@
+@@ -139,12 +176,13 @@
  
                  if (!this.isFull())
                  {
@@ -109,7 +110,7 @@
                      this.markDirty();
                      return true;
                  }
-@@ -189,6 +226,146 @@
+@@ -189,6 +227,145 @@
          return true;
      }
  
@@ -194,8 +195,7 @@
 +
 +    private ItemStack callPushMoveEvent(IInventory iinventory, ItemStack itemstack) {
 +        Inventory destinationInventory = getInventory(iinventory);
-+        InventoryMoveItemEvent event = new InventoryMoveItemEvent(this.getOwner(false).getInventory(),
-+                CraftItemStack.asCraftMirror(itemstack), destinationInventory, true);
++        InventoryMoveItemEvent event = new InventoryMoveItemEvent(this.getOwner().getInventory(), CraftItemStack.asCraftMirror(itemstack), destinationInventory, true);
 +        boolean result = event.callEvent();
 +        if (!event.calledGetItem && !event.calledSetItem) {
 +            skipPushModeEventFire = true;
@@ -237,7 +237,7 @@
 +        if (iinventory instanceof InventoryLargeChest) {
 +            sourceInventory = new org.bukkit.craftbukkit.inventory.CraftInventoryDoubleChest((InventoryLargeChest) iinventory);
 +        } else if (iinventory instanceof TileEntity) {
-+            sourceInventory = ((TileEntity) iinventory).getOwner(false).getInventory();
++            sourceInventory = ((TileEntity) iinventory).getOwner().getInventory();
 +        } else {
 +            sourceInventory = iinventory.getOwner().getInventory();
 +        }
@@ -309,7 +309,7 @@
              for (EntityItem entityitem : getCaptureItems(hopper.getWorld(), hopper.getXPos(), hopper.getYPos(), hopper.getZPos()))
              {
                  if (putDropInInventoryAllSlots((IInventory)null, hopper, entityitem))
-@@ -358,14 +519,66 @@
+@@ -358,14 +519,46 @@
          if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction))
          {
              ItemStack itemstack1 = itemstack.copy();
@@ -317,32 +317,12 @@
 +            // CraftBukkit start - Call event on collection of items from inventories into the hopper
 +            CraftItemStack oitemstack = CraftItemStack.asCraftMirror(inventoryIn.decrStackSize(index, hopper.getWorld().spigotConfig.hopperAmount));
  
-+            Inventory sourceInventory = null;
++            Inventory sourceInventory;
 +            // Have to special case large chests as they work oddly
 +            if (inventoryIn instanceof InventoryLargeChest) {
 +                sourceInventory = new org.bukkit.craftbukkit.inventory.CraftInventoryDoubleChest((InventoryLargeChest) inventoryIn);
 +            } else {
-+                try
-+                {
-+                    if (inventoryIn.getOwner() != null)
-+                    {
-+                        sourceInventory = inventoryIn.getOwner().getInventory();
-+                    }
-+                    else
-+                        {
-+                            // TODO: create a mod inventory for passing to the event, instead of null
-+                            sourceInventory = null;
-+                        }
-+                }
-+                catch (AbstractMethodError e) {
-+                    sourceInventory = null;
-+                }
-+                finally {
-+                    if (sourceInventory == null)
-+                    {
-+                        sourceInventory = new CraftInventory(inventoryIn);
-+                    }
-+                }
++                sourceInventory = inventoryIn.getOwner() != null ? inventoryIn.getOwner().getInventory() : new CraftCustomInventory(inventoryIn).getInventory();
 +            }
 +
 +            InventoryMoveItemEvent event = new InventoryMoveItemEvent(sourceInventory, oitemstack.clone(), hopper.getOwner().getInventory(), false);
@@ -379,7 +359,7 @@
              inventoryIn.setInventorySlotContents(index, itemstack1);
          }
  
-@@ -382,6 +595,11 @@
+@@ -382,6 +575,11 @@
          }
          else
          {
@@ -391,7 +371,7 @@
              ItemStack itemstack = entity.getItem().copy();
              ItemStack itemstack1 = putStackInInventoryAllSlots(source, destination, itemstack, (EnumFacing)null);
  
-@@ -458,7 +676,9 @@
+@@ -458,7 +656,9 @@
  
              if (itemstack.isEmpty())
              {
@@ -401,7 +381,7 @@
                  stack = ItemStack.EMPTY;
                  flag = true;
              }
-@@ -491,7 +711,7 @@
+@@ -491,7 +691,7 @@
                              }
                          }
  
@@ -410,7 +390,7 @@
                      }
                  }
  
-@@ -505,26 +725,47 @@
+@@ -505,26 +705,47 @@
      private IInventory getInventoryForHopperTransfer()
      {
          EnumFacing enumfacing = BlockHopper.getFacing(this.getBlockMetadata());
@@ -460,7 +440,7 @@
          net.minecraft.block.state.IBlockState state = worldIn.getBlockState(blockpos);
          Block block = state.getBlock();
  
-@@ -543,7 +784,7 @@
+@@ -543,7 +764,7 @@
              }
          }
  

@@ -141,7 +141,7 @@ public class CraftBlockState implements BlockState {
     }
 
     public Material getType() {
-        return Material.getMaterial(getTypeId());
+        return Material.getBlockMaterial(getTypeId());
     }
 
     public void setFlag(int flag) {
@@ -186,11 +186,11 @@ public class CraftBlockState implements BlockState {
         }
 
         BlockPos pos = new BlockPos(x, y, z);
-        IBlockState newBlock = CraftMagicNumbers.getBlock(getType()).getDefaultState();
+        IBlockState newBlock = CraftMagicNumbers.getBlock(getType()).getStateFromMeta(this.getRawData());
         block.setTypeIdAndData(getTypeId(), getRawData(), applyPhysics);
         world.getHandle().notifyBlockUpdate(
                 pos,
-                CraftMagicNumbers.getBlock(block).getDefaultState(),
+                CraftMagicNumbers.getBlock(block).getStateFromMeta(block.getData()),
                 newBlock,
                 3
         );

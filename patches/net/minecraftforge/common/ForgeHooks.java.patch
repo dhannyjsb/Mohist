@@ -360,7 +360,7 @@
          {
              // Let the client know the block still exists
              entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-@@ -861,83 +651,115 @@
+@@ -861,33 +651,70 @@
                      entityPlayer.connection.sendPacket(pkt);
                  }
              }
@@ -379,6 +379,7 @@
          // handle all placement events here
          int meta = itemstack.getItemDamage();
          int size = itemstack.getCount();
++		int data = itemstack.getMetadata();
          NBTTagCompound nbt = null;
 -        if (itemstack.getTagCompound() != null)
 -        {
@@ -389,7 +390,7 @@
          if (!(itemstack.getItem() instanceof ItemBucket)) // if not bucket
          {
              world.captureBlockSnapshots = true;
-+            if (itemstack.getItem() instanceof ItemDye && itemstack.getItemDamage() == 15) {
++            if (itemstack.getItem() instanceof ItemDye && itemstack.getMetadata() == 15) {
 +                Block block = world.getBlockState(pos).getBlock();
 +                if (block == Blocks.SAPLING || block instanceof BlockMushroom)
 +                    world.captureTreeGeneration = true;
@@ -398,60 +399,48 @@
  
          EnumActionResult ret = itemstack.getItem().onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
          world.captureBlockSnapshots = false;
--
++        List<BlockState> blocks = new ArrayList();
++        for (net.minecraftforge.common.util.BlockSnapshot snapshot : (List<net.minecraftforge.common.util.BlockSnapshot>) world.capturedBlockSnapshots.clone()) {
++            blocks.add(new CraftBlockState(snapshot));
++        }
+ 
 -        if (ret == EnumActionResult.SUCCESS)
 -        {
 -            // save new item data
 -            int newMeta = itemstack.getItemDamage();
--            int newSize = itemstack.getCount();
--            NBTTagCompound newNBT = null;
--            if (itemstack.getTagCompound() != null)
--            {
--                newNBT = itemstack.getTagCompound().copy();
-+        int newMeta = itemstack.getItemDamage();
-+        int newSize = itemstack.getCount();
-+        NBTTagCompound newNBT = null;
-+        if (itemstack.getTagCompound() != null) {
-+            newNBT = itemstack.getTagCompound().copy();
-+        }
-+        itemstack.setItemDamage(meta);
-+        itemstack.setCount(size);
-+        if (nbt != null) {
-+            itemstack.setTagCompound(nbt);
-+        }
++		int newCount = itemstack.stackSize;
 +        if (ret == EnumActionResult.SUCCESS && world.captureTreeGeneration && world.capturedBlockSnapshots.size() > 0) {
 +            world.captureTreeGeneration = false;
 +            Location location = new Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ());
 +            TreeType treeType = BlockSapling.treeType;
 +            BlockSapling.treeType = null;
-+            @SuppressWarnings("unchecked")
-+            List<BlockSnapshot> blocks = (List<BlockSnapshot>) world.capturedBlockSnapshots.clone();
 +            world.capturedBlockSnapshots.clear();
 +            StructureGrowEvent event = null;
 +            if (treeType != null) {
-+                boolean isBonemeal = itemstack.getItem() == Items.DYE && meta == 15;
-+                event = new StructureGrowEvent(location, treeType, isBonemeal, (Player) player.getBukkitEntity(), toBlockStates(world, blocks));
++                boolean isBonemeal = itemstack.getItem() == Items.DYE && data == 15;
++                event = new StructureGrowEvent(location, treeType, isBonemeal, (Player) player.getBukkitEntity(), blocks);
 +                org.bukkit.Bukkit.getPluginManager().callEvent(event);
-             }
++            }
 +            if (event == null || !event.isCancelled()) {
 +                // Change the stack to its new contents if it hasn't been tampered with.
-+                if (itemstack.getCount() == size && itemstack.getItemDamage() == meta) {
-+                    itemstack.setItemDamage(newMeta);
-+                    itemstack.setCount(newSize);
++                if (itemstack.stackSize == size && itemstack.getMetadata() == data) {
++                    itemstack.stackSize = newCount;
 +                }
-+                for (BlockSnapshot blocksnapshot : Lists.reverse(blocks)) {
-+                    world.restoringBlockSnapshots = true;
-+                    blocksnapshot.restore(true, false);
-+                    world.restoringBlockSnapshots = false;
++                for (BlockState blockstate : blocks) {
++                    blockstate.update(true);
 +                }
 +            }
-+
 +            return ret;
 +        }
 +        world.captureTreeGeneration = false;
 +
 +        if (ret == EnumActionResult.SUCCESS) {
-+            org.bukkit.event.block.BlockPlaceEvent blockPlaceEvent = null;
++        	int newMeta = itemstack.getItemDamage();
+             int newSize = itemstack.getCount();
+             NBTTagCompound newNBT = null;
+             if (itemstack.getTagCompound() != null)
+@@ -896,48 +723,38 @@
+             }
              BlockEvent.PlaceEvent placeEvent = null;
              @SuppressWarnings("unchecked")
 -            List<BlockSnapshot> blockSnapshots = (List<BlockSnapshot>)world.capturedBlockSnapshots.clone();
@@ -459,31 +448,28 @@
              world.capturedBlockSnapshots.clear();
 -
 -            // make sure to set pre-placement item data for event
--            itemstack.setItemDamage(meta);
--            itemstack.setCount(size);
--            if (nbt != null)
--            {
--                itemstack.setTagCompound(nbt);
--            }
+             itemstack.setItemDamage(meta);
+             itemstack.setCount(size);
+             if (nbt != null)
+             {
+                 itemstack.setTagCompound(nbt);
+             }
 -            if (blockSnapshots.size() > 1)
 -            {
 +            if (blockSnapshots.size() > 1) {
-+                blockPlaceEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callBlockMultiPlaceEvent(world, player, hand, toBlockStates(world, blockSnapshots), pos.getX(), pos.getY(), pos.getZ());
                  placeEvent = ForgeEventFactory.onPlayerMultiBlockPlace(player, blockSnapshots, side, hand);
--            }
++            } else if (blockSnapshots.size() == 1) {
++				placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshots.get(0), side, hand);
+             }
 -            else if (blockSnapshots.size() == 1)
 -            {
-+            } else if (blockSnapshots.size() == 1) {
-+                blockPlaceEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPlaceEvent(world, player, hand, toBlockState(world, blockSnapshots.get(0)), pos.getX(), pos.getY(), pos.getZ());
-                 placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshots.get(0), side, hand);
-             }
+-                placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshots.get(0), side, hand);
+-            }
  
 -            if (placeEvent != null && placeEvent.isCanceled())
 -            {
-+            if ((placeEvent != null && placeEvent.isCanceled()) || (blockPlaceEvent != null && (blockPlaceEvent.isCancelled() || !blockPlaceEvent.canBuild()))) {
++            if (placeEvent != null && placeEvent.isCanceled()) {
                  ret = EnumActionResult.FAIL; // cancel placement
-+                // Remove this when MC-99075 fixed
-+                blockPlaceEvent.getPlayer().updateInventory();
                  // revert back all captured blocks
 -                for (BlockSnapshot blocksnapshot : Lists.reverse(blockSnapshots))
 -                {
@@ -495,6 +481,7 @@
 -            }
 -            else
 -            {
++				((org.bukkit.craftbukkit.entity.CraftPlayer) player.getBukkitEntity()).updateInventory();
 +            } else {
                  // Change the stack to its new content
                  itemstack.setItemDamage(newMeta);
@@ -504,31 +491,30 @@
 +                if (nbt != null) {
                      itemstack.setTagCompound(newNBT);
                  }
- 
+-
 -                for (BlockSnapshot snap : blockSnapshots)
 -                {
-+                for (Map.Entry<BlockPos, TileEntity> e : world.capturedTileEntities.entrySet()) {
-+                    world.setTileEntity(e.getKey(), e.getValue());
-+                }
-+
++				
 +                for (BlockSnapshot snap : blockSnapshots) {
                      int updateFlag = snap.getFlag();
                      IBlockState oldBlock = snap.getReplacedBlock();
                      IBlockState newBlock = world.getBlockState(snap.getPos());
-@@ -948,14 +770,57 @@
+@@ -948,7 +765,30 @@
  
                      world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                  }
-+                if (itemstack.getItem() instanceof ItemRecord) {
+-                player.addStat(StatList.getObjectUseStats(itemstack.getItem()));
++				player.addStat(StatList.getObjectUseStats(itemstack.getItem()));
++                if (itemstack.item instanceof ItemRecord) {
 +                    ((BlockJukebox) Blocks.JUKEBOX).insertRecord(world, pos, world.getBlockState(pos), itemstack);
-+                    world.playEvent(null, 1010, pos, Item.getIdFromItem(itemstack.getItem()));
++                    world.playEvent((EntityPlayer) null, 1010, pos, Item.getIdFromItem(itemstack.item));
 +                    itemstack.shrink(1);
-+                    player.addStat(StatList.CRAFTING_TABLE_INTERACTION);
++                    player.addStat(StatList.RECORD_PLAYED);
 +                }
 +
-+                if (itemstack.getItem() == Items.SKULL) { // Special case skulls to allow wither spawns to be cancelled
++                if (itemstack.item == Items.SKULL) { // Special case skulls to allow wither spawns to be cancelled
 +                    BlockPos bp = pos;
-+                    if (!world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
++                    if (!world.getBlockState(pos).getMaterial().isReplaceable()) {
 +                        if (!world.getBlockState(pos).getMaterial().isSolid()) {
 +                            bp = null;
 +                        } else {
@@ -542,38 +528,18 @@
 +                        }
 +                    }
 +                }
-+
-+                // SPIGOT-1288 - play sound stripped from ItemBlock
-+                if (itemstack.getItem() instanceof ItemBlock) {
-+                    SoundType soundeffecttype = ((ItemBlock) itemstack.getItem()).getBlock().getSoundType();
-+                    world.playSound(player, pos, soundeffecttype.getPlaceSound(), SoundCategory.BLOCKS, (soundeffecttype.getVolume() + 1.0F) / 2.0F, soundeffecttype.getPitch() * 0.8F);
-+                }
-                 player.addStat(StatList.getObjectUseStats(itemstack.getItem()));
              }
          }
          world.capturedBlockSnapshots.clear();
-+        world.capturedTileEntities.clear();
- 
+@@ -956,6 +796,7 @@
          return ret;
      }
  
-+    private static BlockState toBlockState(World world, BlockSnapshot blockSnapshot) {
-+        return new CraftBlockState(world.getWorld().getBlockAt(blockSnapshot.getPos().getX(), blockSnapshot.getPos().getY(), blockSnapshot.getPos().getZ()), blockSnapshot.getFlag());
-+    }
-+
-+    public static List<BlockState> toBlockStates(World world, List<BlockSnapshot> blockSnapshots) {
-+        List<BlockState> blockStates = new ArrayList<>(blockSnapshots.size());
-+        for (BlockSnapshot blockSnapshot : blockSnapshots) {
-+            blockStates.add(new CraftBlockState(world.getWorld().getBlockAt(blockSnapshot.getPos().getX(), blockSnapshot.getPos().getY(), blockSnapshot.getPos().getZ()), blockSnapshot.getFlag()));
-+        }
-+        return blockStates;
-+    }
-+
 +
      public static boolean onAnvilChange(ContainerRepair container, @Nonnull ItemStack left, @Nonnull ItemStack right, IInventory outputSlot, String name, int baseCost)
      {
          AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
-@@ -1071,7 +936,7 @@
+@@ -1071,7 +912,7 @@
              // Revert variable back to true as it would have been set to false
              if (entity instanceof EntityMinecartContainer)
              {
@@ -582,7 +548,7 @@
              }
          }
          return !event.isCanceled();
-@@ -1344,45 +1209,45 @@
+@@ -1344,45 +1185,45 @@
      private static boolean loadAdvancements(Map<ResourceLocation, Advancement.Builder> map, ModContainer mod)
      {
          return CraftingHelper.findFiles(mod, "assets/" + mod.getModId() + "/advancements", null,
@@ -661,7 +627,7 @@
          );
      }
  
-@@ -1460,7 +1325,6 @@
+@@ -1460,7 +1301,6 @@
  
      public static boolean onFarmlandTrample(World world, BlockPos pos, IBlockState state, float fallDistance, Entity entity)
      {
@@ -669,7 +635,7 @@
          if (entity.canTrample(world, state.getBlock(), pos, fallDistance))
          {
              BlockEvent.FarmlandTrampleEvent event = new BlockEvent.FarmlandTrampleEvent(world, pos, state, fallDistance, entity);
-@@ -1469,5 +1333,4 @@
+@@ -1469,5 +1309,4 @@
          }
          return false;
      }

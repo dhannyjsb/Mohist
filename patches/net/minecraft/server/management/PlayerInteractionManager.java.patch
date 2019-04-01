@@ -99,7 +99,7 @@
              {
                  this.tryHarvestBlock(pos);
              }
-@@ -185,12 +211,25 @@
+@@ -185,11 +211,24 @@
              this.initialDamage = this.curblockDamage;
              float f = 1.0F;
  
@@ -112,22 +112,20 @@
 +                if (block == Blocks.OAK_DOOR) {
 +                    // For some reason *BOTH* the bottom/top part have to be marked updated.
 +                    boolean bottom = data.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER;
-+                    this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
-+                    this.player.connection.sendPacket(new SPacketBlockChange(this.world, bottom ? pos.up() : pos.down()));
++                    ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
++                    ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, bottom ? pos.up() : pos.down()));
 +                } else if (block == Blocks.TRAPDOOR) {
 +
-+                    this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
++                    ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
 +                }
 +            } else if (iblockstate.getMaterial() != Material.AIR) {
                  if (event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
                  {
                      block.onBlockClicked(this.world, pos, this.player);
--                    this.world.extinguishFire((EntityPlayer)null, pos, side);
 +                    // Allow fire punching to be blocked
-+                    this.world.extinguishFire(null, pos, side);
+                     this.world.extinguishFire((EntityPlayer)null, pos, side);
                  }
                  else
-                 {
 @@ -200,6 +239,26 @@
                  }
                  f = iblockstate.getPlayerRelativeBlockHardness(this.player, this.player.world, pos);
@@ -135,7 +133,7 @@
 +            if (playerinteractevent.useItemInHand() == Event.Result.DENY) {
 +                // If we 'insta destroyed' then the client needs to be informed.
 +                if (f > 1.0f) {
-+                    this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
++                    ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
 +                }
 +                return;
 +            }
@@ -143,7 +141,7 @@
 +
 +            if (blockEvent.isCancelled()) {
 +                // Let the client know the block still exists
-+                this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
++                ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
 +                return;
 +            }
 +
@@ -384,7 +382,7 @@
      public EnumActionResult processRightClick(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand)
      {
          if (this.gameType == GameType.SPECTATOR)
-@@ -396,9 +578,65 @@
+@@ -396,9 +578,58 @@
          }
      }
  
@@ -394,9 +392,9 @@
      public EnumActionResult processRightClickBlock(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ)
      {
 -        if (this.gameType == GameType.SPECTATOR)
-+        EnumActionResult result = EnumActionResult.FAIL;
 +        IBlockState blockdata = world.getBlockState(pos);
 +
++ 		if (blockdata.getBlock() != Blocks.AIR) {
 +        boolean cancelledBlock = false;
 +
 +        if (this.gameType == GameType.SPECTATOR) {
@@ -404,17 +402,10 @@
 +            cancelledBlock = !(tileentity instanceof ILockableContainer || tileentity instanceof IInventory);
 +        }
 +
-+        if (player.getCooldownTracker().hasCooldown(stack.getItem())) {
-+            cancelledBlock = true;
++        if (!player.getBukkitEntity().isOp() && stack != null && Block.getBlockFromItem(stack.getItem()) instanceof BlockCommandBlock) {
++        cancelledBlock = true;
 +        }
 +
-+        if (stack.getItem() instanceof ItemBlock  && !player.canUseCommandBlock()) {
-+            Block block1 = ((ItemBlock) stack.getItem()).getBlock();
-+
-+            if (block1 instanceof BlockCommandBlock || block1 instanceof BlockStructure) {
-+                cancelledBlock = true;
-+            }
-+        }
 +
 +        PlayerInteractEvent bukkitInteractEvent = CraftEventFactory.callPlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, pos, facing, stack, cancelledBlock, hand);
 +        firedInteract = true;
@@ -451,15 +442,17 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -433,7 +671,6 @@
+@@ -432,8 +663,8 @@
+             net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock event = net.minecraftforge.common.ForgeHooks
                      .onRightClickBlock(player, hand, pos, facing, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
              if (event.isCanceled()) return event.getCancellationResult();
++			EnumActionResult result = EnumActionResult.PASS;
  
 -            EnumActionResult result = EnumActionResult.PASS;
              if (event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  result = stack.onItemUseFirst(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-@@ -446,10 +683,10 @@
+@@ -446,10 +677,10 @@
              {
                  IBlockState iblockstate = worldIn.getBlockState(pos);
                  if(event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
@@ -474,7 +467,16 @@
              }
  
              if (stack.isEmpty())
-@@ -478,10 +715,10 @@
+@@ -460,7 +691,7 @@
+             {
+                 return EnumActionResult.PASS;
+             }
+-            else
++            else if (!interactResult)
+             {
+                 if (stack.getItem() instanceof ItemBlock && !player.canUseCommandBlock())
+                 {
+@@ -478,10 +709,10 @@
                      int i = stack.getCount();
                      if (result != EnumActionResult.SUCCESS && event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
                              || result == EnumActionResult.SUCCESS && event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW) {
@@ -489,11 +491,12 @@
                      } else return result;
                  }
                  else
-@@ -497,6 +734,7 @@
+@@ -496,6 +727,8 @@
+             }
          }
      }
++        return EnumActionResult.FAIL;
++    }
  
-+
      public void setWorld(WorldServer serverWorld)
      {
-         this.world = serverWorld;

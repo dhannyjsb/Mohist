@@ -8,7 +8,24 @@
  import net.minecraft.world.World;
  
  public interface IRecipe extends net.minecraftforge.registries.IForgeRegistryEntry<IRecipe>
-@@ -34,4 +35,14 @@
+@@ -20,18 +21,28 @@
+         return net.minecraftforge.common.ForgeHooks.defaultRecipeGetRemainingItems(inv);
+     }
+ 
+-default NonNullList<Ingredient> getIngredients()
++    default NonNullList<Ingredient> getIngredients()
+     {
+         return NonNullList.<Ingredient>create();
+     }
+ 
+-default boolean isDynamic()
++    default boolean isDynamic()
+     {
+         return false;
+     }
+ 
+-default String getGroup()
++    default String getGroup()
      {
          return "";
      }
