@@ -90,15 +90,6 @@
          double reachDist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
          net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock event = net.minecraftforge.common.ForgeHooks.onLeftClickBlock(player, pos, side, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
          if (event.isCanceled())
-@@ -149,7 +175,7 @@
- 
-         if (this.isCreative())
-         {
--            if (!this.world.extinguishFire((EntityPlayer)null, pos, side))
-+            if (!this.world.extinguishFire(null, pos, side))
-             {
-                 this.tryHarvestBlock(pos);
-             }
 @@ -185,11 +211,24 @@
              this.initialDamage = this.curblockDamage;
              float f = 1.0F;
@@ -392,13 +383,13 @@
      public EnumActionResult processRightClickBlock(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ)
      {
 -        if (this.gameType == GameType.SPECTATOR)
-+        IBlockState blockdata = world.getBlockState(pos);
++        IBlockState blockdata = worldIn.getBlockState(pos);
 +
 + 		if (blockdata.getBlock() != Blocks.AIR) {
 +        boolean cancelledBlock = false;
 +
 +        if (this.gameType == GameType.SPECTATOR) {
-+            TileEntity tileentity = world.getTileEntity(pos);
++            TileEntity tileentity = worldIn.getTileEntity(pos);
 +            cancelledBlock = !(tileentity instanceof ILockableContainer || tileentity instanceof IInventory);
 +        }
 +
@@ -407,15 +398,15 @@
 +        }
 +
 +
-+        PlayerInteractEvent bukkitInteractEvent = CraftEventFactory.callPlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, pos, facing, stack, cancelledBlock, hand);
++        PlayerInteractEvent playerInteractEvent = CraftEventFactory.callPlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, pos, facing, stack, cancelledBlock, hand);
 +        firedInteract = true;
-+        interactResult = bukkitInteractEvent.useItemInHand() == Event.Result.DENY;
++        interactResult = playerInteractEvent.useItemInHand() == Event.Result.DENY;
 +
-+        if (bukkitInteractEvent.useInteractedBlock() == Event.Result.DENY) {
++        if (playerInteractEvent.useInteractedBlock() == Event.Result.DENY) {
 +            // If we denied a door from opening, we need to send a correcting update to the client, as it already opened the door.
 +            if (blockdata.getBlock() instanceof BlockDoor) {
 +                boolean bottom = blockdata.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER;
-+                ((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, bottom ? pos.up() : pos.down()));
++                ((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(worldIn, bottom ? pos.up() : pos.down()));
 +            } else if (blockdata.getBlock() instanceof BlockCake) {
 +                ((EntityPlayerMP) player).getBukkitEntity().sendHealthUpdate(); // SPIGOT-1341 - reset health for cake
 +                // Paper start - extend Player Interact cancellation
@@ -425,18 +416,18 @@
 +                ((EntityPlayerMP) player).connection.sendPacket(new SPacketCloseWindow());
 +            } else if (blockdata.getBlock() instanceof BlockFlowerPot) {
 +                // Send a block change to air and then send back the correct block, just to make the client happy
-+                SPacketBlockChange packet = new SPacketBlockChange(this.world, pos);
++                SPacketBlockChange packet = new SPacketBlockChange(worldIn, pos);
 +                packet.blockState = Blocks.AIR.getDefaultState();
 +                this.player.connection.sendPacket(packet);
-+                this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
-+                TileEntity tileentity = this.world.getTileEntity(pos);
++                this.player.connection.sendPacket(new SPacketBlockChange(worldIn, pos));
++                TileEntity tileentity = worldIn.getTileEntity(pos);
 +                if (tileentity != null) {
 +                    ((EntityPlayerMP) player).connection.sendPacket(tileentity.getUpdatePacket());
 +                }
 +                // Paper end - extend Player Interact cancellation
 +            }
 +            ((EntityPlayerMP) player).getBukkitEntity().updateInventory(); // SPIGOT-2867
-+            return (bukkitInteractEvent.useItemInHand() != Event.Result.ALLOW) ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
++            return (playerInteractEvent.useItemInHand() != Event.Result.ALLOW) ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 +        }
 +        else if (this.gameType == GameType.SPECTATOR)
          {

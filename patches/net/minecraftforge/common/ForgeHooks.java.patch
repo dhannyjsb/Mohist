@@ -512,7 +512,7 @@
 +                    player.addStat(StatList.RECORD_PLAYED);
 +                }
 +
-+                if (itemstack.item == Items.SKULL) { // Special case skulls to allow wither spawns to be cancelled
++                if (itemstack.item == Items.SKULL) {
 +                    BlockPos bp = pos;
 +                    if (!world.getBlockState(pos).getMaterial().isReplaceable()) {
 +                        if (!world.getBlockState(pos).getMaterial().isSolid()) {

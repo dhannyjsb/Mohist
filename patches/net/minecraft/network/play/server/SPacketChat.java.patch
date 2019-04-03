@@ -8,22 +8,7 @@
  
      public SPacketChat()
      {
-@@ -29,6 +30,14 @@
-         this.type = type;
-     }
- 
-+    // Mohist start
-+    public SPacketChat(ITextComponent message, byte type)
-+    {
-+        this.chatComponent = message;
-+        this.type = ChatType.byId(type);
-+    }
-+    // Mohist end
-+
-     public void readPacketData(PacketBuffer buf) throws IOException
-     {
-         this.chatComponent = buf.readTextComponent();
-@@ -37,7 +46,20 @@
+@@ -37,7 +38,20 @@
  
      public void writePacketData(PacketBuffer buf) throws IOException
      {

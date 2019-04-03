@@ -20,11 +20,10 @@ version = '14.23.5.2824-0.0.5a'
 repositories {
     clear()
     mavenCentral()
-    maven { url "https://maven.aliyun.com/repository/public" }
     maven { url "https://files.minecraftforge.net/maven" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url "https://libraries.minecraft.net/" }
-    maven { url "https://mvnrepository.com/artifact/" }
+    maven { url "https://ci.emc.gs/nexus/content/groups/aikar/" }
     maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
 }
 

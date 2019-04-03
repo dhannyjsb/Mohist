@@ -175,13 +175,14 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +560,30 @@
+@@ -531,4 +560,31 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }
 +
 +    // CraftBukkit start - add method
 +    // Paper start
++	@Nullable
 +    public InventoryHolder getOwner() {
 +        if (world == null) return null;
 +        // Spigot start

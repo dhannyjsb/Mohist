@@ -5,6 +5,7 @@ import com.destroystokyo.paper.exception.ServerEventException;
 import com.destroystokyo.paper.exception.ServerPluginEnableDisableException;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommandYamlParser;
@@ -474,8 +475,6 @@ public final class SimplePluginManager implements PluginManager {
         }
     }
 
-    private void fireEvent(Event event) { callEvent(event); } // Paper - support old method incase plugin uses reflection
-
     /**
      * Calls an event with the given details.
      * <p>
@@ -484,6 +483,22 @@ public final class SimplePluginManager implements PluginManager {
      * @param event Event details
      */
     public void callEvent(Event event) {
+        if (event.isAsynchronous() || !Bukkit.isPrimaryThread()) {
+            if (Thread.holdsLock(this)) {
+                throw new IllegalStateException(event.getEventName() + " cannot be triggered asynchronously from inside synchronized code.");
+            }
+            if (server.isPrimaryThread()) {
+                throw new IllegalStateException(event.getEventName() + " cannot be triggered asynchronously from primary server thread.");
+            }
+            fireEvent(event);
+        } else {
+            synchronized (this) {
+                fireEvent(event);
+            }
+        }
+    }
+
+    private void fireEvent(Event event) {
         HandlerList handlers = event.getHandlers();
         RegisteredListener[] listeners = handlers.getRegisteredListeners();
 

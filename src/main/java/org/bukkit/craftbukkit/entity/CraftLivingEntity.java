@@ -359,7 +359,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (type != null) {
             return type;
         }
-        return EntityType.UNKNOWN;
+        return EntityType.FORGE_MOD;
         // Cauldron end
     }
 

@@ -33,7 +33,8 @@ public enum Message {
     whitelistMessage("message.whitelist"),
     serverFullMessage("message.serverfull"),
     bungeecord("message.bungeecord"),
-    disconnect_flying("disconnect.flying");
+    disconnect_flying("disconnect.flying"),
+    disconnect_duplicate_login("disconnect.duplicate_login");
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());

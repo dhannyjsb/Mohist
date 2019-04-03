@@ -76,6 +76,7 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.meta.BookMeta;
+import org.spigotmc.AsyncCatcher;
 
 import javax.annotation.Nullable;
 import java.net.InetAddress;
@@ -861,31 +862,28 @@ public class CraftEventFactory {
     }
 
     public static Container callInventoryOpenEvent(EntityPlayerMP player, Container container, boolean cancelled) {
-        if (Thread.currentThread() != MinecraftServer.getServerInst().primaryThread) {
-            return container;
+        if (AsyncCatcher.catchInv()) return container;
+        if (player.openContainer != player.inventoryContainer) { // fire INVENTORY_CLOSE if one already open
+            player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
+        }
+
+        CraftServer server = player.world.getServer();
+        CraftPlayer craftPlayer = player.getBukkitEntity();
+        try {
+            player.openContainer.transferTo(container, craftPlayer);
+        } catch (AbstractMethodError e) {
+        }
+
+        InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
+        event.setCancelled(cancelled);
+        if (container.getBukkitView() != null)
+            server.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            container.transferTo(player.openContainer, craftPlayer);
+            return null;
         } else {
-            if (player.openContainer != player.inventoryContainer) { // fire INVENTORY_CLOSE if one already open
-                player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
-            }
-
-            CraftServer server = player.world.getServer();
-            CraftPlayer craftPlayer = player.getBukkitEntity();
-            try {
-                player.openContainer.transferTo(container, craftPlayer);
-            } catch (AbstractMethodError e) {
-            }
-
-            InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
-            event.setCancelled(cancelled);
-            if (container.getBukkitView() != null)
-                server.getPluginManager().callEvent(event);
-
-            if (event.isCancelled()) {
-                container.transferTo(player.openContainer, craftPlayer);
-                return null;
-            } else {
-                return container;
-            }
+            return container;
         }
 	}
 
@@ -1026,14 +1024,13 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human, org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
-        if (Thread.currentThread() != MinecraftServer.getServerInst().primaryThread) {
-            // Paper end
-            InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
-            if (human.openContainer.getBukkitView() != null) {
-                human.world.getServer().getPluginManager().callEvent(event);
-            }
-            human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
+        if (AsyncCatcher.catchInv()) return;
+        // Paper end
+        InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
+        if (human.openContainer.getBukkitView() != null) {
+            human.world.getServer().getPluginManager().callEvent(event);
         }
+        human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
     }
 
     public static void handleEditBookEvent(EntityPlayerMP player, ItemStack newBookItem) {

@@ -2,6 +2,7 @@ package org.bukkit.entity;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.entity.CraftCustomEntity;
 import org.bukkit.entity.minecart.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -259,7 +260,8 @@ public enum EntityType {
     /**
      * An unknown entity without an Entity Class
      */
-    UNKNOWN(null, null, -1, false);
+    UNKNOWN(null, null, -1, false),
+    FORGE_MOD("forge_mod", CraftCustomEntity.class, -1, false);
 
     private String name;
     private Class<? extends Entity> clazz;
