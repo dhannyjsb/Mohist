@@ -33,7 +33,7 @@
  import net.minecraft.server.management.PlayerProfileCache;
  import net.minecraft.server.management.PreYggdrasilConverter;
  import net.minecraft.tileentity.TileEntitySkull;
-@@ -38,35 +27,47 @@
+@@ -38,35 +27,46 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
@@ -46,17 +46,16 @@
 +import net.minecraft.world.chunk.storage.AnvilSaveConverter;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
++import org.apache.logging.log4j.Level;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
++import org.bukkit.craftbukkit.LoggerOutputStream;
 +import org.bukkit.craftbukkit.util.Waitable;
 +import org.bukkit.event.server.RemoteServerCommandEvent;
 +import org.bukkit.event.server.ServerCommandEvent;
 +import org.spigotmc.SpigotConfig;
  
-+import java.io.BufferedReader;
-+import java.io.File;
-+import java.io.IOException;
-+import java.io.InputStreamReader;
++import java.io.*;
 +import java.net.InetAddress;
 +import java.net.Proxy;
 +import java.nio.charset.StandardCharsets;
@@ -93,8 +92,62 @@
          Thread thread = new Thread("Server Infinisleeper")
          {
              {
-@@ -115,7 +116,7 @@
+@@ -96,15 +96,22 @@
+         {
+             public void run()
+             {
+-                if (net.minecraftforge.server.console.TerminalHandler.handleCommands(DedicatedServer.this)) return;
+-                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+-                String s4;
++ 				if (!org.bukkit.craftbukkit.Main.useConsole) {
++                    return;
++                }
++                jline.console.ConsoleReader bufferedreader = reader;
++              	String s4;
+ 
+-                try
+-                {
+-                    while (!DedicatedServer.this.isServerStopped() && DedicatedServer.this.isServerRunning() && (s4 = bufferedreader.readLine()) != null)
+-                    {
+-                        DedicatedServer.this.addPendingCommand(s4, DedicatedServer.this);
++                try {
++                    while (!isServerStopped() && isServerRunning()) {
++                        if (org.bukkit.craftbukkit.Main.useJline) {
++                            s4 = bufferedreader.readLine(">", null);
++                        } else {
++                            s4 = bufferedreader.readLine();
++                        }
++                        if (s4 != null && s4.trim().length() > 0) { // Trim to filter lines which are just spaces
++                            addPendingCommand(s4, DedicatedServer.this);
++                        }
+                     }
+                 }
+                 catch (IOException ioexception1)
+@@ -113,9 +120,30 @@
+                 }
+             }
          };
++		
++		// CraftBukkit start - TODO: handle command-line logging arguments
++        java.util.logging.Logger global = java.util.logging.Logger.getLogger("");
++        global.setUseParentHandlers(false);
++        for (java.util.logging.Handler handler : global.getHandlers()) {
++            global.removeHandler(handler);
++        }
++        global.addHandler(new org.bukkit.craftbukkit.util.ForwardLogHandler());
++
++        final org.apache.logging.log4j.core.Logger logger = ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger());
++        for (org.apache.logging.log4j.core.Appender appender : logger.getAppenders().values()) {
++            if (appender instanceof org.apache.logging.log4j.core.appender.ConsoleAppender) {
++                logger.removeAppender(appender);
++            }
++        }
++
++        new Thread(new org.bukkit.craftbukkit.util.TerminalConsoleWriterThread(System.out, this.reader)).start();
++
++        System.setOut(new PrintStream(new LoggerOutputStream(logger, Level.INFO), true));
++        System.setErr(new PrintStream(new LoggerOutputStream(logger, Level.WARN), true));
++        // CraftBukkit end
          thread.setDaemon(true);
          thread.start();
 -        LOGGER.info("Starting minecraft server version 1.12.2");
@@ -102,7 +155,7 @@
  
          if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
          {
-@@ -125,7 +126,7 @@
+@@ -125,7 +153,7 @@
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStart(this);
  
          LOGGER.info("Loading properties");
@@ -111,7 +164,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -144,7 +145,7 @@
+@@ -144,7 +172,7 @@
              {
                  this.setOnlineMode(this.settings.getBooleanProperty("online-mode", true));
                  this.setPreventProxyConnections(this.settings.getBooleanProperty("prevent-proxy-connections", false));
@@ -120,7 +173,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +182,28 @@
+@@ -181,10 +209,28 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -150,7 +203,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +215,7 @@
+@@ -196,15 +242,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -167,7 +220,7 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,7 +228,7 @@
+@@ -217,7 +255,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -176,7 +229,7 @@
                  long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -271,6 +282,8 @@
+@@ -271,6 +309,8 @@
                  long i1 = System.nanoTime() - j;
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
                  LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
@@ -185,7 +238,7 @@
                  this.currentTime = getCurrentTimeMillis();
  
                  if (this.settings.hasProperty("announce-player-achievements"))
-@@ -292,16 +305,28 @@
+@@ -292,16 +332,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -220,7 +273,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +452,19 @@
+@@ -427,11 +479,19 @@
  
      public void executePendingCommands()
      {
@@ -244,7 +297,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -497,8 +530,8 @@
+@@ -497,8 +557,8 @@
  
      public void setGuiEnabled()
      {
@@ -255,7 +308,7 @@
      }
  
      public boolean getGuiEnabled()
-@@ -592,8 +625,11 @@
+@@ -592,8 +652,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -269,7 +322,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +720,65 @@
+@@ -684,13 +747,65 @@
  
      public String getPlugins()
      {

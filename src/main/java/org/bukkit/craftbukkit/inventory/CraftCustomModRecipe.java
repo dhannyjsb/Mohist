@@ -12,7 +12,8 @@ import org.bukkit.inventory.Recipe;
  * Bukkit API wrapper for non-vanilla IRecipe classes
  */
 public class CraftCustomModRecipe implements Recipe, Keyed {
-    private IRecipe iRecipe;
+    private final IRecipe iRecipe;
+    private final ItemStack output;
     private NamespacedKey key;
 
     public CraftCustomModRecipe(IRecipe iRecipe) {
@@ -21,6 +22,7 @@ public class CraftCustomModRecipe implements Recipe, Keyed {
 
     public CraftCustomModRecipe(IRecipe iRecipe, ResourceLocation key) {
         this.iRecipe = iRecipe;
+        this.output = CraftItemStack.asCraftMirror(iRecipe.getRecipeOutput());
         try {
             this.key = (key != null ? CraftNamespacedKey.fromMinecraft(key) : NamespacedKey.randomKey());
         } catch (Exception e) {
@@ -30,7 +32,7 @@ public class CraftCustomModRecipe implements Recipe, Keyed {
 
     @Override
     public ItemStack getResult() {
-        return CraftItemStack.asCraftMirror(iRecipe.getRecipeOutput());
+        return output.clone();
     }
 
     @Override

@@ -965,9 +965,4 @@ public class Location implements Cloneable, ConfigurationSerializable {
 
         return new Location(world, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
     }
-
-    public boolean isGenerated() {
-        Preconditions.checkNotNull(world, "Location has no world!");
-        return world.isChunkGenerated(locToBlock(x) >> 4, locToBlock(z) >> 4);
-    }
 }

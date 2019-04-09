@@ -18,7 +18,7 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.entity.EnumCreatureType;
-@@ -23,17 +18,50 @@
+@@ -23,17 +18,45 @@
  import net.minecraft.world.biome.Biome;
  import net.minecraft.world.chunk.Chunk;
  import net.minecraft.world.chunk.IChunkProvider;
@@ -43,11 +43,6 @@
      public final IChunkGenerator chunkGenerator;
      public final IChunkLoader chunkLoader;
 -    public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192);
-+    // Paper start - chunk save stats
-+    private long lastQueuedSaves = 0L; // Paper
-+    private long lastProcessedSaves = 0L; // Paper
-+    private long lastSaveStatPrinted = System.currentTimeMillis();
-+    // Paper end
 +    // Paper start
 +    protected Chunk lastChunkByPos = null;
 +    public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192) {
@@ -71,67 +66,19 @@
      public final WorldServer world;
      private final Set<Long> loadingChunks = com.google.common.collect.Sets.newHashSet();
  
-@@ -69,11 +97,21 @@
-         }
-     }
- 
-+    // Paper start
-+    public boolean isChunkGenerated(int x, int z) {
-+        return this.id2ChunkMap.containsKey(ChunkPos.asLong(x, z)) || this.chunkLoader.isChunkGeneratedAt(x, z);
-+    }
-+    // Paper end
-+
-+    public Chunk getChunkIfLoaded(final int x, final int z) {
-+        return this.id2ChunkMap.get(ChunkPos.asLong(x, z));
-+    }
-+
-     @Nullable
-     public Chunk getLoadedChunk(int x, int z)
-     {
-         long i = ChunkPos.asLong(x, z);
--        Chunk chunk = (Chunk)this.id2ChunkMap.get(i);
-+        Chunk chunk = this.id2ChunkMap.get(i);
- 
-         if (chunk != null)
-         {
-@@ -83,16 +121,34 @@
+@@ -83,6 +106,11 @@
          return chunk;
      }
  
-+    // CraftBukkit start - loadChunk method aliases
-+    public Chunk getChunkAt(int i, int j) {
-+        return getChunkAt(i, j, null);
++    // Is it copy of method above?
++    public Chunk getChunkIfLoaded(int x, int z) {
++        return id2ChunkMap.get(ChunkPos.asLong(x, z));
 +    }
-+
-+    public Chunk getChunkAt(int i, int j, Runnable runnable) {
-+        return getChunkAt(i, j, runnable, true);
-+    }
-+
-+    public Chunk getChunkAt(int i, int j, Runnable runnable, boolean generate) {
-+        return loadChunk(i, j, runnable, generate);
-+    }
-+    // CraftBukkit end
 +
      @Nullable
      public Chunk loadChunk(int x, int z)
      {
-         return loadChunk(x, z, null);
-     }
- 
-+    public Chunk loadChunk(int i, int j, @Nullable Runnable runnable) {
-+            return loadChunk(i, j, runnable, true);
-+    }
-+
-     @Nullable
--    public Chunk loadChunk(int x, int z, @Nullable Runnable runnable)
-+    public Chunk loadChunk(int x, int z, @Nullable Runnable runnable, boolean generate)
-     {
--        Chunk chunk = this.getLoadedChunk(x, z);
-+        Chunk chunk = world.paperConfig.allowPermaChunkLoaders ? getLoadedChunk(x, z) : this.getChunkIfLoaded(x, z); // Paper - Configurable perma chunk loaders
-         if (chunk == null)
-         {
-             long pos = ChunkPos.asLong(x, z);
-@@ -106,7 +162,7 @@
+@@ -106,7 +134,7 @@
                  {
                  this.id2ChunkMap.put(ChunkPos.asLong(x, z), chunk);
                  chunk.onLoad();
@@ -140,16 +87,7 @@
                  }
  
                  loadingChunks.remove(pos);
-@@ -121,6 +177,8 @@
-                     // We can only use the async queue for already generated chunks
-                     net.minecraftforge.common.chunkio.ChunkIOExecutor.queueChunkLoad(this.world, loader, this, x, z, runnable);
-                     return null;
-+                } else if (generate) {
-+                    chunk = provideChunk(x, z);
-                 }
-             }
-         }
-@@ -154,7 +212,7 @@
+@@ -154,7 +182,7 @@
  
              this.id2ChunkMap.put(i, chunk);
              chunk.onLoad();
@@ -158,68 +96,50 @@
          }
  
          return chunk;
-@@ -177,7 +235,11 @@
+@@ -177,7 +205,7 @@
          }
          catch (Exception exception)
          {
 -            LOGGER.error("Couldn't load chunk", (Throwable)exception);
-+            // Paper start
-+            String msg = "Couldn't load chunk";
-+            LOGGER.error(msg, exception);
-+            ServerInternalException.reportInternalException(exception);
-+            // Paper end
++			LOGGER.error("Couldn't load chunk", (Throwable)exception);
              return null;
          }
      }
-@@ -190,7 +252,11 @@
+@@ -190,7 +218,7 @@
          }
          catch (Exception exception)
          {
 -            LOGGER.error("Couldn't save entities", (Throwable)exception);
-+            // Paper start
-+            String msg = "Couldn't save entities";
-+            LOGGER.error(msg, exception);
-+            ServerInternalException.reportInternalException(exception);
-+            // Paper end
++			LOGGER.error("Couldn't save entities", (Throwable)exception);
          }
      }
  
-@@ -203,12 +269,16 @@
+@@ -203,12 +231,12 @@
          }
          catch (IOException ioexception)
          {
 -            LOGGER.error("Couldn't save chunk", (Throwable)ioexception);
-+            // Paper start
-+            String msg = "Couldn't save chunk";
-+            LOGGER.error(msg, ioexception);
-+            ServerInternalException.reportInternalException(ioexception);
++ 			LOGGER.error("Couldn't save chunk", (Throwable)ioexception);
          }
          catch (MinecraftException minecraftexception)
          {
 -            LOGGER.error("Couldn't save chunk; already in use by another instance of Minecraft?", (Throwable)minecraftexception);
 -        }
-+            String msg = "Couldn\'t save chunk; already in use by another instance of Minecraft?";
-+            LOGGER.error(msg, minecraftexception);
-+            ServerInternalException.reportInternalException(minecraftexception); }
++			LOGGER.error("Couldn't save chunk; already in use by another instance of Minecraft?", (Throwable)minecraftexception);
++		}
      }
  
      public boolean saveChunks(boolean all)
-@@ -231,8 +301,7 @@
-                 chunk.setModified(false);
+@@ -232,7 +260,7 @@
                  ++i;
  
--                if (i == 24 && !all)
+                 if (i == 24 && !all)
 -                {
-+                if (i == 24 && !all && false) {  // Spigot
++				{
                      return false;
                  }
              }
-@@ -262,28 +331,70 @@
-                 for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
-                 {
-                     Long olong = iterator.next();
--                    Chunk chunk = (Chunk)this.id2ChunkMap.get(olong);
-+                    Chunk chunk = this.id2ChunkMap.get(olong);
+@@ -266,24 +294,52 @@
  
                      if (chunk != null && chunk.unloadQueued)
                      {
@@ -228,8 +148,6 @@
 -                        this.saveChunkData(chunk);
 -                        this.saveChunkExtraData(chunk);
 -                        this.id2ChunkMap.remove(olong);
-+                        // CraftBukkit start - move unload logic to own method
-+                        chunk.setShouldUnload(false); // Paper
 +                        if (!unloadChunk(chunk, true)) {
 +                            continue;
 +                        }
@@ -240,18 +158,6 @@
 -
 -            if (this.id2ChunkMap.isEmpty()) net.minecraftforge.common.DimensionManager.unloadWorld(this.world.provider.getDimension());
 -
-+            // Paper start - delayed chunk unloads
-+            long now = System.currentTimeMillis();
-+            long unloadAfter = this.world.paperConfig.delayChunkUnloadsBy;
-+            if (unloadAfter > 0L) {
-+                for (final Chunk chunk2 : this.id2ChunkMap.values()) {
-+                    if (chunk2.scheduledForUnload != null && now - chunk2.scheduledForUnload > unloadAfter) {
-+                        chunk2.scheduledForUnload = null;
-+                        this.queueUnload(chunk2);
-+                    }
-+                }
-+            }
-+            // Paper end
              this.chunkLoader.chunkTick();
          }
  

@@ -160,15 +160,16 @@
              {
                  flag = false;
              }
-@@ -584,7 +622,6 @@
+@@ -584,7 +622,7 @@
              }
          }
      }
 -
++	
      protected abstract ItemStack getArrowStack();
  
      protected boolean canTriggerWalking()
-@@ -655,7 +692,13 @@
+@@ -655,7 +693,13 @@
  
          if (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, p_190547_1_) > 0)
          {

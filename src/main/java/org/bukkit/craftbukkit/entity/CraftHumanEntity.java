@@ -345,7 +345,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     public void openInventory(InventoryView inventory) {
         if (!(getHandle() instanceof EntityPlayerMP)) return;
         if (((EntityPlayerMP) getHandle()).connection == null) return;
-        if (getHandle().openContainer != getHandle().inventoryContainer) {
+        if (getHandle().openContainer != getHandle().openContainer) {
             // fire INVENTORY_CLOSE if one already open
             ((EntityPlayerMP)getHandle()).connection.processCloseWindow(new CPacketCloseWindow(getHandle().openContainer.windowId));
         }
@@ -415,7 +415,6 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         this.getHandle().closeScreen(reason);
     }
 
-    @Override
     public boolean isBlocking() {
         return getHandle().isActiveItemStackBlocking();
     }
@@ -425,12 +424,10 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         return getHandle().isHandActive();
     }
 
-    @Override
     public boolean setWindowProperty(InventoryView.Property prop, int value) {
         return false;
     }
 
-    @Override
     public int getExpToLevel() {
         return getHandle().xpBarCap();
     }

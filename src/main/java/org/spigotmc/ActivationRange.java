@@ -303,16 +303,14 @@ public class ActivationRange
         {
             isActive = false;
         }
+        int x = MathHelper.floor( entity.posX );
+        int z = MathHelper.floor( entity.posZ );
         // Make sure not on edge of unloaded chunk
-        Chunk chunk = entity.getChunkAtLocation(); // Paper
+        Chunk chunk = entity.world.getChunkIfLoaded( x >> 4, z >> 4 );
         if ( isActive && !( chunk != null && chunk.areNeighborsLoaded( 1 ) ) )
         {
             isActive = false;
         }
-        // Paper start - Skip ticking in chunks scheduled for unload
-        if(entity.world.paperConfig.skipEntityTickingInChunksScheduledForUnload && (chunk == null || chunk.unloadQueued || chunk.scheduledForUnload != null))
-            isActive = false;
-        // Paper end
         return isActive;
     }
 }

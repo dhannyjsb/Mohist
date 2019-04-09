@@ -126,7 +126,8 @@ public class CraftWorld implements World {
     }
 
     public Block getBlockAt(int x, int y, int z) {
-        return getChunkAt(x >> 4, z >> 4).getBlock(x & 0xF, y, z & 0xF);
+        Chunk chunk = getChunkAt(x >> 4, z >> 4);
+        return chunk == null ? null : chunk.getBlock(x & 0xF, y & 0xFF, z & 0xF);
     }
 
     public int getBlockTypeIdAt(int x, int y, int z) {
@@ -168,28 +169,9 @@ public class CraftWorld implements World {
         }
     }
 
-    // Paper start - Async chunk load API
-    public void getChunkAtAsync(final int x, final int z, final ChunkLoadCallback callback) {
-        final ChunkProviderServer cps = this.world.getChunkProvider();
-        cps.loadChunk(x, z, new Runnable() {
-            @Override
-            public void run() {
-                callback.onLoad(cps.loadChunk(x, z).bukkitChunk);
-            }
-        });
-    }
-
-    public void getChunkAtAsync(Block block, ChunkLoadCallback callback) {
-        getChunkAtAsync(block.getX() >> 4, block.getZ() >> 4, callback);
-    }
-
-    public void getChunkAtAsync(Location location, ChunkLoadCallback callback) {
-        getChunkAtAsync(location.getBlockX() >> 4, location.getBlockZ() >> 4, callback);
-    }
-    // Paper end
-
     public Chunk getChunkAt(int x, int z) {
-        return this.world.getChunkProvider().provideChunk(x, z).bukkitChunk;
+    	net.minecraft.world.chunk.Chunk chunk = this.world.getChunkProvider().provideChunk(x, z);
+        return chunk == null ? null : chunk.bukkitChunk;
     }
 
     public Chunk getChunkAt(Block block) {
@@ -645,12 +627,6 @@ public class CraftWorld implements World {
     public Chunk getChunkAt(Location location) {
         return getChunkAt(location.getBlockX() >> 4, location.getBlockZ() >> 4);
     }
-
-    // Paper start
-    public boolean isChunkGenerated(int x, int z) {
-        return this.getHandle().getChunkProvider().isChunkGenerated(x, z);
-    }
-    // Paper end
 
     public ChunkGenerator getGenerator() {
         return generator;
@@ -1636,7 +1612,7 @@ public class CraftWorld implements World {
         ChunkProviderServer cps = world.getChunkProvider();
         for (net.minecraft.world.chunk.Chunk chunk : cps.id2ChunkMap.values()) {
             // If in use, skip it
-            if (isChunkInUse(chunk.x, chunk.z) || chunk.scheduledForUnload != null) {  // Paper - delayed chunk unloads
+            if (isChunkInUse(chunk.x, chunk.z)) {
                 continue;
             }
 

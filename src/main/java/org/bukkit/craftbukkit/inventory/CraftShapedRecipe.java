@@ -1,9 +1,11 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -54,7 +56,11 @@ public class CraftShapedRecipe extends ShapedRecipe implements CraftRecipe {
             }
         }
         // TODO: Check if it's correct way to register recipes
-        ForgeRegistries.RECIPES.register(new ShapedRecipes("", width, shape.length, data, CraftItemStack.asNMSCopy(this.getResult())));
-        // CraftingManager.register(CraftNamespacedKey.toMinecraft(this.getKey()), new ShapedRecipes("", width, shape.length, data, CraftItemStack.asNMSCopy(this.getResult())));
+        ShapedRecipes recipe = new ShapedRecipes("", width, shape.length, data, CraftItemStack.asNMSCopy(this.getResult()));
+        recipe.setKey(CraftNamespacedKey.toMinecraft(this.getKey()));
+        recipe.setRegistryName(recipe.key);
+        ((ForgeRegistry<IRecipe>) ForgeRegistries.RECIPES).unfreeze();
+        ForgeRegistries.RECIPES.register(recipe);
+        ((ForgeRegistry <IRecipe>) ForgeRegistries.RECIPES).freeze();
     }
 }

@@ -7,7 +7,7 @@
  import net.minecraft.block.Block;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.init.Blocks;
-@@ -10,10 +9,13 @@
+@@ -10,6 +9,8 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -16,12 +16,7 @@
  public class BlockStateContainer implements IBlockStatePaletteResizer
  {
      private static final IBlockStatePalette REGISTRY_BASED_PALETTE = new BlockStatePaletteRegistry();
-     protected static final IBlockState AIR_BLOCK_STATE = Blocks.AIR.getDefaultState();
-+    public static final IBlockState DEFAULT_BLOCK_DATA = BlockStateContainer.AIR_BLOCK_STATE; // Paper - OBFHELPER
-     protected BitArray storage;
-     protected IBlockStatePalette palette;
-     private int bits;
-@@ -164,7 +166,19 @@
+@@ -164,7 +165,19 @@
              int l = i >> 4 & 15;
              int i1 = blockIdExtension == null ? 0 : blockIdExtension.get(j, k, l);
              int j1 = i1 << 12 | (blockIds[i] & 255) << 4 | data.get(j, k, l);
@@ -38,7 +33,7 @@
 +                }
 +            }
 +            this.set(i, state);
-+//            this.set(i, Block.BLOCK_STATE_IDS.getByValue(j1));
++			//this.set(i, Block.BLOCK_STATE_IDS.getByValue(j1));
          }
      }
  

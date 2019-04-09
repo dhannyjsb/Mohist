@@ -5,21 +5,25 @@ import cn.pfcraft.i18n.Message;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.logging.log4j.LogManager;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
+    public static boolean useJline = true;
+    public static boolean useConsole = true;
     public static OptionSet main(String[] args) {
         // Todo: Installation script
         OptionParser parser = new OptionParser() {
             {
-				allowsUnrecognizedOptions();
                 acceptsAll(asList("?", "help"), "Show the help");
 
                 acceptsAll(asList("c", "config"), "Properties file to use")
@@ -173,6 +177,29 @@ public class Main {
                 return null;
             }
             try {
+                // This trick bypasses Maven Shade's clever rewriting of our getProperty call when using String literals
+                String jline_UnsupportedTerminal = new String(new char[] {'j','l','i','n','e','.','U','n','s','u','p','p','o','r','t','e','d','T','e','r','m','i','n','a','l'});
+                String jline_terminal = new String(new char[] {'j','l','i','n','e','.','t','e','r','m','i','n','a','l'});
+
+                useJline = !(jline_UnsupportedTerminal).equals(System.getProperty(jline_terminal));
+
+                if (options.has("nojline")) {
+                    System.setProperty("user.language", "en");
+                    useJline = false;
+                }
+
+                if (useJline) {
+                    AnsiConsole.systemInstall();
+                } else {
+                    // This ensures the terminal literal will always match the jline implementation
+                    System.setProperty(jline.TerminalFactory.JLINE_TERMINAL, jline.UnsupportedTerminal.class.getName());
+                }
+
+
+                if (options.has("noconsole")) {
+                    useConsole = false;
+                }
+				
                 Mohist.LOGGER.info(Message.getString(Message.Load_libraries));
             } catch (Throwable t) {
                 t.printStackTrace();

@@ -14,7 +14,7 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.ChunkPos;
-@@ -21,30 +16,22 @@
+@@ -21,6 +16,9 @@
  import net.minecraft.world.WorldServer;
  import net.minecraft.world.chunk.Chunk;
  
@@ -23,36 +23,16 @@
 +
  public class PlayerChunkMap
  {
--    private static final Predicate<EntityPlayerMP> NOT_SPECTATOR = new Predicate<EntityPlayerMP>()
--    {
--        public boolean apply(@Nullable EntityPlayerMP p_apply_1_)
--        {
--            return p_apply_1_ != null && !p_apply_1_.isSpectator();
--        }
--    };
--    private static final Predicate<EntityPlayerMP> CAN_GENERATE_CHUNKS = new Predicate<EntityPlayerMP>()
--    {
--        public boolean apply(@Nullable EntityPlayerMP p_apply_1_)
--        {
--            return p_apply_1_ != null && (!p_apply_1_.isSpectator() || p_apply_1_.getServerWorld().getGameRules().getBoolean("spectatorsGenerateChunks"));
--        }
--    };
-+    private static final Predicate<EntityPlayerMP> NOT_SPECTATOR = p_apply_1_ -> p_apply_1_ != null && !p_apply_1_.isSpectator();
-+    private static final Predicate<EntityPlayerMP> CAN_GENERATE_CHUNKS = p_apply_1_ -> p_apply_1_ != null && (!p_apply_1_.isSpectator() || p_apply_1_.getServerWorld().getGameRules().getBoolean("spectatorsGenerateChunks"));
-     private final WorldServer world;
-     private final List<EntityPlayerMP> players = Lists.<EntityPlayerMP>newArrayList();
-     private final Long2ObjectMap<PlayerChunkMapEntry> entryMap = new Long2ObjectOpenHashMap<PlayerChunkMapEntry>(4096);
-     private final Set<PlayerChunkMapEntry> dirtyEntries = Sets.<PlayerChunkMapEntry>newHashSet();
-     private final List<PlayerChunkMapEntry> pendingSendToPlayers = Lists.<PlayerChunkMapEntry>newLinkedList();
+     private static final Predicate<EntityPlayerMP> NOT_SPECTATOR = new Predicate<EntityPlayerMP>()
+@@ -45,6 +43,7 @@
      private final List<PlayerChunkMapEntry> entriesWithoutChunks = Lists.<PlayerChunkMapEntry>newLinkedList();
--    private final List<PlayerChunkMapEntry> entries = Lists.<PlayerChunkMapEntry>newArrayList();
-+    private final List<PlayerChunkMapEntry> entries = Lists.<PlayerChunkMapEntry>newLinkedList();
+     private final List<PlayerChunkMapEntry> entries = Lists.<PlayerChunkMapEntry>newArrayList();
      private int playerViewRadius;
 +    public int getViewDistance() { return playerViewRadius; } // Paper OBFHELPER
      private long previousTotalWorldTime;
      private boolean sortMissingChunks = true;
      private boolean sortSendToPlayers = true;
-@@ -52,7 +39,7 @@
+@@ -52,7 +51,7 @@
      public PlayerChunkMap(WorldServer serverWorld)
      {
          this.world = serverWorld;
@@ -61,7 +41,7 @@
      }
  
      public WorldServer getWorldServer()
-@@ -183,13 +170,16 @@
+@@ -183,6 +182,9 @@
                              break;
                          }
                      }
@@ -71,24 +51,7 @@
                  }
              }
          }
- 
-         if (!this.pendingSendToPlayers.isEmpty())
-         {
--            int i1 = 81;
-+            int i1 = world.paperConfig.maxChunkSendsPerTick; // Paper
-             Iterator<PlayerChunkMapEntry> iterator1 = this.pendingSendToPlayers.iterator();
- 
-             while (iterator1.hasNext())
-@@ -213,7 +203,7 @@
-         {
-             WorldProvider worldprovider = this.world.provider;
- 
--            if (!worldprovider.canRespawnHere())
-+            if (!worldprovider.canRespawnHere() && !this.world.disableLevelSaving) // Paper - respect saving disabled setting
-             {
-                 this.world.getChunkProvider().queueUnloadAll();
-             }
-@@ -257,6 +247,14 @@
+@@ -257,6 +259,14 @@
          return playerchunkmapentry;
      }
  
@@ -103,7 +66,7 @@
      public void markBlockForUpdate(BlockPos pos)
      {
          int i = pos.getX() >> 4;
-@@ -276,14 +274,22 @@
+@@ -276,14 +286,22 @@
          player.managedPosX = player.posX;
          player.managedPosZ = player.posZ;
  
@@ -127,7 +90,7 @@
          this.players.add(player);
          this.markSortPending();
      }
-@@ -341,6 +347,8 @@
+@@ -341,6 +359,8 @@
              int j1 = i - k;
              int k1 = j - l;
  
@@ -136,7 +99,7 @@
              if (j1 != 0 || k1 != 0)
              {
                  for (int l1 = i - i1; l1 <= i + i1; ++l1)
-@@ -349,7 +357,8 @@
+@@ -349,7 +369,8 @@
                      {
                          if (!this.overlaps(l1, i2, k, l, i1))
                          {
@@ -146,7 +109,7 @@
                          }
  
                          if (!this.overlaps(l1 - j1, i2 - k1, i, j, i1))
-@@ -367,6 +376,12 @@
+@@ -367,6 +388,12 @@
                  player.managedPosX = player.posX;
                  player.managedPosZ = player.posZ;
                  this.markSortPending();
@@ -159,7 +122,7 @@
              }
          }
      }
-@@ -425,6 +440,45 @@
+@@ -425,6 +452,45 @@
          }
      }
  
@@ -205,7 +168,7 @@
      private void markSortPending()
      {
          this.sortMissingChunks = true;
-@@ -446,6 +500,20 @@
+@@ -446,6 +512,20 @@
          this.dirtyEntries.add(entry);
      }
  
@@ -226,18 +189,12 @@
      public void removeEntry(PlayerChunkMapEntry entry)
      {
          ChunkPos chunkpos = entry.getPos();
-@@ -460,7 +528,56 @@
+@@ -460,7 +540,50 @@
  
          if (chunk != null)
          {
 -            this.getWorldServer().getChunkProvider().queueUnload(chunk);
-+            // Paper start - delay chunk unloads
-+            if (world.paperConfig.delayChunkUnloadsBy <= 0) {
-+                this.getWorldServer().getChunkProvider().queueUnload(chunk);
-+            } else {
-+                chunk.scheduledForUnload = System.currentTimeMillis();
-+            }
-+            // Paper end
++        	this.getWorldServer().getChunkProvider().queueUnload(chunk);
          }
      }
 +

@@ -1,6 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/entity/EntityList.java
 +++ ../src-work/minecraft/net/minecraft/entity/EntityList.java
-@@ -104,10 +104,15 @@
+@@ -101,13 +101,20 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import org.bukkit.craftbukkit.entity.CustomEntityRegistry;
  
  public class EntityList
  {
@@ -13,11 +17,12 @@
      private static final ResourceLocation PLAYER = new ResourceLocation("player");
      private static final Logger LOGGER = LogManager.getLogger();
 -    public static final Map<ResourceLocation, EntityList.EntityEggInfo> ENTITY_EGGS = Maps.<ResourceLocation, EntityList.EntityEggInfo>newLinkedHashMap();
++    public static final RegistryNamespaced<ResourceLocation, Class<? extends Entity>> REGISTRY = new CustomEntityRegistry<ResourceLocation, Class<? extends Entity>>();
 +    public static final Map<ResourceLocation, EntityEggInfo> ENTITY_EGGS = Maps.<ResourceLocation, EntityEggInfo>newLinkedHashMap();
      private static final Set<ResourceLocation> EXTRA_NAMES = Sets.newHashSet();
  
      @Nullable
-@@ -222,7 +227,7 @@
+@@ -222,7 +229,7 @@
              }
              catch (Exception e)
              {

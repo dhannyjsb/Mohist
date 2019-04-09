@@ -1,9 +1,8 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/storage/RegionFile.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/storage/RegionFile.java
-@@ -1,21 +1,19 @@
+@@ -1,27 +1,16 @@
  package net.minecraft.world.chunk.storage;
- 
-+import com.destroystokyo.paper.exception.ServerInternalException;
+-
  import com.google.common.collect.Lists;
 -import java.io.BufferedInputStream;
 -import java.io.BufferedOutputStream;
@@ -14,14 +13,10 @@
 -import java.io.File;
 -import java.io.IOException;
 -import java.io.RandomAccessFile;
-+import net.minecraft.nbt.CompressedStreamTools;
-+import net.minecraft.nbt.NBTTagCompound;
 +import net.minecraft.server.MinecraftServer;
 +
 +import javax.annotation.Nullable;
 +import java.io.*;
-+import java.nio.ByteBuffer;
-+import java.nio.IntBuffer;
  import java.util.List;
  import java.util.zip.DeflaterOutputStream;
  import java.util.zip.GZIPInputStream;
@@ -31,79 +26,48 @@
  
  public class RegionFile
  {
-@@ -45,7 +43,7 @@
- 
-             this.dataFile = new RandomAccessFile(fileNameIn, "rw");
- 
--            if (this.dataFile.length() < 4096L)
-+            if (this.dataFile.length() < 8192L)
-             {
-                 this.dataFile.write(EMPTY_SECTOR);
-                 this.dataFile.write(EMPTY_SECTOR);
-@@ -71,42 +69,44 @@
+-    // Minecraft is limited to 256 sections per chunk. So 1MB. This can easily be override.
+-    // So we extend this to use the REAL size when the count is maxed by seeking to that section and reading the length.
+-    private static final boolean FORGE_ENABLE_EXTENDED_SAVE = Boolean.parseBoolean(System.getProperty("forge.enableExtendedSave", "true"));
+     private static final byte[] EMPTY_SECTOR = new byte[4096];
+     private final File fileName;
+     private RandomAccessFile dataFile;
+@@ -71,31 +60,19 @@
              this.sectorFree.set(0, Boolean.valueOf(false));
              this.sectorFree.set(1, Boolean.valueOf(false));
              this.dataFile.seek(0L);
 -
--            for (int j1 = 0; j1 < 1024; ++j1)
--            {
--                int k = this.dataFile.readInt();
-+            // Paper Start
-+            ByteBuffer header = ByteBuffer.allocate(8192);
-+            while (header.hasRemaining())  {
-+                if (this.dataFile.getChannel().read(header) == -1) throw new EOFException();
-+            }
-+            header.clear();
-+            IntBuffer headerAsInts = header.asIntBuffer();
-+            initOversizedState();
-+            // Paper End
-+            for (int j1 = 0; j1 < 1024; ++j1) {
-+                int k = headerAsInts.get(); // Paper
++			
+             for (int j1 = 0; j1 < 1024; ++j1)
+             {
+                 int k = this.dataFile.readInt();
                  this.offsets[j1] = k;
  
-                 int length = k & 255;
+-                int length = k & 255;
 -                if (length == 255)
--                {
++                if (k != 0 && (k >> 8) + (k & 255) <= this.sectorFree.size())
+                 {
 -                    if ((k >> 8) <= this.sectorFree.size())
 -                    { // We're maxed out, so we need to read the proper length from the section
-+                if (length == 255) {
-+                    if ((k >> 8) <= this.sectorFree.size()) { // We're maxed out, so we need to read the proper length from the section
-                         this.dataFile.seek((k >> 8) * 4096);
+-                        this.dataFile.seek((k >> 8) * 4096);
 -                        length = (this.dataFile.readInt() + 4)/ 4096 + 1;
-+                        length = (this.dataFile.readInt() + 4) / 4096 + 1;
-                         this.dataFile.seek(j1 * 4 + 4); //Go back to where we were
-                     }
-                 }
+-                        this.dataFile.seek(j1 * 4 + 4); //Go back to where we were
+-                    }
+-                }
 -                if (k != 0 && (k >> 8) + length <= this.sectorFree.size())
 -                {
 -                    for (int l = 0; l < length; ++l)
--                    {
-+                if (k != 0 && (k >> 8) > 1 && (k >> 8) + length <= this.sectorFree.size()) {
-+                    for (int l = 0; l < length; ++l) {
++                    for (int l = 0; l < (k & 255); ++l)
+                     {
                          this.sectorFree.set((k >> 8) + l, Boolean.valueOf(false));
                      }
--                }
+                 }
 -                else if (length > 0)
 -                    net.minecraftforge.fml.common.FMLLog.log.warn("Invalid chunk: ({}, {}) Offset: {} Length: {} runs off end file. {}", j1 % 32, (int)(j1 / 32), k >> 8, length, fileNameIn);
-+                } else if (k != 0) deleteChunk(j1); // Paper
              }
  
              for (int k1 = 0; k1 < 1024; ++k1)
-             {
--                int l1 = this.dataFile.readInt();
--                this.chunkTimestamps[k1] = l1;
-+                int l1 = headerAsInts.get(); // Paper
-+                if (offsets[k1] != 0) this.chunkTimestamps[k1] = l1; // Paper - don't set timestamp if it got 0'd above due to corruption
-             }
-         }
-         catch (IOException ioexception)
-         {
-             ioexception.printStackTrace();
-+            ServerInternalException.reportInternalException(ioexception); // Paper
-         }
-     }
- 
-@@ -117,7 +117,6 @@
+@@ -117,7 +94,6 @@
      }
  
      @Nullable
@@ -111,213 +75,83 @@
      public synchronized DataInputStream getChunkDataInputStream(int x, int z)
      {
          if (this.outOfBounds(x, z))
-@@ -197,7 +196,7 @@
+@@ -138,11 +114,6 @@
+                 {
+                     int j = i >> 8;
+                     int k = i & 255;
+-                    if (k == 255)
+-                    {
+-                        this.dataFile.seek(j * 4096);
+-                        k = (this.dataFile.readInt() + 4) / 4096 + 1;
+-                    }
+ 
+                     if (j + k > this.sectorFree.size())
+                     {
+@@ -155,12 +126,10 @@
+ 
+                         if (l > 4096 * k)
+                         {
+-                            net.minecraftforge.fml.common.FMLLog.log.warn("Invalid chunk: ({}, {}) Offset: {} Invalid Size: {}>{} {}", x, z, j, l, k * 4096, fileName);
+                             return null;
+                         }
+                         else if (l <= 0)
+                         {
+-                            net.minecraftforge.fml.common.FMLLog.log.warn("Invalid chunk: ({}, {}) Offset: {} Invalid Size: {} {}", x, z, j, l, fileName);
+                             return null;
+                         }
+                         else
+@@ -197,7 +166,7 @@
      @Nullable
      public DataOutputStream getChunkDataOutputStream(int x, int z)
      {
 -        return this.outOfBounds(x, z) ? null : new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(new RegionFile.ChunkBuffer(x, z))));
-+        return this.outOfBounds(x, z) ? null : new DataOutputStream(new ChunkBuffer(x, z));  // Paper - remove middleware, move deflate to .close() for dynamic levels
++        return this.outOfBounds(x, z) ? null : new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(new ChunkBuffer(x, z))));
      }
  
      protected synchronized void write(int x, int z, byte[] data, int length)
-@@ -216,7 +215,7 @@
+@@ -207,17 +176,11 @@
+             int i = this.getOffset(x, z);
+             int j = i >> 8;
+             int k = i & 255;
+-            if (k == 255)
+-            {
+-                this.dataFile.seek(j * 4096);
+-                k = (this.dataFile.readInt() + 4) / 4096 + 1;
+-            }
+             int l = (length + 5) / 4096 + 1;
  
              if (l >= 256)
              {
 -                if (!FORGE_ENABLE_EXTENDED_SAVE) return;
-+                if (!FORGE_ENABLE_EXTENDED_SAVE && !RegionFileCache.isOverzealous()) throw new ChunkTooLargeException(i, j, l); // Paper - throw error instead
-                 net.minecraftforge.fml.common.FMLLog.log.warn("Large Chunk Detected: ({}, {}) Size: {} {}", x, z, l, fileName);
+-                net.minecraftforge.fml.common.FMLLog.log.warn("Large Chunk Detected: ({}, {}) Size: {} {}", x, z, l, fileName);
++				return;
              }
  
-@@ -295,7 +294,7 @@
-         }
-         catch (IOException ioexception)
-         {
--            ioexception.printStackTrace();
-+            org.spigotmc.SneakyThrow.sneaky(ioexception); // Paper - we want the upper try/catch to retry this
-         }
-     }
+             if (j != 0 && k == l)
+@@ -265,7 +228,7 @@
+                 if (j1 >= l)
+                 {
+                     j = l1;
+-                    this.setOffset(x, z, l1 << 8 | (l > 255 ? 255 : l));
++                    this.setOffset(x, z, l1 << 8 | l);
  
-@@ -344,6 +343,146 @@
-         }
-     }
+                     for (int j2 = 0; j2 < l; ++j2)
+                     {
+@@ -287,7 +250,7 @@
  
-+    private final byte[] oversized = new byte[1024];
-+    private int oversizedCount = 0;
-+
-+    private synchronized void initOversizedState() throws IOException {
-+        File metaFile = getOversizedMetaFile();
-+        if (metaFile.exists()) {
-+            final byte[] read = java.nio.file.Files.readAllBytes(metaFile.toPath());
-+            System.arraycopy(read, 0, oversized, 0, oversized.length);
-+            for (byte temp : oversized) {
-+                oversizedCount += temp;
-+            }
-+        }
-+    }
-+
-+    private static int getChunkIndex(int x, int z) {
-+        return (x & 31) + (z & 31) * 32;
-+    }
-+    synchronized boolean isOversized(int x, int z) {
-+        return this.oversized[getChunkIndex(x, z)] == 1;
-+    }
-+    synchronized void setOversized(int x, int z, boolean oversized) throws IOException {
-+        final int offset = getChunkIndex(x, z);
-+        boolean previous = this.oversized[offset] == 1;
-+        this.oversized[offset] = (byte) (oversized ? 1 : 0);
-+        if (!previous && oversized) {
-+            oversizedCount++;
-+        } else if (!oversized && previous) {
-+            oversizedCount--;
-+        }
-+        if (previous && !oversized) {
-+            File oversizedFile = getOversizedFile(x, z);
-+            if (oversizedFile.exists()) {
-+                oversizedFile.delete();
-+            }
-+        }
-+        if (oversizedCount > 0) {
-+            if (previous != oversized) {
-+                writeOversizedMeta();
-+            }
-+        } else if (previous) {
-+            File oversizedMetaFile = getOversizedMetaFile();
-+            if (oversizedMetaFile.exists()) {
-+                oversizedMetaFile.delete();
-+            }
-+        }
-+    }
-+
-+    private void writeOversizedMeta() throws IOException {
-+        java.nio.file.Files.write(getOversizedMetaFile().toPath(), oversized);
-+    }
-+
-+    private File getOversizedMetaFile() {
-+        return new File(fileName.getParentFile(), fileName.getName().replaceAll("\\.mca$", "") + ".oversized.nbt");
-+    }
-+
-+    private File getOversizedFile(int x, int z) {
-+        return new File(fileName.getParentFile(), fileName.getName().replaceAll("\\.mca$", "") + "_oversized_" + x + "_" + z + ".nbt");
-+    }
-+
-+    void writeOversizedData(int x, int z, NBTTagCompound oversizedData) throws IOException {
-+        File file = getOversizedFile(x, z);
-+        try (DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(new java.io.FileOutputStream(file), new java.util.zip.Deflater(java.util.zip.Deflater.BEST_COMPRESSION), 32 * 1024), 32 * 1024))) {
-+            CompressedStreamTools.write(oversizedData, out);
-+        }
-+        this.setOversized(x, z, true);
-+    }
-+
-+    synchronized NBTTagCompound getOversizedData(int x, int z) throws IOException {
-+        File file = getOversizedFile(x, z);
-+        try (DataInputStream out = new DataInputStream(new BufferedInputStream(new InflaterInputStream(new java.io.FileInputStream(file))))) {
-+            return CompressedStreamTools.read(out);
-+        }
-+    }
-+
-+    public class ChunkTooLargeException extends RuntimeException {
-+       public ChunkTooLargeException(int x, int z, int sectors) {
-+           super("Chunk " + x + "," + z + " of " + fileName.toString() + " is too large (" + sectors + "/256)");
-+       }
-+    }
-+    private static class DirectByteArrayOutputStream extends ByteArrayOutputStream {
-+        public DirectByteArrayOutputStream() {
-+            super();
-+        }
-+
-+        public DirectByteArrayOutputStream(int size) {
-+            super(size);
-+        }
-+
-+        public byte[] getBuffer() {
-+            return this.buf;
-+        }
-+    }
-+
-+    // Paper start
-+    public synchronized void deleteChunk(int j1) {
-+        backup();
-+        int k = offsets[j1];
-+        int x = j1 & 1024;
-+        int z = j1 >> 2;
-+        int offset = (k >> 8);
-+        int len = (k & 255);
-+        org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger();
-+        String debug = "idx:" + + j1 + " - " + x + "," + z + " - offset: " + offset + " - len: " + len;
-+        try {
-+            RandomAccessFile file = dataFile;
-+            file.seek(j1 * 4);
-+            file.writeInt(0);
-+            // clear the timestamp
-+            file.seek(4096 + j1 * 4);
-+            file.writeInt(0);
-+            chunkTimestamps[j1] = 0;
-+            offsets[j1] = 0;
-+            logger.error("Deleted corrupt chunk (" + debug + ") " + fileName.getAbsolutePath());
-+        } catch (IOException e) {
-+            logger.error("Error deleting corrupt chunk (" + debug + ") " + fileName.getAbsolutePath(), e);
-+        }
-+    }
-+    private boolean backedUp = false;
-+    private synchronized void backup() {
-+        if (backedUp) {
-+            return;
-+        }
-+        backedUp = true;
-+        File file = this.fileName;
-+        java.text.DateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
-+        java.util.Date today = new java.util.Date();
-+        File corrupt = new File(file.getParentFile(), file.getName() + "." + formatter.format(today) + ".corrupt");
-+        if (corrupt.exists()) {
-+            return;
-+        }
-+        org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger();
-+        logger.error("Region file " + file.getAbsolutePath() + " was corrupt. Backing up to " + corrupt.getAbsolutePath() + " and repairing");
-+        try {
-+            java.nio.file.Files.copy(file.toPath(), corrupt.toPath());
-+        } catch (IOException e) {
-+            logger.error("Error backing up corrupt file" + file.getAbsolutePath(), e);
-+        }
-+    }
-+    // Paper end
-+
-     class ChunkBuffer extends ByteArrayOutputStream
-     {
-         private final int chunkX;
-@@ -358,7 +497,34 @@
+                     this.sizeDelta += 4096 * l;
+                     this.write(j, data, length);
+-                    this.setOffset(x, z, j << 8 | (l > 255 ? 255 : l));
++                    this.setOffset(x, z, j << 8 | l);
+                 }
+             }
+ 
+@@ -358,7 +321,7 @@
  
          public void close() throws IOException
          {
 -            RegionFile.this.write(this.chunkX, this.chunkZ, this.buf, this.count);
-+            // Paper start - apply dynamic compression
-+            int origLength = this.count;
-+            byte[] buf = this.buf;
-+            DirectByteArrayOutputStream out = compressData(buf, origLength);
-+            byte[] bytes = out.getBuffer();
-+            int length = out.size();
-+            RegionFile.this.write(chunkX, this.chunkZ, bytes, length); // Paper - change to bytes/length
-+            // Paper end
++			RegionFile.this.write(this.chunkX, this.chunkZ, this.buf, this.count);
          }
      }
-+
-+    private static final byte[] compressionBuffer = new byte[1024 * 64]; // 64k fits most standard chunks input size even, ideally 1 pass through zlib
-+    private static final java.util.zip.Deflater deflater = new java.util.zip.Deflater();
-+    // since file IO is single threaded, no benefit to using per-region file buffers/synchronization, we can change that later if it becomes viable.
-+    private static DirectByteArrayOutputStream compressData(byte[] buf, int length) throws IOException {
-+        synchronized (deflater) {
-+            deflater.setInput(buf, 0, length);
-+            deflater.finish();
-+
-+
-+            DirectByteArrayOutputStream out = new DirectByteArrayOutputStream(length);
-+            while (!deflater.finished()) {
-+                out.write(compressionBuffer, 0, deflater.deflate(compressionBuffer));
-+            }
-+            out.close();
-+            deflater.reset();
-+            return out;
-+        }
-+    }
-+    // Paper end
  }
