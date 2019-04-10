@@ -168,76 +168,76 @@
          }
      }
  
-@@ -278,66 +347,179 @@
-         return flag;
+@@ -279,25 +348,25 @@
      }
  
--    public boolean tryHarvestBlock(BlockPos pos)
+     public boolean tryHarvestBlock(BlockPos pos)
 -    {
-+    public boolean tryHarvestBlock(BlockPos pos) {
++	{
          int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(world, gameType, player, pos);
--        if (exp == -1)
+         if (exp == -1)
 -        {
-+        if (exp == -1) {
++		{
              return false;
--        }
+         }
 -        else
 -        {
-+        } else {
++		else
++		{
              IBlockState iblockstate = this.world.getBlockState(pos);
              TileEntity tileentity = this.world.getTileEntity(pos);
              Block block = iblockstate.getBlock();
  
--            if ((block instanceof BlockCommandBlock || block instanceof BlockStructure) && !this.player.canUseCommandBlock())
+             if ((block instanceof BlockCommandBlock || block instanceof BlockStructure) && !this.player.canUseCommandBlock())
 -            {
-+            if ((block instanceof BlockCommandBlock || block instanceof BlockStructure) && !this.player.canUseCommandBlock()) {
++			{
                  this.world.notifyBlockUpdate(pos, iblockstate, iblockstate, 3);
                  return false;
--            }
+             }
 -            else
 -            {
-+            } else {
++			else
++			{
                  ItemStack stack = player.getHeldItemMainhand();
                  if (!stack.isEmpty() && stack.getItem().onBlockStartBreak(stack, pos, player)) return false;
  
-                 this.world.playEvent(this.player, 2001, pos, Block.getStateId(iblockstate));
+@@ -305,39 +374,164 @@
                  boolean flag1 = false;
  
--                if (this.isCreative())
+                 if (this.isCreative())
 -                {
-+                if (this.isCreative()) {
++				{
                      flag1 = this.removeBlock(pos);
                      this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
--                }
+                 }
 -                else
 -                {
-+                } else {
++				else
++				{
                      ItemStack itemstack1 = this.player.getHeldItemMainhand();
                      ItemStack itemstack2 = itemstack1.isEmpty() ? ItemStack.EMPTY : itemstack1.copy();
                      boolean flag = iblockstate.getBlock().canHarvestBlock(world, pos, player);
  
--                    if (!itemstack1.isEmpty())
+                     if (!itemstack1.isEmpty())
 -                    {
-+                    if (!itemstack1.isEmpty()) {
++					{
                          itemstack1.onBlockDestroyed(this.world, iblockstate, pos, this.player);
--                        if (itemstack1.isEmpty()) net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(this.player, itemstack2, EnumHand.MAIN_HAND);
-+                        if (itemstack1.isEmpty())
-+                            net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(this.player, itemstack2, EnumHand.MAIN_HAND);
+                         if (itemstack1.isEmpty()) net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(this.player, itemstack2, EnumHand.MAIN_HAND);
                      }
  
                      flag1 = this.removeBlock(pos, flag);
--                    if (flag1 && flag)
+                     if (flag1 && flag)
 -                    {
-+                    if (flag1 && flag) {
++					{
                          iblockstate.getBlock().harvestBlock(this.world, this.player, pos, iblockstate, tileentity, itemstack2);
                      }
                  }
  
                  // Drop experience
--                if (!this.isCreative() && flag1 && exp > 0)
+                 if (!this.isCreative() && flag1 && exp > 0)
 -                {
 -                    iblockstate.getBlock().dropXpOnBlockBreak(world, pos, exp);
-+                if (!this.isCreative() && flag1 && exp > 0) {
++				{
 +                    iblockstate.getBlock().dropXpOnBlockBreak(world, pos, exp, this.player);
                  }
                  return flag1;
@@ -373,7 +373,7 @@
      public EnumActionResult processRightClick(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand)
      {
          if (this.gameType == GameType.SPECTATOR)
-@@ -396,9 +578,58 @@
+@@ -396,9 +590,58 @@
          }
      }
  
@@ -433,7 +433,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -432,8 +663,8 @@
+@@ -432,8 +675,8 @@
              net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock event = net.minecraftforge.common.ForgeHooks
                      .onRightClickBlock(player, hand, pos, facing, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
              if (event.isCanceled()) return event.getCancellationResult();
@@ -443,7 +443,7 @@
              if (event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  result = stack.onItemUseFirst(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-@@ -446,10 +677,10 @@
+@@ -446,10 +689,10 @@
              {
                  IBlockState iblockstate = worldIn.getBlockState(pos);
                  if(event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
@@ -458,7 +458,7 @@
              }
  
              if (stack.isEmpty())
-@@ -460,7 +691,7 @@
+@@ -460,7 +703,7 @@
              {
                  return EnumActionResult.PASS;
              }
@@ -467,7 +467,7 @@
              {
                  if (stack.getItem() instanceof ItemBlock && !player.canUseCommandBlock())
                  {
-@@ -478,10 +709,10 @@
+@@ -478,10 +721,10 @@
                      int i = stack.getCount();
                      if (result != EnumActionResult.SUCCESS && event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
                              || result == EnumActionResult.SUCCESS && event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW) {
@@ -482,7 +482,7 @@
                      } else return result;
                  }
                  else
-@@ -496,6 +727,8 @@
+@@ -496,6 +739,8 @@
              }
          }
      }

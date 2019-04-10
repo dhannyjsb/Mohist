@@ -1,32 +1,19 @@
 --- ../src-base/minecraft/net/minecraft/util/NonNullList.java
 +++ ../src-work/minecraft/net/minecraft/util/NonNullList.java
-@@ -1,12 +1,10 @@
+@@ -1,12 +1,13 @@
  package net.minecraft.util;
  
--import java.util.AbstractList;
--import java.util.ArrayList;
--import java.util.Arrays;
--import java.util.List;
 +import org.apache.commons.lang3.Validate;
 +
- import javax.annotation.Nonnull;
- import javax.annotation.Nullable;
++import javax.annotation.Nonnull;
++import javax.annotation.Nullable;
+ import java.util.AbstractList;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.List;
+-import javax.annotation.Nonnull;
+-import javax.annotation.Nullable;
 -import org.apache.commons.lang3.Validate;
-+import java.util.*;
  
  public class NonNullList<E> extends AbstractList<E>
  {
-@@ -26,6 +24,13 @@
-         return new NonNullList<E>(Arrays.asList((E[])aobject), fill);
-     }
- 
-+    public static <E> NonNullList<E> withSize(int size, Object fill, boolean is) {
-+        Validate.notNull(fill);
-+        Object[] aobject = new Object[size];
-+        Arrays.fill(aobject, fill);
-+        return new NonNullList(new LinkedList(Arrays.asList((Object[])aobject)), fill);
-+    }
-+
-     public static <E> NonNullList<E> from(E defaultElementIn, E... elements)
-     {
-         return new NonNullList<E>(Arrays.asList(elements), defaultElementIn);

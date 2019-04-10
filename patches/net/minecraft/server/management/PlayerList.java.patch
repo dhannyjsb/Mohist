@@ -417,7 +417,7 @@
 +            }
 +        }
 +        // This removes the scoreboard (and player reference) for the specific player in the manager
-+        mcServer.server.getScoreboardManager().removePlayer(playerIn.getBukkitEntity());
++        cserver.getScoreboardManager().removePlayer(playerIn.getBukkitEntity());
 +
 +        ChunkIOExecutor.adjustPoolSize(this.getCurrentPlayerCount());
 +

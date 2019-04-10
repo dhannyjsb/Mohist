@@ -43,7 +43,7 @@
          {
              PlayerChunkMapEntry.this.chunk = PlayerChunkMapEntry.this.playerChunkMap.getWorldServer().getChunkProvider().loadChunk(PlayerChunkMapEntry.this.pos.x, PlayerChunkMapEntry.this.pos.z);
 -            PlayerChunkMapEntry.this.loading = false;
-+           PlayerChunkMapEntry.this.loading = false;
++    		PlayerChunkMapEntry.this.loading = false;
          }
      };
      private boolean loading = true;

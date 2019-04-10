@@ -209,12 +209,9 @@
          BufferedWriter bufferedwriter = null;
  
          try
-@@ -266,17 +256,25 @@
-         }
-         finally
+@@ -268,15 +258,23 @@
          {
--            IOUtils.closeQuietly((Writer)bufferedwriter);
-+            IOUtils.closeQuietly(bufferedwriter);
+             IOUtils.closeQuietly((Writer)bufferedwriter);
          }
 +        // Paper start
 +        };

@@ -133,8 +133,8 @@
 +
 +    // Paper start - Optional prevent TNT from moving in water
 +    @Override
-+    public boolean pushedByWater() {
-+        return !world.paperConfig.preventTntFromMovingInWater && super.pushedByWater();
++    public boolean isPushedByWater() {
++        return !world.paperConfig.preventTntFromMovingInWater && super.isPushedByWater();
 +    }
 +
 +    /**

@@ -1097,15 +1097,6 @@
              return entity;
          }
          else
-@@ -2728,7 +3089,7 @@
-         return this.cachedUniqueIdString;
-     }
- 
--    public boolean isPushedByWater()
-+    public boolean pushedByWater()
-     {
-         return true;
-     }
 @@ -2755,6 +3116,11 @@
  
      public void setCustomNameTag(String name)

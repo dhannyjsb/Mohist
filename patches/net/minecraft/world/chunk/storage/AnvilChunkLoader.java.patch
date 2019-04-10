@@ -64,7 +64,7 @@
          try
          {
              NBTTagCompound nbttagcompound = new NBTTagCompound();
-@@ -177,57 +175,43 @@
+@@ -177,57 +175,56 @@
          }
          catch (Exception exception)
          {
@@ -75,67 +75,70 @@
  
      protected void addChunkToPending(ChunkPos pos, NBTTagCompound compound)
      {
--        if (!this.chunksBeingSaved.contains(pos))
+         if (!this.chunksBeingSaved.contains(pos))
 -        {
-+        if (!this.chunksBeingSaved.contains(pos)) {
++		{
              this.chunksToSave.put(pos, compound);
          }
 -
          ThreadedFileIOBase.getThreadedIOInstance().queueIO(this);
      }
  
--    public boolean writeNextIO()
+     public boolean writeNextIO()
 -    {
--        if (this.chunksToSave.isEmpty())
++	{
+         if (this.chunksToSave.isEmpty())
 -        {
--            if (this.flushing)
++		{
+             if (this.flushing)
 -            {
 -                LOGGER.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", (Object)this.chunkSaveLocation.getName());
-+    public boolean writeNextIO() {
-+        if (this.chunksToSave.isEmpty()) {
-+            if (this.flushing) {
++			{
 +                LOGGER.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", (Object) this.chunkSaveLocation.getName());
              }
  
              return false;
--        }
+         }
 -        else
 -        {
-+        } else {
++		else
++		{
              ChunkPos chunkpos = this.chunksToSave.keySet().iterator().next();
              boolean lvt_3_1_;
  
--            try
+             try
 -            {
-+            try {
++			{
                  this.chunksBeingSaved.add(chunkpos);
                  NBTTagCompound nbttagcompound = this.chunksToSave.remove(chunkpos);
  
--                if (nbttagcompound != null)
+                 if (nbttagcompound != null)
 -                {
--                    try
++				{
+                     try
 -                    {
-+                if (nbttagcompound != null) {
-+                    try {
++					{
                          this.writeChunkData(chunkpos, nbttagcompound);
-+                    } catch (Exception exception) {
-+                        LOGGER.error("Failed to save chunk", (Throwable) exception);
                      }
 -                    catch (Exception exception)
 -                    {
 -                        LOGGER.error("Failed to save chunk", (Throwable)exception);
--                    }
++					catch (Exception exception)
++					{
++                        LOGGER.error("Failed to save chunk", (Throwable) exception);
+                     }
                  }
  
                  lvt_3_1_ = true;
--            }
+             }
 -            finally
 -            {
-+            } finally {
++			finally
++			{
                  this.chunksBeingSaved.remove(chunkpos);
              }
  
-@@ -237,9 +221,10 @@
+@@ -237,9 +234,10 @@
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -149,7 +152,7 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -349,13 +334,12 @@
+@@ -349,13 +347,12 @@
          compound.setByteArray("Biomes", chunkIn.getBiomeArray());
          chunkIn.setHasEntities(false);
          NBTTagList nbttaglist1 = new NBTTagList();
@@ -164,7 +167,7 @@
                  try
                  {
                  if (entity.writeToNBTOptional(nbttagcompound2))
-@@ -366,12 +350,11 @@
+@@ -366,12 +363,11 @@
                  }
                  catch (Exception e)
                  {
@@ -179,7 +182,7 @@
          compound.setTag("Entities", nbttaglist1);
          NBTTagList nbttaglist2 = new NBTTagList();
  
-@@ -384,7 +367,7 @@
+@@ -384,7 +380,7 @@
              }
              catch (Exception e)
              {
@@ -188,7 +191,7 @@
                          tileentity.getClass().getName(), e);
              }
          }
-@@ -421,7 +404,7 @@
+@@ -421,7 +417,7 @@
              }
              catch (Exception exception)
              {
@@ -197,7 +200,7 @@
              }
          }
      }
-@@ -485,7 +468,6 @@
+@@ -485,7 +481,6 @@
              readChunkEntity(nbttagcompound1, worldIn, chunk);
              chunk.setHasEntities(true);
          }
@@ -205,7 +208,7 @@
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
          for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-@@ -498,7 +480,6 @@
+@@ -498,7 +493,6 @@
                  chunk.addTileEntity(tileentity);
              }
          }
@@ -213,7 +216,7 @@
          if (compound.hasKey("TileTicks", 9))
          {
              NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
-@@ -608,8 +589,11 @@
+@@ -608,8 +602,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {
@@ -227,7 +230,7 @@
              for (Entity entity : entityIn.getPassengers())
              {
                  spawnEntity(entity, worldIn);
-@@ -655,4 +639,5 @@
+@@ -655,4 +652,5 @@
      {
          return this.chunksToSave.size();
      }

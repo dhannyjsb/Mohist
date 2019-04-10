@@ -25,15 +25,7 @@
  import net.minecraft.command.ICommandSender;
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.ICrashReportDetail;
-@@ -29,7 +19,6 @@
- import net.minecraft.profiler.Snooper;
- import net.minecraft.server.MinecraftServer;
- import net.minecraft.server.ServerEula;
--import net.minecraft.server.gui.MinecraftServerGui;
- import net.minecraft.server.management.PlayerProfileCache;
- import net.minecraft.server.management.PreYggdrasilConverter;
- import net.minecraft.tileentity.TileEntitySkull;
-@@ -38,35 +27,46 @@
+@@ -38,35 +28,46 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
@@ -92,7 +84,7 @@
          Thread thread = new Thread("Server Infinisleeper")
          {
              {
-@@ -96,15 +96,22 @@
+@@ -96,15 +97,22 @@
          {
              public void run()
              {
@@ -123,7 +115,7 @@
                      }
                  }
                  catch (IOException ioexception1)
-@@ -113,9 +120,30 @@
+@@ -113,9 +121,30 @@
                  }
              }
          };
@@ -155,7 +147,7 @@
  
          if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
          {
-@@ -125,7 +153,7 @@
+@@ -125,7 +154,7 @@
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStart(this);
  
          LOGGER.info("Loading properties");
@@ -164,7 +156,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -144,7 +172,7 @@
+@@ -144,7 +173,7 @@
              {
                  this.setOnlineMode(this.settings.getBooleanProperty("online-mode", true));
                  this.setPreventProxyConnections(this.settings.getBooleanProperty("prevent-proxy-connections", false));
@@ -173,7 +165,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +209,28 @@
+@@ -181,10 +210,28 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -203,7 +195,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +242,7 @@
+@@ -196,15 +243,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -220,7 +212,7 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,7 +255,7 @@
+@@ -217,7 +256,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -229,7 +221,7 @@
                  long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -271,6 +309,8 @@
+@@ -271,6 +310,8 @@
                  long i1 = System.nanoTime() - j;
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
                  LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
@@ -238,7 +230,7 @@
                  this.currentTime = getCurrentTimeMillis();
  
                  if (this.settings.hasProperty("announce-player-achievements"))
-@@ -292,16 +332,28 @@
+@@ -292,16 +333,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -273,7 +265,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +479,19 @@
+@@ -427,11 +480,19 @@
  
      public void executePendingCommands()
      {
@@ -297,18 +289,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -497,8 +557,8 @@
- 
-     public void setGuiEnabled()
-     {
--        MinecraftServerGui.createServerGui(this);
--        this.guiIsEnabled = true;
-+        //MinecraftServerGui.createServerGui(this);
-+        this.guiIsEnabled = false;
-     }
- 
-     public boolean getGuiEnabled()
-@@ -592,8 +652,11 @@
+@@ -592,8 +653,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -322,7 +303,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +747,65 @@
+@@ -684,13 +748,66 @@
  
      public String getPlugins()
      {
@@ -360,7 +341,8 @@
 -        return this.rconConsoleSource.getLogContents();
 +
 +    // CraftBukkit start - fire RemoteServerCommandEvent
-+    public String handleRConCommand(final String command) {
++    public String handleRConCommand(final String command)
++	{
 +        Waitable<String> waitable = new Waitable<String>() {
 +            @Override
 +            protected String evaluate() {

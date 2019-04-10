@@ -21,95 +21,97 @@
  @Immutable
  public class BlockPos extends Vec3i
  {
-@@ -72,73 +73,59 @@
-         return this.add(-vec.getX(), -vec.getY(), -vec.getZ());
+@@ -73,72 +74,72 @@
      }
  
--    public BlockPos up()
+     public BlockPos up()
 -    {
-+    public BlockPos up() {
++	{
          return this.up(1);
      }
  
--    public BlockPos up(int n)
+     public BlockPos up(int n)
 -    {
-+    public BlockPos up(int n) {
++	{
          return this.offset(EnumFacing.UP, n);
      }
  
--    public BlockPos down()
+     public BlockPos down()
 -    {
-+    public BlockPos down() {
++	{
          return this.down(1);
      }
  
 -    public BlockPos down(int n)
 -    {
-+    public BlockPos down(int n) {
++    public BlockPos down(int n) 
++	{
          return this.offset(EnumFacing.DOWN, n);
      }
  
--    public BlockPos north()
+     public BlockPos north()
 -    {
-+    public BlockPos north() {
++	{
          return this.north(1);
      }
  
--    public BlockPos north(int n)
+     public BlockPos north(int n)
 -    {
-+    public BlockPos north(int n) {
++	{
          return this.offset(EnumFacing.NORTH, n);
      }
  
--    public BlockPos south()
+     public BlockPos south()
 -    {
-+    public BlockPos south() {
++	{
          return this.south(1);
      }
  
--    public BlockPos south(int n)
+     public BlockPos south(int n)
 -    {
-+    public BlockPos south(int n) {
++	{
          return this.offset(EnumFacing.SOUTH, n);
      }
  
--    public BlockPos west()
+     public BlockPos west()
 -    {
-+    public BlockPos west() {
++	{
          return this.west(1);
      }
  
--    public BlockPos west(int n)
+     public BlockPos west(int n)
 -    {
-+    public BlockPos west(int n) {
++	{
          return this.offset(EnumFacing.WEST, n);
      }
  
 -    public BlockPos east()
 -    {
-+    public BlockPos east() {
++    public BlockPos east() 
++	{
          return this.east(1);
      }
  
 -    public BlockPos east(int n)
 -    {
-+    public BlockPos east(int n) {
++    public BlockPos east(int n) 
++	{
          return this.offset(EnumFacing.EAST, n);
      }
  
--    public BlockPos offset(EnumFacing facing)
+     public BlockPos offset(EnumFacing facing)
 -    {
-+    public BlockPos offset(EnumFacing facing) {
++	{
          return this.offset(facing, 1);
      }
  
--    public BlockPos offset(EnumFacing facing, int n)
+     public BlockPos offset(EnumFacing facing, int n)
 -    {
-+    public BlockPos offset(EnumFacing facing, int n) {
++	{
          return n == 0 ? this : new BlockPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n);
      }
  
-@@ -238,30 +225,31 @@
+@@ -238,30 +239,31 @@
          return this;
      }
  
@@ -150,7 +152,7 @@
                          }
                          else
                          {
-@@ -280,6 +268,7 @@
+@@ -280,6 +282,7 @@
                                  this.pos.y = y1;
                                  ++this.pos.z;
                              }
@@ -158,49 +160,39 @@
  
                              return this.pos;
                          }
-@@ -289,11 +278,10 @@
-         };
+@@ -290,10 +293,10 @@
      }
  
--    public static class MutableBlockPos extends BlockPos
+     public static class MutableBlockPos extends BlockPos
 -        {
 -            protected int x;
 -            protected int y;
 -            protected int z;
-+    public static class MutableBlockPos extends BlockPos {
++	{
 +        protected int x;
 +        protected int y;
 +        protected int z;
  
              public MutableBlockPos()
              {
-@@ -308,6 +296,7 @@
-             public MutableBlockPos(int x_, int y_, int z_)
-             {
-                 super(0, 0, 0);
-+                // Paper start - Modify base position variables
-                 this.x = x_;
-                 this.y = y_;
-                 this.z = z_;
-@@ -333,22 +322,19 @@
-                 return super.rotate(rotationIn).toImmutable();
+@@ -334,21 +337,21 @@
              }
  
--            public int getX()
+             public int getX()
 -            {
-+            public int getX() {
++			{
                  return this.x;
              }
  
--            public int getY()
+             public int getY()
 -            {
-+            public int getY() {
++			{
                  return this.y;
              }
  
--            public int getZ()
+             public int getZ()
 -            {
-+            public int getZ() {
++			{
                  return this.z;
              }
  
@@ -209,7 +201,7 @@
              {
                  this.x = xIn;
                  this.y = yIn;
-@@ -356,7 +342,7 @@
+@@ -356,7 +359,7 @@
                  return this;
              }
  
@@ -218,7 +210,7 @@
              {
                  return this.setPos(MathHelper.floor(xIn), MathHelper.floor(yIn), MathHelper.floor(zIn));
              }
-@@ -367,19 +353,19 @@
+@@ -367,19 +370,19 @@
                  return this.setPos(entityIn.posX, entityIn.posY, entityIn.posZ);
              }
  
@@ -242,13 +234,14 @@
              }
  
              public void setY(int yIn)
-@@ -393,22 +379,21 @@
+@@ -393,22 +396,22 @@
              }
          }
  
 -    public static final class PooledMutableBlockPos extends BlockPos.MutableBlockPos
 -        {
-+    public static final class PooledMutableBlockPos extends MutableBlockPos {
++    public static final class PooledMutableBlockPos extends MutableBlockPos
++	{
              private boolean released;
 -            private static final List<BlockPos.PooledMutableBlockPos> POOL = Lists.<BlockPos.PooledMutableBlockPos>newArrayList();
 +            private static final List<PooledMutableBlockPos> POOL = Lists.<PooledMutableBlockPos>newArrayList();
@@ -269,7 +262,7 @@
              {
                  return retain(MathHelper.floor(xIn), MathHelper.floor(yIn), MathHelper.floor(zIn));
              }
-@@ -419,13 +404,13 @@
+@@ -419,13 +422,13 @@
                  return retain(vec.getX(), vec.getY(), vec.getZ());
              }
  
@@ -285,7 +278,7 @@
  
                          if (blockpos$pooledmutableblockpos != null && blockpos$pooledmutableblockpos.released)
                          {
-@@ -436,7 +421,7 @@
+@@ -436,7 +439,7 @@
                      }
                  }
  
@@ -294,7 +287,7 @@
              }
  
              public void release()
-@@ -452,41 +437,41 @@
+@@ -452,41 +455,41 @@
                  }
              }
  
