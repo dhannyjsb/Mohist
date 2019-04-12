@@ -33,18 +33,6 @@
  
      public ShapedOreRecipe(ResourceLocation group, Block     result, Object... recipe){ this(group, new ItemStack(result), recipe); }
      public ShapedOreRecipe(ResourceLocation group, Item      result, Object... recipe){ this(group, new ItemStack(result), recipe); }
-@@ -188,9 +189,9 @@
-     }
- 
-     @Override
--    public boolean canFit(int p_194133_1_, int p_194133_2_)
-+    public boolean canFit(int width, int height)
-     {
--        return p_194133_1_ >= this.width && p_194133_2_ >= this.height;
-+        return width >= this.width && height >= this.height;
-     }
- 
-     public static ShapedOreRecipe factory(JsonContext context, JsonObject json)
 @@ -254,4 +255,16 @@
          ItemStack result = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "result"), context);
          return new ShapedOreRecipe(group.isEmpty() ? null : new ResourceLocation(group), result, primer);

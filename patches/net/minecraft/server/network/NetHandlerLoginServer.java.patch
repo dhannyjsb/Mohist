@@ -209,7 +209,7 @@
 +                        new LoginHandler().fireEvents();
 +                    } catch (Exception ex) {
 +                        disconnect(new TextComponentTranslation("Failed to verify username!"));
-+                        server.server.getLogger1().warn( "Exception verifying " + loginGameProfile.getName(), ex);
++                        Mohist.LOGGER.warn( "Exception verifying " + loginGameProfile.getName(), ex);
 +                    }
 +                }
 +            });
@@ -281,7 +281,7 @@
 +                        // CraftBukkit start - catch all exceptions
 +                    } catch (Exception exception) {
 +                        disconnect(new TextComponentTranslation("Failed to verify username!"));
-+                        server.server.getLogger1().warn("Exception verifying " + gameprofile.getName(), exception);
++                        Mohist.LOGGER.warn("Exception verifying " + gameprofile.getName(), exception);
 +                        // CraftBukkit end
                      }
                  }

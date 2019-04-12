@@ -1,8 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/entity/EntityLiving.java
 +++ ../src-work/minecraft/net/minecraft/entity/EntityLiving.java
-@@ -1,32 +1,20 @@
+@@ -1,32 +1,21 @@
  package net.minecraft.entity;
  
++import cn.pfcraft.Mohist;
  import com.google.common.collect.Maps;
 -import java.util.Arrays;
 -import java.util.Map;
@@ -36,7 +37,7 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTTagFloat;
  import net.minecraft.nbt.NBTTagList;
-@@ -37,13 +25,7 @@
+@@ -37,13 +26,7 @@
  import net.minecraft.pathfinding.PathNavigate;
  import net.minecraft.pathfinding.PathNavigateGround;
  import net.minecraft.pathfinding.PathNodeType;
@@ -51,7 +52,7 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
  import net.minecraft.util.datafix.walkers.ItemStackDataLists;
-@@ -53,11 +35,25 @@
+@@ -53,11 +36,25 @@
  import net.minecraft.world.EnumDifficulty;
  import net.minecraft.world.World;
  import net.minecraft.world.WorldServer;
@@ -77,7 +78,7 @@
  public abstract class EntityLiving extends EntityLivingBase
  {
      private static final DataParameter<Byte> AI_FLAGS = EntityDataManager.<Byte>createKey(EntityLiving.class, DataSerializers.BYTE);
-@@ -68,22 +64,24 @@
+@@ -68,22 +65,24 @@
      protected EntityJumpHelper jumpHelper;
      private final EntityBodyHelper bodyHelper;
      protected PathNavigate navigator;
@@ -107,7 +108,7 @@
  
      public EntityLiving(World worldIn)
      {
-@@ -96,6 +94,7 @@
+@@ -96,6 +95,7 @@
          this.bodyHelper = this.createBodyHelper();
          this.navigator = this.createNavigator(worldIn);
          this.senses = new EntitySenses(this);
@@ -115,7 +116,7 @@
          Arrays.fill(this.inventoryArmorDropChances, 0.085F);
          Arrays.fill(this.inventoryHandsDropChances, 0.085F);
  
-@@ -171,8 +170,40 @@
+@@ -171,8 +171,40 @@
      {
          this.attackTarget = entitylivingbaseIn;
          net.minecraftforge.common.ForgeHooks.onLivingSetAttackTarget(this, entitylivingbaseIn);
@@ -130,7 +131,7 @@
 +                reason = getAttackTarget().isEntityAlive() ? EntityTargetEvent.TargetReason.FORGOT_TARGET : EntityTargetEvent.TargetReason.TARGET_DIED;
 +            }
 +            if (reason == EntityTargetEvent.TargetReason.UNKNOWN) {
-+                world.getServer().getLogger1().warn("Unknown target reason, please report on the issue tracker", new Exception());
++                Mohist.LOGGER.warn("Unknown target reason, please report on the issue tracker", new Exception());
 +            }
 +            CraftLivingEntity ctarget = null;
 +            if (entityliving != null) {
@@ -156,7 +157,7 @@
      public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
      {
          return cls != EntityGhast.class;
-@@ -447,12 +478,21 @@
+@@ -447,12 +479,21 @@
      {
          super.readEntityFromNBT(compound);
  
@@ -180,7 +181,7 @@
  
          if (compound.hasKey("ArmorItems", 9))
          {
-@@ -581,6 +621,11 @@
+@@ -581,6 +622,11 @@
          {
              for (EntityItem entityitem : this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D)))
              {
@@ -192,7 +193,7 @@
                  if (!entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup())
                  {
                      this.updateEquipmentIfNeeded(entityitem);
-@@ -653,8 +698,14 @@
+@@ -653,8 +699,14 @@
              }
          }
  
@@ -209,7 +210,7 @@
              double d0;
  
              switch (entityequipmentslot.getSlotType())
-@@ -671,7 +722,9 @@
+@@ -671,7 +723,9 @@
  
              if (!itemstack1.isEmpty() && (double)(this.rand.nextFloat() - 0.1F) < d0)
              {
@@ -219,7 +220,7 @@
              }
  
              this.setItemStackToSlot(entityequipmentslot, itemstack);
-@@ -696,7 +749,7 @@
+@@ -696,7 +750,7 @@
          return true;
      }
  
@@ -228,7 +229,7 @@
      {
          return true;
      }
-@@ -722,25 +775,23 @@
+@@ -722,25 +776,23 @@
          else
          {
              Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
@@ -259,7 +260,7 @@
                      this.idleTime = 0;
                  }
              }
-@@ -753,6 +804,12 @@
+@@ -753,6 +805,12 @@
          this.world.profiler.startSection("checkDespawn");
          this.despawnEntity();
          this.world.profiler.endSection();
@@ -272,7 +273,7 @@
          this.world.profiler.startSection("sensing");
          this.senses.clearSensingCache();
          this.world.profiler.endSection();
-@@ -1209,6 +1266,10 @@
+@@ -1209,6 +1267,10 @@
      {
          if (this.getLeashed() && this.getLeashHolder() == player)
          {
@@ -283,7 +284,7 @@
              this.clearLeashed(true, !player.capabilities.isCreativeMode);
              return true;
          }
-@@ -1218,6 +1279,10 @@
+@@ -1218,6 +1280,10 @@
  
              if (itemstack.getItem() == Items.LEAD && this.canBeLeashedTo(player))
              {
@@ -294,7 +295,7 @@
                  this.setLeashHolder(player, true);
                  itemstack.shrink(1);
                  return true;
-@@ -1245,11 +1310,13 @@
+@@ -1245,11 +1311,13 @@
          {
              if (!this.isEntityAlive())
              {
@@ -308,7 +309,7 @@
                  this.clearLeashed(true, true);
              }
          }
-@@ -1264,7 +1331,9 @@
+@@ -1264,7 +1332,9 @@
  
              if (!this.world.isRemote && dropLead)
              {
@@ -318,7 +319,7 @@
              }
  
              if (!this.world.isRemote && sendPacket && this.world instanceof WorldServer)
-@@ -1348,6 +1417,7 @@
+@@ -1348,6 +1418,7 @@
              }
              else
              {
@@ -326,7 +327,7 @@
                  this.clearLeashed(false, true);
              }
          }
-@@ -1448,7 +1518,6 @@
+@@ -1448,7 +1519,6 @@
          ON_GROUND,
          IN_AIR,
          IN_WATER;

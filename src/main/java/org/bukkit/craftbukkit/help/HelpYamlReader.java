@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.help;
 
+import cn.pfcraft.Mohist;
 import com.google.common.base.Charsets;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -38,10 +39,10 @@ public class HelpYamlReader {
                     helpYaml.save(helpYamlFile);
                 }
             } catch (IOException ex) {
-                server.getLogger1().error("Could not save " + helpYamlFile, ex);
+                Mohist.LOGGER.error("Could not save " + helpYamlFile, ex);
             }
         } catch (Exception ex) {
-            server.getLogger1().error("Failed to load help.yml. Verify the yaml indentation is correct. Reverting to default help.yml.");
+            Mohist.LOGGER.error("Failed to load help.yml. Verify the yaml indentation is correct. Reverting to default help.yml.");
             helpYaml = defaultConfig;
         }
     }

@@ -19,7 +19,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import org.bukkit.*;
+import org.bukkit.EntityEffect;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -44,12 +47,6 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public CraftEntity(final CraftServer server, final Entity entity) {
         this.server = server;
         this.entity = entity;
-    }
-
-    @Override
-    public Chunk getChunk() {
-        final net.minecraft.world.chunk.Chunk currentChunk = this.entity.getCurrentChunk();
-        return (currentChunk != null) ? currentChunk.bukkitChunk : this.getLocation().getChunk();
     }
 
     public static CraftEntity getEntity(CraftServer server, Entity entity) {
@@ -262,30 +259,11 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public void setVelocity(Vector velocity) {
         Preconditions.checkArgument(velocity != null, "velocity");
         velocity.checkFinite();
-
-        // Paper start - Warn server owners when plugins try to set super high velocities
-        if (!(this instanceof org.bukkit.entity.Projectile) && isUnsafeVelocity(velocity)) {
-            CraftServer.excessiveVelEx = new Exception("Excessive velocity set detected: tried to set velocity of entity " + entity.getName() + " id #" + getEntityId() + " to (" + velocity.getX() + "," + velocity.getY() + "," + velocity.getZ() + ").");
-        }
-        // Paper end
-
         entity.motionX = velocity.getX();
         entity.motionY = velocity.getY();
         entity.motionZ = velocity.getZ();
         entity.velocityChanged = true;
     }
-
-    // Paper start
-    private static boolean isUnsafeVelocity(Vector vel) {
-        final double x = vel.getX();
-        final double y = vel.getY();
-        final double z = vel.getZ();
-        if (x > 4 || x < -4 || y > 4 || y < -4 || z > 4 || z < -4) {
-            return true;
-        }
-        return false;
-    }
-    // Paper end
 
     @Override
     public double getHeight() {
@@ -505,15 +483,14 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             return false;
         }
         final CraftEntity other = (CraftEntity) obj;
-        return (this.getHandle() == other.getHandle()); // Paper - while logically the same, this is clearer
+        return (this.getEntityId() == other.getEntityId());
     }
 
-    // Paper - Fix hashCode. entity ID's are not static.
-    // A CraftEntity can change reference to a new entity with a new ID, and hash codes should never change
-    @Override
+	@Override
     public int hashCode() {
-        return getUniqueId().hashCode();
-        // Paper end
+        int hash = 7;
+        hash = 29 * hash + this.getEntityId();
+        return hash;
     }
 
     public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {

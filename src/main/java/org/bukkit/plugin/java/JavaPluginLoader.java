@@ -1,5 +1,6 @@
 package org.bukkit.plugin.java;
 
+import cn.pfcraft.Mohist;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -26,7 +27,6 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 /**
@@ -71,7 +71,7 @@ public final class JavaPluginLoader implements PluginLoader {
         if (dataFolder.equals(oldDataFolder)) {
             // They are equal -- nothing needs to be done!
         } else if (dataFolder.isDirectory() && oldDataFolder.isDirectory()) {
-            server.getLogger1().warn(String.format(
+            Mohist.LOGGER.warn(String.format(
                 "While loading %s (%s) found old-data folder: `%s' next to the new one `%s'",
                 description.getFullName(),
                 file,
@@ -82,7 +82,7 @@ public final class JavaPluginLoader implements PluginLoader {
             if (!oldDataFolder.renameTo(dataFolder)) {
                 throw new InvalidPluginException("Unable to rename old data folder: `" + oldDataFolder + "' to: `" + dataFolder + "'");
             }
-             server.getLogger1().info( String.format(
+             Mohist.LOGGER.info( String.format(
                 "While loading %s (%s) renamed data folder: `%s' to `%s'",
                 description.getFullName(),
                 file,
@@ -306,13 +306,13 @@ public final class JavaPluginLoader implements PluginLoader {
 
             if (!loaders.contains(pluginLoader)) {
                 loaders.add(pluginLoader);
-                server.getLogger1().error( "Enabled plugin with unregistered PluginClassLoader " + plugin.getDescription().getFullName());
+                Mohist.LOGGER.error( "Enabled plugin with unregistered PluginClassLoader " + plugin.getDescription().getFullName());
             }
 
             try {
                 jPlugin.setEnabled(true);
             } catch (Throwable ex) {
-                server.getLogger1().error( "Error occurred while enabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
+                Mohist.LOGGER.error( "Error occurred while enabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
                 // Paper start - Disable plugins that fail to load
                 server.getPluginManager().disablePlugin(jPlugin, true); // Paper - close Classloader on disable - She's dead jim
                 return;
@@ -346,7 +346,7 @@ public final class JavaPluginLoader implements PluginLoader {
             try {
                 jPlugin.setEnabled(false);
             } catch (Throwable ex) {
-                server.getLogger1().error( "Error occurred while disabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
+                Mohist.LOGGER.error( "Error occurred while disabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
             }
 
             if (cloader instanceof PluginClassLoader) {
@@ -364,7 +364,7 @@ public final class JavaPluginLoader implements PluginLoader {
                         loader.close();
                     }
                 } catch (IOException e) {
-                    server.getLogger1().error( "Error closing the Plugin Class Loader for " + plugin.getDescription().getFullName());
+                    Mohist.LOGGER.error( "Error closing the Plugin Class Loader for " + plugin.getDescription().getFullName());
                     e.printStackTrace();
                 }
                 // Paper end

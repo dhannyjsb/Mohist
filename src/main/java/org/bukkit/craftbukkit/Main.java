@@ -4,15 +4,12 @@ import cn.pfcraft.Mohist;
 import cn.pfcraft.i18n.Message;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import org.apache.logging.log4j.LogManager;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

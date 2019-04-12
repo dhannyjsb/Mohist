@@ -1,11 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/border/WorldBorder.java
 +++ ../src-work/minecraft/net/minecraft/world/border/WorldBorder.java
-@@ -1,14 +1,16 @@
- package net.minecraft.world.border;
- 
- import com.google.common.collect.Lists;
--import java.util.List;
- import net.minecraft.entity.Entity;
+@@ -6,6 +6,7 @@
  import net.minecraft.util.math.AxisAlignedBB;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.ChunkPos;
@@ -13,12 +8,7 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
-+import java.util.List;
-+
- public class WorldBorder
- {
-     private final List<IBorderListener> listeners = Lists.<IBorderListener>newArrayList();
-@@ -24,6 +26,9 @@
+@@ -24,6 +25,9 @@
      private int warningTime;
      private int warningDistance;
  
@@ -28,26 +18,7 @@
      public WorldBorder()
      {
          this.endDiameter = this.startDiameter;
-@@ -34,6 +39,18 @@
-         this.warningDistance = 5;
-     }
- 
-+    // Paper start
-+    private final BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos();
-+    public boolean isBlockInBounds(int chunkX, int chunkZ) {
-+        mutPos.setPos(chunkX, 64, chunkZ);
-+        return contains(mutPos);
-+    }
-+    public boolean isChunkInBounds(int chunkX, int chunkZ) {
-+        mutPos.setPos(((chunkX << 4) + 15), 64, (chunkZ << 4) + 15);
-+        return contains(mutPos);
-+    }
-+    // Paper end
-+
-     public boolean contains(BlockPos pos)
-     {
-         return (double)(pos.getX() + 1) > this.minX() && (double)pos.getX() < this.maxX() && (double)(pos.getZ() + 1) > this.minZ() && (double)pos.getZ() < this.maxZ();
-@@ -206,6 +223,7 @@
+@@ -206,6 +210,7 @@
  
      public void addListener(IBorderListener listener)
      {

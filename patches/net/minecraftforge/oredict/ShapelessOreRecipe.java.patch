@@ -17,18 +17,6 @@
  
      public ShapelessOreRecipe(ResourceLocation group, Block result, Object... recipe){ this(group, new ItemStack(result), recipe); }
      public ShapelessOreRecipe(ResourceLocation group, Item  result, Object... recipe){ this(group, new ItemStack(result), recipe); }
-@@ -138,9 +141,9 @@
-     }
- 
-     @Override
--    public boolean canFit(int p_194133_1_, int p_194133_2_)
-+    public boolean canFit(int width, int height)
-     {
--        return p_194133_1_ * p_194133_2_ >= this.input.size();
-+        return width * height >= this.input.size();
-     }
- 
-     public static ShapelessOreRecipe factory(JsonContext context, JsonObject json)
 @@ -157,4 +160,17 @@
          ItemStack itemstack = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "result"), context);
          return new ShapelessOreRecipe(group.isEmpty() ? null : new ResourceLocation(group), ings, itemstack);

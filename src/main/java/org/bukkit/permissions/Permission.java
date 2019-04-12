@@ -1,5 +1,6 @@
 package org.bukkit.permissions;
 
+import cn.pfcraft.Mohist;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -227,7 +228,7 @@ public class Permission {
             try {
                 result.add(Permission.loadPermission(entry.getKey().toString(), (Map<?, ?>) entry.getValue(), def, result));
             } catch (Throwable ex) {
-                Bukkit.getServer().getLogger1().error(String.format(error, entry.getKey()), ex);
+                Mohist.LOGGER.error(String.format(error, entry.getKey()), ex);
             }
         }
 

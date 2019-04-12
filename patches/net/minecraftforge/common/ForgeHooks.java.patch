@@ -360,7 +360,7 @@
          {
              // Let the client know the block still exists
              entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-@@ -861,33 +651,70 @@
+@@ -861,33 +651,73 @@
                      entityPlayer.connection.sendPacket(pkt);
                  }
              }
@@ -373,17 +373,17 @@
          return event.isCanceled() ? -1 : event.getExpToDrop();
      }
  
--    public static EnumActionResult onPlaceItemIntoWorld(@Nonnull ItemStack itemstack, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EnumHand hand)
+     public static EnumActionResult onPlaceItemIntoWorld(@Nonnull ItemStack itemstack, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EnumHand hand)
 -    {
-+    public static EnumActionResult onPlaceItemIntoWorld(@Nonnull ItemStack itemstack, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EnumHand hand) {
++	{
          // handle all placement events here
          int meta = itemstack.getItemDamage();
          int size = itemstack.getCount();
 +		int data = itemstack.getMetadata();
          NBTTagCompound nbt = null;
--        if (itemstack.getTagCompound() != null)
+         if (itemstack.getTagCompound() != null)
 -        {
-+        if (itemstack.getTagCompound() != null) {
++		{
              nbt = itemstack.getTagCompound().copy();
          }
  
@@ -404,10 +404,6 @@
 +            blocks.add(new CraftBlockState(snapshot));
 +        }
  
--        if (ret == EnumActionResult.SUCCESS)
--        {
--            // save new item data
--            int newMeta = itemstack.getItemDamage();
 +		int newCount = itemstack.stackSize;
 +        if (ret == EnumActionResult.SUCCESS && world.captureTreeGeneration && world.capturedBlockSnapshots.size() > 0) {
 +            world.captureTreeGeneration = false;
@@ -434,12 +430,16 @@
 +        }
 +        world.captureTreeGeneration = false;
 +
-+        if (ret == EnumActionResult.SUCCESS) {
+         if (ret == EnumActionResult.SUCCESS)
+-        {
+-            // save new item data
+-            int newMeta = itemstack.getItemDamage();
++		{
 +        	int newMeta = itemstack.getItemDamage();
              int newSize = itemstack.getCount();
              NBTTagCompound newNBT = null;
              if (itemstack.getTagCompound() != null)
-@@ -896,48 +723,38 @@
+@@ -896,10 +726,8 @@
              }
              BlockEvent.PlaceEvent placeEvent = null;
              @SuppressWarnings("unchecked")
@@ -451,55 +451,57 @@
              itemstack.setItemDamage(meta);
              itemstack.setCount(size);
              if (nbt != null)
-             {
+@@ -907,37 +735,38 @@
                  itemstack.setTagCompound(nbt);
              }
--            if (blockSnapshots.size() > 1)
+             if (blockSnapshots.size() > 1)
 -            {
-+            if (blockSnapshots.size() > 1) {
++			{
                  placeEvent = ForgeEventFactory.onPlayerMultiBlockPlace(player, blockSnapshots, side, hand);
-+            } else if (blockSnapshots.size() == 1) {
-+				placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshots.get(0), side, hand);
              }
 -            else if (blockSnapshots.size() == 1)
 -            {
 -                placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshots.get(0), side, hand);
--            }
++			else if (blockSnapshots.size() == 1)
++			{
++				placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshots.get(0), side, hand);
+             }
  
--            if (placeEvent != null && placeEvent.isCanceled())
+             if (placeEvent != null && placeEvent.isCanceled())
 -            {
-+            if (placeEvent != null && placeEvent.isCanceled()) {
++			{
                  ret = EnumActionResult.FAIL; // cancel placement
                  // revert back all captured blocks
--                for (BlockSnapshot blocksnapshot : Lists.reverse(blockSnapshots))
+                 for (BlockSnapshot blocksnapshot : Lists.reverse(blockSnapshots))
 -                {
-+                for (BlockSnapshot blocksnapshot : Lists.reverse(blockSnapshots)) {
++				{
                      world.restoringBlockSnapshots = true;
                      blocksnapshot.restore(true, false);
                      world.restoringBlockSnapshots = false;
                  }
--            }
++				((org.bukkit.craftbukkit.entity.CraftPlayer) player.getBukkitEntity()).updateInventory();
+             }
 -            else
 -            {
-+				((org.bukkit.craftbukkit.entity.CraftPlayer) player.getBukkitEntity()).updateInventory();
-+            } else {
++			else
++			{
                  // Change the stack to its new content
                  itemstack.setItemDamage(newMeta);
                  itemstack.setCount(newSize);
--                if (nbt != null)
+                 if (nbt != null)
 -                {
-+                if (nbt != null) {
++				{
                      itemstack.setTagCompound(newNBT);
                  }
 -
--                for (BlockSnapshot snap : blockSnapshots)
--                {
 +				
-+                for (BlockSnapshot snap : blockSnapshots) {
+                 for (BlockSnapshot snap : blockSnapshots)
+-                {
++				{
                      int updateFlag = snap.getFlag();
                      IBlockState oldBlock = snap.getReplacedBlock();
                      IBlockState newBlock = world.getBlockState(snap.getPos());
-@@ -948,7 +765,30 @@
+@@ -948,7 +777,30 @@
  
                      world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                  }
@@ -531,7 +533,7 @@
              }
          }
          world.capturedBlockSnapshots.clear();
-@@ -956,6 +796,7 @@
+@@ -956,6 +808,7 @@
          return ret;
      }
  
@@ -539,7 +541,7 @@
      public static boolean onAnvilChange(ContainerRepair container, @Nonnull ItemStack left, @Nonnull ItemStack right, IInventory outputSlot, String name, int baseCost)
      {
          AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
-@@ -1071,7 +912,7 @@
+@@ -1071,7 +924,7 @@
              // Revert variable back to true as it would have been set to false
              if (entity instanceof EntityMinecartContainer)
              {
@@ -548,7 +550,7 @@
              }
          }
          return !event.isCanceled();
-@@ -1344,45 +1185,45 @@
+@@ -1344,45 +1197,45 @@
      private static boolean loadAdvancements(Map<ResourceLocation, Advancement.Builder> map, ModContainer mod)
      {
          return CraftingHelper.findFiles(mod, "assets/" + mod.getModId() + "/advancements", null,
@@ -627,7 +629,7 @@
          );
      }
  
-@@ -1460,7 +1301,6 @@
+@@ -1460,7 +1313,6 @@
  
      public static boolean onFarmlandTrample(World world, BlockPos pos, IBlockState state, float fallDistance, Entity entity)
      {
@@ -635,7 +637,7 @@
          if (entity.canTrample(world, state.getBlock(), pos, fallDistance))
          {
              BlockEvent.FarmlandTrampleEvent event = new BlockEvent.FarmlandTrampleEvent(world, pos, state, fallDistance, entity);
-@@ -1469,5 +1309,4 @@
+@@ -1469,5 +1321,4 @@
          }
          return false;
      }

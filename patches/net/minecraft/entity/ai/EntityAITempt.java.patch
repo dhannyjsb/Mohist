@@ -45,7 +45,7 @@
 -            {
 -                return this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
 -            }
-+            return tempt && this.temptingPlayer != null; // Paper - must have target - plugin might of cancelled
++            return tempt;
          }
      }
  

@@ -462,8 +462,6 @@ public interface Server extends PluginMessageRecipient {
      */
     public Logger getLogger();
 
-    public org.apache.logging.log4j.Logger getLogger1();
-
     /**
      * Gets a {@link PluginCommand} with the given name or alias.
      *
@@ -981,6 +979,12 @@ public interface Server extends PluginMessageRecipient {
     // Spigot start
     public class Spigot
     {
+	
+        public org.bukkit.configuration.file.YamlConfiguration getConfig()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+		
         /**
          * Sends the component to the player
          *

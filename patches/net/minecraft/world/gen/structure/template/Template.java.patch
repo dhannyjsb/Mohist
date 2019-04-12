@@ -12,15 +12,3 @@
                  if (template$blockinfo1 != null)
                  {
                      Block block1 = template$blockinfo1.blockState.getBlock();
-@@ -248,9 +247,11 @@
-                                 template$blockinfo1.tileentityData.setInteger("x", blockpos.getX());
-                                 template$blockinfo1.tileentityData.setInteger("y", blockpos.getY());
-                                 template$blockinfo1.tileentityData.setInteger("z", blockpos.getZ());
-+                                tileentity2.isLoadingStructure = true; // Paper
-                                 tileentity2.readFromNBT(template$blockinfo1.tileentityData);
-                                 tileentity2.mirror(placementIn.getMirror());
-                                 tileentity2.rotate(placementIn.getRotation());
-+                                tileentity2.isLoadingStructure = false; // Paper
-                             }
-                         }
-                     }

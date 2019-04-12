@@ -1,8 +1,6 @@
 package org.bukkit.command;
 
-import com.destroystokyo.paper.event.server.ServerExceptionEvent;
-import com.destroystokyo.paper.exception.ServerCommandException;
-import com.destroystokyo.paper.exception.ServerTabCompleteException;
+import cn.pfcraft.Mohist;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -134,12 +132,9 @@ public class SimpleCommandMap implements CommandMap {
             // Note: we don't return the result of target.execute as thats success / failure, we return handled (true) or not handled (false)
             target.execute(sender, sentCommandLabel, Arrays.copyOfRange(args, 1, args.length));
         } catch (CommandException ex) {
-            server.getPluginManager().callEvent(new ServerExceptionEvent(new ServerCommandException(ex, target, sender, args))); // Paper
             throw ex;
         } catch (Throwable ex) {
-            String msg = "Unhandled exception executing '" + commandLine + "' in " + target;
-            server.getPluginManager().callEvent(new ServerExceptionEvent(new ServerCommandException(ex, target, sender, args))); // Paper
-            throw new CommandException(msg, ex);
+            throw new CommandException("Unhandled exception executing '" + commandLine + "' in " + target, ex);
         }
 
         // return true as command was handled
@@ -212,9 +207,8 @@ public class SimpleCommandMap implements CommandMap {
         } catch (CommandException ex) {
             throw ex;
         } catch (Throwable ex) {
-            String msg = "Unhandled exception executing tab-completer for '" + cmdLine + "' in " + target;
-            server.getPluginManager().callEvent(new ServerExceptionEvent(new ServerTabCompleteException(msg, ex, target, sender, args))); // Paper
-            throw new CommandException(msg, ex); }
+            throw new CommandException("Unhandled exception executing tab-completer for '" + cmdLine + "' in " + target, ex);
+        }
     }
 
     public Collection<Command> getCommands() {
@@ -227,7 +221,7 @@ public class SimpleCommandMap implements CommandMap {
         for (Map.Entry<String, String[]> entry : values.entrySet()) {
             String alias = entry.getKey();
             if (alias.contains(" ")) {
-                server.getLogger1().warn("Could not register alias " + alias + " because it contains illegal characters");
+                Mohist.LOGGER.warn("Could not register alias " + alias + " because it contains illegal characters");
                 continue;
             }
 
@@ -250,7 +244,7 @@ public class SimpleCommandMap implements CommandMap {
             }
 
             if (bad.length() > 0) {
-                server.getLogger1().warn("Could not register alias " + alias + " because it contains commands that do not exist: " + bad);
+                Mohist.LOGGER.warn("Could not register alias " + alias + " because it contains commands that do not exist: " + bad);
                 continue;
             }
 

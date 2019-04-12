@@ -69,7 +69,7 @@ public class WatchdogThread extends Thread
                 if ( !isLongTimeout && (earlyWarningEvery <= 0 || !hasStarted || currentTime < lastEarlyWarning + earlyWarningEvery || currentTime < lastTick + earlyWarningDelay)) continue;
                 lastEarlyWarning = currentTime;
                 // Paper end
-                Logger log = Bukkit.getServer().getLogger1();
+                Logger log = Mohist.LOGGER;
                 // Paper start - Different message when it's a short timeout
                 if ( isLongTimeout )
                 {

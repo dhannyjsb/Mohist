@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import cn.pfcraft.Mohist;
 import com.destroystokyo.paper.Title;
 import com.destroystokyo.paper.profile.CraftPlayerProfile;
 import com.destroystokyo.paper.profile.PlayerProfile;
@@ -1634,7 +1635,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         if ( healthMod >= Float.MAX_VALUE || healthMod <= 0 )
         {
             healthMod = 20; // Reset health
-            getServer().getLogger1().warn( getName() + " tried to crash the server with a large health attribute" );
+            Mohist.LOGGER.warn( getName() + " tried to crash the server with a large health attribute" );
         }
          collection.add(new ModifiableAttributeInstance(getHandle().getAttributeMap(), (new RangedAttribute(null, "generic.maxHealth", healthMod, 0.0D, Float.MAX_VALUE)).setDescription("Max Health").setShouldWatch(true)));
         // Spigot end

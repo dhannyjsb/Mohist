@@ -510,6 +510,5 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      */
     boolean fromMobSpawner();
 
-    Chunk getChunk();
     // Paper end
 }

@@ -1,7 +1,6 @@
 package org.bukkit.craftbukkit;
 
 import cn.pfcraft.Mohist;
-import com.destroystokyo.paper.MCUtil;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -97,7 +96,6 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.StandardMessenger;
 import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.StringUtil;
 import org.bukkit.util.permissions.DefaultPermissions;
 import org.yaml.snakeyaml.Yaml;
@@ -248,7 +246,6 @@ public final class CraftServer implements Server {
         while (listener instanceof CommandSenderWrapper) {
             listener = ((CommandSenderWrapper) listener).delegate;
         }
-        if (unrestrictedSignCommands && listener instanceof TileEntitySign.ISignCommandListener) return true; // Paper
         return unrestrictedAdvancements && listener instanceof AdvancementRewards.AdvancementCommandListener;
     }
 
@@ -954,11 +951,6 @@ public final class CraftServer implements Server {
     }
 
     @Override
-    public org.apache.logging.log4j.Logger getLogger1() {
-        return Mohist.LOGGER;
-    }
-
-    @Override
     public Logger getLogger() {
         return logger;
     }
@@ -1515,7 +1507,7 @@ public final class CraftServer implements Server {
             offers = tabCompleteChat(player, message);
         }
 
-        TabCompleteEvent tabEvent = new TabCompleteEvent(player, message, offers, message.startsWith("/") || forceCommand, pos != null ? MCUtil.toLocation(((CraftWorld) player.getWorld()).getHandle(), pos) : null); // Paper
+        TabCompleteEvent tabEvent = new TabCompleteEvent(player, message, offers, message.startsWith("/") || forceCommand, pos != null ? new Location(player.getWorld(), pos.getX(), pos.getY(), pos.getZ()) : null); // Paper
         getPluginManager().callEvent(tabEvent);
 
         return tabEvent.isCancelled() ? Collections.EMPTY_LIST : tabEvent.getCompletions();

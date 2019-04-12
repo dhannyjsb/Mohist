@@ -102,20 +102,9 @@
          if (this.getRollingAmplitude() > 0)
          {
              this.setRollingAmplitude(this.getRollingAmplitude() - 1);
-@@ -238,63 +278,17 @@
-             this.setDamage(this.getDamage() - 1.0F);
-         }
- 
-+        // Paper start - Configurable nether ceiling damage
-+        // Extracted to own function
-+        /*
-         if (this.posY < -64.0D)
-         {
+@@ -243,58 +283,6 @@
              this.outOfWorld();
          }
-+        */
-+        this.checkAndDoHeightDamage();
-+        // Paper end
  
 -        if (!this.world.isRemote && this.world instanceof WorldServer)
 -        {
@@ -172,7 +161,7 @@
          if (this.world.isRemote)
          {
              if (this.turnProgress > 0)
-@@ -381,6 +375,16 @@
+@@ -381,6 +369,16 @@
              if (getCollisionHandler() != null) box = getCollisionHandler().getMinecartCollisionBox(this);
              else                               box = this.getEntityBoundingBox().grow(0.20000000298023224D, 0.0D, 0.20000000298023224D);
  
@@ -189,7 +178,7 @@
              if (canBeRidden() && this.motionX * this.motionX + this.motionZ * this.motionZ > 0.01D)
              {
                  List<Entity> list = this.world.getEntitiesInAABBexcluding(this, box, EntitySelectors.getTeamCollisionPredicate(this));
-@@ -393,10 +397,22 @@
+@@ -393,10 +391,22 @@
  
                          if (!(entity1 instanceof EntityPlayer) && !(entity1 instanceof EntityIronGolem) && !(entity1 instanceof EntityMinecart) && !this.isBeingRidden() && !entity1.isRiding())
                          {
@@ -212,7 +201,7 @@
                              entity1.applyEntityCollision(this);
                          }
                      }
-@@ -408,6 +424,12 @@
+@@ -408,6 +418,12 @@
                  {
                      if (!this.isPassenger(entity) && entity.canBePushed() && entity instanceof EntityMinecart)
                      {
@@ -225,7 +214,7 @@
                          entity.applyEntityCollision(this);
                      }
                  }
-@@ -420,7 +442,8 @@
+@@ -420,7 +436,8 @@
  
      protected double getMaximumSpeed()
      {
@@ -235,7 +224,7 @@
      }
  
      public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)
-@@ -446,18 +469,28 @@
+@@ -446,18 +463,28 @@
  
          if (this.onGround)
          {
@@ -270,7 +259,7 @@
          }
      }
  
-@@ -668,7 +701,7 @@
+@@ -668,7 +695,7 @@
  
      protected void applyDrag()
      {
@@ -279,7 +268,7 @@
          {
              this.motionX *= 0.996999979019165D;
              this.motionY *= 0.0D;
-@@ -868,6 +901,12 @@
+@@ -868,6 +895,12 @@
              {
                  if (!this.isPassenger(entityIn))
                  {
@@ -292,7 +281,7 @@
                      double d0 = entityIn.posX - this.posX;
                      double d1 = entityIn.posZ - this.posZ;
                      double d2 = d0 * d0 + d1 * d1;
-@@ -1260,6 +1299,9 @@
+@@ -1260,6 +1293,9 @@
      public void setDragAir(double value)
      {
          dragAir = value;
@@ -302,7 +291,7 @@
      }
  
      public double getSlopeAdjustment()
-@@ -1322,4 +1364,26 @@
+@@ -1322,4 +1358,26 @@
              }
          }
      }

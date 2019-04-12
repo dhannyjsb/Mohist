@@ -1,6 +1,5 @@
 package org.spigotmc;
 
-import com.destroystokyo.paper.MCUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.effect.EntityWeatherEffect;
@@ -11,12 +10,14 @@ import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.passive.*;
+import net.minecraft.entity.passive.EntityAmbientCreature;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,7 +32,6 @@ public class ActivationRange
     static AxisAlignedBB maxBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
     static AxisAlignedBB miscBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
     static AxisAlignedBB animalBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
-    static AxisAlignedBB waterBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 ); // Paper
     static AxisAlignedBB monsterBB = new AxisAlignedBB( 0, 0, 0, 0, 0, 0 );
 
     /**
@@ -43,7 +43,6 @@ public class ActivationRange
      */
     public static byte initializeEntityActivationType(Entity entity)
     {
-        if (entity instanceof EntityWaterMob) { return 4; } // Paper
         if ( entity instanceof EntityMob || entity instanceof EntitySlime )
         {
             return 1; // Monster
@@ -76,7 +75,6 @@ public class ActivationRange
         if ( ( entity.activationType == 3 && config.miscActivationRange == 0 )
                 || ( entity.activationType == 2 && config.animalActivationRange == 0 )
                 || ( entity.activationType == 1 && config.monsterActivationRange == 0 )
-                || ( entity.activationType == 4 && config.waterActivationRange == 0 ) // Paper
                 || entity instanceof EntityPlayer
                 || entity instanceof EntityThrowable
                 || entity instanceof MultiPartEntityPart
@@ -108,13 +106,11 @@ public class ActivationRange
         final int miscActivationRange = world.spigotConfig.miscActivationRange;
         final int animalActivationRange = world.spigotConfig.animalActivationRange;
         final int monsterActivationRange = world.spigotConfig.monsterActivationRange;
-        final int waterActivationRange = world.spigotConfig.waterActivationRange; // Paper
 
         int maxRange = Math.max( monsterActivationRange, animalActivationRange );
         maxRange = Math.max( maxRange, miscActivationRange );
         maxRange = Math.min( ( world.spigotConfig.viewDistance << 4 ) - 8, maxRange );
 
-        Chunk chunk; // Paper
         for ( EntityPlayer player : world.playerEntities )
         {
 
@@ -123,7 +119,6 @@ public class ActivationRange
             miscBB = player.getEntityBoundingBox().grow( miscActivationRange, 256, miscActivationRange );
             animalBB = player.getEntityBoundingBox().grow( animalActivationRange, 256, animalActivationRange );
             monsterBB = player.getEntityBoundingBox().grow( monsterActivationRange, 256, monsterActivationRange );
-            waterBB = player.getEntityBoundingBox().grow( waterActivationRange, 256, waterActivationRange ); // Paper
 
             int i = MathHelper.floor( maxBB.minX / 16.0D );
             int j = MathHelper.floor( maxBB.maxX / 16.0D );
@@ -134,9 +129,9 @@ public class ActivationRange
             {
                 for ( int j1 = k; j1 <= l; ++j1 )
                 {
-                    if ( (chunk = MCUtil.getLoadedChunkWithoutMarkingActive(world, i1, j1 )) != null ) // Paper
+                    if ( world.getWorld().isChunkLoaded( i1, j1 ) )
                     {
-                        activateChunkEntities( chunk );
+                        activateChunkEntities( world.getChunkFromChunkCoords( i1, j1 ) );
                     }
                 }
             }
@@ -154,7 +149,7 @@ public class ActivationRange
         {
             for ( Entity entity : slice )
             {
-                if ( entity != null && MinecraftServer.currentTick > entity.activatedTick )
+                if (MinecraftServer.currentTick > entity.activatedTick )
                 {
                     if ( entity.defaultActivationState )
                     {
@@ -175,14 +170,6 @@ public class ActivationRange
                                 entity.activatedTick = MinecraftServer.currentTick;
                             }
                             break;
-                            // Paper start
-                        case 4:
-                            if ( waterBB.intersects( entity.getEntityBoundingBox() ) )
-                            {
-                                entity.activatedTick = MinecraftServer.currentTick;
-                            }
-                            break;
-                            // Paper end
                         case 3:
                         default:
                             if ( miscBB.intersects( entity.getEntityBoundingBox() ) )
@@ -204,14 +191,11 @@ public class ActivationRange
      */
     public static boolean checkEntityImmunities(Entity entity)
     {
-        // Paper start - optimize Water cases
-        if ((entity.inWater && (!(entity instanceof EntityLiving) || !(((EntityLiving) entity).getNavigator() instanceof PathNavigateSwimmer)))) {
+        // quick checks.
+        if ( entity.isInWater() || entity.fire > 0 )
+        {
             return true;
         }
-        if (entity.fire > 0) {
-            return true;
-        }
-        // Paper end
         if ( !( entity instanceof EntityArrow ) )
         {
             if ( !entity.onGround || !entity.riddenByEntities.isEmpty() || entity.isRiding() )
@@ -227,29 +211,18 @@ public class ActivationRange
         {
             EntityLiving living = (EntityLiving) entity;
 
-            if ( living.recentlyHit > 0 || living.hurtTime > 0 || living.activePotionsMap.size() > 0 )
+            if ( /*TODO: Missed mapping? living.attackTicks > 0 || */ living.hurtTime > 0 || living.activePotionsMap.size() > 0 )
             {
                 return true;
             }
-            if ( entity instanceof EntityCreature )
+            if ( entity instanceof EntityCreature && ( (EntityCreature) entity ).getAttackTarget() != null )
             {
-                // Paper start
-                EntityCreature creature = (EntityCreature) entity;
-                if (creature.getAttackTarget() != null || creature.movingTarget != null) {
-                    return true;
-                }
-                // Paper end
+                return true;
             }
             if ( entity instanceof EntityVillager && ( (EntityVillager) entity ).isMating()/* Getter for first boolean */ )
             {
                 return true;
             }
-            // Paper start
-            if ( entity instanceof EntityLlama && ( (EntityLlama ) entity ).inCaravan() )
-            {
-                return true;
-            }
-            // Paper end
             if ( entity instanceof EntityAnimal)
             {
                 EntityAnimal animal = (EntityAnimal) entity;

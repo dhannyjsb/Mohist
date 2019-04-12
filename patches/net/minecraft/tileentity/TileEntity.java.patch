@@ -1,10 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntity.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntity.java
-@@ -1,12 +1,13 @@
+@@ -1,12 +1,12 @@
  package net.minecraft.tileentity;
  
 -import javax.annotation.Nullable;
-+import com.destroystokyo.paper.KeyedObject;
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockJukebox;
  import net.minecraft.block.state.IBlockState;
@@ -15,7 +14,7 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.network.play.server.SPacketUpdateTileEntity;
  import net.minecraft.util.Mirror;
-@@ -16,16 +17,26 @@
+@@ -16,16 +16,23 @@
  import net.minecraft.util.registry.RegistryNamespaced;
  import net.minecraft.util.text.ITextComponent;
  import net.minecraft.world.World;
@@ -27,16 +26,12 @@
 +import org.bukkit.Bukkit;
 +import org.bukkit.craftbukkit.block.CraftBlockEntityState;
 +import org.bukkit.craftbukkit.inventory.CraftCustomInventory;
-+import org.bukkit.craftbukkit.inventory.CraftInventory;
 +import org.bukkit.inventory.InventoryHolder;
  
--public abstract class TileEntity implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
 +import javax.annotation.Nullable;
-+import java.util.logging.Level;
 +
-+public abstract class TileEntity implements KeyedObject, net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
+ public abstract class TileEntity implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
  {
-+    public boolean isLoadingStructure = false; // Paper
      private static final Logger LOGGER = LogManager.getLogger();
      private static final RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >> REGISTRY = new RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >> ();
 -    protected World world;
@@ -44,49 +39,16 @@
      protected BlockPos pos = BlockPos.ORIGIN;
      protected boolean tileEntityInvalid;
      private int blockMetadata = -1;
-@@ -36,12 +47,39 @@
-         REGISTRY.putObject(new ResourceLocation(id), clazz);
-     }
+@@ -38,7 +45,7 @@
  
-+    // Paper start
-+    private java.lang.ref.WeakReference<Chunk> currentChunk = null;
-+    public Chunk getCurrentChunk() {
-+        final Chunk chunk = currentChunk != null ? currentChunk.get() : world.getChunkIfLoaded(pos.getX() >> 4, pos.getZ() >> 4);
-+        return chunk != null && chunk.isLoaded() ? chunk : null;
-+    }
-+    public void setCurrentChunk(Chunk chunk) {
-+        this.currentChunk = chunk != null ? new java.lang.ref.WeakReference<>(chunk) : null;
-+    }
-+    private String tileEntityKeyString = null;
-+    private ResourceLocation tileEntityKey = getResourceLocation();
-+
-+    @Override
-+    public ResourceLocation getResourceLocation() {
-+        if (tileEntityKey == null) {
-+            tileEntityKey = getKey(this.getClass());
-+            tileEntityKeyString = tileEntityKey != null ? tileEntityKey.toString() : null;
-+        }
-+        return tileEntityKey;
-+    }
-+
-+    @Override
-+    public String getResourceLocationString() {
-+        getResourceLocation(); // Try to load if it doesn't exists.
-+        return tileEntityKeyString;
-+    }
-+
      @Nullable
--    public static ResourceLocation getKey(Class <? extends TileEntity > clazz)
+     public static ResourceLocation getKey(Class <? extends TileEntity > clazz)
 -    {
-+    public static ResourceLocation getKey(Class <? extends TileEntity > clazz) {
++	{
          return REGISTRY.getNameForObject(clazz);
      }
  
-+    static boolean IGNORE_TILE_UPDATES = false; // Paper
-     public World getWorld()
-     {
-         return this.world;
-@@ -108,7 +146,7 @@
+@@ -108,7 +115,7 @@
          catch (Throwable throwable1)
          {
              LOGGER.error("Failed to create block entity {}", s, throwable1);
@@ -95,7 +57,7 @@
                      s, oclass == null ? null : oclass.getName(), throwable1);
          }
  
-@@ -122,7 +160,7 @@
+@@ -122,7 +129,7 @@
              catch (Throwable throwable)
              {
                  LOGGER.error("Failed to load data for block entity {}", s, throwable);
@@ -104,32 +66,7 @@
                          s, oclass.getName(), throwable);
                  tileentity = null;
              }
-@@ -154,6 +192,9 @@
-     {
-         if (this.world != null)
-         {
-+            if (TileEntity.IGNORE_TILE_UPDATES) {
-+                return;
-+            }
-             IBlockState iblockstate = this.world.getBlockState(this.pos);
-             this.blockMetadata = iblockstate.getBlock().getMetaFromState(iblockstate);
-             this.world.markChunkDirty(this.pos, this);
-@@ -243,7 +284,13 @@
- 
-         if (this.world != null)
-         {
--            CrashReportCategory.addBlockInfo(reportCategory, this.pos, this.getBlockType(), this.getBlockMetadata());
-+
-+            // Paper start - Prevent TileEntity and Entity crashes
-+            Block block = this.getBlockType();
-+            if (block != null) {
-+                CrashReportCategory.addBlockInfo(reportCategory, this.pos, this.getBlockType(), this.getBlockMetadata());
-+            }
-+            // Paper end
-             reportCategory.addDetail("Actual block type", new ICrashReportDetail<String>()
-             {
-                 public String call() throws Exception
-@@ -315,7 +362,7 @@
+@@ -315,7 +322,7 @@
       * @param net The NetworkManager the packet originated from
       * @param pkt The data packet
       */
@@ -138,7 +75,7 @@
      {
      }
  
-@@ -339,16 +386,7 @@
+@@ -339,16 +346,7 @@
      }
  
      private boolean isVanilla = getClass().getName().startsWith("net.minecraft.");
@@ -156,7 +93,7 @@
      public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
      {
          return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
-@@ -359,17 +397,8 @@
+@@ -359,17 +357,8 @@
          return pass == 0;
      }
  
@@ -175,7 +112,7 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +560,31 @@
+@@ -531,4 +520,31 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }

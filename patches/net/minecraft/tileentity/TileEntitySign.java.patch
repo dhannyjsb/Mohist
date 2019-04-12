@@ -33,22 +33,7 @@
          this.stats.writeStatsToNBT(compound);
          return compound;
      }
-@@ -51,8 +56,7 @@
-     {
-         this.isEditable = false;
-         super.readFromNBT(compound);
--        ICommandSender icommandsender = new ICommandSender()
--        {
-+        ICommandSender icommandlistener = new ISignCommandListener() { // Paper
-             public String getName()
-             {
-                 return "Sign";
-@@ -75,23 +79,40 @@
-             }
-             public MinecraftServer getServer()
-             {
--                return TileEntitySign.this.world.getMinecraftServer();
-+                return MinecraftServer.getServerInst(); // Paper - world may be null
+@@ -79,19 +84,38 @@
              }
          };
  
@@ -70,14 +55,16 @@
              try
              {
 -                this.signText[i] = TextComponentUtils.processComponent(icommandsender, itextcomponent, (Entity)null);
-+                if (oldSign && !isLoadingStructure) {  // Paper - saved structures will be in the new format, but will not have isConverted
++                ITextComponent ichatbasecomponent = ITextComponent.Serializer.jsonToComponent(s);
++
++                if (oldSign) {
 +                    signText[i] = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(s)[0];
 +                    continue;
 +                }
 +                // CraftBukkit end
-+                ITextComponent ichatbasecomponent = ITextComponent.Serializer.jsonToComponent(s);
++
 +                try {
-+                    this.signText[i] = TextComponentUtils.processComponent(icommandlistener, ichatbasecomponent, (Entity) null);
++                    this.signText[i] = TextComponentUtils.processComponent(icommandsender, ichatbasecomponent, (Entity) null);
 +                } catch (CommandException commandexception) {
 +                    this.signText[i] = ichatbasecomponent;
 +                }
@@ -91,34 +78,17 @@
          }
  
          this.stats.readStatsFromNBT(compound);
-@@ -141,8 +162,7 @@
- 
-     public boolean executeCommand(final EntityPlayer playerIn)
-     {
--        ICommandSender icommandsender = new ICommandSender()
--        {
-+        ICommandSender icommandlistener = new ISignCommandListener() { // Paper
-             public String getName()
-             {
-                 return playerIn.getName();
-@@ -201,7 +221,12 @@
+@@ -201,7 +225,12 @@
  
                  if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)
                  {
 -                    playerIn.getServer().getCommandManager().executeCommand(icommandsender, clickevent.getValue());
 +                    // playerIn.getServer().getCommandManager().executeCommand(icommandsender, clickevent.getValue());
-+                    CommandBlockBaseLogic.executeSafely(icommandlistener, new org.bukkit.craftbukkit.command.ProxiedNativeCommandSender(
-+                            icommandlistener,
-+                            new org.bukkit.craftbukkit.command.CraftBlockCommandSender(icommandlistener),
++                    CommandBlockBaseLogic.executeSafely(icommandsender, new org.bukkit.craftbukkit.command.ProxiedNativeCommandSender(
++                            icommandsender,
++                            new org.bukkit.craftbukkit.command.CraftBlockCommandSender(icommandsender),
 +                            playerIn.getBukkitEntity()
 +                    ), clickevent.getValue());
                  }
              }
          }
-@@ -213,4 +238,6 @@
-     {
-         return this.stats;
-     }
-+
-+    public interface ISignCommandListener extends ICommandSender {} // Paper
- }
