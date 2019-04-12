@@ -679,7 +679,7 @@
 +            com.google.common.base.Preconditions.checkState(!passenger.riddenByEntities.contains(this), "Circular entity riding! %s %s", this, passenger);
 +             CraftEntity craft = (CraftEntity) passenger.getBukkitEntity().getVehicle();
 +            Entity orig = craft == null ? null : craft.getHandle();
-+            if (getBukkitEntity() instanceof Vehicle && passenger.getBukkitEntity() instanceof LivingEntity && passenger.world.isChunkLoaded((int) passenger.posX >> 4, (int) passenger.posZ >> 4, false)) { // Boolean not used
++            if (getBukkitEntity() instanceof Vehicle && passenger.getBukkitEntity() instanceof LivingEntity && passenger.world.isChunkLoaded0((int) passenger.posX >> 4, (int) passenger.posZ >> 4, false)) { // Boolean not used
 +                VehicleEnterEvent event = new VehicleEnterEvent(
 +                        (Vehicle) getBukkitEntity(),
 +                        passenger.getBukkitEntity()
