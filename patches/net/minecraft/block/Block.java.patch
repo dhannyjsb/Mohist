@@ -329,7 +329,7 @@
              return false;
          return type != null && type.equals(getHarvestTool(state));
      }
-@@ -2272,23 +2281,15 @@
+@@ -2286,23 +2295,15 @@
          return false;
      }
  
@@ -355,7 +355,7 @@
      }
  
      /**
-@@ -2628,6 +2629,18 @@
+@@ -2642,6 +2643,18 @@
          registerBlock(id, new ResourceLocation(textualID), block_);
      }
  
