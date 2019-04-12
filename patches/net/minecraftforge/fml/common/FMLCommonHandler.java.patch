@@ -9,3 +9,21 @@
          {
              return;
          }
+@@ -522,16 +522,7 @@
+     public String getModName()
+     {
+         List<String> modNames = Lists.newArrayListWithExpectedSize(3);
+-        modNames.add("fml");
+-        if (!noForge)
+-        {
+-            modNames.add(ForgeVersion.MOD_ID);
+-        }
+-
+-        if (Loader.instance().getFMLBrandingProperties().containsKey("snooperbranding"))
+-        {
+-            modNames.add(Loader.instance().getFMLBrandingProperties().get("snooperbranding"));
+-        }
++        modNames.add("Mohist");
+         return Joiner.on(',').join(modNames);
+     }
+ 
