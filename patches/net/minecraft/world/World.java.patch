@@ -895,7 +895,7 @@
                      this.addedTileEntityList.add(tileEntityIn);
                  }
                  else
-@@ -2501,7 +2843,7 @@
+@@ -2500,7 +2842,7 @@
      public boolean isBlockNormalCube(BlockPos pos, boolean _default)
      {
          if (this.isOutsideBuildHeight(pos))
@@ -904,7 +904,7 @@
              return false;
          }
          else
-@@ -2658,6 +3000,11 @@
+@@ -2657,6 +2999,11 @@
                  }
  
                  this.rainingStrength = MathHelper.clamp(this.rainingStrength, 0.0F, 1.0F);
@@ -916,7 +916,7 @@
              }
          }
      }
-@@ -2847,8 +3194,11 @@
+@@ -2846,8 +3193,11 @@
  
      public boolean checkLightFor(EnumSkyBlock lightType, BlockPos pos)
      {
@@ -929,7 +929,7 @@
              return false;
          }
          else
-@@ -3029,16 +3379,19 @@
+@@ -3028,16 +3378,19 @@
          return list;
      }
  
@@ -955,7 +955,7 @@
          }
  
          return list;
-@@ -3138,7 +3491,19 @@
+@@ -3137,7 +3490,19 @@
  
          for (Entity entity4 : this.loadedEntityList)
          {
@@ -976,7 +976,7 @@
              {
                  ++j2;
              }
-@@ -3153,6 +3518,9 @@
+@@ -3152,6 +3517,9 @@
          {
              if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.EntityJoinWorldEvent(entity4, this)))
              {
@@ -986,7 +986,7 @@
                  loadedEntityList.add(entity4);
                  this.onEntityAdded(entity4);
              }
-@@ -3169,19 +3537,24 @@
+@@ -3168,19 +3536,24 @@
          IBlockState iblockstate1 = this.getBlockState(pos);
          AxisAlignedBB axisalignedbb = skipCollisionCheck ? null : blockIn.getDefaultState().getCollisionBoundingBox(this, pos);
  
@@ -1014,7 +1014,7 @@
      }
  
      public int getSeaLevel()
-@@ -3346,6 +3719,12 @@
+@@ -3345,6 +3718,12 @@
          {
              EntityPlayer entityplayer1 = this.playerEntities.get(j2);
  
@@ -1027,7 +1027,7 @@
              if (p_190525_9_.apply(entityplayer1))
              {
                  double d1 = entityplayer1.getDistanceSq(x, y, z);
-@@ -3367,8 +3746,7 @@
+@@ -3366,8 +3745,7 @@
          {
              EntityPlayer entityplayer = this.playerEntities.get(j2);
  
@@ -1037,7 +1037,7 @@
                  double d0 = entityplayer.getDistanceSq(x, y, z);
  
                  if (range < 0.0D || d0 < range * range)
-@@ -3593,6 +3971,16 @@
+@@ -3592,6 +3970,16 @@
      {
      }
  
@@ -1054,7 +1054,7 @@
      public float getThunderStrength(float delta)
      {
          return (this.prevThunderingStrength + (this.thunderingStrength - this.prevThunderingStrength) * delta) * this.getRainStrength(delta);
-@@ -3880,8 +4268,8 @@
+@@ -3879,8 +4267,8 @@
          BlockPos blockpos1 = this.getSpawnPoint();
          int j2 = x * 16 + 8 - blockpos1.getX();
          int k2 = z * 16 + 8 - blockpos1.getZ();
