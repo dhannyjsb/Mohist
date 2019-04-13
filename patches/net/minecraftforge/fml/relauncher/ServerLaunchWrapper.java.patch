@@ -1,16 +1,21 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,32 +19,24 @@
+@@ -19,32 +19,29 @@
  
  package net.minecraftforge.fml.relauncher;
  
-+import cn.pfcraft.i18n.Message;
-+
- import java.lang.reflect.Method;
- 
--import org.apache.logging.log4j.LogManager;
--import org.apache.logging.log4j.core.LoggerContext;
+-import java.lang.reflect.Method;
 -
++import cn.pfcraft.Mohist;
++import cn.pfcraft.down.DownloadLibraries;
++import cn.pfcraft.down.DownloadServer;
++import cn.pfcraft.i18n.Message;
+ import org.apache.logging.log4j.LogManager;
+-import org.apache.logging.log4j.core.LoggerContext;
+ 
++import java.io.IOException;
++import java.lang.reflect.Method;
++
  public class ServerLaunchWrapper {
  
 -    /**
@@ -38,17 +43,27 @@
          }
          Class<?> launchwrapper = null;
          try
-@@ -54,8 +46,7 @@
+@@ -54,11 +51,16 @@
          }
          catch (Exception e)
          {
 -            System.err.printf("We appear to be missing one or more essential library files.\n" +
 -            		"You will need to add them to your server before FML and Forge will run successfully.");
-+            System.err.printf(Message.getString(Message.Not_Have_Library_1) + Message.getString(Message.Not_Have_Library_2));
++            System.out.println(Message.getString(Message.Not_Have_Library));
++            System.out.println(Message.getString(Message.Dw_Start));
              e.printStackTrace(System.err);
-             System.exit(1);
+-            System.exit(1);
++            Thread t = new Thread(new DownloadServer(),"Server Download Thread");
++            Thread t1 = new Thread(new DownloadLibraries(),"Server Libraries Thread");
++            t.start();
++            t1.start();
          }
-@@ -71,7 +62,7 @@
++        Mohist.LOGGER = LogManager.getLogger("Mohist");
++        Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
+ 
+         try
+         {
+@@ -71,7 +73,7 @@
          }
          catch (Exception e)
          {

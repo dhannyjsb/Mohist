@@ -10,7 +10,7 @@ public class Mohist implements Runnable{
 	private static final String name = "Mohist";
 	private static final String version = "0.0.5c";
 	private static final String native_verson = "v1_12_R1";
-	public static final Logger LOGGER = LogManager.getLogger("Mohist");
+	public static Logger LOGGER;
 	private static final String bukkit_version = "1.12.2-R0.1-SNAPSHOT";
 	private static String[] args;
 
@@ -38,7 +38,7 @@ public class Mohist implements Runnable{
 
 	@Override
 	public void run() {
-		LOGGER.info(Message.getString(Message.Mohist_Start));
+
 		new ServerLaunchWrapper().run(args);
 	}
 }

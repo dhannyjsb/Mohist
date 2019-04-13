@@ -8,8 +8,18 @@ public enum Message {
     Mohist_Start("mohist.start"),
     Mohsit_Server_Start("mohist.server.start"),
     Mohist_Start_Error("mohist.start.error"),
-    Not_Have_Library_1("mohist.start.error.nothavelibrary.1"),
-    Not_Have_Library_2("mohist.start.error.nothavelibrary.2"),
+    Not_Have_Library("mohist.start.error.nothavelibrary"),
+
+    Dw_File("file.download"),
+    Dw_Start("file.download.start"),
+    Dw_Now("file.download.now"),
+    Dw_Ok("file.download.ok"),
+
+
+    UnZip_Start("file.unzip.start"),
+    UnZip_Now("file.unzip.now"),
+    UnZip_Ok("file.unzip.ok"),
+
     Mohist_Load_Map("mohist.load.map"),
     Mohist_Load_Map_Spawn("mohist.load.map.spawn"),
     Mohisy_Stop("mohist.stop"),
@@ -38,6 +48,7 @@ public enum Message {
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
+
 
     public static String getString(Message key){
         return rb.getString(key.toString());
