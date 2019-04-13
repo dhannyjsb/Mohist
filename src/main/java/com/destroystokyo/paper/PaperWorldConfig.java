@@ -433,7 +433,7 @@ public class PaperWorldConfig
 
     private void fitlerNBTFromSpawnEgg() {
         if (!(this.filterNBTFromSpawnEgg = this.getBoolean("filter-nbt-data-from-spawn-eggs-and-related", true))) {
-            Bukkit.getLogger1().warn("Spawn Egg and Armor Stand NBT filtering disabled, this is a potential security risk");
+            Mohist.LOGGER.warn("Spawn Egg and Armor Stand NBT filtering disabled, this is a potential security risk");
         }
     }
 

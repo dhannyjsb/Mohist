@@ -1,5 +1,6 @@
 package com.destroystokyo.paper;
 
+import cn.pfcraft.Mohist;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import net.minecraft.server.MinecraftServer;
@@ -65,7 +66,7 @@ public class PaperConfig
         }
         catch (IOException ex2) {}
         catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger1().error( "Could not load paper.yml, please correct your syntax errors", ex);
+            Mohist.LOGGER.error( "Could not load paper.yml, please correct your syntax errors", ex);
             throw Throwables.propagate(ex);
         }
         PaperConfig.config.options().header("This is the main configuration file for Paper.\nAs you can see, there's tons to configure. Some options may impact gameplay, so use\nwith caution, and make sure you know what each option does before configuring.\n\nIf you need help with the configuration or have any questions related to Paper,\njoin us in our IRC channel.\n\nIRC: #paper @ irc.spi.gt ( http://irc.spi.gt/iris/?channels=paper )\nWiki: https://paper.readthedocs.org/ \nPaper Forums: https://aquifermc.org/ \n");
@@ -250,14 +251,14 @@ public class PaperConfig
 
     private static void savePlayerData() {
         if (!(PaperConfig.savePlayerData = getBoolean("settings.save-player-data", PaperConfig.savePlayerData))) {
-            Bukkit.getLogger1().warn( "Player Data Saving is currently disabled. Any changes to your players data, such as inventories, experience points, advancements and the like will not be saved when they log out.");
+            Mohist.LOGGER.warn( "Player Data Saving is currently disabled. Any changes to your players data, such as inventories, experience points, advancements and the like will not be saved when they log out.");
         }
     }
 
     private static void useAlternativeLuckFormula() {
         PaperConfig.useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", false);
         if (PaperConfig.useAlternativeLuckFormula) {
-            Bukkit.getLogger1().info( "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
+            Mohist.LOGGER.info( "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
         }
     }
 
