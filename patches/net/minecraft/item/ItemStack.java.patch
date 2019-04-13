@@ -63,30 +63,7 @@
      private NBTTagCompound stackTagCompound;
      private boolean isEmpty;
      int itemDamage;
-@@ -94,7 +102,21 @@
-     {
-         this(itemIn, amount, 0);
-     }
--
-+    // Paper start
-+    private static final java.util.Comparator<NBTTagCompound> enchantSorter = java.util.Comparator.comparingInt(o -> o.getShort("id"));
-+    private void processEnchantOrder(NBTTagCompound tag) {
-+        if (tag == null || !tag.hasKey("ench", 9)) {
-+            return;
-+        }
-+        NBTTagList list = tag.getTagList("ench", 10);
-+        if (list.tagCount() < 2) {
-+            return;
-+        }
-+        try {
-+            list.sort(enchantSorter); // Paper
-+        } catch (Exception ignored) {}
-+    }
-+    // Paper end
-     public ItemStack(Item itemIn, int amount, int meta){ this(itemIn, amount, meta, null); }
-     public ItemStack(Item itemIn, int amount, int meta, @Nullable NBTTagCompound capNBT)
-     {
-@@ -119,47 +141,50 @@
+@@ -119,47 +127,57 @@
  
      public ItemStack(NBTTagCompound compound)
      {
@@ -113,7 +90,6 @@
 +            // CraftBukkit start - make defensive copy as this data may be coming from the save thread
 +            // this.stackTagCompound = compound.getCompoundTag("tag");
 +            this.stackTagCompound = compound.getCompoundTag("tag").copy();
-+            processEnchantOrder(this.stackTagCompound); // Paper
              if (this.item != null)
              {
 -                this.item.updateItemStackNBT(compound);
@@ -128,28 +104,31 @@
  
      public boolean isEmpty()
      {
--        if (this == EMPTY)
+         if (this == EMPTY)
 -        {
-+        if (this == EMPTY) {
++		{
              return true;
--        }
+         }
 -        else if (this.getItemRaw() != null && this.getItemRaw() != Items.AIR)
 -        {
--            if (this.stackSize <= 0)
++		else if (this.getItemRaw() != null && this.getItemRaw() != Items.AIR)
++		{
+             if (this.stackSize <= 0)
 -            {
-+        } else if (this.getItemRaw() != null && this.getItemRaw() != Items.AIR) {
-+            if (this.stackSize <= 0) {
++			{
                  return true;
--            }
+             }
 -            else
 -            {
-+            } else {
++			else
++			{
                  return this.itemDamage < -32768 || this.itemDamage > 65535;
              }
--        }
+         }
 -        else
 -        {
-+        } else {
++		else
++		{
              return true;
          }
      }
@@ -157,7 +136,7 @@
  
      public static void registerFixes(DataFixer fixer)
      {
-@@ -185,10 +210,9 @@
+@@ -185,10 +203,9 @@
      {
          if (!worldIn.isRemote) return net.minecraftforge.common.ForgeHooks.onPlaceItemIntoWorld(this, playerIn, worldIn, pos, side, hitX, hitY, hitZ, hand);
          EnumActionResult enumactionresult = this.getItem().onItemUse(playerIn, worldIn, pos, hand, side, hitX, hitY, hitZ);
@@ -170,7 +149,7 @@
          }
  
          return enumactionresult;
-@@ -231,7 +255,8 @@
+@@ -231,7 +248,8 @@
  
          if (this.stackTagCompound != null)
          {
@@ -180,7 +159,7 @@
          }
  
          if (this.capabilities != null)
-@@ -291,6 +316,26 @@
+@@ -291,6 +309,26 @@
  
      public void setItemDamage(int meta)
      {
@@ -207,7 +186,7 @@
          getItem().setDamage(this, meta);
      }
  
-@@ -322,6 +367,18 @@
+@@ -322,6 +360,18 @@
  
                  amount -= j;
  
@@ -226,7 +205,7 @@
                  if (amount <= 0)
                  {
                      return false;
-@@ -347,6 +404,11 @@
+@@ -347,6 +397,11 @@
                  if (this.attemptDamageItem(amount, entityIn.getRNG(), entityIn instanceof EntityPlayerMP ? (EntityPlayerMP)entityIn : null))
                  {
                      entityIn.renderBrokenItemStack(this);
@@ -238,7 +217,7 @@
                      this.shrink(1);
  
                      if (entityIn instanceof EntityPlayer)
-@@ -592,9 +654,22 @@
+@@ -592,6 +647,18 @@
          return this.stackTagCompound != null ? this.stackTagCompound.getTagList("ench", 10) : new NBTTagList();
      }
  
@@ -257,19 +236,7 @@
      public void setTagCompound(@Nullable NBTTagCompound nbt)
      {
          this.stackTagCompound = nbt;
-+        processEnchantOrder(this.stackTagCompound); // Paper
-     }
- 
-     public String getDisplayName()
-@@ -931,6 +1006,7 @@
-         nbttagcompound.setShort("id", (short)Enchantment.getEnchantmentID(ench));
-         nbttagcompound.setShort("lvl", (short)((byte)level));
-         nbttaglist.appendTag(nbttagcompound);
-+        processEnchantOrder(nbttagcompound); // Paper
-     }
- 
-     public boolean isItemEnchanted()
-@@ -983,6 +1059,14 @@
+@@ -983,6 +1050,14 @@
  
      public void setRepairCost(int cost)
      {
@@ -284,7 +251,7 @@
          if (!this.hasTagCompound())
          {
              this.stackTagCompound = new NBTTagCompound();
-@@ -1043,6 +1127,14 @@
+@@ -1043,6 +1118,14 @@
          nbttaglist.appendTag(nbttagcompound);
      }
  
@@ -299,7 +266,7 @@
      public ITextComponent getTextComponent()
      {
          TextComponentString textcomponentstring = new TextComponentString(this.getDisplayName());
-@@ -1280,4 +1372,16 @@
+@@ -1280,4 +1363,16 @@
      {
          return this.isEmpty() || this.getItem().doesSneakBypassUse(this, world, pos, player);
      }

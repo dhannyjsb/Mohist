@@ -562,10 +562,6 @@ public final class Bukkit {
         return server.getLogger();
     }
 
-    public static org.apache.logging.log4j.Logger getLogger1() {
-        return Mohist.LOGGER;
-    }
-
     /**
      * Gets a {@link PluginCommand} with the given name or alias.
      *
@@ -1150,14 +1146,14 @@ public final class Bukkit {
     }
 
     // Paper start
-    /**
-      * Gets the current server TPS
-      * @return current server TPS (1m, 5m, 15m in Paper-Server)
-      */
+	/**
+     * Gets the current server TPS
+     * @return current server TPS (1m, 5m, 15m in Paper-Server)
+     */
     public static double[] getTPS() {
         return server.getTPS();
     }
-// Paper end
+	// Paper end
     
     /**
      * Get the advancement specified by this key.

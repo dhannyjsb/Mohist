@@ -1561,59 +1561,12 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    public default <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data) { spawnParticle(particle, null, null, x, y, z, count, offsetX, offsetY, offsetZ, extra, data, true); }// Paper start - Expand Particle API
-    /**
-    * Spawns the particle (the number of times specified by count)
-    * at the target location. The position of each particle will be
-    * randomized positively and negatively by the offset parameters
-    * on each axis.
-    *
-    * @param particle the particle to spawn
-    * @param receivers List of players to receive the particles, or null for all in world
-    * @param source Source of the particles to be used in visibility checks, or null if no player source
-    * @param x the position on the x axis to spawn at
-    * @param y the position on the y axis to spawn at
-    * @param z the position on the z axis to spawn at
-    * @param count the number of particles
-    * @param offsetX the maximum random offset on the X axis
-    * @param offsetY the maximum random offset on the Y axis
-    * @param offsetZ the maximum random offset on the Z axis
-    * @param extra the extra data for this particle, depends on the
-    *              particle used (normally speed)
-    * @param data the data to use for the particle or null,
-    *             the type of this depends on {@link Particle#getDataType()}
-    * @param <T> Type
-    */
-    public default <T> void spawnParticle(Particle particle, List<Player> receivers, Player source, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data) { spawnParticle(particle, receivers, source, x, y, z, count, offsetX, offsetY, offsetZ, extra, data, true); }
-    /**
-    * Spawns the particle (the number of times specified by count)
-    * at the target location. The position of each particle will be
-    * randomized positively and negatively by the offset parameters
-    * on each axis.
-    *
-    * @param particle the particle to spawn
-    * @param receivers List of players to receive the particles, or null for all in world
-    * @param source Source of the particles to be used in visibility checks, or null if no player source
-    * @param x the position on the x axis to spawn at
-    * @param y the position on the y axis to spawn at
-    * @param z the position on the z axis to spawn at
-    * @param count the number of particles
-    * @param offsetX the maximum random offset on the X axis
-    * @param offsetY the maximum random offset on the Y axis
-    * @param offsetZ the maximum random offset on the Z axis
-    * @param extra the extra data for this particle, depends on the
-    *              particle used (normally speed)
-    * @param data the data to use for the particle or null,
-    *             the type of this depends on {@link Particle#getDataType()}
-    * @param <T> Type
-    * @param force allows the particle to be seen further away from the player
-    *              and shows to players using any vanilla client particle settings
-    */
-    public <T> void spawnParticle(Particle particle, List<Player> receivers, Player source, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data, boolean force);
-    // Paper end
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
+
     // Spigot start
     public class Spigot
     {
+
         /**
          * Plays an effect to all players within a default radius around a given
          * location.
@@ -1660,12 +1613,12 @@ public interface World extends PluginMessageRecipient, Metadatable {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
 		
-		public LightningStrike strikeLightningEffect(Location loc, boolean isSilent)
+		public LightningStrike strikeLightning(Location loc, boolean isSilent)
         {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
 		
-		public LightningStrike strikeLightning(Location loc, boolean isSilent)
+		public LightningStrike strikeLightningEffect(Location loc, boolean isSilent)
         {
             throw new UnsupportedOperationException( "Not supported yet." );
         }

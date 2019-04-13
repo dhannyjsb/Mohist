@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.map;
 
+import cn.pfcraft.Mohist;
 import net.minecraft.world.storage.MapData;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -141,7 +142,7 @@ public final class CraftMapView implements MapView {
             try {
                 renderer.render(this, canvas, player);
             } catch (Throwable ex) {
-                Bukkit.getLogger1().error("Could not render map using renderer " + renderer.getClass().getName(), ex);
+                Mohist.LOGGER.error("Could not render map using renderer " + renderer.getClass().getName(), ex);
             }
 
             byte[] buf = canvas.getBuffer();

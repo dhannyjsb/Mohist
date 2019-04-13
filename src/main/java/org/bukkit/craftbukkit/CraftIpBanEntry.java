@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit;
 
+import cn.pfcraft.Mohist;
 import net.minecraft.server.management.UserListIPBans;
 import net.minecraft.server.management.UserListIPBansEntry;
 import org.bukkit.Bukkit;
@@ -80,7 +81,7 @@ public final class CraftIpBanEntry implements org.bukkit.BanEntry {
         try {
             this.list.writeChanges();
         } catch (IOException ex) {
-            Bukkit.getLogger1().error("Failed to save banned-ips.json, {0}", ex.getMessage());
+            Mohist.LOGGER.error("Failed to save banned-ips.json, {0}", ex.getMessage());
         }
     }
 }

@@ -20,7 +20,7 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.crash.ICrashReportDetail;
-@@ -21,13 +8,21 @@
+@@ -21,11 +8,19 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -34,13 +34,19 @@
 +
  public class NBTTagCompound extends NBTBase
  {
-     private static final Logger LOGGER = LogManager.getLogger();
+-    private static final Logger LOGGER = LogManager.getLogger();
++	private static final Logger LOGGER = LogManager.getLogger();
      private static final Pattern SIMPLE_VALUE = Pattern.compile("[A-Za-z0-9._+-]+");
 -    private final Map<String, NBTBase> tagMap = Maps.<String, NBTBase>newHashMap();
-+    public final Map<String, NBTBase> tagMap = new ConcurrentHashMap<>(); // Paper
++    private final Map<String, NBTBase> tagMap = new HashMap<>();
  
--    void write(DataOutput output) throws IOException
-+    public void write(DataOutput output) throws IOException
+     void write(DataOutput output) throws IOException
      {
-         for (String s : this.tagMap.keySet())
-         {
+@@ -82,7 +77,6 @@
+ 
+     public void setTag(String key, NBTBase value)
+     {
+-        if (value == null) throw new IllegalArgumentException("Invalid null NBT value with key " + key);
+         this.tagMap.put(key, value);
+     }
+ 

@@ -1,5 +1,6 @@
 package org.bukkit.configuration.file;
 
+import cn.pfcraft.Mohist;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
@@ -177,9 +178,9 @@ public class YamlConfiguration extends FileConfiguration {
             config.load(file);
         } catch (FileNotFoundException ex) {
         } catch (IOException ex) {
-            Bukkit.getLogger1().error( "Cannot load " + file, ex);
+            Mohist.LOGGER.error( "Cannot load " + file, ex);
         } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger1().error( "Cannot load " + file, ex);
+            Mohist.LOGGER.error( "Cannot load " + file, ex);
         }
 
         return config;
@@ -204,9 +205,9 @@ public class YamlConfiguration extends FileConfiguration {
         try {
             config.load(reader);
         } catch (IOException ex) {
-            Bukkit.getLogger1().error( "Cannot load configuration from stream", ex);
+            Mohist.LOGGER.error( "Cannot load configuration from stream", ex);
         } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger1().error( "Cannot load configuration from stream", ex);
+            Mohist.LOGGER.error( "Cannot load configuration from stream", ex);
         }
 
         return config;

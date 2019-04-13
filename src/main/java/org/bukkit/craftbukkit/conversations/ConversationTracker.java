@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.conversations;
 
+import cn.pfcraft.Mohist;
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -48,7 +49,7 @@ public class ConversationTracker {
             try {
                 conversation.abandon(new ConversationAbandonedEvent(conversation, new ManuallyAbandonedConversationCanceller()));
             } catch (Throwable t) {
-                Bukkit.getLogger1().error("Unexpected exception while abandoning a conversation", t);
+                Mohist.LOGGER.error("Unexpected exception while abandoning a conversation", t);
             }
         }
     }

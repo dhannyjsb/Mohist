@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.base64.Base64;
+import jline.console.ConsoleReader;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -151,7 +152,6 @@ public final class CraftServer implements Server {
     private boolean unrestrictedSignCommands; // Paper
     private final List<CraftPlayer> playerView;
     public int reloadCount;
-    public static Exception excessiveVelEx; // Paper - Velocity warnings
 
     public CraftSimpleCommandMap getCraftCommandMap() {
         return this.craftCommandMap;
@@ -185,6 +185,9 @@ public final class CraftServer implements Server {
         Potion.setPotionBrewer(new CraftPotionBrewer());
         MobEffects.BLINDNESS.getClass();
         // Ugly hack :(
+        if (!Main.useConsole) {
+            getLogger().info("Console input is disabled due to --noconsole command argument");
+        }
 
         configuration = YamlConfiguration.loadConfiguration(getConfigFile());
         configuration.options().copyDefaults(true);
@@ -287,7 +290,7 @@ public final class CraftServer implements Server {
             for (Plugin plugin : plugins) {
                 try {
                     String message = String.format("Loading %s", plugin.getDescription().getFullName());
-                    Bukkit.getLogger1().info(message);
+                    Mohist.LOGGER.info(message);
                     plugin.onLoad();
                 } catch (Throwable ex) {
                    LogManager.getLogger(CraftServer.class.getName()).error(ex.getMessage() + " initializing " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
@@ -760,7 +763,7 @@ public final class CraftServer implements Server {
         Map<String, Map<String, Object>> perms;
 
         try {
-            perms = yaml.load(stream);
+            perms = (Map<String, Map<String, Object>>) yaml.load(stream);
         } catch (MarkedYAMLException ex) {
             Mohist.LOGGER.warn( "Server permissions file " + file + " is not valid YAML: " + ex.toString());
             return;
@@ -770,7 +773,9 @@ public final class CraftServer implements Server {
         } finally {
             try {
                 stream.close();
-            } catch (IOException ex) {}
+            } catch (IOException ex) {
+			
+			}
         }
 
         if (perms == null) {
@@ -953,6 +958,10 @@ public final class CraftServer implements Server {
     @Override
     public Logger getLogger() {
         return logger;
+    }
+	
+	public ConsoleReader getReader() {
+        return console.reader;
     }
 
     @Override

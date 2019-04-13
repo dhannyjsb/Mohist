@@ -27,10 +27,10 @@ public class CraftBlockState implements BlockState {
     private final int x;
     private final int y;
     private final int z;
+    private final NBTTagCompound nbt;
     protected int type;
     protected MaterialData data;
     protected int flag;
-    private final NBTTagCompound nbt;
 
     public CraftBlockState(final Block block) {
         this.world = (CraftWorld) block.getWorld();
@@ -50,6 +50,19 @@ public class CraftBlockState implements BlockState {
         }
         else nbt = null;
     }
+	
+	public CraftBlockState(final Block block, int flag) {
+        this(block);
+        this.flag = flag;
+    }
+
+    public CraftBlockState(Material material) {
+        world = null;
+        type = material.getId();
+        chunk = null;
+        x = y = z = 0;
+        this.nbt = null;
+    }
 
     public CraftBlockState(BlockSnapshot blocksnapshot)
     {
@@ -65,18 +78,7 @@ public class CraftBlockState implements BlockState {
         this.createData((byte) blocksnapshot.getMeta());
     }
 
-    public CraftBlockState(final Block block, int flag) {
-        this(block);
-        this.flag = flag;
-    }
 
-    public CraftBlockState(Material material) {
-        world = null;
-        type = material.getId();
-        chunk = null;
-        x = y = z = 0;
-        this.nbt = null;
-    }
 
     public static CraftBlockState getBlockState(net.minecraft.world.World world, int x, int y, int z) {
         return new CraftBlockState(world.getWorld().getBlockAt(x, y, z));

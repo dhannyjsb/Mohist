@@ -35,7 +35,7 @@ public class SpigotWorldConfig
     {
         if ( verbose )
         {
-			LogManager.getLogger("Spigot").info(s);
+			Bukkit.getLogger().info( s );
         }
     }
 

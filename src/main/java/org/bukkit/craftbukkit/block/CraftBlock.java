@@ -6,6 +6,7 @@ import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -353,7 +354,7 @@ public class CraftBlock implements Block {
             return new CraftBed(this);
         default:
             TileEntity tileEntity = chunk.getCraftWorld().getTileEntityAt(x, y, z);
-            if (tileEntity != null) {
+            if (tileEntity != null && tileEntity instanceof IInventory) {
                 // block with unhandled TileEntity:
                 return new CraftBlockEntityState<TileEntity>(this, (Class<TileEntity>) tileEntity.getClass());
             } else {

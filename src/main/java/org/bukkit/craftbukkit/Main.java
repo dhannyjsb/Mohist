@@ -4,6 +4,7 @@ import cn.pfcraft.Mohist;
 import cn.pfcraft.i18n.Message;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.apache.logging.log4j.LogManager;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
@@ -18,6 +19,7 @@ public class Main {
     public static boolean useJline = true;
     public static boolean useConsole = true;
     public static OptionSet main(String[] args) {
+        Mohist.LOGGER = LogManager.getLogger("Mohist");
         // Todo: Installation script
         OptionParser parser = new OptionParser() {
             {

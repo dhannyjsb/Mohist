@@ -211,7 +211,6 @@ public final class JavaPluginLoader implements PluginLoader {
         Validate.notNull(plugin, "Plugin can not be null");
         Validate.notNull(listener, "Listener can not be null");
 
-        boolean useTimings = server.getPluginManager().useTimings();
         Map<Class<? extends Event>, Set<RegisteredListener>> ret = new HashMap<Class<? extends Event>, Set<RegisteredListener>>();
         Set<Method> methods;
         try {
@@ -225,7 +224,7 @@ public final class JavaPluginLoader implements PluginLoader {
                 methods.add(method);
             }
         } catch (NoClassDefFoundError e) {
-            Bukkit.getLogger1().error("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
+            Mohist.LOGGER.error("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
             return ret;
         }
 
@@ -239,7 +238,7 @@ public final class JavaPluginLoader implements PluginLoader {
             }
             final Class<?> checkClass;
             if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) {
-                Bukkit.getLogger1().error(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
+                Mohist.LOGGER.error(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
                 continue;
             }
             final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
@@ -258,7 +257,7 @@ public final class JavaPluginLoader implements PluginLoader {
                     if (!warningState.printFor(warning)) {
                         break;
                     }
-                    Bukkit.getLogger1().warn(String.format(
+                    Mohist.LOGGER.warn(String.format(
                                     "\"%s\" has registered a listener for %s on method \"%s\", but the event is Deprecated." +
                                     " \"%s\"; please notify the authors %s.",
                                     plugin.getDescription().getFullName(),
@@ -285,11 +284,6 @@ public final class JavaPluginLoader implements PluginLoader {
                     }
                 }
             };
-            if (useTimings) {
-                eventSet.add(new TimedRegisteredListener(listener, executor, eh.priority(), plugin, eh.ignoreCancelled()));
-            } else {
-                eventSet.add(new RegisteredListener(listener, executor, eh.priority(), plugin, eh.ignoreCancelled()));
-            }
         }
         return ret;
     }
@@ -298,7 +292,7 @@ public final class JavaPluginLoader implements PluginLoader {
         Validate.isTrue(plugin instanceof JavaPlugin, "Plugin is not associated with this PluginLoader");
 
         if (!plugin.isEnabled()) {
-            Bukkit.getLogger1().info("Enabling " + plugin.getDescription().getFullName());
+            Mohist.LOGGER.info("Enabling " + plugin.getDescription().getFullName());
 
             JavaPlugin jPlugin = (JavaPlugin) plugin;
 
@@ -336,7 +330,7 @@ public final class JavaPluginLoader implements PluginLoader {
 
         if (plugin.isEnabled()) {
             String message = String.format("Disabling %s", plugin.getDescription().getFullName());
-            Bukkit.getLogger1().info(message);
+            Mohist.LOGGER.info(message);
 
             server.getPluginManager().callEvent(new PluginDisableEvent(plugin));
 

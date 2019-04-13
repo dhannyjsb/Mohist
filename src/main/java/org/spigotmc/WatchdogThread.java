@@ -84,19 +84,6 @@ public class WatchdogThread extends Thread
                     log.error( "During the run of the server, a physics stackoverflow was supressed" );
                     log.error( "near " + net.minecraft.world.World.blockLocation);
                 }
-                // Paper start - Warn in watchdog if an excessive velocity was ever set
-                if ( org.bukkit.craftbukkit.CraftServer.excessiveVelEx != null )
-                {
-                    log.error( "------------------------------" );
-                    log.error( "During the run of the server, a plugin set an excessive velocity on an entity" );
-                    log.error( "This may be the cause of the issue, or it may be entirely unrelated" );
-                    log.error( org.bukkit.craftbukkit.CraftServer.excessiveVelEx.getMessage());
-                    for ( StackTraceElement stack : org.bukkit.craftbukkit.CraftServer.excessiveVelEx.getStackTrace() )
-                    {
-                        log.error( "\t\t" + stack );
-                    }
-                }
-                // Paper end
                 } else
                     {
                         log.error( "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH ---");

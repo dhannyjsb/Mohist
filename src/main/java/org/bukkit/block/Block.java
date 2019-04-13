@@ -135,9 +135,6 @@ public interface Block extends Metadatable {
      */
     int getZ();
 
-    public default long getBlockKey() {
-        return ((long)getX() & 0x7FFFFFF) | (((long)getZ() & 0x7FFFFFF) << 27) | ((long)getY() << 54);
-    }
     /**
      * Gets the Location of the block
      *
@@ -258,6 +255,7 @@ public interface Block extends Metadatable {
      * @return BlockState with the current state of this block.
      */
     BlockState getState();
+
     /**
      * Returns the biome that this block resides in
      *

@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.util;
 
+import cn.pfcraft.Mohist;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -160,7 +161,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
                 try {
                     Files.write(advancement, file, Charsets.UTF_8);
                 } catch (IOException ex) {
-                    Bukkit.getLogger1().error( "Error saving advancement " + key, ex);
+                    Mohist.LOGGER.error( "Error saving advancement " + key, ex);
                 }
 
                 MinecraftServer.getServerInst().getPlayerList().reloadResources();

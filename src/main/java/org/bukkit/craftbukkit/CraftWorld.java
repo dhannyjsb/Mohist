@@ -671,7 +671,6 @@ public class CraftWorld implements World {
         for (Object o : world.loadedEntityList) {
             if (o instanceof net.minecraft.entity.Entity) {
                 net.minecraft.entity.Entity mcEnt = (net.minecraft.entity.Entity) o;
-                if (mcEnt.shouldBeRemoved) continue; // Paper
                 Entity bukkitEntity = mcEnt.getBukkitEntity();
 
                 // Assuming that bukkitEntity isn't null
@@ -690,7 +689,6 @@ public class CraftWorld implements World {
         for (Object o : world.loadedEntityList) {
             if (o instanceof net.minecraft.entity.Entity) {
                 net.minecraft.entity.Entity mcEnt = (net.minecraft.entity.Entity) o;
-                if (mcEnt.shouldBeRemoved) continue; // Paper
                 Entity bukkitEntity = mcEnt.getBukkitEntity();
 
                 // Assuming that bukkitEntity isn't null
@@ -715,7 +713,6 @@ public class CraftWorld implements World {
 
         for (Object entity: world.loadedEntityList) {
             if (entity instanceof net.minecraft.entity.Entity) {
-                if (((net.minecraft.entity.Entity) entity).shouldBeRemoved) continue; // Paper
                 Entity bukkitEntity = ((net.minecraft.entity.Entity) entity).getBukkitEntity();
 
                 if (bukkitEntity == null) {
@@ -738,7 +735,6 @@ public class CraftWorld implements World {
 
         for (Object entity: world.loadedEntityList) {
             if (entity instanceof net.minecraft.entity.Entity) {
-                if (((net.minecraft.entity.Entity) entity).shouldBeRemoved) continue; // Paper
                 Entity bukkitEntity = ((net.minecraft.entity.Entity) entity).getBukkitEntity();
 
                 if (bukkitEntity == null) {
@@ -1311,9 +1307,8 @@ public class CraftWorld implements World {
         int chunkCoordX = chunkcoordinates.getX() >> 4;
         int chunkCoordZ = chunkcoordinates.getZ() >> 4;
         // Cycle through the 25x25 Chunks around it to load/unload the chunks.
-        int radius = world.paperConfig.keepLoadedRange / 16; // Paper
-        for (int x = -radius; x <= radius; x++) { // Paper
-            for (int z = -radius; z <= radius; z++) { // Paper
+        for (int x = -12; x <= 12; x++) {
+            for (int z = -12; z <= 12; z++) {
                 if (keepLoaded) {
                     loadChunk(chunkCoordX + x, chunkCoordZ + z);
                 } else {
@@ -1571,18 +1566,15 @@ public class CraftWorld implements World {
         spawnParticle(particle, location.getX(), location.getY(), location.getZ(), count, offsetX, offsetY, offsetZ, extra, data);
     }
 
-    // Paper start - Particle API Expansion
     @Override
-    public <T> void spawnParticle(Particle particle, List<Player> receivers, Player sender, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data, boolean force) {
-        // Paper end
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data) {
         if (data != null && !particle.getDataType().isInstance(data)) {
             throw new IllegalArgumentException("data should be " + particle.getDataType() + " got " + data.getClass());
         }
         getHandle().sendParticles(
-                receivers == null ? getHandle().playerEntities : receivers.stream().map(player -> ((CraftPlayer) player).getHandle()).collect(java.util.stream.Collectors.toList()), // Paper -  Particle API Expansion
-                sender != null ? ((CraftPlayer) sender).getHandle() : null, // Sender // Paper - Particle API Expansion
+                null, // Sender
                 CraftParticle.toNMS(particle), // Particle
-                force , // Extended range // Paper - Particle API Expansion
+                true, // Extended range
                 x, y, z, // Position
                 count,  // Count
                 offsetX, offsetY, offsetZ, // Random offset

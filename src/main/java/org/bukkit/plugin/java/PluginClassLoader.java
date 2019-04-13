@@ -1,5 +1,6 @@
 package org.bukkit.plugin.java;
 
+import cn.pfcraft.Mohist;
 import com.google.common.io.ByteStreams;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -49,14 +50,14 @@ final class PluginClassLoader extends URLClassLoader {
                 method.setAccessible( true );
                 method.invoke( null );
                 method.setAccessible( oldAccessible );
-                Bukkit.getLogger1().info( "Set PluginClassLoader as parallel capable" );
+                Mohist.LOGGER.info( "Set PluginClassLoader as parallel capable" );
             }
         } catch ( NoSuchMethodException ex )
         {
             // Ignore
         } catch ( Exception ex )
         {
-            Bukkit.getLogger1().warn("Error setting PluginClassLoader as parallel capable", ex );
+            Mohist.LOGGER.warn("Error setting PluginClassLoader as parallel capable", ex );
         }
     }
     // Spigot End

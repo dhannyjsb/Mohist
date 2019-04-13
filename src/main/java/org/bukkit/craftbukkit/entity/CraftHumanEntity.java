@@ -411,7 +411,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     @Override
-    public void closeInventory(final InventoryCloseEvent.Reason reason) {
+    public void closeInventory(InventoryCloseEvent.Reason reason) {
         this.getHandle().closeScreen(reason);
     }
 
