@@ -45,6 +45,29 @@ public enum Message {
     bungeecord("message.bungeecord"),
     disconnect_flying("disconnect.flying"),
     disconnect_duplicate_login("disconnect.duplicate_login");
+    
+    crash_mc_version("crash.mc.version"),
+    crash_system("crash.system"),
+    crash_version("crash.version"),
+    crash_java_version("crash.java.version"),
+    crash_jvm_version("crash.jvm.version"),
+    crash_Memory("crash.memory"),
+    mohist_bytes("mohist.bytes"),
+    crash_jvm_flags("crash.jvm.flags"),
+    crash_craftbukkit_info("crash.craftbukkit.info"),
+    crash_thread("crash.thread"),
+    crash_Stacktrace("crash.stacktrace"),
+    crash_mc_report("crash.mc.report"),
+    crash_msg("crash.msg"),
+    crash_save_error("crash.save.error"),
+    crash_Negative_index("crash.negative.index"),
+
+    other_upto("other.upto"),
+    other_total("other.total"),
+    other_IntCache("other.intcache"),
+    other_head("other.head"),
+    other_time("other.time"),
+    other_Description("other.description"),
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
