@@ -3,7 +3,6 @@ package org.bukkit.plugin.java;
 import cn.pfcraft.Mohist;
 import com.google.common.io.ByteStreams;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 

@@ -56,14 +56,7 @@
      public int findChunksForSpawning(WorldServer worldServerIn, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate)
      {
          if (!spawnHostileMobs && !spawnPeacefulMobs)
-@@ -40,17 +58,29 @@
- 
-             for (EntityPlayer entityplayer : worldServerIn.playerEntities)
-             {
--                if (!entityplayer.isSpectator())
-+                if (!entityplayer.isSpectator() && entityplayer.affectsSpawning)
-                 {
-                     int j = MathHelper.floor(entityplayer.posX / 16.0D);
+@@ -46,11 +64,14 @@
                      int k = MathHelper.floor(entityplayer.posZ / 16.0D);
                      int l = 8;
  
@@ -76,15 +69,6 @@
 +                    byte b0 = worldServerIn.spigotConfig.mobSpawnRange;
 +                    b0 = ( b0 > worldServerIn.spigotConfig.viewDistance ) ? (byte) worldServerIn.spigotConfig.viewDistance : b0;
 +                    b0 = ( b0 > 8 ) ? 8 : b0;
-+                    // Paper start
-+                    com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent event;
-+                    event = new com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent(
-+                            (org.bukkit.entity.Player) entityplayer.getBukkitEntity(), b0);
-+                    if (!event.callEvent()) {
-+                        continue;
-+                    }
-+                    b0 = event.getSpawnRadius();
-+                    // Paperr end
 +                    for (int i1 = -b0; i1 <= b0; ++i1) {
 +                        for (int j1 = -b0; j1 <= b0; ++j1) {
 +                            boolean flag = i1 == -b0 || i1 == b0 || j1 == -b0 || j1 == b0;
@@ -92,7 +76,7 @@
                              ChunkPos chunkpos = new ChunkPos(i1 + j, j1 + k);
  
                              if (!this.eligibleChunksForSpawning.contains(chunkpos))
-@@ -77,20 +107,40 @@
+@@ -77,20 +98,43 @@
  
              for (EnumCreatureType enumcreaturetype : EnumCreatureType.values())
              {
@@ -122,9 +106,11 @@
                  {
 -                    int k4 = worldServerIn.countEntities(enumcreaturetype, true);
 -                    int l4 = enumcreaturetype.getMaxNumberOfCreature() * i / MOB_COUNT_DIV;
--
++                    int k4 = worldServerIn.countEntities(enumcreaturetype.getCreatureClass());
++                    int l4 = limit * i / MOB_COUNT_DIV; // CraftBukkit - use per-world limits
+ 
 -                    if (k4 <= l4)
-+                    if ((mobcnt = getEntityCount(worldServerIn, enumcreaturetype.getCreatureClass())) <= limit * i / 289) // Paper - use 17x17 like vanilla (a at top of file)
++                    if ((mobcnt = getEntityCount(worldServerIn, enumcreaturetype.getCreatureClass())) <= limit * i / 256)
                      {
 -                        java.util.ArrayList<ChunkPos> shuffled = com.google.common.collect.Lists.newArrayList(this.eligibleChunksForSpawning);
 -                        java.util.Collections.shuffle(shuffled);
@@ -140,33 +126,7 @@
                              BlockPos blockpos = getRandomChunkPosition(worldServerIn, chunkpos1.x, chunkpos1.z);
                              int k1 = blockpos.getX();
                              int l1 = blockpos.getY();
-@@ -134,6 +184,25 @@
- 
-                                             if (worldServerIn.canCreatureTypeSpawnHere(enumcreaturetype, biome$spawnlistentry, blockpos$mutableblockpos) && canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(biome$spawnlistentry.entityClass), worldServerIn, blockpos$mutableblockpos))
-                                             {
-+                                                // Paper start
-+                                                com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent event;
-+                                                Class<? extends EntityLiving> cls = biome$spawnlistentry.entityClass;
-+                                                org.bukkit.entity.EntityType type = EntityList.clsToTypeMap.get(cls);
-+                                                if (type != null) {
-+                                                    event = new com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent(
-+                                                            new Location(worldServerIn.getWorld(), blockpos$mutableblockpos.getX(), blockpos$mutableblockpos.getY(), blockpos$mutableblockpos.getZ()),
-+                                                            type, CreatureSpawnEvent.SpawnReason.NATURAL
-+                                                    );
-+                                                    if (!event.callEvent()) {
-+                                                        if (event.shouldAbortSpawn()) {
-+                                                            continue;
-+                                                        }
-+                                                        j2 += l2;
-+                                                        ++j4;
-+                                                        continue;
-+                                                    }
-+                                                }
-+                                                // Paper end
-                                                 EntityLiving entityliving;
- 
-                                                 try
-@@ -156,15 +225,17 @@
+@@ -156,15 +200,17 @@
  
                                                      if (entityliving.isNotColliding())
                                                      {
@@ -187,7 +147,7 @@
                                                      {
                                                          continue label134;
                                                      }
-@@ -295,8 +366,11 @@
+@@ -295,8 +341,11 @@
  
                              if (net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(entityliving, worldIn, j + 0.5f, (float) blockpos.getY(), k +0.5f, false) == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY) continue;
                              entityliving.setLocationAndAngles((double)((float)j + 0.5F), (double)blockpos.getY(), (double)((float)k + 0.5F), randomIn.nextFloat() * 360.0F, 0.0F);

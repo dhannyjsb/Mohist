@@ -1,11 +1,9 @@
 package org.bukkit.entity;
 
-import com.destroystokyo.paper.entity.RangedEntity;
-
 /**
  * Represents a Skeleton.
  */
-public interface Skeleton extends Monster, RangedEntity { // Paper
+public interface Skeleton extends Monster {
 
     /**
      * Gets the current type of this skeleton.

@@ -65,7 +65,7 @@
      protected boolean processInteract(EntityPlayer player, EnumHand hand)
      {
          ItemStack itemstack = player.getHeldItem(hand);
-@@ -267,10 +282,21 @@
+@@ -267,10 +282,20 @@
          {
              boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this);
              float f = this.getPowered() ? 2.0F : 1.0F;
@@ -86,17 +86,12 @@
 +                this.spawnLingeringCloud();
 +            } else {
 +                timeSinceIgnited = 0;
-+                this.dataManager.set(IGNITED, Boolean.valueOf(false)); // Paper
 +            }
          }
      }
  
-@@ -278,9 +304,10 @@
-     {
-         Collection<PotionEffect> collection = this.getActivePotionEffects();
- 
--        if (!collection.isEmpty())
-+        if (!collection.isEmpty() && !world.paperConfig.disableCreeperLingeringEffect) // Paper
+@@ -281,6 +306,7 @@
+         if (!collection.isEmpty())
          {
              EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.world, this.posX, this.posY, this.posZ);
 +            entityareaeffectcloud.setOwner(this);

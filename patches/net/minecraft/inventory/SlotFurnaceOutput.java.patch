@@ -11,7 +11,7 @@
  
  public class SlotFurnaceOutput extends Slot
  {
-@@ -69,12 +72,26 @@
+@@ -69,6 +72,20 @@
  
                  i = j;
              }
@@ -32,10 +32,3 @@
  
              while (i > 0)
              {
-                 int k = EntityXPOrb.getXPSplit(i);
-                 i -= k;
--                this.player.world.spawnEntity(new EntityXPOrb(this.player.world, this.player.posX, this.player.posY + 0.5D, this.player.posZ + 0.5D, k));
-+                this.player.world.spawnEntity(new EntityXPOrb(this.player.world, this.player.posX, this.player.posY + 0.5D, this.player.posZ + 0.5D, k, org.bukkit.entity.ExperienceOrb.SpawnReason.FURNACE, player)); // Paper
-             }
-         }
- 

@@ -925,34 +925,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return GameMode.getByValue(getHandle().interactionManager.getGameType().getID());
     }
 
-    public int applyMending(int amount) {
-        EntityPlayerMP handle = getHandle();
-        // Logic copied from EntityExperienceOrb and remapped to unobfuscated methods/properties
-        ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, handle);
-        if (!itemstack.isEmpty() && itemstack.isItemDamaged()) {
-            EntityXPOrb orb = new EntityXPOrb(handle.world);
-            orb.xpValue = amount;
-            orb.spawnReason = org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM;
-            orb.posX = handle.posX;
-            orb.posY = handle.posY;
-            orb.posZ = handle.posZ;
-            int i = Math.min(orb.xpToDur(amount), itemstack.getItemDamage());
-            org.bukkit.event.player.PlayerItemMendEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerItemMendEvent(handle, orb, itemstack, i);
-            i = event.getRepairAmount();
-            orb.isDead = true;
-            if (!event.isCancelled()) {
-                amount -= orb.durToXp(i);
-                itemstack.setItemDamage(itemstack.getItemDamage() - i);
-            }
-        }
-        return amount;
-    }
-
     @Override
-    public void giveExp(int exp, boolean applyMending) {
-        if (applyMending) {
-            exp = this.applyMending(exp);
-        }
+    public void giveExp(int exp) {
         getHandle().addExperience(exp);
     }
 
@@ -1430,11 +1404,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         if (container.getBukkitView().getType() != prop.getType()) {
             return false;
         }
-        // Paper start
-        if (prop == Property.REPAIR_COST && container instanceof ContainerRepair) {
-            ((ContainerRepair) container).maximumCost = value;
-        }
-        // Paper end
         getHandle().sendWindowProperty(container, prop.getId(), value);
         return true;
     }
@@ -1451,13 +1420,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void setFlying(boolean value) {
-        boolean needsUpdate = getHandle().capabilities.isFlying != value; // Paper - Only refresh abilities if needed
         if (!getAllowFlight() && value) {
             throw new IllegalArgumentException("Cannot make player fly if getAllowFlight() is false");
         }
 
         getHandle().capabilities.isFlying = value;
-        if (needsUpdate) getHandle().sendPlayerAbilities(); // Paper - Only refresh abilities if needed
+        getHandle().sendPlayerAbilities();
     }
 
     @Override
@@ -1765,15 +1733,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         String locale = getHandle().language;
         return locale != null ? locale : "en_us";
         // Paper end
-    }
-
-    public void setAffectsSpawning(boolean affects) {
-        this.getHandle().affectsSpawning = affects;
-    }
-
-    @Override
-    public boolean getAffectsSpawning() {
-        return this.getHandle().affectsSpawning;
     }
 
     @Override

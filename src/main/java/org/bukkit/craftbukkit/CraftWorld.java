@@ -954,10 +954,6 @@ public class CraftWorld implements World {
         if (Boat.class.isAssignableFrom(clazz)) {
             entity = new EntityBoat(world, x, y, z);
             entity.setLocationAndAngles(x, y, z, yaw, pitch);
-            // Paper start
-        } else if (org.bukkit.entity.Item.class.isAssignableFrom(clazz)) {
-            entity = new EntityItem(world, x, y, z, new net.minecraft.item.ItemStack(net.minecraft.item.Item.getItemFromBlock(Blocks.DIRT)));
-            // Paper end
         } else if (FallingBlock.class.isAssignableFrom(clazz)) {
             entity = new EntityFallingBlock(world, x, y, z, world.getBlockState(new BlockPos(x, y, z)));
         } else if (Projectile.class.isAssignableFrom(clazz)) {
@@ -1223,7 +1219,7 @@ public class CraftWorld implements World {
         } else if (TNTPrimed.class.isAssignableFrom(clazz)) {
             entity = new EntityTNTPrimed(world, x, y, z, null);
         } else if (ExperienceOrb.class.isAssignableFrom(clazz)) {
-            entity = new EntityXPOrb(world, x, y, z, 0, org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM, null, null); // Paper
+            entity = new EntityXPOrb(world, x, y, z, 0);
         } else if (Weather.class.isAssignableFrom(clazz)) {
             // not sure what this can do
             if (LightningStrike.class.isAssignableFrom(clazz)) {

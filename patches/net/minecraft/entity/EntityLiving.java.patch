@@ -78,7 +78,7 @@
  public abstract class EntityLiving extends EntityLivingBase
  {
      private static final DataParameter<Byte> AI_FLAGS = EntityDataManager.<Byte>createKey(EntityLiving.class, DataSerializers.BYTE);
-@@ -68,22 +65,24 @@
+@@ -68,16 +65,16 @@
      protected EntityJumpHelper jumpHelper;
      private final EntityBodyHelper bodyHelper;
      protected PathNavigate navigator;
@@ -100,15 +100,7 @@
      private final Map<PathNodeType, Float> mapPathPriority = Maps.newEnumMap(PathNodeType.class);
      private ResourceLocation deathLootTable;
      private long deathLootTableSeed;
-     private boolean isLeashed;
-     private Entity leashHolder;
-     private NBTTagCompound leashNBTTag;
-+    @Nullable
-+    public EntityAISwimming goalFloat; // Paper
- 
-     public EntityLiving(World worldIn)
-     {
-@@ -96,6 +95,7 @@
+@@ -96,6 +93,7 @@
          this.bodyHelper = this.createBodyHelper();
          this.navigator = this.createNavigator(worldIn);
          this.senses = new EntitySenses(this);
@@ -116,7 +108,7 @@
          Arrays.fill(this.inventoryArmorDropChances, 0.085F);
          Arrays.fill(this.inventoryHandsDropChances, 0.085F);
  
-@@ -171,8 +171,40 @@
+@@ -171,8 +169,40 @@
      {
          this.attackTarget = entitylivingbaseIn;
          net.minecraftforge.common.ForgeHooks.onLivingSetAttackTarget(this, entitylivingbaseIn);
@@ -157,7 +149,7 @@
      public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
      {
          return cls != EntityGhast.class;
-@@ -447,12 +479,21 @@
+@@ -447,12 +477,21 @@
      {
          super.readEntityFromNBT(compound);
  
@@ -181,19 +173,7 @@
  
          if (compound.hasKey("ArmorItems", 9))
          {
-@@ -581,6 +622,11 @@
-         {
-             for (EntityItem entityitem : this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D)))
-             {
-+                // Paper Start
-+                if (!entityitem.canMobPickup) {
-+                    continue;
-+                }
-+                // Paper End
-                 if (!entityitem.isDead && !entityitem.getItem().isEmpty() && !entityitem.cannotPickup())
-                 {
-                     this.updateEquipmentIfNeeded(entityitem);
-@@ -653,8 +699,14 @@
+@@ -653,8 +692,14 @@
              }
          }
  
@@ -210,7 +190,7 @@
              double d0;
  
              switch (entityequipmentslot.getSlotType())
-@@ -671,7 +723,9 @@
+@@ -671,7 +716,9 @@
  
              if (!itemstack1.isEmpty() && (double)(this.rand.nextFloat() - 0.1F) < d0)
              {
@@ -220,7 +200,7 @@
              }
  
              this.setItemStackToSlot(entityequipmentslot, itemstack);
-@@ -696,7 +750,7 @@
+@@ -696,7 +743,7 @@
          return true;
      }
  
@@ -229,7 +209,7 @@
      {
          return true;
      }
-@@ -722,25 +776,23 @@
+@@ -722,9 +769,9 @@
          else
          {
              Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
@@ -241,26 +221,7 @@
                  double d0 = entity.posX - this.posX;
                  double d1 = entity.posY - this.posY;
                  double d2 = entity.posZ - this.posZ;
-                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
- 
--                if (this.canDespawn() && d3 > 16384.0D)
--                {
-+                if (this.canDespawn() && d3 > world.paperConfig.hardDespawnDistance) { // CraftBukkit - remove isTypeNotPersistent() check // Paper - custom despawn distances
-                     this.setDead();
-                 }
- 
--                if (this.idleTime > 600 && this.rand.nextInt(800) == 0 && d3 > 1024.0D && this.canDespawn())
-+                if (this.idleTime > 600 && this.rand.nextInt(800) == 0 && d3 > world.paperConfig.softDespawnDistance && this.canDespawn()) // CraftBukkit - remove isTypeNotPersistent() check // Paper - custom despawn distances
-                 {
-                     this.setDead();
-                 }
--                else if (d3 < 1024.0D)
--                {
-+                else if (d3 < world.paperConfig.softDespawnDistance) { // Paper - custom despawn distances
-                     this.idleTime = 0;
-                 }
-             }
-@@ -753,6 +805,12 @@
+@@ -753,6 +800,12 @@
          this.world.profiler.startSection("checkDespawn");
          this.despawnEntity();
          this.world.profiler.endSection();
@@ -273,7 +234,7 @@
          this.world.profiler.startSection("sensing");
          this.senses.clearSensingCache();
          this.world.profiler.endSection();
-@@ -1209,6 +1267,10 @@
+@@ -1209,6 +1262,10 @@
      {
          if (this.getLeashed() && this.getLeashHolder() == player)
          {
@@ -284,7 +245,7 @@
              this.clearLeashed(true, !player.capabilities.isCreativeMode);
              return true;
          }
-@@ -1218,6 +1280,10 @@
+@@ -1218,6 +1275,10 @@
  
              if (itemstack.getItem() == Items.LEAD && this.canBeLeashedTo(player))
              {
@@ -295,7 +256,7 @@
                  this.setLeashHolder(player, true);
                  itemstack.shrink(1);
                  return true;
-@@ -1245,11 +1311,13 @@
+@@ -1245,11 +1306,13 @@
          {
              if (!this.isEntityAlive())
              {
@@ -309,7 +270,7 @@
                  this.clearLeashed(true, true);
              }
          }
-@@ -1264,7 +1332,9 @@
+@@ -1264,7 +1327,9 @@
  
              if (!this.world.isRemote && dropLead)
              {
@@ -319,7 +280,7 @@
              }
  
              if (!this.world.isRemote && sendPacket && this.world instanceof WorldServer)
-@@ -1348,6 +1418,7 @@
+@@ -1348,6 +1413,7 @@
              }
              else
              {
@@ -327,7 +288,7 @@
                  this.clearLeashed(false, true);
              }
          }
-@@ -1448,7 +1519,6 @@
+@@ -1448,7 +1514,6 @@
          ON_GROUND,
          IN_AIR,
          IN_WATER;

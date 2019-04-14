@@ -72,7 +72,6 @@ public class PaperConfig
         PaperConfig.config.options().header("This is the main configuration file for Paper.\nAs you can see, there's tons to configure. Some options may impact gameplay, so use\nwith caution, and make sure you know what each option does before configuring.\n\nIf you need help with the configuration or have any questions related to Paper,\njoin us in our IRC channel.\n\nIRC: #paper @ irc.spi.gt ( http://irc.spi.gt/iris/?channels=paper )\nWiki: https://paper.readthedocs.org/ \nPaper Forums: https://aquifermc.org/ \n");
         PaperConfig.config.options().copyDefaults(true);
         PaperConfig.verbose = getBoolean("verbose", false);
-        (PaperConfig.commands = new HashMap<String, Command>()).put("paper", new PaperCommand("paper"));
         PaperConfig.version = getInt("config-version", 13);
         set("config-version", 13);
         readConfig(PaperConfig.class, null);
@@ -85,12 +84,6 @@ public class PaperConfig
     protected static void log(final String s) {
         if (PaperConfig.verbose) {
             LOGGER.info(s);
-        }
-    }
-
-    public static void registerCommands() {
-        for (final Map.Entry<String, Command> entry : PaperConfig.commands.entrySet()) {
-            MinecraftServer.getServerInst().server.getCommandMap().register(entry.getKey(), "Paper", entry.getValue());
         }
     }
 

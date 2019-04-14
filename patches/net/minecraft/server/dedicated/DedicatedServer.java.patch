@@ -84,38 +84,27 @@
          Thread thread = new Thread("Server Infinisleeper")
          {
              {
-@@ -96,15 +97,22 @@
+@@ -96,16 +97,16 @@
          {
              public void run()
              {
--                if (net.minecraftforge.server.console.TerminalHandler.handleCommands(DedicatedServer.this)) return;
++ 				BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+                 if (net.minecraftforge.server.console.TerminalHandler.handleCommands(DedicatedServer.this)) return;
 -                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
--                String s4;
-+ 				if (!org.bukkit.craftbukkit.Main.useConsole) {
-+                    return;
-+                }
-+                jline.console.ConsoleReader bufferedreader = reader;
-+              	String s4;
+                 String s4;
  
 -                try
 -                {
--                    while (!DedicatedServer.this.isServerStopped() && DedicatedServer.this.isServerRunning() && (s4 = bufferedreader.readLine()) != null)
--                    {
--                        DedicatedServer.this.addPendingCommand(s4, DedicatedServer.this);
 +                try {
-+                    while (!isServerStopped() && isServerRunning()) {
-+                        if (org.bukkit.craftbukkit.Main.useJline) {
-+                            s4 = bufferedreader.readLine(">", null);
-+                        } else {
-+                            s4 = bufferedreader.readLine();
-+                        }
-+                        if (s4 != null && s4.trim().length() > 0) { // Trim to filter lines which are just spaces
-+                            addPendingCommand(s4, DedicatedServer.this);
-+                        }
+                     while (!DedicatedServer.this.isServerStopped() && DedicatedServer.this.isServerRunning() && (s4 = bufferedreader.readLine()) != null)
+                     {
+                         DedicatedServer.this.addPendingCommand(s4, DedicatedServer.this);
                      }
++
                  }
                  catch (IOException ioexception1)
-@@ -113,9 +121,30 @@
+                 {
+@@ -113,9 +114,30 @@
                  }
              }
          };
@@ -135,7 +124,7 @@
 +            }
 +        }
 +
-+        new Thread(new org.bukkit.craftbukkit.util.TerminalConsoleWriterThread(System.out, this.reader)).start();
++        //new Thread(new org.bukkit.craftbukkit.util.TerminalConsoleWriterThread(System.out, this.reader)).start();
 +
 +        System.setOut(new PrintStream(new LoggerOutputStream(logger, Level.INFO), true));
 +        System.setErr(new PrintStream(new LoggerOutputStream(logger, Level.WARN), true));
@@ -147,7 +136,7 @@
  
          if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
          {
-@@ -125,7 +154,7 @@
+@@ -125,7 +147,7 @@
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStart(this);
  
          LOGGER.info("Loading properties");
@@ -156,7 +145,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -144,7 +173,7 @@
+@@ -144,7 +166,7 @@
              {
                  this.setOnlineMode(this.settings.getBooleanProperty("online-mode", true));
                  this.setPreventProxyConnections(this.settings.getBooleanProperty("prevent-proxy-connections", false));
@@ -165,7 +154,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +210,28 @@
+@@ -181,10 +203,27 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -182,7 +171,6 @@
 +
 +            // Paper start
 +            com.destroystokyo.paper.PaperConfig.init((File) options.valueOf("paper-settings"));
-+            com.destroystokyo.paper.PaperConfig.registerCommands();
 +            // Paper end
 +
              LOGGER.info("Generating keypair");
@@ -195,7 +183,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +243,7 @@
+@@ -196,15 +235,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -212,7 +200,7 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,7 +256,7 @@
+@@ -217,7 +248,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -221,7 +209,7 @@
                  long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -271,6 +310,8 @@
+@@ -271,6 +302,8 @@
                  long i1 = System.nanoTime() - j;
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
                  LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
@@ -230,7 +218,7 @@
                  this.currentTime = getCurrentTimeMillis();
  
                  if (this.settings.hasProperty("announce-player-achievements"))
-@@ -292,16 +333,28 @@
+@@ -292,16 +325,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -265,7 +253,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +480,19 @@
+@@ -427,11 +472,19 @@
  
      public void executePendingCommands()
      {
@@ -289,7 +277,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -592,8 +653,11 @@
+@@ -592,8 +645,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -303,7 +291,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +748,66 @@
+@@ -684,13 +740,66 @@
  
      public String getPlugins()
      {

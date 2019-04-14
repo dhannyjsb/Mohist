@@ -10,7 +10,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -169,8 +168,6 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @return killer player, or null if none found
      */
     public Player getKiller();
-
-    public void setKiller(@Nullable Player killer);
 
     /**
      * Adds the given {@link PotionEffect} to the living entity.

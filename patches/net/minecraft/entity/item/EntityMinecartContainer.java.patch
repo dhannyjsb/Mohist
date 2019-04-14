@@ -75,11 +75,12 @@
      }
  
      @Nullable
-@@ -168,7 +209,6 @@
+@@ -168,7 +209,7 @@
      protected void writeEntityToNBT(NBTTagCompound compound)
      {
          super.writeEntityToNBT(compound);
 -
++		
          if (this.lootTable != null)
          {
              compound.setString("LootTable", this.lootTable.toString());

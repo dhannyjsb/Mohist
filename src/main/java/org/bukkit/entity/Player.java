@@ -903,9 +903,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param amount Exp amount to give
      */
-    public void giveExp(int amount, boolean applyMending);
-
-    public int applyMending(int amount);
+	public void giveExp(int amount);
 
     /**
      * Gives the player the amount of experience levels specified. Levels can
@@ -1701,18 +1699,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     // Spigot end
     
     // Paper start
-    /**
-     * Get whether the player can affect mob spawning
-     * @return if the player can affect mob spawning
-     */
-    public boolean getAffectsSpawning();
-
-    /**
-     * Set whether the player can affect mob spawning
-     * @param affects Whether the player can affect mob spawning
-     */
-    public void setAffectsSpawning(boolean affects);
-
     /**
      * Gets the view distance for this player
      * @return the player's view distance

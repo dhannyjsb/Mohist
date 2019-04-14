@@ -1,13 +1,11 @@
 --- ../src-base/minecraft/net/minecraft/entity/item/EntityFireworkRocket.java
 +++ ../src-work/minecraft/net/minecraft/entity/item/EntityFireworkRocket.java
-@@ -23,14 +23,19 @@
+@@ -23,13 +23,14 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
  
-+import java.util.UUID;
-+
  public class EntityFireworkRocket extends Entity
  {
 -    private static final DataParameter<ItemStack> FIREWORK_ITEM = EntityDataManager.<ItemStack>createKey(EntityFireworkRocket.class, DataSerializers.ITEM_STACK);
@@ -16,13 +14,10 @@
      private int fireworkAge;
 -    private int lifetime;
 +    public int lifetime;
-+    public UUID spawningEntity; // Paper
      private EntityLivingBase boostedEntity;
-+    public EntityLivingBase getBoostedEntity() { return boostedEntity; } // Paper - OBFHELPER
  
      public EntityFireworkRocket(World worldIn)
-     {
-@@ -38,6 +43,14 @@
+@@ -38,6 +39,14 @@
          this.setSize(0.25F, 0.25F);
      }
  
@@ -37,7 +32,7 @@
      protected void entityInit()
      {
          this.dataManager.register(FIREWORK_ITEM, ItemStack.EMPTY);
-@@ -187,8 +200,10 @@
+@@ -187,8 +196,10 @@
  
          if (!this.world.isRemote && this.fireworkAge > this.lifetime)
          {
@@ -50,7 +45,7 @@
              this.setDead();
          }
      }
-@@ -209,7 +224,9 @@
+@@ -209,7 +220,9 @@
          {
              if (this.boostedEntity != null)
              {
@@ -60,7 +55,7 @@
              }
  
              double d0 = 5.0D;
-@@ -235,7 +252,9 @@
+@@ -235,7 +248,9 @@
                      if (flag)
                      {
                          float f1 = f * (float)Math.sqrt((5.0D - (double)this.getDistance(entitylivingbase)) / 5.0D);
@@ -70,28 +65,3 @@
                      }
                  }
              }
-@@ -275,6 +294,12 @@
-         {
-             compound.setTag("FireworksItem", itemstack.writeToNBT(new NBTTagCompound()));
-         }
-+
-+        // Paper start
-+        if (spawningEntity != null) {
-+            compound.setUniqueId("SpawningEntity", spawningEntity);
-+        }
-+        // Paper end
-     }
- 
-     public void readEntityFromNBT(NBTTagCompound compound)
-@@ -292,6 +317,11 @@
-                 this.dataManager.set(FIREWORK_ITEM, itemstack);
-             }
-         }
-+        // Paper start
-+        if (nbttagcompound.hasUniqueId("SpawningEntity")) {
-+            spawningEntity = nbttagcompound.getUniqueId("SpawningEntity");
-+        }
-+        // Paper end
-     }
- 
-     public boolean canBeAttackedWithItem()

@@ -4,7 +4,9 @@ import cn.pfcraft.Mohist;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.command.defaults.*;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.command.defaults.HelpCommand;
+import org.bukkit.command.defaults.PluginsCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 

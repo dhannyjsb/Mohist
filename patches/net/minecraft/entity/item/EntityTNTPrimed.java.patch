@@ -41,13 +41,16 @@
          this.prevPosX = this.posX;
          this.prevPosY = this.posY;
          this.prevPosZ = this.posZ;
-@@ -69,44 +78,61 @@
+@@ -69,39 +78,48 @@
          }
  
          this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 -        this.motionX *= 0.9800000190734863D;
 -        this.motionY *= 0.9800000190734863D;
 -        this.motionZ *= 0.9800000190734863D;
++            this.motionX *= 0.9800000190734863D;
++            this.motionY *= 0.9800000190734863D;
++            this.motionZ *= 0.9800000190734863D;
  
 -        if (this.onGround)
 -        {
@@ -55,40 +58,37 @@
 -            this.motionZ *= 0.699999988079071D;
 -            this.motionY *= -0.5D;
 -        }
-+        // Paper start - Configurable TNT entity height nerf
-+        if (this.world.paperConfig.entityTNTHeightNerf != 0 && this.posY > this.world.paperConfig.entityTNTHeightNerf) {
- 
--        --this.fuse;
-+            this.motionX *= 0.9800000190734863D;
-+            this.motionY *= 0.9800000190734863D;
-+            this.motionZ *= 0.9800000190734863D;
- 
--        if (this.fuse <= 0)
--        {
--            this.setDead();
-+            if (this.onGround) {
++            if (this.onGround)
++			{
 +                this.motionX *= 0.699999988079071D;
 +                this.motionZ *= 0.699999988079071D;
 +                this.motionY *= -0.5D;
 +            }
  
+-        --this.fuse;
++            --this.fuse;
+ 
+-        if (this.fuse <= 0)
+-        {
+-            this.setDead();
++            if (this.fuse <= 0)
++			{
++                // CraftBukkit start - Need to reverse the order of the explosion and the entity death so we have a location for the event
++                // this.setDead();
+ 
 -            if (!this.world.isRemote)
 -            {
 -                this.explode();
-+            --this.fuse;
-+
-+            if (this.fuse <= 0) {
-+                // CraftBukkit start - Need to reverse the order of the explosion and the entity death so we have a location for the event
-+                // this.setDead();
-+
-+                if (!this.world.isRemote) {
++                if (!this.world.isRemote)
++				{
 +                    this.explode();
 +                }
 +                this.setDead();
-+            } else {
+             }
++			else
++			{
 +                this.handleWaterMovement();
 +                this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
-             }
          }
 -        else
 -        {
@@ -113,20 +113,7 @@
      }
  
      protected void writeEntityToNBT(NBTTagCompound compound)
-     {
-         compound.setShort("Fuse", (short)this.getFuse());
-+        // Paper start - Try and load origin location from the old NBT tags for backwards compatibility
-+        if (compound.hasKey("SourceLoc_x")) {
-+            int srcX = compound.getInteger("SourceLoc_x");
-+            int srcY = compound.getInteger("SourceLoc_y");
-+            int srcZ = compound.getInteger("SourceLoc_z");
-+            origin = new org.bukkit.Location(world.getWorld(), srcX, srcY, srcZ);
-+        }
-+        // Paper end
-     }
- 
-     protected void readEntityFromNBT(NBTTagCompound compound)
-@@ -148,4 +174,46 @@
+@@ -148,4 +166,46 @@
      {
          return this.fuse;
      }

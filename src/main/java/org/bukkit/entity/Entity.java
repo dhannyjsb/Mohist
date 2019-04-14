@@ -492,23 +492,4 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
     @Override
     Spigot spigot();
     // Spigot end
-
-    // Paper start
-    /**
-      * Gets the location where this entity originates from.
-      * <p>
-      * This value can be null if the entity hasn't yet been added to the world.
-      *
-      * @return Location where entity originates or null if not yet added
-      */
-    Location getOrigin();
-    
-    /**
-     * Returns whether this entity was spawned from a mob spawner.
-     *
-     * @return True if entity spawned from a mob spawner
-     */
-    boolean fromMobSpawner();
-
-    // Paper end
 }

@@ -3,7 +3,6 @@ package org.bukkit.craftbukkit;
 import cn.pfcraft.Mohist;
 import net.minecraft.server.management.UserListIPBans;
 import net.minecraft.server.management.UserListIPBansEntry;
-import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.util.Date;

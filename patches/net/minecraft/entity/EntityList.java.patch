@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/entity/EntityList.java
 +++ ../src-work/minecraft/net/minecraft/entity/EntityList.java
-@@ -101,13 +101,20 @@
+@@ -101,13 +101,15 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -8,11 +8,6 @@
  
  public class EntityList
  {
-+    // Paper start
-+    public static Map<Class<? extends Entity>, ResourceLocation> clsToKeyMap = new java.util.HashMap<>();
-+    public static Map<Class<? extends Entity>, org.bukkit.entity.EntityType> clsToTypeMap = new java.util.HashMap<>();
-+    // Paper end
-+
      public static final ResourceLocation LIGHTNING_BOLT = new ResourceLocation("lightning_bolt");
      private static final ResourceLocation PLAYER = new ResourceLocation("player");
      private static final Logger LOGGER = LogManager.getLogger();
@@ -22,7 +17,7 @@
      private static final Set<ResourceLocation> EXTRA_NAMES = Sets.newHashSet();
  
      @Nullable
-@@ -222,7 +229,7 @@
+@@ -222,7 +224,7 @@
              }
              catch (Exception e)
              {

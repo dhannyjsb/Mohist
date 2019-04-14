@@ -2,7 +2,6 @@ package org.bukkit.plugin.java;
 
 import cn.pfcraft.Mohist;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.Warning;
 import org.bukkit.Warning.WarningState;

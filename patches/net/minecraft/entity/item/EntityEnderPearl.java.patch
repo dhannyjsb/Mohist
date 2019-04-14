@@ -12,13 +12,12 @@
  
  public class EntityEnderPearl extends EntityThrowable
  {
-@@ -96,27 +101,37 @@
-             {
+@@ -97,26 +102,37 @@
                  EntityPlayerMP entityplayermp = (EntityPlayerMP)entitylivingbase;
  
--                if (entityplayermp.connection.getNetworkManager().isChannelOpen() && entityplayermp.world == this.world && !entityplayermp.isPlayerSleeping())
+                 if (entityplayermp.connection.getNetworkManager().isChannelOpen() && entityplayermp.world == this.world && !entityplayermp.isPlayerSleeping())
 -                {
-+                if (entityplayermp.connection.getNetworkManager().isChannelOpen() && entityplayermp.world == this.world && !entityplayermp.isPlayerSleeping()) {
++				{
                      net.minecraftforge.event.entity.living.EnderTeleportEvent event = new net.minecraftforge.event.entity.living.EnderTeleportEvent(entityplayermp, this.posX, this.posY, this.posZ, 5.0F);
 -                    if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event))
 -                    { // Don't indent to lower patch size

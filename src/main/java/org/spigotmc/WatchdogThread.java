@@ -4,7 +4,6 @@ import cn.pfcraft.Mohist;
 import com.destroystokyo.paper.PaperConfig;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.Logger;
-import org.bukkit.Bukkit;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
@@ -15,10 +14,6 @@ public class WatchdogThread extends Thread
 
     private static WatchdogThread instance;
     private final long timeoutTime;
-    private final long earlyWarningEvery; // Paper - Timeout time for just printing a dump but not restarting
-    private final long earlyWarningDelay; // Paper
-    public static volatile boolean hasStarted; // Paper
-    private long lastEarlyWarning; // Paper - Keep track of short dump times to avoid spamming console with short dumps
     private final boolean restart;
     private volatile long lastTick;
     private volatile boolean stopping;
@@ -28,8 +23,6 @@ public class WatchdogThread extends Thread
         super( "Spigot Watchdog Thread" );
         this.timeoutTime = timeoutTime;
         this.restart = restart;
-        earlyWarningEvery = Math.min(PaperConfig.watchdogPrintEarlyWarningEvery, timeoutTime); // Paper
-        earlyWarningDelay = Math.min(PaperConfig.watchdogPrintEarlyWarningDelay, timeoutTime); // Paper
     }
 
     public static void doStart(int timeoutTime, boolean restart)
@@ -60,19 +53,9 @@ public class WatchdogThread extends Thread
         while ( !stopping )
         {
             //
-            long currentTime = System.currentTimeMillis(); // Paper - do we REALLY need to call this method multiple times?
-            if ( lastTick != 0 && currentTime > lastTick + earlyWarningEvery && !Boolean.getBoolean("disable.watchdog") ) // Paper - Add property to disable and short timeout
+            if ( lastTick != 0 && System.currentTimeMillis() > lastTick + timeoutTime && !Boolean.getBoolean("disable.watchdog"))
             {
-                // Paper start
-                boolean isLongTimeout = currentTime > lastTick + timeoutTime;
-                // Don't spam early warning dumps
-                if ( !isLongTimeout && (earlyWarningEvery <= 0 || !hasStarted || currentTime < lastEarlyWarning + earlyWarningEvery || currentTime < lastTick + earlyWarningDelay)) continue;
-                lastEarlyWarning = currentTime;
-                // Paper end
                 Logger log = Mohist.LOGGER;
-                // Paper start - Different message when it's a short timeout
-                if ( isLongTimeout )
-                {
                 log.error( "The server has stopped responding!" );
                 log.error( "Please report this to https://github.com/PFCraft/Mohist" );
                 log.error( "Be sure to include ALL relevant console errors and Minecraft crash reports" );
@@ -84,44 +67,29 @@ public class WatchdogThread extends Thread
                     log.error( "During the run of the server, a physics stackoverflow was supressed" );
                     log.error( "near " + net.minecraft.world.World.blockLocation);
                 }
-                } else
-                    {
-                        log.error( "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH ---");
-                        log.error( "The server has not responded for " + (currentTime - lastTick) / 1000 + " seconds! Creating thread dump");
-                    }
-                // Paper end - Different message for short timeout
                 log.error( "------------------------------" );
                 log.error( "Server thread dump (Look for plugins here before reporting to Spigot!):" );
                 dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServerInst().primaryThread.getId(), Integer.MAX_VALUE ), log );
                 log.error( "------------------------------" );
                 //
-                // Paper start - Only print full dump on long timeouts
-                if ( isLongTimeout )
-                {
                 log.error( "Entire Thread Dump:" );
                 ThreadInfo[] threads = ManagementFactory.getThreadMXBean().dumpAllThreads( true, true );
                 for ( ThreadInfo thread : threads )
                 {
                     dumpThread( thread, log );
                 }
-                } else {
-                    log.error( "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH ---");
-                }
                 log.error( "------------------------------" );
 
-                if ( isLongTimeout )
-                {
                 if ( restart )
                 {
                     MinecraftServer.getServerInst().primaryThread.stop();
                 }
                 break;
-                } // Paper end
             }
 
             try
             {
-                sleep( 1000 );
+                sleep( 10000 );
             } catch ( InterruptedException ex )
             {
                 interrupt();

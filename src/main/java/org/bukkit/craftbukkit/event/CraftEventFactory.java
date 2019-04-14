@@ -257,7 +257,7 @@ public class CraftEventFactory {
     /**
      * EntityShootBowEvent
      */
-    public static EntityShootBowEvent callEntityShootBowEvent(EntityLivingBase who, ItemStack itemstack, ItemStack arrowItem, EntityArrow entityArrow, float force) {
+    public static EntityShootBowEvent callEntityShootBowEvent(EntityLivingBase who, ItemStack itemstack, EntityArrow entityArrow, float force) {
         LivingEntity shooter = (LivingEntity) who.getBukkitEntity();
         CraftItemStack itemInHand = CraftItemStack.asCraftMirror(itemstack);
         Arrow arrow = (Arrow) entityArrow.getBukkitEntity();
@@ -266,7 +266,7 @@ public class CraftEventFactory {
             itemInHand = null;
         }
 
-        EntityShootBowEvent event = new EntityShootBowEvent(shooter, itemInHand, CraftItemStack.asCraftMirror(arrowItem), arrow, force);
+        EntityShootBowEvent event = new EntityShootBowEvent(shooter, itemInHand, arrow, force);
         Bukkit.getPluginManager().callEvent(event);
 
         return event;
@@ -861,30 +861,34 @@ public class CraftEventFactory {
     }
 
     public static Container callInventoryOpenEvent(EntityPlayerMP player, Container container, boolean cancelled) {
-        if (AsyncCatcher.catchInv()) return container;
-        if (player.openContainer != player.inventoryContainer) { // fire INVENTORY_CLOSE if one already open
-            player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
-        }
-
-        CraftServer server = player.world.getServer();
-        CraftPlayer craftPlayer = player.getBukkitEntity();
-        try {
-            player.openContainer.transferTo(container, craftPlayer);
-        } catch (AbstractMethodError e) {
-        }
-
-        InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
-        event.setCancelled(cancelled);
-        if (container.getBukkitView() != null)
-            server.getPluginManager().callEvent(event);
-
-        if (event.isCancelled()) {
-            container.transferTo(player.openContainer, craftPlayer);
-            return null;
-        } else {
+        if (AsyncCatcher.catchInv()) {
             return container;
+        } else {
+            if (player.openContainer != player.inventoryContainer) { // fire INVENTORY_CLOSE if one already open
+                player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
+            }
+
+            CraftServer server = player.world.getServer();
+            CraftPlayer craftPlayer = player.getBukkitEntity();
+            try {
+                player.openContainer.transferTo(container, craftPlayer);
+            } catch (AbstractMethodError e) {
+            }
+
+            InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
+            event.setCancelled(cancelled);
+            if (container.getBukkitView() != null)
+                server.getPluginManager().callEvent(event);
+
+            if (event.isCancelled()) {
+                container.transferTo(player.openContainer, craftPlayer);
+                return null;
+            } else {
+                return container;
+            }
         }
-	}
+    }
+
 
     public static ItemStack callPreCraftEvent(InventoryCrafting matrix, ItemStack result, InventoryView lastCraftView, boolean isRepair) {
         CraftInventoryCrafting inventory = new CraftInventoryCrafting(matrix, matrix.resultInventory);
@@ -927,7 +931,7 @@ public class CraftEventFactory {
             hitBlock = entity.getBukkitEntity().getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
         }
 
-        ProjectileHitEvent event = new ProjectileHitEvent((Projectile) entity.getBukkitEntity(), position.entityHit == null ? null : position.entityHit.getBukkitEntity(), hitBlock, position.sideHit == null ? null : CraftBlock.notchToBlockFace(position.sideHit)); // Paper - add BlockFace parameter
+        ProjectileHitEvent event = new ProjectileHitEvent((Projectile) entity.getBukkitEntity(), position.entityHit == null ? null : position.entityHit.getBukkitEntity(), hitBlock);
         entity.world.getServer().getPluginManager().callEvent(event);
         return event;
     }
@@ -1023,13 +1027,14 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human, org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
-        if (AsyncCatcher.catchInv()) return;
-        // Paper end
-        InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
-        if (human.openContainer.getBukkitView() != null) {
-            human.world.getServer().getPluginManager().callEvent(event);
+        if (!AsyncCatcher.catchInv()) {
+            // Paper end
+            InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
+            if (human.openContainer.getBukkitView() != null) {
+                human.world.getServer().getPluginManager().callEvent(event);
+            }
+            human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
         }
-        human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
     }
 
     public static void handleEditBookEvent(EntityPlayerMP player, ItemStack newBookItem) {

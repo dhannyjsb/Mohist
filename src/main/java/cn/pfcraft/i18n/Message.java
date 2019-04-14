@@ -44,8 +44,8 @@ public enum Message {
     serverFullMessage("message.serverfull"),
     bungeecord("message.bungeecord"),
     disconnect_flying("disconnect.flying"),
-    disconnect_duplicate_login("disconnect.duplicate_login");
-    
+    disconnect_duplicate_login("disconnect.duplicate_login"),
+
     crash_mc_version("crash.mc.version"),
     crash_system("crash.system"),
     crash_version("crash.version"),
@@ -68,6 +68,7 @@ public enum Message {
     other_head("other.head"),
     other_time("other.time"),
     other_Description("other.description"),
+    ;
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());

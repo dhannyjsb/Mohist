@@ -89,13 +89,3 @@
              }
          }
  
-@@ -357,6 +368,9 @@
-         {
-             this.throwerName = null;
-         }
-+        if (this instanceof EntityEnderPearl && this.world != null && this.world.paperConfig.disableEnderpearlExploit) {
-+            this.throwerName = null;
-+        }
- 
-         this.thrower = this.getThrower();
-     }

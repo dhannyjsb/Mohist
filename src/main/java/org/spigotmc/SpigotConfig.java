@@ -63,7 +63,6 @@ public class SpigotConfig
         config.options().copyDefaults( true );
 
         commands = new HashMap<String, Command>();
-        commands.put( "spigot", new SpigotCommand( "spigot" ) );
 
         version = getInt( "config-version", 11 );
         set( "config-version", 11 );

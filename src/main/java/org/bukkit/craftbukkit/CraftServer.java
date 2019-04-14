@@ -33,7 +33,6 @@ import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.dedicated.PendingCommand;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.server.management.UserListEntry;
-import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.util.text.translation.I18n;
@@ -672,7 +671,7 @@ public final class CraftServer implements Server {
         Validate.notNull(commandLine, "CommandLine cannot be null");
 
         // Paper Start
-        if (!org.spigotmc.AsyncCatcher.shuttingDown && !Bukkit.isPrimaryThread()) {
+        if (!Bukkit.isPrimaryThread()) {
             final CommandSender fSender = sender;
             final String fCommandLine = commandLine;
             Mohist.LOGGER.error( "Command Dispatched Async: " + commandLine);
@@ -958,10 +957,6 @@ public final class CraftServer implements Server {
     @Override
     public Logger getLogger() {
         return logger;
-    }
-	
-	public ConsoleReader getReader() {
-        return console.reader;
     }
 
     @Override

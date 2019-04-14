@@ -14,7 +14,6 @@ import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Represents a world, which may contain entities, chunks and blocks

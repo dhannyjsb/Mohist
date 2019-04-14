@@ -15,7 +15,7 @@
  
      protected void initEntityAI()
      {
-@@ -587,11 +593,21 @@
+@@ -587,11 +593,23 @@
  
                          if (integer.intValue() == 0)
                          {
@@ -29,11 +29,13 @@
                          }
                          else
                          {
-+                            // CraftBukkit start
-+                            if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this.rabbit, blockpos, block, block.getMetaFromState(iblockstate.withProperty(BlockCarrot.AGE, Integer.valueOf(integer.intValue() - 1)))).isCancelled()) {
++                            if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(
++                                    this.rabbit,
++                                    blockpos,
++                                    block, block.getMetaFromState(iblockstate.withProperty(BlockCarrot.AGE, Integer.valueOf(integer.intValue() - 1)))
++                            ).isCancelled()) {
 +                                return;
 +                            }
-+                            // CraftBukkit end
                              world.setBlockState(blockpos, iblockstate.withProperty(BlockCarrot.AGE, Integer.valueOf(integer.intValue() - 1)), 2);
                              world.playEvent(2001, blockpos, Block.getStateId(iblockstate));
                          }
