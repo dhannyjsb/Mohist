@@ -10,7 +10,7 @@ public class DownloadServer implements Runnable {
 
     @Override
     public void run() {
-        String url = "https://s3.amazonaws.com/Minecraft.Download/versions/1.12.2/minecraft_server.1.12.2.jar";
+        String url = "https://launcher.mojang.com/v1/objects/886945bfb2b978778c3a0288fd7fab09d315b25f/server.jar";
         String fileName = "minecraft_server.1.12.2.jar";
         Object[] o1 = {fileName};
         System.out.println(Message.getFormatString(Message.Dw_File,o1));
