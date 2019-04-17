@@ -29,7 +29,6 @@ import org.bukkit.craftbukkit.inventory.*;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Villager;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.bukkit.permissions.PermissibleBase;
@@ -407,12 +406,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     public void closeInventory() {
-        this.getHandle().closeScreen(InventoryCloseEvent.Reason.PLUGIN);
-    }
-
-    @Override
-    public void closeInventory(InventoryCloseEvent.Reason reason) {
-        this.getHandle().closeScreen(reason);
+		getHandle().closeScreen();
     }
 
     public boolean isBlocking() {
@@ -455,30 +449,6 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         getHandle().getCooldownTracker().setCooldown(CraftMagicNumbers.getItem(material), ticks);
     }
 
-    // Paper start
-    @Override
-    public org.bukkit.entity.Entity releaseLeftShoulderEntity() {
-        if (!getHandle().getLeftShoulderEntity().hasNoTags()) {
-            Entity entity = getHandle().releaseLeftShoulderEntity();
-            if (entity != null) {
-                return entity.getBukkitEntity();
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public org.bukkit.entity.Entity releaseRightShoulderEntity() {
-        if (!getHandle().getRightShoulderEntity().hasNoTags()) {
-            Entity entity = getHandle().releaseRightShoulderEntity();
-            if (entity != null) {
-                return entity.getBukkitEntity();
-            }
-        }
-        return null;
-    }
-    // Paper end
-
     @Override
     public org.bukkit.entity.Entity getShoulderEntityLeft() {
         if (!getHandle().getLeftShoulderEntity().hasNoTags()) {
@@ -516,16 +486,4 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
             entity.remove();
         }
     }
-
-    // Paper start - Add method to open already placed sign
-    @Override
-    public void openSign(org.bukkit.block.Sign sign) {
-        org.apache.commons.lang.Validate.isTrue(sign.getWorld().equals(this.getWorld()), "Sign must be in the same world as player is in");
-        org.bukkit.craftbukkit.block.CraftSign craftSign = (org.bukkit.craftbukkit.block.CraftSign) sign;
-        net.minecraft.tileentity.TileEntitySign teSign = craftSign.getTileEntity();
-        // Make sign editable temporarily, will be set back to false in PlayerConnection later
-        teSign.isEditable = true;
-        getHandle().openEditSign(teSign);
-    }
-    // Paper end
 }

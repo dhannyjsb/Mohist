@@ -50,29 +50,11 @@
          try
          {
              FileUtils.writeStringToFile(this.statsFile, dumpJson(this.statsData));
-@@ -93,7 +103,7 @@
+@@ -93,7 +103,6 @@
          {
              JsonObject jsonobject = jsonelement.getAsJsonObject();
              Map<StatBase, TupleIntJsonSerializable> map = Maps.<StatBase, TupleIntJsonSerializable>newHashMap();
 -
-+            java.util.List<String> invalidStats = com.google.common.collect.Lists.newArrayList(); // Paper
              for (Entry<String, JsonElement> entry : jsonobject.entrySet())
              {
                  StatBase statbase = StatList.getOneShotStat(entry.getKey());
-@@ -136,9 +146,15 @@
-                 else
-                 {
-                     LOGGER.warn("Invalid statistic in {}: Don't know what {} is", this.statsFile, entry.getKey());
-+                    if (com.destroystokyo.paper.PaperConfig.removeInvalidStatistics) invalidStats.add((String) entry.getKey()); // Paper
-                 }
-             }
--
-+            // Paper start - Remove invalid statistics
-+            for (String invalid : invalidStats) {
-+                jsonobject.remove(invalid);
-+                LOGGER.info("Removing invalid statistic: " + invalid);
-+            }
-+            // Paper end
-             return map;
-         }
-     }

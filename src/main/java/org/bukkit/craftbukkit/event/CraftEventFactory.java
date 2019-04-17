@@ -408,18 +408,13 @@ public class CraftEventFactory {
     public static EntityDeathEvent callEntityDeathEvent(EntityLivingBase victim, List<org.bukkit.inventory.ItemStack> drops) {
         CraftLivingEntity entity = (CraftLivingEntity) victim.getBukkitEntity();
         EntityDeathEvent event = new EntityDeathEvent(entity, drops, victim.getExpReward());
-        populateFields(victim, event); // Paper - make cancellable
         Bukkit.getServer().getPluginManager().callEvent(event);
-        // Paper start - make cancellable
-        if (event.isCancelled()) {
-            return event;
-        }
-        playDeathSound(victim, event);
-        // Paper end
+
         victim.expToDrop = event.getDroppedExp();
 
 		victim.capturedDrops.clear();
-        for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
+        for (org.bukkit.inventory.ItemStack stack : event.getDrops())
+		{
             net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
             if (entityitem != null)
             {
@@ -433,14 +428,7 @@ public class CraftEventFactory {
         CraftPlayer entity = victim.getBukkitEntity();
         PlayerDeathEvent event = new PlayerDeathEvent(entity, drops, victim.getExpReward(), 0, deathMessage);
         event.setKeepInventory(keepInventory);
-        populateFields(victim, event); // Paper - make cancellable
         Bukkit.getServer().getPluginManager().callEvent(event);
-        // Paper start - make cancellable
-        if (event.isCancelled()) {
-            return event;
-        }
-        playDeathSound(victim, event);
-        // Paper end
         victim.keepLevel = event.getKeepLevel();
         victim.newLevel = event.getNewLevel();
         victim.newTotalExp = event.getNewTotalExp();
@@ -468,32 +456,6 @@ public class CraftEventFactory {
         }
         return event;
     }
-
-    // Paper start - helper methods for making death event cancellable
-    // Add information to death event
-    private static void populateFields(EntityLivingBase victim, EntityDeathEvent event) {
-        event.setReviveHealth(event.getEntity().getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue());
-        event.setShouldPlayDeathSound(!victim.silentDeath && !victim.isSilent());
-        SoundEvent soundEffect = victim.getDeathSoundEffect();
-        event.setDeathSound(soundEffect != null ? org.bukkit.craftbukkit.CraftSound.getSoundByEffect(soundEffect) : null);
-        event.setDeathSoundCategory(org.bukkit.SoundCategory.valueOf(victim.getSoundCategory().name()));
-        event.setDeathSoundVolume(victim.getDeathSoundVolume());
-        event.setDeathSoundPitch(victim.getDeathSoundPitch());
-    }
-
-    // Play death sound manually
-    private static void playDeathSound(EntityLivingBase victim, EntityDeathEvent event) {
-        if (event.shouldPlayDeathSound() && event.getDeathSound() != null && event.getDeathSoundCategory() != null) {
-            EntityPlayer source = victim instanceof EntityPlayer ? (EntityPlayer) victim : null;
-            double x = event.getEntity().getLocation().getX();
-            double y = event.getEntity().getLocation().getY();
-            double z = event.getEntity().getLocation().getZ();
-            SoundEvent soundEffect = org.bukkit.craftbukkit.CraftSound.getSoundEffect(event.getDeathSound());
-            SoundCategory soundCategory = SoundCategory.valueOf(event.getDeathSoundCategory().name());
-            victim.world.playSound(source, x, y, z, soundEffect, soundCategory, event.getDeathSoundVolume(), event.getDeathSoundPitch());
-        }
-    }
-    // Paper end
 
     /**
      * Server methods
@@ -753,17 +715,6 @@ public class CraftEventFactory {
         return event;
     }
 
-    // Paper start - Add orb
-    public static PlayerExpChangeEvent callPlayerExpChangeEvent(EntityPlayer entity, EntityXPOrb entityOrb) {
-        Player player = (Player) entity.getBukkitEntity();
-        ExperienceOrb source = (ExperienceOrb) entityOrb.getBukkitEntity();
-        int expAmount = source.getExperience();
-        PlayerExpChangeEvent event = new PlayerExpChangeEvent(player, source, expAmount);
-        Bukkit.getPluginManager().callEvent(event);
-        return event;
-    }
-    // Paper end
-
     public static boolean handleBlockGrowEvent(World world, int x, int y, int z, net.minecraft.block.Block type, int data) {
         Block block = world.getWorld().getBlockAt(x, y, z);
         CraftBlockState state = (CraftBlockState) block.getState();
@@ -861,9 +812,7 @@ public class CraftEventFactory {
     }
 
     public static Container callInventoryOpenEvent(EntityPlayerMP player, Container container, boolean cancelled) {
-        if (AsyncCatcher.catchInv()) {
-            return container;
-        } else {
+        if (AsyncCatcher.catchInv()) return container;
             if (player.openContainer != player.inventoryContainer) { // fire INVENTORY_CLOSE if one already open
                 player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
             }
@@ -877,16 +826,14 @@ public class CraftEventFactory {
 
             InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
             event.setCancelled(cancelled);
-            if (container.getBukkitView() != null)
-                server.getPluginManager().callEvent(event);
+            if (container.getBukkitView() != null) server.getPluginManager().callEvent(event);
 
             if (event.isCancelled()) {
                 container.transferTo(player.openContainer, craftPlayer);
                 return null;
-            } else {
-                return container;
             }
-        }
+            
+	  return container;
     }
 
 
@@ -901,21 +848,6 @@ public class CraftEventFactory {
 
         return CraftItemStack.asNMSCopy(bitem);
     }
-
-    // Paper start
-    public static com.destroystokyo.paper.event.entity.ProjectileCollideEvent callProjectileCollideEvent(Entity entity, RayTraceResult position) {
-        Projectile projectile = (Projectile) entity.getBukkitEntity();
-        org.bukkit.entity.Entity collided = position.entityHit.getBukkitEntity();
-        com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = new com.destroystokyo.paper.event.entity.ProjectileCollideEvent(projectile, collided);
-        if (projectile.getShooter() instanceof Player && collided instanceof Player) {
-            if (!((Player) projectile.getShooter()).canSee((Player) collided)) {
-                event.setCancelled(true);
-            }
-        }
-        Bukkit.getPluginManager().callEvent(event);
-        return event;
-    }
-    // Paper end
 
     public static ProjectileLaunchEvent callProjectileLaunchEvent(Entity entity) {
         Projectile bukkitEntity = (Projectile) entity.getBukkitEntity();
@@ -1023,18 +955,12 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human) {
-        handleInventoryCloseEvent(human, org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNKNOWN);
-    }
-
-    public static void handleInventoryCloseEvent(EntityPlayer human, org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
-        if (!AsyncCatcher.catchInv()) {
-            // Paper end
+			if (!AsyncCatcher.catchInv()) return;
             InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
             if (human.openContainer.getBukkitView() != null) {
                 human.world.getServer().getPluginManager().callEvent(event);
             }
             human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
-        }
     }
 
     public static void handleEditBookEvent(EntityPlayerMP player, ItemStack newBookItem) {
@@ -1249,12 +1175,4 @@ public class CraftEventFactory {
         world.getServer().getPluginManager().callEvent(blockBreakEvent);
         return blockBreakEvent;
     }
-
-    // Paper start
-    public static com.destroystokyo.paper.event.entity.EntityZapEvent callEntityZapEvent (Entity entity, Entity lightning, Entity changedEntity) {
-        com.destroystokyo.paper.event.entity.EntityZapEvent event = new com.destroystokyo.paper.event.entity.EntityZapEvent(entity.getBukkitEntity(), (LightningStrike) lightning.getBukkitEntity(), changedEntity.getBukkitEntity());
-        entity.getBukkitEntity().getServer().getPluginManager().callEvent(event);
-        return event;
-    }
-    // Paper end
 }

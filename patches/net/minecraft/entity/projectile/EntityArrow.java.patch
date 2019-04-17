@@ -98,23 +98,7 @@
                  {
                      this.setDead();
                  }
-@@ -262,6 +277,15 @@
-                 }
-             }
- 
-+            // Paper start - Call ProjectileCollideEvent
-+            if (raytraceresult != null &&raytraceresult.entityHit != null) {
-+                com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callProjectileCollideEvent(this, raytraceresult);
-+                if (event.isCancelled()) {
-+                    raytraceresult = null;
-+                }
-+            }
-+            // Paper end
-+
-             if (raytraceresult != null && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult))
-             {
-                 this.onHit(raytraceresult);
-@@ -339,7 +363,7 @@
+@@ -339,7 +354,7 @@
      protected void onHit(RayTraceResult raytraceResultIn)
      {
          Entity entity = raytraceResultIn.entityHit;
@@ -123,7 +107,7 @@
          if (entity != null)
          {
              float f = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-@@ -363,7 +387,12 @@
+@@ -363,7 +378,12 @@
  
              if (this.isBurning() && !(entity instanceof EntityEnderman))
              {
@@ -137,35 +121,44 @@
              }
  
              if (entity.attackEntityFrom(damagesource, (float)i))
-@@ -565,26 +594,7 @@
+@@ -565,14 +585,24 @@
  
          this.setIsCritical(compound.getBoolean("crit"));
      }
 -
 -    public void onCollideWithPlayer(EntityPlayer entityIn)
--    {
--        if (!this.world.isRemote && this.inGround && this.arrowShake <= 0)
--        {
++	public void onCollideWithPlayer(EntityPlayer entityIn)
+     {
+         if (!this.world.isRemote && this.inGround && this.arrowShake <= 0)
+         {
 -            boolean flag = this.pickupStatus == EntityArrow.PickupStatus.ALLOWED || this.pickupStatus == EntityArrow.PickupStatus.CREATIVE_ONLY && entityIn.capabilities.isCreativeMode;
--
++            ItemStack itemstack = this.getArrowStack();
++            EntityItem item = new EntityItem(this.world, this.posX, this.posY, this.posZ, itemstack);
++            if (this.pickupStatus == PickupStatus.ALLOWED && entityIn.inventory.canHold(itemstack) > 0) {
++                PlayerPickupArrowEvent event = new PlayerPickupArrowEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), new org.bukkit.craftbukkit.entity.CraftItem(this.world.getServer(), this, item), (org.bukkit.entity.Arrow) this.getBukkitEntity());
++                // event.setCancelled(!entityhuman.canPickUpLoot); TODO
++                this.world.getServer().getPluginManager().callEvent(event);
+ 
 -            if (this.pickupStatus == EntityArrow.PickupStatus.ALLOWED && !entityIn.inventory.addItemStackToInventory(this.getArrowStack()))
--            {
--                flag = false;
--            }
++                if (event.isCancelled()) {
++                    return;
++                }
++            }
++            boolean flag = this.pickupStatus == PickupStatus.ALLOWED || this.pickupStatus == PickupStatus.CREATIVE_ONLY && entityIn.capabilities.isCreativeMode;
++
++            if (this.pickupStatus == PickupStatus.ALLOWED && !entityIn.inventory.addItemStackToInventory(item.getItem()))
+             {
+                 flag = false;
+             }
+@@ -584,7 +614,6 @@
+             }
+         }
+     }
 -
--            if (flag)
--            {
--                entityIn.onItemPickup(this, 1);
--                this.setDead();
--            }
--        }
--    }
--
-+	
      protected abstract ItemStack getArrowStack();
  
      protected boolean canTriggerWalking()
-@@ -655,7 +665,13 @@
+@@ -655,7 +684,13 @@
  
          if (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, p_190547_1_) > 0)
          {

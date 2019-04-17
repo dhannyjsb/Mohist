@@ -5,10 +5,6 @@ import org.bukkit.util.CachedServerIcon;
 public class CraftIconCache implements CachedServerIcon {
     public final String value;
 
-    public String getData() {
-        return this.value;
-    }
-
     public CraftIconCache(final String value) {
         this.value = value;
     }

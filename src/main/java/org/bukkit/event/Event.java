@@ -1,6 +1,5 @@
 package org.bukkit.event;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 /**
@@ -75,22 +74,6 @@ public abstract class Event {
     public final boolean isAsynchronous() {
         return async;
     }
-
-    // Paper start
-    /**
-     * Calls the event and tests if cancelled.
-     *
-     * @return false if event was cancelled, if cancellable. otherwise true.
-     */
-    public boolean callEvent() {
-        Bukkit.getPluginManager().callEvent(this);
-        if (this instanceof Cancellable) {
-                return !((Cancellable) this).isCancelled();
-        } else {
-            return true;
-        }
-    }
-    // Paper end
 
     public enum Result {
 

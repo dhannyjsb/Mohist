@@ -86,29 +86,6 @@ public class CraftWorld implements World {
     private int chunkLoadCount = 0;
     private int chunkGCTickCount;
 
-    // Paper start - Provide fast information methods
-    public int getEntityCount() {
-        return world.loadedEntityList.size();
-    }
-    public int getTileEntityCount() {
-        // We don't use the full world tile entity list, so we must iterate chunks
-                int size = 0;
-        for (net.minecraft.world.chunk.Chunk chunk : ((ChunkProviderServer) world.getChunkProvider()).id2ChunkMap.values()) {
-                size += chunk.tileEntities.size();
-            }
-        return size;
-    }
-    public int getTickableTileEntityCount() {
-        return world.tickableTileEntities.size();
-    }
-    public int getChunkCount() {
-        return world.getChunkProvider().id2ChunkMap.size();
-    }
-    public int getPlayerCount() {
-        return world.playerEntities.size();
-    }
-    // Paper end
-
     private static final Random rand = new Random();
 
     public CraftWorld(WorldServer world, ChunkGenerator gen, Environment env) {
@@ -123,8 +100,7 @@ public class CraftWorld implements World {
     }
 
     public Block getBlockAt(int x, int y, int z) {
-        Chunk chunk = getChunkAt(x >> 4, z >> 4);
-        return chunk == null ? null : chunk.getBlock(x & 0xF, y & 0xFF, z & 0xF);
+		return getChunkAt(x >> 4, z >> 4).getBlock(x & 0xF, y, z & 0xF);
     }
 
     public int getBlockTypeIdAt(int x, int y, int z) {
@@ -167,8 +143,7 @@ public class CraftWorld implements World {
     }
 
     public Chunk getChunkAt(int x, int z) {
-    	net.minecraft.world.chunk.Chunk chunk = this.world.getChunkProvider().provideChunk(x, z);
-        return chunk == null ? null : chunk.bukkitChunk;
+		return this.world.getChunkProvider().provideChunk(x, z).bukkitChunk;
     }
 
     public Chunk getChunkAt(Block block) {
@@ -502,14 +477,17 @@ public class CraftWorld implements World {
         world.captureBlockSnapshots = false;
         world.captureTreeGeneration = false;
         if (grownTree) { // Copy block data to delegate
-            for (BlockSnapshot blockSnapshot : world.capturedBlockSnapshots) {
-                BlockPos position = blockSnapshot.getPos();
-                IBlockState oldBlock = world.getBlockState(position);
-                int typeId = net.minecraft.block.Block.getIdFromBlock(blockSnapshot.getReplacedBlock().getBlock());
-                int data = blockSnapshot.getMeta();
-                int flag = blockSnapshot.getFlag();
-                delegate.setTypeIdAndData(position.getX(), position.getY(), position.getZ(), typeId, data);
-                IBlockState newBlock = world.getBlockState(position);
+            for (BlockSnapshot blocksnapshot : this.world.capturedBlockSnapshots) {
+                BlockPos position = blocksnapshot.getPos();
+                int x = position.getX();
+                int y = position.getY();
+                int z = position.getZ();
+                net.minecraft.block.state.IBlockState oldBlock = world.getBlockState(position);
+                int typeId = net.minecraft.block.Block.getIdFromBlock(blocksnapshot.getReplacedBlock().getBlock());
+                int data = blocksnapshot.getMeta();
+                int flag = blocksnapshot.getFlag();;
+                delegate.setTypeIdAndData(x, y, z, typeId, data);
+                net.minecraft.block.state.IBlockState newBlock = world.getBlockState(position);
                 world.markAndNotifyBlock(position, null, oldBlock, newBlock, flag);
             }
             world.capturedBlockSnapshots.clear();

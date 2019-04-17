@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -360,31 +359,4 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @return collision status
      */
     boolean isCollidable();
-    
-    // Paper start
-    /**
-     * Get the number of arrows stuck in this entity
-     * @return Number of arrows stuck
-     */
-    int getArrowsStuck();
-
-    /***
-     * Set the number of arrows stuck in this entity
-     *
-     * @param arrows Number of arrows to stick in this entity
-     */
-    void setArrowsStuck(int arrows);
-
-    int getShieldBlockingDelay();
-
-    void setShieldBlockingDelay(int delay);
-
-    ItemStack getActiveItem();
-
-    int getItemUseRemainingTime();
-
-    int getHandRaisedTime();
-
-    boolean isHandRaised();
-    // Paper end
 }

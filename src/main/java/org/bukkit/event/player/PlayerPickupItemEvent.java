@@ -15,7 +15,6 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 public class PlayerPickupItemEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Item item;
-    private boolean flyAtPlayer = true; // Paper
     private boolean cancel = false;
     private final int remaining;
 
@@ -24,27 +23,6 @@ public class PlayerPickupItemEvent extends PlayerEvent implements Cancellable {
         this.item = item;
         this.remaining = remaining;
     }
-
-    // Paper Start
-    /**
-     * Set if the item will fly at the player
-     * <p>Cancelling the event will set this value to false.</p>
-     *
-     * @param flyAtPlayer True for item to fly at player
-     */
-    public void setFlyAtPlayer(boolean flyAtPlayer) {
-        this.flyAtPlayer = flyAtPlayer;
-    }
-
-    /**
-     * Gets if the item will fly at the player
-     *
-     * @return True if the item will fly at the player
-     */
-    public boolean getFlyAtPlayer() {
-        return flyAtPlayer;
-    }
-    // Paper End
 
     /**
      * Gets the Item picked up by the player.
@@ -70,7 +48,6 @@ public class PlayerPickupItemEvent extends PlayerEvent implements Cancellable {
 
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
-        this.flyAtPlayer = !cancel; // Paper
     }
 
     @Override

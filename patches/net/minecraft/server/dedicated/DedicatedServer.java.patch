@@ -58,8 +58,7 @@
  @SideOnly(Side.SERVER)
  public class DedicatedServer extends MinecraftServer implements IServer
  {
--    private static final Logger LOGGER = LogManager.getLogger();
-+    private static final Logger LOGGER = Mohist.LOGGER;
+     private static final Logger LOGGER = LogManager.getLogger();
      private static final Pattern RESOURCE_PACK_SHA1_PATTERN = Pattern.compile("^[a-fA-F0-9]{40}$");
 -    public final List<PendingCommand> pendingCommandList = Collections.<PendingCommand>synchronizedList(Lists.newArrayList());
 +    public final java.util.Queue<PendingCommand> pendingCommandList = new java.util.concurrent.ConcurrentLinkedQueue<>(); // Paper - use a proper queue
@@ -154,7 +153,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +203,27 @@
+@@ -181,10 +203,23 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -169,10 +168,6 @@
 +            MohistConfig.registerCommands();
 +            // Mohist end
 +
-+            // Paper start
-+            com.destroystokyo.paper.PaperConfig.init((File) options.valueOf("paper-settings"));
-+            // Paper end
-+
              LOGGER.info("Generating keypair");
              this.setKeyPair(CryptManager.generateKeyPair());
 -            LOGGER.info("Starting Minecraft server on {}:{}", this.getServerHostname().isEmpty() ? "*" : this.getServerHostname(), Integer.valueOf(this.getServerPort()));
@@ -183,7 +178,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +235,7 @@
+@@ -196,15 +231,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -200,7 +195,7 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,7 +248,7 @@
+@@ -217,7 +244,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -209,16 +204,17 @@
                  long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -271,6 +302,8 @@
+@@ -271,7 +298,8 @@
                  long i1 = System.nanoTime() - j;
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
                  LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
+-                this.currentTime = getCurrentTimeMillis();
 +                Object[] p1 = {this.getServerHostname(), String.valueOf(this.getServerPort())};
 +                Mohist.LOGGER.info(Message.getFormatString(Message.Server_Ip, p1));
-                 this.currentTime = getCurrentTimeMillis();
  
                  if (this.settings.hasProperty("announce-player-achievements"))
-@@ -292,16 +325,28 @@
+                 {
+@@ -292,16 +320,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -253,7 +249,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +472,19 @@
+@@ -427,11 +467,19 @@
  
      public void executePendingCommands()
      {
@@ -277,7 +273,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -592,8 +645,11 @@
+@@ -592,8 +640,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -291,7 +287,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +740,66 @@
+@@ -684,13 +735,66 @@
  
      public String getPlugins()
      {

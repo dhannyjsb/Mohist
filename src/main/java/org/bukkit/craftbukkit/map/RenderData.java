@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class RenderData {
 
-    public byte[] buffer; // Paper
+    public final byte[] buffer;
     public final ArrayList<MapCursor> cursors;
 
     public RenderData() {

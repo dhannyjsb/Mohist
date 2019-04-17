@@ -3,7 +3,6 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Sets;
 import net.minecraft.nbt.*;
 import org.apache.commons.codec.binary.Base64;
@@ -106,7 +105,6 @@ class CraftMetaItem implements ItemMeta, Repairable {
                     .put(CraftMetaFirework.class, "FIREWORK")
                     .put(CraftMetaCharge.class, "FIREWORK_EFFECT")
                     .put(CraftMetaKnowledgeBook.class, "KNOWLEDGE_BOOK")
-                    .put(CraftMetaArmorStand.class, "ARMOR_STAND")
                     .put(CraftMetaItem.class, "UNSPECIFIC")
                     .build();
 
@@ -207,7 +205,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
     private String displayName;
     private String locName;
     private List<String> lore;
-    private EnchantmentMap enchantments; // Paper
+    private Map<Enchantment, Integer> enchantments;
     private int repairCost;
     private int hideFlag;
     private boolean unbreakable;
@@ -230,7 +228,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
         }
 
         if (meta.hasEnchants()) {
-            this.enchantments = new EnchantmentMap(meta.enchantments); // Paper
+            this.enchantments = new HashMap<Enchantment, Integer>(meta.enchantments);
         }
 
         this.repairCost = meta.repairCost;
@@ -334,13 +332,13 @@ class CraftMetaItem implements ItemMeta, Repairable {
         }
     }
 
-    static EnchantmentMap buildEnchantments(NBTTagCompound tag, ItemMetaKey key) { // Paper
+    static Map<Enchantment, Integer> buildEnchantments(NBTTagCompound tag, ItemMetaKey key) {
         if (!tag.hasKey(key.NBT)) {
             return null;
         }
 
         NBTTagList ench = tag.getTagList(key.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND);
-        EnchantmentMap enchantments = new EnchantmentMap(); // Paper
+        Map<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>(ench.tagCount());
 
         for (int i = 0; i < ench.tagCount(); i++) {
             int id = 0xffff & ((NBTTagCompound) ench.get(i)).getShort(ENCHANTMENTS_ID.NBT);
@@ -410,13 +408,13 @@ class CraftMetaItem implements ItemMeta, Repairable {
     void deserializeInternal(NBTTagCompound tag) {
     }
 
-    static EnchantmentMap buildEnchantments(Map<String, Object> map, ItemMetaKey key) { // Paper
+    static Map<Enchantment, Integer> buildEnchantments(Map<String, Object> map, ItemMetaKey key) {
         Map<?, ?> ench = SerializableMeta.getObject(Map.class, map, key.BUKKIT, true);
         if (ench == null) {
             return null;
         }
 
-        EnchantmentMap enchantments = new EnchantmentMap(); // Paper
+        Map<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>(ench.size());
         for (Map.Entry<?, ?> entry : ench.entrySet()) {
             // Doctor older enchants
             String enchantKey = entry.getKey().toString();
@@ -567,13 +565,13 @@ class CraftMetaItem implements ItemMeta, Repairable {
     }
 
     public Map<Enchantment, Integer> getEnchants() {
-        return hasEnchants() ? ImmutableSortedMap.copyOfSorted(enchantments) : ImmutableMap.<Enchantment, Integer>of(); // Paper
+        return hasEnchants() ? ImmutableMap.copyOf(enchantments) : ImmutableMap.<Enchantment, Integer>of();
     }
 
     public boolean addEnchant(Enchantment ench, int level, boolean ignoreRestrictions) {
         Validate.notNull(ench, "Enchantment cannot be null");
         if (enchantments == null) {
-            enchantments = new EnchantmentMap(); // Paper
+            enchantments = new HashMap<Enchantment, Integer>(4);
         }
 
         if (ignoreRestrictions || level >= ench.getStartLevel() && level <= ench.getMaxLevel()) {
@@ -737,7 +735,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
                 clone.lore = new ArrayList<String>(this.lore);
             }
             if (this.enchantments != null) {
-                clone.enchantments = new EnchantmentMap(this.enchantments); // Paper
+                clone.enchantments = new HashMap<Enchantment, Integer>(this.enchantments);
             }
             clone.hideFlag = this.hideFlag;
             clone.unbreakable = this.unbreakable;
@@ -888,37 +886,12 @@ class CraftMetaItem implements ItemMeta, Repairable {
                         CraftMetaEnchantedBook.STORED_ENCHANTMENTS.NBT,
                         CraftMetaCharge.EXPLOSION.NBT,
                         CraftMetaBlockState.BLOCK_ENTITY_TAG.NBT,
-                        CraftMetaKnowledgeBook.BOOK_RECIPES.NBT,
-                        // Paper start
-                        CraftMetaArmorStand.ENTITY_TAG.NBT,
-                        CraftMetaArmorStand.INVISIBLE.NBT,
-                        CraftMetaArmorStand.NO_BASE_PLATE.NBT,
-                        CraftMetaArmorStand.SHOW_ARMS.NBT,
-                        CraftMetaArmorStand.SMALL.NBT,
-                        CraftMetaArmorStand.MARKER.NBT
-                        // Paper end
+                        CraftMetaKnowledgeBook.BOOK_RECIPES.NBT
                 ));
             }
             return HANDLED_TAGS;
         }
     }
-
-    // Paper start
-    private static class EnchantmentMap extends TreeMap<Enchantment, Integer> {
-        private EnchantmentMap(Map<Enchantment, Integer> enchantments) {
-            this();
-            putAll(enchantments);
-        }
-
-        private EnchantmentMap() {
-            super((o1, o2) -> ((Integer) o1.getId()).compareTo(o2.getId()));
-        }
-
-        public EnchantmentMap clone() {
-            return (EnchantmentMap) super.clone();
-        }
-    }
-    // Paper end
 
     // Spigot start
     private final Spigot spigot = new Spigot()

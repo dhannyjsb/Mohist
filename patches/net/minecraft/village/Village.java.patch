@@ -34,7 +34,7 @@
  public class Village implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
  {
      private World world;
-@@ -38,10 +39,10 @@
+@@ -38,7 +39,7 @@
      private int numVillagers;
      private int noBreedTicks;
      private final Map<UUID, Integer> playerReputation = Maps.<UUID, Integer>newHashMap();
@@ -42,11 +42,7 @@
 +    private final List<VillageAggressor> villageAgressors = Lists.<VillageAggressor>newArrayList();
      private int numIronGolems;
  
--    public Village()
-+    private Village()  // Paper - Nothing should call this - world needs to be set.
-     {
-         this.capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
-     }
+     public Village()
 @@ -83,7 +84,7 @@
              {
                  EntityIronGolem entityirongolem = new EntityIronGolem(this.world);
@@ -101,21 +97,7 @@
  
              if (!village$villageaggressor.agressor.isEntityAlive() || Math.abs(this.tickCounter - village$villageaggressor.agressionTime) > 300)
              {
-@@ -358,7 +359,12 @@
-         while (iterator.hasNext())
-         {
-             VillageDoorInfo villagedoorinfo = iterator.next();
--
-+            // Paper start- don't remove doors from unloaded chunks
-+            if (!this.world.isBlockLoaded(villagedoorinfo.getDoorBlockPos())) {
-+                villagedoorinfo.setLastActivityTimestamp(villagedoorinfo.getLastActivityTimestamp() + 1);
-+                continue;
-+            }
-+            // Paper end
-             if (flag1)
-             {
-                 villagedoorinfo.resetDoorOpeningRestrictionCounter();
-@@ -586,13 +592,13 @@
+@@ -586,13 +587,13 @@
  
      /* ======================================== FORGE START =====================================*/
      private net.minecraftforge.common.capabilities.CapabilityDispatcher capabilities;

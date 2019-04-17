@@ -268,15 +268,6 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -950,7 +1031,7 @@
-                 return true;
-             }
-         }
--        else if (this.hasEntities && this.world.getTotalWorldTime() >= this.lastSaveTime + 600L)
-+        else if (this.hasEntities && this.world.getTotalWorldTime() >= this.lastSaveTime + MinecraftServer.getServerInst().autosavePeriod * 4)  // Spigot - Only save if we've passed 2 auto save intervals without modification
-         {
-             return true;
-         }
 @@ -1001,6 +1082,63 @@
          }
      }

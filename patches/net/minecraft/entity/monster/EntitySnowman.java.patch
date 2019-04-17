@@ -29,18 +29,3 @@
                  }
              }
          }
-@@ -154,6 +158,14 @@
- 
-         if (false && itemstack.getItem() == Items.SHEARS && this.isPumpkinEquipped() && !this.world.isRemote) //Forge: Moved to onSheared
-         {
-+            // CraftBukkit start
-+            PlayerShearEntityEvent event = new PlayerShearEntityEvent((org.bukkit.entity.Player) player.getBukkitEntity(), this.getBukkitEntity());
-+            this.world.getServer().getPluginManager().callEvent(event);
-+            if (event.isCancelled()) {
-+                return false;
-+            }
-+            // CraftBukkit end
-+
-             this.setPumpkinEquipped(false);
-             itemstack.damageItem(1, player);
-         }

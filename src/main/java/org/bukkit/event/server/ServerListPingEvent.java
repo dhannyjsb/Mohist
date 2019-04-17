@@ -21,7 +21,6 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
     private int maxPlayers;
 
     public ServerListPingEvent(final InetAddress address, final String motd, final int numPlayers, final int maxPlayers) {
-        super(); // Paper - Is this event being fired async?
         Validate.isTrue(numPlayers >= 0, "Cannot have negative number of players online", numPlayers);
         this.address = address;
         this.motd = motd;
@@ -39,7 +38,6 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
      * @param maxPlayers the max number of players
      */
     protected ServerListPingEvent(final InetAddress address, final String motd, final int maxPlayers) {
-        super(); // Paper - Is this event being fired async?
         this.numPlayers = MAGIC_PLAYER_COUNT;
         this.address = address;
         this.motd = motd;
@@ -145,24 +143,4 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
     public Iterator<Player> iterator() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
-
-    // Paper start
-    private java.util.List<String> sample;
-
-    /**
-     * @deprecated Will be replaced in 1.13
-     * @param sample the new player list sample
-     */
-    public void setSampleText(java.util.List<String> sample) {
-        this.sample = sample;
-    }
-
-    /**
-     * @deprecated Will be replaced in 1.13
-     * @return the player list sample
-     */
-    public java.util.List<String> getSampleText() {
-        return sample;
-    }
-    // Paper end
 }

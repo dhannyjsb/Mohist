@@ -15,30 +15,16 @@
  public class NettyPacketEncoder extends MessageToByteEncoder < Packet<? >>
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -20,7 +21,21 @@
+@@ -20,7 +21,7 @@
          this.direction = direction;
      }
  
 -    protected void encode(ChannelHandlerContext p_encode_1_, Packet<?> p_encode_2_, ByteBuf p_encode_3_) throws IOException, Exception
-+    private static int MAX_PACKET_SIZE = 2097152;
-+    public static class PacketTooLargeException extends RuntimeException {
-+        private final Packet<?> packet;
-+        PacketTooLargeException(Packet<?> packet, int packetLength) {
-+            super("PacketTooLarge - " + packet.getClass().getSimpleName() + " is " + packetLength +". Max is " + MAX_PACKET_SIZE);
-+            this.packet = packet;
-+        }
-+
-+        public Packet<?> getPacket() {
-+            return packet;
-+        }
-+    }
-+    // Paper end
-+
 +    protected void encode(ChannelHandlerContext p_encode_1_, Packet<?> p_encode_2_, ByteBuf p_encode_3_) throws Exception
      {
          EnumConnectionState enumconnectionstate = (EnumConnectionState)p_encode_1_.channel().attr(NetworkManager.PROTOCOL_ATTRIBUTE_KEY).get();
  
-@@ -36,7 +51,10 @@
+@@ -36,7 +37,10 @@
              {
                  LOGGER.debug(RECEIVED_PACKET_MARKER, "OUT: [{}:{}] {}", p_encode_1_.channel().attr(NetworkManager.PROTOCOL_ATTRIBUTE_KEY).get(), integer, p_encode_2_.getClass().getName());
              }
@@ -50,14 +36,3 @@
              if (integer == null)
              {
                  throw new IOException("Can't serialize unregistered packet");
-@@ -54,6 +72,10 @@
-                 {
-                     throw throwable; // Forge: throw this instead of logging it, to prevent corrupt packets from being sent to the client where they are much harder to debug.
-                 }
-+                final int packetLength = p_encode_3_.readableBytes();
-+                if (packetLength > MAX_PACKET_SIZE) {
-+                    throw new PacketTooLargeException(p_encode_2_, packetLength);
-+                }
-             }
-         }
-     }

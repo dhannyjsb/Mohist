@@ -742,10 +742,4 @@ public final class SimplePluginManager implements PluginManager {
     public void useTimings(boolean use) {
         useTimings = use;
     }
-
-    public void clearPermissions() {
-        this.permissions.clear();
-        this.defaultPerms.get(true).clear();
-        this.defaultPerms.get(false).clear();
-    }
 }

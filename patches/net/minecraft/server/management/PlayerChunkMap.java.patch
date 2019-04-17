@@ -189,15 +189,16 @@
      public void removeEntry(PlayerChunkMapEntry entry)
      {
          ChunkPos chunkpos = entry.getPos();
-@@ -460,7 +540,50 @@
+@@ -456,11 +536,48 @@
+         this.dirtyEntries.remove(entry);
+         this.pendingSendToPlayers.remove(entry);
+         this.entriesWithoutChunks.remove(entry);
+-        Chunk chunk = entry.getChunk();
++    }
  
-         if (chunk != null)
-         {
+-        if (chunk != null)
+-        {
 -            this.getWorldServer().getChunkProvider().queueUnload(chunk);
-+        	this.getWorldServer().getChunkProvider().queueUnload(chunk);
-         }
-     }
-+
 +    // CraftBukkit start - Sorter to load nearby chunks first
 +    private static class ChunkCoordComparator implements java.util.Comparator<ChunkPos> {
 +        private int x;
@@ -206,7 +207,7 @@
 +        public ChunkCoordComparator (EntityPlayer entityplayer) {
 +            x = (int) entityplayer.posX >> 4;
 +            z = (int) entityplayer.posZ >> 4;
-+        }
+         }
 +
 +        public int compare(ChunkPos a, ChunkPos b) {
 +            if (a.equals(b)) {
@@ -238,6 +239,6 @@
 +                }
 +            }
 +        }
-+    }
+     }
 +    // CraftBukkit end
  }

@@ -38,20 +38,7 @@
      }
  
      protected void initEntityAI()
-@@ -193,12 +203,22 @@
-         {
-             if (!this.world.isRemote)
-             {
-+                // CraftBukkit start
-+                PlayerShearEntityEvent event = new PlayerShearEntityEvent((org.bukkit.entity.Player) player.getBukkitEntity(), this.getBukkitEntity());
-+                this.world.getServer().getPluginManager().callEvent(event);
-+                if (event.isCancelled()) {
-+                    return false;
-+                }
-+                // CraftBukkit end
-+
-                 this.setSheared(true);
-                 int i = 1 + this.rand.nextInt(3);
+@@ -198,7 +208,9 @@
  
                  for (int j = 0; j < i; ++j)
                  {
@@ -61,7 +48,7 @@
                      entityitem.motionY += (double)(this.rand.nextFloat() * 0.05F);
                      entityitem.motionX += (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F);
                      entityitem.motionZ += (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F);
-@@ -348,6 +368,13 @@
+@@ -348,6 +360,13 @@
  
      public void eatGrassBonus()
      {

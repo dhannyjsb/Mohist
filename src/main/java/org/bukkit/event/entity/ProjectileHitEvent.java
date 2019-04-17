@@ -12,7 +12,6 @@ public class ProjectileHitEvent extends EntityEvent {
     private static final HandlerList handlers = new HandlerList();
     private final Entity hitEntity;
     private final Block hitBlock;
-    private final org.bukkit.block.BlockFace hitBlockFace; // Paper
 
     public ProjectileHitEvent(final Projectile projectile) {
         this(projectile, null, null);
@@ -27,14 +26,9 @@ public class ProjectileHitEvent extends EntityEvent {
     }
 
     public ProjectileHitEvent(final Projectile projectile, Entity hitEntity, Block hitBlock) {
-        this(projectile, hitEntity, hitBlock, null);
-    }
-
-    public ProjectileHitEvent(final Projectile projectile, Entity hitEntity, Block hitBlock, org.bukkit.block.BlockFace hitBlockFace) {
-        super(projectile);
+		super(projectile);
         this.hitEntity = hitEntity;
         this.hitBlock = hitBlock;
-        this.hitBlockFace = hitBlockFace; // Paper
     }
 
     @Override
@@ -49,10 +43,6 @@ public class ProjectileHitEvent extends EntityEvent {
      */
     public Block getHitBlock() {
         return hitBlock;
-    }
-
-    public org.bukkit.block.BlockFace getHitBlockFace() {
-        return hitBlockFace;
     }
 
     /**

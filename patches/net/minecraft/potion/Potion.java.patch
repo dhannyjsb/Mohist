@@ -156,7 +156,7 @@
 +   public void renderHUDEffect(PotionEffect effect, net.minecraft.client.gui.Gui gui, int x, int y, float z, float alpha)
      {
 -        renderHUDEffect(x, y, effect, net.minecraft.client.Minecraft.getMinecraft(), alpha);
-+            renderHUDEffect(x, y, effect, net.minecraft.client.Minecraft.getMinecraft(), alpha);
++    	renderHUDEffect(x, y, effect, net.minecraft.client.Minecraft.getMinecraft(), alpha);
      }
 -
      /**

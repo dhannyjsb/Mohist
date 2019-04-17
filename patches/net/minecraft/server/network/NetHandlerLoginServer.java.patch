@@ -1,12 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/server/network/NetHandlerLoginServer.java
 +++ ../src-work/minecraft/net/minecraft/server/network/NetHandlerLoginServer.java
-@@ -1,21 +1,13 @@
+@@ -1,21 +1,11 @@
  package net.minecraft.server.network;
  
 +import cn.pfcraft.Mohist;
 +import cn.pfcraft.i18n.Message;
-+import com.destroystokyo.paper.profile.CraftPlayerProfile;
-+import com.destroystokyo.paper.profile.PlayerProfile;
  import com.mojang.authlib.GameProfile;
  import com.mojang.authlib.exceptions.AuthenticationUnavailableException;
  import io.netty.channel.ChannelFuture;
@@ -26,7 +24,7 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.network.NetworkManager;
  import net.minecraft.network.login.INetHandlerLoginServer;
-@@ -29,26 +21,45 @@
+@@ -29,11 +19,30 @@
  import net.minecraft.util.CryptManager;
  import net.minecraft.util.ITickable;
  import net.minecraft.util.text.ITextComponent;
@@ -36,8 +34,10 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.util.Waitable;
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
++import org.bukkit.event.player.PlayerPreLoginEvent;
  
 +import javax.annotation.Nullable;
 +import javax.crypto.SecretKey;
@@ -55,9 +55,7 @@
  public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
  {
      private static final AtomicInteger AUTHENTICATOR_THREAD_ID = new AtomicInteger(0);
--    private static final Logger LOGGER = LogManager.getLogger();
-+    private static final Logger LOGGER = Mohist.LOGGER;
-     private static final Random RANDOM = new Random();
+@@ -42,13 +51,15 @@
      private final byte[] verifyToken = new byte[4];
      private final MinecraftServer server;
      public final NetworkManager networkManager;
@@ -100,17 +98,10 @@
                  net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.fmlServerHandshake(this.server.getPlayerList(), this.networkManager, this.player);
                  this.player = null;
              }
-@@ -94,22 +109,61 @@
+@@ -94,22 +109,54 @@
          }
      }
  
-+    // Paper start - Cache authenticator threads
-+    private static final AtomicInteger threadId = new AtomicInteger(0);
-+    private static final java.util.concurrent.ExecutorService authenticatorPool = java.util.concurrent.Executors.newCachedThreadPool(
-+            r -> new Thread(r, "User Authenticator #" + threadId.incrementAndGet())
-+    );
-+    // Paper end
-+
 +    // Spigot start
 +    public void initUUID()
 +    {
@@ -166,7 +157,7 @@
  
              if (this.server.getNetworkCompressionThreshold() >= 0 && !this.networkManager.isLocalChannel())
              {
-@@ -127,12 +181,12 @@
+@@ -127,12 +174,12 @@
  
              if (entityplayermp != null)
              {
@@ -182,7 +173,7 @@
              }
          }
      }
-@@ -149,23 +203,38 @@
+@@ -149,23 +196,36 @@
  
      public void processLoginStart(CPacketLoginStart packetIn)
      {
@@ -200,20 +191,18 @@
          {
 -            this.currentLoginState = NetHandlerLoginServer.LoginState.READY_TO_ACCEPT;
 +            // Spigot start
-+            // Paper start - Cache authenticator threads
-+            authenticatorPool.execute(new Runnable() {
++            new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + NetHandlerLoginServer.AUTHENTICATOR_THREAD_ID.incrementAndGet()) {
 +                @Override
 +                public void run() {
 +                    try {
 +                        initUUID();
 +                        new LoginHandler().fireEvents();
 +                    } catch (Exception ex) {
-+                        disconnect(new TextComponentTranslation("Failed to verify username!"));
-+                        Mohist.LOGGER.warn( "Exception verifying " + loginGameProfile.getName(), ex);
++                        disconnect(new TextComponentString("Failed to verify username!"));
++                        server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + loginGameProfile.getName(), ex);
 +                    }
 +                }
-+            });
-+            // Paper end
++            }.start();
 +            // Spigot end
          }
      }
@@ -225,21 +214,16 @@
          PrivateKey privatekey = this.server.getKeyPair().getPrivate();
  
          if (!Arrays.equals(this.verifyToken, packetIn.getVerifyToken(privatekey)))
-@@ -175,10 +244,10 @@
+@@ -175,7 +235,7 @@
          else
          {
              this.secretKey = packetIn.getSecretKey(privatekey);
 -            this.currentLoginState = NetHandlerLoginServer.LoginState.AUTHENTICATING;
 +            this.currentLoginState = LoginState.AUTHENTICATING;
              this.networkManager.enableEncryption(this.secretKey);
--            (new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + AUTHENTICATOR_THREAD_ID.incrementAndGet())
--            {
-+            // Paper start - Cache authenticator threads
-+            authenticatorPool.execute(new Runnable() {
-                 public void run()
-                 {
-                     GameProfile gameprofile = NetHandlerLoginServer.this.loginGameProfile;
-@@ -190,14 +259,18 @@
+             (new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + AUTHENTICATOR_THREAD_ID.incrementAndGet())
+             {
+@@ -190,14 +250,18 @@
  
                          if (NetHandlerLoginServer.this.loginGameProfile != null)
                          {
@@ -261,7 +245,7 @@
                          }
                          else
                          {
-@@ -211,13 +284,23 @@
+@@ -211,13 +275,19 @@
                          {
                              NetHandlerLoginServer.LOGGER.warn("Authentication servers are down but will let them in anyway!");
                              NetHandlerLoginServer.this.loginGameProfile = NetHandlerLoginServer.this.getOfflineProfile(gameprofile);
@@ -270,10 +254,6 @@
                          }
                          else
                          {
-+                            // Paper start
-+                            if (com.destroystokyo.paper.PaperConfig.authenticationServersDownKickMessage != null) {
-+                                NetHandlerLoginServer.this.disconnect(new TextComponentString(com.destroystokyo.paper.PaperConfig.authenticationServersDownKickMessage));
-+                            } else // Paper end
                              NetHandlerLoginServer.this.disconnect(new TextComponentTranslation("multiplayer.disconnect.authservers_down", new Object[0]));
                              NetHandlerLoginServer.LOGGER.error("Couldn't verify username because servers are unavailable");
 +
@@ -286,13 +266,7 @@
                      }
                  }
                  @Nullable
-@@ -226,10 +309,46 @@
-                     SocketAddress socketaddress = NetHandlerLoginServer.this.networkManager.getRemoteAddress();
-                     return NetHandlerLoginServer.this.server.getPreventProxyConnections() && socketaddress instanceof InetSocketAddress ? ((InetSocketAddress)socketaddress).getAddress() : null;
-                 }
--            }).start();
-+            });
-+            // Paper end
+@@ -230,6 +300,47 @@
          }
      }
  
@@ -304,26 +278,32 @@
 +            java.util.UUID uniqueId = loginGameProfile.getId();
 +            final org.bukkit.craftbukkit.CraftServer server = NetHandlerLoginServer.this.server.server;
 +
-+            // Paper start
-+            PlayerProfile profile = CraftPlayerProfile.asBukkitMirror(loginGameProfile);
-+            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId, profile);
-+            server.getPluginManager().callEvent(asyncEvent); profile = asyncEvent.getPlayerProfile();
-+            profile.complete(true);
-+            loginGameProfile = CraftPlayerProfile.asAuthlib(profile);
-+            playerName = loginGameProfile.getName();
-+            uniqueId = loginGameProfile.getId();
-+            // Paper end
-+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-+                if (onlinePlayer.getUniqueId().equals(uniqueId)) {
-+                    disconnect(new TextComponentString(Message.getString(Message.disconnect_duplicate_login)));
++            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId);
++            server.getPluginManager().callEvent(asyncEvent);
++
++            if (PlayerPreLoginEvent.getHandlerList().getRegisteredListeners().length != 0) {
++                final PlayerPreLoginEvent event = new PlayerPreLoginEvent(playerName, address, uniqueId);
++                if (asyncEvent.getResult() != PlayerPreLoginEvent.Result.ALLOWED) {
++                    event.disallow(asyncEvent.getResult(), asyncEvent.getKickMessage());
++                }
++                Waitable<PlayerPreLoginEvent.Result> waitable = new Waitable<PlayerPreLoginEvent.Result>() {
++                    @Override
++                    protected PlayerPreLoginEvent.Result evaluate() {
++                        server.getPluginManager().callEvent(event);
++                        return event.getResult();
++                    }};
++
++                    NetHandlerLoginServer.this.server.processQueue.add(waitable);
++                    if (waitable.get() != PlayerPreLoginEvent.Result.ALLOWED) {
++                        disconnect(new TextComponentString(event.getKickMessage()));
++                        return;
++                    }
++            } else {
++                if (asyncEvent.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
++                    disconnect(new TextComponentString(asyncEvent.getKickMessage()));
 +                    return;
 +                }
 +            }
-+            if (asyncEvent.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-+                disconnect(new TextComponentTranslation(asyncEvent.getKickMessage()));
-+                return;
-+            }
-+
 +            // CraftBukkit end
 +            NetHandlerLoginServer.LOGGER.info("UUID of player {} is {}", NetHandlerLoginServer.this.loginGameProfile.getName(), NetHandlerLoginServer.this.loginGameProfile.getId());
 +            NetHandlerLoginServer.this.currentLoginState = NetHandlerLoginServer.LoginState.READY_TO_ACCEPT;

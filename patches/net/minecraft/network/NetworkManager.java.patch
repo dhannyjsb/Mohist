@@ -41,7 +41,7 @@
              return new EpollEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Epoll Client IO #%d").setDaemon(true).build());
          }
      };
-@@ -74,63 +75,76 @@
+@@ -74,63 +75,69 @@
          }
      };
      private final EnumPacketDirection direction;
@@ -61,12 +61,9 @@
      private ITextComponent terminationReason;
      private boolean isEncrypted;
      private boolean disconnected;
--
+ 
 -    public NetworkManager(EnumPacketDirection packetDirection)
 -    {
-+    public int protocolVersion;
-+    public InetSocketAddress virtualHost;
-+    private static boolean enableExplicitFlush = Boolean.getBoolean("paper.explicit-flush");
 +    public NetworkManager(EnumPacketDirection packetDirection) 
 +	{
          this.direction = packetDirection;
@@ -123,11 +120,6 @@
 -    {
 +    public void exceptionCaught(ChannelHandlerContext p_exceptionCaught_1_, Throwable p_exceptionCaught_2_) throws Exception 
 +	{
-+        // Paper start
-+        if (p_exceptionCaught_2_ instanceof io.netty.handler.codec.EncoderException && p_exceptionCaught_2_.getCause() instanceof NettyPacketEncoder.PacketTooLargeException) {
-+            p_exceptionCaught_2_ = p_exceptionCaught_2_.getCause();
-+        }
-+        // Paper end
          TextComponentTranslation textcomponenttranslation;
  
 -        if (p_exceptionCaught_2_ instanceof TimeoutException)
@@ -144,7 +136,7 @@
              textcomponenttranslation = new TextComponentTranslation("disconnect.genericReason", new Object[] {"Internal Exception: " + p_exceptionCaught_2_});
          }
  
-@@ -173,7 +187,7 @@
+@@ -173,7 +180,7 @@
  
              try
              {
@@ -153,7 +145,7 @@
              }
              finally
              {
-@@ -195,7 +209,7 @@
+@@ -195,7 +202,7 @@
  
              try
              {
@@ -162,7 +154,7 @@
              }
              finally
              {
-@@ -265,7 +279,7 @@
+@@ -265,7 +272,7 @@
              {
                  while (!this.outboundPacketsQueue.isEmpty())
                  {
@@ -171,7 +163,7 @@
                      this.dispatchPacket(networkmanager$inboundhandlertuplepacketlistener.packet, networkmanager$inboundhandlertuplepacketlistener.futureListeners);
                  }
              }
-@@ -276,18 +290,19 @@
+@@ -276,18 +283,19 @@
          }
      }
  
@@ -194,11 +186,11 @@
 -            this.channel.flush();
 +        if (this.channel != null) 
 +		{
-+            if (enableExplicitFlush) this.channel.eventLoop().execute(() -> this.channel.flush()); // Paper - we don't need to explicit flush here, but allow opt in incase issues are found to a better version
++           this.channel.flush();
          }
      }
  
-@@ -296,16 +311,19 @@
+@@ -296,16 +304,19 @@
          return this.socketAddress;
      }
  
@@ -224,7 +216,7 @@
      {
          return this.channel instanceof LocalChannel || this.channel instanceof LocalServerChannel;
      }
-@@ -410,7 +428,7 @@
+@@ -410,7 +421,7 @@
              }
              else
              {
@@ -233,7 +225,7 @@
              }
  
              if (this.channel.pipeline().get("compress") instanceof NettyCompressionEncoder)
-@@ -476,4 +494,12 @@
+@@ -476,4 +487,12 @@
                  this.futureListeners = inFutureListeners;
              }
          }

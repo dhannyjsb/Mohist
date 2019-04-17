@@ -59,12 +59,9 @@
      }
  
      public boolean canDoLightning(net.minecraft.world.chunk.Chunk chunk)
-@@ -601,6 +608,11 @@
- 
-     public boolean canDropChunk(int x, int z)
+@@ -603,4 +610,9 @@
      {
--        return true;
-+        return !this.world.isSpawnChunk(x, z); // Paper - Use shouldStayLoaded check for all worlds
+         return true;
      }
 +    // Mohist start
 +    public static WorldProvider getProviderForDimension(int dimensionId){

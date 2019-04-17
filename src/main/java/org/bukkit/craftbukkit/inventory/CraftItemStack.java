@@ -1,12 +1,14 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
+import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -14,8 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 
-import static org.bukkit.craftbukkit.inventory.CraftMetaItem.ENCHANTMENTS_ID;
-import static org.bukkit.craftbukkit.inventory.CraftMetaItem.ENCHANTMENTS_LVL;
+import static org.bukkit.craftbukkit.inventory.CraftMetaItem.*;
 
 @DelegateDeserialization(ItemStack.class)
 public final class CraftItemStack extends ItemStack {
@@ -166,27 +167,37 @@ public final class CraftItemStack extends ItemStack {
         }
     }
 
-    @Override
+	@Override
     public int getMaxStackSize() {
-        return (handle == null) ? Material.AIR.getMaxStackSize() : handle.getItem().getItemStackLimit(handle);
+        return (handle == null) ? Material.AIR.getMaxStackSize() : handle.getItem().getItemStackLimit(this.handle);
     }
-
-    // Paper start
-    @Override
-    public int getMaxItemUseDuration() {
-        return handle == null ? 0 : handle.getMaxItemUseDuration();
-    }
-    // Paper end
 
     @Override
     public void addUnsafeEnchantment(Enchantment ench, int level) {
         Validate.notNull(ench, "Cannot add null enchantment");
 
-        // Paper start - Replace whole method
-        final ItemMeta itemMeta = getItemMeta();
-        itemMeta.addEnchant(ench, level, true);
-        setItemMeta(itemMeta);
-        // Paper end
+        if (!makeTag(handle)) {
+            return;
+        }
+        NBTTagList list = getEnchantmentList(handle);
+        if (list == null) {
+            list = new NBTTagList();
+            handle.getTagCompound().setTag(ENCHANTMENTS.NBT, list);
+        }
+        int size = list.tagCount();
+
+        for (int i = 0; i < size; i++) {
+            NBTTagCompound tag = (NBTTagCompound) list.get(i);
+            short id = tag.getShort(ENCHANTMENTS_ID.NBT);
+            if (id == ench.getId()) {
+                tag.setShort(ENCHANTMENTS_LVL.NBT, (short) level);
+                return;
+            }
+        }
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setShort(ENCHANTMENTS_ID.NBT, (short) ench.getId());
+        tag.setShort(ENCHANTMENTS_LVL.NBT, (short) level);
+        list.appendTag(tag);
     }
 
     static boolean makeTag(net.minecraft.item.ItemStack item) {
@@ -201,31 +212,68 @@ public final class CraftItemStack extends ItemStack {
         return true;
     }
 
-    @Override
+	@Override
     public boolean containsEnchantment(Enchantment ench) {
-        return hasItemMeta() && getItemMeta().hasEnchant(ench); // Paper - use meta
+        return getEnchantmentLevel(ench) > 0;
     }
 
     @Override
     public int getEnchantmentLevel(Enchantment ench) {
-        return hasItemMeta() ? getItemMeta().getEnchantLevel(ench) : 0; // Pape - replace entire method with meta
+        Validate.notNull(ench, "Cannot find null enchantment");
+        if (handle == null) {
+            return 0;
+        }
+        return EnchantmentHelper.getEnchantmentLevel(CraftEnchantment.getRaw(ench), handle);
     }
 
     @Override
     public int removeEnchantment(Enchantment ench) {
-        // Paper start - replace entire method
-        final ItemMeta itemMeta = getItemMeta();
-        int level = itemMeta.getEnchantLevel(ench);
-        if (level > 0) {
-            itemMeta.removeEnchant(ench);
-            setItemMeta(itemMeta);
+        Validate.notNull(ench, "Cannot remove null enchantment");
+
+        NBTTagList list = getEnchantmentList(handle), listCopy;
+        if (list == null) {
+            return 0;
         }
+        int index = Integer.MIN_VALUE;
+        int level = Integer.MIN_VALUE;
+        int size = list.tagCount();
+
+        for (int i = 0; i < size; i++) {
+            NBTTagCompound enchantment = (NBTTagCompound) list.get(i);
+            int id = 0xffff & enchantment.getShort(ENCHANTMENTS_ID.NBT);
+            if (id == ench.getId()) {
+                index = i;
+                level = 0xffff & enchantment.getShort(ENCHANTMENTS_LVL.NBT);
+                break;
+            }
+        }
+
+        if (index == Integer.MIN_VALUE) {
+            return 0;
+        }
+        if (size == 1) {
+            handle.getTagCompound().removeTag(ENCHANTMENTS.NBT);
+            if (handle.getTagCompound().hasNoTags()) {
+                handle.setTagCompound(null);
+            }
+            return level;
+        }
+
+        // This is workaround for not having an index removal
+        listCopy = new NBTTagList();
+        for (int i = 0; i < size; i++) {
+            if (i != index) {
+                listCopy.appendTag(list.get(i));
+            }
+        }
+        handle.getTagCompound().setTag(ENCHANTMENTS.NBT, listCopy);
+
         return level;
     }
 
     @Override
     public Map<Enchantment, Integer> getEnchantments() {
-        return hasItemMeta() ? getItemMeta().getEnchants() : ImmutableMap.<Enchantment, Integer>of(); // Paper - use Item Meta
+        return getEnchantments(handle);
     }
 
     static Map<Enchantment, Integer> getEnchantments(net.minecraft.item.ItemStack item) {
@@ -300,8 +348,6 @@ public final class CraftItemStack extends ItemStack {
                 return new CraftMetaSpawnEgg(item.getTagCompound());
             case KNOWLEDGE_BOOK:
                 return new CraftMetaKnowledgeBook(item.getTagCompound());
-                case ARMOR_STAND:
-                    return new CraftMetaArmorStand(item.getTagCompound()); // Paper
          case FURNACE:
             case CHEST:
             case TRAPPED_CHEST:

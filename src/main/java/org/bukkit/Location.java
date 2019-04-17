@@ -500,7 +500,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
      * @param power The power of explosion, where 4F is TNT
      * @return false if explosion was canceled, otherwise true
      */
-        public boolean createExplosion(float power) {
+    public boolean createExplosion(float power) {
         return world.createExplosion(this, power);
     }
 

@@ -1,14 +1,10 @@
 package org.bukkit.craftbukkit.inventory;
 
-import com.destroystokyo.paper.profile.CraftPlayerProfile;
-import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntitySkull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,7 +14,6 @@ import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 @DelegateDeserialization(SerializableMeta.class)
@@ -120,19 +115,6 @@ class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
         return hasOwner() ? profile.getName() : null;
     }
 
-    // Paper start
-    @Override
-    public void setPlayerProfile(@Nullable PlayerProfile profile) {
-        this.profile = (profile == null) ? null : CraftPlayerProfile.asAuthlibCopy(profile);
-    }
-
-    @Nullable
-    @Override
-    public PlayerProfile getPlayerProfile() {
-        return profile != null ? CraftPlayerProfile.asBukkitCopy(profile) : null;
-    }
-   // Paper end
-
     @Override
     public OfflinePlayer getOwningPlayer() {
         if (hasOwner()) {
@@ -156,13 +138,7 @@ class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
         if (name == null) {
             profile = null;
         } else {
-            // Paper start - Use Online Players Skull
-            GameProfile newProfile = null;
-            EntityPlayer player = MinecraftServer.getServerInst().getPlayerList().getPlayerByUsername(name);
-            if (player != null) newProfile = player.getGameProfile();
-            if (newProfile == null) newProfile = new GameProfile(null, name);
-            profile = newProfile;
-            // Paper end
+			profile = new GameProfile(null, name);
         }
 
         return true;

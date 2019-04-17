@@ -22,15 +22,7 @@
  public class MapGenStronghold extends MapGenStructure
  {
      public final List<Biome> allowedBiomes;
-@@ -72,6 +73,7 @@
- 
-     public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored)
-     {
-+        this.world = worldIn; // Paper
-         if (!this.ranBiomeCheck)
-         {
-             this.generatePositions();
-@@ -181,9 +183,9 @@
+@@ -181,9 +182,9 @@
  
      protected StructureStart getStructureStart(int chunkX, int chunkZ)
      {

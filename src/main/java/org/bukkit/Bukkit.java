@@ -26,7 +26,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -267,26 +266,6 @@ public final class Bukkit {
     public static int broadcastMessage(String message) {
         return server.broadcastMessage(message);
     }
-
-    // Paper start
-    /**
-     * Sends the component to all online players.
-     *
-     * @param component the component to send
-     */
-    public static void broadcast(net.md_5.bungee.api.chat.BaseComponent component) {
-        server.broadcast(component);
-    }
-
-    /**
-     *  Sends an array of components as a single message to all online players.
-     *
-     * @param components the components to send
-     */
-    public static void broadcast(net.md_5.bungee.api.chat.BaseComponent... components) {
-        server.broadcast(components);
-    }
-    // Paper end
     
     /**
      * Gets the name of the update folder. The update folder is used to safely
@@ -1204,39 +1183,7 @@ public final class Bukkit {
      *
      * @return true if player names should be suggested
      */
-           public static boolean suggestPlayerNamesWhenNullTabCompletions() {
-           return server.suggestPlayerNamesWhenNullTabCompletions();
-       }
-
-    /**
-         * Creates a PlayerProfile for the specified uuid, with name as null
-         * @param uuid UUID to create profile for
-         * @return A PlayerProfile object
-         */
-    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid) {
-        return server.createProfile(uuid);
+    public static boolean suggestPlayerNamesWhenNullTabCompletions() {
+        return server.suggestPlayerNamesWhenNullTabCompletions();
     }
-
-    /**
-     * Creates a PlayerProfile for the specified name, with UUID as null
-     * @param name Name to create profile for
-     * @return A PlayerProfile object
-     */
-    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name) {
-        return server.createProfile(name);
-    }
-
-    /**
-     * Creates a PlayerProfile for the specified name/uuid
-     *
-     * Both UUID and Name can not be null at same time. One must be supplied.
-     *
-     * @param uuid UUID to create profile for
-     * @param name Name to create profile for
-     * @return A PlayerProfile object
-     */
-    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
-        return server.createProfile(uuid, name);
-    }
-    // Paper end
 }

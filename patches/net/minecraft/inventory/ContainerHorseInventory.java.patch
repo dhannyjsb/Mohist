@@ -26,7 +26,7 @@
          this.horseInventory = horseInventoryIn;
          this.horse = horse;
          int i = 3;
-@@ -133,4 +140,13 @@
+@@ -133,4 +140,14 @@
          super.onContainerClosed(playerIn);
          this.horseInventory.closeInventory(playerIn);
      }
@@ -36,6 +36,7 @@
 +        if (bukkitEntity != null) {
 +            return bukkitEntity;
 +        }
++
 +  		return bukkitEntity = (horseInventory.getOwner() != null ? new CraftInventoryView(player.player.getBukkitEntity(), horseInventory.getOwner().getInventory(), this) : null);
 +    }
 +

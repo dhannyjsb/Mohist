@@ -29,19 +29,11 @@
  public class BlockGrass extends Block implements IGrowable
  {
      public static final PropertyBool SNOWY = PropertyBool.create("snowy");
-@@ -36,32 +43,56 @@
- 
-     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-     {
-+        if (worldIn.paperConfig.grassUpdateRate != 1 && (worldIn.paperConfig.grassUpdateRate < 1 || (MinecraftServer.currentTick + pos.hashCode()) % worldIn.paperConfig.grassUpdateRate != 0)) { return; } // Paper
-         if (!worldIn.isRemote)
-         {
+@@ -41,18 +48,27 @@
              if (!worldIn.isAreaLoaded(pos, 3)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
--            if (worldIn.getLightFromNeighbors(pos.up()) < 4 && worldIn.getBlockState(pos.up()).getLightOpacity(worldIn, pos.up()) > 2)
--            {
+             if (worldIn.getLightFromNeighbors(pos.up()) < 4 && worldIn.getBlockState(pos.up()).getLightOpacity(worldIn, pos.up()) > 2)
+             {
 -                worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
-+                int lightLevel = -1; // Paper
-+                if (worldIn.getBlockState(pos.up()).getLightOpacity() > 2 && (lightLevel = worldIn.getLightFromNeighbors(pos.up())) < 4) { // Paper - move light check to end to avoid unneeded light lookups
 +                    org.bukkit.World bworld = worldIn.getWorld();
 +                    BlockState blockState = bworld.getBlockAt(pos.getX(), pos.getY(), pos.getZ()).getState();
 +                    blockState.setType(CraftMagicNumbers.getMaterial(Blocks.DIRT));
@@ -56,14 +48,8 @@
              else
              {
 -                if (worldIn.getLightFromNeighbors(pos.up()) >= 9)
--                {
-+                // Paper start
-+                // If light was calculated above, reuse it, else grab it
-+                if (lightLevel == -1) {
-+                    lightLevel = worldIn.getLightFromNeighbors(pos.up());
-+                }
-+                if (lightLevel >= 9) {
-+                    // Paper end
++            	if (worldIn.getLightFromNeighbors(pos.up()) >= 9)
+                 {
                      for (int i = 0; i < 4; ++i)
                      {
                          BlockPos blockpos = pos.add(rand.nextInt(3) - 1, rand.nextInt(5) - 3, rand.nextInt(3) - 1);
@@ -74,13 +60,13 @@
                              return;
                          }
  
-                         IBlockState iblockstate = worldIn.getBlockState(blockpos.up());
+@@ -60,8 +76,18 @@
                          IBlockState iblockstate1 = worldIn.getBlockState(blockpos);
  
--                        if (iblockstate1.getBlock() == Blocks.DIRT && iblockstate1.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && worldIn.getLightFromNeighbors(blockpos.up()) >= 4 && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2)
+                         if (iblockstate1.getBlock() == Blocks.DIRT && iblockstate1.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && worldIn.getLightFromNeighbors(blockpos.up()) >= 4 && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2)
 -                        {
 -                            worldIn.setBlockState(blockpos, Blocks.GRASS.getDefaultState());
-+                        if (iblockstate1.getBlock() == Blocks.DIRT && iblockstate1.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && worldIn.getLightFromNeighbors(blockpos.up()) >= 4 && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2) {
++						{
 +                            //worldIn.setBlockState(blockpos, Blocks.GRASS.getDefaultState());
 +                            org.bukkit.World bworld = worldIn.getWorld();
 +                            BlockState blockState = bworld.getBlockAt(blockpos.getX(), blockpos.getY(), blockpos.getZ()).getState();
@@ -95,7 +81,7 @@
                          }
                      }
                  }
-@@ -109,7 +140,8 @@
+@@ -109,7 +135,8 @@
  
                              if (Blocks.TALLGRASS.canBlockStay(worldIn, blockpos1, iblockstate1))
                              {

@@ -92,22 +92,7 @@
                              {
                                  set.add(blockpos);
                              }
-@@ -130,7 +145,13 @@
-         int i1 = MathHelper.floor(this.y + (double)f3 + 1.0D);
-         int j2 = MathHelper.floor(this.z - (double)f3 - 1.0D);
-         int j1 = MathHelper.floor(this.z + (double)f3 + 1.0D);
--        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this.exploder, new AxisAlignedBB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1));
-+        // Paper start - Fix lag from explosions processing dead entities
-+        List<Entity> list = this.world.getEntitiesInAABBexcluding(this.exploder, new AxisAlignedBB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1), new Predicate<Entity>() {
-+            public boolean apply(Entity entity) {
-+                return EntitySelectors.CAN_AI_TARGET.apply(entity) && !entity.isDead;
-+            }
-+        });
-+        // Paper end
-         net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.world, this, list, f3);
-         Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
- 
-@@ -154,14 +175,21 @@
+@@ -154,9 +169,16 @@
                          d5 = d5 / d13;
                          d7 = d7 / d13;
                          d9 = d9 / d13;
@@ -126,31 +111,7 @@
                          double d11 = d10;
  
                          if (entity instanceof EntityLivingBase)
-                         {
--                            d11 = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase)entity, d10);
-+                            d11 = entity instanceof EntityPlayer && world.paperConfig.disableExplosionKnockback ? 0 : EnchantmentProtection.getBlastDamageReduction((EntityLivingBase)entity, d10); // Paper - Disable explosion knockback
-                         }
- 
-                         entity.motionX += d5 * d11;
-@@ -172,7 +200,7 @@
-                         {
-                             EntityPlayer entityplayer = (EntityPlayer)entity;
- 
--                            if (!entityplayer.isSpectator() && (!entityplayer.isCreative() || !entityplayer.capabilities.isFlying))
-+                            if (!entityplayer.isSpectator() && (!entityplayer.isCreative() || !world.paperConfig.disableExplosionKnockback || !entityplayer.capabilities.isFlying)) // Paper - Disable explosion knockback
-                             {
-                                 this.playerKnockbackMap.put(entityplayer, new Vec3d(d5 * d10, d7 * d10, d9 * d10));
-                             }
-@@ -185,7 +213,7 @@
- 
-     public void doExplosionB(boolean spawnParticles)
-     {
--        this.world.playSound((EntityPlayer)null, this.x, this.y, this.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-+        this.world.playSound(null, this.x, this.y, this.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
- 
-         if (this.size >= 2.0F && this.damagesTerrain)
-         {
-@@ -198,6 +226,48 @@
+@@ -198,6 +220,48 @@
  
          if (this.damagesTerrain)
          {
@@ -199,7 +160,7 @@
              for (BlockPos blockpos : this.affectedBlockPositions)
              {
                  IBlockState iblockstate = this.world.getBlockState(blockpos);
-@@ -228,7 +298,9 @@
+@@ -228,7 +292,9 @@
                  {
                      if (block.canDropFromExplosion(this))
                      {
@@ -210,7 +171,7 @@
                      }
  
                      block.onBlockExploded(this.world, blockpos, this);
-@@ -242,7 +314,12 @@
+@@ -242,7 +308,12 @@
              {
                  if (this.world.getBlockState(blockpos1).getMaterial() == Material.AIR && this.world.getBlockState(blockpos1.down()).isFullBlock() && this.random.nextInt(3) == 0)
                  {
@@ -224,7 +185,7 @@
                  }
              }
          }
-@@ -266,7 +343,8 @@
+@@ -266,7 +337,8 @@
          }
          else
          {
@@ -234,7 +195,7 @@
          }
      }
  
-@@ -281,4 +359,82 @@
+@@ -281,4 +353,82 @@
      }
  
      public Vec3d getPosition(){ return this.position; }

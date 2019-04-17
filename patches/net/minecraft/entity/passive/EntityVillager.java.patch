@@ -124,25 +124,7 @@
              }
          }
      }
-@@ -880,11 +921,16 @@
-         return false;
-     }
- 
--    public void onStruckByLightning(EntityLightningBolt lightningBolt)
-+    public void onStruckByLightning(@Nullable EntityLightningBolt lightningBolt)
-     {
-         if (!this.world.isRemote && !this.isDead)
-         {
-             EntityWitch entitywitch = new EntityWitch(this.world);
-+            // Paper start
-+            if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityZapEvent(this, lightningBolt, entitywitch).isCancelled()) {
-+                return;
-+            }
-+            // Paper end
-             entitywitch.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-             entitywitch.onInitialSpawn(this.world.getDifficultyForLocation(new BlockPos(entitywitch)), (IEntityLivingData)null);
-             entitywitch.setNoAI(this.isAIDisabled());
-@@ -895,7 +941,7 @@
+@@ -895,7 +936,7 @@
                  entitywitch.setAlwaysRenderNameTag(this.getAlwaysRenderNameTag());
              }
  

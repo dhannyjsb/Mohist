@@ -1,9 +1,7 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntityBeacon.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntityBeacon.java
-@@ -1,12 +1,8 @@
- package net.minecraft.tileentity;
+@@ -2,11 +2,6 @@
  
-+import com.destroystokyo.paper.event.block.BeaconEffectEvent;
  import com.google.common.collect.Lists;
  import com.google.common.collect.Sets;
 -import java.util.Arrays;
@@ -14,7 +12,7 @@
  import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockStainedGlass;
-@@ -16,7 +12,6 @@
+@@ -16,7 +11,6 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.entity.player.InventoryPlayer;
  import net.minecraft.init.Blocks;
@@ -22,7 +20,7 @@
  import net.minecraft.init.MobEffects;
  import net.minecraft.inventory.Container;
  import net.minecraft.inventory.ContainerBeacon;
-@@ -33,29 +28,69 @@
+@@ -33,29 +27,69 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -103,7 +101,7 @@
              this.updateBeacon();
          }
      }
-@@ -69,39 +104,69 @@
+@@ -69,39 +103,54 @@
          }
      }
  
@@ -158,23 +156,8 @@
 +    }
 +
 +    private void applyEffect(List<EntityPlayer> list, Potion effects, int i, int b0) {
-+        // Paper - BeaconEffectEvent
-+        applyEffect(list, effects, i, b0, true);
-+    }
-+
-+    private void applyEffect(List<EntityPlayer> list, Potion effects, int i, int b0, boolean isPrimary) {
-+        // Paper start - BeaconEffectEvent
-+        org.bukkit.block.Block block = world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
-+        org.bukkit.potion.PotionEffect effect = CraftPotionUtil.toBukkit(new PotionEffect(effects, i, b0, true, true));
-+        // Paper end
-+        for (EntityPlayer entityplayer : list) {
-+            // Paper start - BeaconEffectEvent
-+            BeaconEffectEvent event = new BeaconEffectEvent(block, effect, (Player) entityplayer.getBukkitEntity(), isPrimary);
-+            if (CraftEventFactory.callEvent(event).isCancelled()) continue;
-+            org.bukkit.potion.PotionEffect eventEffect = event.getEffect();
-+            entityplayer.getBukkitEntity().addPotionEffect(eventEffect, true);
-+        }
-+        // Paper end
++        for (EntityPlayer entityplayer : list)
++            entityplayer.addPotionEffect(new PotionEffect(effects, i, b0, true, true));
 +    }
 +
 +    private boolean hasSecondaryEffect() {
@@ -191,7 +174,7 @@
 +            applyEffect(list, this.primaryEffect, i, b0);
 +
 +            if (hasSecondaryEffect()) {
-+                applyEffect(list, this.secondaryEffect, i, 0, false); // Paper - BeaconEffectEvent
++                applyEffect(list, this.secondaryEffect, i, 0);
              }
          }
      }
@@ -199,7 +182,7 @@
  
      private void updateSegmentColors()
      {
-@@ -112,7 +177,7 @@
+@@ -112,7 +161,7 @@
          this.levels = 0;
          this.beamSegments.clear();
          this.isComplete = true;
@@ -208,7 +191,7 @@
          this.beamSegments.add(tileentitybeacon$beamsegment);
          boolean flag = true;
          BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-@@ -159,7 +224,7 @@
+@@ -159,7 +208,7 @@
              }
              else
              {
@@ -217,7 +200,7 @@
                  this.beamSegments.add(tileentitybeacon$beamsegment);
              }
  
-@@ -215,7 +280,7 @@
+@@ -215,7 +264,7 @@
      }
  
      @SideOnly(Side.CLIENT)
@@ -226,7 +209,7 @@
      {
          return this.beamSegments;
      }
-@@ -285,8 +350,12 @@
+@@ -285,8 +334,12 @@
      public void readFromNBT(NBTTagCompound compound)
      {
          super.readFromNBT(compound);

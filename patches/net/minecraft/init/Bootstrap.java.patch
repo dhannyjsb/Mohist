@@ -358,7 +358,7 @@
 +                            org.bukkit.Bukkit.getPluginManager().callEvent(structureEvent);
 +                        }
 +                        if (structureEvent == null || !structureEvent.isCancelled()) {
-+                            for (BlockState blockstate : blockstates) {
++                            for (org.bukkit.block.BlockState blockstate : blockstates) {
 +                                blockstate.update(true);
 +                            }
 +                        }

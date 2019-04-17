@@ -13,7 +13,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.base64.Base64;
-import jline.console.ConsoleReader;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -102,7 +101,6 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -115,7 +113,6 @@ public final class CraftServer implements Server {
     private final String serverVersion;
     private final String bukkitVersion = Versioning.getBukkitVersion();
     private final Logger logger = Logger.getLogger("Minecraft");
-    private static CraftServer instance;
     private final ServicesManager servicesManager = new SimpleServicesManager();
     private final CraftScheduler scheduler = new CraftScheduler();
     private final CraftSimpleCommandMap craftCommandMap = new CraftSimpleCommandMap(this);
@@ -148,7 +145,6 @@ public final class CraftServer implements Server {
     private CraftIconCache icon;
     private boolean overrideAllCommandBlockCommands = false;
     private boolean unrestrictedAdvancements;
-    private boolean unrestrictedSignCommands; // Paper
     private final List<CraftPlayer> playerView;
     public int reloadCount;
 
@@ -166,7 +162,6 @@ public final class CraftServer implements Server {
     }
 
     public CraftServer(MinecraftServer console, PlayerList playerList) {
-        this.instance = this;
         this.console = console;
         this.playerList = (DedicatedPlayerList) playerList;
         this.playerView = Collections.unmodifiableList(Lists.transform(playerList.getPlayers(), new Function<EntityPlayerMP, CraftPlayer>() {
@@ -226,12 +221,6 @@ public final class CraftServer implements Server {
         saveCommandsConfig();
         overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
         unrestrictedAdvancements = commandsConfiguration.getBoolean("unrestricted-advancements");
-        // Paper start
-        unrestrictedSignCommands = commandsConfiguration.getBoolean("unrestricted-signs");
-        if (unrestrictedSignCommands) {
-            logger.warning("Warning: Commands are no longer restricted on signs. If you allow players to use Creative Mode, there may be risk of players bypassing permissions. Use this setting at your own risk!!!!");
-        }
-        // Paper end
         pluginManager.useTimings(configuration.getBoolean("settings.plugin-profiling"));
         monsterSpawn = configuration.getInt("spawn-limits.monsters");
         animalSpawn = configuration.getInt("spawn-limits.animals");
@@ -304,7 +293,7 @@ public final class CraftServer implements Server {
         if (type == PluginLoadOrder.STARTUP) {
             helpMap.clear();
             helpMap.initializeGeneralTopics();
-            if (com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions(); // Paper
+            loadCustomPermissions(); // Paper
         }
 
         Plugin[] plugins = pluginManager.getPlugins();
@@ -316,58 +305,22 @@ public final class CraftServer implements Server {
         }
 
         if (type == PluginLoadOrder.POSTWORLD) {
-            commandMap.setFallbackCommands();
             // Spigot start - Allow vanilla commands to be forced to be the main command
             setVanillaCommands(true);
             commandMap.setFallbackCommands();
             this.setVanillaCommands(false);
             // Spigot end
             commandMap.registerServerAliases();
-            if (!com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions(); // Paper
+            loadCustomPermissions();
             DefaultPermissions.registerCorePermissions();
             CraftDefaultPermissions.registerCorePermissions();
             helpMap.initializeCommands();
         }
     }
 
-    public boolean reloadCommandAliases() {
-        Set<String> removals = getCommandAliases().keySet().stream()
-                .map(key -> key.toLowerCase(java.util.Locale.ENGLISH))
-                .collect(java.util.stream.Collectors.toSet());
-        getCommandMap().getKnownCommands().keySet().removeIf(removals::contains);
-        File file = getCommandsConfigFile();
-        try {
-            commandsConfiguration.load(file);
-        } catch (FileNotFoundException ex) {
-            return false;
-        } catch (IOException | org.bukkit.configuration.InvalidConfigurationException ex) {
-            Mohist.LOGGER.error( "Cannot load " + file, ex);
-            return false;
-        }
-        commandMap.registerServerAliases();
-        return true;
-    }
-
-    public void reloadPermissions() {
-        pluginManager.clearPermissions();
-        if (com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions();
-        for (Plugin plugin : pluginManager.getPlugins()) {
-            for (Permission perm : plugin.getDescription().getPermissions()) {
-                try {
-                    pluginManager.addPermission(perm);
-                } catch (IllegalArgumentException ex) {
-                    Mohist.LOGGER.warn( "Plugin " + plugin.getDescription().getFullName() + " tried to register permission '" + perm.getName() + "' but it's already registered", ex);
-                }
-            }
-        }
-        if (!com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions();
-        DefaultPermissions.registerCorePermissions();
-        CraftDefaultPermissions.registerCorePermissions();
-    }
-
     @Override
     public boolean suggestPlayerNamesWhenNullTabCompletions() {
-        return com.destroystokyo.paper.PaperConfig.suggestPlayersWhenNullTabCompletions;
+        return true;
     }
 
     public void disablePlugins() {
@@ -670,29 +623,6 @@ public final class CraftServer implements Server {
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(commandLine, "CommandLine cannot be null");
 
-        // Paper Start
-        if (!Bukkit.isPrimaryThread()) {
-            final CommandSender fSender = sender;
-            final String fCommandLine = commandLine;
-            Mohist.LOGGER.error( "Command Dispatched Async: " + commandLine);
-            Mohist.LOGGER.error( "Please notify author of plugin causing this execution to fix this bug! see: http://bit.ly/1oSiM6C", new Throwable());
-            org.bukkit.craftbukkit.util.Waitable<Boolean> wait = new org.bukkit.craftbukkit.util.Waitable<Boolean>() {
-                @Override
-                protected Boolean evaluate() {
-                    return dispatchCommand(fSender, fCommandLine);
-                }
-            };
-            net.minecraft.server.MinecraftServer.getServerInst().processQueue.add(wait);
-            try {
-                return wait.get();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // This is proper habit for java. If we aren't handling it, pass it on!
-            } catch (Exception e) {
-                throw new RuntimeException("Exception processing dispatch command", e.getCause());
-            }
-        }
-        // Paper End
-
         if (commandMap.dispatch(sender, commandLine)) {
             return true;
         }
@@ -842,7 +772,7 @@ public final class CraftServer implements Server {
         System.out.println("Preparing start region for level " + (console.worldServerList.size() - 1) + " (Seed: " + internal.getSeed() + ")");
 
         if (internal.getWorld().getKeepSpawnInMemory()) {
-            short short1 = internal.paperConfig.keepLoadedRange; // Paper
+            short short1 = 196;
             long i = System.currentTimeMillis();
             for (int j = -short1; j <= short1; j += 16) {
                 for (int k = -short1; k <= short1; k += 16) {
@@ -1194,8 +1124,7 @@ public final class CraftServer implements Server {
             }
         GameProfile profile;
         // Only fetch an online UUID in online mode
-        if (MinecraftServer.getServerInst().isServerInOnlineMode()
-                || (org.spigotmc.SpigotConfig.bungee && com.destroystokyo.paper.PaperConfig.bungeeOnlineMode)) {
+        if (MinecraftServer.getServerInst().isServerInOnlineMode() || (org.spigotmc.SpigotConfig.bungee)) {
             profile = console.getPlayerProfileCache().getGameProfileForUsername( name );
         } else {
             // Make an OfflinePlayer using an offline mode UUID since the name has no profile
@@ -1453,7 +1382,6 @@ public final class CraftServer implements Server {
         return helpMap;
     }
 
-    @Override // Paper - add override
     public SimpleCommandMap getCommandMap() {
         return commandMap;
     }
@@ -1511,7 +1439,7 @@ public final class CraftServer implements Server {
             offers = tabCompleteChat(player, message);
         }
 
-        TabCompleteEvent tabEvent = new TabCompleteEvent(player, message, offers, message.startsWith("/") || forceCommand, pos != null ? new Location(player.getWorld(), pos.getX(), pos.getY(), pos.getZ()) : null); // Paper
+        TabCompleteEvent tabEvent = new TabCompleteEvent(player, message, offers);
         getPluginManager().callEvent(tabEvent);
 
         return tabEvent.isCancelled() ? Collections.EMPTY_LIST : tabEvent.getCompletions();
@@ -1701,46 +1629,5 @@ public final class CraftServer implements Server {
     public Spigot spigot()
     {
         return spigot;
-    }
-    
-    // Paper start
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static boolean dumpHeap(File file) {
-        try {
-            if (file.getParentFile() != null) {
-                file.getParentFile().mkdirs();
-            }
-                Class clazz = Class.forName("com.sun.management.HotSpotDiagnosticMXBean");
-                javax.management.MBeanServer server = java.lang.management.ManagementFactory.getPlatformMBeanServer();
-                Object hotspotMBean = java.lang.management.ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", clazz);
-                java.lang.reflect.Method m = clazz.getMethod("dumpHeap", String.class, boolean.class);
-                m.invoke(hotspotMBean, file.getPath(), true);
-                return true;
-            } catch (Throwable t) {
-                Mohist.LOGGER.error("Could not write heap to " + file);
-                t.printStackTrace();
-                return false;
-            }
-    }
-    
-    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid) {
-        return createProfile(uuid, null);
-    }
-
-    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name) {
-        return createProfile(null, name);
-    }
-
-    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
-        Player player = uuid != null ? Bukkit.getPlayer(uuid) : (name != null ? Bukkit.getPlayerExact(name) : null);
-        if (player != null) {
-                return new com.destroystokyo.paper.profile.CraftPlayerProfile((CraftPlayer)player);
-            }
-        return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
-    }
-    // Paper end
-
-    public static CraftServer instance() {
-        return instance;
     }
 }

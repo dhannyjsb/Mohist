@@ -217,26 +217,7 @@
                      this.shrink(1);
  
                      if (entityIn instanceof EntityPlayer)
-@@ -592,6 +647,18 @@
-         return this.stackTagCompound != null ? this.stackTagCompound.getTagList("ench", 10) : new NBTTagList();
-     }
- 
-+    // Paper start - (this is just a good no conflict location)
-+    public org.bukkit.inventory.ItemStack asBukkitMirror() {
-+        return CraftItemStack.asCraftMirror(this);
-+    }
-+    public org.bukkit.inventory.ItemStack asBukkitCopy() {
-+        return CraftItemStack.asCraftMirror(this.copy());
-+    }
-+    public static ItemStack fromBukkitCopy(org.bukkit.inventory.ItemStack itemstack) {
-+        return CraftItemStack.asNMSCopy(itemstack);
-+    }
-+    // Paper end
-+
-     public void setTagCompound(@Nullable NBTTagCompound nbt)
-     {
-         this.stackTagCompound = nbt;
-@@ -983,6 +1050,14 @@
+@@ -983,6 +1038,14 @@
  
      public void setRepairCost(int cost)
      {
@@ -251,7 +232,7 @@
          if (!this.hasTagCompound())
          {
              this.stackTagCompound = new NBTTagCompound();
-@@ -1043,6 +1118,14 @@
+@@ -1043,6 +1106,14 @@
          nbttaglist.appendTag(nbttagcompound);
      }
  
@@ -266,7 +247,7 @@
      public ITextComponent getTextComponent()
      {
          TextComponentString textcomponentstring = new TextComponentString(this.getDisplayName());
-@@ -1280,4 +1363,16 @@
+@@ -1280,4 +1351,16 @@
      {
          return this.isEmpty() || this.getItem().doesSneakBypassUse(this, world, pos, player);
      }

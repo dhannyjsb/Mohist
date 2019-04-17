@@ -464,46 +464,4 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public boolean isCollidable() {
         return getHandle().collides;
     }
-
-    // Paper start
-    @Override
-    public int getArrowsStuck() {
-        return getHandle().getArrowCountInEntity();
-    }
-
-    @Override
-    public void setArrowsStuck(int arrows) {
-        getHandle().setArrowCountInEntity(arrows);
-    }
-
-    @Override
-    public int getShieldBlockingDelay() {
-        return getHandle().getShieldBlockingDelay();
-    }
-
-    @Override
-    public void setShieldBlockingDelay(int delay) {
-        getHandle().setShieldBlockingDelay(delay);
-    }
-
-    @Override
-    public ItemStack getActiveItem() {
-        return getHandle().getActiveItemStack().asBukkitMirror();
-    }
-
-    @Override
-    public int getItemUseRemainingTime() {
-        return getHandle().getItemInUseCount();
-    }
-
-    @Override
-    public int getHandRaisedTime() {
-        return getHandle().getItemInUseMaxCount();
-    }
-
-    @Override
-    public boolean isHandRaised() {
-        return getHandle().isRiding();
-    }
-    // Paper end
 }

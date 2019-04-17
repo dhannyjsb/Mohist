@@ -131,7 +131,6 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      */
     public void closeInventory();
 
-    public void closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason);
     /**
      * Returns the ItemStack currently in your hand, can be empty.
      *
@@ -250,24 +249,6 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @return Experience required to level up
      */
     public int getExpToLevel();
-
-    // Paper start
-     /**
-      *  If there is an Entity on this entities left shoulder, it will be released to the world and returned.
-      *  If no Entity is released, null will be returned.
-      *
-      * @return The released entity, or null
-      */
-     public Entity releaseLeftShoulderEntity();
-
-    /**
-    * If there is an Entity on this entities left shoulder, it will be released to the world and returned.
-    * If no Entity is released, null will be returned.
-    *
-    * @return The released entity, or null
-    */
-    public Entity releaseRightShoulderEntity();
-    // Paper end
     
     /**
      * Gets the entity currently perched on the left shoulder or null if no
@@ -330,13 +311,4 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      */
     @Deprecated
     public void setShoulderEntityRight(Entity entity);
-
-    // Paper start - Add method to open already placed sign
-    /**
-     * Opens an editor window for the specified sign
-     *
-     * @param sign The sign to open
-     */
-    void openSign(org.bukkit.block.Sign sign);
-    // Paper end
 }

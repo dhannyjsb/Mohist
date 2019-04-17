@@ -8,7 +8,7 @@
  import net.minecraft.world.World;
  
  public interface IRecipe extends net.minecraftforge.registries.IForgeRegistryEntry<IRecipe>
-@@ -20,18 +21,28 @@
+@@ -20,18 +21,22 @@
          return net.minecraftforge.common.ForgeHooks.defaultRecipeGetRemainingItems(inv);
      }
  
@@ -30,13 +30,7 @@
          return "";
      }
 +
-+    default org.bukkit.inventory.Recipe toBukkitRecipe() // CraftBukkit
-+    {
-+        return null;
-+    }
++    org.bukkit.inventory.Recipe toBukkitRecipe(); // CraftBukkit
 +
-+    default void setKey(ResourceLocation key) // CraftBukkit
-+    {
-+
-+    }
++    void setKey(ResourceLocation key); // CraftBukkit
  }

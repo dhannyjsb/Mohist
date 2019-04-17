@@ -15,11 +15,12 @@
  import net.minecraft.stats.StatList;
  import net.minecraft.util.DamageSource;
  import net.minecraft.util.datafix.DataFixer;
-@@ -26,13 +26,16 @@
+@@ -26,13 +26,17 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.event.entity.EntityPickupItemEvent;
++import org.bukkit.event.player.PlayerPickupItemEvent;
  
 +import javax.annotation.Nullable;
 +
@@ -33,7 +34,7 @@
      private int health;
      private String thrower;
      private String owner;
-@@ -43,6 +46,8 @@
+@@ -43,6 +47,8 @@
       */
      public int lifespan = 6000;
  
@@ -42,7 +43,7 @@
      public EntityItem(World worldIn, double x, double y, double z)
      {
          super(worldIn);
-@@ -60,7 +65,7 @@
+@@ -60,7 +66,7 @@
      {
          this(worldIn, x, y, z);
          this.setItem(stack);
@@ -51,7 +52,7 @@
      }
  
      protected boolean canTriggerWalking()
-@@ -93,10 +98,12 @@
+@@ -93,10 +99,12 @@
          {
              super.onUpdate();
  
@@ -68,7 +69,7 @@
  
              this.prevPosX = this.posX;
              this.prevPosY = this.posY;
-@@ -156,10 +163,12 @@
+@@ -156,10 +164,12 @@
                  this.motionY *= -0.5D;
              }
  
@@ -81,7 +82,7 @@
  
              this.handleWaterMovement();
  
-@@ -180,6 +189,10 @@
+@@ -180,6 +190,10 @@
  
              if (!this.world.isRemote && this.age >= lifespan)
              {
@@ -92,7 +93,7 @@
                  int hook = net.minecraftforge.event.ForgeEventFactory.onItemExpire(this, item);
                  if (hook < 0) this.setDead();
                  else          this.lifespan += hook;
-@@ -191,10 +204,35 @@
+@@ -191,10 +205,35 @@
          }
      }
  
@@ -130,7 +131,7 @@
              this.combineItems(entityitem);
          }
      }
-@@ -248,11 +286,14 @@
+@@ -248,11 +287,14 @@
                      }
                      else
                      {
@@ -150,7 +151,7 @@
                          return true;
                      }
                  }
-@@ -314,6 +355,9 @@
+@@ -314,6 +356,9 @@
          }
          else
          {
@@ -160,7 +161,7 @@
              this.markVelocityChanged();
              this.health = (int)((float)this.health - amount);
  
-@@ -393,6 +437,28 @@
+@@ -393,6 +438,34 @@
              Item item = itemstack.getItem();
              int i = itemstack.getCount();
  
@@ -170,9 +171,15 @@
 +
 +            if (this.pickupDelay <= 0 && canHold > 0) {
 +                itemstack.setCount(canHold);
++                PlayerPickupItemEvent playerEvent = new PlayerPickupItemEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
++                playerEvent.setCancelled(!entityIn.canPickUpLoot1);
++                this.world.getServer().getPluginManager().callEvent(playerEvent);
++                if (playerEvent.isCancelled()) {
++                    return;
++                }
 +
 +                // Call newer event afterwards
-+                EntityPickupItemEvent entityEvent = new EntityPickupItemEvent(entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
++                EntityPickupItemEvent entityEvent = new EntityPickupItemEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
 +                entityEvent.setCancelled(!entityIn.canPickUpLoot1);
 +                this.world.getServer().getPluginManager().callEvent(entityEvent);
 +                if (entityEvent.isCancelled()) {

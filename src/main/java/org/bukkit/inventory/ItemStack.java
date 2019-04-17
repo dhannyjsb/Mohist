@@ -10,11 +10,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Represents a stack of items
@@ -556,7 +553,7 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
             }
         }
 
-        return result.ensureServerConversions(); // Paper
+        return result;
     }
 
     /**
@@ -608,159 +605,4 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
 
         return true;
     }
-    
-    // Paper start
-    /**
-      * Minecart updates are converting simple item stacks into more complex NBT oriented Item Stacks.
-      *
-      * Use this method to to ensure any desired data conversions are processed.
-      * The input itemstack will not be the same as the returned itemstack.
-      *
-      * @return A potentially Data Converted ItemStack
-      */
-    public ItemStack ensureServerConversions() {
-        return Bukkit.getServer().getItemFactory().ensureServerConversions(this);
-    }
-
-    public String getI18NDisplayName() {
-        return Bukkit.getServer().getItemFactory().getI18NDisplayName(this);
-    }
-
-    public int getMaxItemUseDuration() {
-        Material material = Material.getMaterial(type);
-        if (material == null || !material.isItem()) {
-                return 0;
-            }
-        // Requires access to NMS
-        return ensureServerConversions().getMaxItemUseDuration();
-    }
-
-    /**
-     * Clones the itemstack and returns it a single quantity.
-     * @return The new itemstack with 1 quantity
-     */
-    public ItemStack asOne() {
-        return asQuantity(1);
-    }
-
-    /**
-     * Clones the itemstack and returns it as the specified quantity
-     * @param qty The quantity of the cloned item
-     * @return The new itemstack with specified quantity
-     */
-    public ItemStack asQuantity(int qty) {
-        ItemStack clone = clone();
-        clone.setAmount(qty);
-        return clone;
-    }
-
-    /**
-     * Adds 1 to this itemstack. Will not go over the items max stack size.
-     * @return The same item (not a clone)
-     */
-    public ItemStack add() {
-        return add(1);
-    }
-
-    /**
-     * Adds quantity to this itemstack. Will not go over the items max stack size.
-     *
-     * @param qty The amount to add
-     * @return The same item (not a clone)
-     */
-    public ItemStack add(int qty) {
-        setAmount(Math.min(getMaxStackSize(), getAmount() + qty));
-        return this;
-    }
-
-    /**
-     * Subtracts 1 to this itemstack.  Going to 0 or less will invalidate the item.
-     * @return The same item (not a clone)
-     */
-    public ItemStack subtract() {
-        return subtract(1);
-    }
-
-    /**
-     * Subtracts quantity to this itemstack. Going to 0 or less will invalidate the item.
-     *
-     * @param qty The amount to add
-     * @return The same item (not a clone)
-     */
-    public ItemStack subtract(int qty) {
-        setAmount(Math.max(0, getAmount() - qty));
-        return this;
-    }
-
-    /**
-     * If the item has lore, returns it, else it will return null
-     * @return The lore, or null
-     */
-    @Nullable
-    public List<String> getLore() {
-        if (!hasItemMeta()) {
-                return null;
-            }
-        ItemMeta itemMeta = getItemMeta();
-        if (!itemMeta.hasLore()) {
-                return null;
-            }
-        return itemMeta.getLore();
-    }
-
-    /**
-     * Sets the lore for this item.
-     * Removes lore when given null.
-     *
-     * @param lore the lore that will be set
-     */
-    public void setLore(List<String> lore) {
-        ItemMeta itemMeta = getItemMeta();
-        itemMeta.setLore(lore);
-        setItemMeta(itemMeta);
-    }
-
-    /**
-     * Set itemflags which should be ignored when rendering a ItemStack in the Client. This Method does silently ignore double set itemFlags.
-     *
-     * @param itemFlags The hideflags which shouldn't be rendered
-     */
-    public void addItemFlags(ItemFlag... itemFlags) {
-        ItemMeta itemMeta = getItemMeta();
-        itemMeta.addItemFlags(itemFlags);
-        setItemMeta(itemMeta);
-    }
-
-    /**
-     * Remove specific set of itemFlags. This tells the Client it should render it again. This Method does silently ignore double removed itemFlags.
-     *
-     * @param itemFlags Hideflags which should be removed
-     */
-    public void removeItemFlags(ItemFlag... itemFlags) {
-        ItemMeta itemMeta = getItemMeta();
-        itemMeta.removeItemFlags(itemFlags);
-        setItemMeta(itemMeta);
-    }
-
-    /**
-     * Get current set itemFlags. The collection returned is unmodifiable.
-     *
-     * @return A set of all itemFlags set
-     */
-    public Set<ItemFlag> getItemFlags() {
-        ItemMeta itemMeta = getItemMeta();
-        return itemMeta.getItemFlags();
-    }
-
-    /**
-     * Check if the specified flag is present on this item.
-     *
-     * @param flag the flag to check
-     * @return if it is present
-     */
-    public boolean hasItemFlag(ItemFlag flag) {
-        ItemMeta itemMeta = getItemMeta();
-        return itemMeta.hasItemFlag(flag);
-    }
-    // Paper end
 }

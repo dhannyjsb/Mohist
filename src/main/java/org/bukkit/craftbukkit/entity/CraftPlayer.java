@@ -1,18 +1,15 @@
 package org.bukkit.craftbukkit.entity;
 
 import cn.pfcraft.Mohist;
-import com.destroystokyo.paper.Title;
-import com.destroystokyo.paper.profile.CraftPlayerProfile;
-import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.BaseEncoding;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
+import io.netty.util.internal.ConcurrentSet;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
@@ -21,24 +18,18 @@ import net.minecraft.entity.ai.attributes.AttributeMap;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerRepair;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.*;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.GameType;
 import net.minecraft.world.WorldServer;
@@ -92,18 +83,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     private long lastPlayed = 0;
     private boolean hasPlayedBefore = false;
     private final ConversationTracker conversationTracker = new ConversationTracker();
-    private final Set<String> channels = new HashSet<String>();
+    private final Set<String> channels = new ConcurrentSet<String>();
     private final Map<UUID, Set<WeakReference<Plugin>>> hiddenPlayers = new HashMap<>();
     private static final WeakHashMap<Plugin, WeakReference<Plugin>> pluginWeakReferences = new WeakHashMap<>();
     private int hash = 0;
     private double health = 20;
     private boolean scaledHealth = false;
     private double healthScale = 20;
-    // Paper start
-    private org.bukkit.event.player.PlayerResourcePackStatusEvent.Status resourcePackStatus;
-    private String resourcePackHash;
-    // Paper end
-    private static final boolean DISABLE_CHANNEL_LIMIT = System.getProperty("paper.disableChannelLimit") != null; // Paper - add a flag to disable the channel limit
 
     public CraftPlayer(CraftServer server, EntityPlayerMP entity) {
         super(server, entity);
@@ -148,20 +134,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
     }
 
-    // Paper start - Implement NetworkClient
-    @Override
-    public int getProtocolVersion() {
-        if (getHandle().connection == null) return -1;
-        return getHandle().connection.netManager.protocolVersion;
-    }
-
-    @Override
-    public InetSocketAddress getVirtualHost() {
-        if (getHandle().connection == null) return null;
-        return getHandle().connection.netManager.virtualHost;
-    }
-    // Paper end
-
     @Override
     public double getEyeHeight(boolean ignorePose) {
         if (ignorePose) {
@@ -193,84 +165,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             sendMessage(message);
         }
     }
-    // Paper start
-    @Override
-    public void setPlayerListHeaderFooter(BaseComponent[] header, BaseComponent[] footer) {
-        SPacketPlayerListHeaderFooter packet = new SPacketPlayerListHeaderFooter();
-        packet.header1 = header;
-        packet.footer1 = footer;
-        getHandle().connection.sendPacket(packet);
-    }
 
-    @Override
-    public void setPlayerListHeaderFooter(BaseComponent header, BaseComponent footer) {
-        this.setPlayerListHeaderFooter(header == null ? null : new BaseComponent[]{header},
-                footer == null ? null : new BaseComponent[]{footer});
-    }
-
-
-    @Override
-    public void setTitleTimes(int fadeInTicks, int stayTicks, int fadeOutTicks) {
-        getHandle().connection.sendPacket(new SPacketTitle(SPacketTitle.Type.TIMES, (BaseComponent[]) null, fadeInTicks, stayTicks, fadeOutTicks));
-    }
-
-    @Override
-    public void setSubtitle(BaseComponent[] subtitle) {
-        getHandle().connection.sendPacket(new SPacketTitle(SPacketTitle.Type.SUBTITLE, subtitle, 0, 0, 0));
-    }
-
-    @Override
-    public void setSubtitle(BaseComponent subtitle) {
-        setSubtitle(new BaseComponent[]{subtitle});
-    }
-
-    @Override
-    public void showTitle(BaseComponent[] title) {
-        getHandle().connection.sendPacket(new SPacketTitle(SPacketTitle.Type.TITLE, title, 0, 0, 0));
-    }
-
-    @Override
-    public void showTitle(BaseComponent title) {
-        showTitle(new BaseComponent[]{title});
-    }
-
-    @Override
-    public void showTitle(BaseComponent[] title, BaseComponent[] subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks) {
-        setTitleTimes(fadeInTicks, stayTicks, fadeOutTicks);
-        setSubtitle(subtitle);
-        showTitle(title);
-    }
-
-    @Override
-    public void showTitle(BaseComponent title, BaseComponent subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks) {
-        setTitleTimes(fadeInTicks, stayTicks, fadeOutTicks);
-        setSubtitle(subtitle);
-        showTitle(title);
-    }
-
-    @Override
-    public void sendTitle(Title title) {
-        Preconditions.checkNotNull(title, "Title is null");
-        setTitleTimes(title.getFadeIn(), title.getStay(), title.getFadeOut());
-        setSubtitle(title.getSubtitle() == null ? new BaseComponent[0] : title.getSubtitle());
-        showTitle(title.getTitle());
-    }
-
-    @Override
-    public void updateTitle(Title title) {
-        Preconditions.checkNotNull(title, "Title is null");
-        setTitleTimes(title.getFadeIn(), title.getStay(), title.getFadeOut());
-        if (title.getSubtitle() != null) {
-            setSubtitle(title.getSubtitle());
-        }
-        showTitle(title.getTitle());
-    }
-
-    @Override
-    public void hideTitle() {
-        getHandle().connection.sendPacket(new SPacketTitle(SPacketTitle.Type.CLEAR, (BaseComponent[]) null, 0, 0, 0));
-    }
-    // Paper end
     @Override
     public String getDisplayName() {
         return getHandle().displayName;
@@ -637,29 +532,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
         // Close any foreign inventory
         if (getHandle().openContainer != getHandle().inventoryContainer) {
-            getHandle().closeScreen(org.bukkit.event.inventory.InventoryCloseEvent.Reason.TELEPORT); // Paper
+            getHandle().closeScreen();
         }
 
         // Check if the fromWorld and toWorld are the same.
         if (fromWorld == toWorld) {
             entity.connection.teleport(to);
         } else {
-            // Paper - Configurable suffocation check
-            server.getHandle().recreatePlayerEntity(entity, toWorld.dimension, true, to, !toWorld.paperConfig.disableTeleportationSuffocationCheck);
+            server.getHandle().recreatePlayerEntity(entity, toWorld.dimension, true, to, true);
         }
         return true;
     }
-
-    // Paper start - Ugly workaround for SPIGOT-1915 & GH-114
-    @Override
-    public boolean setPassenger(org.bukkit.entity.Entity passenger) {
-        boolean wasSet = super.setPassenger(passenger);
-        if (wasSet) {
-            this.getHandle().connection.sendPacket(new SPacketSetPassengers(this.getHandle()));
-        }
-        return wasSet;
-    }
-    // Paper end
 
     @Override
     public void setSneaking(boolean sneak) {
@@ -693,9 +576,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void updateInventory() {
-        if (getHandle().connection == null) {
-            return;
-        }
         getHandle().sendContainerToPlayer(getHandle().openContainer);
     }
 
@@ -1063,14 +943,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         hiddenPlayers.put(player.getUniqueId(), hidingPlugins);
 
         // Remove this player from the hidden player's EntityTrackerEntry
-        EntityPlayerMP other = ((CraftPlayer) player).getHandle();
-        // Paper start
-        unregisterPlayer(other);
-    }
-
-    private void unregisterPlayer(EntityPlayerMP other) {
         EntityTracker tracker = ((WorldServer) entity.world).entityTracker;
-        // Paper end
+        EntityPlayerMP other = ((CraftPlayer) player).getHandle();
         EntityTrackerEntry entry = tracker.trackedEntityHashTable.lookup(other.getEntityId());
         if (entry != null) {
             entry.removeTrackedPlayerSymmetric(getHandle());
@@ -1111,14 +985,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
         hiddenPlayers.remove(player.getUniqueId());
 
-        // Paper start
-        EntityPlayerMP other = ((CraftPlayer) player).getHandle();
-        registerPlayer(other);
-    }
-
-    private void registerPlayer(EntityPlayerMP other) {
         EntityTracker tracker = ((WorldServer) entity.world).entityTracker;
-        // Paper end
+        EntityPlayerMP other = ((CraftPlayer) player).getHandle();
+
         getHandle().connection.sendPacket(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, other));
 
         EntityTrackerEntry entry = tracker.trackedEntityHashTable.lookup(other.getEntityId());
@@ -1126,45 +995,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             entry.updatePlayerEntity(getHandle());
         }
     }
-
-    // Paper start
-    private void reregisterPlayer(EntityPlayerMP player) {
-        if (!hiddenPlayers.containsKey(player.getUniqueID())) {
-                unregisterPlayer(player);
-                registerPlayer(player);
-            }
-    }
-    public void setPlayerProfile(PlayerProfile profile) {
-        EntityPlayer self = getHandle();
-        self.setProfile(CraftPlayerProfile.asAuthlibCopy(profile));
-        List<EntityPlayerMP> players = server.getServer().getPlayerList().playerEntityList;
-        for (EntityPlayer player : players) {
-                player.getBukkitEntity().setHandle(self);
-            }
-        refreshPlayer();
-    }
-    public PlayerProfile getPlayerProfile() {
-        return new CraftPlayerProfile(this).clone();
-    }
-
-    private void refreshPlayer() {
-        EntityPlayerMP handle = getHandle();
-        Location loc = getLocation();
-        NetHandlerPlayServer connection = handle.connection;
-        reregisterPlayer(handle);
-
-        //Respawn the player then update their position and selected slot
-        connection.sendPacket(new SPacketRespawn(handle.dimension, handle.world.getDifficulty(), handle.world.getWorldInfo().getTerrainType(), handle.interactionManager.getGameType()));
-        handle.sendPlayerAbilities();
-        connection.sendPacket(new SPacketPlayerPosLook(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(), new HashSet<>(), 0));
-        MinecraftServer.getServerInst().getPlayerList().syncPlayerInventory(handle);
-
-        if (this.isOp()) {
-            this.setOp(false);
-            this.setOp(true);
-        }
-    }
-    // Paper end
 
     public void removeDisconnectingPlayer(Player player) {
         hiddenPlayers.remove(player.getUniqueId());
@@ -1336,7 +1166,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public void addChannel(String channel) {
-        com.google.common.base.Preconditions.checkState( DISABLE_CHANNEL_LIMIT || channels.size() < 128, "Too many channels registered" ); // Spigot // Paper - flag to disable channel limit
         if (channels.add(channel)) {
             server.getPluginManager().callEvent(new PlayerRegisterChannelEvent(this, channel));
         }
@@ -1578,15 +1407,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public void sendHealthUpdate() {
-        // Paper start - cancellable death event
-        SPacketUpdateHealth packet = new SPacketUpdateHealth(getScaledHealth(), getHandle().getFoodStats().getFoodLevel(), getHandle().getFoodStats().getSaturationLevel());
-        if (this.getHandle().queueHealthUpdatePacket) {
-            this.getHandle().queuedHealthUpdatePacket = packet;
-        } else {
-            this.getHandle().connection.sendPacket(packet);
-        }
-        // Paper end
-    }
+        getHandle().connection.sendPacket(new SPacketUpdateHealth(getScaledHealth(), getHandle().getFoodStats().getFoodLevel(), getHandle().getFoodStats().getSaturationLevel()));
+	}
 
     public void injectScaledMaxHealth(Collection<IAttributeInstance> collection, boolean force) {
         if (!scaledHealth && !force) {
@@ -1729,48 +1551,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public String getLocale() {
-        // Paper start - Locale change event
-        String locale = getHandle().language;
-        return locale != null ? locale : "en_us";
-        // Paper end
-    }
-
-    @Override
-    public void sendActionBar(String message) {
-        if (getHandle().connection == null || message == null || message.isEmpty()) return;
-        getHandle().connection.sendPacket(new SPacketChat(new TextComponentString(message), ChatType.GAME_INFO));
-    }
-
-    @Override
-    public void sendActionBar(char alternateChar, String message) {
-        if (message == null || message.isEmpty()) return;
-        sendActionBar(org.bukkit.ChatColor.translateAlternateColorCodes(alternateChar, message));
-    }
-
-    @Override
-    public void setResourcePack(String url, String hash) {
-        Validate.notNull(url, "Resource pack URL cannot be null");
-        Validate.notNull(hash, "Hash cannot be null");
-        this.getHandle().loadResourcePack(url, hash);
-    }
-
-    @Override
-    public org.bukkit.event.player.PlayerResourcePackStatusEvent.Status getResourcePackStatus() {
-        return this.resourcePackStatus;
-    }
-
-    @Override
-    public String getResourcePackHash() {
-        return this.resourcePackHash;
-    }
-
-    @Override
-    public boolean hasResourcePack() {
-        return this.resourcePackStatus == org.bukkit.event.player.PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED;
-    }
-
-    public void setResourcePackStatus(org.bukkit.event.player.PlayerResourcePackStatusEvent.Status status) {
-        this.resourcePackStatus = status;
+		return getHandle().language;
     }
 
     // Spigot start
@@ -1798,39 +1579,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             if ( getHealth() <= 0 && isOnline() )
             {
                 server.getServer().getPlayerList().recreatePlayerEntity( getHandle(), 0, false );
-            }
-        }
-
-        @Override
-        public void sendMessage(BaseComponent component) {
-            sendMessage( new BaseComponent[] { component } );
-        }
-
-        @Override
-        public void sendMessage(BaseComponent... components) {
-            if ( getHandle().connection == null ) return;
-
-            SPacketChat packet = new SPacketChat(null, ChatType.CHAT);
-            packet.components = components;
-            getHandle().connection.sendPacket(packet);
-        }
-
-        @Override
-        public void sendMessage(net.md_5.bungee.api.ChatMessageType position, BaseComponent component) {
-            sendMessage( position, new BaseComponent[] { component } );
-        }
-
-        @Override
-        public void sendMessage(net.md_5.bungee.api.ChatMessageType position, BaseComponent... components) {
-            if ( getHandle().connection == null ) return;
-
-            SPacketChat packet = new SPacketChat(null, ChatType.byId((byte) position.ordinal()));
-            // Action bar doesn't render colours, replace colours with legacy section symbols
-            if (position == net.md_5.bungee.api.ChatMessageType.ACTION_BAR) {
-                components = new BaseComponent[]{new net.md_5.bungee.api.chat.TextComponent(BaseComponent.toLegacyText(components))};
-            }
-            packet.components = components;
-            getHandle().connection.sendPacket(packet);
+			}
         }
 
         @Override
@@ -1893,7 +1642,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         @Override
         public String getLocale()
         {
-            return CraftPlayer.this.getLocale(); // Paper
+            return getHandle().language;
         }
 
         @Override
@@ -1906,6 +1655,37 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             }
 
             return java.util.Collections.unmodifiableSet( ret );
+        }
+@Override
+        public void sendMessage(BaseComponent component) {
+            sendMessage( new BaseComponent[] { component } );
+        }
+
+        @Override
+        public void sendMessage(BaseComponent... components) {
+            if ( getHandle().connection == null ) return;
+
+            SPacketChat packet = new SPacketChat(null, ChatType.CHAT);
+            packet.components = components;
+            getHandle().connection.sendPacket(packet);
+        }
+
+        @Override
+        public void sendMessage(net.md_5.bungee.api.ChatMessageType position, BaseComponent component) {
+            sendMessage( position, new BaseComponent[] { component } );
+        }
+
+        @Override
+        public void sendMessage(net.md_5.bungee.api.ChatMessageType position, BaseComponent... components) {
+            if ( getHandle().connection == null ) return;
+
+            SPacketChat packet = new SPacketChat(null, ChatType.byId((byte) position.ordinal()));
+            // Action bar doesn't render colours, replace colours with legacy section symbols
+            if (position == net.md_5.bungee.api.ChatMessageType.ACTION_BAR) {
+                components = new BaseComponent[]{new net.md_5.bungee.api.chat.TextComponent(BaseComponent.toLegacyText(components))};
+            }
+            packet.components = components;
+            getHandle().connection.sendPacket(packet);
         }
     };
 
