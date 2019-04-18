@@ -21,6 +21,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 - `git clone https://github.com/PFCraft/Mohist.git`
 - `git submodule update --init --recursive`
 - `gradlew build`
+* Output path - `.\Mohist\build\distributions\`
 
 ## Installation
 * Read the wiki in detail [**WIKI**](https://github.com/PFCraft/Mohist/wiki/Install-Mohist)
