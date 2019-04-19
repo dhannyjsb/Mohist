@@ -13,7 +13,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**Metrics**](https://bstats.org/plugin/bukkit/Mohist)
 
 ## Info
-* jdk1.8.0_212
+* Oraclejdk1.8.0_212
 * Forge-1.12.2 - 14.23.5.2836
 * Paper-1.12.2
 
