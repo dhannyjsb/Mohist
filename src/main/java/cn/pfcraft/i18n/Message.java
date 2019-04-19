@@ -45,6 +45,7 @@ public enum Message {
     bungeecord("message.bungeecord"),
     disconnect_flying("disconnect.flying"),
     disconnect_duplicate_login("disconnect.duplicate_login"),
+    client_join_mods("client.join.mods"),
 
     crash_mc_version("crash.mc.version"),
     crash_system("crash.system"),
