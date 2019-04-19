@@ -26,7 +26,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 ## Installation
 * Read the wiki in detail [**WIKI**](https://github.com/PFCraft/Mohist/wiki/Install-Mohist)
 
-## The project address on which the project depends
+## Part of the code comes from
 [**Bukkit**](https://hub.spigotmc.org/stash/scm/spigot/bukkit.git)
 [**Paper**](https://github.com/PaperMC/Paper.git)
 [**CraftBukkit**](https://hub.spigotmc.org/stash/scm/spigot/craftbukkit.git)
