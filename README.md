@@ -11,6 +11,8 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**Home(Chinese)**](https://www.mohist.red/)
    [**QQ**](https://jq.qq.com/?_wv=1027&k=5q7lcCb)
    [**Metrics**](https://bstats.org/plugin/bukkit/Mohist)
+   [**PayPal**](https://www.paypal.me/Mgazul)
+   [**afdian(Chinese)**](https://afdian.net/@Mgazul)
 
 ## Info
 * Oraclejdk1.8.0_212
