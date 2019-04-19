@@ -705,15 +705,7 @@
              this.riddenByEntities.remove(passenger);
              passenger.rideCooldown = 60;
          }
-@@ -2197,7 +2401,6 @@
-         return 300;
-     }
- 
--    @SideOnly(Side.CLIENT)
-     public void setVelocity(double x, double y, double z)
-     {
-         this.motionX = x;
-@@ -2325,12 +2528,12 @@
+@@ -2325,12 +2529,12 @@
          this.setFlag(5, invisible);
      }
  
@@ -728,7 +720,7 @@
      {
          byte b0 = ((Byte)this.dataManager.get(FLAGS)).byteValue();
  
-@@ -2351,17 +2554,52 @@
+@@ -2351,17 +2555,52 @@
  
      public void setAir(int air)
      {
@@ -783,7 +775,7 @@
          }
      }
  
-@@ -2502,7 +2740,7 @@
+@@ -2502,7 +2741,7 @@
  
      public String toString()
      {
@@ -792,7 +784,7 @@
      }
  
      public boolean isEntityInvulnerable(DamageSource source)
-@@ -2540,7 +2778,7 @@
+@@ -2540,7 +2779,7 @@
      public Entity changeDimension(int dimensionIn)
      {
          if (this.world.isRemote || this.isDead) return null;
@@ -801,7 +793,7 @@
      }
  
      @Nullable // Forge: Entities that require custom handling should override this method, not the other
-@@ -2551,53 +2789,67 @@
+@@ -2551,53 +2790,67 @@
              if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
              this.world.profiler.startSection("changeDimension");
              MinecraftServer minecraftserver = this.getServer();
@@ -909,7 +901,7 @@
              this.world.profiler.endStartSection("reloading");
              Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
  
-@@ -2605,28 +2857,26 @@
+@@ -2605,28 +2858,26 @@
              {
                  entity.copyDataFromOld(this);
  
@@ -947,7 +939,7 @@
              return entity;
          }
          else
-@@ -2755,6 +3005,11 @@
+@@ -2755,6 +3006,11 @@
  
      public void setCustomNameTag(String name)
      {
@@ -959,7 +951,7 @@
          this.dataManager.set(CUSTOM_NAME, name);
      }
  
-@@ -2838,7 +3093,25 @@
+@@ -2838,7 +3094,25 @@
  
      public void setEntityBoundingBox(AxisAlignedBB bb)
      {
@@ -986,7 +978,7 @@
      }
  
      public float getEyeHeight()
-@@ -2897,11 +3170,11 @@
+@@ -2897,11 +3171,11 @@
  
      public void setCommandStat(CommandResultStats.Type type, int amount)
      {
@@ -1002,7 +994,7 @@
  
      @Nullable
      public MinecraftServer getServer()
-@@ -2974,7 +3247,6 @@
+@@ -2974,7 +3248,6 @@
      public void onRemovedFromWorld() {
          this.isAddedToWorld = false;
      }
@@ -1010,7 +1002,7 @@
      /**
       * Returns a NBTTagCompound that can be used to store custom data for this entity.
       * It will be written, and read from disc, so it persists over world saves.
-@@ -3030,7 +3302,7 @@
+@@ -3030,7 +3303,7 @@
          {
              return ((net.minecraft.entity.item.EntityMinecart)this).getCartItem();
          }
@@ -1019,7 +1011,7 @@
          {
              return new ItemStack(((EntityBoat)this).getItemBoat());
          }
-@@ -3109,14 +3381,14 @@
+@@ -3109,14 +3382,14 @@
      }
  
      @Override
@@ -1036,7 +1028,7 @@
      {
          return capabilities == null ? null : capabilities.getCapability(capability, facing);
      }
-@@ -3319,7 +3591,7 @@
+@@ -3319,7 +3592,7 @@
          return SoundCategory.NEUTRAL;
      }
  

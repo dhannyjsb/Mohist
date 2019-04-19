@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/common/chunkio/ChunkIOProvider.java
++++ ../src-work/minecraft/net/minecraftforge/common/chunkio/ChunkIOProvider.java
+@@ -107,7 +107,7 @@
+ 
+         provider.id2ChunkMap.put(ChunkPos.asLong(this.chunkInfo.x, this.chunkInfo.z), this.chunk);
+         this.chunk.onLoad();
+-        this.chunk.populate(provider, provider.chunkGenerator);
++        this.chunk.populateCB(provider, provider.chunkGenerator, false);
+ 
+         this.runCallbacks();
+     }
