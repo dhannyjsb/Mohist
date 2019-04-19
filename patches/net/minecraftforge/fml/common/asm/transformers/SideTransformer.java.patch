@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/asm/transformers/SideTransformer.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/asm/transformers/SideTransformer.java
+@@ -53,7 +53,7 @@
+         ClassReader classReader = new ClassReader(bytes);
+         classReader.accept(classNode, 0);
+ 
+-        if (remove(classNode.visibleAnnotations, SIDE))
++        if (remove(classNode.visibleAnnotations, SIDE) && false)
+         {
+             if (DEBUG)
+             {

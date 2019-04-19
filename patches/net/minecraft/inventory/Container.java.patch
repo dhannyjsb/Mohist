@@ -31,29 +31,18 @@
  public abstract class Container
  {
      public NonNullList<ItemStack> inventoryItemStacks = NonNullList.<ItemStack>create();
-@@ -31,7 +41,88 @@
+@@ -31,7 +41,77 @@
      private final Set<Slot> dragSlots = Sets.<Slot>newHashSet();
      protected List<IContainerListener> listeners = Lists.<IContainerListener>newArrayList();
      private final Set<EntityPlayer> playerList = Sets.<EntityPlayer>newHashSet();
 +    private int tickCount; // Spigot
  
 +    public boolean checkReachable = true;
-+    private InventoryView bukkitView;
-+    private boolean isBukkitViewCreated;
++    public InventoryView bukkitView;
 +
-+    @Nullable
-+    public InventoryView getBukkitView() {
-+        if(!isBukkitViewCreated) {
-+            isBukkitViewCreated = true;
-+            bukkitView = computeBukkitView();
-+            return bukkitView;
-+        }
++    public InventoryView getBukkitView()
++    {
 +        return bukkitView;
-+    }
-+
-+    public void setBukkitView(InventoryView bukkitView) {
-+        this.bukkitView = bukkitView;
-+        isBukkitViewCreated = true;
 +    }
 +
 +    @Nullable
@@ -88,7 +77,7 @@
 +    }
 +
 +    public void transferTo(Container other, org.bukkit.craftbukkit.entity.CraftHumanEntity player) {
-+        InventoryView source = this.getBukkitView(), destination = other.getBukkitView();
++        InventoryView source = this.bukkitView, destination = other.bukkitView;
 +        if (source != null) {
 +            try {
 +                ((CraftInventory) source.getTopInventory()).getInventory().onClose(player);
@@ -120,7 +109,7 @@
      protected Slot addSlotToContainer(Slot slotIn)
      {
          slotIn.slotNumber = this.inventorySlots.size();
-@@ -79,7 +170,7 @@
+@@ -79,7 +159,7 @@
              ItemStack itemstack = ((Slot)this.inventorySlots.get(i)).getStack();
              ItemStack itemstack1 = this.inventoryItemStacks.get(i);
  
@@ -129,7 +118,7 @@
              {
                  boolean clientStackChanged = !ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack);
                  itemstack1 = itemstack.isEmpty() ? ItemStack.EMPTY : itemstack.copy();
-@@ -92,6 +183,7 @@
+@@ -92,6 +172,7 @@
                  }
              }
          }
@@ -137,7 +126,7 @@
      }
  
      public boolean enchantItem(EntityPlayer playerIn, int id)
-@@ -174,7 +266,7 @@
+@@ -174,7 +255,7 @@
                  {
                      ItemStack itemstack9 = inventoryplayer.getItemStack().copy();
                      int k1 = inventoryplayer.getItemStack().getCount();
@@ -146,7 +135,7 @@
                      for (Slot slot8 : this.dragSlots)
                      {
                          ItemStack itemstack13 = inventoryplayer.getItemStack();
-@@ -192,12 +284,50 @@
+@@ -192,12 +273,50 @@
                              }
  
                              k1 -= itemstack14.getCount() - j3;
@@ -161,7 +150,7 @@
 +                    // itemstack9.setCount(k1);
 +                    // inventoryplayer.setItemStack(itemstack9);
 +                    // CraftBukkit start - InventoryDragEvent
-+                    InventoryView view = getBukkitView();
++                    InventoryView view = bukkitView;
 +                    org.bukkit.inventory.ItemStack newcursor = CraftItemStack.asCraftMirror(itemstack9);
 +                    newcursor.setAmount(k1);
 +                    Map<Integer, org.bukkit.inventory.ItemStack> eventmap = new HashMap<Integer, org.bukkit.inventory.ItemStack>();
@@ -200,7 +189,7 @@
                  }
  
                  this.resetDrag();
-@@ -219,8 +349,9 @@
+@@ -219,8 +338,9 @@
                  {
                      if (dragType == 0)
                      {
@@ -211,7 +200,7 @@
                      }
  
                      if (dragType == 1)
-@@ -348,6 +479,15 @@
+@@ -348,6 +468,15 @@
                      }
  
                      slot6.onSlotChanged();
@@ -219,7 +208,7 @@
 +                    if (player instanceof EntityPlayerMP && slot6.getSlotStackLimit() != 64) {
 +                        ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(this.windowId, slot6.slotNumber, slot6.getStack()));
 +                        // Updating a crafting inventory makes the client reset the result slot, have to send it again
-+                        if (getBukkitView() != null && (this.getBukkitView().getType() == InventoryType.WORKBENCH || this.getBukkitView().getType() == InventoryType.CRAFTING)) {
++                        if (bukkitView != null && (this.bukkitView.getType() == InventoryType.WORKBENCH || this.bukkitView.getType() == InventoryType.CRAFTING)) {
 +                            ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(this.windowId, 0, this.getSlot(0).getStack()));
 +                        }
 +                    }
@@ -227,13 +216,13 @@
                  }
              }
          }
-@@ -797,7 +937,9 @@
+@@ -797,7 +926,9 @@
                  p_192389_4_.setRecipeUsed(irecipe);
                  itemstack = irecipe.getCraftingResult(p_192389_3_);
              }
 -
-+            if (p_192389_3_.resultInventory != null && getBukkitView() != null) {
-+                itemstack = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(p_192389_3_, itemstack, getBukkitView(), false); // CraftBukkit
++            if (p_192389_3_.resultInventory != null && bukkitView != null) {
++                itemstack = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(p_192389_3_, itemstack, bukkitView, false); // CraftBukkit
 +            }
              p_192389_4_.setInventorySlotContents(0, itemstack);
              entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
