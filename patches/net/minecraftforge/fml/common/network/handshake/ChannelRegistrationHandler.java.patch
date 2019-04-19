@@ -24,23 +24,31 @@
  
  public class ChannelRegistrationHandler extends SimpleChannelInboundHandler<FMLProxyPacket> {
      @Override
-@@ -48,6 +47,15 @@
+@@ -45,6 +44,23 @@
+             msg.payload().readBytes(data);
+             String channels = new String(data, StandardCharsets.UTF_8);
+             String[] split = channels.split("\0");
++            // Cauldron start - register bukkit channels for players
++            NetworkDispatcher dispatcher = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get();
++            if (msg.channel().equals("REGISTER"))
++            {
++                for (String channel : split)
++                {
++                    dispatcher.player.getBukkitEntity().addChannel(channel);
++                }
++            }
++            else
++            {
++                for (String channel : split)
++                {
++                    dispatcher.player.getBukkitEntity().removeChannel(channel);
++                }
++            }
++            // Cauldron end
              Set<String> channelSet = ImmutableSet.copyOf(split);
              FMLCommonHandler.instance().fireNetRegistrationEvent(manager, channelSet, msg.channel(), side);
              msg.payload().release();
-+            // handle REGISTER/UNREGISTER channel in Bukkit
-+            org.bukkit.craftbukkit.entity.CraftPlayer player = ((net.minecraft.network.NetHandlerPlayServer) ctx.attr(NetworkDispatcher.FML_DISPATCHER).get().getNetHandler()).getPlayer();
-+            if (msg.channel().equals("REGISTER")) {
-+                for (String channel : channelSet)
-+                    player.addChannel(channel);
-+            } else {
-+                for (String channel : channelSet)
-+                    player.removeChannel(channel);
-+            }
-         }
-         else
-         {
-@@ -58,7 +66,7 @@
+@@ -58,7 +74,7 @@
      @Override
      public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
      {
