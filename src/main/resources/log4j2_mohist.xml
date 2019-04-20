@@ -23,7 +23,7 @@
             </Policies>
         </RollingRandomAccessFile>
         <RollingRandomAccessFile name="DebugFile" fileName="logs/debug.log" filePattern="logs/debug-%i.log.gz">
-            <PatternLayout pattern="[%d{HH:mm:ss}] [%level] [%logger]: %replace{%msg}{(?i)\u00A7[0-9A-FK-OR]}{}%n"/>
+            <PatternLayout pattern="[%d{HH:mm:ss} %level]: %replace{%msg}{(?i)\u00A7[0-9A-FK-OR]}{}%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="200MB"/>
