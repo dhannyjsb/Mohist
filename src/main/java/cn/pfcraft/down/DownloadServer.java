@@ -11,7 +11,7 @@ public class DownloadServer implements Runnable {
 
     @Override
     public void run() {
-        String url = "https://launcher.mojang.com/v1/objects/886945bfb2b978778c3a0288fd7fab09d315b25f/server.jar";
+        String url;
         String fileName = "minecraft_server.1.12.2.jar";
 		Locale locale = Locale.getDefault();
         Object[] o1 = {fileName};
@@ -22,6 +22,8 @@ public class DownloadServer implements Runnable {
             byte[] buff = new byte[8192];
 			if (locale.getCountry().equals("CN")) {
                 url = "https://bmclapi2.bangbang93.com/version/1.12.2/server";
+            } else {
+                url = "https://launcher.mojang.com/v1/objects/886945bfb2b978778c3a0288fd7fab09d315b25f/server.jar";
             }
             is = new URL(url).openStream();
             File file = new File(".", fileName);

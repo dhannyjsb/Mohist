@@ -2,19 +2,19 @@ package cn.pfcraft.down;
 
 import cn.pfcraft.i18n.Message;
 
-import javax.crypto.MacSpi;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.zip.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class DownloadLibraries implements Runnable {
     @Override
     public void run() {
-        String url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
+        String url;
         String fileName = "libraries.zip";
 		Locale locale = Locale.getDefault();
         Object[] o1 = {fileName};
@@ -24,7 +24,9 @@ public class DownloadLibraries implements Runnable {
         try {
             byte[] buff = new byte[8192];
 		    if (locale.getCountry().equals("CN")) {
-                url = "https://gitee.com/PFCraft/MohistDown/raw/master/mohist/libraries.zip";
+                url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
+            } else {
+                url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
             }
             is1 = new URL(url).openStream();
             File file = new File(".", fileName);

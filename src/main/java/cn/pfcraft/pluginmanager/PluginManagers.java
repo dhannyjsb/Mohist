@@ -17,7 +17,6 @@ public class PluginManagers {
 			if (sender.isOp())
 				return true;
 
-			sender.sendMessage("§7请输入正确的指令");
 			return false;
 		}
 		return true;
@@ -28,7 +27,7 @@ public class PluginManagers {
 			return true;
 
 		if (split.length < 2) {
-			sender.sendMessage(ChatColor.GOLD + "/" + label + " load <plugin> §b- 加载插件");
+			sender.sendMessage(ChatColor.GOLD + "/" + label + " load <plugin> &b- load plugin");
 			return true;
 		}
         String jarName = split[1] + (split[1].endsWith(".jar") ? "" : ".jar");
@@ -38,7 +37,7 @@ public class PluginManagers {
             jarName = split[1] + (split[1].endsWith(".jar") ? ".unloaded" : ".jar.unloaded");
             toLoad = new File("plugins" + File.separator + jarName);
             if (!toLoad.exists()) {
-                sender.sendMessage("§c没有发现文件 " + split[1] + ".jar");
+                sender.sendMessage("&cNo files found " + split[1] + ".jar");
                 return true;
             } else {
                 String fileName = jarName.substring(0, jarName.length() - (".unloaded".length()));
@@ -50,14 +49,14 @@ public class PluginManagers {
 
 		PluginDescriptionFile desc = Control.getDescription(toLoad);
 		if (desc == null) {
-            sender.sendMessage("§cjar不包含plugin.yml文件");
+            sender.sendMessage("&cjar no plugin.yml");
 			return true;
 		}
         final Plugin[] pl = Bukkit.getPluginManager().getPlugins();
         ArrayList<Plugin> plugins = new ArrayList<Plugin>(java.util.Arrays.asList(pl));
         for(Plugin p: plugins) {
             if (desc.getName().equals(p.getName())) {
-                sender.sendMessage(desc.getName()+"§7无法重复加载");
+                sender.sendMessage(desc.getName()+"&7Unable to load repeatedly");
                 return true;
             }
         }
@@ -76,14 +75,14 @@ public class PluginManagers {
 			return true;
 
 		if (split.length < 2) {
-			sender.sendMessage(ChatColor.GOLD + "/" + label + " unload <plugin> §b- Uninstall plugin");
+			sender.sendMessage(ChatColor.GOLD + "/" + label + " unload <plugin> &b- Uninstall plugin");
 			return true;
 		}
 
 		final Plugin p = Bukkit.getServer().getPluginManager().getPlugin(split[1]);
 
 		if (p == null)
-			sender.sendMessage("§7No plugins found" + split[1]);
+			sender.sendMessage("&7No plugins found " + split[1]);
 		else {
 			if (Control.unloadPlugin(p, true))
 				sender.sendMessage(p.getDescription().getName()+p.getDescription().getVersion()+"Unload successfully");
@@ -99,14 +98,14 @@ public class PluginManagers {
 			return true;
 
 		if (split.length < 2) {
-			sender.sendMessage(ChatColor.GOLD + "/" + label + " reload <plugin> §b- Reloaded plugin");
+			sender.sendMessage(ChatColor.GOLD + "/" + label + " reload <plugin> &b- Reloaded plugin");
 			return true;
 		}
 
 		final Plugin p = Bukkit.getServer().getPluginManager().getPlugin(split[1]);
 
 		if (p == null)
-			sender.sendMessage("§7No plugins found" + split[1]);
+			sender.sendMessage("&7No plugins found " + split[1]);
 		else {
 			final File file = Control.getFile((JavaPlugin) p);
 
@@ -123,7 +122,7 @@ public class PluginManagers {
 				sender.sendMessage(split[1]+"An error occurred during overloading");
 
 			Control.enablePlugin(loaded);
-			sender.sendMessage(split[1]+"Overload success");
+			sender.sendMessage(split[1]+" reload success");
 		}
 		return true;
 	}
