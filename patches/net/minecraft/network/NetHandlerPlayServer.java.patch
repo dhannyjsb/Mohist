@@ -1323,7 +1323,7 @@
 +                if(inventory == null)
 +				{
 +                    inventory = new CraftInventoryView(this.player.getBukkitEntity(), MinecraftServer.getServerInst().server.createInventory(this.player.getBukkitEntity(), InventoryType.CHEST), this.player.openContainer);
-+                    this.player.openContainer.bukkitView = inventory;
++                    this.player.openContainer.setBukkitView(inventory);
 +                }
 +                InventoryType.SlotType type = CraftInventoryView.getSlotType(inventory, packetIn.getSlotId());
 +

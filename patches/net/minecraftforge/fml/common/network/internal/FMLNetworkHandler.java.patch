@@ -71,18 +71,18 @@
 +                // Cauldron start - create bukkitView for passed container then fire open event.
 +                if (entityPlayer != null)
 +                {
-+                    if (remoteGuiContainer.bukkitView == null)
++                    if (remoteGuiContainer.getBukkitView() == null)
 +                    {
 +                        TileEntity tileEntity = entityPlayer.world.getTileEntity(new BlockPos(x, y, z));
 +                        if (tileEntity != null && tileEntity instanceof IInventory)
 +                        {
 +                            IInventory teInv = (IInventory)tileEntity;
 +                            CraftInventory inventory = new CraftInventory(teInv);
-+                            remoteGuiContainer.bukkitView = new CraftInventoryView(entityPlayer.getBukkitEntity(), inventory, remoteGuiContainer);
++                            remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), inventory, remoteGuiContainer));
 +                        }
 +                        else
 +                        {
-+                            remoteGuiContainer.bukkitView = new CraftInventoryView(entityPlayer.getBukkitEntity(), MinecraftServer.getServerInst().server.createInventory(entityPlayer.getBukkitEntity(), InventoryType.CHEST), remoteGuiContainer);
++                            remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), MinecraftServer.getServerInst().server.createInventory(entityPlayer.getBukkitEntity(), InventoryType.CHEST), remoteGuiContainer));
 +                        }
 +                    }
 +                    remoteGuiContainer = CraftEventFactory.callInventoryOpenEvent((EntityPlayerMP) entityPlayer, remoteGuiContainer, false);
