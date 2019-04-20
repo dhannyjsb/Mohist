@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.zip.*;
 
 public class DownloadLibraries implements Runnable {
@@ -15,12 +16,16 @@ public class DownloadLibraries implements Runnable {
     public void run() {
         String url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
         String fileName = "libraries.zip";
+		Locale locale = Locale.getDefault();
         Object[] o1 = {fileName};
         System.out.println(Message.getFormatString(Message.Dw_File,o1));
         BufferedOutputStream bos = null;
         InputStream is1 = null;
         try {
             byte[] buff = new byte[8192];
+		    if (locale.getCountry().equals("CN")) {
+                url = "https://gitee.com/PFCraft/MohistDown/raw/master/mohist/libraries.zip";
+            }
             is1 = new URL(url).openStream();
             File file = new File(".", fileName);
             file.getParentFile().mkdirs();

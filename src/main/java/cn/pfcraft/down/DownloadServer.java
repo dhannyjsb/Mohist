@@ -4,6 +4,7 @@ import cn.pfcraft.i18n.Message;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.util.Locale;
 import java.net.URL;
 
 public class DownloadServer implements Runnable {
@@ -12,12 +13,16 @@ public class DownloadServer implements Runnable {
     public void run() {
         String url = "https://launcher.mojang.com/v1/objects/886945bfb2b978778c3a0288fd7fab09d315b25f/server.jar";
         String fileName = "minecraft_server.1.12.2.jar";
+		Locale locale = Locale.getDefault();
         Object[] o1 = {fileName};
         System.out.println(Message.getFormatString(Message.Dw_File,o1));
         BufferedOutputStream bos = null;
         InputStream is = null;
         try {
             byte[] buff = new byte[8192];
+			if (locale.getCountry().equals("CN")) {
+                url = "https://bmclapi2.bangbang93.com/version/1.12.2/server";
+            }
             is = new URL(url).openStream();
             File file = new File(".", fileName);
             file.getParentFile().mkdirs();
