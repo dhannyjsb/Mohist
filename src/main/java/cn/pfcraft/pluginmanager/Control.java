@@ -22,15 +22,15 @@ import java.util.zip.ZipEntry;
 
 public class Control {
 
-	public static PluginDescriptionFile getDescription(final File file) {
+	public static PluginDescriptionFile getDescription(File file) {
 		try {
-			final JarFile jar = new JarFile(file);
-			final ZipEntry zip = jar.getEntry("plugin.yml");
+			JarFile jar = new JarFile(file);
+			ZipEntry zip = jar.getEntry("plugin.yml");
 			if (zip == null) {
 				jar.close();
 				return null;
 			}
-			final PluginDescriptionFile pdf = new PluginDescriptionFile(jar.getInputStream(zip));
+			PluginDescriptionFile pdf = new PluginDescriptionFile(jar.getInputStream(zip));
 			jar.close();
 			return pdf;
 		} catch (InvalidDescriptionException | IOException ioe) {
@@ -40,7 +40,7 @@ public class Control {
 		return null;
 	}
 
-	public static File getFile(final JavaPlugin plugin) {
+	public static File getFile(JavaPlugin plugin) {
 		Field file;
 		
 		try {
@@ -54,21 +54,21 @@ public class Control {
 		return null;
 	}
 
-	public static void enablePlugin(final Plugin plugin) {
+	public static void enablePlugin(Plugin plugin) {
 		Bukkit.getPluginManager().enablePlugin(plugin);
 	}
 
-	public static void disablePlugin(final Plugin plugin) {
+	public static void disablePlugin(Plugin plugin) {
 		Bukkit.getPluginManager().disablePlugin(plugin);
 	}
 
-	public static Plugin loadPlugin(final File plugin) {
+	public static Plugin loadPlugin(File plugin) {
 		Plugin p;
 		try {
 			p = Bukkit.getPluginManager().loadPlugin(plugin);
 			try {
 				p.onLoad();
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return p;
@@ -89,10 +89,10 @@ public class Control {
 		ArrayList<Plugin> reload = new ArrayList<>();
 		disablePlugin(plugin);
 		if (ReloadDependents) {
-			for (final Plugin p : pluginManager.getPlugins()) {
-				final List<String> depend = p.getDescription().getDepend();
+			for (Plugin p : pluginManager.getPlugins()) {
+				List<String> depend = p.getDescription().getDepend();
 				if (depend != null) {
-					for (final String s : depend) {
+					for (String s : depend) {
 						if (s.equals(pName)) {
 							if (!reload.contains(p)) {
 								reload.add(p);
@@ -102,9 +102,9 @@ public class Control {
 					}
 				}
 
-				final List<String> softDepend = p.getDescription().getSoftDepend();
+				List<String> softDepend = p.getDescription().getSoftDepend();
 				if (softDepend != null) {
-					for (final String s : softDepend) {
+					for (String s : softDepend) {
 						if (s.equals(pName)) {
 							if (!reload.contains(p)) {
 								reload.add(p);
@@ -143,7 +143,7 @@ public class Control {
 
 		if (commandMap != null) {
 			synchronized (commandMap) {
-				final Iterator<Map.Entry<String, Command>> it = commands.entrySet().iterator();
+				Iterator<Map.Entry<String, Command>> it = commands.entrySet().iterator();
 				while (it.hasNext()) {
 					Map.Entry<String, Command> entry = it.next();
 					if (entry.getValue() instanceof PluginCommand) {
@@ -166,13 +166,13 @@ public class Control {
 				names.remove(pName);
 		}
 
-		final JavaPluginLoader jpl = (JavaPluginLoader) plugin.getPluginLoader();
+		JavaPluginLoader jpl = (JavaPluginLoader) plugin.getPluginLoader();
 		Field loaders = null;
 
 		try {
 			loaders = jpl.getClass().getDeclaredField("loaders");
 			loaders.setAccessible(true);
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -180,7 +180,7 @@ public class Control {
 			CopyOnWriteArrayList<String> loaderMap = (CopyOnWriteArrayList<String>) loaders.get(jpl);
 			
 			loaderMap.remove(plugin.getDescription().getName());
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -200,10 +200,6 @@ public class Control {
 			}
 		}
 
-		//File loaded = getFile((JavaPlugin) plugin);
-		//File unloaded = new File(getFile((JavaPlugin) plugin) + ".unloaded");
-
-		//return loaded.renameTo(unloaded);
 		return true;
 	}
 

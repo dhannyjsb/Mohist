@@ -59,14 +59,6 @@ public class PluginsCommand extends BukkitCommand {
                     tabs.add(plugin.getName());
                 }
             }
-            else if (action.equals("load")) {
-                for (File file : new File("plugins").listFiles()) {
-                    if (file.isFile() && file.getName().toLowerCase().endsWith(".jar")) {
-                        tabs.add(file.getName().substring(0, file.getName().length() - 4));
-                    }
-                }
-            }
-            return tabs;
         }
         return tabs;
     }

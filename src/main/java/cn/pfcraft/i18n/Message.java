@@ -1,5 +1,7 @@
 package cn.pfcraft.i18n;
 
+import org.bukkit.ChatColor;
+
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -69,6 +71,23 @@ public enum Message {
     other_head("other.head"),
     other_time("other.time"),
     other_Description("other.description"),
+
+    command_nopermission("command.nopermission"),
+    pluginscommand_load("pluginscommand.load"),
+    pluginscommand_unload("pluginscommand.unload"),
+    pluginscommand_reload("pluginscommand.reload"),
+    pluginscommand_loaded("pluginscommand.loaded"),
+    pluginscommand_unloaded("pluginscommand.unloaded"),
+    pluginscommand_reloaded("pluginscommand.reloaded"),
+    pluginscommand_noplugin("pluginscommand.noplugin"),
+    pluginscommand_nofile("pluginscommand.nofile"),
+    pluginscommand_noyml("pluginscommand.noyml"),
+    pluginscommand_alreadyloaded("pluginscommand.alreadyloaded"),
+    pluginscommand_notload("pluginscommand.notload"),
+    pluginscommand_notunload("pluginscommand.notunload"),
+    pluginscommand_nojar("pluginscommand.nojar"),
+    pluginscommand_unloaderror("pluginscommand.unloaderror"),
+    pluginscommand_reloaderror("pluginscommand.reloaderror"),
     ;
 
     private final String value;
@@ -76,11 +95,11 @@ public enum Message {
 
 
     public static String getString(Message key){
-        return rb.getString(key.toString());
+        return ChatColor.translateAlternateColorCodes( '&', rb.getString(key.toString()));
     }
 
     public static String getFormatString(Message key, Object[] f){
-        return new MessageFormat(getString(key)).format(f);
+        return ChatColor.translateAlternateColorCodes( '&', new MessageFormat(getString(key)).format(f));
     }
 
     public String getValue() {

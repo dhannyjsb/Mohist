@@ -1,5 +1,6 @@
 package cn.pfcraft.pluginmanager;
 
+import cn.pfcraft.i18n.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +18,7 @@ public class PluginManagers {
 			if (sender.isOp())
 				return true;
 
+			sender.sendMessage(Message.getString(Message.command_nopermission));
 			return false;
 		}
 		return true;
@@ -27,7 +29,8 @@ public class PluginManagers {
 			return true;
 
 		if (split.length < 2) {
-			sender.sendMessage(ChatColor.GOLD + "/" + label + " load <plugin> &b- load plugin");
+			Object[] f = {label};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_load, f));
 			return true;
 		}
         String jarName = split[1] + (split[1].endsWith(".jar") ? "" : ".jar");
@@ -37,7 +40,8 @@ public class PluginManagers {
             jarName = split[1] + (split[1].endsWith(".jar") ? ".unloaded" : ".jar.unloaded");
             toLoad = new File("plugins" + File.separator + jarName);
             if (!toLoad.exists()) {
-                sender.sendMessage("&cNo files found " + split[1] + ".jar");
+				Object[] f = {split[1]};
+				sender.sendMessage(Message.getFormatString(Message.pluginscommand_nofile, f));
                 return true;
             } else {
                 String fileName = jarName.substring(0, jarName.length() - (".unloaded".length()));
@@ -49,80 +53,97 @@ public class PluginManagers {
 
 		PluginDescriptionFile desc = Control.getDescription(toLoad);
 		if (desc == null) {
-            sender.sendMessage("&cjar no plugin.yml");
+			Object[] f = {split[1]};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_noyml, f));
 			return true;
 		}
-        final Plugin[] pl = Bukkit.getPluginManager().getPlugins();
+        Plugin[] pl = Bukkit.getPluginManager().getPlugins();
         ArrayList<Plugin> plugins = new ArrayList<Plugin>(java.util.Arrays.asList(pl));
         for(Plugin p: plugins) {
             if (desc.getName().equals(p.getName())) {
-                sender.sendMessage(desc.getName()+"&7Unable to load repeatedly");
+				Object[] f = {desc.getName()};
+				sender.sendMessage(Message.getFormatString(Message.pluginscommand_alreadyloaded, f));
                 return true;
             }
         }
 		Plugin p = null;
 		if ((p = Control.loadPlugin(toLoad)) != null) {
 			Control.enablePlugin(p);
-            sender.sendMessage(p.getDescription().getName()+p.getDescription().getVersion()+"Loaded successfully");
-		} else
-		sender.sendMessage(split[1]+"Unable to load! (View console for details.)");
-
-		return true;
-	}
-
-	public static boolean unloadPluginCommand(final CommandSender sender, final String label, final String[] split) {
-		if (!hasPermission(sender))
-			return true;
-
-		if (split.length < 2) {
-			sender.sendMessage(ChatColor.GOLD + "/" + label + " unload <plugin> &b- Uninstall plugin");
-			return true;
-		}
-
-		final Plugin p = Bukkit.getServer().getPluginManager().getPlugin(split[1]);
-
-		if (p == null)
-			sender.sendMessage("&7No plugins found " + split[1]);
-		else {
-			if (Control.unloadPlugin(p, true))
-				sender.sendMessage(p.getDescription().getName()+p.getDescription().getVersion()+"Unload successfully");
-			else
-				sender.sendMessage(split[1]+"Unable to unload! (View console for details.)");
+			Object[] d = {p.getDescription().getName(), p.getDescription().getVersion()};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_loaded, d));
+		} else {
+			Object[] d = {split[1]};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_notload, d));
 		}
 
 		return true;
 	}
 
-	public static boolean reloadPluginCommand(final CommandSender sender, final String label, final String[] split) {
+	public static boolean unloadPluginCommand(CommandSender sender, String label, String[] split) {
 		if (!hasPermission(sender))
 			return true;
 
 		if (split.length < 2) {
-			sender.sendMessage(ChatColor.GOLD + "/" + label + " reload <plugin> &b- Reloaded plugin");
+			Object[] f = {label};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_unload, f));
 			return true;
 		}
 
-		final Plugin p = Bukkit.getServer().getPluginManager().getPlugin(split[1]);
+		Plugin p = Bukkit.getServer().getPluginManager().getPlugin(split[1]);
 
-		if (p == null)
-			sender.sendMessage("&7No plugins found " + split[1]);
-		else {
-			final File file = Control.getFile((JavaPlugin) p);
+		if (p == null) {
+			Object[] f = {split[1]};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_noplugin, f));
+		} else {
+			if (Control.unloadPlugin(p, true)) {
+				Object[] d = {p.getDescription().getName(), p.getDescription().getVersion()};
+				sender.sendMessage(Message.getFormatString(Message.pluginscommand_unloaded, d));
+			} else {
+				Object[] d = {split[1]};
+				sender.sendMessage(Message.getFormatString(Message.pluginscommand_notunload, d));
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean reloadPluginCommand(CommandSender sender, String label, String[] split) {
+		if (!hasPermission(sender))
+			return true;
+
+		if (split.length < 2) {
+			Object[] f = {label};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_reload, f));
+			return true;
+		}
+
+		Plugin p = Bukkit.getServer().getPluginManager().getPlugin(split[1]);
+
+		if (p == null) {
+			Object[] f = {split[1]};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_noplugin, f));
+		} else {
+			File file = Control.getFile((JavaPlugin) p);
 
 			if (file == null) {
-                sender.sendMessage(p.getName()+"jarFile is missing");
+				Object[] f = {p.getName()};
+				sender.sendMessage(Message.getFormatString(Message.pluginscommand_nojar, f));
 				return true;
 			}
 
 			File name = new File("plugins" + File.separator + file.getName());
 			JavaPlugin loaded = null;
-			if (!Control.unloadPlugin(p, false))
-				sender.sendMessage(split[1]+"An error occurred while uninstalling");
-			else if ((loaded = (JavaPlugin) Control.loadPlugin(name)) == null)
-				sender.sendMessage(split[1]+"An error occurred during overloading");
+			if (!Control.unloadPlugin(p, false)) {
+				Object[] f = {split[1]};
+				sender.sendMessage(Message.getFormatString(Message.pluginscommand_unloaderror, f));
+			} else if ((loaded = (JavaPlugin) Control.loadPlugin(name)) == null) {
+				Object[] f = {split[1]};
+				sender.sendMessage(Message.getFormatString(Message.pluginscommand_nojar, f));
+			}
 
 			Control.enablePlugin(loaded);
-			sender.sendMessage(split[1]+" reload success");
+			Object[] d = {split[1]};
+			sender.sendMessage(Message.getFormatString(Message.pluginscommand_reloaded, d));
 		}
 		return true;
 	}
