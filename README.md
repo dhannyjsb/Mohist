@@ -40,7 +40,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 ## User License
 1. The source code is free to distribute and copy under the premise of complying with the [**GPL-3.0**](https://github.com/PFCraft/Mohist/blob/master/LICENSE).
 2. We are not responsible for any legal disputes arising from your use of Mohist for commercial activities.
-1. 源代码可以在遵守[**GPL-3.0**](https://github.com/PFCraft/Mohist/blob/master/LICENSE).的前提下自由分发和复制。
+1. 源代码可以在遵守[**GPL-3.0**](https://github.com/PFCraft/Mohist/blob/master/LICENSE)的前提下自由分发和复制。
 2. 对于因使用Mohist进行商业活动而引起的任何法律纠纷，我们概不负责。
 
 Welcome everyone to participate in development, unity is power.
