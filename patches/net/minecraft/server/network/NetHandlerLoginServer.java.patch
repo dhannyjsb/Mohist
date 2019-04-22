@@ -1,10 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/server/network/NetHandlerLoginServer.java
 +++ ../src-work/minecraft/net/minecraft/server/network/NetHandlerLoginServer.java
-@@ -1,21 +1,11 @@
+@@ -1,21 +1,10 @@
  package net.minecraft.server.network;
  
-+import cn.pfcraft.Mohist;
-+import cn.pfcraft.i18n.Message;
++import red.mohist.Mohist;
  import com.mojang.authlib.GameProfile;
  import com.mojang.authlib.exceptions.AuthenticationUnavailableException;
  import io.netty.channel.ChannelFuture;
@@ -24,7 +23,7 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.network.NetworkManager;
  import net.minecraft.network.login.INetHandlerLoginServer;
-@@ -29,11 +19,30 @@
+@@ -29,11 +18,28 @@
  import net.minecraft.util.CryptManager;
  import net.minecraft.util.ITickable;
  import net.minecraft.util.text.ITextComponent;
@@ -33,9 +32,7 @@
  import org.apache.commons.lang3.Validate;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-+import org.bukkit.Bukkit;
 +import org.bukkit.craftbukkit.util.Waitable;
-+import org.bukkit.entity.Player;
 +import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 +import org.bukkit.event.player.PlayerPreLoginEvent;
  
@@ -55,7 +52,7 @@
  public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
  {
      private static final AtomicInteger AUTHENTICATOR_THREAD_ID = new AtomicInteger(0);
-@@ -42,13 +51,15 @@
+@@ -42,13 +48,15 @@
      private final byte[] verifyToken = new byte[4];
      private final MinecraftServer server;
      public final NetworkManager networkManager;
@@ -72,7 +69,7 @@
      public NetHandlerLoginServer(MinecraftServer serverIn, NetworkManager networkManagerIn)
      {
          this.server = serverIn;
-@@ -58,17 +69,21 @@
+@@ -58,17 +66,21 @@
  
      public void update()
      {
@@ -98,7 +95,7 @@
                  net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.fmlServerHandshake(this.server.getPlayerList(), this.networkManager, this.player);
                  this.player = null;
              }
-@@ -94,22 +109,54 @@
+@@ -94,22 +106,54 @@
          }
      }
  
@@ -157,7 +154,7 @@
  
              if (this.server.getNetworkCompressionThreshold() >= 0 && !this.networkManager.isLocalChannel())
              {
-@@ -127,12 +174,12 @@
+@@ -127,12 +171,12 @@
  
              if (entityplayermp != null)
              {
@@ -173,7 +170,7 @@
              }
          }
      }
-@@ -149,23 +196,36 @@
+@@ -149,23 +193,36 @@
  
      public void processLoginStart(CPacketLoginStart packetIn)
      {
@@ -214,7 +211,7 @@
          PrivateKey privatekey = this.server.getKeyPair().getPrivate();
  
          if (!Arrays.equals(this.verifyToken, packetIn.getVerifyToken(privatekey)))
-@@ -175,7 +235,7 @@
+@@ -175,7 +232,7 @@
          else
          {
              this.secretKey = packetIn.getSecretKey(privatekey);
@@ -223,7 +220,7 @@
              this.networkManager.enableEncryption(this.secretKey);
              (new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + AUTHENTICATOR_THREAD_ID.incrementAndGet())
              {
-@@ -190,14 +250,18 @@
+@@ -190,14 +247,18 @@
  
                          if (NetHandlerLoginServer.this.loginGameProfile != null)
                          {
@@ -245,7 +242,7 @@
                          }
                          else
                          {
-@@ -211,13 +275,19 @@
+@@ -211,13 +272,19 @@
                          {
                              NetHandlerLoginServer.LOGGER.warn("Authentication servers are down but will let them in anyway!");
                              NetHandlerLoginServer.this.loginGameProfile = NetHandlerLoginServer.this.getOfflineProfile(gameprofile);
@@ -266,7 +263,7 @@
                      }
                  }
                  @Nullable
-@@ -230,6 +300,47 @@
+@@ -230,6 +297,47 @@
          }
      }
  

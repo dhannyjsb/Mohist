@@ -1,4 +1,4 @@
-package cn.pfcraft;
+package red.mohist;
 
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;

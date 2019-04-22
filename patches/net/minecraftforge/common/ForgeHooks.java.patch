@@ -20,7 +20,7 @@
 -import java.util.regex.Pattern;
 -import java.util.stream.Collectors;
 -
-+import cn.pfcraft.Mohist;
++import red.mohist.Mohist;
  import com.google.common.collect.Lists;
  import com.google.common.collect.Queues;
  import com.google.common.collect.Sets;
@@ -71,7 +71,15 @@
  import net.minecraftforge.event.AnvilUpdateEvent;
  import net.minecraftforge.event.DifficultyChangeEvent;
  import net.minecraftforge.event.ForgeEventFactory;
-@@ -158,13 +133,27 @@
+@@ -144,7 +119,6 @@
+ import net.minecraftforge.event.world.BlockEvent;
+ import net.minecraftforge.event.world.NoteBlockEvent;
+ import net.minecraftforge.fluids.IFluidBlock;
+-import net.minecraftforge.fml.common.FMLLog;
+ import net.minecraftforge.fml.common.Loader;
+ import net.minecraftforge.fml.common.LoaderState;
+ import net.minecraftforge.fml.common.ModContainer;
+@@ -158,13 +132,27 @@
  import net.minecraftforge.registries.GameData;
  import net.minecraftforge.registries.IForgeRegistry;
  import net.minecraftforge.registries.RegistryManager;
@@ -102,7 +110,7 @@
  public class ForgeHooks
  {
      //TODO: Loot tables?
-@@ -351,161 +340,6 @@
+@@ -351,161 +339,6 @@
       */
      public static boolean onPickBlock(RayTraceResult target, EntityPlayer player, World world)
      {
@@ -264,7 +272,7 @@
          ItemStack result;
          boolean isCreative = player.capabilities.isCreativeMode;
          TileEntity te = null;
-@@ -817,27 +651,8 @@
+@@ -817,27 +650,8 @@
  
      public static int onBlockBreakEvent(World world, GameType gameType, EntityPlayerMP entityPlayer, BlockPos pos)
      {
@@ -293,7 +301,7 @@
          {
              SPacketBlockChange packet = new SPacketBlockChange(world, pos);
              packet.blockState = Blocks.AIR.getDefaultState();
-@@ -847,11 +662,11 @@
+@@ -847,11 +661,11 @@
          // Post the block break event
          IBlockState state = world.getBlockState(pos);
          BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
@@ -307,7 +315,7 @@
          {
              // Let the client know the block still exists
              entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-@@ -866,33 +681,73 @@
+@@ -866,33 +680,73 @@
                      entityPlayer.connection.sendPacket(pkt);
                  }
              }
@@ -386,7 +394,7 @@
              int newSize = itemstack.getCount();
              NBTTagCompound newNBT = null;
              if (itemstack.getTagCompound() != null)
-@@ -901,10 +756,8 @@
+@@ -901,10 +755,8 @@
              }
              BlockEvent.PlaceEvent placeEvent = null;
              @SuppressWarnings("unchecked")
@@ -398,7 +406,7 @@
              itemstack.setItemDamage(meta);
              itemstack.setCount(size);
              if (nbt != null)
-@@ -912,37 +765,38 @@
+@@ -912,37 +764,38 @@
                  itemstack.setTagCompound(nbt);
              }
              if (blockSnapshots.size() > 1)
@@ -448,7 +456,7 @@
                      int updateFlag = snap.getFlag();
                      IBlockState oldBlock = snap.getReplacedBlock();
                      IBlockState newBlock = world.getBlockState(snap.getPos());
-@@ -953,7 +807,30 @@
+@@ -953,7 +806,30 @@
  
                      world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                  }
@@ -480,7 +488,7 @@
              }
          }
          world.capturedBlockSnapshots.clear();
-@@ -961,6 +838,7 @@
+@@ -961,6 +837,7 @@
          return ret;
      }
  
@@ -488,7 +496,7 @@
      public static boolean onAnvilChange(ContainerRepair container, @Nonnull ItemStack left, @Nonnull ItemStack right, IInventory outputSlot, String name, int baseCost)
      {
          AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
-@@ -1076,7 +954,7 @@
+@@ -1076,7 +953,7 @@
              // Revert variable back to true as it would have been set to false
              if (entity instanceof EntityMinecartContainer)
              {
@@ -497,7 +505,7 @@
              }
          }
          return !event.isCanceled();
-@@ -1349,45 +1227,45 @@
+@@ -1349,45 +1226,45 @@
      private static boolean loadAdvancements(Map<ResourceLocation, Advancement.Builder> map, ModContainer mod)
      {
          return CraftingHelper.findFiles(mod, "assets/" + mod.getModId() + "/advancements", null,
@@ -576,7 +584,7 @@
          );
      }
  
-@@ -1465,7 +1343,6 @@
+@@ -1465,7 +1342,6 @@
  
      public static boolean onFarmlandTrample(World world, BlockPos pos, IBlockState state, float fallDistance, Entity entity)
      {
@@ -584,7 +592,7 @@
          if (entity.canTrample(world, state.getBlock(), pos, fallDistance))
          {
              BlockEvent.FarmlandTrampleEvent event = new BlockEvent.FarmlandTrampleEvent(world, pos, state, fallDistance, entity);
-@@ -1474,7 +1351,6 @@
+@@ -1474,7 +1350,6 @@
          }
          return false;
      }

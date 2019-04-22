@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.management.UserListBans;
 import net.minecraft.server.management.UserListBansEntry;

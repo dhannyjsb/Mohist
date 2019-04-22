@@ -1,4 +1,4 @@
-package cn.pfcraft.i18n;
+package red.mohist.i18n;
 
 import org.bukkit.ChatColor;
 

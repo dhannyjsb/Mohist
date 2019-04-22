@@ -1,4 +1,4 @@
-package cn.pfcraft.i18n;
+package red.mohist.i18n;
 
 import java.io.IOException;
 import java.io.InputStream;

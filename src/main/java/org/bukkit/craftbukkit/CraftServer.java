@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -293,7 +293,6 @@ public final class CraftServer implements Server {
         if (type == PluginLoadOrder.STARTUP) {
             helpMap.clear();
             helpMap.initializeGeneralTopics();
-            loadCustomPermissions(); // Paper
         }
 
         Plugin[] plugins = pluginManager.getPlugins();

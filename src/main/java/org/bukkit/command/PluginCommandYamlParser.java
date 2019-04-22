@@ -1,6 +1,6 @@
 package org.bukkit.command;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;

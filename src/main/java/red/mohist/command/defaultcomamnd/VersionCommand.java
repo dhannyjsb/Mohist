@@ -1,4 +1,4 @@
-package cn.pfcraft.command.defaultcomamnd;
+package red.mohist.command.defaultcomamnd;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraftforge.common.ForgeVersion;

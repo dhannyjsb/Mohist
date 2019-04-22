@@ -3,7 +3,7 @@
 @@ -1,18 +1,13 @@
  package net.minecraft.server.management;
  
-+import cn.pfcraft.i18n.Message;
++import red.mohist.i18n.Message;
 +import com.google.common.base.Predicate;
 +import com.google.common.collect.Iterables;
  import com.google.common.collect.Lists;

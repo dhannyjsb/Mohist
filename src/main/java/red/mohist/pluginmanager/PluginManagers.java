@@ -1,8 +1,7 @@
-package cn.pfcraft.pluginmanager;
+package red.mohist.pluginmanager;
 
-import cn.pfcraft.i18n.Message;
+import red.mohist.i18n.Message;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;

@@ -1,6 +1,6 @@
-package cn.pfcraft.down;
+package red.mohist.down;
 
-import cn.pfcraft.i18n.Message;
+import red.mohist.i18n.Message;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -8,25 +8,27 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.*;
 
 public class DownloadLibraries implements Runnable {
     @Override
     public void run() {
-        String url;
+        /**
+         *   Mohist使用: https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip
+         *   PFServer使用: https://lliiooll.gitee.io/mohistdown/libraries_pfserver.zip
+         */
+        String url = "https://lliiooll.gitee.io/mohistdown/libraries_pfserver.zip";
         String fileName = "libraries.zip";
-		Locale locale = Locale.getDefault();
+        Locale locale = Locale.getDefault();
         Object[] o1 = {fileName};
         System.out.println(Message.getFormatString(Message.Dw_File,o1));
         BufferedOutputStream bos = null;
         InputStream is1 = null;
         try {
             byte[] buff = new byte[8192];
-		    if (locale.getCountry().equals("CN")) {
-                url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
-            } else {
-                url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
+            if (locale.getCountry().equals("CN")) {
+                System.out.println("自动为你设置为中国国内下载源");
+                url = "https://lliiooll.gitee.io/mohistdown/libraries_pfserver.zip";
             }
             is1 = new URL(url).openStream();
             File file = new File(".", fileName);

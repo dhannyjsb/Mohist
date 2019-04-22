@@ -1,4 +1,4 @@
-package cn.pfcraft.pluginmanager;
+package red.mohist.pluginmanager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

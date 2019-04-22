@@ -1,8 +1,6 @@
-package cn.pfcraft;
+package red.mohist;
 
-import cn.pfcraft.i18n.Message;
 import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Mohist implements Runnable{

@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.map;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import net.minecraft.world.storage.MapData;
 import org.bukkit.Bukkit;
 import org.bukkit.World;

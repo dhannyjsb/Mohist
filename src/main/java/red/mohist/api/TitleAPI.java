@@ -1,4 +1,4 @@
-package cn.pfcraft.api;
+package red.mohist.api;
 
 import org.bukkit.entity.Player;
 

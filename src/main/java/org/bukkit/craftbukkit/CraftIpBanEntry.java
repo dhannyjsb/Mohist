@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import net.minecraft.server.management.UserListIPBans;
 import net.minecraft.server.management.UserListIPBansEntry;
 

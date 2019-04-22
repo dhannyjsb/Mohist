@@ -3,7 +3,7 @@
 @@ -1,14 +1,16 @@
  package net.minecraft.util;
  
-+import cn.pfcraft.Mohist;
++import red.mohist.Mohist;
  import com.google.common.collect.Maps;
  import com.mojang.authlib.GameProfile;
  import com.mojang.util.UUIDTypeAdapter;

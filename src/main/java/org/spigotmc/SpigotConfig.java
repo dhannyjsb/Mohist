@@ -1,6 +1,6 @@
 package org.spigotmc;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.google.common.base.Throwables;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import net.minecraft.entity.SharedMonsterAttributes;

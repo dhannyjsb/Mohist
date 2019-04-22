@@ -3,7 +3,7 @@
 @@ -1,5 +1,6 @@
  package net.minecraft.crash;
  
-+import cn.pfcraft.i18n.Message;
++import red.mohist.i18n.Message;
  import com.google.common.collect.Lists;
  import java.io.File;
  import java.io.FileOutputStream;

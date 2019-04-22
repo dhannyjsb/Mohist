@@ -1,12 +1,11 @@
 package org.bukkit.command.defaults;
 
-import cn.pfcraft.pluginmanager.PluginManagers;
+import red.mohist.pluginmanager.PluginManagers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
-import java.io.File;
 import java.util.*;
 
 public class PluginsCommand extends BukkitCommand {

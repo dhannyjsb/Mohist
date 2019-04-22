@@ -1,6 +1,6 @@
 package org.bukkit.command;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -255,9 +255,5 @@ public class SimpleCommandMap implements CommandMap {
                 knownCommands.remove(alias.toLowerCase(java.util.Locale.ENGLISH));
             }
         }
-    }
-
-    public Map<String, Command> getKnownCommands() {
-        return this.knownCommands;
     }
 }

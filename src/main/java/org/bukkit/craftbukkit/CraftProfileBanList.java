@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;

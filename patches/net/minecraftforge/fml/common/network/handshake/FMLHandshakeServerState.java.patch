@@ -4,7 +4,7 @@
  
  package net.minecraftforge.fml.common.network.handshake;
  
-+import cn.pfcraft.i18n.Message;
++import red.mohist.i18n.Message;
  import io.netty.channel.ChannelFutureListener;
  import io.netty.channel.ChannelHandlerContext;
  

@@ -1,6 +1,6 @@
 package org.bukkit.permissions;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 

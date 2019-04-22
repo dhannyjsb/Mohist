@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/server/ServerEula.java
 +++ ../src-work/minecraft/net/minecraft/server/ServerEula.java
-@@ -1,11 +1,12 @@
+@@ -1,11 +1,11 @@
  package net.minecraft.server;
  
 -import java.io.File;
@@ -8,17 +8,17 @@
 -import java.io.FileOutputStream;
 -import java.io.InputStream;
 -import java.io.OutputStream;
+-import java.util.Properties;
 +import java.io.*;
 +import java.text.SimpleDateFormat;
 +import java.util.Date;
- import java.util.Properties;
 +
-+import cn.pfcraft.i18n.Message;
-+import cn.pfcraft.i18n.UTF8Properties;
++import red.mohist.i18n.Message;
++import red.mohist.i18n.UTF8Properties;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.commons.io.IOUtils;
-@@ -32,14 +33,15 @@
+@@ -32,14 +32,15 @@
  
          try
          {
@@ -37,7 +37,7 @@
              this.createEULAFile();
          }
          finally
-@@ -61,14 +63,17 @@
+@@ -61,14 +62,17 @@
  
          try
          {

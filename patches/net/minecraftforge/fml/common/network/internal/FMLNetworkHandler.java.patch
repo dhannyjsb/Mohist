@@ -1,10 +1,9 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/internal/FMLNetworkHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/internal/FMLNetworkHandler.java
-@@ -19,34 +19,29 @@
+@@ -19,34 +19,28 @@
  
  package net.minecraftforge.fml.common.network.internal;
  
-+import cn.pfcraft.Mohist;
 +import com.google.gson.JsonArray;
 +import com.google.gson.JsonObject;
  import io.netty.channel.ChannelPipeline;
@@ -44,7 +43,7 @@
  import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
  import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
  import net.minecraftforge.fml.common.network.internal.FMLMessage.CompleteHandshake;
-@@ -54,12 +49,16 @@
+@@ -54,12 +48,15 @@
  import net.minecraftforge.fml.common.registry.EntityRegistry.EntityRegistration;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -52,7 +51,6 @@
 -import com.google.gson.JsonArray;
 -import com.google.gson.JsonObject;
  import org.apache.commons.lang3.tuple.Pair;
-+import org.bukkit.Bukkit;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
 +import org.bukkit.craftbukkit.inventory.CraftInventory;
 +import org.bukkit.craftbukkit.inventory.CraftInventoryView;
@@ -64,7 +62,7 @@
  
  public class FMLNetworkHandler
  {
-@@ -88,6 +87,30 @@
+@@ -88,6 +85,30 @@
              Container remoteGuiContainer = NetworkRegistry.INSTANCE.getRemoteGuiContainer(mc, entityPlayerMP, modGuiId, world, x, y, z);
              if (remoteGuiContainer != null)
              {
@@ -95,7 +93,7 @@
                  entityPlayerMP.getNextWindowId();
                  entityPlayerMP.closeContainer();
                  int windowId = entityPlayerMP.currentWindowId;
-@@ -113,7 +136,7 @@
+@@ -113,7 +134,7 @@
          }
          else
          {
@@ -104,7 +102,7 @@
          }
  
      }
-@@ -167,7 +190,7 @@
+@@ -167,7 +188,7 @@
                  rejectStrings.add(modContainer.getName() + ": " + reject.getValue());
              }
              String rejectString = String.join("\n", rejectStrings);

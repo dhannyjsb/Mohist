@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.help;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.google.common.base.Charsets;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;

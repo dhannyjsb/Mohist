@@ -1,6 +1,6 @@
 package org.spigotmc;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.Logger;
 

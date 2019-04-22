@@ -1,6 +1,6 @@
 package org.bukkit.plugin.java;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.google.common.io.ByteStreams;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
@@ -16,6 +16,7 @@ import java.security.CodeSigner;
 import java.security.CodeSource;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -25,7 +26,7 @@ import java.util.jar.Manifest;
  */
 final class PluginClassLoader extends URLClassLoader {
     private final JavaPluginLoader loader;
-    private final Map<String, Class<?>> classes = new java.util.concurrent.ConcurrentHashMap<String, Class<?>>(); // Spigot
+    private final Map<String, Class<?>> classes = new ConcurrentHashMap<String, Class<?>>(); // Spigot
     private final PluginDescriptionFile description;
     private final File dataFolder;
     private final File file;

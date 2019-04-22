@@ -1,6 +1,6 @@
 package org.bukkit.plugin;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -123,7 +123,7 @@ public final class SimplePluginManager implements PluginManager {
             try {
                 description = loader.getPluginDescription(file);
                 String name = description.getName();
-                if (name.equalsIgnoreCase("bukkit") || name.equalsIgnoreCase("minecraft") || name.equalsIgnoreCase("mojang")) {
+                if (name.equalsIgnoreCase("bukkit") || name.equalsIgnoreCase("minecraft") || name.equalsIgnoreCase("mojang")  || name.equalsIgnoreCase("spigot") || name.equalsIgnoreCase("forge") || name.equalsIgnoreCase("paper") || name.equalsIgnoreCase("mohist")) {
                     Mohist.LOGGER.error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': Restricted Name");
                     continue;
                 } else if (description.rawName.indexOf(' ') != -1) {
@@ -175,6 +175,8 @@ public final class SimplePluginManager implements PluginManager {
                 }
             }
         }
+
+        loadedPlugins.addAll(ImmutableSet.of("Mohist", "Forge"));
 
         while (!plugins.isEmpty()) {
             boolean missingDependency = true;
@@ -373,7 +375,7 @@ public final class SimplePluginManager implements PluginManager {
      * @param plugin Plugin to check
      * @return true if the plugin is enabled, otherwise false
      */
-    public synchronized boolean isPluginEnabled(Plugin plugin) {
+    public boolean isPluginEnabled(Plugin plugin) {
         if ((plugin != null) && (plugins.contains(plugin))) {
             return plugin.isEnabled();
         } else {
@@ -381,7 +383,7 @@ public final class SimplePluginManager implements PluginManager {
         }
     }
 
-    public synchronized void enablePlugin(final Plugin plugin) {
+    public void enablePlugin(final Plugin plugin) {
         if (!plugin.isEnabled()) {
             List<Command> pluginCommands = PluginCommandYamlParser.parse(plugin);
 
@@ -398,30 +400,17 @@ public final class SimplePluginManager implements PluginManager {
         }
     }
 
-    // Paper start - close Classloader on disable
     public void disablePlugins() {
-        disablePlugins(false);
-    }
-
-    // Paper start - close Classloader on disable
-    public synchronized void disablePlugins(boolean closeClassloaders) {
-        // Paper end - close Classloader on disable
         Plugin[] plugins = getPlugins();
         for (int i = plugins.length - 1; i >= 0; i--) {
-            disablePlugin(plugins[i], closeClassloaders); // Paper - close Classloader on disable
+            disablePlugin(plugins[i]);
         }
     }
 
-    // Paper start - close Classloader on disable
-    public void disablePlugin(Plugin plugin) {
-        disablePlugin(plugin, false);
-    }
-
-    public void disablePlugin(final Plugin plugin, boolean closeClassloader) {
-        // Paper end - close Classloader on disable
+    public void disablePlugin(final Plugin plugin) {
         if (plugin.isEnabled()) {
             try {
-                plugin.getPluginLoader().disablePlugin(plugin, closeClassloader); // Paper - close Classloader on disable
+                plugin.getPluginLoader().disablePlugin(plugin);
             } catch (Throwable ex) {
                 server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while disabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
             }
@@ -452,10 +441,10 @@ public final class SimplePluginManager implements PluginManager {
             }
         }
     }
-    
+
     public void clearPlugins() {
         synchronized (this) {
-            disablePlugins(true); // Paper - close Classloader on disable
+            disablePlugins();
             plugins.clear();
             lookupNames.clear();
             HandlerList.unregisterAll();

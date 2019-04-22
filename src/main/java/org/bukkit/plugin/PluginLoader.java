@@ -73,8 +73,4 @@ public interface PluginLoader {
      * @param plugin Plugin to disable
      */
     public void disablePlugin(Plugin plugin);
-
-    default public void disablePlugin(Plugin plugin, boolean closeClassloader) {
-        disablePlugin(plugin);
-    }
 }

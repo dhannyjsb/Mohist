@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.conversations;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ManuallyAbandonedConversationCanceller;

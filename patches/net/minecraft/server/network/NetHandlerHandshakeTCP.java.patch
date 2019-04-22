@@ -3,7 +3,7 @@
 @@ -1,5 +1,6 @@
  package net.minecraft.server.network;
  
-+import cn.pfcraft.i18n.Message;
++import red.mohist.i18n.Message;
  import net.minecraft.network.EnumConnectionState;
  import net.minecraft.network.NetworkManager;
  import net.minecraft.network.handshake.INetHandlerHandshakeServer;

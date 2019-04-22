@@ -1,4 +1,4 @@
-package cn.pfcraft.command.defaultcomamnd;
+package red.mohist.command.defaultcomamnd;
 
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;

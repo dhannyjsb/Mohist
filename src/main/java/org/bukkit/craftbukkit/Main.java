@@ -1,11 +1,10 @@
 package org.bukkit.craftbukkit;
 
-import cn.pfcraft.Mohist;
-import cn.pfcraft.i18n.Message;
+import red.mohist.Mohist;
+import red.mohist.i18n.Message;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.logging.log4j.LogManager;
-import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,6 +117,8 @@ public class Main {
 
                 acceptsAll(asList("demo"), "Demo mode");
 
+                acceptsAll(asList("mixin"), "This argument is needed for proper Mixin Framework work in the test env");
+
                 // Spigot Start
                 acceptsAll(asList("S", "spigot-settings"), "File for spigot settings")
                         .withRequiredArg()
@@ -134,13 +135,6 @@ public class Main {
                         .describedAs("Yml file");
                 // Mohist End
 
-                // Paper Start
-                acceptsAll(asList("paper", "paper-settings"), "File for paper settings")
-                        .withRequiredArg()
-                        .ofType(File.class)
-                        .defaultsTo(new File("paper.yml"))
-                        .describedAs("Yml file");
-                // Paper end
 
                 // Paper start
                 acceptsAll(asList("server-name"), "Name of the server")
@@ -149,8 +143,6 @@ public class Main {
                         .defaultsTo("Unknown Server")
                         .describedAs("Name");
                 // Paper end
-
-                acceptsAll(asList("mixin"), "This argument is needed for proper Mixin Framework work in the test env");
             }
         };
 

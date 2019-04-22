@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.util;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

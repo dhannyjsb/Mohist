@@ -1,29 +1,28 @@
-package cn.pfcraft.down;
+package red.mohist.down;
 
-import cn.pfcraft.i18n.Message;
+import red.mohist.i18n.Message;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.util.Locale;
 import java.net.URL;
+import java.util.Locale;
 
 public class DownloadServer implements Runnable {
 
     @Override
     public void run() {
-        String url;
+        String url = "https://s3.amazonaws.com/Minecraft.Download/versions/1.12.2/minecraft_server.1.12.2.jar";
         String fileName = "minecraft_server.1.12.2.jar";
-		Locale locale = Locale.getDefault();
+        Locale locale = Locale.getDefault();
         Object[] o1 = {fileName};
         System.out.println(Message.getFormatString(Message.Dw_File,o1));
         BufferedOutputStream bos = null;
         InputStream is = null;
         try {
             byte[] buff = new byte[8192];
-			if (locale.getCountry().equals("CN")) {
+            if (locale.getCountry().equals("CN")) {
+                System.out.println("自动为你设置为中国国内下载源");
                 url = "https://bmclapi2.bangbang93.com/version/1.12.2/server";
-            } else {
-                url = "https://launcher.mojang.com/v1/objects/886945bfb2b978778c3a0288fd7fab09d315b25f/server.jar";
             }
             is = new URL(url).openStream();
             File file = new File(".", fileName);

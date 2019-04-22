@@ -1,9 +1,8 @@
-package cn.pfcraft.command.defaultcomamnd;
+package red.mohist.command.defaultcomamnd;
 
-import cn.pfcraft.MohistConfig;
+import red.mohist.MohistConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

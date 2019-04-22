@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.util;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

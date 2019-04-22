@@ -1,6 +1,6 @@
 package org.bukkit;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Warning.WarningState;
 import org.bukkit.advancement.Advancement;
@@ -266,7 +266,7 @@ public final class Bukkit {
     public static int broadcastMessage(String message) {
         return server.broadcastMessage(message);
     }
-    
+
     /**
      * Gets the name of the update folder. The update folder is used to safely
      * update plugins at the right moment on a plugin load.
@@ -1166,15 +1166,6 @@ public final class Bukkit {
     public static Server.Spigot spigot()
     {
         return server.spigot();
-    }
-    // Paper start
-    /**
-      * Gets the active {@link CommandMap}
-      *
-      * @return the active command map
-      */
-    public static CommandMap getCommandMap() {
-        return server.getCommandMap();
     }
     
     /**

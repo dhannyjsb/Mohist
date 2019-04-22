@@ -1,6 +1,6 @@
 package org.bukkit.plugin.java;
 
-import cn.pfcraft.Mohist;
+import red.mohist.Mohist;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 import org.bukkit.Warning;
@@ -31,11 +31,11 @@ import java.util.regex.Pattern;
 /**
  * Represents a Java plugin loader, allowing plugins in the form of .jar
  */
-public final class JavaPluginLoader implements PluginLoader {
-    final Server server;
-    private final Pattern[] fileFilters = new Pattern[] { Pattern.compile("\\.jar$"), };
-    private final Map<String, Class<?>> classes = new java.util.concurrent.ConcurrentHashMap<String, Class<?>>(); // Spigot
-    private final List<PluginClassLoader> loaders = new CopyOnWriteArrayList<PluginClassLoader>();
+public class JavaPluginLoader implements PluginLoader {
+    Server server;
+    private Pattern[] fileFilters = new Pattern[] { Pattern.compile("\\.jar$"), };
+    private Map<String, Class<?>> classes = new java.util.concurrent.ConcurrentHashMap<String, Class<?>>(); // Spigot
+    private List<PluginClassLoader> loaders = new CopyOnWriteArrayList<PluginClassLoader>();
 
     /**
      * This class was not meant to be constructed explicitly
@@ -47,24 +47,24 @@ public final class JavaPluginLoader implements PluginLoader {
         server = instance;
     }
 
-    public Plugin loadPlugin(final File file) throws InvalidPluginException {
+    public Plugin loadPlugin(File file) throws InvalidPluginException {
         Validate.notNull(file, "File cannot be null");
 
         if (!file.exists()) {
             throw new InvalidPluginException(new FileNotFoundException(file.getPath() + " does not exist"));
         }
 
-        final PluginDescriptionFile description;
+        PluginDescriptionFile description;
         try {
             description = getPluginDescription(file);
         } catch (InvalidDescriptionException ex) {
             throw new InvalidPluginException(ex);
         }
 
-        final File parentFile = file.getParentFile();
-        final File dataFolder = new File(parentFile, description.getName());
+        File parentFile = file.getParentFile();
+        File dataFolder = new File(parentFile, description.getName());
         @SuppressWarnings("deprecation")
-        final File oldDataFolder = new File(parentFile, description.getRawName());
+        File oldDataFolder = new File(parentFile, description.getRawName());
 
         // Found old data folder
         if (dataFolder.equals(oldDataFolder)) {
@@ -99,7 +99,7 @@ public final class JavaPluginLoader implements PluginLoader {
             ));
         }
 
-        for (final String pluginName : description.getDepend()) {
+        for (String pluginName : description.getDepend()) {
             Plugin current = server.getPluginManager().getPlugin(pluginName);
 
             if (current == null) {
@@ -107,7 +107,7 @@ public final class JavaPluginLoader implements PluginLoader {
             }
         }
 
-        final PluginClassLoader loader;
+        PluginClassLoader loader;
         try {
             loader = new PluginClassLoader(this, getClass().getClassLoader(), description, dataFolder, file);
         } catch (InvalidPluginException ex) {
@@ -163,7 +163,7 @@ public final class JavaPluginLoader implements PluginLoader {
         return fileFilters.clone();
     }
 
-    Class<?> getClassByName(final String name) {
+    Class<?> getClassByName(String name) {
         Class<?> cachedClass = classes.get(name);
 
         if (cachedClass != null) {
@@ -181,7 +181,7 @@ public final class JavaPluginLoader implements PluginLoader {
         return null;
     }
 
-    void setClass(final String name, final Class<?> clazz) {
+    void setClass(String name, Class<?> clazz) {
         if (!classes.containsKey(name)) {
             classes.put(name, clazz);
 
@@ -206,7 +206,7 @@ public final class JavaPluginLoader implements PluginLoader {
         }
     }
 
-    public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, final Plugin plugin) {
+    public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, Plugin plugin) {
         Validate.notNull(plugin, "Plugin can not be null");
         Validate.notNull(listener, "Listener can not be null");
 
@@ -227,20 +227,20 @@ public final class JavaPluginLoader implements PluginLoader {
             return ret;
         }
 
-        for (final Method method : methods) {
-            final EventHandler eh = method.getAnnotation(EventHandler.class);
+        for (Method method : methods) {
+            EventHandler eh = method.getAnnotation(EventHandler.class);
             if (eh == null) continue;
             // Do not register bridge or synthetic methods to avoid event duplication
             // Fixes SPIGOT-893
             if (method.isBridge() || method.isSynthetic()) {
                 continue;
             }
-            final Class<?> checkClass;
+            Class<?> checkClass;
             if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) {
                 Mohist.LOGGER.error(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
                 continue;
             }
-            final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
+            Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
             method.setAccessible(true);
             Set<RegisteredListener> eventSet = ret.get(eventClass);
             if (eventSet == null) {
@@ -287,7 +287,7 @@ public final class JavaPluginLoader implements PluginLoader {
         return ret;
     }
 
-    public void enablePlugin(final Plugin plugin) {
+    public void enablePlugin(Plugin plugin) {
         Validate.isTrue(plugin instanceof JavaPlugin, "Plugin is not associated with this PluginLoader");
 
         if (!plugin.isEnabled()) {
@@ -307,7 +307,7 @@ public final class JavaPluginLoader implements PluginLoader {
             } catch (Throwable ex) {
                 Mohist.LOGGER.error( "Error occurred while enabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
                 // Paper start - Disable plugins that fail to load
-                server.getPluginManager().disablePlugin(jPlugin, true); // Paper - close Classloader on disable - She's dead jim
+                server.getPluginManager().disablePlugin(jPlugin);
                 return;
                 // Paper end
             }
@@ -318,13 +318,7 @@ public final class JavaPluginLoader implements PluginLoader {
         }
     }
 
-    // Paper start - close Classloader on disable
     public void disablePlugin(Plugin plugin) {
-        disablePlugin(plugin, false); // Retain old behavior unless requested
-    }
-
-    public void disablePlugin(Plugin plugin, boolean closeClassloader) {
-        // Paper end - close Class Loader on disable
         Validate.isTrue(plugin instanceof JavaPlugin, "Plugin is not associated with this PluginLoader");
 
         if (plugin.isEnabled()) {
@@ -351,16 +345,6 @@ public final class JavaPluginLoader implements PluginLoader {
                 for (String name : names) {
                     removeClass(name);
                 }
-                // Paper start - close Class Loader on disable
-                try {
-                    if (closeClassloader) {
-                        loader.close();
-                    }
-                } catch (IOException e) {
-                    Mohist.LOGGER.error( "Error closing the Plugin Class Loader for " + plugin.getDescription().getFullName());
-                    e.printStackTrace();
-                }
-                // Paper end
             }
         }
     }
