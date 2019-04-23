@@ -1,7 +1,5 @@
 package red.mohist.i18n;
 
-import org.bukkit.ChatColor;
-
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -126,11 +124,11 @@ public enum Message {
 
 
     public static String getString(Message key){
-        return ChatColor.translateAlternateColorCodes( '&', rb.getString(key.toString()));
+        return rb.getString(key.toString());
     }
 
     public static String getFormatString(Message key, Object[] f){
-        return ChatColor.translateAlternateColorCodes( '&', new MessageFormat(getString(key)).format(f));
+        return new MessageFormat(getString(key).format(f));
     }
 
     public String getValue() {
