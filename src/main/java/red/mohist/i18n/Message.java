@@ -128,7 +128,7 @@ public enum Message {
     }
 
     public static String getFormatString(Message key, Object[] f){
-        return new MessageFormat(getString(key).format(f));
+        return new MessageFormat(getString(key)).format(f);
     }
 
     public String getValue() {
