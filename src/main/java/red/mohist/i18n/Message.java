@@ -88,6 +88,37 @@ public enum Message {
     pluginscommand_nojar("pluginscommand.nojar"),
     pluginscommand_unloaderror("pluginscommand.unloaderror"),
     pluginscommand_reloaderror("pluginscommand.reloaderror"),
+
+    bukkit_plugin_noyml("bukkit.plugin.noyml"),
+    bukkit_plugin_enabling("bukkit.plugin.enabling"),
+    bukkit_plugin_enablingunreg("bukkit.plugin.enablingunreg"),
+    bukkit_plugin_enablingerror("bukkit.plugin.enablingerror"),
+    bukkit_plugin_disabling("bukkit.plugin.disabling"),
+    bukkit_plugin_disablingerror("bukkit.plugin.disablingerror"),
+
+    craftserver_addworld("craftserver.addworld"),
+
+    growth_modifier_defaulting("growth.modifier.defaulting"),
+    growth_modifier("growth.modifier"),
+    merge_radius_item("merge.radius.item"),
+    merge_radius_exp("merge.radius.exp"),
+    view_distance("view.distance"),
+    mob_spawn_range("mob.spawn.range"),
+    item_despawn_rate("item.despawn.rate"),
+    entity_activation_range("entity.activation.range"),
+    entity_tracking_range("entity.tracking.range"),
+    ticks_per_hopper_transfer("ticks.per.hopper.transfer"),
+    random_light_updates("random.light.updates"),
+    save_structure_info("save.structure.info"),
+    save_structure_info_error("save.structure.info.error"),
+    save_structure_info_error1("save.structure.info.error1"),
+    arrow_despawn_rate("arrow.despawn.rate"),
+    zombie_aggressive_towards_villager("zombie.aggressive.towards.villager"),
+    nerf_spawner_mobs("nerf.spawner.mobs"),
+    enable_zombie_pigmen_portal_spawns("enable.zombie.pigmen.portal.spawns"),
+    custom_map_seeds("custom.map.seeds"),
+    max_tnt_per_tick("max-tnt.per.tick"),
+    max_tick_time_tile("max.tick.time.tile"),
     ;
 
     private final String value;

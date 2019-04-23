@@ -89,10 +89,10 @@ public class SpigotWorldConfig
         int modifier = getInt( "growth." + crop.toLowerCase(java.util.Locale.ENGLISH) + "-modifier", 100 );
         if ( modifier == 0 )
         {
-            log( "Cannot set " + crop + " growth to zero, defaulting to 100" );
+            log(Message.getFormatString(Message.growth_modifier_defaulting, new Object[] {crop}));
             modifier = 100;
         }
-        log( crop + " Growth Modifier: " + modifier + "%" );
+        log(Message.getFormatString(Message.growth_modifier, new Object[] {crop, modifier}));
 
         return modifier;
     }
@@ -114,35 +114,35 @@ public class SpigotWorldConfig
     private void itemMerge()
     {
         itemMerge = getDouble("merge-radius.item", 2.5 );
-        log( "Item Merge Radius: " + itemMerge );
+        log(Message.getFormatString(Message.merge_radius_item, new Object[] {itemMerge}));
     }
 
     public double expMerge;
     private void expMerge()
     {
         expMerge = getDouble("merge-radius.exp", 3.0 );
-        log( "Experience Merge Radius: " + expMerge );
+        log(Message.getFormatString(Message.merge_radius_exp, new Object[] {expMerge}));
     }
 
     public int viewDistance;
     private void viewDistance()
     {
         viewDistance = getInt( "view-distance", Bukkit.getViewDistance() );
-        log( "View Distance: " + viewDistance );
+        log(Message.getFormatString(Message.view_distance, new Object[] {viewDistance}));
     }
 
     public byte mobSpawnRange;
     private void mobSpawnRange()
     {
         mobSpawnRange = (byte) getInt( "mob-spawn-range", 4 );
-        log( "Mob Spawn Range: " + mobSpawnRange );
+        log(Message.getFormatString(Message.mob_spawn_range, new Object[] {mobSpawnRange}));
     }
 
     public int itemDespawnRate;
     private void itemDespawnRate()
     {
         itemDespawnRate = getInt( "item-despawn-rate", 6000 );
-        log( "Item Despawn Rate: " + itemDespawnRate );
+        log(Message.getFormatString(Message.item_despawn_rate, new Object[] {itemDespawnRate}));
     }
 
     public int animalActivationRange = 32;
@@ -157,7 +157,7 @@ public class SpigotWorldConfig
         miscActivationRange = getInt( "entity-activation-range.misc", miscActivationRange );
         waterActivationRange = getInt( "entity-activation-range.water", waterActivationRange ); // Paper
         tickInactiveVillagers = getBoolean( "entity-activation-range.tick-inactive-villagers", tickInactiveVillagers );
-        log( "Entity Activation Range: An " + animalActivationRange + " / Mo " + monsterActivationRange + " / Mi " + miscActivationRange + " / Tiv " + tickInactiveVillagers );
+        log( Message.getFormatString(Message.entity_activation_range, new Object[] {animalActivationRange, monsterActivationRange, miscActivationRange, tickInactiveVillagers}));
     }
 
     public int playerTrackingRange = 48;
@@ -172,7 +172,7 @@ public class SpigotWorldConfig
         monsterTrackingRange = getInt( "entity-tracking-range.monsters", monsterTrackingRange );
         miscTrackingRange = getInt( "entity-tracking-range.misc", miscTrackingRange );
         otherTrackingRange = getInt( "entity-tracking-range.other", otherTrackingRange );
-        log( "Entity Tracking Range: Pl " + playerTrackingRange + " / An " + animalTrackingRange + " / Mo " + monsterTrackingRange + " / Mi " + miscTrackingRange + " / Other " + otherTrackingRange );
+        log( Message.getFormatString(Message.entity_tracking_range, new Object[] {playerTrackingRange, animalTrackingRange, monsterTrackingRange, miscTrackingRange,  otherTrackingRange}));
     }
 
     public int hopperTransfer;
@@ -188,25 +188,25 @@ public class SpigotWorldConfig
         }
         hopperCheck = getInt( "ticks-per.hopper-check", 1 );
         hopperAmount = getInt( "hopper-amount", 1 );
-        log( "Hopper Transfer: " + hopperTransfer + " Hopper Check: " + hopperCheck + " Hopper Amount: " + hopperAmount );
+        log( Message.getFormatString(Message.ticks_per_hopper_transfer, new Object[] {hopperTransfer, hopperCheck, hopperAmount}));
     }
 
     public boolean randomLightUpdates;
     private void lightUpdates()
     {
         randomLightUpdates = getBoolean( "random-light-updates", false );
-        log( "Random Lighting Updates: " + randomLightUpdates );
+        log(Message.getFormatString(Message.random_light_updates, new Object[] {randomLightUpdates}));
     }
 
     public boolean saveStructureInfo;
     private void structureInfo()
     {
         saveStructureInfo = getBoolean( "save-structure-info", true );
-        log( "Structure Info Saving: " + saveStructureInfo );
+        log(Message.getFormatString(Message.save_structure_info, new Object[] {saveStructureInfo}));
         if ( !saveStructureInfo )
         {
-            log( "*** WARNING *** You have selected to NOT save structure info. This may cause structures such as fortresses to not spawn mobs!" );
-            log( "*** WARNING *** Please use this option with caution, SpigotMC is not responsible for any issues this option may cause in the future!" );
+            log( Message.getString(Message.save_structure_info_error));
+            log( Message.getString(Message.save_structure_info_error1));
         }
     }
 
@@ -214,28 +214,28 @@ public class SpigotWorldConfig
     private void arrowDespawnRate()
     {
         arrowDespawnRate = getInt( "arrow-despawn-rate", 1200  );
-        log( "Arrow Despawn Rate: " + arrowDespawnRate );
+        log(Message.getFormatString(Message.arrow_despawn_rate, new Object[] {arrowDespawnRate}));
     }
 
     public boolean zombieAggressiveTowardsVillager;
     private void zombieAggressiveTowardsVillager()
     {
         zombieAggressiveTowardsVillager = getBoolean( "zombie-aggressive-towards-villager", true );
-        log( "Zombie Aggressive Towards Villager: " + zombieAggressiveTowardsVillager );
+        log(Message.getFormatString(Message.zombie_aggressive_towards_villager, new Object[] {zombieAggressiveTowardsVillager}));
     }
 
     public boolean nerfSpawnerMobs;
     private void nerfSpawnerMobs()
     {
         nerfSpawnerMobs = getBoolean( "nerf-spawner-mobs", false );
-        log( "Nerfing mobs spawned from spawners: " + nerfSpawnerMobs );
+        log(Message.getFormatString(Message.nerf_spawner_mobs, new Object[] {nerfSpawnerMobs}));
     }
 
     public boolean enableZombiePigmenPortalSpawns;
     private void enableZombiePigmenPortalSpawns()
     {
         enableZombiePigmenPortalSpawns = getBoolean( "enable-zombie-pigmen-portal-spawns", true );
-        log( "Allow Zombie Pigmen to spawn from portal blocks: " + enableZombiePigmenPortalSpawns );
+        log(Message.getFormatString(Message.enable_zombie_pigmen_portal_spawns, new Object[] {enableZombiePigmenPortalSpawns}));
     }
 
     public int dragonDeathSoundRadius;
@@ -260,7 +260,7 @@ public class SpigotWorldConfig
         largeFeatureSeed = getInt( "seed-feature", 14357617 );
         monumentSeed = getInt( "seed-monument", 10387313 );
         slimeSeed = getInt( "seed-slime", 987234911 );
-        log( "Custom Map Seeds:  Village: " + villageSeed + " Feature: " + largeFeatureSeed + " Monument: "  + monumentSeed + " Slime: " + slimeSeed );
+        log( Message.getFormatString(Message.custom_map_seeds, new Object[] {villageSeed, largeFeatureSeed, monumentSeed, slimeSeed}));
     }
 
     public float jumpWalkExhaustion;
@@ -297,7 +297,7 @@ public class SpigotWorldConfig
             set( "max-tnt-per-tick", 100 );
         }
         maxTntTicksPerTick = getInt( "max-tnt-per-tick", 100 );
-        log( "Max TNT Explosions: " + maxTntTicksPerTick );
+        log(Message.getFormatString(Message.max_tnt_per_tick, new Object[] {maxTntTicksPerTick}));
     }
 
     public int hangingTickFrequency;
@@ -312,7 +312,7 @@ public class SpigotWorldConfig
     {
         tileMaxTickTime = getInt("max-tick-time.tile", 50);
         entityMaxTickTime = getInt("max-tick-time.entity", 50);
-        log("Tile Max Tick Time: " + tileMaxTickTime + "ms Entity max Tick Time: " + entityMaxTickTime + "ms");
+        log(Message.getFormatString(Message.max_tick_time_tile, new Object[] {tileMaxTickTime, entityMaxTickTime}));
     }
 
     public double squidSpawnRangeMin;

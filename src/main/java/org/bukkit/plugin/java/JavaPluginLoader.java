@@ -15,6 +15,8 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.*;
 import org.yaml.snakeyaml.error.YAMLException;
+import red.mohist.i18n.Message;
+import sun.util.resources.cldr.sg.CurrencyNames_sg;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -132,7 +134,7 @@ public class JavaPluginLoader implements PluginLoader {
             JarEntry entry = jar.getJarEntry("plugin.yml");
 
             if (entry == null) {
-                throw new InvalidDescriptionException(new FileNotFoundException("Jar does not contain plugin.yml"));
+                throw new InvalidDescriptionException(new FileNotFoundException(Message.getString(Message.bukkit_plugin_noyml)));
             }
 
             stream = jar.getInputStream(entry);
@@ -290,8 +292,9 @@ public class JavaPluginLoader implements PluginLoader {
     public void enablePlugin(Plugin plugin) {
         Validate.isTrue(plugin instanceof JavaPlugin, "Plugin is not associated with this PluginLoader");
 
+        Object[] pn = {plugin.getDescription().getFullName()};
         if (!plugin.isEnabled()) {
-            Mohist.LOGGER.info("Enabling " + plugin.getDescription().getFullName());
+            Mohist.LOGGER.info(Message.getFormatString(Message.bukkit_plugin_enabling, pn));
 
             JavaPlugin jPlugin = (JavaPlugin) plugin;
 
@@ -299,13 +302,13 @@ public class JavaPluginLoader implements PluginLoader {
 
             if (!loaders.contains(pluginLoader)) {
                 loaders.add(pluginLoader);
-                Mohist.LOGGER.error( "Enabled plugin with unregistered PluginClassLoader " + plugin.getDescription().getFullName());
+                Mohist.LOGGER.error(Message.getFormatString(Message.bukkit_plugin_enablingunreg, pn));
             }
 
             try {
                 jPlugin.setEnabled(true);
             } catch (Throwable ex) {
-                Mohist.LOGGER.error( "Error occurred while enabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
+                Mohist.LOGGER.error(Message.getFormatString(Message.bukkit_plugin_enablingerror, pn), ex);
                 // Paper start - Disable plugins that fail to load
                 server.getPluginManager().disablePlugin(jPlugin);
                 return;
@@ -322,8 +325,7 @@ public class JavaPluginLoader implements PluginLoader {
         Validate.isTrue(plugin instanceof JavaPlugin, "Plugin is not associated with this PluginLoader");
 
         if (plugin.isEnabled()) {
-            String message = String.format("Disabling %s", plugin.getDescription().getFullName());
-            Mohist.LOGGER.info(message);
+            Mohist.LOGGER.info(Message.getFormatString(Message.bukkit_plugin_disabling, new Object[] {plugin.getDescription().getFullName()}));
 
             server.getPluginManager().callEvent(new PluginDisableEvent(plugin));
 
@@ -333,7 +335,7 @@ public class JavaPluginLoader implements PluginLoader {
             try {
                 jPlugin.setEnabled(false);
             } catch (Throwable ex) {
-                Mohist.LOGGER.error( "Error occurred while disabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
+                Mohist.LOGGER.error( Message.getFormatString(Message.bukkit_plugin_disablingerror, new Object[] {plugin.getDescription().getFullName()}), ex);
             }
 
             if (cloader instanceof PluginClassLoader) {
