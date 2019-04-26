@@ -5,6 +5,7 @@
 /plugin
 /eclipse
 /.gradle
+/.vscode
 /spigot
 /patches2
 /patches3
