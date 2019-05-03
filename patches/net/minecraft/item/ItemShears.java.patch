@@ -8,7 +8,7 @@
  
  public class ItemShears extends Item
  {
-@@ -50,10 +51,18 @@
+@@ -50,6 +51,13 @@
              BlockPos pos = new BlockPos(entity.posX, entity.posY, entity.posZ);
              if (target.isShearable(itemstack, entity.world, pos))
              {
@@ -22,16 +22,3 @@
                  java.util.List<ItemStack> drops = target.onSheared(itemstack, entity.world, pos,
                          net.minecraft.enchantment.EnchantmentHelper.getEnchantmentLevel(net.minecraft.init.Enchantments.FORTUNE, itemstack));
  
-                 java.util.Random rand = new java.util.Random();
-+                entity.forceDrops = true;
-                 for(ItemStack stack : drops)
-                 {
-                     net.minecraft.entity.item.EntityItem ent = entity.entityDropItem(stack, 1.0F);
-@@ -61,6 +70,7 @@
-                     ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-                     ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-                 }
-+                entity.forceDrops = false;
-                 itemstack.damageItem(1, entity);
-             }
-             return true;
