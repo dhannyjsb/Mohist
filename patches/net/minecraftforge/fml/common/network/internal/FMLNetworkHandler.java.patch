@@ -111,3 +111,12 @@
              return String.format("Server Mod rejections:\n%s", rejectString);
          }
      }
+@@ -210,7 +231,7 @@
+     public static void enhanceStatusQuery(JsonObject jsonobject)
+     {
+         JsonObject fmlData = new JsonObject();
+-        fmlData.addProperty("type", "FML");
++        fmlData.addProperty("type", "BUKKIT"); // Show the Bukkit icon in server list.
+         JsonArray modList = new JsonArray();
+         for (ModContainer mc : Loader.instance().getActiveModList())
+         {
