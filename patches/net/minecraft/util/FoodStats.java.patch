@@ -36,7 +36,7 @@
      public void addStats(int foodLevelIn, float foodSaturationModifier)
      {
          this.foodLevel = Math.min(foodLevelIn + this.foodLevel, 20);
-@@ -24,7 +33,22 @@
+@@ -24,12 +33,27 @@
  
      public void addStats(ItemFood foodItem, ItemStack stack)
      {
@@ -59,8 +59,15 @@
 +        }
      }
  
-     public void onUpdate(EntityPlayer player)
-@@ -42,7 +66,20 @@
+-    public void onUpdate(EntityPlayer player)
++    public void onUpdate(EntityPlayer entityplayer)
+     {
+-        EnumDifficulty enumdifficulty = player.world.getDifficulty();
++        EnumDifficulty enumdifficulty = entityplayer.world.getDifficulty();
+         this.prevFoodLevel = this.foodLevel;
+ 
+         if (this.foodExhaustionLevel > 4.0F)
+@@ -42,20 +66,33 @@
              }
              else if (enumdifficulty != EnumDifficulty.PEACEFUL)
              {
@@ -82,12 +89,19 @@
              }
          }
  
-@@ -55,7 +92,7 @@
+-        boolean flag = player.world.getGameRules().getBoolean("naturalRegeneration");
++        boolean flag = entityplayer.world.getGameRules().getBoolean("naturalRegeneration");
+ 
+-        if (flag && this.foodSaturationLevel > 0.0F && player.shouldHeal() && this.foodLevel >= 20)
++        if (flag && this.foodSaturationLevel > 0.0F && entityplayer.shouldHeal() && this.foodLevel >= 20)
+         {
+             ++this.foodTimer;
+ 
              if (this.foodTimer >= 10)
              {
                  float f = Math.min(this.foodSaturationLevel, 6.0F);
 -                player.heal(f / 6.0F);
-+                player.heal(f / 6.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.SATIATED); // CraftBukkit - added RegainReason
++                entityplayer.heal(f / 6.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.SATIATED); // CraftBukkit - added RegainReason
                  this.addExhaustion(f);
                  this.foodTimer = 0;
              }
@@ -97,8 +111,20 @@
              {
 -                player.heal(1.0F);
 -                this.addExhaustion(6.0F);
-+                player.heal(1.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.SATIATED); // CraftBukkit - added RegainReason
-+                this.addExhaustion(player == null ? 6.0F : player.world.spigotConfig.regenExhaustion); // Spigot - Change to use configurable value
++                entityplayer.heal(1.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.SATIATED); // CraftBukkit - added RegainReason
++                this.addExhaustion((player == null) ? 6.0F : player.world.spigotConfig.regenExhaustion); // Spigot - Change to use configurable value
                  this.foodTimer = 0;
              }
          }
+@@ -77,9 +114,9 @@
+ 
+             if (this.foodTimer >= 80)
+             {
+-                if (player.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && enumdifficulty == EnumDifficulty.NORMAL)
++                if (entityplayer.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || entityplayer.getHealth() > 1.0F && enumdifficulty == EnumDifficulty.NORMAL)
+                 {
+-                    player.attackEntityFrom(DamageSource.STARVE, 1.0F);
++                    entityplayer.attackEntityFrom(DamageSource.STARVE, 1.0F);
+                 }
+ 
+                 this.foodTimer = 0;
