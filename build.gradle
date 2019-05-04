@@ -2,8 +2,11 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "https://files.minecraftforge.net/maven" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url 'https://files.minecraftforge.net/maven' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+        maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+        maven { url 'https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository' }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -12,7 +15,9 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: "idea"
 apply plugin: 'net.minecraftforge.gradle.patcher'
+apply plugin: 'net.minecraftforge.gradle.launch4j'
 
 group = 'red.mohist'
 version = '14.23.5.2836-0.0.7a'
@@ -20,18 +25,20 @@ version = '14.23.5.2836-0.0.7a'
 repositories {
     clear()
     mavenCentral()
-    maven { url "https://files.minecraftforge.net/maven" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "https://libraries.minecraft.net/" }
+    maven { url 'https://files.minecraftforge.net/maven' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://libraries.minecraft.net/' }
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    maven { url 'https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository' }
 }
 
-configurations{
-    compile.extendsFrom exported
-    libraries
+configurations.all {
+    transitive = false
 }
 
 dependencies {
-    libraries 'org.avaje:ebean:2.8.1'
+    compile 'org.avaje:ebean:2.8.1'
 }
 
 minecraft.version = "1.12.2"
@@ -78,9 +85,27 @@ minecraft {
 
 sourceCompatibility = 1.8
 [compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
+tasks.generateXmlConfig.dependsOn installer
 tasks.compileJava.enabled = false
+tasks.build.dependsOn 'launch4j'
 
 tasks.reobfuscate.setProperty("extraSrg",["PK: org/bukkit/craftbukkit org/bukkit/craftbukkit/v1_12_R1"])
+
+installer {
+    classifier = 'installer'
+    from "src/main/resources/mohist_logo.png"
+    rename "mohist_logo\\.png", "big_logo.png"
+}
+
+launch4j {
+    jar = installer.archivePath.canonicalPath
+    outfile = file("build/distributions/${project.name}-${project.version}-installer-win.exe").canonicalPath
+    icon = file('icon.ico').canonicalPath
+    manifest = file('l4jManifest.xml').canonicalPath
+    jreMinVersion = '1.8.0'
+    initialHeapPercent = 5
+    maxHeapPercent = 100
+}
 
 task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     onlyIf {
@@ -100,7 +125,9 @@ task signUniversal(type: SignJar, dependsOn: 'outputJar') {
     inputFile = outputJar.archivePath
     outputFile = outputJar.archivePath
 }
+uploadArchives.dependsOn signUniversal
 build.dependsOn signUniversal
+installer.dependsOn signUniversal
 
 outputJar {
     classifier = 'universal'
