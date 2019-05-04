@@ -485,7 +485,7 @@
          this.clearCurrentTask();
      }
  
-@@ -390,11 +482,12 @@
+@@ -390,17 +482,18 @@
      {
          this.currentTask = null;
          this.percentDone = 0;
@@ -499,6 +499,13 @@
          {
              if (worldserver != null)
              {
+                 if (!isSilent)
+                 {
+-                    LOGGER.info("Saving chunks for level '{}'/{}", worldserver.getWorldInfo().getWorldName(), worldserver.provider.getDimensionType().getName());
++                    LOGGER.info(Message.getFormatString(Message.save_chunks_level, new Object[] { worldserver.getWorldInfo().getWorldName(), worldserver.provider.getDimensionType().getName()}));
+                 }
+ 
+                 try
 @@ -415,10 +508,22 @@
          }
      }
@@ -708,6 +715,46 @@
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStopping();
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
              }
+@@ -546,7 +714,7 @@
+         }
+         catch (Throwable throwable1)
+         {
+-            LOGGER.error("Encountered an unexpected exception", throwable1);
++            LOGGER.error(Message.getString(Message.crash_report), throwable1);
+             CrashReport crashreport = null;
+ 
+             if (throwable1 instanceof ReportedException)
+@@ -555,18 +723,18 @@
+             }
+             else
+             {
+-                crashreport = this.addServerInfoToCrashReport(new CrashReport("Exception in server tick loop", throwable1));
++                crashreport = this.addServerInfoToCrashReport(new CrashReport(Message.getString(Message.crash_report1), throwable1));
+             }
+ 
+             File file1 = new File(new File(this.getDataDirectory(), "crash-reports"), "crash-" + (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date()) + "-server.txt");
+ 
+             if (crashreport.saveToFile(file1))
+             {
+-                LOGGER.error("This crash report has been saved to: {}", (Object)file1.getAbsolutePath());
++                LOGGER.error(Message.getFormatString(Message.crash_report2, new Object[] { file1.getAbsolutePath()}));
+             }
+             else
+             {
+-                LOGGER.error("We were unable to save this crash report to disk.");
++                LOGGER.error(Message.getString(Message.crash_report3));
+             }
+ 
+             net.minecraftforge.fml.common.FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
+@@ -580,7 +748,7 @@
+             }
+             catch (Throwable throwable)
+             {
+-                LOGGER.error("Exception stopping the server", throwable);
++                LOGGER.error(Message.getString(Message.crash_report4), throwable);
+             }
+             finally
+             {
 @@ -607,8 +775,11 @@
              try
              {

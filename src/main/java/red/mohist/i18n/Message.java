@@ -46,7 +46,12 @@ public enum Message {
     disconnect_flying("disconnect.flying"),
     disconnect_duplicate_login("disconnect.duplicate_login"),
     client_join_mods("client.join.mods"),
-
+    save_chunks_level("save.chunks.level"),
+    crash_report("crash.report"),
+    crash_report1("crash.report1"),
+    crash_report2("crash.report2"),
+    crash_report3("crash.report3"),
+    crash_report4("crash.report4"),
     crash_mc_version("crash.mc.version"),
     crash_system("crash.system"),
     crash_version("crash.version"),
