@@ -1,9 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/server/dedicated/DedicatedServer.java
 +++ ../src-work/minecraft/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -1,21 +1,11 @@
+@@ -1,21 +1,12 @@
  package net.minecraft.server.dedicated;
  
 -import com.google.common.collect.Lists;
++import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 +import red.mohist.Mohist;
 +import red.mohist.MohistConfig;
 +import red.mohist.i18n.Message;
@@ -25,7 +26,7 @@
  import net.minecraft.command.ICommandSender;
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.ICrashReportDetail;
-@@ -38,35 +28,46 @@
+@@ -38,35 +29,46 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
@@ -83,7 +84,7 @@
          Thread thread = new Thread("Server Infinisleeper")
          {
              {
-@@ -96,16 +97,16 @@
+@@ -96,16 +98,16 @@
          {
              public void run()
              {
@@ -103,7 +104,7 @@
                  }
                  catch (IOException ioexception1)
                  {
-@@ -113,9 +114,30 @@
+@@ -113,9 +115,30 @@
                  }
              }
          };
@@ -135,7 +136,7 @@
  
          if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
          {
-@@ -125,7 +147,7 @@
+@@ -125,7 +148,7 @@
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStart(this);
  
          LOGGER.info("Loading properties");
@@ -144,7 +145,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -144,7 +166,7 @@
+@@ -144,7 +167,7 @@
              {
                  this.setOnlineMode(this.settings.getBooleanProperty("online-mode", true));
                  this.setPreventProxyConnections(this.settings.getBooleanProperty("prevent-proxy-connections", false));
@@ -153,7 +154,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +203,23 @@
+@@ -181,10 +204,23 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -178,7 +179,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +231,7 @@
+@@ -196,15 +232,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -195,17 +196,22 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,7 +244,7 @@
+@@ -217,8 +245,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
 -                this.setPlayerList(new DedicatedPlayerList(this));
+-                long j = System.nanoTime();
 +                this.anvilConverterForAnvilFile = new AnvilSaveConverter(server.getWorldContainer(), this.dataFixer); // CraftBukkit - moved from MinecraftServer constructor
-                 long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -271,7 +298,8 @@
-                 long i1 = System.nanoTime() - j;
+                 {
+@@ -268,10 +295,11 @@
+                 if (!net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerAboutToStart(this)) return false;
+                 LOGGER.info("Preparing level \"{}\"", (Object)this.getFolderName());
+                 this.loadAllWorlds(this.getFolderName(), this.getFolderName(), k, worldtype, s2);
+-                long i1 = System.nanoTime() - j;
++                long i1 = System.nanoTime() - ServerLaunchWrapper.j;
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
                  LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
 -                this.currentTime = getCurrentTimeMillis();

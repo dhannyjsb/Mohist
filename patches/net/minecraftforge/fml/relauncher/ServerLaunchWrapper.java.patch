@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,32 +19,28 @@
+@@ -19,32 +19,29 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -24,6 +24,7 @@
 -    {
 -        new ServerLaunchWrapper().run(args);
 -    }
++    public static long j;
  
 -    private ServerLaunchWrapper()
 +    public ServerLaunchWrapper()
@@ -42,7 +43,7 @@
          }
          Class<?> launchwrapper = null;
          try
-@@ -54,11 +50,16 @@
+@@ -54,11 +51,17 @@
          }
          catch (Exception e)
          {
@@ -59,10 +60,11 @@
          }
 +        Mohist.LOGGER = LogManager.getLogger("Mohist");
 +        Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
++        j = System.nanoTime();
  
          try
          {
-@@ -71,7 +72,7 @@
+@@ -71,7 +74,7 @@
          }
          catch (Exception e)
          {
