@@ -47,7 +47,7 @@ minecraft {
     mappings = 'snapshot_nodoc_20171003'
     workspaceDir = "projects"
     versionJson = "jsons/${minecraft.version}-dev.json"
-    buildUserdev = true
+    buildUserdev = false
     buildInstaller = true
     installerVersion = "1.5"
 
