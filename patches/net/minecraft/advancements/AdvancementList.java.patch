@@ -1,28 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/advancements/AdvancementList.java
 +++ ../src-work/minecraft/net/minecraft/advancements/AdvancementList.java
-@@ -3,22 +3,23 @@
- import com.google.common.base.Functions;
- import com.google.common.collect.Maps;
- import com.google.common.collect.Sets;
--import java.util.Iterator;
--import java.util.Map;
--import java.util.Set;
--import java.util.Map.Entry;
--import java.util.function.Function;
--import javax.annotation.Nullable;
- import net.minecraft.util.ResourceLocation;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
- 
-+import javax.annotation.Nullable;
-+import java.util.Iterator;
-+import java.util.Map;
-+import java.util.Map.Entry;
-+import java.util.Set;
-+import java.util.function.Function;
-+
+@@ -18,7 +18,7 @@
  public class AdvancementList
  {
      private static final Logger LOGGER = LogManager.getLogger();
@@ -31,7 +9,7 @@
      private final Set<Advancement> roots = Sets.<Advancement>newLinkedHashSet();
      private final Set<Advancement> nonRoots = Sets.<Advancement>newLinkedHashSet();
      private AdvancementList.Listener listener;
-@@ -133,7 +134,7 @@
+@@ -133,7 +133,7 @@
              }
          }
  
