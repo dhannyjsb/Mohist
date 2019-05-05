@@ -14,7 +14,7 @@
          EnumFacing enumfacing = (EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING);
          IProjectile iprojectile = this.getProjectileEntity(world, iposition, stack);
 -        iprojectile.shoot((double)enumfacing.getFrontOffsetX(), (double)((float)enumfacing.getFrontOffsetY() + 0.1F), (double)enumfacing.getFrontOffsetZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
-+//        iprojectile.shoot((double)enumfacing.getFrontOffsetX(), (double)((float)enumfacing.getFrontOffsetY() + 0.1F), (double)enumfacing.getFrontOffsetZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
++        //iprojectile.shoot((double)enumfacing.getFrontOffsetX(), (double)((float)enumfacing.getFrontOffsetY() + 0.1F), (double)enumfacing.getFrontOffsetZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
 +        ItemStack itemstack1 = stack.splitStack(1);
 +        org.bukkit.block.Block block = world.getWorld().getBlockAt(source.getBlockPos().getX(), source.getBlockPos().getY(), source.getBlockPos().getZ());
 +        CraftItemStack craftItem = CraftItemStack.asCraftMirror(itemstack1);
@@ -42,7 +42,7 @@
 +        ((Entity) iprojectile).projectileSource = new org.bukkit.craftbukkit.projectiles.CraftBlockProjectileSource(source.getBlockTileEntity());
          world.spawnEntity((Entity)iprojectile);
 -        stack.shrink(1);
-+//        stack.shrink(1); // CraftBukkit - Handled during event processing
++        //stack.shrink(1); // CraftBukkit - Handled during event processing
          return stack;
      }
  

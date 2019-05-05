@@ -6,7 +6,7 @@
  {
 -    private final Map<Item, CooldownTracker.Cooldown> cooldowns = Maps.<Item, CooldownTracker.Cooldown>newHashMap();
 -    private int ticks;
-+    public final Map<Item, Cooldown> cooldowns = Maps.<Item, Cooldown>newHashMap();
++    public final Map<Item, CooldownTracker.Cooldown> cooldowns = Maps.<Item, CooldownTracker.Cooldown>newHashMap();
 +    public int ticks;
  
      public boolean hasCooldown(Item itemIn)
