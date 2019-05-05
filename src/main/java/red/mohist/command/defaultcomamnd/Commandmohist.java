@@ -25,7 +25,7 @@ public class Commandmohist extends Command {
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location location) throws IllegalArgumentException {
         if (args.length <= 1)
-            return CommandBase.getListMatchingLast(args, "reload");
+            return CommandBase.getListOfStringsMatchingLastWord(args, "reload");
 
         return Collections.emptyList();
     }
