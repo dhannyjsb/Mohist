@@ -285,6 +285,7 @@ public class JavaPluginLoader implements PluginLoader {
                     }
                 }
             };
+            eventSet.add(new RegisteredListener(listener, executor, eh.priority(), plugin, eh.ignoreCancelled()));
         }
         return ret;
     }
