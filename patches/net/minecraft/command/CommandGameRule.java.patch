@@ -1,26 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/command/CommandGameRule.java
 +++ ../src-work/minecraft/net/minecraft/command/CommandGameRule.java
-@@ -1,8 +1,5 @@
- package net.minecraft.command;
- 
--import java.util.Collections;
--import java.util.List;
--import javax.annotation.Nullable;
- import net.minecraft.entity.player.EntityPlayerMP;
- import net.minecraft.network.play.server.SPacketEntityStatus;
- import net.minecraft.server.MinecraftServer;
-@@ -10,6 +7,10 @@
- import net.minecraft.util.text.TextComponentString;
- import net.minecraft.world.GameRules;
- 
-+import javax.annotation.Nullable;
-+import java.util.Collections;
-+import java.util.List;
-+
- public class CommandGameRule extends CommandBase
- {
-     public String getName()
-@@ -29,7 +30,7 @@
+@@ -29,7 +29,7 @@
  
      public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
      {

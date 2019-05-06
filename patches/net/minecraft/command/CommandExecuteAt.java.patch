@@ -1,12 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/command/CommandExecuteAt.java
 +++ ../src-work/minecraft/net/minecraft/command/CommandExecuteAt.java
-@@ -1,16 +1,19 @@
- package net.minecraft.command;
- 
--import java.util.Collections;
--import java.util.List;
--import javax.annotation.Nullable;
- import net.minecraft.block.Block;
+@@ -7,9 +7,11 @@
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.Entity;
  import net.minecraft.server.MinecraftServer;
@@ -16,14 +10,9 @@
  import net.minecraft.world.World;
 +import org.bukkit.craftbukkit.command.ProxiedNativeCommandSender;
  
-+import javax.annotation.Nullable;
-+import java.util.Collections;
-+import java.util.List;
-+
  public class CommandExecuteAt extends CommandBase
  {
-     public String getName()
-@@ -78,7 +81,8 @@
+@@ -78,7 +80,8 @@
  
              try
              {
@@ -33,7 +22,7 @@
  
                  if (j < 1)
                  {
-@@ -87,6 +91,9 @@
+@@ -87,6 +90,9 @@
              }
              catch (Throwable var23)
              {
