@@ -149,6 +149,9 @@ public class ActivationRange
         {
             for ( Entity entity : slice )
             {
+                if (entity == null) {
+                    continue;
+                }
                 if (MinecraftServer.currentTick > entity.activatedTick )
                 {
                     if ( entity.defaultActivationState )
@@ -170,7 +173,6 @@ public class ActivationRange
                                 entity.activatedTick = MinecraftServer.currentTick;
                             }
                             break;
-                        case 3:
                         default:
                             if ( miscBB.intersects( entity.getEntityBoundingBox() ) )
                             {
