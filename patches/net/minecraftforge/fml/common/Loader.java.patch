@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/Loader.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/Loader.java
+@@ -95,6 +95,7 @@
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonObject;
+ import com.google.gson.JsonParser;
++import red.mohist.api.ServerAPI;
+ 
+ import javax.annotation.Nullable;
+ 
+@@ -751,6 +752,7 @@
+         modController.transition(LoaderState.AVAILABLE, false);
+         modController.distributeStateMessage(LoaderState.AVAILABLE);
+         GameData.freezeData();
++        ServerAPI.mods.put("mods", mods.size());
+         FMLLog.log.info("Forge Mod Loader has successfully loaded {} mod{}", mods.size(), mods.size() == 1 ? "" : "s");
+         progressBar.step("Completing Minecraft initialization");
+     }
