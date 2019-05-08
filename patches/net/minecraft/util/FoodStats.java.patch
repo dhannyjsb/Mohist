@@ -67,7 +67,7 @@
          this.prevFoodLevel = this.foodLevel;
  
          if (this.foodExhaustionLevel > 4.0F)
-@@ -42,20 +66,33 @@
+@@ -42,32 +66,45 @@
              }
              else if (enumdifficulty != EnumDifficulty.PEACEFUL)
              {
@@ -105,7 +105,11 @@
                  this.addExhaustion(f);
                  this.foodTimer = 0;
              }
-@@ -66,8 +103,8 @@
+         }
+-        else if (flag && this.foodLevel >= 18 && player.shouldHeal())
++        else if (flag && this.foodLevel >= 18 && entityplayer.shouldHeal())
+         {
+             ++this.foodTimer;
  
              if (this.foodTimer >= 80)
              {
