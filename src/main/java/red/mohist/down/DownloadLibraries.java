@@ -18,11 +18,7 @@ import java.util.zip.ZipFile;
 public class DownloadLibraries implements Runnable {
     @Override
     public void run() {
-        /**
-         *   Mohist使用: https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip
-         *   PFServer使用: https://lliiooll.gitee.io/mohistdown/libraries_pfserver.zip
-         */
-        String url = "https://lliiooll.gitee.io/mohistdown/libraries_pfserver.zip";
+        String url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
         String fileName = "libraries.zip";
         Locale locale = Locale.getDefault();
         Object[] o1 = {fileName};
@@ -33,7 +29,7 @@ public class DownloadLibraries implements Runnable {
             byte[] buff = new byte[8192];
             if (locale.getCountry().equals("CN")) {
                 System.out.println("自动为你设置为中国国内下载源");
-                url = "https://lliiooll.gitee.io/mohistdown/libraries_pfserver.zip";
+                url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
             }
             is1 = new URL(url).openStream();
             File file = new File(".", fileName);
