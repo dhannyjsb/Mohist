@@ -1,15 +1,16 @@
 --- ../src-base/minecraft/net/minecraft/command/CommandHandler.java
 +++ ../src-work/minecraft/net/minecraft/command/CommandHandler.java
-@@ -16,6 +16,8 @@
+@@ -16,6 +16,9 @@
  import net.minecraft.util.text.TextFormatting;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
++import org.bukkit.command.CommandWrapper;
 +import org.bukkit.craftbukkit.command.CraftSimpleCommandMap;
 +import org.bukkit.craftbukkit.command.ModCustomCommand;
  
  public abstract class CommandHandler implements ICommandManager
  {
-@@ -27,11 +29,6 @@
+@@ -27,15 +30,11 @@
      {
          rawCommand = rawCommand.trim();
  
@@ -21,7 +22,12 @@
          String[] astring = rawCommand.split(" ");
          String s = astring[0];
          astring = dropFirstString(astring);
-@@ -48,7 +45,7 @@
+         ICommand icommand = this.commandMap.get(s);
++        if (icommand == null) icommand = CommandWrapper.toNMSCommand(sender, s);
+         int i = 0;
+ 
+         try
+@@ -48,7 +47,7 @@
                  textcomponenttranslation1.getStyle().setColor(TextFormatting.RED);
                  sender.sendMessage(textcomponenttranslation1);
              }
@@ -30,7 +36,7 @@
              {
                  net.minecraftforge.event.CommandEvent event = new net.minecraftforge.event.CommandEvent(icommand, sender, astring);
                  if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event))
-@@ -144,23 +141,38 @@
+@@ -144,23 +143,38 @@
  
      protected abstract MinecraftServer getServer();
  
