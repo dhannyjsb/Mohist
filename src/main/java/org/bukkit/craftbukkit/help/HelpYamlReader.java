@@ -1,12 +1,12 @@
 package org.bukkit.craftbukkit.help;
 
-import red.mohist.Mohist;
 import com.google.common.base.Charsets;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.help.HelpTopic;
+import red.mohist.Mohist;
 
 import java.io.File;
 import java.io.IOException;

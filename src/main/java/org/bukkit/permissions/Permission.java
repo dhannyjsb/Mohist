@@ -1,11 +1,15 @@
 package org.bukkit.permissions;
 
-import red.mohist.Mohist;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
+import red.mohist.Mohist;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents a unique permission that may be attached to a {@link

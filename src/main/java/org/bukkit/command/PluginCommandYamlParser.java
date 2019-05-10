@@ -1,7 +1,7 @@
 package org.bukkit.command;
 
-import red.mohist.Mohist;
 import org.bukkit.plugin.Plugin;
+import red.mohist.Mohist;
 
 import java.util.ArrayList;
 import java.util.List;

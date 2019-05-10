@@ -1,8 +1,8 @@
 package org.spigotmc;
 
-import red.mohist.Mohist;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.Logger;
+import red.mohist.Mohist;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;

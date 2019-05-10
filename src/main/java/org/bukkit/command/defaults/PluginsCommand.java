@@ -1,12 +1,17 @@
 package org.bukkit.command.defaults;
 
-import red.mohist.pluginmanager.PluginManagers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import red.mohist.pluginmanager.PluginManagers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class PluginsCommand extends BukkitCommand {
     public PluginsCommand(String name) {

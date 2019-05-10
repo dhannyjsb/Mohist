@@ -1,9 +1,9 @@
 package org.bukkit.craftbukkit.conversations;
 
-import red.mohist.Mohist;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ManuallyAbandonedConversationCanceller;
+import red.mohist.Mohist;
 
 import java.util.LinkedList;
 import java.util.logging.Level;

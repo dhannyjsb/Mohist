@@ -1,7 +1,21 @@
 package org.bukkit;
 
 import com.google.common.collect.Maps;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.Guardian;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Rabbit;
+import org.bukkit.entity.Squid;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.TippedArrow;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Witch;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.ZombieVillager;
 
 import java.util.Map;
 

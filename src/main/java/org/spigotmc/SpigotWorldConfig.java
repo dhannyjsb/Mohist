@@ -1,9 +1,9 @@
 package org.spigotmc;
 
-import red.mohist.Mohist;
-import red.mohist.i18n.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import red.mohist.Mohist;
+import red.mohist.i18n.Message;
 
 import java.util.List;
 

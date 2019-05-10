@@ -1,8 +1,8 @@
 package org.bukkit.craftbukkit.util;
 
-import red.mohist.Mohist;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import red.mohist.Mohist;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

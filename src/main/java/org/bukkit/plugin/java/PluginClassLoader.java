@@ -1,10 +1,10 @@
 package org.bukkit.plugin.java;
 
-import red.mohist.Mohist;
 import com.google.common.io.ByteStreams;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
+import red.mohist.Mohist;
 
 import java.io.File;
 import java.io.IOException;

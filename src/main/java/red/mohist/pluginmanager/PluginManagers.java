@@ -1,11 +1,11 @@
 package red.mohist.pluginmanager;
 
-import red.mohist.i18n.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import red.mohist.i18n.Message;
 
 import java.io.File;
 import java.util.ArrayList;

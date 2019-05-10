@@ -3,8 +3,6 @@ package org.bukkit.command;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FormattedCommandAlias extends Command {
     private final String[] formatStrings;

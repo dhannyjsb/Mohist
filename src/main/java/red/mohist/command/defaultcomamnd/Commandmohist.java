@@ -1,12 +1,12 @@
 package red.mohist.command.defaultcomamnd;
 
-import red.mohist.MohistConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import red.mohist.MohistConfig;
 
 import java.io.File;
 import java.util.Collections;

@@ -1,13 +1,13 @@
 package red.mohist;
 
-import red.mohist.command.defaultcomamnd.Commandmohist;
-import red.mohist.command.defaultcomamnd.Commandunban;
-import red.mohist.command.defaultcomamnd.VersionCommand;
 import com.google.common.base.Throwables;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import red.mohist.command.defaultcomamnd.Commandmohist;
+import red.mohist.command.defaultcomamnd.Commandunban;
+import red.mohist.command.defaultcomamnd.VersionCommand;
 
 import java.io.File;
 import java.io.IOException;

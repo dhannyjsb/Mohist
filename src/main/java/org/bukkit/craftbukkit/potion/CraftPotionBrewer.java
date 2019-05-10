@@ -2,7 +2,11 @@ package org.bukkit.craftbukkit.potion;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import org.bukkit.potion.*;
+import org.bukkit.potion.PotionBrewer;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.Collection;
