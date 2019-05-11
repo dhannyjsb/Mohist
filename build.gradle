@@ -46,7 +46,7 @@ minecraft.version = "1.12.2"
 minecraft {
     mappings = 'snapshot_nodoc_20171003'
     workspaceDir = "projects"
-    versionJson = "jsons/${minecraft.version}-dev.json"
+    versionJson = "jsons/${minecraft.version}-mohist-dev.json"
     buildUserdev = false
     buildInstaller = true
     installerVersion = "1.5"
@@ -54,6 +54,8 @@ minecraft {
     def common = {
         patchPrefixOriginal "../src-base/minecraft"
         patchPrefixChanged "../src-work/minecraft"
+        mainClassClient "net.minecraft.launchwrapper.Launch"
+        tweakClassClient "net.minecraftforge.fml.common.launcher.FMLTweaker"
         mainClassServer "net.minecraft.launchwrapper.Launch"
         tweakClassServer "net.minecraftforge.fml.common.launcher.FMLServerTweaker"
     }
@@ -137,12 +139,12 @@ outputJar {
             "Implementation-Version": version,
             "Main-Class": "red.mohist.Mohist",
             "TweakClass": "net.minecraftforge.fml.common.launcher.FMLTweaker",
-            "Class-Path": getServerClasspath(file("jsons/${minecraft.version}-rel.json"))
+            "Class-Path": getServerClasspath(file("jsons/${minecraft.version}-mohist-rel.json"))
     ])
 }
 
 processJson {
-    releaseJson = "jsons/${minecraft.version}-rel.json"
+    releaseJson = "jsons/${minecraft.version}-mohist-rel.json"
     addReplacements([
             "@minecraft_version@": project.minecraft.version,
             "@version@": project.version,
