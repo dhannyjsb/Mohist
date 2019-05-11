@@ -13,6 +13,8 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**Metrics**](https://bstats.org/plugin/bukkit/Mohist)
    [**PayPal**](https://www.paypal.me/Mgazul)
    [**afdian(中文)**](https://afdian.net/@Mgazul)
+   
+   [**Jenkins**](https://ci.codemc.org/job/PFCraft/job/Mohist/)
 
 ## Info
 * Java 8u212 JDK or higher
