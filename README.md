@@ -20,10 +20,21 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 * Paper-1.12.2
 
 ## Building
-- `git clone https://github.com/PFCraft/Mohist.git`
-- `git submodule update --init --recursive`
-- `gradlew launch4j`
-* Output path - `.\Mohist\build\distributions\`
+* Checkout project
+  * You can use IDE or clone from console:
+  `git clone https://github.com/PFCraft/Mohist.git`
+* Setup
+  * Setting up submodules:
+  `git submodule update --init --recursive`
+* Building
+  * Build the project for Linux:
+  `./gradlew launch4j`
+  * or for Windows:
+  `./gradlew.bat launch4j `
+
+All builds will be in `.\Mohist\build\distributions\`
+
+Mohist-xxxxx-universal.jar - is the server we should run it
 
 ## Installation
 * Read the wiki in detail [**WIKI**](https://github.com/PFCraft/Mohist/wiki/Install-Mohist)
