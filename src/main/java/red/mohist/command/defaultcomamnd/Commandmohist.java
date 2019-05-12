@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.potion.PotionEffectType;
 import red.mohist.MohistConfig;
 
 import java.io.File;
@@ -18,14 +19,14 @@ public class Commandmohist extends Command {
     public Commandmohist(String name) {
         super(name);
         this.description = "Mohist related commands";
-        this.usageMessage = "/mohist [reload]";
+        this.usageMessage = "/mohist [reload|potions]";
         this.setPermission("bukkit.command.mohist");
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location location) throws IllegalArgumentException {
         if (args.length <= 1)
-            return CommandBase.getListOfStringsMatchingLastWord(args, "reload");
+            return CommandBase.getListOfStringsMatchingLastWord(args, "reload", "potions");
 
         return Collections.emptyList();
     }
@@ -42,6 +43,9 @@ public class Commandmohist extends Command {
         switch (args[0].toLowerCase(Locale.ENGLISH))  {
             case "reload":
                 doReload(sender);
+                break;
+            case "potions":
+                getPotions(sender);
                 break;
             default:
                 sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
@@ -60,5 +64,11 @@ public class Commandmohist extends Command {
         console.server.reloadCount++;
 
         Command.broadcastCommandMessage(sender, ChatColor.GREEN + "mohist config reload complete.");
+    }
+
+    private void getPotions(CommandSender sender) {
+        for(PotionEffectType pet : 	PotionEffectType.values()){
+            sender.sendMessage(pet.toString());
+        }
     }
 }

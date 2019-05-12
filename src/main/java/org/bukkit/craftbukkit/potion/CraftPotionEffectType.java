@@ -79,7 +79,7 @@ public class CraftPotionEffectType extends PotionEffectType {
         case 27:
             return "UNLUCK";
         default:
-            return "UNKNOWN_EFFECT_TYPE_" + getId();
+            return handle.getRegistryName().toString();
         }
     }
 
