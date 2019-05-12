@@ -135,7 +135,7 @@ public class CraftEnchantment extends Enchantment {
         case 71:
             return "VANISHING_CURSE";
         default:
-            return "UNKNOWN_ENCHANT_" + getId();
+            return target.getRegistryName().toString();
         }
     }
 

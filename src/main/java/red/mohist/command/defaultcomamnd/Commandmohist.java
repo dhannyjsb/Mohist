@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffectType;
 import red.mohist.MohistConfig;
 
@@ -47,6 +48,9 @@ public class Commandmohist extends Command {
             case "potions":
                 getPotions(sender);
                 break;
+            case "enchants":
+                getEnchant(sender);
+                break;
             default:
                 sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
                 return false;
@@ -67,8 +71,14 @@ public class Commandmohist extends Command {
     }
 
     private void getPotions(CommandSender sender) {
-        for(PotionEffectType pet : 	PotionEffectType.values()){
+        for(PotionEffectType pet : PotionEffectType.values()){
             sender.sendMessage(pet.toString());
+        }
+    }
+
+    private void getEnchant(CommandSender sender) {
+        for(Enchantment ench : Enchantment.values()){
+            sender.sendMessage(ench.toString());
         }
     }
 }
