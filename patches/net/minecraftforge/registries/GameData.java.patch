@@ -26,19 +26,6 @@
          }
      }
  
-@@ -702,9 +707,9 @@
-             {
-                 StringBuilder buf = new StringBuilder();
-                 buf.append("Forge Mod Loader detected missing registry entries.\n\n")
--                   .append("There are ").append(defaulted.size()).append(" missing entries in this save.\n")
--                   .append("If you continue the missing entries will get removed.\n")
--                   .append("A world backup will be automatically created in your saves directory.\n\n");
-+                    .append("There are ").append(defaulted.size()).append(" missing entries in this save.\n")
-+                    .append("If you continue the missing entries will get removed.\n")
-+                    .append("A world backup will be automatically created in your saves directory.\n\n");
- 
-                 defaulted.asMap().forEach((name, entries) ->
-                 {
 @@ -879,11 +884,11 @@
      /**
       * Check a name for a domain prefix, and if not present infer it from the

@@ -1,29 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
-@@ -19,19 +19,17 @@
- 
- package net.minecraftforge.fml.common.network.handshake;
- 
-+import com.google.common.collect.ImmutableSet;
- import io.netty.channel.ChannelHandlerContext;
- import io.netty.channel.SimpleChannelInboundHandler;
--
--import java.nio.charset.StandardCharsets;
--import java.util.Set;
--
- import net.minecraft.network.NetworkManager;
- import net.minecraftforge.fml.common.FMLCommonHandler;
- import net.minecraftforge.fml.common.FMLLog;
- import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
- import net.minecraftforge.fml.relauncher.Side;
- 
--import com.google.common.collect.ImmutableSet;
-+import java.nio.charset.StandardCharsets;
-+import java.util.Set;
- 
- public class ChannelRegistrationHandler extends SimpleChannelInboundHandler<FMLProxyPacket> {
-     @Override
-@@ -45,6 +43,23 @@
+@@ -45,6 +45,23 @@
              msg.payload().readBytes(data);
              String channels = new String(data, StandardCharsets.UTF_8);
              String[] split = channels.split("\0");
@@ -47,12 +24,3 @@
              Set<String> channelSet = ImmutableSet.copyOf(split);
              FMLCommonHandler.instance().fireNetRegistrationEvent(manager, channelSet, msg.channel(), side);
              msg.payload().release();
-@@ -58,7 +73,7 @@
-     @Override
-     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
-     {
--        FMLLog.log.error("ChannelRegistrationHandler exception", cause);
-+       	FMLLog.log.error("ChannelRegistrationHandler exception", cause);
-         super.exceptionCaught(ctx, cause);
-     }
- }

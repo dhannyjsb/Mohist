@@ -1,22 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/internal/FMLNetworkHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/internal/FMLNetworkHandler.java
-@@ -19,34 +19,28 @@
- 
- package net.minecraftforge.fml.common.network.internal;
- 
-+import com.google.gson.JsonArray;
-+import com.google.gson.JsonObject;
- import io.netty.channel.ChannelPipeline;
- import io.netty.channel.embedded.EmbeddedChannel;
--
--import java.util.ArrayList;
--import java.util.Comparator;
--import java.util.EnumMap;
--import java.util.List;
--import java.util.Map;
--import java.util.stream.Collectors;
--
- import net.minecraft.entity.Entity;
+@@ -33,9 +33,13 @@
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.inventory.Container;
@@ -29,27 +13,10 @@
 +import net.minecraft.util.math.BlockPos;
  import net.minecraft.world.World;
  import net.minecraftforge.common.util.FakePlayer;
--import net.minecraftforge.fml.common.FMLCommonHandler;
--import net.minecraftforge.fml.common.FMLContainer;
--import net.minecraftforge.fml.common.FMLLog;
--import net.minecraftforge.fml.common.Loader;
--import net.minecraftforge.fml.common.ModContainer;
-+import net.minecraftforge.fml.common.*;
- import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
- import net.minecraftforge.fml.common.network.FMLOutboundHandler;
--import net.minecraftforge.fml.common.network.NetworkRegistry;
- import net.minecraftforge.fml.common.network.FMLOutboundHandler.OutboundTarget;
-+import net.minecraftforge.fml.common.network.NetworkRegistry;
- import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
- import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
- import net.minecraftforge.fml.common.network.internal.FMLMessage.CompleteHandshake;
-@@ -54,12 +48,15 @@
- import net.minecraftforge.fml.common.registry.EntityRegistry.EntityRegistration;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
--
--import com.google.gson.JsonArray;
--import com.google.gson.JsonObject;
+ import net.minecraftforge.fml.common.FMLCommonHandler;
+@@ -58,6 +62,10 @@
+ import com.google.gson.JsonArray;
+ import com.google.gson.JsonObject;
  import org.apache.commons.lang3.tuple.Pair;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
 +import org.bukkit.craftbukkit.inventory.CraftInventory;
@@ -57,12 +24,8 @@
 +import org.bukkit.event.inventory.InventoryType;
  
  import javax.annotation.Nullable;
-+import java.util.*;
-+import java.util.stream.Collectors;
  
- public class FMLNetworkHandler
- {
-@@ -88,6 +85,30 @@
+@@ -88,6 +96,30 @@
              Container remoteGuiContainer = NetworkRegistry.INSTANCE.getRemoteGuiContainer(mc, entityPlayerMP, modGuiId, world, x, y, z);
              if (remoteGuiContainer != null)
              {
@@ -93,25 +56,7 @@
                  entityPlayerMP.getNextWindowId();
                  entityPlayerMP.closeContainer();
                  int windowId = entityPlayerMP.currentWindowId;
-@@ -113,7 +134,7 @@
-         }
-         else
-         {
--            FMLLog.log.debug("Invalid attempt to open a local GUI on a dedicated server. This is likely a bug. GUI ID: {},{}", mc.getModId(), modGuiId);
-+           FMLLog.log.debug("Invalid attempt to open a local GUI on a dedicated server. This is likely a bug. GUI ID: {},{}", mc.getModId(), modGuiId);
-         }
- 
-     }
-@@ -167,7 +188,7 @@
-                 rejectStrings.add(modContainer.getName() + ": " + reject.getValue());
-             }
-             String rejectString = String.join("\n", rejectStrings);
--            FMLLog.log.info("Rejecting connection {}: {}", side, rejectString);
-+           	FMLLog.log.info("Rejecting connection {}: {}", side, rejectString);
-             return String.format("Server Mod rejections:\n%s", rejectString);
-         }
-     }
-@@ -210,7 +231,7 @@
+@@ -210,7 +242,7 @@
      public static void enhanceStatusQuery(JsonObject jsonobject)
      {
          JsonObject fmlData = new JsonObject();

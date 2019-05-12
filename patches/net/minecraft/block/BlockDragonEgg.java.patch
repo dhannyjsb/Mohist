@@ -23,7 +23,7 @@
                  if (blockpos.getY() > 0)
                  {
 -                    worldIn.setBlockState(blockpos, this.getDefaultState(), 2);
-+                    worldIn.setBlockState(blockpos.up(), this.getDefaultState(), 2); // Paper
++                    worldIn.setBlockState(blockpos.up(), this.getDefaultState(), 2); // Paper MC-94186 Fix dragon egg falling in lazy chunks
                  }
              }
          }
