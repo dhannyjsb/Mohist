@@ -28,7 +28,6 @@ public class DownloadLibraries implements Runnable {
         try {
             byte[] buff = new byte[8192];
             if (locale.getCountry().equals("CN")) {
-                System.out.println("自动为你设置为中国国内下载源");
                 url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
             }
             is1 = new URL(url).openStream();

@@ -72,7 +72,9 @@ public class Commandmohist extends Command {
 
     private void getPotions(CommandSender sender) {
         for(PotionEffectType pet : PotionEffectType.values()){
-            sender.sendMessage(pet.toString());
+            if(pet != null) {
+                sender.sendMessage(pet.toString());
+            }
         }
     }
 

@@ -25,7 +25,6 @@ public class DownloadServer implements Runnable {
         try {
             byte[] buff = new byte[8192];
             if (locale.getCountry().equals("CN")) {
-                System.out.println("自动为你设置为中国国内下载源");
                 url = "https://bmclapi2.bangbang93.com/version/1.12.2/server";
             }
             is = new URL(url).openStream();
