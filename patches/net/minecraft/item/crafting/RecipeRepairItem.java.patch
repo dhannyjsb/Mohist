@@ -39,7 +39,7 @@
 +                recipe.key = new ResourceLocation("repairitem");
 +                inv.currentRecipe = recipe;
 +				if (inv.resultInventory != null && inv.eventHandler.getBukkitView() != null) {
-+                	result = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(inv, result, inv.eventHandler.getBukkitView(), true);
++                	result = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPreCraftEvent(inv, result, inv.eventHandler.getBukkitView(), true);
 +                }
 +				return result;
 +                // return new ItemStack(itemstack2.getItem(), 1, i1);

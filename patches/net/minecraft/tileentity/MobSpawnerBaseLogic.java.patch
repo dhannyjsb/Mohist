@@ -69,7 +69,7 @@
  
 -                        AnvilChunkLoader.spawnEntity(entity, world);
 +						if (entity.world.spigotConfig.nerfSpawnerMobs) entity.fromMobSpawner = true; // Spigot Start
-+                        if (org.bukkit.craftbukkit.event.CraftEventFactory.callSpawnerSpawnEvent(entity, blockpos).isCancelled()) {
++                        if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callSpawnerSpawnEvent(entity, blockpos).isCancelled()) {
 +                            continue;
 +                        }
 +

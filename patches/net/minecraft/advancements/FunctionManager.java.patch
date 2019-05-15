@@ -10,7 +10,7 @@
 +    public class CustomFunctionListener implements ICommandSender
      {
 +
-+        public org.bukkit.command.CommandSender sender = new org.bukkit.craftbukkit.command.CraftFunctionCommandSender(this);
++        public org.bukkit.command.CommandSender sender = new org.bukkit.craftbukkit.v1_12_R1.command.CraftFunctionCommandSender(this);
          public String getName()
          {
              return FunctionManager.this.currentGameLoopFunctionId;

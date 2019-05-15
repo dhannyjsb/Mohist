@@ -21,7 +21,7 @@
  
      public void onHit(RayTraceResult p_190536_1_)
      {
-+        org.bukkit.craftbukkit.event.CraftEventFactory.callProjectileHitEvent(this, p_190536_1_); // CraftBukkit
++        org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callProjectileHitEvent(this, p_190536_1_); // CraftBukkit
          if (p_190536_1_.entityHit != null && this.owner != null)
          {
              p_190536_1_.entityHit.attackEntityFrom(DamageSource.causeIndirectDamage(this, this.owner).setProjectile(), 1.0F);

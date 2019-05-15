@@ -9,7 +9,7 @@
 +            // this.world.playEvent(2002, new BlockPos(this), PotionUtils.getPotionColor(PotionTypes.WATER));
              int i = 3 + this.world.rand.nextInt(5) + this.world.rand.nextInt(5);
  
-+            org.bukkit.event.entity.ExpBottleEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callExpBottleEvent(this, i);
++            org.bukkit.event.entity.ExpBottleEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callExpBottleEvent(this, i);
 +            i = event.getExperience();
 +            if (event.getShowEffect()) {
 +                this.world.playEvent(2002, new BlockPos(this), PotionUtils.getPotionColor(PotionTypes.WATER));

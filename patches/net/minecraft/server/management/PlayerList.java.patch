@@ -79,10 +79,10 @@
 +import org.bukkit.Bukkit;
 +import org.bukkit.Location;
 +import org.bukkit.TravelAgent;
-+import org.bukkit.craftbukkit.CraftServer;
-+import org.bukkit.craftbukkit.CraftWorld;
-+import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
-+import org.bukkit.craftbukkit.util.CraftChatMessage;
++import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
++import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
++import org.bukkit.craftbukkit.v1_12_R1.chunkio.ChunkIOExecutor;
++import org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage;
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.player.*;
 +import org.bukkit.util.Vector;
@@ -125,7 +125,7 @@
      public PlayerList(MinecraftServer server)
      {
 +        this.cserver = server.server = new CraftServer(server, this);
-+        server.console = org.bukkit.craftbukkit.command.ColouredConsoleSender.getInstance();
++        server.console = org.bukkit.craftbukkit.v1_12_R1.command.ColouredConsoleSender.getInstance();
          this.bannedPlayers = new UserListBans(FILE_PLAYERBANS);
          this.bannedIPs = new UserListIPBans(FILE_IPBANS);
          this.ops = new UserListOps(FILE_OPS);
@@ -307,7 +307,7 @@
 +        joinMessage = playerJoinEvent.getJoinMessage();
 +
 +        if (joinMessage != null && joinMessage.length() > 0) {
-+            for (ITextComponent line : org.bukkit.craftbukkit.util.CraftChatMessage.fromString(joinMessage)) {
++            for (ITextComponent line : org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage.fromString(joinMessage)) {
 +                mcServer.getPlayerList().sendPacketToAllPlayers(new SPacketChat(line));
 +            }
 +        }
@@ -358,7 +358,7 @@
          playerIn.addStat(StatList.LEAVE_GAME);
 +
 +        // CraftBukkit start - Quitting must be before we do final save of data, in case plugins need to modify it
-+        org.bukkit.craftbukkit.event.CraftEventFactory.handleInventoryCloseEvent(playerIn);
++        org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleInventoryCloseEvent(playerIn);
 +        if(playerIn.connection != null) {
 +            // Mohist CraftServer Changed to Bukkit
 +            PlayerQuitEvent playerQuitEvent = new PlayerQuitEvent(cserver.getPlayer(playerIn), "\u00A7e" + playerIn.getName() + " left the game");
@@ -688,7 +688,7 @@
 +        if (exitWorld != null) {
 +            if ((cause == PlayerTeleportEvent.TeleportCause.END_PORTAL) && (i == 0)) {
 +                // THE_END -> NORMAL; use bed if available, otherwise default spawn
-+                exit = ((org.bukkit.craftbukkit.entity.CraftPlayer) entityplayer.getBukkitEntity()).getBedSpawnLocation();
++                exit = ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) entityplayer.getBukkitEntity()).getBedSpawnLocation();
 +                if (exit == null || ((CraftWorld) exit.getWorld()).getHandle().dimension != 0) {
 +                    BlockPos randomSpawn = entityplayer.getSpawnPoint(mcServer, exitWorld);
 +                    exit = new Location(exitWorld.getWorld(), randomSpawn.getX(), randomSpawn.getY(), randomSpawn.getZ());
@@ -704,7 +704,7 @@
 +            }
 +        }
 +
-+        TravelAgent agent = exit != null ? (TravelAgent) ((CraftWorld) exit.getWorld()).getHandle().getDefaultTeleporter() : org.bukkit.craftbukkit.CraftTravelAgent.DEFAULT; // return arbitrary TA to compensate for implementation dependent plugins
++        TravelAgent agent = exit != null ? (TravelAgent) ((CraftWorld) exit.getWorld()).getHandle().getDefaultTeleporter() : org.bukkit.craftbukkit.v1_12_R1.CraftTravelAgent.DEFAULT; // return arbitrary TA to compensate for implementation dependent plugins
 +        PlayerPortalEvent event = new PlayerPortalEvent(entityplayer.getBukkitEntity(), enter, exit, agent, cause);
 +        event.useTravelAgent(useTravelAgent);
 +        Bukkit.getServer().getPluginManager().callEvent(event);

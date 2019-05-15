@@ -52,7 +52,7 @@
 +                                entityarrow.setFire(event.getDuration());
 +                            }
                          }
-+                        org.bukkit.event.entity.EntityShootBowEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityShootBowEvent(entityplayer, itemstack, entityarrow, f);
++                        org.bukkit.event.entity.EntityShootBowEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityShootBowEvent(entityplayer, itemstack, entityarrow, f);
 +                        if (event.isCancelled()) {
 +                            event.getProjectile().remove();
 +                            return;

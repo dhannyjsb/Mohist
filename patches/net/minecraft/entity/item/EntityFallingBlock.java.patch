@@ -13,7 +13,7 @@
  import net.minecraft.block.material.Material;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.crash.CrashReportCategory;
-@@ -24,21 +21,23 @@
+@@ -24,21 +21,22 @@
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.util.datafix.DataFixer;
@@ -25,10 +25,9 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
  
 +import javax.annotation.Nullable;
-+import java.util.ArrayList;
 +import java.util.List;
 +
  public class EntityFallingBlock extends Entity
@@ -42,7 +41,7 @@
      private int fallHurtMax = 40;
      private float fallHurtAmount = 2.0F;
      public NBTTagCompound tileEntityData;
-@@ -114,7 +113,7 @@
+@@ -114,7 +112,7 @@
              {
                  BlockPos blockpos = new BlockPos(this);
  
@@ -51,7 +50,7 @@
                  {
                      this.world.setBlockToAir(blockpos);
                  }
-@@ -170,7 +169,7 @@
+@@ -170,7 +168,7 @@
                      if (!flag1 && BlockFalling.canFallThrough(this.world.getBlockState(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ))))
                      {
                          this.onGround = false;
@@ -60,7 +59,7 @@
                      }
  
                      this.motionX *= 0.699999988079071D;
-@@ -183,8 +182,12 @@
+@@ -183,8 +181,12 @@
  
                          if (!this.dontSetBlock)
                          {
@@ -74,7 +73,7 @@
                                  if (block instanceof BlockFalling)
                                  {
                                      ((BlockFalling)block).onEndFalling(this.world, blockpos1, this.fallTile, iblockstate);
-@@ -248,7 +251,9 @@
+@@ -248,7 +250,9 @@
  
                  for (Entity entity : list)
                  {

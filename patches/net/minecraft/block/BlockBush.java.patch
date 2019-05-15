@@ -31,7 +31,7 @@
      {
          if (!this.canBlockStay(worldIn, pos, state))
          {
-+            if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPhysicsEvent(worldIn, pos).isCancelled()) {
++            if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockPhysicsEvent(worldIn, pos).isCancelled()) {
 +                return;
 +            }
              this.dropBlockAsItem(worldIn, pos, state, 0);

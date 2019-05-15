@@ -14,7 +14,7 @@
  import net.minecraft.world.World;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 +import org.bukkit.entity.LivingEntity;
  
  public class EntityPotion extends EntityThrowable
@@ -65,7 +65,7 @@
 +                }
 +            }
 +        }
-+        org.bukkit.event.entity.PotionSplashEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callPotionSplashEvent(this, affected);
++        org.bukkit.event.entity.PotionSplashEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPotionSplashEvent(this, affected);
 +        if (!event.isCancelled() && p_190543_2_ != null && !p_190543_2_.isEmpty()) { // do not process effects if there are no effects to process
 +            for (LivingEntity victim : event.getAffectedEntities()) {
 +                if (!(victim instanceof CraftLivingEntity)) {
@@ -118,7 +118,7 @@
  
 -        this.world.spawnEntity(entityareaeffectcloud);
 +        // this.world.spawnEntity(entityareaeffectcloud);
-+        org.bukkit.event.entity.LingeringPotionSplashEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callLingeringPotionSplashEvent(this, entityareaeffectcloud);
++        org.bukkit.event.entity.LingeringPotionSplashEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callLingeringPotionSplashEvent(this, entityareaeffectcloud);
 +        if (!(event.isCancelled() || entityareaeffectcloud.isDead)) {
 +            this.world.spawnEntity(entityareaeffectcloud);
 +        } else {

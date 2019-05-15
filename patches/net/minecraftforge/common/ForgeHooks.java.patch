@@ -88,7 +88,7 @@
 +import org.bukkit.Location;
 +import org.bukkit.TreeType;
 +import org.bukkit.block.BlockState;
-+import org.bukkit.craftbukkit.block.CraftBlockState;
++import org.bukkit.craftbukkit.v1_12_R1.block.CraftBlockState;
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.world.StructureGrowEvent;
  
@@ -448,7 +448,7 @@
                      blocksnapshot.restore(true, false);
                      world.restoringBlockSnapshots = false;
                  }
-+				((org.bukkit.craftbukkit.entity.CraftPlayer) player.getBukkitEntity()).updateInventory();
++				((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) player.getBukkitEntity()).updateInventory();
              }
 -            else
 -            {

@@ -19,8 +19,8 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-+import org.bukkit.craftbukkit.block.CraftBlockEntityState;
-+import org.bukkit.craftbukkit.inventory.CraftCustomInventory;
++import org.bukkit.craftbukkit.v1_12_R1.block.CraftBlockEntityState;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomInventory;
 +import org.bukkit.inventory.InventoryHolder;
  
 +import javax.annotation.Nullable;

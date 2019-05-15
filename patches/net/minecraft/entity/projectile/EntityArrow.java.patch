@@ -103,7 +103,7 @@
      {
          Entity entity = raytraceResultIn.entityHit;
 -
-+        org.bukkit.craftbukkit.event.CraftEventFactory.callProjectileHitEvent(this, raytraceResultIn);
++        org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callProjectileHitEvent(this, raytraceResultIn);
          if (entity != null)
          {
              float f = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
@@ -135,7 +135,7 @@
 +            ItemStack itemstack = this.getArrowStack();
 +            EntityItem item = new EntityItem(this.world, this.posX, this.posY, this.posZ, itemstack);
 +            if (this.pickupStatus == PickupStatus.ALLOWED && entityIn.inventory.canHold(itemstack) > 0) {
-+                PlayerPickupArrowEvent event = new PlayerPickupArrowEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), new org.bukkit.craftbukkit.entity.CraftItem(this.world.getServer(), this, item), (org.bukkit.entity.Arrow) this.getBukkitEntity());
++                PlayerPickupArrowEvent event = new PlayerPickupArrowEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), new org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem(this.world.getServer(), this, item), (org.bukkit.entity.Arrow) this.getBukkitEntity());
 +                // event.setCancelled(!entityhuman.canPickUpLoot); TODO
 +                this.world.getServer().getPluginManager().callEvent(event);
  

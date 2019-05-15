@@ -20,7 +20,7 @@
  import net.minecraftforge.fml.common.eventhandler.Event;
  
  import com.google.common.collect.ImmutableList;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
  
  import javax.annotation.Nonnull;
  import javax.annotation.Nullable;
@@ -49,7 +49,7 @@
              super(blockSnapshot, placedAgainst, player);
              this.player = player;
              this.hand = hand;
-+            org.bukkit.craftbukkit.block.CraftBlockState blockstate = org.bukkit.craftbukkit.block.CraftBlockState.getBlockState(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
++            org.bukkit.craftbukkit.v1_12_R1.block.CraftBlockState blockstate = org.bukkit.craftbukkit.v1_12_R1.block.CraftBlockState.getBlockState(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
 +            org.bukkit.event.block.BlockPlaceEvent bukkitEvent = CraftEventFactory.callBlockPlaceEvent(getWorld(), player, hand , blockstate, getPos().getX(), getPos().getY(), getPos().getZ());
 +            if (bukkitEvent.isCancelled() || !bukkitEvent.canBuild()) {
 +                this.setCanceled(true);

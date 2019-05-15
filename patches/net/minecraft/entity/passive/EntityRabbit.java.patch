@@ -20,7 +20,7 @@
                          if (integer.intValue() == 0)
                          {
 +                            // CraftBukkit start
-+                            if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this.rabbit, blockpos, Blocks.AIR, 0).isCancelled()) {
++                            if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityChangeBlockEvent(this.rabbit, blockpos, Blocks.AIR, 0).isCancelled()) {
 +                                return;
 +                            }
 +                            // CraftBukkit end
@@ -29,7 +29,7 @@
                          }
                          else
                          {
-+                            if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(
++                            if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityChangeBlockEvent(
 +                                    this.rabbit,
 +                                    blockpos,
 +                                    block, block.getMetaFromState(iblockstate.withProperty(BlockCarrot.AGE, Integer.valueOf(integer.intValue() - 1)))

@@ -6,8 +6,8 @@
  import net.minecraft.entity.player.EntityPlayer;
 +import net.minecraft.entity.player.InventoryPlayer;
  import net.minecraft.item.ItemStack;
-+import org.bukkit.craftbukkit.inventory.CraftInventory;
-+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
  
  public class ContainerChest extends Container
  {
@@ -51,9 +51,9 @@
 +
 +        CraftInventory inventory;
 +        if (this.lowerChestInventory instanceof InventoryPlayer) {
-+            inventory = new org.bukkit.craftbukkit.inventory.CraftInventoryPlayer((InventoryPlayer) this.lowerChestInventory);
++            inventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryPlayer((InventoryPlayer) this.lowerChestInventory);
 +        } else if (this.lowerChestInventory instanceof InventoryLargeChest) {
-+            inventory = new org.bukkit.craftbukkit.inventory.CraftInventoryDoubleChest((InventoryLargeChest) this.lowerChestInventory);
++            inventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryDoubleChest((InventoryLargeChest) this.lowerChestInventory);
 +        } else {
 +            inventory = new CraftInventory(this.lowerChestInventory);
 +        }

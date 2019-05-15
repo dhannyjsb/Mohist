@@ -22,7 +22,7 @@
      private final CommandBlockBaseLogic commandBlockLogic = new CommandBlockBaseLogic()
      {
 +        {
-+            sender = new org.bukkit.craftbukkit.command.CraftBlockCommandSender(this);
++            sender = new org.bukkit.craftbukkit.v1_12_R1.command.CraftBlockCommandSender(this);
 +        }
          public BlockPos getPosition()
          {

@@ -106,8 +106,8 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.Material;
-+import org.bukkit.craftbukkit.Main;
-+import org.bukkit.craftbukkit.entity.CraftCustomEntity;
++import org.bukkit.craftbukkit.v1_12_R1.Main;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftCustomEntity;
 +import org.bukkit.entity.EntityType;
 +import org.bukkit.potion.PotionEffectType;
 +import org.spigotmc.SlackActivityAccountant;
@@ -174,7 +174,7 @@
      private boolean worldIconSet;
 +    // CraftBukkit start
 +    public List<WorldServer> worldServerList = new ArrayList<>();
-+    public org.bukkit.craftbukkit.CraftServer server;
++    public org.bukkit.craftbukkit.v1_12_R1.CraftServer server;
 +    public OptionSet options;
 +    public org.bukkit.command.ConsoleCommandSender console;
 +    public org.bukkit.command.RemoteConsoleCommandSender remoteConsole;
@@ -211,7 +211,7 @@
 +            Main.useJline = false;
 +        }
 +
-+        Runtime.getRuntime().addShutdownHook(new org.bukkit.craftbukkit.util.ServerShutdownThread(this));
++        Runtime.getRuntime().addShutdownHook(new org.bukkit.craftbukkit.v1_12_R1.util.ServerShutdownThread(this));
 +        this.serverThread = primaryThread = new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, this, "Server thread"); // Moved from main
      }
  
@@ -376,11 +376,11 @@
 +                    ID_MAP.put((short)typeId, bukkitType);
 +                }
 +                for (Object enchantment : Enchantment.REGISTRY) {
-+                    org.bukkit.enchantments.Enchantment.registerEnchantment(new org.bukkit.craftbukkit.enchantments.CraftEnchantment((Enchantment) enchantment));
++                    org.bukkit.enchantments.Enchantment.registerEnchantment(new org.bukkit.craftbukkit.v1_12_R1.enchantments.CraftEnchantment((Enchantment) enchantment));
 +                }
 +                org.bukkit.enchantments.Enchantment.stopAcceptingRegistrations();
 +                for (Object effect : Potion.REGISTRY) {
-+                    PotionEffectType.registerPotionEffectType(new org.bukkit.craftbukkit.potion.CraftPotionEffectType((Potion) effect));
++                    PotionEffectType.registerPotionEffectType(new org.bukkit.craftbukkit.v1_12_R1.potion.CraftPotionEffectType((Potion) effect));
 +                }
 +                PotionEffectType.stopAcceptingRegistrations();
 +                server.loadPlugins();
@@ -402,7 +402,7 @@
 -        {
 -            WorldServer world = (dim == 0 ? overWorld : (WorldServer)new WorldServerMulti(this, isavehandler, dim, overWorld, profiler).init());
 +                world.initialize(worldsettings);
-+                this.server.scoreboardManager = new org.bukkit.craftbukkit.scoreboard.CraftScoreboardManager(this, world.getScoreboard());
++                this.server.scoreboardManager = new org.bukkit.craftbukkit.v1_12_R1.scoreboard.CraftScoreboardManager(this, world.getScoreboard());
 +            } else {
 +                gen = this.server.getGenerator(name);
 +
@@ -825,7 +825,7 @@
 +            processQueue.remove().run();
 +        }
 +
-+        org.bukkit.craftbukkit.chunkio.ChunkIOExecutor.tick();
++        org.bukkit.craftbukkit.v1_12_R1.chunkio.ChunkIOExecutor.tick();
 +
 +        // Send time updates to everyone, it will get the right time from the world the player is in.
 +        if (this.tickCounter % 20 == 0) {
@@ -1070,7 +1070,7 @@
 -    public static void main(String[] p_main_0_)
 +    public static void main(String[] args)
      {
-+        OptionSet options = org.bukkit.craftbukkit.Main.main(args);
++        OptionSet options = org.bukkit.craftbukkit.v1_12_R1.Main.main(args);
 +        if (options == null)
 +            return;
          //Forge: Copied from DedicatedServer.init as to run as early as possible, Old code left in place intentionally.

@@ -4,7 +4,7 @@
  import net.minecraft.util.text.translation.I18n;
  import net.minecraft.world.IBlockAccess;
  import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
  
  public class BlockRedstoneComparator extends BlockRedstoneDiode implements ITileEntityProvider
  {

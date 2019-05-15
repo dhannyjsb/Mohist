@@ -9,8 +9,8 @@ import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.math.BlockPos;
-import org.bukkit.craftbukkit.command.CraftBlockCommandSender;
-import org.bukkit.craftbukkit.command.CraftRemoteConsoleCommandSender;
+import org.bukkit.craftbukkit.v1_12_R1.command.CraftBlockCommandSender;
+import org.bukkit.craftbukkit.v1_12_R1.command.CraftRemoteConsoleCommandSender;
 
 import javax.annotation.Nullable;
 import java.util.List;

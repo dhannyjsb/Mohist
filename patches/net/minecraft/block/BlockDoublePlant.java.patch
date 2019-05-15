@@ -67,7 +67,7 @@
          if (!this.canBlockStay(worldIn, pos, state))
          {
 -            boolean flag = state.getValue(HALF) == BlockDoublePlant.EnumBlockHalf.UPPER;
-+            if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPhysicsEvent(worldIn, pos).isCancelled()) {
++            if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockPhysicsEvent(worldIn, pos).isCancelled()) {
 +                return;
 +            }
 +            boolean flag = state.getValue(HALF) == EnumBlockHalf.UPPER;

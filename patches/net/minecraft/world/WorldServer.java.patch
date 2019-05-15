@@ -120,7 +120,7 @@
 +        this.provider.setDimension(providerDim);
 +        this.chunkProvider = this.createChunkProvider();
 +        perWorldStorage = new MapStorage(new net.minecraftforge.common.WorldSpecificSaveHandler((WorldServer) this, saveHandlerIn));
-+        this.worldTeleporter = new org.bukkit.craftbukkit.CraftTravelAgent(this); //// CraftBukkit
++        this.worldTeleporter = new org.bukkit.craftbukkit.v1_12_R1.CraftTravelAgent(this); //// CraftBukkit
 +        this.calculateInitialSkylight();
 +        this.calculateInitialWeather();
 +        this.getWorldBorder().setSize(server.getMaxWorldSize());
@@ -456,14 +456,14 @@
                      {
 -                        this.setBlockState(blockpos2, Blocks.ICE.getDefaultState());
 +                        // this.setBlockState(blockpos2, Blocks.ICE.getDefaultState());
-+                        org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(this, blockpos2, Blocks.ICE.getDefaultState(), null);
++                        org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleBlockFormEvent(this, blockpos2, Blocks.ICE.getDefaultState(), null);
                      }
  
                      if (flag && this.canSnowAt(blockpos1, true))
                      {
 -                        this.setBlockState(blockpos1, Blocks.SNOW_LAYER.getDefaultState());
 +                        // this.setBlockState(blockpos1, Blocks.SNOW_LAYER.getDefaultState());
-+                        org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(this, blockpos1, Blocks.SNOW_LAYER.getDefaultState(), null);
++                        org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleBlockFormEvent(this, blockpos1, Blocks.SNOW_LAYER.getDefaultState(), null);
                      }
  
                      if (flag && this.getBiome(blockpos2).canRain())
@@ -523,16 +523,16 @@
 +        // Mohist - if provider is vanilla, proceed to create a bukkit compatible chunk generator
 +        if (this.provider.getClass().toString().length() <= 3 || this.provider.getClass().toString().contains("net.minecraft")) {
 +            // CraftBukkit start
-+            org.bukkit.craftbukkit.generator.InternalChunkGenerator gen;
++            org.bukkit.craftbukkit.v1_12_R1.generator.InternalChunkGenerator gen;
 +    
 +            if (this.generator != null) {
-+                gen = new org.bukkit.craftbukkit.generator.CustomChunkGenerator(this, this.getSeed(), this.generator);
++                gen = new org.bukkit.craftbukkit.v1_12_R1.generator.CustomChunkGenerator(this, this.getSeed(), this.generator);
 +            } else if (this.provider instanceof WorldProviderHell) {
-+                gen = new org.bukkit.craftbukkit.generator.NetherChunkGenerator(this, this.getSeed());
++                gen = new org.bukkit.craftbukkit.v1_12_R1.generator.NetherChunkGenerator(this, this.getSeed());
 +            } else if (this.provider instanceof WorldProviderEnd) {
-+                gen = new org.bukkit.craftbukkit.generator.SkyLandsChunkGenerator(this, this.getSeed());
++                gen = new org.bukkit.craftbukkit.v1_12_R1.generator.SkyLandsChunkGenerator(this, this.getSeed());
 +            } else {
-+                gen = new org.bukkit.craftbukkit.generator.NormalChunkGenerator(this, this.getSeed());
++                gen = new org.bukkit.craftbukkit.v1_12_R1.generator.NormalChunkGenerator(this, this.getSeed());
 +            }
 +    
 +            this.chunkProvider = new ChunkProviderServer(this, ichunkloader, gen);

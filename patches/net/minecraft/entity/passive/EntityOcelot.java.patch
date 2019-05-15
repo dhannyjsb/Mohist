@@ -36,7 +36,7 @@
              {
 -                if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player))
 +                // CraftBukkit - added event call and isCancelled check
-+                if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player) && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, player).isCancelled())
++                if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player) && !org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityTameEvent(this, player).isCancelled())
                  {
                      this.setTamedBy(player);
                      this.setTameSkin(1 + this.world.rand.nextInt(3));

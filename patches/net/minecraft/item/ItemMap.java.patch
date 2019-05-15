@@ -35,7 +35,7 @@
          mapdata.trackingPosition = trackingPosition;
          mapdata.unlimitedTracking = unlimitedTracking;
          mapdata.markDirty();
-+        org.bukkit.craftbukkit.event.CraftEventFactory.callEvent(new MapInitializeEvent(mapdata.mapView));
++        org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEvent(new MapInitializeEvent(mapdata.mapView));
          return itemstack;
      }
  

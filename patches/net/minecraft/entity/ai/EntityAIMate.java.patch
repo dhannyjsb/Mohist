@@ -23,7 +23,7 @@
              }
  
 +            int experience = this.animal.getRNG().nextInt(7) + 1;
-+            org.bukkit.event.entity.EntityBreedEvent entityBreedEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityBreedEvent(entityageable, animal, targetMate, entityplayermp, this.animal.breedItem, experience);
++            org.bukkit.event.entity.EntityBreedEvent entityBreedEvent = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityBreedEvent(entityageable, animal, targetMate, entityplayermp, this.animal.breedItem, experience);
 +            if (entityBreedEvent.isCancelled()) {
 +                return;
 +            }

@@ -11,7 +11,7 @@
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.IBlockAccess;
  import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
  
 +import java.util.Random;
 +

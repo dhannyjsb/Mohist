@@ -15,7 +15,7 @@
                  {
 +                    Player who = (player == null) ? null : (Player) player.getBukkitEntity();
 +                    org.bukkit.block.Block blockClicked = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
-+                    org.bukkit.block.BlockFace blockFace = org.bukkit.craftbukkit.block.CraftBlock.notchToBlockFace(facing);
++                    org.bukkit.block.BlockFace blockFace = org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock.notchToBlockFace(facing);
 +
 +                    HangingPlaceEvent event = new HangingPlaceEvent((org.bukkit.entity.Hanging) entityhanging.getBukkitEntity(), who, blockClicked, blockFace);
 +                    worldIn.getServer().getPluginManager().callEvent(event);

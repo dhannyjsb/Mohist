@@ -54,7 +54,7 @@
                      if (this.world.isAirBlock(blockpos))
                      {
 -                        this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
-+                        if (!org.bukkit.craftbukkit.event.CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
++                        if (!org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
 +                            this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                        }
                      }

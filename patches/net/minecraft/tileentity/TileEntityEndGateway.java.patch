@@ -18,7 +18,7 @@
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.Bukkit;
 +import org.bukkit.Location;
-+import org.bukkit.craftbukkit.entity.CraftPlayer;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 +import org.bukkit.event.player.PlayerTeleportEvent;
  
 +import javax.annotation.Nullable;
@@ -42,7 +42,7 @@
              {
                  BlockPos blockpos = this.exactTeleport ? this.exitPortal : this.findExitPosition();
 +                if (entityIn instanceof EntityPlayerMP) {
-+                    org.bukkit.craftbukkit.entity.CraftPlayer player = (CraftPlayer) entityIn.getBukkitEntity();
++                    org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer player = (CraftPlayer) entityIn.getBukkitEntity();
 +                    org.bukkit.Location location = new Location(world.getWorld(), (double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D);
 +                    location.setPitch(player.getLocation().getPitch());
 +                    location.setYaw(player.getLocation().getYaw());

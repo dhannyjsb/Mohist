@@ -102,7 +102,7 @@
          Arrays.fill(this.precipitationHeightMap, -999);
          Arrays.fill(this.blockBiomeArray, (byte) - 1);
          capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
-+        this.bukkitChunk = new org.bukkit.craftbukkit.CraftChunk(this);
++        this.bukkitChunk = new org.bukkit.craftbukkit.v1_12_R1.CraftChunk(this);
 +        this.chunkKey = ChunkPos.asLong(this.x, this.z);
      }
  

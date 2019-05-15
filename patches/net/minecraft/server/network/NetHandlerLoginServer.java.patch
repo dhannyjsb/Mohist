@@ -32,7 +32,7 @@
  import org.apache.commons.lang3.Validate;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-+import org.bukkit.craftbukkit.util.Waitable;
++import org.bukkit.craftbukkit.v1_12_R1.util.Waitable;
 +import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 +import org.bukkit.event.player.PlayerPreLoginEvent;
  
@@ -273,7 +273,7 @@
 +            String playerName = loginGameProfile.getName();
 +            java.net.InetAddress address = ((java.net.InetSocketAddress) networkManager.getRemoteAddress()).getAddress();
 +            java.util.UUID uniqueId = loginGameProfile.getId();
-+            final org.bukkit.craftbukkit.CraftServer server = NetHandlerLoginServer.this.server.server;
++            final org.bukkit.craftbukkit.v1_12_R1.CraftServer server = NetHandlerLoginServer.this.server.server;
 +
 +            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId);
 +            server.getPluginManager().callEvent(asyncEvent);

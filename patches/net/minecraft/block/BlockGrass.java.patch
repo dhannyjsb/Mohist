@@ -7,20 +7,13 @@
  import net.minecraft.block.material.Material;
  import net.minecraft.block.properties.IProperty;
  import net.minecraft.block.properties.PropertyBool;
-@@ -9,13 +8,21 @@
- import net.minecraft.creativetab.CreativeTabs;
- import net.minecraft.init.Blocks;
- import net.minecraft.item.Item;
-+import net.minecraft.server.MinecraftServer;
- import net.minecraft.util.BlockRenderLayer;
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.world.IBlockAccess;
+@@ -15,7 +14,14 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.block.BlockState;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
-+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
++import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
 +import org.bukkit.event.block.BlockFadeEvent;
 +import org.bukkit.event.block.BlockSpreadEvent;
  
@@ -29,7 +22,7 @@
  public class BlockGrass extends Block implements IGrowable
  {
      public static final PropertyBool SNOWY = PropertyBool.create("snowy");
-@@ -41,18 +48,27 @@
+@@ -41,18 +47,27 @@
              if (!worldIn.isAreaLoaded(pos, 3)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
              if (worldIn.getLightFromNeighbors(pos.up()) < 4 && worldIn.getBlockState(pos.up()).getLightOpacity(worldIn, pos.up()) > 2)
              {
@@ -60,7 +53,7 @@
                              return;
                          }
  
-@@ -60,8 +76,18 @@
+@@ -60,8 +75,18 @@
                          IBlockState iblockstate1 = worldIn.getBlockState(blockpos);
  
                          if (iblockstate1.getBlock() == Blocks.DIRT && iblockstate1.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && worldIn.getLightFromNeighbors(blockpos.up()) >= 4 && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2)
@@ -81,7 +74,7 @@
                          }
                      }
                  }
-@@ -109,7 +135,8 @@
+@@ -109,7 +134,8 @@
  
                              if (Blocks.TALLGRASS.canBlockStay(worldIn, blockpos1, iblockstate1))
                              {

@@ -87,7 +87,7 @@
                  return IntCache.getCacheSizes();
              }
          });
-+        this.systemDetailsCategory.addDetail(Message.getString(Message.crash_craftbukkit_info), (ICrashReportDetail) new org.bukkit.craftbukkit.CraftCrashReport());
++        this.systemDetailsCategory.addDetail(Message.getString(Message.crash_craftbukkit_info), (ICrashReportDetail) new org.bukkit.craftbukkit.v1_12_R1.CraftCrashReport());
          net.minecraftforge.fml.common.FMLCommonHandler.instance().enhanceCrashReport(this, this.systemDetailsCategory);
      }
  

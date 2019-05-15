@@ -42,7 +42,7 @@
 -            this.world.newExplosion((Entity)null, this.posX, this.posY, this.posZ, (float)this.explosionPower, flag, flag);
 +            // this.world.newExplosion((Entity)null, this.posX, this.posY, this.posZ, (float)this.explosionPower, flag, flag);
 +            // CraftBukkit start - fire ExplosionPrimeEvent
-+            ExplosionPrimeEvent event = new ExplosionPrimeEvent((org.bukkit.entity.Explosive) org.bukkit.craftbukkit.entity.CraftEntity.getEntity(this.world.getServer(), this));
++            ExplosionPrimeEvent event = new ExplosionPrimeEvent((org.bukkit.entity.Explosive) org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity.getEntity(this.world.getServer(), this));
 +            this.world.getServer().getPluginManager().callEvent(event);
 +            if (!event.isCancelled()) {
 +                // give 'this' instead of (Entity) null so we know what causes the damage

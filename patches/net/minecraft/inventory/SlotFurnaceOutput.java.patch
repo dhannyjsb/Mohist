@@ -24,7 +24,7 @@
 +                org.bukkit.block.Block block = this.player.world.getWorld().getBlockAt(furnace.getPos().getX(), furnace.getPos().getY(), furnace.getPos().getZ());
 +    
 +                if (removeCount != 0) {
-+                    FurnaceExtractEvent event = new FurnaceExtractEvent(player, block, org.bukkit.craftbukkit.util.CraftMagicNumbers.getMaterial(stack.getItem()), removeCount, i);
++                    FurnaceExtractEvent event = new FurnaceExtractEvent(player, block, org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getMaterial(stack.getItem()), removeCount, i);
 +                    this.player.world.getServer().getPluginManager().callEvent(event);
 +                    i = event.getExpToDrop();
 +                }

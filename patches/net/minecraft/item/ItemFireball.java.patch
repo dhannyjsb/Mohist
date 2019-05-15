@@ -4,7 +4,7 @@
              {
                  if (worldIn.getBlockState(pos).getMaterial() == Material.AIR)
                  {
-+                    if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockIgniteEvent(worldIn, pos.getX(), pos.getY(), pos.getZ(), org.bukkit.event.block.BlockIgniteEvent.IgniteCause.FIREBALL, player).isCancelled()) {
++                    if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(worldIn, pos.getX(), pos.getY(), pos.getZ(), org.bukkit.event.block.BlockIgniteEvent.IgniteCause.FIREBALL, player).isCancelled()) {
 +                        if (!player.capabilities.isCreativeMode) {
 +                            itemstack.shrink(1);
 +                        }

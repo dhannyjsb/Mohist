@@ -5,7 +5,7 @@
          super.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
  
 -        if (entityIn instanceof EntityBoat)
-+        if (entityIn instanceof EntityBoat && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(entityIn, pos, Blocks.AIR, 0).isCancelled())
++        if (entityIn instanceof EntityBoat && !org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityChangeBlockEvent(entityIn, pos, Blocks.AIR, 0).isCancelled())
          {
              worldIn.destroyBlock(new BlockPos(pos), true);
          }

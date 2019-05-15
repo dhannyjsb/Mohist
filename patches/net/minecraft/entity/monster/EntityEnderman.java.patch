@@ -47,7 +47,7 @@
 -                    world.setBlockState(blockpos, iblockstate2, 3);
 -                    this.enderman.setHeldBlockState((IBlockState)null);
 +                    // CraftBukkit start - Place event
-+                    if (!org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this.enderman, blockpos, this.enderman.getHeldBlockState().getBlock(), this.enderman.getHeldBlockState().getBlock().getMetaFromState(this.enderman.getHeldBlockState())).isCancelled()) {
++                    if (!org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityChangeBlockEvent(this.enderman, blockpos, this.enderman.getHeldBlockState().getBlock(), this.enderman.getHeldBlockState().getBlock().getMetaFromState(this.enderman.getHeldBlockState())).isCancelled()) {
 +                        world.setBlockState(blockpos, iblockstate2, 3);
 +                        this.enderman.setHeldBlockState((IBlockState) null);
 +                    }
@@ -63,7 +63,7 @@
 +                    // this.enderman.setHeldBlockState(iblockstate);
 +                    // world.setBlockToAir(blockpos);
 +                    // CraftBukkit start - Pickup event
-+                    if (!org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this.enderman, this.enderman.world.getWorld().getBlockAt(blockpos.getX(), blockpos.getY(), blockpos.getZ()), org.bukkit.Material.AIR).isCancelled()) {
++                    if (!org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityChangeBlockEvent(this.enderman, this.enderman.world.getWorld().getBlockAt(blockpos.getX(), blockpos.getY(), blockpos.getZ()), org.bukkit.Material.AIR).isCancelled()) {
 +                        this.enderman.setHeldBlockState(iblockstate);
 +                        world.setBlockToAir(blockpos);
 +                    }

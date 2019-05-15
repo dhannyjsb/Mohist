@@ -20,15 +20,13 @@
  import net.minecraft.init.MobEffects;
  import net.minecraft.inventory.Container;
  import net.minecraft.inventory.ContainerBeacon;
-@@ -33,29 +27,69 @@
+@@ -33,29 +27,67 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
-+import org.bukkit.craftbukkit.potion.CraftPotionUtil;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity;
++import org.bukkit.craftbukkit.v1_12_R1.potion.CraftPotionUtil;
 +import org.bukkit.entity.HumanEntity;
-+import org.bukkit.entity.Player;
  
 -public class TileEntityBeacon extends TileEntityLockable implements ITickable, ISidedInventory
 -{
@@ -101,7 +99,7 @@
              this.updateBeacon();
          }
      }
-@@ -69,39 +103,54 @@
+@@ -69,39 +101,54 @@
          }
      }
  
@@ -182,7 +180,7 @@
  
      private void updateSegmentColors()
      {
-@@ -112,7 +161,7 @@
+@@ -112,7 +159,7 @@
          this.levels = 0;
          this.beamSegments.clear();
          this.isComplete = true;
@@ -191,7 +189,7 @@
          this.beamSegments.add(tileentitybeacon$beamsegment);
          boolean flag = true;
          BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-@@ -159,7 +208,7 @@
+@@ -159,7 +206,7 @@
              }
              else
              {
@@ -200,7 +198,7 @@
                  this.beamSegments.add(tileentitybeacon$beamsegment);
              }
  
-@@ -215,7 +264,7 @@
+@@ -215,7 +262,7 @@
      }
  
      @SideOnly(Side.CLIENT)
@@ -209,7 +207,7 @@
      {
          return this.beamSegments;
      }
-@@ -285,8 +334,12 @@
+@@ -285,8 +332,12 @@
      public void readFromNBT(NBTTagCompound compound)
      {
          super.readFromNBT(compound);

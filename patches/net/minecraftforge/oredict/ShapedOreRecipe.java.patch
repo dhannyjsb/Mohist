@@ -20,7 +20,7 @@
  import com.google.gson.JsonElement;
  import com.google.gson.JsonObject;
  import com.google.gson.JsonSyntaxException;
-+import org.bukkit.craftbukkit.inventory.CraftCustomModRecipe;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomModRecipe;
 +import org.bukkit.inventory.Recipe;
  
  public class ShapedOreRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IShapedRecipe

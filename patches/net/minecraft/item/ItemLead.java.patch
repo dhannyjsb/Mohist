@@ -21,7 +21,7 @@
 +                    }
                  }
  
-+                if (org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerLeashEntityEvent(entityliving, entityleashknot, player).isCancelled()) {
++                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerLeashEntityEvent(entityliving, entityleashknot, player).isCancelled()) {
 +                    continue;
 +                }
 +

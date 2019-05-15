@@ -4,7 +4,7 @@
  import net.minecraft.entity.player.InventoryPlayer;
  import net.minecraft.item.ItemStack;
  import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
  
  public class ContainerMerchant extends Container
  {
@@ -34,7 +34,7 @@
 +    @Override
 +    public CraftInventoryView getBukkitView() {
 +        if (bukkitEntity == null) {
-+            bukkitEntity = new CraftInventoryView(this.player.player.getBukkitEntity(), new org.bukkit.craftbukkit.inventory.CraftInventoryMerchant(merchantInventory), this);
++            bukkitEntity = new CraftInventoryView(this.player.player.getBukkitEntity(), new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryMerchant(merchantInventory), this);
 +        }
 +        return bukkitEntity;
 +    }

@@ -14,9 +14,9 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.CraftServer;
-+import org.bukkit.craftbukkit.CraftWorld;
-+import org.bukkit.craftbukkit.map.CraftMapView;
++import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
++import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
++import org.bukkit.craftbukkit.v1_12_R1.map.CraftMapView;
  
 +import javax.annotation.Nullable;
 +import java.util.List;
@@ -162,7 +162,7 @@
          @Nullable
          public Packet<?> getPacket(ItemStack stack)
          {
-+            org.bukkit.craftbukkit.map.RenderData render = MapData.this.mapView.render((org.bukkit.craftbukkit.entity.CraftPlayer) this.player.getBukkitEntity());
++            org.bukkit.craftbukkit.v1_12_R1.map.RenderData render = MapData.this.mapView.render((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) this.player.getBukkitEntity());
 +
 +            java.util.Collection<MapDecoration> icons = new java.util.ArrayList<>();
 +

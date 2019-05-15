@@ -42,8 +42,8 @@
 +import org.apache.logging.log4j.Level;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-+import org.bukkit.craftbukkit.LoggerOutputStream;
-+import org.bukkit.craftbukkit.util.Waitable;
++import org.bukkit.craftbukkit.v1_12_R1.LoggerOutputStream;
++import org.bukkit.craftbukkit.v1_12_R1.util.Waitable;
 +import org.bukkit.event.server.RemoteServerCommandEvent;
 +import org.bukkit.event.server.ServerCommandEvent;
 +import org.spigotmc.SpigotConfig;
@@ -115,7 +115,7 @@
 +        for (java.util.logging.Handler handler : global.getHandlers()) {
 +            global.removeHandler(handler);
 +        }
-+        global.addHandler(new org.bukkit.craftbukkit.util.ForwardLogHandler());
++        global.addHandler(new org.bukkit.craftbukkit.v1_12_R1.util.ForwardLogHandler());
 +
 +        final org.apache.logging.log4j.core.Logger logger = ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger());
 +        for (org.apache.logging.log4j.core.Appender appender : logger.getAppenders().values()) {
@@ -124,7 +124,7 @@
 +            }
 +        }
 +
-+        //new Thread(new org.bukkit.craftbukkit.util.TerminalConsoleWriterThread(System.out, this.reader)).start();
++        //new Thread(new org.bukkit.craftbukkit.v1_12_R1.util.TerminalConsoleWriterThread(System.out, this.reader)).start();
 +
 +        System.setOut(new PrintStream(new LoggerOutputStream(logger, Level.INFO), true));
 +        System.setErr(new PrintStream(new LoggerOutputStream(logger, Level.WARN), true));
@@ -224,7 +224,7 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
-+					this.remoteConsole = new org.bukkit.craftbukkit.command.CraftRemoteConsoleCommandSender(this.rconConsoleSource);
++					this.remoteConsole = new org.bukkit.craftbukkit.v1_12_R1.command.CraftRemoteConsoleCommandSender(this.rconConsoleSource);
                  }
  
 -                if (this.getMaxTickTime() > 0L)

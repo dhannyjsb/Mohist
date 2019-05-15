@@ -6,7 +6,7 @@ import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.network.play.server.SPacketTitle.Type;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class TitleAPI {

@@ -13,7 +13,7 @@
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.World;
  import net.minecraft.world.WorldServer;
-+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 +import org.bukkit.entity.LivingEntity;
  
  public class EntityAreaEffectCloud extends Entity
@@ -79,7 +79,7 @@
 +                                }
 +                            }
 +                        }
-+                        org.bukkit.event.entity.AreaEffectCloudApplyEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callAreaEffectCloudApplyEvent(this, entities);
++                        org.bukkit.event.entity.AreaEffectCloudApplyEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callAreaEffectCloudApplyEvent(this, entities);
 +                        if (true) { // Preserve NMS spacing and bracket count for smallest diff
 +                            for (LivingEntity entity : event.getAffectedEntities()) {
 +                                if (entity instanceof CraftLivingEntity) {

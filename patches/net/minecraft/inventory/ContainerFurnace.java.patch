@@ -4,8 +4,8 @@
  import net.minecraft.tileentity.TileEntityFurnace;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.inventory.CraftInventoryFurnace;
-+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryFurnace;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
  
  public class ContainerFurnace extends Container
  {

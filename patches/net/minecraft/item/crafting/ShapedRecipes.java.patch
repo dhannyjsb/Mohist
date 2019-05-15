@@ -4,9 +4,9 @@
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.inventory.CraftCustomModRecipe;
-+import org.bukkit.craftbukkit.inventory.CraftItemStack;
-+import org.bukkit.craftbukkit.inventory.CraftShapedRecipe;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomModRecipe;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapedRecipe;
 +import org.bukkit.inventory.Recipe;
  
  public class ShapedRecipes extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements net.minecraftforge.common.crafting.IShapedRecipe
@@ -78,7 +78,7 @@
 +                ItemStack[] matchingStacks = list.getMatchingStacks();
 +                if (matchingStacks.length > 0) {
 +                    net.minecraft.item.ItemStack stack = matchingStacks[0];
-+                    recipe.setIngredient(c, org.bukkit.craftbukkit.util.CraftMagicNumbers.getMaterial(stack.getItem()), (matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
++                    recipe.setIngredient(c, org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getMaterial(stack.getItem()), (matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
 +                }
 +            }
 +            c++;

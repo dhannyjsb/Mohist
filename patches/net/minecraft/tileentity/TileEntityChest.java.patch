@@ -23,7 +23,7 @@
  import net.minecraft.util.datafix.walkers.ItemStackDataLists;
  import net.minecraft.util.math.AxisAlignedBB;
  import net.minecraft.util.math.BlockPos;
-+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity;
 +import org.bukkit.entity.HumanEntity;
  
 +import javax.annotation.Nullable;
@@ -95,7 +95,7 @@
 +                int newPower = Math.max(0, Math.min(15, this.numPlayersUsing));
 +
 +                if (oldPower != newPower) {
-+                    org.bukkit.craftbukkit.event.CraftEventFactory.callRedstoneChange(world, pos.getX(), pos.getY(), pos.getZ(), oldPower, newPower);
++                    org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callRedstoneChange(world, pos.getX(), pos.getY(), pos.getZ(), oldPower, newPower);
 +                }
 +            }
              this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), false);

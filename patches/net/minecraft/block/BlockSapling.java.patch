@@ -42,7 +42,7 @@
 +                    List<net.minecraftforge.common.util.BlockSnapshot> blocks = (List) worldIn.capturedBlockSnapshots.clone();
 +                    List<BlockState> blockstates = new java.util.ArrayList();
 +                    for (net.minecraftforge.common.util.BlockSnapshot snapshot : blocks) {
-+                        blockstates.add(new org.bukkit.craftbukkit.block.CraftBlockState(snapshot));
++                        blockstates.add(new org.bukkit.craftbukkit.v1_12_R1.block.CraftBlockState(snapshot));
 +                    }
 +                    worldIn.capturedBlockSnapshots.clear();
 +                    StructureGrowEvent event = null;

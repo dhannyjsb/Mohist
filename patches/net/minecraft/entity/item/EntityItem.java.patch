@@ -86,7 +86,7 @@
  
              if (!this.world.isRemote && this.age >= lifespan)
              {
-+                if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
++                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
 +                    this.age = 0;
 +                    return;
 +                }
@@ -109,7 +109,7 @@
 +
 +        if (!this.world.isRemote && this.age >= world.spigotConfig.itemDespawnRate) { // Spigot
 +            // CraftBukkit start - fire ItemDespawnEvent
-+            if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
++            if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
 +                this.age = 0;
 +                return;
 +            }
@@ -141,7 +141,7 @@
 -                        other.setItem(itemstack1);
 -                        this.setDead();
 +                        // Spigot start
-+                        if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemMergeEvent(other, this).isCancelled()) return false;
++                        if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callItemMergeEvent(other, this).isCancelled()) return false;
 +                        itemstack.grow(itemstack1.getCount());
 +                        this.pickupDelay = Math.max(other.pickupDelay, this.pickupDelay);
 +                        this.age = Math.min(other.age, this.age);
@@ -155,7 +155,7 @@
          }
          else
          {
-+            if (org.bukkit.craftbukkit.event.CraftEventFactory.handleNonLivingEntityDamageEvent(this, source, amount)) {
++            if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleNonLivingEntityDamageEvent(this, source, amount)) {
 +                return false;
 +            }
              this.markVelocityChanged();

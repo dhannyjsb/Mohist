@@ -4,7 +4,7 @@
          {
              if (!this.world.isRemote)
              {
-+                if (org.bukkit.craftbukkit.event.CraftEventFactory.handleNonLivingEntityDamageEvent(this, source, amount, false) || this.isDead) {
++                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleNonLivingEntityDamageEvent(this, source, amount, false) || this.isDead) {
 +                    return true;
 +                }
                  this.dropItemOrSelf(source.getTrueSource(), false);

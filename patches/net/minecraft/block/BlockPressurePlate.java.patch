@@ -27,7 +27,7 @@
 +                    org.bukkit.event.Cancellable cancellable;
 +
 +                    if (entity instanceof EntityPlayer) {
-+                        cancellable = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerInteractEvent((EntityPlayer) entity, org.bukkit.event.block.Action.PHYSICAL, pos, null, null, null);
++                        cancellable = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent((EntityPlayer) entity, org.bukkit.event.block.Action.PHYSICAL, pos, null, null, null);
 +                    } else {
 +                        cancellable = new EntityInteractEvent(entity.getBukkitEntity(), bworld.getBlockAt(pos.getX(), pos.getY(), pos.getZ()));
 +                        manager.callEvent((EntityInteractEvent) cancellable);

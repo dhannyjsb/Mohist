@@ -69,13 +69,13 @@
 -import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.Location;
-+import org.bukkit.craftbukkit.entity.CraftPlayer;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
-+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
-+import org.bukkit.craftbukkit.inventory.CraftItemStack;
-+import org.bukkit.craftbukkit.util.CraftChatMessage;
-+import org.bukkit.craftbukkit.util.LazyPlayerSet;
-+import org.bukkit.craftbukkit.util.Waitable;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
++import org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage;
++import org.bukkit.craftbukkit.v1_12_R1.util.LazyPlayerSet;
++import org.bukkit.craftbukkit.v1_12_R1.util.Waitable;
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.Event;
 +import org.bukkit.event.block.Action;
@@ -116,7 +116,7 @@
      private int lastMovePacketCounter;
      private ServerRecipeBookHelper field_194309_H = new ServerRecipeBookHelper();
  
-+    private final org.bukkit.craftbukkit.CraftServer server;
++    private final org.bukkit.craftbukkit.v1_12_R1.CraftServer server;
 +    private boolean processedDisconnect;
 +    private int lastTick = MinecraftServer.currentTick;
 +    private int allowedPlayerTicks = 1;
@@ -1697,11 +1697,11 @@
 +                lines[i] = TextFormatting.getTextWithoutFormattingCodes(new TextComponentString(TextFormatting.getTextWithoutFormattingCodes(astring[i])).getUnformattedText());
              }
  
-+            SignChangeEvent event = new SignChangeEvent((org.bukkit.craftbukkit.block.CraftBlock) player.getWorld().getBlockAt(x, y, z), this.server.getPlayer(this.player), lines);
++            SignChangeEvent event = new SignChangeEvent((org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock) player.getWorld().getBlockAt(x, y, z), this.server.getPlayer(this.player), lines);
 +            this.server.getPluginManager().callEvent(event);
 +
 +            if (!event.isCancelled()) {
-+                System.arraycopy(org.bukkit.craftbukkit.block.CraftSign.sanitizeLines(event.getLines()), 0, tileentitysign.signText, 0, 4);
++                System.arraycopy(org.bukkit.craftbukkit.v1_12_R1.block.CraftSign.sanitizeLines(event.getLines()), 0, tileentitysign.signText, 0, 4);
 +                tileentitysign.isEditable = false;
 +            }
 +

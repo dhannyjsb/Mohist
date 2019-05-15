@@ -91,10 +91,10 @@
 +import org.bukkit.Server;
 +import org.bukkit.TravelAgent;
 +import org.bukkit.block.BlockFace;
-+import org.bukkit.craftbukkit.CraftWorld;
-+import org.bukkit.craftbukkit.entity.CraftEntity;
-+import org.bukkit.craftbukkit.entity.CraftPlayer;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
++import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 +import org.bukkit.entity.Hanging;
 +import org.bukkit.entity.LivingEntity;
 +import org.bukkit.entity.Vehicle;
@@ -637,7 +637,7 @@
 +
 +                if (bworld == null) {
 +                    EntityPlayer entityPlayer = (EntityPlayer) this;
-+                    bworld = ((org.bukkit.craftbukkit.CraftServer) server).getServer().getWorldServer(entityPlayer.dimension).getWorld();
++                    bworld = ((org.bukkit.craftbukkit.v1_12_R1.CraftServer) server).getServer().getWorldServer(entityPlayer.dimension).getWorld();
 +                }
 +
 +                setWorld(bworld == null ? null : ((CraftWorld) bworld).getHandle());
@@ -859,7 +859,7 @@
 -                    d0 = MathHelper.clamp(d0 * 8.0D, worldserver1.getWorldBorder().minX() + 16.0D, worldserver1.getWorldBorder().maxX() - 16.0D);
 -                    d1 = MathHelper.clamp(d1 * 8.0D, worldserver1.getWorldBorder().minZ() + 16.0D, worldserver1.getWorldBorder().maxZ() - 16.0D);
 -                }
-+            TravelAgent agent = exit != null ? (TravelAgent) ((CraftWorld) exit.getWorld()).getHandle().getDefaultTeleporter() : org.bukkit.craftbukkit.CraftTravelAgent.DEFAULT; // return arbitrary TA to compensate for implementation dependent plugins
++            TravelAgent agent = exit != null ? (TravelAgent) ((CraftWorld) exit.getWorld()).getHandle().getDefaultTeleporter() : org.bukkit.craftbukkit.v1_12_R1.CraftTravelAgent.DEFAULT; // return arbitrary TA to compensate for implementation dependent plugins
 +            boolean oldCanCreate = agent.getCanCreatePortal();
 +            agent.setCanCreatePortal(false); // General entities cannot create portals
  

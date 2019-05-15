@@ -4,7 +4,7 @@
  import net.minecraft.item.ItemStack;
  import net.minecraft.util.EnumFacing;
  import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.inventory.CraftItemStack;
++import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 +import org.bukkit.event.block.BlockDispenseEvent;
  
  public abstract class BehaviorProjectileDispense extends BehaviorDefaultDispenseItem
@@ -39,7 +39,7 @@
 +        }
 +
 +        iprojectile.shoot(event.getVelocity().getX(), event.getVelocity().getY(), event.getVelocity().getZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
-+        ((Entity) iprojectile).projectileSource = new org.bukkit.craftbukkit.projectiles.CraftBlockProjectileSource(source.getBlockTileEntity());
++        ((Entity) iprojectile).projectileSource = new org.bukkit.craftbukkit.v1_12_R1.projectiles.CraftBlockProjectileSource(source.getBlockTileEntity());
          world.spawnEntity((Entity)iprojectile);
 -        stack.shrink(1);
 +        //stack.shrink(1); // CraftBukkit - Handled during event processing

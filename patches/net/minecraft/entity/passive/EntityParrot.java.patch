@@ -22,7 +22,7 @@
              if (!this.world.isRemote)
              {
 -                if (this.rand.nextInt(10) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player))
-+                if (this.rand.nextInt(10) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player) && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, player).isCancelled()) // CraftBukkit
++                if (this.rand.nextInt(10) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player) && !org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityTameEvent(this, player).isCancelled()) // CraftBukkit
                  {
                      this.setTamedBy(player);
                      this.playTameEffect(true);

@@ -58,7 +58,7 @@
 +                ITextComponent ichatbasecomponent = ITextComponent.Serializer.jsonToComponent(s);
 +
 +                if (oldSign) {
-+                    signText[i] = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(s)[0];
++                    signText[i] = org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage.fromString(s)[0];
 +                    continue;
 +                }
 +                // CraftBukkit end
@@ -84,9 +84,9 @@
                  {
 -                    playerIn.getServer().getCommandManager().executeCommand(icommandsender, clickevent.getValue());
 +                    // playerIn.getServer().getCommandManager().executeCommand(icommandsender, clickevent.getValue());
-+                    CommandBlockBaseLogic.executeSafely(icommandsender, new org.bukkit.craftbukkit.command.ProxiedNativeCommandSender(
++                    CommandBlockBaseLogic.executeSafely(icommandsender, new org.bukkit.craftbukkit.v1_12_R1.command.ProxiedNativeCommandSender(
 +                            icommandsender,
-+                            new org.bukkit.craftbukkit.command.CraftBlockCommandSender(icommandsender),
++                            new org.bukkit.craftbukkit.v1_12_R1.command.CraftBlockCommandSender(icommandsender),
 +                            playerIn.getBukkitEntity()
 +                    ), clickevent.getValue());
                  }

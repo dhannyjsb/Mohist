@@ -4,7 +4,7 @@
  
          if (this.breakingTime == 240 && this.entity.world.getDifficulty() == EnumDifficulty.HARD)
          {
-+            if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityBreakDoorEvent(this.entity, this.doorPosition.getX(), this.doorPosition.getY(), this.doorPosition.getZ()).isCancelled()) {
++            if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityBreakDoorEvent(this.entity, this.doorPosition.getX(), this.doorPosition.getY(), this.doorPosition.getZ()).isCancelled()) {
 +                this.startExecuting();
 +                return;
 +            }

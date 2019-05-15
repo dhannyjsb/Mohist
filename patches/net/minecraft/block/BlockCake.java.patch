@@ -32,7 +32,7 @@
              player.getFoodStats().addStats(2, 0.1F);
 +            int oldFoodLevel = player.getFoodStats().foodLevel;
 +
-+            org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callFoodLevelChangeEvent(player, 2 + oldFoodLevel);
++            org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callFoodLevelChangeEvent(player, 2 + oldFoodLevel);
 +            if (!event.isCancelled()) {
 +                player.getFoodStats().addStats(event.getFoodLevel() - oldFoodLevel, 0.1F);
 +            }

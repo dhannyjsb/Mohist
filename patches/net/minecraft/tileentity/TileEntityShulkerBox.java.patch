@@ -12,7 +12,7 @@
  import net.minecraft.util.math.AxisAlignedBB;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity;
 +import org.bukkit.entity.HumanEntity;
  
 +import javax.annotation.Nullable;
