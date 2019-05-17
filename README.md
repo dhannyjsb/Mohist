@@ -18,7 +18,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 
 ## Info
 * Java 8u212 JDK or higher
-* Forge-1.12.2 - 14.23.5.2836
+* Forge-1.12.2 - 14.23.5.2838
 * Paper-1.12.2
 
 ## Building
