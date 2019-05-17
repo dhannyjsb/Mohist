@@ -141,7 +141,7 @@ public class PluginManagers {
 			}
 
 			Control.enablePlugin(loaded);
-			Object[] d = {split[1]};
+			Object[] d = {split[1], loaded.getDescription().getVersion()};
 			sender.sendMessage(Message.getFormatString(Message.pluginscommand_reloaded, d));
 		}
 		return true;

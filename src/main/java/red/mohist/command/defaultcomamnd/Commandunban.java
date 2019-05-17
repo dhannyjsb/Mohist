@@ -23,7 +23,7 @@ public class Commandunban extends Command {
         }
         OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
         if (!p.isBanned()) {
-            sender.sendMessage(ChatColor.RED + "该玩家没有被ban");
+            sender.sendMessage(ChatColor.RED + "The player is not being ban.");
         }
         Bukkit.getServer().getBanList(BanList.Type.NAME).pardon(p.getName());
         return true;

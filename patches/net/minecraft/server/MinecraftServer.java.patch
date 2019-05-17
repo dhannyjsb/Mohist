@@ -323,9 +323,9 @@
 +                        String materialName = key.toString().toUpperCase().replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
 +                        Material material = Material.addMaterial(EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Integer.TYPE}, new Object[]{Item.getIdFromItem(item), item.getItemStackLimit()}));
 +                        if (material != null) {
-+                            Mohist.LOGGER.debug("Injected new Forge item material %s with ID %d.", material.name(), material.getId());
++                            Mohist.LOGGER.debug("Injected new Forge item material " + material.name() + " with ID " + material.getId());
 +                        } else {
-+                            Mohist.LOGGER.debug("Inject item failure %s with ID %d.", materialName, Item.getIdFromItem(item));
++                            Mohist.LOGGER.debug("Inject item failure " + materialName + " with ID " + Item.getIdFromItem(item));
 +                        }
 +                    }
                  }
@@ -343,9 +343,9 @@
 +                        String materialName = key.toString().toUpperCase().replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
 +                        Material material = Material.addBlockMaterial(EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE}, new Object[]{Block.getIdFromBlock(block)}));
 +                        if (material != null) {
-+                            Mohist.LOGGER.debug("Injected new Forge block material %s with ID %d.", material.name(), material.getId());
++                            Mohist.LOGGER.debug("Injected new Forge block material "+ material.name()+ " with ID " + material.getId());
 +                        } else {
-+                            Mohist.LOGGER.debug("Inject block failure %s with ID %d.", materialName, Block.getIdFromBlock(block));
++                            Mohist.LOGGER.debug("Inject block failure " + materialName + " with ID " +  Block.getIdFromBlock(block));
 +                        }
 +                    }
 +                }
