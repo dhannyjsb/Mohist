@@ -1,5 +1,7 @@
 package org.bukkit.plugin.java;
 
+import com.google.common.collect.ImmutableList;
+import net.md_5.specialsource.InheritanceMap;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 import org.bukkit.Warning;
@@ -75,29 +77,27 @@ public class JavaPluginLoader implements PluginLoader {
             throw new InvalidPluginException(ex);
         }
 
-        File parentFile = file.getParentFile();
-        File dataFolder = new File(parentFile, description.getName());
-        @SuppressWarnings("deprecation")
-        File oldDataFolder = new File(parentFile, description.getRawName());
+        File dataFolder = new File(file.getParentFile(), description.getName());
+        File oldDataFolder = getDataFolder(file);
 
         // Found old data folder
         if (dataFolder.equals(oldDataFolder)) {
             // They are equal -- nothing needs to be done!
         } else if (dataFolder.isDirectory() && oldDataFolder.isDirectory()) {
-            Mohist.LOGGER.warn(String.format(
+            Mohist.LOGGER.info(String.format(
                 "While loading %s (%s) found old-data folder: `%s' next to the new one `%s'",
-                description.getFullName(),
+                description.getName(),
                 file,
                 oldDataFolder,
                 dataFolder
             ));
         } else if (oldDataFolder.isDirectory() && !dataFolder.exists()) {
             if (!oldDataFolder.renameTo(dataFolder)) {
-                throw new InvalidPluginException("Unable to rename old data folder: `" + oldDataFolder + "' to: `" + dataFolder + "'");
+                throw new InvalidPluginException("Unable to rename old data folder: '" + oldDataFolder + "' to: '" + dataFolder + "'");
             }
              Mohist.LOGGER.info( String.format(
-                "While loading %s (%s) renamed data folder: `%s' to `%s'",
-                description.getFullName(),
+                "While loading %s (%s) renamed data folder: '%s' to '%s'",
+                description.getName(),
                 file,
                 oldDataFolder,
                 dataFolder
@@ -106,14 +106,18 @@ public class JavaPluginLoader implements PluginLoader {
 
         if (dataFolder.exists() && !dataFolder.isDirectory()) {
             throw new InvalidPluginException(String.format(
-                "Projected datafolder: `%s' for %s (%s) exists and is not a directory",
+                "Projected datafolder: '%s' for %s (%s) exists and is not a directory",
                 dataFolder,
-                description.getFullName(),
+                description.getName(),
                 file
             ));
         }
 
-        for (String pluginName : description.getDepend()) {
+        List<String> depend = description.getDepend();
+        if (depend == null) {
+            depend = ImmutableList.<String>of();
+        }
+        for (String pluginName : depend) {
             Plugin current = server.getPluginManager().getPlugin(pluginName);
 
             if (current == null) {
@@ -133,6 +137,22 @@ public class JavaPluginLoader implements PluginLoader {
         loaders.add(loader);
 
         return loader.plugin;
+    }
+
+    private File getDataFolder(File file) {
+        File dataFolder = null;
+        String filename = file.getName();
+        int index = file.getName().lastIndexOf(".");
+        if (index != -1) {
+            String name = filename.substring(0, index);
+            dataFolder = new File(file.getParentFile(), name);
+        } else {
+            // This is if there is no extension, which should not happen
+            // Using _ to prevent name collision
+
+            dataFolder = new File(file.getParentFile(), filename + "_");
+        }
+        return dataFolder;
     }
 
     public PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException {
