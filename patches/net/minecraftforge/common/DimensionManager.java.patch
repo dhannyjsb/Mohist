@@ -227,7 +227,7 @@
          }
      }
  
-@@ -499,4 +511,108 @@
+@@ -499,4 +511,109 @@
              return null;
          }
      }
@@ -287,7 +287,8 @@
 +            worldinfo = new WorldInfo(worldSettings,name);
 +        }
 +
-+        WorldServer world = (WorldServer) new WorldServerMulti(mcServer, saveHandler, dim, overworld, mcServer.profiler, worldinfo, env, gen).init();
++        worldinfo.setWorldName(name);
++        WorldServer world = (WorldServer) new WorldServer(mcServer, saveHandler, worldinfo, dim, mcServer.profiler, env, gen).init();
 +        world.initialize(worldSettings);
 +
 +        world.provider.setDimension(dim); // Fix for TerrainControl injecting their own WorldProvider
