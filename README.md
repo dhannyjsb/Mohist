@@ -36,6 +36,8 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
 
 All builds will be in `.\Mohist\build\distributions\`
 
+If you are a plugin developer, you can add the following files to your library file `.\Mohist\build\localCache\Mohist\recompiled.jar`
+
 Mohist-xxxxx-universal.jar - is the server we should run it
 
 ## Installation
