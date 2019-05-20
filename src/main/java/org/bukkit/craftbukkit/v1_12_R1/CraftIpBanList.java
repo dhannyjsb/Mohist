@@ -5,7 +5,6 @@ import net.minecraft.server.management.UserListIPBans;
 import net.minecraft.server.management.UserListIPBansEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.bukkit.craftbukkit.v1_12_R1.CraftIpBanEntry;
 import red.mohist.Mohist;
 
 import java.io.IOException;

@@ -1,7 +1,6 @@
 package org.bukkit.plugin.java;
 
 import com.google.common.collect.ImmutableList;
-import net.md_5.specialsource.InheritanceMap;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 import org.bukkit.Warning;

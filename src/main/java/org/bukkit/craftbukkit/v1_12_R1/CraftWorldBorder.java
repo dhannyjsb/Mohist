@@ -5,7 +5,6 @@ import net.minecraft.util.math.BlockPos;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 
 public class CraftWorldBorder implements WorldBorder {
 

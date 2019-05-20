@@ -8,7 +8,6 @@ import net.minecraft.server.management.UserListBansEntry;
 import net.minecraft.server.management.UserListEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.bukkit.craftbukkit.v1_12_R1.CraftProfileBanEntry;
 import red.mohist.Mohist;
 
 import java.io.IOException;

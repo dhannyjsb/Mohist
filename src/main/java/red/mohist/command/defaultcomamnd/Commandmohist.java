@@ -1,7 +1,6 @@
 package red.mohist.command.defaultcomamnd;
 
 import net.minecraft.command.CommandBase;
-import net.minecraft.server.MinecraftServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
