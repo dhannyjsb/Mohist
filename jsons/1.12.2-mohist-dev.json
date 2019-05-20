@@ -134,11 +134,6 @@
       "url" : "http://repo.maven.apache.org/maven2"
     },
     {
-      "name": "co.aikar:fastutil-lite:1.0",
-      "children" : ["sources"],
-      "url" : "https://ci.emc.gs/nexus/content/groups/aikar/"
-    },
-    {
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "children" : ["sources"],
       "url" : "http://repo.maven.apache.org/maven2"

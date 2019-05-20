@@ -199,12 +199,6 @@
       "serverreq":true
     },
     {
-      "name": "co.aikar:fastutil-lite:1.0",
-      "url" : "https://ci.emc.gs/nexus/content/groups/aikar/",
-      "clientreq":true,
-      "serverreq":true
-    },
-    {
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "url" : "http://files.minecraftforge.net/maven/",
       "clientreq":true,

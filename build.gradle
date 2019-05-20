@@ -4,7 +4,6 @@ buildscript {
         mavenCentral()
         maven { url 'https://files.minecraftforge.net/maven' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
         maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
         maven { url 'https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository' }
     }
@@ -28,7 +27,6 @@ repositories {
     maven { url 'https://files.minecraftforge.net/maven' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://libraries.minecraft.net/' }
-    maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
     maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
     maven { url 'https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository' }
 }
