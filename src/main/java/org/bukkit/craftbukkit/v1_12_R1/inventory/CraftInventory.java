@@ -43,7 +43,8 @@ public class CraftInventory implements Inventory {
 
     public String getName() {
     	String name = getInventory().getName();
-        return name != null ? name : "";
+        String modname = getInventory().getClass().getSimpleName();
+        return name != null ? name : modname;
     }
 
     public ItemStack getItem(int index) {
@@ -449,8 +450,9 @@ public class CraftInventory implements Inventory {
     }
 
     public String getTitle() {
-    	String name = this.inventory.getName();
-        return name != null ? name : "";
+        String name = getInventory().getName();
+        String modname = getInventory().getClass().getSimpleName();
+        return name != null ? name : modname;
     }
 
     public InventoryType getType() {
