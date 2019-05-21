@@ -616,20 +616,7 @@
          if (this.rand.nextDouble() >= this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getAttributeValue())
          {
              this.isAirBorne = true;
-@@ -1256,6 +1378,12 @@
-     }
- 
-     @Nullable
-+    public SoundEvent getDeathSoundEffect()
-+    {
-+        return getDeathSound();
-+    } // Paper - OBFHELPER
-+
-+    @Nullable
-     protected SoundEvent getDeathSound()
-     {
-         return SoundEvents.ENTITY_GENERIC_DEATH;
-@@ -1313,7 +1441,8 @@
+@@ -1313,7 +1435,8 @@
      {
          float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
          if (ret == null) return;
@@ -639,7 +626,7 @@
          super.fall(distance, damageMultiplier);
          PotionEffect potioneffect = this.getActivePotionEffect(MobEffects.JUMP_BOOST);
          float f = potioneffect == null ? 0.0F : (float)(potioneffect.getAmplifier() + 1);
-@@ -1321,8 +1450,11 @@
+@@ -1321,8 +1444,11 @@
  
          if (i > 0)
          {
@@ -652,7 +639,7 @@
              int j = MathHelper.floor(this.posX);
              int k = MathHelper.floor(this.posY - 0.20000000298023224D);
              int l = MathHelper.floor(this.posZ);
-@@ -1362,7 +1494,7 @@
+@@ -1362,7 +1488,7 @@
      {
          if (!source.isUnblockable())
          {
@@ -661,7 +648,7 @@
              damage = CombatRules.getDamageAfterAbsorb(damage, (float)this.getTotalArmorValue(), (float)this.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
          }
  
-@@ -1377,7 +1509,8 @@
+@@ -1377,7 +1503,8 @@
          }
          else
          {
@@ -671,7 +658,7 @@
              {
                  int i = (this.getActivePotionEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
                  int j = 25 - i;
-@@ -1404,26 +1537,152 @@
+@@ -1404,26 +1531,152 @@
      }
  
      protected void damageEntity(DamageSource damageSrc, float damageAmount)
@@ -841,7 +828,7 @@
      }
  
      public CombatTracker getCombatTracker()
-@@ -1605,6 +1864,7 @@
+@@ -1605,6 +1858,7 @@
          if (this.attributeMap == null)
          {
              this.attributeMap = new AttributeMap();
@@ -849,7 +836,7 @@
          }
  
          return this.attributeMap;
-@@ -1689,7 +1949,7 @@
+@@ -1689,7 +1943,7 @@
      {
          return 1.0F;
      }
@@ -858,7 +845,7 @@
      protected float getSoundPitch()
      {
          return this.isChild() ? (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.5F : (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F;
-@@ -1843,9 +2103,9 @@
+@@ -1843,9 +2097,9 @@
                  if (!this.isInLava() || this instanceof EntityPlayer && ((EntityPlayer)this).capabilities.isFlying)
                  {
                      if (this.isElytraFlying())
@@ -870,7 +857,7 @@
                              this.fallDistance = 1.0F;
                          }
  
-@@ -1855,27 +2115,27 @@
+@@ -1855,27 +2109,27 @@
                          double d8 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
                          double d1 = vec3d.lengthVector();
                          float f4 = MathHelper.cos(f);
@@ -905,7 +892,7 @@
                              this.motionX += (vec3d.x / d6 * d8 - this.motionX) * 0.1D;
                              this.motionZ += (vec3d.z / d6 * d8 - this.motionZ) * 0.1D;
                          }
-@@ -1886,21 +2146,22 @@
+@@ -1886,21 +2140,22 @@
                          this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
  
                          if (this.collidedHorizontally && !this.world.isRemote)
@@ -934,7 +921,7 @@
                          }
                      }
                      else
-@@ -2345,7 +2606,6 @@
+@@ -2345,7 +2600,6 @@
          }
  
          this.world.profiler.startSection("ai");
@@ -942,7 +929,7 @@
          if (this.isMovementBlocked())
          {
              this.isJumping = false;
-@@ -2426,7 +2686,8 @@
+@@ -2426,7 +2680,8 @@
  
          if (!this.world.isRemote)
          {
@@ -952,7 +939,7 @@
          }
      }
  
-@@ -2560,12 +2821,12 @@
+@@ -2560,12 +2815,12 @@
  
      public boolean canBeCollidedWith()
      {
@@ -967,7 +954,7 @@
      }
  
      protected void markVelocityChanged()
-@@ -2629,7 +2890,7 @@
+@@ -2629,7 +2884,7 @@
          {
              PotionEffect effect = iterator.next();
  
@@ -976,7 +963,7 @@
              {
                  onFinishedPotionEffect(effect);
                  iterator.remove();
-@@ -2667,7 +2928,8 @@
+@@ -2667,7 +2922,8 @@
          if (this.isHandActive())
          {
              ItemStack itemstack = this.getHeldItem(this.getActiveHand());
@@ -986,7 +973,7 @@
  
              if (itemstack == this.activeItemStack)
              {
-@@ -2785,8 +3047,25 @@
+@@ -2785,8 +3041,25 @@
          if (!this.activeItemStack.isEmpty() && this.isHandActive())
          {
              this.updateItemUse(this.activeItemStack, 16);
@@ -1014,7 +1001,7 @@
              itemstack = net.minecraftforge.event.ForgeEventFactory.onItemUseFinish(this, activeItemStackCopy, getItemInUseCount(), itemstack);
              this.setHeldItem(this.getActiveHand(), itemstack);
              this.resetActiveHand();
-@@ -2897,11 +3176,14 @@
+@@ -2897,11 +3170,14 @@
  
              if (flag1)
              {
@@ -1034,7 +1021,7 @@
                  }
              }
          }
-@@ -2936,6 +3218,11 @@
+@@ -2936,6 +3212,11 @@
          }
      }
  
@@ -1046,7 +1033,7 @@
      public boolean canBeHitWithPotion()
      {
          return true;
-@@ -2949,7 +3236,7 @@
+@@ -2949,7 +3230,7 @@
      @SuppressWarnings("unchecked")
      @Override
      @Nullable
@@ -1055,7 +1042,7 @@
      {
          if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
          {
-@@ -2961,7 +3248,7 @@
+@@ -2961,7 +3242,7 @@
      }
  
      @Override
@@ -1064,7 +1051,7 @@
      {
          return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
      }
-@@ -2975,7 +3262,7 @@
+@@ -2975,7 +3256,7 @@
      public void setPartying(BlockPos pos, boolean p_191987_2_)
      {
      }

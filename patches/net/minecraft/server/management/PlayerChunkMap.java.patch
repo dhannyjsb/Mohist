@@ -41,6 +41,15 @@
      }
  
      public WorldServer getWorldServer()
+@@ -155,7 +154,7 @@
+ 
+         if (!this.entriesWithoutChunks.isEmpty())
+         {
+-            long l = System.nanoTime() + 50000000L;
++            long l = System.nanoTime() + 25000000L;
+             int k = 49;
+             Iterator<PlayerChunkMapEntry> iterator = this.entriesWithoutChunks.iterator();
+ 
 @@ -183,6 +182,9 @@
                              break;
                          }

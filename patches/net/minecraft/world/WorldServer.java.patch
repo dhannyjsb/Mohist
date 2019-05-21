@@ -455,41 +455,173 @@
          {
              int i = this.rand.nextInt(this.playerEntities.size());
              EntityPlayer entityplayer = this.playerEntities.get(i);
-@@ -398,6 +571,7 @@
-                 chunk.enqueueRelightChecks();
-                 this.profiler.endStartSection("tickChunk");
-                 chunk.onTick(false);
-+                if (!chunk.areNeighborsLoaded(1)) continue; // Spigot
-                 this.profiler.endStartSection("thunder");
+@@ -392,97 +565,93 @@
+             {
+                 this.profiler.startSection("getChunk");
+                 Chunk chunk = iterator.next();
+-                int j = chunk.x * 16;
+-                int k = chunk.z * 16;
+-                this.profiler.endStartSection("checkNextLight");
+-                chunk.enqueueRelightChecks();
+-                this.profiler.endStartSection("tickChunk");
+-                chunk.onTick(false);
+-                this.profiler.endStartSection("thunder");
++                try {
++                    int j = chunk.x * 16;
++                    int k = chunk.z * 16;
++                    this.profiler.endStartSection("checkNextLight");
++                    chunk.enqueueRelightChecks();
++                    this.profiler.endStartSection("tickChunk");
++                    chunk.onTick(false);
++                    if (!chunk.areNeighborsLoaded(1)) continue; // Spigot
++                    this.profiler.endStartSection("thunder");
  
-                 if (this.provider.canDoLightning(chunk) && flag && flag1 && this.rand.nextInt(100000) == 0)
-@@ -416,7 +590,7 @@
-                             entityskeletonhorse.setTrap(true);
-                             entityskeletonhorse.setGrowingAge(0);
-                             entityskeletonhorse.setPosition((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ());
+-                if (this.provider.canDoLightning(chunk) && flag && flag1 && this.rand.nextInt(100000) == 0)
+-                {
+-                    this.updateLCG = this.updateLCG * 3 + 1013904223;
+-                    int l = this.updateLCG >> 2;
+-                    BlockPos blockpos = this.adjustPosToNearbyEntity(new BlockPos(j + (l & 15), 0, k + (l >> 8 & 15)));
++                    if (this.provider.canDoLightning(chunk) && flag && flag1 && this.rand.nextInt(100000) == 0) {
++                        this.updateLCG = this.updateLCG * 3 + 1013904223;
++                        int l = this.updateLCG >> 2;
++                        BlockPos blockpos = this.adjustPosToNearbyEntity(new BlockPos(j + (l & 15), 0, k + (l >> 8 & 15)));
+ 
+-                    if (this.isRainingAt(blockpos))
+-                    {
+-                        DifficultyInstance difficultyinstance = this.getDifficultyForLocation(blockpos);
++                        if (this.isRainingAt(blockpos)) {
++                            DifficultyInstance difficultyinstance = this.getDifficultyForLocation(blockpos);
+ 
+-                        if (this.getGameRules().getBoolean("doMobSpawning") && this.rand.nextDouble() < (double)difficultyinstance.getAdditionalDifficulty() * 0.01D)
+-                        {
+-                            EntitySkeletonHorse entityskeletonhorse = new EntitySkeletonHorse(this);
+-                            entityskeletonhorse.setTrap(true);
+-                            entityskeletonhorse.setGrowingAge(0);
+-                            entityskeletonhorse.setPosition((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ());
 -                            this.spawnEntity(entityskeletonhorse);
-+                            this.spawnEntity(entityskeletonhorse, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING);
-                             this.addWeatherEffect(new EntityLightningBolt(this, (double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), true));
+-                            this.addWeatherEffect(new EntityLightningBolt(this, (double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), true));
++                            if (this.getGameRules().getBoolean("doMobSpawning") && this.rand.nextDouble() < (double) difficultyinstance.getAdditionalDifficulty() * 0.01D) {
++                                EntitySkeletonHorse entityskeletonhorse = new EntitySkeletonHorse(this);
++                                entityskeletonhorse.setTrap(true);
++                                entityskeletonhorse.setGrowingAge(0);
++                                entityskeletonhorse.setPosition((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
++                                this.spawnEntity(entityskeletonhorse, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING);
++                                this.addWeatherEffect(new EntityLightningBolt(this, (double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), true));
++                            } else {
++                                this.addWeatherEffect(new EntityLightningBolt(this, (double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), false));
++                            }
                          }
-                         else
-@@ -438,12 +612,14 @@
-                     if (this.isAreaLoaded(blockpos2, 1)) // Forge: check area to avoid loading neighbors in unloaded chunks
-                     if (this.canBlockFreezeNoWater(blockpos2))
-                     {
+-                        else
+-                        {
+-                            this.addWeatherEffect(new EntityLightningBolt(this, (double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), false));
+-                        }
+                     }
+-                }
+ 
+-                this.profiler.endStartSection("iceandsnow");
++                    this.profiler.endStartSection("iceandsnow");
+ 
+-                if (this.provider.canDoRainSnowIce(chunk) && this.rand.nextInt(16) == 0)
+-                {
+-                    this.updateLCG = this.updateLCG * 3 + 1013904223;
+-                    int j2 = this.updateLCG >> 2;
+-                    BlockPos blockpos1 = this.getPrecipitationHeight(new BlockPos(j + (j2 & 15), 0, k + (j2 >> 8 & 15)));
+-                    BlockPos blockpos2 = blockpos1.down();
++                    if (this.provider.canDoRainSnowIce(chunk) && this.rand.nextInt(16) == 0) {
++                        this.updateLCG = this.updateLCG * 3 + 1013904223;
++                        int j2 = this.updateLCG >> 2;
++                        BlockPos blockpos1 = this.getPrecipitationHeight(new BlockPos(j + (j2 & 15), 0, k + (j2 >> 8 & 15)));
++                        BlockPos blockpos2 = blockpos1.down();
+ 
+-                    if (this.isAreaLoaded(blockpos2, 1)) // Forge: check area to avoid loading neighbors in unloaded chunks
+-                    if (this.canBlockFreezeNoWater(blockpos2))
+-                    {
 -                        this.setBlockState(blockpos2, Blocks.ICE.getDefaultState());
-+                        // this.setBlockState(blockpos2, Blocks.ICE.getDefaultState());
-+                        org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleBlockFormEvent(this, blockpos2, Blocks.ICE.getDefaultState(), null);
-                     }
+-                    }
++                        if (this.isAreaLoaded(blockpos2, 1)) // Forge: check area to avoid loading neighbors in unloaded chunks
++                            if (this.canBlockFreezeNoWater(blockpos2)) {
++                                // this.setBlockState(blockpos2, Blocks.ICE.getDefaultState());
++                                org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleBlockFormEvent(this, blockpos2, Blocks.ICE.getDefaultState(), null);
++                            }
  
-                     if (flag && this.canSnowAt(blockpos1, true))
-                     {
+-                    if (flag && this.canSnowAt(blockpos1, true))
+-                    {
 -                        this.setBlockState(blockpos1, Blocks.SNOW_LAYER.getDefaultState());
-+                        // this.setBlockState(blockpos1, Blocks.SNOW_LAYER.getDefaultState());
-+                        org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleBlockFormEvent(this, blockpos1, Blocks.SNOW_LAYER.getDefaultState(), null);
-                     }
+-                    }
++                        if (flag && this.canSnowAt(blockpos1, true)) {
++                            // this.setBlockState(blockpos1, Blocks.SNOW_LAYER.getDefaultState());
++                            org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleBlockFormEvent(this, blockpos1, Blocks.SNOW_LAYER.getDefaultState(), null);
++                        }
  
-                     if (flag && this.getBiome(blockpos2).canRain())
-@@ -611,6 +787,7 @@
+-                    if (flag && this.getBiome(blockpos2).canRain())
+-                    {
+-                        this.getBlockState(blockpos2).getBlock().fillWithRain(this, blockpos2);
++                        if (flag && this.getBiome(blockpos2).canRain()) {
++                            this.getBlockState(blockpos2).getBlock().fillWithRain(this, blockpos2);
++                        }
+                     }
+-                }
+ 
+-                this.profiler.endStartSection("tickBlocks");
++                    this.profiler.endStartSection("tickBlocks");
+ 
+-                if (i > 0)
+-                {
+-                    for (ExtendedBlockStorage extendedblockstorage : chunk.getBlockStorageArray())
+-                    {
+-                        if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE && extendedblockstorage.needsRandomTick())
+-                        {
+-                            for (int i1 = 0; i1 < i; ++i1)
+-                            {
+-                                this.updateLCG = this.updateLCG * 3 + 1013904223;
+-                                int j1 = this.updateLCG >> 2;
+-                                int k1 = j1 & 15;
+-                                int l1 = j1 >> 8 & 15;
+-                                int i2 = j1 >> 16 & 15;
+-                                IBlockState iblockstate = extendedblockstorage.get(k1, i2, l1);
+-                                Block block = iblockstate.getBlock();
+-                                this.profiler.startSection("randomTick");
++                    if (i > 0) {
++                        for (ExtendedBlockStorage extendedblockstorage : chunk.getBlockStorageArray()) {
++                            if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE && extendedblockstorage.needsRandomTick()) {
++                                for (int i1 = 0; i1 < i; ++i1) {
++                                    this.updateLCG = this.updateLCG * 3 + 1013904223;
++                                    int j1 = this.updateLCG >> 2;
++                                    int k1 = j1 & 15;
++                                    int l1 = j1 >> 8 & 15;
++                                    int i2 = j1 >> 16 & 15;
++                                    IBlockState iblockstate = extendedblockstorage.get(k1, i2, l1);
++                                    Block block = iblockstate.getBlock();
++                                    this.profiler.startSection("randomTick");
+ 
+-                                if (block.getTickRandomly())
+-                                {
+-                                    block.randomTick(this, new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k), iblockstate, this.rand);
+-                                }
++                                    if (block.getTickRandomly()) {
++                                        block.randomTick(this, new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k), iblockstate, this.rand);
++                                    }
+ 
+-                                this.profiler.endSection();
++                                    this.profiler.endSection();
++                                }
+                             }
+                         }
++                    } catch(Exception e){
++                        try {
++                            this.getChunkProvider().unloadChunk(chunk, true);
++                        } catch (Exception e2) {
++                            e.printStackTrace();
++                        }
++                        e.printStackTrace();
+                     }
+                 }
+-            }
+-
+             this.profiler.endSection();
+         }
+     }
+@@ -611,6 +780,7 @@
  
          this.provider.onWorldUpdateEntities();
          super.updateEntities();
@@ -497,7 +629,7 @@
      }
  
      protected void tickPlayers()
-@@ -686,6 +863,7 @@
+@@ -686,6 +856,7 @@
          {
              int i = this.pendingTickListEntriesTreeSet.size();
  
@@ -505,7 +637,7 @@
              if (i != this.pendingTickListEntriesHashSet.size())
              {
                  throw new IllegalStateException("TickNextTick list out of synch");
-@@ -694,7 +872,14 @@
+@@ -694,7 +865,14 @@
              {
                  if (i > 65536)
                  {
@@ -521,7 +653,7 @@
                  }
  
                  this.profiler.startSection("cleaning");
-@@ -817,6 +1002,7 @@
+@@ -817,6 +995,7 @@
          return list;
      }
  
@@ -529,7 +661,7 @@
      public void updateEntityWithOptionalForce(Entity entityIn, boolean forceUpdate)
      {
          if (!this.canSpawnAnimals() && (entityIn instanceof EntityAnimal || entityIn instanceof EntityWaterMob))
-@@ -831,6 +1017,7 @@
+@@ -831,6 +1010,7 @@
  
          super.updateEntityWithOptionalForce(entityIn, forceUpdate);
      }
@@ -537,7 +669,7 @@
  
      private boolean canSpawnNPCs()
      {
-@@ -845,9 +1032,62 @@
+@@ -845,9 +1025,62 @@
      protected IChunkProvider createChunkProvider()
      {
          IChunkLoader ichunkloader = this.saveHandler.getChunkLoader(this.provider);
@@ -601,7 +733,7 @@
      public boolean isBlockModifiable(EntityPlayer player, BlockPos pos)
      {
          return super.isBlockModifiable(player, pos);
-@@ -929,6 +1169,23 @@
+@@ -929,6 +1162,23 @@
              int j = this.provider.getAverageGroundLevel();
              int k = 8;
  
@@ -625,7 +757,7 @@
              if (blockpos != null)
              {
                  i = blockpos.getX();
-@@ -941,7 +1198,7 @@
+@@ -941,7 +1191,7 @@
  
              int l = 0;
  
@@ -634,7 +766,7 @@
              {
                  i += random.nextInt(64) - random.nextInt(64);
                  k += random.nextInt(64) - random.nextInt(64);
-@@ -987,30 +1244,30 @@
+@@ -987,30 +1237,30 @@
      }
  
      public void saveAllChunks(boolean all, @Nullable IProgressUpdate progressCallback) throws MinecraftException
@@ -672,7 +804,7 @@
                      chunkproviderserver.queueUnload(chunk);
                  }
              }
-@@ -1039,6 +1296,12 @@
+@@ -1039,6 +1289,12 @@
              }
          }
  
@@ -685,7 +817,7 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1053,9 +1316,10 @@
+@@ -1053,9 +1309,10 @@
          this.perWorldStorage.saveAllData();
      }
  
@@ -699,7 +831,7 @@
      }
  
      public void loadEntities(Collection<Entity> entityCollection)
-@@ -1074,7 +1338,6 @@
+@@ -1074,7 +1331,6 @@
      {
          if (entityIn.isDead)
          {
@@ -707,7 +839,7 @@
              return false;
          }
          else
-@@ -1093,7 +1356,6 @@
+@@ -1093,7 +1349,6 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
@@ -715,7 +847,7 @@
                          return false;
                      }
  
-@@ -1141,9 +1403,15 @@
+@@ -1141,9 +1396,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -732,7 +864,7 @@
              return true;
          }
          else
-@@ -1164,11 +1432,12 @@
+@@ -1164,11 +1425,12 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -749,7 +881,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1480,8 @@
+@@ -1211,7 +1473,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -759,7 +891,7 @@
                  }
              }
  
-@@ -1298,11 +1568,19 @@
+@@ -1298,11 +1561,19 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
