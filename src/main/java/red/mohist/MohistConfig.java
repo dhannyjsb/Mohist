@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import red.mohist.command.defaultcomamnd.Commandmohist;
-import red.mohist.command.defaultcomamnd.Commandunban;
 import red.mohist.command.defaultcomamnd.VersionCommand;
 
 import java.io.File;
@@ -45,7 +44,6 @@ public class MohistConfig {
 
         commands = new HashMap<String, Command>();
         commands.put("mohist", new Commandmohist("mohist"));
-        commands.put("unban", new Commandunban("unban"));
         commands.put("version", new VersionCommand("version"));
 
         version = getInt("config-version", 1);
