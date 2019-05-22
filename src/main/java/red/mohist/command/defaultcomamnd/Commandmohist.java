@@ -1,6 +1,7 @@
 package red.mohist.command.defaultcomamnd;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.server.MinecraftServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.permissions.Permission;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
@@ -57,6 +59,10 @@ public class Commandmohist extends Command {
                 // Not recommended for use in games, only test output
                 getEntityTypes(sender);
                 break;
+            case "commands":
+                // Not recommended for use in games, only test output
+                getCommands(sender);
+                break;
             default:
                 sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
                 return false;
@@ -88,6 +94,12 @@ public class Commandmohist extends Command {
     private void getEntityTypes(CommandSender sender) {
         for(EntityType ent : EntityType.values()){
             sender.sendMessage(ent.toString());
+        }
+    }
+
+    private void getCommands(CommandSender sender){
+        for (Command per : MinecraftServer.getServerInst().server.getCommandMap().getCommands()) {
+            sender.sendMessage(per.getName());
         }
     }
 }
