@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 public class Mohist implements Runnable{
 
 	private static final String name = "Mohist";
-	private static final String version = "0.0.8a";
+	private static final String version = "0.0.8b";
 	private static final String native_verson = "v1_12_R1";
 	public static Logger LOGGER;
 	private static final String bukkit_version = "1.12.2-R0.1-SNAPSHOT";

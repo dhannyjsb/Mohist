@@ -19,7 +19,7 @@ apply plugin: 'net.minecraftforge.gradle.patcher'
 apply plugin: 'net.minecraftforge.gradle.launch4j'
 
 group = 'red.mohist'
-version = '14.23.5.2838-0.0.8a'
+version = '14.23.5.2838-0.0.8b'
 
 repositories {
     clear()
