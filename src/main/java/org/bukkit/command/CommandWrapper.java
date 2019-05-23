@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.math.BlockPos;
 import org.bukkit.craftbukkit.v1_12_R1.command.CraftBlockCommandSender;
+import org.bukkit.craftbukkit.v1_12_R1.command.CraftFunctionCommandSender;
 import org.bukkit.craftbukkit.v1_12_R1.command.CraftRemoteConsoleCommandSender;
 
 import javax.annotation.Nullable;
@@ -91,8 +92,8 @@ public class CommandWrapper implements ICommand {
         if (sender instanceof MinecraftServer) return MinecraftServer.getServerInst().console;
         if (sender instanceof RConConsoleSource) return new CraftRemoteConsoleCommandSender((RConConsoleSource) sender);
         if (sender instanceof CommandBlockBaseLogic) return new CraftBlockCommandSender(sender);
+        if (sender instanceof FunctionManager.CustomFunctionListener) return new CraftFunctionCommandSender(sender);
         if (sender instanceof Entity) return ((Entity) sender).getBukkitEntity();
-        if (sender instanceof FunctionManager.CustomFunctionListener) return((FunctionManager.CustomFunctionListener) sender).sender;
         return null;
     }
 }
