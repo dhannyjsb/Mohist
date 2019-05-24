@@ -8,7 +8,7 @@ public class Mohist implements Runnable{
 	public static Logger LOGGER;
 	private static String[] args;
 	private static final String name = "Mohist";
-	private static final String version = "0.0.8b";
+	private static final String version = "0.0.9";
 	private static final String native_verson = "v1_12_R1";
 	private static final String nms_prefix = "net/minecraft/server/";
 
