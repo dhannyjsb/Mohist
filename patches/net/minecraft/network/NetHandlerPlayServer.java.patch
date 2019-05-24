@@ -1712,11 +1712,24 @@
  
      public void processKeepAlive(CPacketKeepAlive packetIn)
      {
-+        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
++        //PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld()); // CraftBukkit // Paper - This shouldn't be on the main thread
          if (this.field_194403_g && packetIn.getKey() == this.field_194404_h)
          {
              int i = (int)(this.currentTimeMillis() - this.field_194402_f);
-@@ -1340,12 +2386,25 @@
+@@ -1328,7 +2374,11 @@
+         }
+         else if (!this.player.getName().equals(this.serverController.getServerOwner()))
+         {
+-            this.disconnect(new TextComponentTranslation("disconnect.timeout", new Object[0]));
++            // Paper start - This needs to be handled on the main thread for plugins
++            LOGGER.warn("{} sent an invalid keepalive! pending keepalive: {} got id: {} expected id: {}",
++                    this.player.getName(), this.field_194403_g,  packetIn.getKey(), this.field_194404_h);
++            serverController.addScheduledTask(() -> this.disconnect(new TextComponentTranslation("disconnect.timeout", new Object[0])));
++            // Paper end
+         }
+     }
+ 
+@@ -1340,12 +2390,25 @@
      public void processPlayerAbilities(CPacketPlayerAbilities packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1744,7 +1757,7 @@
          List<String> list = Lists.<String>newArrayList();
  
          for (String s : this.serverController.getTabCompletions(this.player, packetIn.getMessage(), packetIn.getTargetBlock(), packetIn.hasTargetBlock()))
-@@ -1369,6 +2428,11 @@
+@@ -1369,6 +2432,11 @@
  
          if ("MC|BEdit".equals(s))
          {
@@ -1756,7 +1769,7 @@
              PacketBuffer packetbuffer = packetIn.getBufferData();
  
              try
-@@ -1395,15 +2459,22 @@
+@@ -1395,15 +2463,22 @@
                  if (itemstack.getItem() == Items.WRITABLE_BOOK && itemstack.getItem() == itemstack1.getItem())
                  {
                      itemstack1.setTagInfo("pages", itemstack.getTagCompound().getTagList("pages", 8));
@@ -1779,7 +1792,7 @@
              PacketBuffer packetbuffer1 = packetIn.getBufferData();
  
              try
-@@ -1443,12 +2514,14 @@
+@@ -1443,12 +2518,14 @@
                      }
  
                      itemstack2.setTagInfo("pages", nbttaglist);
@@ -1795,7 +1808,7 @@
              }
          }
          else if ("MC|TrSel".equals(s))
-@@ -1466,6 +2539,7 @@
+@@ -1466,6 +2543,7 @@
              catch (Exception exception5)
              {
                  LOGGER.error("Couldn't select trade", (Throwable)exception5);
@@ -1803,7 +1816,7 @@
              }
          }
          else if ("MC|AdvCmd".equals(s))
-@@ -1528,6 +2602,7 @@
+@@ -1528,6 +2606,7 @@
              catch (Exception exception4)
              {
                  LOGGER.error("Couldn't set command block", (Throwable)exception4);
@@ -1811,7 +1824,7 @@
              }
          }
          else if ("MC|AutoCmd".equals(s))
-@@ -1606,6 +2681,7 @@
+@@ -1606,6 +2685,7 @@
              catch (Exception exception3)
              {
                  LOGGER.error("Couldn't set command block", (Throwable)exception3);
@@ -1819,7 +1832,7 @@
              }
          }
          else if ("MC|Beacon".equals(s))
-@@ -1632,6 +2708,7 @@
+@@ -1632,6 +2712,7 @@
                  catch (Exception exception2)
                  {
                      LOGGER.error("Couldn't set beacon", (Throwable)exception2);
@@ -1827,7 +1840,7 @@
                  }
              }
          }
-@@ -1743,6 +2820,7 @@
+@@ -1743,6 +2824,7 @@
              catch (Exception exception1)
              {
                  LOGGER.error("Couldn't set structure block", (Throwable)exception1);
@@ -1835,7 +1848,7 @@
              }
          }
          else if ("MC|PickItem".equals(s))
-@@ -1760,7 +2838,43 @@
+@@ -1760,7 +2842,43 @@
              catch (Exception exception)
              {
                  LOGGER.error("Couldn't pick item", (Throwable)exception);
