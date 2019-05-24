@@ -10,8 +10,8 @@ public class CachedSizeConcurrentLinkedQueue<E> extends ConcurrentLinkedQueue<E>
     public boolean add(E e) {
         boolean result = super.add(e);
         if (result) {
-                cachedSize.increment();
-            }
+            cachedSize.increment();
+        }
         return result;
     }
 
@@ -19,8 +19,8 @@ public class CachedSizeConcurrentLinkedQueue<E> extends ConcurrentLinkedQueue<E>
     public E poll() {
         E result = super.poll();
         if (result != null) {
-                cachedSize.decrement();
-            }
+            cachedSize.decrement();
+        }
         return result;
     }
 
