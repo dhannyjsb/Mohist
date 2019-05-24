@@ -5,12 +5,12 @@ import org.apache.logging.log4j.Logger;
 
 public class Mohist implements Runnable{
 
+	public static Logger LOGGER;
+	private static String[] args;
 	private static final String name = "Mohist";
 	private static final String version = "0.0.8b";
 	private static final String native_verson = "v1_12_R1";
-	public static Logger LOGGER;
-	private static final String bukkit_version = "1.12.2-R0.1-SNAPSHOT";
-	private static String[] args;
+	private static final String nms_prefix = "net/minecraft/server/";
 
 	public static String getName(){
 		return name;
@@ -24,8 +24,9 @@ public class Mohist implements Runnable{
         return native_verson;
     }
 
-	public static String getBukkitVersion() {
-		return bukkit_version;
+	public static String getNmsPrefix()
+	{
+		return nms_prefix;
 	}
 
 	public static void main(String[] args){
@@ -36,7 +37,6 @@ public class Mohist implements Runnable{
 
 	@Override
 	public void run() {
-
 		new ServerLaunchWrapper().run(args);
 	}
 }

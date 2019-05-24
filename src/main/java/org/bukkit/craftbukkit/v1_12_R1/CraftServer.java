@@ -141,6 +141,7 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
 import red.mohist.Mohist;
 import red.mohist.i18n.Message;
+import red.mohist.remapnms.ReflectionTransformer;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -324,6 +325,7 @@ public final class CraftServer implements Server {
     }
 
     public void loadPlugins() {
+        ReflectionTransformer.init();
         pluginManager.registerInterface(JavaPluginLoader.class);
 
         File pluginFolder = (File) console.options.valueOf("plugins");
