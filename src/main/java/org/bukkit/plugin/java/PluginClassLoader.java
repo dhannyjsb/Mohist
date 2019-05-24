@@ -10,7 +10,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import red.mohist.Mohist;
-import red.mohist.remapnms.MohistRemapper;
 import red.mohist.remapnms.ClassInheritanceProvider;
 import red.mohist.remapnms.MappingLoader;
 import red.mohist.remapnms.ReflectionTransformer;
@@ -66,7 +65,7 @@ final class PluginClassLoader extends URLClassLoader {
         provider.add(new ClassInheritanceProvider());
         provider.add(new ClassLoaderProvider(this));
         this.jarMapping.setFallbackInheritanceProvider(provider);
-        remapper = new MohistRemapper(jarMapping);
+        remapper = new JarRemapper(jarMapping);
 
         try {
             Class<?> jarClass;

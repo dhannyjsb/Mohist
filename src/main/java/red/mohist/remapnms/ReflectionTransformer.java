@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import net.md_5.specialsource.JarMapping;
+import net.md_5.specialsource.JarRemapper;
 import net.md_5.specialsource.provider.JointProvider;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -24,7 +25,7 @@ public class ReflectionTransformer {
     public static final String DESC_ReflectionMethods = Type.getInternalName(ReflectionMethods.class);
 
     public static JarMapping jarMapping;
-    public static MohistRemapper remapper;
+    public static JarRemapper remapper;
 
     public static final HashMap<String, String> classDeMapping = Maps.newHashMap();
     public static final Multimap<String, String> methodDeMapping = ArrayListMultimap.create();
@@ -44,7 +45,7 @@ public class ReflectionTransformer {
         JointProvider provider = new JointProvider();
         provider.add(new ClassInheritanceProvider());
         jarMapping.setFallbackInheritanceProvider(provider);
-        remapper = new MohistRemapper(jarMapping);
+        remapper = new JarRemapper(jarMapping);
 
         jarMapping.classes.forEach((k, v) -> classDeMapping.put(v, k));
         jarMapping.methods.forEach((k, v) -> methodDeMapping.put(v, k));

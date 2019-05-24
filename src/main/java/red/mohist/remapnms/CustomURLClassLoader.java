@@ -35,7 +35,7 @@ public class CustomURLClassLoader extends URLClassLoader
         provider.add(new ClassInheritanceProvider());
         provider.add(new ClassLoaderProvider(this));
         this.jarMapping.setFallbackInheritanceProvider(provider);
-        this.remapper = new MohistRemapper(this.jarMapping);
+        this.remapper = new JarRemapper(this.jarMapping);
     }
 
     public CustomURLClassLoader(final URL[] urls, final ClassLoader parent) {
