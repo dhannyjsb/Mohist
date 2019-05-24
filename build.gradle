@@ -6,9 +6,11 @@ buildscript {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
         maven { url 'https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository' }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.nemerosa:versioning:2.7.1'
     }
 }
 
@@ -17,9 +19,13 @@ apply plugin: 'maven'
 apply plugin: "idea"
 apply plugin: 'net.minecraftforge.gradle.patcher'
 apply plugin: 'net.minecraftforge.gradle.launch4j'
+apply plugin: 'net.nemerosa.versioning'
 
 group = 'red.mohist'
-version = '14.23.5.2838-0.0.9'
+version = '0.0.9-'+versioning {
+    full {it.abbreviated}
+    dirty = { t -> t }
+}.info.full
 
 repositories {
     clear()
