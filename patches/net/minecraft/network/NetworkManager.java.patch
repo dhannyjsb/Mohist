@@ -216,6 +216,15 @@
      {
          return this.channel instanceof LocalChannel || this.channel instanceof LocalServerChannel;
      }
+@@ -410,7 +421,7 @@
+             }
+             else
+             {
+-                this.channel.pipeline().addBefore("decoder", "decompress", new NettyCompressionDecoder(threshold));
++                this.channel.pipeline().addAfter("splitter", "decompress", new NettyCompressionDecoder(threshold));
+             }
+ 
+             if (this.channel.pipeline().get("compress") instanceof NettyCompressionEncoder)
 @@ -476,4 +487,12 @@
                  this.futureListeners = inFutureListeners;
              }
