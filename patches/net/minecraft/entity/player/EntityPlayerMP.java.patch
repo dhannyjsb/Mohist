@@ -721,7 +721,7 @@
          this.connection.sendPacket(new SPacketOpenWindow(this.currentWindowId, "EntityHorse", inventoryIn.getDisplayName(), inventoryIn.getSizeInventory(), horse.getEntityId()));
 -        this.openContainer = new ContainerHorseInventory(this.inventory, inventoryIn, horse, this);
 +        // this.openContainer = new ContainerHorseInventory(this.inventory, inventoryIn, horse, this);
-+        this.openContainer = container;
++        this.openContainer = container; // CraftBukkit - Use container we passed to event
          this.openContainer.windowId = this.currentWindowId;
          this.openContainer.addListener(this);
      }
@@ -729,9 +729,9 @@
      {
          this.connection.sendPacket(new SPacketWindowItems(containerToSend.windowId, itemsList));
          this.connection.sendPacket(new SPacketSetSlot(-1, -1, this.inventory.getItemStack()));
++        if (containerToSend.getBukkitView() == null) return; // Cauldron - allow vanilla mods to bypass
 +        // CraftBukkit start - Send a Set Slot to update the crafting result slot
-+        InventoryView bukkitView = containerToSend.getBukkitView();
-+        if (bukkitView != null && java.util.EnumSet.of(InventoryType.CRAFTING,InventoryType.WORKBENCH).contains(bukkitView.getType())) {
++        if (java.util.EnumSet.of(InventoryType.CRAFTING, InventoryType.WORKBENCH).contains(containerToSend.getBukkitView().getType())) {
 +            this.connection.sendPacket(new SPacketSetSlot(containerToSend.windowId, 0, containerToSend.getSlot(0).getStack()));
 +        }
 +        // CraftBukkit end
