@@ -142,7 +142,7 @@ public final class SimplePluginManager implements PluginManager {
                     continue;
                 }
             } catch (InvalidDescriptionException ex) {
-                Mohist.LOGGER.error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Description,new Object[]{file.getPath(),directory.getPath()}), ex);//by: lliiooll
                 continue;
             }
 
@@ -253,7 +253,7 @@ public final class SimplePluginManager implements PluginManager {
                         loadedPlugins.add(plugin);
                         continue;
                     } catch (InvalidPluginException ex) {
-                        Mohist.LOGGER.error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                        Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Plugin,new Object[]{file.getPath(),directory.getPath()}), ex);//by: lliiooll
                     }
                 }
             }
@@ -278,7 +278,7 @@ public final class SimplePluginManager implements PluginManager {
                             loadedPlugins.add(plugin);
                             break;
                         } catch (InvalidPluginException ex) {
-                            Mohist.LOGGER.error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                            Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Plugin,new Object[]{file.getPath(),directory.getPath()}),ex);//by: lliiooll
                         }
                     }
                 }

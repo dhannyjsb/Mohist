@@ -124,6 +124,12 @@ public enum Message {
     custom_map_seeds("custom.map.seeds"),
     max_tnt_per_tick("max-tnt.per.tick"),
     max_tick_time_tile("max.tick.time.tile"),
+
+    Exception_Could_not_load_plugin("exception.could.not.load.plugin"),
+    Exception_plugin_not_hav_depend("exception.plugin.not.hav.depend"),
+    Exception_Invalid_Plugin("exception.invalid.plugin"),
+    Exception_Invalid_Description("exception.invalid.description"),
+
     ;
 
     private final String value;
