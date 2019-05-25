@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/world/WorldType.java
++++ ../src-work/minecraft/net/minecraft/world/WorldType.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world;
+ 
++import net.minecraftforge.common.util.EnumHelper;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+@@ -33,6 +34,9 @@
+         this.canBeCreated = true;
+         this.id = id;
+         WORLD_TYPES[id] = this;
++        if (org.bukkit.WorldType.getByName(name) == null) {
++            EnumHelper.addBukkitWorldType(name);
++        }
+     }
+ 
+     public String getName()
