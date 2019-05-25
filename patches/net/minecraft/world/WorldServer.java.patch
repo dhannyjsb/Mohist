@@ -382,6 +382,15 @@
          }
  
          this.profiler.endStartSection("chunkSource");
+@@ -212,7 +377,7 @@
+             this.setSkylightSubtracted(j);
+         }
+ 
+-        this.worldInfo.setWorldTotalTime(this.worldInfo.getWorldTotalTime() + 1L);
++        this.worldInfo.tick();
+ 
+         if (this.getGameRules().getBoolean("doDaylightCycle"))
+         {
 @@ -236,6 +401,7 @@
          }
          this.profiler.endSection();
