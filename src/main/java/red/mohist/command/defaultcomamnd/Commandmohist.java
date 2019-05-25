@@ -5,6 +5,7 @@ import net.minecraft.server.MinecraftServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -63,6 +64,10 @@ public class Commandmohist extends Command {
                 // Not recommended for use in games, only test output
                 getCommands(sender);
                 break;
+            case "biomes":
+                // Not recommended for use in games, only test output
+                getBiomes(sender);
+                break;
             default:
                 sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
                 return false;
@@ -100,6 +105,12 @@ public class Commandmohist extends Command {
     private void getCommands(CommandSender sender){
         for (Command per : MinecraftServer.getServerInst().server.getCommandMap().getCommands()) {
             sender.sendMessage(per.getName());
+        }
+    }
+
+    private void getBiomes(CommandSender sender){
+        for (Biome biome : Biome.values()) {
+            sender.sendMessage(biome.name());
         }
     }
 }
