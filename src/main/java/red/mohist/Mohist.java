@@ -5,35 +5,35 @@ import org.apache.logging.log4j.Logger;
 
 public class Mohist implements Runnable{
 
-	public static Logger LOGGER;
-	public static ResourceBundle rb;
-	private static String[] args;
-	private static final String name = "Mohist";
-	private static final String version = "0.0.9";
-	private static final String native_verson = "v1_12_R1";
-	private static final String nms_prefix = "net/minecraft/server/";
+    public static Logger LOGGER;
+    public static ResourceBundle rb;
+    private static String[] args;
+    private static final String name = "Mohist";
+    private static final String version = "0.0.9";
+    private static final String native_verson = "v1_12_R1";
+    private static final String nms_prefix = "net/minecraft/server/";
 
-	public static String getName(){
-		return name;
-	}
+    public static String getName(){
+        return name;
+    }
 
-	public static String getVersion(){
-		return version;
-	}
+    public static String getVersion(){
+        return version;
+    }
 
     public static String getNativeVersion() {
         return native_verson;
     }
 
-	public static String getNmsPrefix()
-	{
-		return nms_prefix;
-	}
+    public static String getNmsPrefix()
+    {
+        return nms_prefix;
+    }
 
-	public static void main(String[] args){
-		File f = new File("mohist.yml");
+    public static void main(String[] args){
+        File f = new File("mohist.yml");
         YamlConfiguration y;
-        
+
         if(!f.exists()){
             try {
                 f.createNewFile();
@@ -56,13 +56,14 @@ public class Mohist implements Runnable{
         }else{
             rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(y.getString("locale")), new UTF8Control());
         }
-		Mohist.args = args;
-		Thread t = new Thread(new Mohist(),"Mohist");
-		t.start();
-	}
+        red.mohist.i18n.Message.rb = rb;
+        Mohist.args = args;
+        Thread t = new Thread(new Mohist(),"Mohist");
+        t.start();
+    }
 
-	@Override
-	public void run() {
-		new ServerLaunchWrapper().run(args);
-	}
+    @Override
+    public void run() {
+        new ServerLaunchWrapper().run(args);
+    }
 }
