@@ -1,5 +1,7 @@
 package red.mohist.i18n;
 
+import red.mohist.Mohist;
+
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
