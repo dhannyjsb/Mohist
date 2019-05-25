@@ -1,11 +1,16 @@
 package red.mohist;
 
-        import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
-        import org.apache.logging.log4j.Logger;
-        import red.mohist.i18n.UTF8Control;
-        import java.io.IOException;
-        import java.util.Locale;
-        import java.util.ResourceBundle;
+import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.configuration.file.YamlConfiguration;
+import red.mohist.i18n.UTF8Control;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class Mohist implements Runnable{
 
@@ -37,7 +42,6 @@ public class Mohist implements Runnable{
     public static void main(String[] args){
         File f = new File("mohist.yml");
         YamlConfiguration y;
-
         if(!f.exists()){
             try {
                 f.createNewFile();
@@ -55,12 +59,14 @@ public class Mohist implements Runnable{
             }
             y = YamlConfiguration.loadConfiguration(f);
         }
-        if(y.getString("locale").equalsIgnoreCase("default")){
-            rb = ResourceBundle.getBundle("assets.mohist.lang.message", Locale.getDefault(), new UTF8Control());
-        }else{
-            rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(y.getString("locale")), new UTF8Control());
+        switch (y.getString("locale")){
+            default:
+                rb = ResourceBundle.getBundle("assets.mohist.lang.message", Locale.getDefault(), new UTF8Control());
+            case "Default":
+                rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(y.getString("locale")), new UTF8Control());
+            case "default":
+                rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(y.getString("locale")), new UTF8Control());
         }
-        red.mohist.i18n.Message.rb = rb;
         Mohist.args = args;
         Thread t = new Thread(new Mohist(),"Mohist");
         t.start();
@@ -70,4 +76,5 @@ public class Mohist implements Runnable{
     public void run() {
         new ServerLaunchWrapper().run(args);
     }
+
 }

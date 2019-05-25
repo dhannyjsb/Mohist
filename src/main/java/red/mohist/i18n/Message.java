@@ -1,5 +1,7 @@
 package red.mohist.i18n;
 
+import red.mohist.Mohist;
+
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -126,7 +128,7 @@ public enum Message {
 
     private final String value;
     //public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
-    public static ResourceBundle rb;
+    public static ResourceBundle rb = Mohist.rb;
 
 
     public static String getString(Message key){
