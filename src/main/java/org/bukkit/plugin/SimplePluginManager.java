@@ -16,6 +16,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.util.FileUtil;
 import red.mohist.Mohist;
+import red.mohist.i18n.Message;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -215,8 +216,8 @@ public final class SimplePluginManager implements PluginManager {
 
                             server.getLogger().log(
                                 Level.SEVERE,
-                                "Could not load '" + entry.getValue().getPath() + "' in folder '" + directory.getPath() + "'",
-                                new UnknownDependencyException(dependency));
+                                    Message.getFormatString(Message.Exception_Could_not_load_plugin,new Object[]{entry.getValue().getPath(),directory.getPath()}),// by: lliioollcn
+                                new UnknownDependencyException(Message.getFormatString(Message.Exception_plugin_not_hav_depend,new Object[]{dependency})));
                             break;
                         }
                     }
