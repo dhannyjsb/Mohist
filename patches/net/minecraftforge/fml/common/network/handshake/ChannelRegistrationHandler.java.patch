@@ -1,26 +1,19 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
-@@ -45,6 +45,23 @@
-             msg.payload().readBytes(data);
-             String channels = new String(data, StandardCharsets.UTF_8);
-             String[] split = channels.split("\0");
-+            // Cauldron start - register bukkit channels for players
-+            NetworkDispatcher dispatcher = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get();
-+            if (msg.channel().equals("REGISTER"))
-+            {
-+                for (String channel : split)
-+                {
-+                    dispatcher.player.getBukkitEntity().addChannel(channel);
-+                }
-+            }
-+            else
-+            {
-+                for (String channel : split)
-+                {
-+                    dispatcher.player.getBukkitEntity().removeChannel(channel);
-+                }
-+            }
-+            // Cauldron end
+@@ -48,6 +48,16 @@
              Set<String> channelSet = ImmutableSet.copyOf(split);
              FMLCommonHandler.instance().fireNetRegistrationEvent(manager, channelSet, msg.channel(), side);
              msg.payload().release();
++            // Cauldron start - register bukkit channels for players
++            org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer player = ((net.minecraft.network.NetHandlerPlayServer) ctx.attr(NetworkDispatcher.FML_DISPATCHER).get().getNetHandler()).getPlayer();
++            if (msg.channel().equals("REGISTER")) {
++                for (String channel : channelSet)
++                    player.addChannel(channel);
++            } else {
++                for (String channel : channelSet)
++                    player.removeChannel(channel);
++            }
++            // Cauldron end
+         }
+         else
+         {
