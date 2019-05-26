@@ -130,6 +130,10 @@ public enum Message {
     Exception_Invalid_Plugin("exception.invalid.plugin"),
     Exception_Invalid_Description("exception.invalid.description"),
 
+    Use_Unkonw_Comamnd("use.unknow.command"),
+    outdated_Client("outdate.client"),
+    outdated_Server("outdate.server"),
+
     ;
 
     private final String value;

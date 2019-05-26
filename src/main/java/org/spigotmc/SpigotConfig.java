@@ -14,6 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import red.mohist.Mohist;
+import red.mohist.MohistConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -172,9 +173,9 @@ public class SpigotConfig
         tabComplete = getInt( "commands.tab-complete", 0 );
     }
 
-    public static String unknownCommandMessage;
-    public static String outdatedClientMessage = "Outdated client! Please use {0}";
-    public static String outdatedServerMessage = "Outdated server! I\'m still on {0}";
+    //public static String unknownCommandMessage;
+    public static String outdatedClientMessage = MohistConfig.outdatedClientMessage;
+    public static String outdatedServerMessage = MohistConfig.outdatedServerMessage;
     private static String transform(String s)
     {
         return ChatColor.translateAlternateColorCodes( '&', s ).replaceAll( "\\\\n", "\n" );
@@ -183,13 +184,13 @@ public class SpigotConfig
     {
         if (version < 8)
         {
-            set( "messages.outdated-client", outdatedClientMessage );
-            set( "messages.outdated-server", outdatedServerMessage );
+            //set( "messages.outdated-client", outdatedClientMessage );
+            //set( "messages.outdated-server", outdatedServerMessage );
         }
 
-        unknownCommandMessage = transform( getString( "messages.unknown-command", "Unknown command. Type \"/help\" for help." ) );
-        outdatedClientMessage = transform( getString( "messages.outdated-client", outdatedClientMessage ) );
-        outdatedServerMessage = transform( getString( "messages.outdated-server", outdatedServerMessage ) );
+        //unknownCommandMessage = transform( MohistConfig.unknownCommandMessage );
+        //outdatedClientMessage = transform(MohistConfig.outdatedClientMessage);
+        //outdatedServerMessage = transform( MohistConfig.outdatedServerMessage );
     }
 
     public static int timeoutTime = 60;
