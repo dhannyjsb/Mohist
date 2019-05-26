@@ -1,23 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/handshake/NetworkDispatcher.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/handshake/NetworkDispatcher.java
-@@ -103,7 +103,7 @@
-     public static final AttributeKey<Map<ResourceLocation, ForgeRegistry.Snapshot>> FML_GAMEDATA_SNAPSHOT = AttributeKey.valueOf("fml:gameDataSnapshot");
-     public final NetworkManager manager;
-     private final PlayerList scm;
--    private EntityPlayerMP player;
-+    public EntityPlayerMP player; // Cauldron
-     private ConnectionState state;
-     private ConnectionType connectionType;
-     private final Side side;
-@@ -347,6 +347,7 @@
-     private boolean handleClientSideCustomPacket(SPacketCustomPayload msg, ChannelHandlerContext context)
-     {
-         String channelName = msg.getChannelName();
-+        player.getBukkitEntity().addChannel(channelName); // Cauldron - register channel for bukkit player
-         if ("FML|MP".equals(channelName))
-         {
-             boolean result = handleMultiPartCustomPacket(msg, context);
-@@ -597,7 +598,7 @@
+@@ -597,7 +597,7 @@
              }
              else
              {

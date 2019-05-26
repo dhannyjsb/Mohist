@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/SaveHandler.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/SaveHandler.java
-@@ -1,13 +1,7 @@
+@@ -1,25 +1,42 @@
  package net.minecraft.world.storage;
  
 -import java.io.DataInputStream;
@@ -10,25 +10,47 @@
 -import java.io.FileOutputStream;
 -import java.io.IOException;
 -import javax.annotation.Nullable;
++import net.minecraft.block.Block;
++import net.minecraft.enchantment.Enchantment;
++import net.minecraft.entity.Entity;
  import net.minecraft.entity.player.EntityPlayer;
 +import net.minecraft.entity.player.EntityPlayerMP;
++import net.minecraft.item.Item;
  import net.minecraft.nbt.CompressedStreamTools;
  import net.minecraft.nbt.NBTTagCompound;
++import net.minecraft.potion.Potion;
  import net.minecraft.server.MinecraftServer;
-@@ -19,7 +13,12 @@
++import net.minecraft.util.ResourceLocation;
+ import net.minecraft.util.datafix.DataFixer;
+ import net.minecraft.util.datafix.FixTypes;
+ import net.minecraft.world.MinecraftException;
+ import net.minecraft.world.WorldProvider;
+ import net.minecraft.world.chunk.storage.IChunkLoader;
  import net.minecraft.world.gen.structure.template.TemplateManager;
++import net.minecraftforge.common.util.EnumHelper;
++import net.minecraftforge.fml.common.registry.EntityRegistry;
++import net.minecraftforge.fml.common.registry.ForgeRegistries;
++import net.minecraftforge.fml.relauncher.ReflectionHelper;
++import net.minecraftforge.registries.GameData;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
++import org.bukkit.Material;
++import org.bukkit.block.Biome;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftCustomEntity;
 +import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
++import org.bukkit.entity.EntityType;
++import org.bukkit.potion.PotionEffectType;
++import red.mohist.Mohist;
  
 +import javax.annotation.Nullable;
 +import java.io.*;
++import java.util.Map;
 +import java.util.UUID;
 +
  public class SaveHandler implements ISaveHandler, IPlayerFileData
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -31,6 +30,8 @@
+@@ -31,6 +48,8 @@
      private final TemplateManager structureTemplateManager;
      protected final DataFixer dataFixer;
  
@@ -37,7 +59,7 @@
      public SaveHandler(File p_i46648_1_, String saveDirectoryNameIn, boolean p_i46648_3_, DataFixer dataFixerIn)
      {
          this.dataFixer = dataFixerIn;
-@@ -208,7 +209,6 @@
+@@ -208,7 +227,6 @@
          try
          {
              File file1 = new File(this.playersDirectory, player.getCachedUniqueIdString() + ".dat");
@@ -45,7 +67,7 @@
              if (file1.exists() && file1.isFile())
              {
                  nbttagcompound = CompressedStreamTools.readCompressed(new FileInputStream(file1));
-@@ -221,6 +221,16 @@
+@@ -221,6 +239,16 @@
  
          if (nbttagcompound != null)
          {
@@ -62,7 +84,7 @@
              player.readFromNBT(this.dataFixer.process(FixTypes.PLAYER, nbttagcompound));
          }
  
-@@ -228,6 +238,22 @@
+@@ -228,6 +256,22 @@
          return nbttagcompound;
      }
  
@@ -85,7 +107,7 @@
      public IPlayerFileData getPlayerNBTManager()
      {
          return this;
-@@ -267,7 +293,7 @@
+@@ -267,7 +311,7 @@
          return this.structureTemplateManager;
      }
  
@@ -94,7 +116,7 @@
      {
          try
          {
-@@ -284,4 +310,50 @@
+@@ -284,4 +328,120 @@
          }
          return null;
      }
@@ -144,4 +166,74 @@
 +        return playersDirectory;
 +    }
 +    // CraftBukkit end
++
++    // Mohist start
++    public static void initBukkitData(WorldInfo worldInfo) {
++        // inject bukkit materials before plugins load
++        if ((worldInfo == null || worldInfo.getDimension() == 0))
++        {
++            for (Map.Entry<ResourceLocation, Item> entry : ForgeRegistries.ITEMS.getEntries()) {
++                ResourceLocation key = entry.getKey();
++                Item item = entry.getValue();
++                if(!key.getResourceDomain().equals("minecraft")) {
++                    String materialName = key.toString().toUpperCase().replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
++                    Material material = Material.addMaterial(EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Integer.TYPE}, new Object[]{Item.getIdFromItem(item), item.getItemStackLimit()}));
++                    if (material != null) {
++                        Mohist.LOGGER.debug("Injected new Forge item material " + material.name() + " with ID " + material.getId());
++                    } else {
++                        Mohist.LOGGER.debug("Inject item failure " + materialName + " with ID " + Item.getIdFromItem(item));
++                    }
++                }
++            }
++            for (Material material : Material.values()) {
++                if (material.getId() < 256)
++                    Material.addBlockMaterial(material);
++            }
++            for (Map.Entry<ResourceLocation, Block> entry : ForgeRegistries.BLOCKS.getEntries()) {
++                ResourceLocation key = entry.getKey();
++                Block block = entry.getValue();
++                if(!key.getResourceDomain().equals("minecraft")) {
++                    String materialName = key.toString().toUpperCase().replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
++                    Material material = Material.addBlockMaterial(EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE}, new Object[]{Block.getIdFromBlock(block)}));
++                    if (material != null) {
++                        Mohist.LOGGER.debug("Injected new Forge block material "+ material.name()+ " with ID " + material.getId());
++                    } else {
++                        Mohist.LOGGER.debug("Inject block failure " + materialName + " with ID " +  Block.getIdFromBlock(block));
++                    }
++                }
++            }
++            Map<String, EntityType> NAME_MAP = ReflectionHelper.getPrivateValue(EntityType.class, null, "NAME_MAP");
++            Map<Short, EntityType> ID_MAP = ReflectionHelper.getPrivateValue(EntityType.class, null, "ID_MAP");
++
++            for (Map.Entry<String, Class<? extends Entity>> entity : EntityRegistry.entityClassMap.entrySet()) {
++                String entityname = entity.getKey();
++                String entityType = entityname.replace("-", "_").toUpperCase();
++
++                int typeId = GameData.getEntityRegistry().getID(EntityRegistry.getEntry(entity.getValue()));
++                EntityType bukkitType = EnumHelper.addEnum(EntityType.class, entityType, new Class[] { String.class, Class.class, Integer.TYPE, Boolean.TYPE }, new Object[] { entityname, CraftCustomEntity.class, typeId, false });
++
++                NAME_MAP.put(entityname.toLowerCase(), bukkitType);
++                ID_MAP.put((short)typeId, bukkitType);
++            }
++            for (Object enchantment : Enchantment.REGISTRY) {
++                org.bukkit.enchantments.Enchantment.registerEnchantment(new org.bukkit.craftbukkit.v1_12_R1.enchantments.CraftEnchantment((Enchantment) enchantment));
++            }
++            org.bukkit.enchantments.Enchantment.stopAcceptingRegistrations();
++            for (Object effect : Potion.REGISTRY) {
++                PotionEffectType.registerPotionEffectType(new org.bukkit.craftbukkit.v1_12_R1.potion.CraftPotionEffectType((Potion) effect));
++            }
++            PotionEffectType.stopAcceptingRegistrations();
++            b:
++            for (Map.Entry<ResourceLocation, net.minecraft.world.biome.Biome> entry : ForgeRegistries.BIOMES.getEntries()) {
++                String biomeName = entry.getKey().getResourcePath().toUpperCase(java.util.Locale.ENGLISH);
++                for (Biome biome : Biome.values()) {
++                    if (biome.toString().equals(biomeName)) continue b;
++                }
++                EnumHelper.addBukkitBiome(biomeName);
++            }
++            MinecraftServer.getServerInst().server.loadPlugins();
++            MinecraftServer.getServerInst().server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
++        }
++    }
++    // Mohist end
  }

@@ -28,7 +28,7 @@
 -            this.structureData = (MapGenStructureData)worldIn.getPerWorldStorage().getOrLoadData(MapGenStructureData.class, this.getStructureName());
 -
 +            // Spigot Start
-+            if (worldIn.spigotConfig.saveStructureInfo) {
++            if (worldIn.spigotConfig.saveStructureInfo && !this.getStructureName().equals("Mineshaft")) { // // Cauldron
 +                this.structureData = (MapGenStructureData)worldIn.getPerWorldStorage().getOrLoadData(MapGenStructureData.class, this.getStructureName());
 +            } else {
 +                this.structureData = new MapGenStructureData(this.getStructureName());
