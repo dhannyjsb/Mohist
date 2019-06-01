@@ -76,11 +76,9 @@ public class Download {
             if(logOut){
                 System.out.println(Message.getString(Message.Dw_Start));
             }
-
             while ( (count = is.read(buff)) != -1) {
-                Object[] o = {fileName,file.length(),l};
                 if(logOut){
-                    System.out.println(Message.getFormatString(Message.Dw_Now,o));
+                    System.out.println(Message.getFormatString(Message.Dw_Now,new Object[]{fileName,"" + file.length(),l}));
                 }
                 bos.write(buff, 0, count);
             }

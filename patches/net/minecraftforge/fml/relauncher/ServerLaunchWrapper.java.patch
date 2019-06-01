@@ -63,8 +63,8 @@
 +        Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
 +        j = System.nanoTime();
  
-+        Thread t = new Thread(new Update(),"Mohist Update Thread");
-+        t.run();
++        //Thread t = new Thread(new Update(),"Mohist Update Thread");
++        //t.run();
 +
          try
          {

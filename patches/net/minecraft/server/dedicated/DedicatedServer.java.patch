@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/server/dedicated/DedicatedServer.java
 +++ ../src-work/minecraft/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -1,21 +1,13 @@
+@@ -1,21 +1,14 @@
  package net.minecraft.server.dedicated;
  
 -import com.google.common.collect.Lists;
@@ -28,7 +28,7 @@
  import net.minecraft.command.ICommandSender;
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.ICrashReportDetail;
-@@ -38,35 +30,47 @@
+@@ -38,35 +31,47 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
@@ -87,7 +87,7 @@
          Thread thread = new Thread("Server Infinisleeper")
          {
              {
-@@ -96,16 +100,16 @@
+@@ -96,16 +101,16 @@
          {
              public void run()
              {
@@ -107,7 +107,7 @@
                  }
                  catch (IOException ioexception1)
                  {
-@@ -113,9 +117,30 @@
+@@ -113,9 +118,30 @@
                  }
              }
          };
@@ -139,7 +139,7 @@
  
          if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
          {
-@@ -125,7 +150,7 @@
+@@ -125,7 +151,7 @@
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStart(this);
  
          LOGGER.info("Loading properties");
@@ -148,7 +148,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -144,7 +169,7 @@
+@@ -144,7 +170,7 @@
              {
                  this.setOnlineMode(this.settings.getBooleanProperty("online-mode", true));
                  this.setPreventProxyConnections(this.settings.getBooleanProperty("prevent-proxy-connections", false));
@@ -157,7 +157,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +206,23 @@
+@@ -181,10 +207,23 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -182,7 +182,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +234,7 @@
+@@ -196,15 +235,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -199,7 +199,7 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,8 +247,7 @@
+@@ -217,8 +248,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -209,7 +209,7 @@
  
                  if (this.getFolderName() == null)
                  {
-@@ -268,11 +297,16 @@
+@@ -268,11 +298,16 @@
                  if (!net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerAboutToStart(this)) return false;
                  LOGGER.info("Preparing level \"{}\"", (Object)this.getFolderName());
                  this.loadAllWorlds(this.getFolderName(), this.getFolderName(), k, worldtype, s2);
@@ -229,7 +229,7 @@
                  if (this.settings.hasProperty("announce-player-achievements"))
                  {
                      this.worlds[0].getGameRules().setOrCreateGameRule("announceAdvancements", this.settings.getBooleanProperty("announce-player-achievements", true) ? "true" : "false");
-@@ -292,16 +326,28 @@
+@@ -292,16 +327,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -264,7 +264,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +473,19 @@
+@@ -427,11 +474,19 @@
  
      public void executePendingCommands()
      {
@@ -288,7 +288,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -592,8 +646,11 @@
+@@ -592,8 +647,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -302,7 +302,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +741,66 @@
+@@ -684,13 +742,66 @@
  
      public String getPlugins()
      {
