@@ -66,7 +66,7 @@ public class Update {
         int size = ja.size();
         String releasesDate = json.getString("created_at").replaceAll("T","T ");
         String releasesMsg = json.getString("body");
-        Bukkit.getConsoleSender().sendMessage(pre + "共有 §e" + size + "§f 个文件");
+        Mohist.LOGGER.info(pre + "共有 §e" + size + "§f 个文件");
         for (int i = 0;i < size;i++){
             Mohist.LOGGER.info(pre + "开始下载...");
             new Download(ja.getJSONObject(i).getString("browser_download_url"),"Mohist-update.jar");
