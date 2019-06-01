@@ -7,8 +7,10 @@ import org.bukkit.Bukkit;
 import red.mohist.Mohist;
 import red.mohist.down.Download;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,40 +20,38 @@ public class Update {
     private static String pre = "§c§l[§bMohist更新程序§c§l] §b";
 
     public static boolean getUpdate(){
-        try {
-            URL u = new URL("https://api.github.com/repos/PFCraft/Mohist/releases/latest");
-            HttpURLConnection conn = (HttpURLConnection) u.openConnection();
-            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("contentType", "UTF-8");
-            InputStream in = conn.getInputStream();
-            int i = 0;
-            int n = 0;
-            byte[] b = new byte[1024];
-            while((i = in.read()) != -1) {
-                b[n] = (byte) i;
-                n++;
+        //请求的url
+        URL url = null;
+        //建立的http链接
+        HttpURLConnection httpConn = null;
+        //请求的输入流
+        BufferedReader in = null;
+        //输入流的缓冲
+        StringBuffer sb = new StringBuffer();
+        try{
+            url = new URL("https://api.github.com/repos/PFCraft/Mohist/releases/latest");
+            in = new BufferedReader(new InputStreamReader(url.openStream(),"UTF-8") );
+            String str = null;
+            //一行一行进行读入
+            while((str = in.readLine()) != null) {
+                sb.append( str );
             }
-            String jsonText = new String(b,0,n);
-
-            JSONObject json = JSON.parseObject(jsonText);
-            String version = json.getString("name");
-            if(!version.equals(Mohist.getVersion())){
-                return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally{
+            try{
+                if(in!=null) {
+                    in.close(); //关闭流
+                }
+            }catch(IOException ex) {
+                ex.printStackTrace();
             }
-            //String releasesPeople;
-            //String downloadUrl;
-            //String releasesDate;
-            //String fileName;
-            //String releasesMsg;
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        String jsonText =sb.toString();
+        JSONObject json = JSON.parseObject(jsonText);
+        String version = json.getString("name");
+        if(!version.equals(Mohist.getVersion())) {
+            return true;
         }
         return false;
     }
@@ -78,30 +78,34 @@ public class Update {
     }
 
     private static JSONObject getJson(){
-        String jsonText = null;
-        try {
-            URL u = new URL("https://api.github.com/repos/PFCraft/Mohist/releases/latest");
-            HttpURLConnection conn = (HttpURLConnection) u.openConnection();
-            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("contentType", "UTF-8");
-            InputStream in = conn.getInputStream();
-            int i = 0;
-            int n = 0;
-            byte[] b = new byte[1024];
-            while((i = in.read()) != -1) {
-                b[n] = (byte) i;
-                n++;
+        //请求的url
+        URL url = null;
+        //建立的http链接
+        HttpURLConnection httpConn = null;
+        //请求的输入流
+        BufferedReader in = null;
+        //输入流的缓冲
+        StringBuffer sb = new StringBuffer();
+        try{
+            url = new URL("https://api.github.com/repos/PFCraft/Mohist/releases/latest");
+            in = new BufferedReader(new InputStreamReader(url.openStream(),"UTF-8") );
+            String str = null;
+            //一行一行进行读入
+            while((str = in.readLine()) != null) {
+                sb.append( str );
             }
-            jsonText = new String(b,0,n);
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally{
+            try{
+                if(in!=null) {
+                    in.close(); //关闭流
+                }
+            }catch(IOException ex) {
+                ex.printStackTrace();
+            }
         }
+        String jsonText =sb.toString();
         return JSON.parseObject(jsonText);
     }
 }
