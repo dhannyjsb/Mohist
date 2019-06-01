@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
 import red.mohist.down.Download;
+import red.mohist.i18n.Message;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -15,17 +16,19 @@ import java.net.URL;
 
 public class Update implements Runnable{
 
-    private static String pre = "¡ìc¡ìl[¡ìbMohist¸üĞÂ³ÌĞò¡ìc¡ìl] ¡ìb";
+    private static String pre = Message.getString(Message.Mohist_update_program);
 
     public static boolean getUpdate(){
         JSONObject json = getJson();
         String version = json.getString("name");
         if(!version.equals(Mohist.getVersion())) {
-            Mohist.LOGGER.info(pre + "·¢ÏÖ¸üĞÂ,×îĞÂ°æ±¾ºÅÎª: ¡ì7(¡ìe" + version + "¡ì7) ¡ìbÄ¿Ç°°æ±¾Îª: ¡ì7(¡ìe" + Mohist.getVersion() + "¡ì7)");
+			Mohist.LOGGER.info(pre + Message.getFormatString(Message.Mohist_update_program_check_hasupdate,new Object[] {version,Mohist.getVersion()}));
+            //Mohist.LOGGER.info(pre + "å‘ç°æ›´æ–°,æœ€æ–°ç‰ˆæœ¬å·ä¸º: Â§7(Â§e" + version + "Â§7) Â§bç›®å‰ç‰ˆæœ¬ä¸º: Â§7(Â§e" + Mohist.getVersion() + "Â§7)");
             return true;
         }
-        Mohist.LOGGER.info(pre + "Ã»ÓĞ·¢ÏÖ¸üĞÂ,×îĞÂ°æ±¾ºÅÎª: ¡ì7(¡ìe" + version + "¡ì7) ¡ìbÄ¿Ç°°æ±¾Îª: ¡ì7(¡ìe" + Mohist.getVersion() + "¡ì7)");
-        Mohist.LOGGER.info(pre + "Èç¹ûÄã²»ÏëÆôÓÃ¸üĞÂ¼ì²â£¬ÇëÔÚmohist.ymlÀïµÄupdateµÄautogetÉèÎªflase");
+		Mohist.LOGGER.info(pre + Message.getFormatString(Message.Mohist_update_program_check_noupdate,new Object[] {version,Mohist.getVersion()}));
+        //Mohist.LOGGER.info(pre + "æ²¡æœ‰å‘ç°æ›´æ–°,æœ€æ–°ç‰ˆæœ¬å·ä¸º: Â§7(Â§e" + version + "Â§7) Â§bç›®å‰ç‰ˆæœ¬ä¸º: Â§7(Â§e" + Mohist.getVersion() + "Â§7)");
+        Mohist.LOGGER.info(pre + Message.getString(Message.Mohist_update_program_tips_stopautoget));
         return false;
     }
 
@@ -39,31 +42,26 @@ public class Update implements Runnable{
         int size = ja.size();
         String releasesDate = json.getString("created_at").replaceAll("T","T ");
         String releasesMsg = json.getString("body");
-        Mohist.LOGGER.info(pre + "¹²ÓĞ ¡ìe" + size + "¡ìb ¸öÎÄ¼ş");
+        Mohist.LOGGER.info(pre + "Total Â§e" + size + "Â§b Files");
         for (int i = 0;i < size;i++){
-            Mohist.LOGGER.info(pre + "¿ªÊ¼ÏÂÔØ...");
+            Mohist.LOGGER.info(pre + Message.getString(Message.Dw_Start));
             new Download(ja.getJSONObject(i).getString("browser_download_url"),"Mohist-update.jar",true);
-            Mohist.LOGGER.info(pre + "¸üĞÂÏûÏ¢: ¡ìe" + releasesMsg);
-            Mohist.LOGGER.info(pre + "·¢²¼ÈÕÆÚ: ¡ìe" + releasesDate);
+            Mohist.LOGGER.info(pre + Message.getFormatString(Message.Mohist_update_message,new Object[] {releasesMsg}));
+            Mohist.LOGGER.info(pre + Message.getFormatString(Message.Mohist_update_date,new Object[] {releasesDate}));
         }
 
 
     }
 
     private static JSONObject getJson(){
-        //ÇëÇóµÄurl
         URL url = null;
-        //½¨Á¢µÄhttpÁ´½Ó
         HttpURLConnection httpConn = null;
-        //ÇëÇóµÄÊäÈëÁ÷
         BufferedReader in = null;
-        //ÊäÈëÁ÷µÄ»º³å
         StringBuffer sb = new StringBuffer();
         try{
             url = new URL("https://api.github.com/repos/PFCraft/Mohist/releases/latest");
             in = new BufferedReader(new InputStreamReader(url.openStream(),"UTF-8") );
             String str = null;
-            //Ò»ĞĞÒ»ĞĞ½øĞĞ¶ÁÈë
             while((str = in.readLine()) != null) {
                 sb.append( str );
             }
@@ -72,7 +70,7 @@ public class Update implements Runnable{
         } finally{
             try{
                 if(in!=null) {
-                    in.close(); //¹Ø±ÕÁ÷
+                    in.close(); 
                 }
             }catch(IOException ex) {
                 ex.printStackTrace();
@@ -86,13 +84,13 @@ public class Update implements Runnable{
     public void run() {
         if(MohistConfig.config.getBoolean("update.autoget")){
             if(Update.getUpdate()){
-                Mohist.LOGGER.info(pre + "½«ÎªÄúÔÚºóÌ¨ÏÂÔØ¸üĞÂ...");
+                //Mohist.LOGGER.info(pre + "å°†ä¸ºæ‚¨åœ¨åå°ä¸‹è½½æ›´æ–°...");
                 if(!new File("Mohist-update.jar").exists()){
                     Update.downloadUpdate();
                 }
-                Mohist.LOGGER.info(pre + "ÏÂÔØÍê±Ï,Çë½«¸ùÄ¿Â¼ÏÂµÄ Mohist-update.jarÎÄ¼şÌæ»»±¾¶Ë²¢É¾³ıMohist-update.jar£¬½«libraries.zip½âÑ¹Ìæ»»librariesÎÄ¼ş¼Ğ");
+                Mohist.LOGGER.info(pre + Message.getString(Message.Mohist_update_program_tips_done));
             }
         }else
-            Mohist.LOGGER.info(pre + "×Ô¶¯¸üĞÂÎ´ÆôÓÃ");
+            Mohist.LOGGER.info(pre + Message.getString(Message.Mohist_update_program_tips_false));
     }
 }

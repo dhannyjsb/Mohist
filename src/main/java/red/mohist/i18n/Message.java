@@ -135,7 +135,16 @@ public enum Message {
     outdated_Server("outdate.server"),
 
     Server_Start_Done("server.start.done"),
-
+	
+	Mohist_update_program("mohist.update.program"),
+	Mohist_update_program_check_hasupdate("mohist.update.program.check.hasupdate"),
+	Mohist_update_program_check_noupdate("mohist.update.program.check.noupdate"),
+	Mohist_update_program_tips_stopautoget("mohist.update.program.tips.stopautoget"),
+	Mohist_update_message("mohist.update.message"),
+	Mohist_update_date("mohist.update.date"),
+	Mohist_update_program_tips_done("mohist.update.program.tips.done"),
+	Mohist_update_program_tips_false("mohist.update.program.tips.false"),
+	
     ;
 
     private final String value;

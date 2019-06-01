@@ -61,6 +61,7 @@ public class MohistConfig {
             set("messages.Outdate-Client",outdatedClientMessage);
             set("messages.Outdate-Server",outdatedServerMessage);
             set("update.version","Stable");
+			set("update.autoget",false);
         }
         unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
         outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
