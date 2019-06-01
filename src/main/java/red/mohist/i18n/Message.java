@@ -134,6 +134,8 @@ public enum Message {
     outdated_Client("outdate.client"),
     outdated_Server("outdate.server"),
 
+    Server_Start_Done("server.start.done"),
+
     ;
 
     private final String value;

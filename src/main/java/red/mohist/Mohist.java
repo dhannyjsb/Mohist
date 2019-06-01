@@ -77,9 +77,6 @@ public class Mohist implements Runnable{
 
     @Override
     public void run() {
-        if(Update.getUpdate()){
-            Update.downloadUpdate();
-        }
         new ServerLaunchWrapper().run(args);
     }
 
