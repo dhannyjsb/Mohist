@@ -46,7 +46,7 @@ configurations.all {
 
 dependencies {
     compile 'org.avaje:ebean:2.8.1'
-    
+    /*
     compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'com.mojang:patchy:1.1'
     compile 'oshi-project:oshi-core:1.1'
@@ -98,7 +98,7 @@ dependencies {
     compile 'net.md-5:bungeecord-chat:1.12-SNAPSHOT'
 
     compile 'com.alibaba:fastjson:1.2.58'
-
+*/
 }
 
 minecraft.version = "1.12.2"
