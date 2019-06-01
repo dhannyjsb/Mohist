@@ -48,8 +48,10 @@ dependencies {
     compile 'org.avaje:ebean:2.8.1'
     compile 'com.alibaba:fastjson:1.2.58'
 
-
-
+    // 以下库仅仅是为了让开发人员更好的开发
+    // 以下庫僅僅是為了讓開發人員更好的開發
+    // The following libraries are just for better development by developers
+    // 以下のライブラリは開発者がより良い開発をするためだけです。
     compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'com.mojang:patchy:1.1'
     compile 'oshi-project:oshi-core:1.1'
