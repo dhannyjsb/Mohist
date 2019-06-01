@@ -20,39 +20,13 @@ public class Update {
     private static String pre = "§c§l[§bMohist更新程序§c§l] §b";
 
     public static boolean getUpdate(){
-        //请求的url
-        URL url = null;
-        //建立的http链接
-        HttpURLConnection httpConn = null;
-        //请求的输入流
-        BufferedReader in = null;
-        //输入流的缓冲
-        StringBuffer sb = new StringBuffer();
-        try{
-            url = new URL("https://api.github.com/repos/PFCraft/Mohist/releases/latest");
-            in = new BufferedReader(new InputStreamReader(url.openStream(),"UTF-8") );
-            String str = null;
-            //一行一行进行读入
-            while((str = in.readLine()) != null) {
-                sb.append( str );
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally{
-            try{
-                if(in!=null) {
-                    in.close(); //关闭流
-                }
-            }catch(IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-        String jsonText =sb.toString();
-        JSONObject json = JSON.parseObject(jsonText);
+        JSONObject json = getJson();
         String version = json.getString("name");
         if(!version.equals(Mohist.getVersion())) {
+            Mohist.LOGGER.info(pre + "发现更新,最新版本号为: §e" + version + " §b目前版本为: §e" + Mohist.getVersion());
             return true;
         }
+        Mohist.LOGGER.info(pre + "没有发现更新,最新版本号为: §e" + version + " §b目前版本为: §e" + Mohist.getVersion());
         return false;
     }
 
@@ -63,7 +37,8 @@ public class Update {
         String releasesPeople = json.getJSONObject("author").getString("login");
 
         JSONArray ja = json.getJSONArray("assets");
-        int size = ja.size();
+        //int size = ja.size();
+        int size = 1;
         String releasesDate = json.getString("created_at").replaceAll("T","T ");
         String releasesMsg = json.getString("body");
         Mohist.LOGGER.info(pre + "共有 §e" + size + "§f 个文件");
