@@ -4,6 +4,7 @@ import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.configuration.file.YamlConfiguration;
 import red.mohist.i18n.UTF8Control;
+import red.mohist.update.Update;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,6 +77,9 @@ public class Mohist implements Runnable{
 
     @Override
     public void run() {
+        if(Update.getUpdate()){
+            Update.downloadUpdate();
+        }
         new ServerLaunchWrapper().run(args);
     }
 

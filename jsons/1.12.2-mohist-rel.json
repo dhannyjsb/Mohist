@@ -203,6 +203,12 @@
       "url" : "http://files.minecraftforge.net/maven/",
       "clientreq":true,
       "serverreq":true
+    },
+	{
+      "name": "com.alibaba:fastjson:1.2.58",
+      "url" : "http://repo.maven.apache.org/maven2",
+	  "clientreq":true,
+      "serverreq":true
     }
   ]
 },

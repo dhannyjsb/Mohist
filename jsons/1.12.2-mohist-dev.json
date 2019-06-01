@@ -137,6 +137,11 @@
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "children" : ["sources"],
       "url" : "http://repo.maven.apache.org/maven2"
+    },
+	{
+      "name": "com.alibaba:fastjson:1.2.58",
+      "children" : ["sources"],
+      "url" : "http://repo.maven.apache.org/maven2"
     }
   ]
 }

@@ -28,7 +28,8 @@ public class MohistConfig {
     public static String outdatedClientMessage = Message.getString(Message.outdated_Client);
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
     private static File CONFIG_FILE;
-    private static final String HEADER = "This is the main configuration file for Mohist.";
+    private static final String HEADER = "This is the main configuration file for Mohist.\n"
+            + "You can change \"update: \n  version: Stable or Debug to get universal version or debug version\"\n";
     /*========================================================================*/
     public static YamlConfiguration config;
     static int version;
@@ -55,9 +56,11 @@ public class MohistConfig {
         version = getInt("config-version", 1);
         set("config-version", 1);
         if(version < 0){
+            config.options().header("");
             set("messages.use-unknow-command",unknownCommandMessage);
             set("messages.Outdate-Client",outdatedClientMessage);
             set("messages.Outdate-Server",outdatedServerMessage);
+            set("update.version","Stable");
         }
         unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
         outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
