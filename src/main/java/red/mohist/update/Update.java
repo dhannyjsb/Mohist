@@ -15,7 +15,7 @@ import java.net.URL;
 
 public class Update {
 
-    private static String pre = "¡ìc¡ìl[¡ìbMohist¸üĞÂ³ÌĞò¡ìc¡ìl] ¡ìb";
+    private static String pre = "Â§cÂ§l[Â§bMohistæ›´æ–°ç¨‹åºÂ§cÂ§l] Â§b";
 
     public static boolean getUpdate(){
         try {
@@ -66,12 +66,12 @@ public class Update {
         int size = ja.size();
         String releasesDate = json.getString("created_at").replaceAll("T","T ");
         String releasesMsg = json.getString("body");
-        Bukkit.getConsoleSender().sendMessage(pre + "¹²ÓĞ ¡ìe" + size + "¡ìf ¸öÎÄ¼ş");
+        Bukkit.getConsoleSender().sendMessage(pre + "å…±æœ‰ Â§e" + size + "Â§f ä¸ªæ–‡ä»¶");
         for (int i = 0;i < size;i++){
-            Bukkit.getConsoleSender().sendMessage(pre + "¿ªÊ¼ÏÂÔØ...");
+            Bukkit.getConsoleSender().sendMessage(pre + "å¼€å§‹ä¸‹è½½...");
             new Download(ja.getJSONObject(i).getString("browser_download_url"),"Mohist-update.jar");
-            Bukkit.getConsoleSender().sendMessage(pre + "¸üĞÂÏûÏ¢: ¡ìe" + releasesMsg);
-            Bukkit.getConsoleSender().sendMessage(pre + "·¢²¼ÈÕÆÚ: ¡ìe" + releasesDate);
+            Bukkit.getConsoleSender().sendMessage(pre + "æ›´æ–°æ¶ˆæ¯: Â§e" + releasesMsg);
+            Bukkit.getConsoleSender().sendMessage(pre + "å‘å¸ƒæ—¥æœŸ: Â§e" + releasesDate);
         }
 
 
