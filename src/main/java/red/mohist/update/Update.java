@@ -23,10 +23,10 @@ public class Update {
         JSONObject json = getJson();
         String version = json.getString("name");
         if(!version.equals(Mohist.getVersion())) {
-            Mohist.LOGGER.info(pre + "发现更新,最新版本号为: §e" + version + " §b目前版本为: §e" + Mohist.getVersion());
+            System.out.println(pre + "发现更新,最新版本号为: §e" + version + " §b目前版本为: §e" + Mohist.getVersion());
             return true;
         }
-        Mohist.LOGGER.info(pre + "没有发现更新,最新版本号为: §e" + version + " §b目前版本为: §e" + Mohist.getVersion());
+        System.out.println(pre + "没有发现更新,最新版本号为: §e" + version + " §b目前版本为: §e" + Mohist.getVersion());
         return false;
     }
 
@@ -37,16 +37,15 @@ public class Update {
         String releasesPeople = json.getJSONObject("author").getString("login");
 
         JSONArray ja = json.getJSONArray("assets");
-        //int size = ja.size();
-        int size = 1;
+        int size = ja.size();
         String releasesDate = json.getString("created_at").replaceAll("T","T ");
         String releasesMsg = json.getString("body");
-        Mohist.LOGGER.info(pre + "共有 §e" + size + "§f 个文件");
+        System.out.println(pre + "共有 §e" + size + "§f 个文件");
         for (int i = 0;i < size;i++){
-            Mohist.LOGGER.info(pre + "开始下载...");
+            System.out.println(pre + "开始下载...");
             new Download(ja.getJSONObject(i).getString("browser_download_url"),"Mohist-update.jar");
-            Mohist.LOGGER.info(pre + "更新消息: §e" + releasesMsg);
-            Mohist.LOGGER.info(pre + "发布日期: §e" + releasesDate);
+            System.out.println(pre + "更新消息: §e" + releasesMsg);
+            System.out.println(pre + "发布日期: §e" + releasesDate);
         }
 
 
