@@ -28,8 +28,8 @@ public class Download {
             int count = 0;
             System.out.println(Message.getString(Message.Dw_Start));
             while ( (count = is.read(buff)) != -1) {
-                Object[] o = {fileName,file.length(),l};
-                System.out.println(Message.getFormatString(Message.Dw_Now,o));
+                String s =  String.valueOf(file.length()).replaceAll(",","");
+                System.out.println(Message.getFormatString(Message.Dw_Now,new Object[]{fileName,s.replaceAll(" ",""),l}));
                 bos.write(buff, 0, count);
             }
         }
@@ -78,7 +78,8 @@ public class Download {
             }
             while ( (count = is.read(buff)) != -1) {
                 if(logOut){
-                    System.out.println(Message.getFormatString(Message.Dw_Now,new Object[]{fileName,"" + file.length(),l}));
+                    String s =  String.valueOf(file.length()).replaceAll(",","");
+                    System.out.println(Message.getFormatString(Message.Dw_Now,new Object[]{fileName,s.replaceAll(" ",""),l}));
                 }
                 bos.write(buff, 0, count);
             }
