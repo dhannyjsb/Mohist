@@ -82,6 +82,7 @@ public class Update implements Runnable{
 
     @Override
     public void run() {
+		/*
         if(MohistConfig.config.getBoolean("update.autoget")){
             if(Update.getUpdate()){
                 //Mohist.LOGGER.info(pre + "将为您在后台下载更新...");
@@ -92,5 +93,6 @@ public class Update implements Runnable{
             }
         }else
             Mohist.LOGGER.info(pre + Message.getString(Message.Mohist_update_program_tips_false));
+		*/
     }
 }
