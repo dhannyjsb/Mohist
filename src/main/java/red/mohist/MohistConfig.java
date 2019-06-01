@@ -56,7 +56,7 @@ public class MohistConfig {
         version = getInt("config-version", 1);
         set("config-version", 1);
         if(version < 0){
-            config.options().header("");
+            config.options().header(HEADER);
             set("messages.use-unknow-command",unknownCommandMessage);
             set("messages.Outdate-Client",outdatedClientMessage);
             set("messages.Outdate-Server",outdatedServerMessage);
