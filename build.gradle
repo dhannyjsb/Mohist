@@ -46,6 +46,9 @@ configurations.all {
 
 dependencies {
     compile 'org.avaje:ebean:2.8.1'
+    compile 'com.alibaba:fastjson:1.2.58'
+    
+    
     /*
     compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'com.mojang:patchy:1.1'
@@ -96,8 +99,6 @@ dependencies {
     compile 'org.xerial:sqlite-jdbc:3.21.0.1'
     compile 'mysql:mysql-connector-java:5.1.45'
     compile 'net.md-5:bungeecord-chat:1.12-SNAPSHOT'
-
-    compile 'com.alibaba:fastjson:1.2.58'
 */
 }
 

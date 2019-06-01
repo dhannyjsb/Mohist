@@ -68,10 +68,10 @@ public class Update {
         String releasesMsg = json.getString("body");
         Bukkit.getConsoleSender().sendMessage(pre + "共有 §e" + size + "§f 个文件");
         for (int i = 0;i < size;i++){
-            Bukkit.getConsoleSender().sendMessage(pre + "开始下载...");
+            Mohist.LOGGER.info(pre + "开始下载...");
             new Download(ja.getJSONObject(i).getString("browser_download_url"),"Mohist-update.jar");
-            Bukkit.getConsoleSender().sendMessage(pre + "更新消息: §e" + releasesMsg);
-            Bukkit.getConsoleSender().sendMessage(pre + "发布日期: §e" + releasesDate);
+            Mohist.LOGGER.info(pre + "更新消息: §e" + releasesMsg);
+            Mohist.LOGGER.info(pre + "发布日期: §e" + releasesDate);
         }
 
 
