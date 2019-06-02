@@ -95,7 +95,6 @@ public class Download {
                     e.printStackTrace();
                 }
             }
-
             if (bos != null) {
                 try {
                     bos.close();
