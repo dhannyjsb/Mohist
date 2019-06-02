@@ -177,4 +177,20 @@ public class MohistConfig {
         config.addDefault(path, def);
         return config.getString(path, config.getString(path));
     }
+
+    public static void reload(){
+        try {
+            config.save(CONFIG_FILE);
+            config.load(CONFIG_FILE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        // Reload read
+        unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
+        outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
+        outdatedServerMessage = transform(  getString("messages.Outdate-Server",outdatedServerMessage) );
+    }
 }

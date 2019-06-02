@@ -12,6 +12,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.permissions.Permission;
 import org.bukkit.potion.PotionEffectType;
+import red.mohist.MohistConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +69,9 @@ public class Commandmohist extends Command {
                 // Not recommended for use in games, only test output
                 getBiomes(sender);
                 break;
+            case "reload":
+                MohistConfig.reload();
+                sender.sendMessage(ChatColor.GREEN + "Config reload success");
             default:
                 sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
                 return false;
