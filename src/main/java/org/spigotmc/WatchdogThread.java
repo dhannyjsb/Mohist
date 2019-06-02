@@ -3,6 +3,7 @@ package org.spigotmc;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.Logger;
 import red.mohist.Mohist;
+import red.mohist.i18n.Message;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
@@ -55,23 +56,23 @@ public class WatchdogThread extends Thread
             if ( lastTick != 0 && System.currentTimeMillis() > lastTick + timeoutTime && !Boolean.getBoolean("disable.watchdog"))
             {
                 Logger log = Mohist.LOGGER;
-                log.error( "The server has stopped responding!" );
-                log.error( "Please report this to https://github.com/PFCraft/Mohist" );
-                log.error( "Be sure to include ALL relevant console errors and Minecraft crash reports" );
-                log.error( "Mohist version: " + Mohist.getVersion() );
+                log.error( Message.getString(Message.Watchdog_One) );
+                log.error( Message.getString(Message.Watchdog_Two) );
+                log.error( Message.getString(Message.Watchdog_Three) );
+                log.error( Message.getString(Message.Watchdog_Four) + Mohist.getVersion() );
                 //
                 if(net.minecraft.world.World.haveWeSilencedAPhysicsCrash)
                 {
                     log.error( "------------------------------" );
-                    log.error( "During the run of the server, a physics stackoverflow was supressed" );
-                    log.error( "near " + net.minecraft.world.World.blockLocation);
+                    log.error( Message.getString(Message.Watchdog_Five) );
+                    log.error( Message.getString(Message.Watchdog_Six) + net.minecraft.world.World.blockLocation );
                 }
                 log.error( "------------------------------" );
-                log.error( "Server thread dump (Look for plugins here before reporting to Spigot!):" );
+                log.error( Message.getString(Message.Watchdog_Seven) );
                 dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServerInst().primaryThread.getId(), Integer.MAX_VALUE ), log );
                 log.error( "------------------------------" );
                 //
-                log.error( "Entire Thread Dump:" );
+                log.error( Message.getString(Message.Watchdog_Eight) );
                 ThreadInfo[] threads = ManagementFactory.getThreadMXBean().dumpAllThreads( true, true );
                 for ( ThreadInfo thread : threads )
                 {
@@ -100,20 +101,20 @@ public class WatchdogThread extends Thread
     {
         log.error( "------------------------------" );
         //
-        log.error( "Current Thread: " + thread.getThreadName() );
-        log.error( "\tPID: " + thread.getThreadId()
-                + " | Suspended: " + thread.isSuspended()
-                + " | Native: " + thread.isInNative()
-                + " | State: " + thread.getThreadState() );
+        log.error( Message.getString(Message.Watchdog_Nine) + thread.getThreadName() );
+        log.error( "\t" + Message.getString(Message.Watchdog_Ten) + thread.getThreadId()
+                + " | " + Message.getString(Message.Watchdog_Eleven) + thread.isSuspended()
+                + " | " + Message.getString(Message.Watchdog_Twelve) + thread.isInNative()
+                + " | " + Message.getString(Message.Watchdog_Thirteen) + thread.getThreadState() );
         if ( thread.getLockedMonitors().length != 0 )
         {
-            log.error( "\tThread is waiting on monitor(s):" );
+            log.error( "\t" + Message.getString(Message.Watchdog_Sixteen) );
             for ( MonitorInfo monitor : thread.getLockedMonitors() )
             {
-                log.error( "\t\tLocked on:" + monitor.getLockedStackFrame() );
+                log.error( "\t\t" + Message.getString(Message.Watchdog_Fourteen) + monitor.getLockedStackFrame() );
             }
         }
-        log.error( "\tStack:" );
+        log.error( "\t" + Message.getString(Message.Watchdog_Fifteen) );
         //
         for ( StackTraceElement stack : thread.getStackTrace() )
         {

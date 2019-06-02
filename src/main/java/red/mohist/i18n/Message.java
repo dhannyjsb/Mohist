@@ -145,6 +145,22 @@ public enum Message {
 	Mohist_update_program_tips_done("mohist.update.program.tips.done"),
 	Mohist_update_program_tips_false("mohist.update.program.tips.false"),
 	
+	Watchdog_One("watchdog.one"),
+	Watchdog_Two("watchdog.two"),
+	Watchdog_Three("watchdog.three"),
+	Watchdog_Four("watchdog.four"),
+	Watchdog_Five("watchdog.five"),
+	Watchdog_Six("watchdog.six"),
+	Watchdog_Seven("watchdog.seven"),
+	Watchdog_Eight("watchdog.eight"),
+	Watchdog_Nine("watchdog.nine"),
+	Watchdog_Ten("watchdog.ten"),
+	Watchdog_Eleven("watchdog.eleven"),
+	Watchdog_Twelve("watchdog.twelve"),
+	Watchdog_Thirteen("watchdog.thirteen"),
+	Watchdog_Fourteen("watchdog.fourteen"),
+	Watchdog_Fifteen("watchdog.fifteen"),
+	Watchdog_Sixteen("watchdog.sixteen"),
     ;
 
     private final String value;
