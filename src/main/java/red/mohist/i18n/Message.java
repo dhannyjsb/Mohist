@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public enum Message {
     Mohist_Test("mohist.test"),
     Mohist_Start("mohist.start"),
-    Mohsit_Server_Start("mohist.server.start"),
+    Mohist_Server_Start("mohist.server.start"),
     Mohist_Start_Error("mohist.start.error"),
     Not_Have_Library("mohist.start.error.nothavelibrary"),
 
@@ -24,11 +24,11 @@ public enum Message {
 
     Mohist_Load_Map("mohist.load.map"),
     Mohist_Load_Map_Spawn("mohist.load.map.spawn"),
-    Mohisy_Stop("mohist.stop"),
+    Mohist_Stop("mohist.stop"),
     Mohist_Start_Fail("mohist.start.fail"),
-    Mohisy_Save_Players("mohist.save.players"),
-    Mohisy_Save_Worlds("mohist.save.worlds"),
-    Mohisy_Save_Other("mohist.save.other"),
+    Mohist_Save_Players("mohist.save.players"),
+    Mohist_Save_Worlds("mohist.save.worlds"),
+    Mohist_Save_Other("mohist.save.other"),
     Load_libraries("load.libraries"),
     Server_Ip("server.ip"),
     EULA("eula"),
