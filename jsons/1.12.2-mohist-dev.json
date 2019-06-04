@@ -124,7 +124,7 @@
       "url" : "https://hub.spigotmc.org/nexus/content/groups/public/"
     },
     {
-      "name": "com.maxqia:ReflectionRemapper:0.1-SNAPSHOT",
+      "name": "com.maxqia:ReflectionRemapper:0.2-SNAPSHOT",
       "children" : ["sources"],
       "url" : "https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository"
     },

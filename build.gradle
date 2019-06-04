@@ -101,7 +101,7 @@ dependencies {
     compile 'org.xerial:sqlite-jdbc:3.21.0.1'
     compile 'mysql:mysql-connector-java:5.1.45'
     compile 'net.md-5:bungeecord-chat:1.12-SNAPSHOT'    
-    // compile 'com.maxqia:ReflectionRemapper:0.1-SNAPSHOT'
+    // compile 'com.maxqia:ReflectionRemapper:0.2-SNAPSHOT'
 }
 
 minecraft.version = "1.12.2"
