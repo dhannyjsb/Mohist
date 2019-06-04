@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
+import com.maxqia.ReflectionRemapper.ReflectionTransformer;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
@@ -142,7 +143,6 @@ import org.yaml.snakeyaml.error.MarkedYAMLException;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
 import red.mohist.i18n.Message;
-import red.mohist.remapnms.ReflectionTransformer;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;

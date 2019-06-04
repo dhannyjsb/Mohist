@@ -1,8 +1,8 @@
 package red.mohist;
 
+import com.maxqia.ReflectionRemapper.NetworkTransformer;
+import com.maxqia.ReflectionRemapper.SideTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import red.mohist.remapnms.NetworkTransformer;
-import red.mohist.remapnms.SideTransformer;
 
 import javax.annotation.Nullable;
 import java.util.Map;

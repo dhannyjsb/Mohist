@@ -100,8 +100,8 @@ dependencies {
     compile 'org.scala-lang.modules:scala-parser-combinators_2.11:1.0.1'
     compile 'org.xerial:sqlite-jdbc:3.21.0.1'
     compile 'mysql:mysql-connector-java:5.1.45'
-    compile 'net.md-5:bungeecord-chat:1.12-SNAPSHOT'
-
+    compile 'net.md-5:bungeecord-chat:1.12-SNAPSHOT'    
+    // compile 'com.maxqia:ReflectionRemapper:0.1-SNAPSHOT'
 }
 
 minecraft.version = "1.12.2"
