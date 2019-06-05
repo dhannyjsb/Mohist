@@ -51,7 +51,7 @@
      private final Map<EntityPlayer, Vec3d> playerKnockbackMap;
      private final Vec3d position;
  
-+    public boolean wasCanceled = true;
++    public boolean wasCanceled = false;
 +
      @SideOnly(Side.CLIENT)
      public Explosion(World worldIn, Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions)
@@ -121,20 +121,20 @@
 +                }
 +            }
 +
-+            boolean cancelled = true;
++            boolean cancelled;
 +            List<org.bukkit.block.Block> bukkitBlocks;
 +            float yield;
 +
 +            if (explode != null) {
 +                EntityExplodeEvent event = new EntityExplodeEvent(explode, location, blockList, 1.0F / this.size);
 +                this.world.getServer().getPluginManager().callEvent(event);
-+               // cancelled = event.isCancelled();
++                cancelled = event.isCancelled();
 +                bukkitBlocks = event.blockList();
 +                yield = event.getYield();
 +            } else {
 +                BlockExplodeEvent event = new BlockExplodeEvent(location.getBlock(), blockList, 1.0F / this.size);
 +                this.world.getServer().getPluginManager().callEvent(event);
-+               // cancelled = event.isCancelled();
++                cancelled = event.isCancelled();
 +                bukkitBlocks = event.blockList();
 +                yield = event.getYield();
 +            }

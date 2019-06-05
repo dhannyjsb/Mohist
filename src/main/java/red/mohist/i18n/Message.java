@@ -245,6 +245,4 @@ public enum Message {
         this.value = value;
     }
 
-
-
 }
