@@ -56,23 +56,23 @@ public class WatchdogThread extends Thread
             if ( lastTick != 0 && System.currentTimeMillis() > lastTick + timeoutTime && !Boolean.getBoolean("disable.watchdog"))
             {
                 Logger log = Mohist.LOGGER;
-                log.error( Message.getString(Message.Watchdog_One) );
-                log.error( Message.getString(Message.Watchdog_Two) );
-                log.error( Message.getString(Message.Watchdog_Three) );
-                log.error( Message.getString(Message.Watchdog_Four) + Mohist.getVersion() );
+                log.error( Message.getString(Message.Watchdog_1) );
+                log.error( Message.getString(Message.Watchdog_2) );
+                log.error( Message.getString(Message.Watchdog_3) );
+                log.error( Message.getString(Message.Watchdog_4) + Mohist.getVersion() );
                 //
                 if(net.minecraft.world.World.haveWeSilencedAPhysicsCrash)
                 {
                     log.error( "------------------------------" );
-                    log.error( Message.getString(Message.Watchdog_Five) );
-                    log.error( Message.getString(Message.Watchdog_Six) + net.minecraft.world.World.blockLocation );
+                    log.error( Message.getString(Message.Watchdog_5) );
+                    log.error( Message.getString(Message.Watchdog_6) + net.minecraft.world.World.blockLocation );
                 }
                 log.error( "------------------------------" );
-                log.error( Message.getString(Message.Watchdog_Seven) );
+                log.error( Message.getString(Message.Watchdog_7) );
                 dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServerInst().primaryThread.getId(), Integer.MAX_VALUE ), log );
                 log.error( "------------------------------" );
                 //
-                log.error( Message.getString(Message.Watchdog_Eight) );
+                log.error( Message.getString(Message.Watchdog_8) );
                 ThreadInfo[] threads = ManagementFactory.getThreadMXBean().dumpAllThreads( true, true );
                 for ( ThreadInfo thread : threads )
                 {
@@ -101,20 +101,20 @@ public class WatchdogThread extends Thread
     {
         log.error( "------------------------------" );
         //
-        log.error( Message.getString(Message.Watchdog_Nine) + thread.getThreadName() );
-        log.error( "\t" + Message.getString(Message.Watchdog_Ten) + thread.getThreadId()
-                + " | " + Message.getString(Message.Watchdog_Eleven) + thread.isSuspended()
-                + " | " + Message.getString(Message.Watchdog_Twelve) + thread.isInNative()
-                + " | " + Message.getString(Message.Watchdog_Thirteen) + thread.getThreadState() );
+        log.error( Message.getString(Message.Watchdog_9) + thread.getThreadName() );
+        log.error( "\t" + Message.getString(Message.Watchdog_10) + thread.getThreadId()
+                + " | " + Message.getString(Message.Watchdog_11) + thread.isSuspended()
+                + " | " + Message.getString(Message.Watchdog_12) + thread.isInNative()
+                + " | " + Message.getString(Message.Watchdog_13) + thread.getThreadState() );
         if ( thread.getLockedMonitors().length != 0 )
         {
-            log.error( "\t" + Message.getString(Message.Watchdog_Sixteen) );
+            log.error( "\t" + Message.getString(Message.Watchdog_16) );
             for ( MonitorInfo monitor : thread.getLockedMonitors() )
             {
-                log.error( "\t\t" + Message.getString(Message.Watchdog_Fourteen) + monitor.getLockedStackFrame() );
+                log.error( "\t\t" + Message.getString(Message.Watchdog_14) + monitor.getLockedStackFrame() );
             }
         }
-        log.error( "\t" + Message.getString(Message.Watchdog_Fifteen) );
+        log.error( "\t" + Message.getString(Message.Watchdog_15) );
         //
         for ( StackTraceElement stack : thread.getStackTrace() )
         {
