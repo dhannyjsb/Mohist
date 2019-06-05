@@ -447,7 +447,7 @@
 +            hasStopped = true;
 +        }
 +        // CraftBukkit end
-+        LOGGER.info(Message.getString(Message.Mohist_Stop));
++        LOGGER.info(Message.getString(Message.Mohisy_Stop));
 +        if (this.server != null) {
 +            this.server.disablePlugins();
 +        }
@@ -459,7 +459,7 @@
          if (this.playerList != null)
          {
 -            LOGGER.info("Saving players");
-+            LOGGER.info(Message.getString(Message.Mohist_Save_Players));
++            LOGGER.info(Message.getString(Message.Mohisy_Save_Players));
              this.playerList.saveAllPlayerData();
              this.playerList.removeAllPlayers();
 +            try { Thread.sleep(100); } catch (InterruptedException ex) {} // CraftBukkit - SPIGOT-625 - give server at least a chance to send packets
@@ -468,7 +468,7 @@
          if (this.worlds != null)
          {
 -            LOGGER.info("Saving worlds");
-+            LOGGER.info(Message.getString(Message.Mohist_Save_Worlds));
++            LOGGER.info(Message.getString(Message.Mohisy_Save_Worlds));
  
              for (WorldServer worldserver : this.worlds)
              {
@@ -497,7 +497,7 @@
 +        // Spigot start
 +        if (org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly) {
 +            Object[] p = {"usercache.json"};
-+            LOGGER.info(Message.getFormatString(Message.Mohist_Save_Other, p));
++            LOGGER.info(Message.getFormatString(Message.Mohisy_Save_Other, p));
 +            this.profileCache.save();
 +        }
 +        // Spigot end

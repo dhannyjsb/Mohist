@@ -135,7 +135,7 @@
          thread.setDaemon(true);
          thread.start();
 -        LOGGER.info("Starting minecraft server version 1.12.2");
-+        Mohist.LOGGER.info(Message.getString(Message.Mohist_Server_Start));
++        Mohist.LOGGER.info(Message.getString(Message.Mohsit_Server_Start));
  
          if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
          {
