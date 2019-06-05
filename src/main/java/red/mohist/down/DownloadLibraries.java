@@ -19,7 +19,7 @@ public class DownloadLibraries implements Runnable {
     @Override
     public void run() {
         String url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
-        String fileName = "minecraft_server.1.12.2.jar";
+        String fileName = "libraries.zip";
         Locale locale = Locale.getDefault();
         if (locale.getCountry().equals("zh_CN") || locale.getCountry().equals("CN") || locale.getCountry().equals("zh_TW") || locale.getCountry().equals("TW")) {
             url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
