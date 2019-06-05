@@ -217,7 +217,7 @@ public enum Message {
 	forge_loader_54("forge_loader_54"),
 	forge_loader_55("forge_loader_55"),
 	forge_loader_56("forge_loader_56"),
-	forge_loader_57("forge_loader_57"),
+	forge_loader_57("forge_loader_57")
     ;
 
     private final String value;
