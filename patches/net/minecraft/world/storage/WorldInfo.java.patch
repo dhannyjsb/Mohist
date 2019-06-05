@@ -116,7 +116,7 @@
      {
          // one time set for this
          if (this.additionalProperties == null)
-@@ -869,4 +894,25 @@
+@@ -869,4 +894,29 @@
      {
          return this.versionName;
      }
@@ -140,5 +140,9 @@
 +    public int getDimension()
 +    {
 +        return this.dimension;
++    }
++
++    public void tick() {
++        totalTime++;
 +    }
  }

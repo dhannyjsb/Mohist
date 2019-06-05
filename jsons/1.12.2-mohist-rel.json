@@ -199,9 +199,21 @@
       "serverreq":true
     },
     {
+      "name": "com.maxqia:ReflectionRemapper:0.2-SNAPSHOT",
+      "url" : "https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository",
+      "clientreq":true,
+      "serverreq":true
+    },
+    {
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "url" : "http://files.minecraftforge.net/maven/",
       "clientreq":true,
+      "serverreq":true
+    },
+	{
+      "name": "com.alibaba:fastjson:1.2.58",
+      "url" : "http://repo.maven.apache.org/maven2",
+	  "clientreq":true,
       "serverreq":true
     }
   ]

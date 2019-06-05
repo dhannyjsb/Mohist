@@ -9,14 +9,17 @@
  import io.netty.channel.ChannelFutureListener;
  import io.netty.channel.ChannelHandlerContext;
  
-@@ -66,7 +68,9 @@
+@@ -66,7 +68,12 @@
              FMLHandshakeMessage.ModList client = (FMLHandshakeMessage.ModList)msg;
              NetworkDispatcher dispatcher = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get();
              dispatcher.setModList(client.modList());
 -            FMLLog.log.info("Client attempting to join with {} mods : {}", client.modListSize(), client.modListAsString());
-+            PlayerAPI.mods.put(dispatcher.player, client.modListSize());
++            if (client.modListSize() > 0) {
++                PlayerAPI.mods.put(dispatcher.player, client.modListSize());
++            }
 +            Object[] mods = {client.modListSize()};
 +            FMLLog.log.info(Message.getFormatString(Message.client_join_mods, mods));
++            FMLLog.log.debug("Client attempting to join with {} mods : {}", client.modListSize(), client.modListAsString());
              String modRejections = FMLNetworkHandler.checkModList(client, Side.CLIENT);
              if (modRejections != null)
              {

@@ -1,22 +1,42 @@
 --- ../src-base/minecraft/net/minecraftforge/common/util/EnumHelper.java
 +++ ../src-work/minecraft/net/minecraftforge/common/util/EnumHelper.java
-@@ -52,6 +52,7 @@
+@@ -51,7 +51,11 @@
+ import net.minecraft.world.IBlockAccess;
  import net.minecraft.world.gen.structure.StructureStrongholdPieces.Stronghold.Door;
  import net.minecraftforge.classloading.FMLForgePlugin;
++import net.minecraftforge.fml.relauncher.ReflectionHelper;
  import org.apache.commons.lang3.ArrayUtils;
 +import org.bukkit.World;
++import org.bukkit.WorldType;
++import org.bukkit.block.Biome;
  
  import javax.annotation.Nullable;
  
-@@ -428,4 +429,11 @@
+@@ -428,4 +432,27 @@
              setup();
          }
      }
-+	
-+	public static World.Environment addBukkitEnvironment(int id, String name) {
++
++    public static Biome addBukkitBiome(String name) {
++        return (Biome)addEnum(Biome.class, name, new Class[]{}, new Object[]{});
++    }
++
++    public static World.Environment addBukkitEnvironment(int id, String name) {
 +        if(!isSetup){
 +            setup();
 +        }
 +        return (World.Environment)addEnum(World.Environment.class,name,new Class[]{Integer.TYPE}, new Object[]{Integer.valueOf(id)});
++    }
++
++    public static WorldType addBukkitWorldType(String name)
++    {
++        if (!isSetup)
++        {
++            setup();
++        }
++        WorldType worldType = addEnum(WorldType.class, name, new Class [] { String.class }, new Object[] { name });
++        Map<String, WorldType> BY_NAME = ReflectionHelper.getPrivateValue(WorldType.class, null, "BY_NAME");
++        BY_NAME.put(name.toUpperCase(), worldType);
++        return worldType;
 +    }
  }

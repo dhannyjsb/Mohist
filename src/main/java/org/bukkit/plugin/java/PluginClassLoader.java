@@ -1,5 +1,8 @@
 package org.bukkit.plugin.java;
 
+import com.maxqia.ReflectionRemapper.ClassInheritanceProvider;
+import com.maxqia.ReflectionRemapper.MappingLoader;
+import com.maxqia.ReflectionRemapper.ReflectionTransformer;
 import net.md_5.specialsource.JarMapping;
 import net.md_5.specialsource.JarRemapper;
 import net.md_5.specialsource.provider.ClassLoaderProvider;
@@ -10,9 +13,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import red.mohist.Mohist;
-import red.mohist.remapnms.ClassInheritanceProvider;
-import red.mohist.remapnms.MappingLoader;
-import red.mohist.remapnms.ReflectionTransformer;
 
 import java.io.File;
 import java.io.IOException;

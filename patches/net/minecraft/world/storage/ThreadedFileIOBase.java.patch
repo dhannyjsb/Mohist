@@ -1,8 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/ThreadedFileIOBase.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/ThreadedFileIOBase.java
-@@ -46,12 +46,12 @@
+@@ -45,14 +45,15 @@
+                 ++this.savedIOCounter;
              }
  
++             /* // Spigot start - don't sleep in between chunks so we unload faster.
              try
 -            {
 -                Thread.sleep(this.isThreadWaiting ? 0L : 10L);
@@ -12,9 +14,11 @@
 -            catch (InterruptedException interruptedexception1)
 -            {
 -                interruptedexception1.printStackTrace();
+-            }
 +			catch (InterruptedException interruptedexception1)
 +			{
 +            	interruptedexception1.printStackTrace();
-             }
++            } */ // Spigot end
          }
  
+         if (this.threadedIOQueue.isEmpty())

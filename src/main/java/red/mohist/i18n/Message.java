@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public enum Message {
     Mohist_Test("mohist.test"),
     Mohist_Start("mohist.start"),
-    Mohsit_Server_Start("mohist.server.start"),
+    Mohist_Server_Start("mohist.server.start"),
     Mohist_Start_Error("mohist.start.error"),
     Not_Have_Library("mohist.start.error.nothavelibrary"),
 
@@ -24,11 +24,11 @@ public enum Message {
 
     Mohist_Load_Map("mohist.load.map"),
     Mohist_Load_Map_Spawn("mohist.load.map.spawn"),
-    Mohisy_Stop("mohist.stop"),
+    Mohist_Stop("mohist.stop"),
     Mohist_Start_Fail("mohist.start.fail"),
-    Mohisy_Save_Players("mohist.save.players"),
-    Mohisy_Save_Worlds("mohist.save.worlds"),
-    Mohisy_Save_Other("mohist.save.other"),
+    Mohist_Save_Players("mohist.save.players"),
+    Mohist_Save_Worlds("mohist.save.worlds"),
+    Mohist_Save_Other("mohist.save.other"),
     Load_libraries("load.libraries"),
     Server_Ip("server.ip"),
     EULA("eula"),
@@ -124,11 +124,48 @@ public enum Message {
     custom_map_seeds("custom.map.seeds"),
     max_tnt_per_tick("max-tnt.per.tick"),
     max_tick_time_tile("max.tick.time.tile"),
+
+    Exception_Could_not_load_plugin("exception.could.not.load.plugin"),
+    Exception_plugin_not_hav_depend("exception.plugin.not.hav.depend"),
+    Exception_Invalid_Plugin("exception.invalid.plugin"),
+    Exception_Invalid_Description("exception.invalid.description"),
+
+    Use_Unkonw_Comamnd("use.unknow.command"),
+    outdated_Client("outdate.client"),
+    outdated_Server("outdate.server"),
+
+    Server_Start_Done("server.start.done"),
+	
+	Mohist_update_program("mohist.update.program"),
+	Mohist_update_program_check_hasupdate("mohist.update.program.check.hasupdate"),
+	Mohist_update_program_check_noupdate("mohist.update.program.check.noupdate"),
+	Mohist_update_program_tips_stopautoget("mohist.update.program.tips.stopautoget"),
+	Mohist_update_message("mohist.update.message"),
+	Mohist_update_date("mohist.update.date"),
+	Mohist_update_program_tips_done("mohist.update.program.tips.done"),
+	Mohist_update_program_tips_false("mohist.update.program.tips.false"),
+	
+	Watchdog_One("watchdog.one"),
+	Watchdog_Two("watchdog.two"),
+	Watchdog_Three("watchdog.three"),
+	Watchdog_Four("watchdog.four"),
+	Watchdog_Five("watchdog.five"),
+	Watchdog_Six("watchdog.six"),
+	Watchdog_Seven("watchdog.seven"),
+	Watchdog_Eight("watchdog.eight"),
+	Watchdog_Nine("watchdog.nine"),
+	Watchdog_Ten("watchdog.ten"),
+	Watchdog_Eleven("watchdog.eleven"),
+	Watchdog_Twelve("watchdog.twelve"),
+	Watchdog_Thirteen("watchdog.thirteen"),
+	Watchdog_Fourteen("watchdog.fourteen"),
+	Watchdog_Fifteen("watchdog.fifteen"),
+	Watchdog_Sixteen("watchdog.sixteen"),
     ;
 
     private final String value;
-    //public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
-    public static ResourceBundle rb = Mohist.rb;
+    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
+    //public static ResourceBundle rb = Mohist.rb;
 
 
     public static String getString(Message key){

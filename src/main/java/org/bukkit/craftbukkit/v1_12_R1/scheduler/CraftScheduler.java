@@ -428,9 +428,7 @@ public class CraftScheduler implements BukkitScheduler {
                             Level.WARNING,
                             msg,
                             throwable);
-                    task.getOwner().getServer().getPluginManager().callEvent(
-                            new ServerExceptionEvent(new ServerSchedulerException(msg, throwable, task))
-                    );
+                    //task.getOwner().getServer().getPluginManager().callEvent(new ServerExceptionEvent(new ServerSchedulerException(msg, throwable, task)));
                     // Paper end
                 } finally {
                     currentTask = null;

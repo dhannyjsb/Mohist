@@ -10,7 +10,7 @@
  import net.minecraft.block.material.MapColor;
  import net.minecraft.block.material.Material;
  import net.minecraft.block.properties.IProperty;
-@@ -22,10 +19,15 @@
+@@ -22,10 +19,16 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.world.IBlockAccess;
  import net.minecraft.world.World;
@@ -19,6 +19,7 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 +import org.bukkit.event.block.BlockBurnEvent;
++import org.bukkit.event.block.BlockSpreadEvent;
  
 +import javax.annotation.Nullable;
 +import java.util.Map;
@@ -27,13 +28,7 @@
  public class BlockFire extends Block
  {
      public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 15);
-@@ -133,12 +135,13 @@
- 
-     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-     {
-+        /*
-         if (worldIn.getGameRules().getBoolean("doFireTick"))
-         {
+@@ -138,7 +141,7 @@
              if (!worldIn.isAreaLoaded(pos, 2)) return; // Forge: prevent loading unloaded chunks when spreading fire
              if (!this.canPlaceBlockAt(worldIn, pos))
              {
@@ -94,7 +89,7 @@
                                  }
  
                                  BlockPos blockpos = pos.add(k, i1, l);
-+                                if (!world.isLoaded(blockposition1)) continue; // Paper
++                                if (!worldIn.isBlockLoaded(blockpos)) continue; // Paper
                                  int k1 = this.getNeighborEncouragement(worldIn, blockpos);
  
                                  if (k1 > 0)
@@ -126,12 +121,8 @@
                                      }
                                  }
                              }
-@@ -238,9 +263,10 @@
-                     }
-                 }
-             }
--        }
-+        }*/
+@@ -241,6 +266,7 @@
+         }
      }
  
 +

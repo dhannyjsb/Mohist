@@ -21,6 +21,53 @@ public class DownloadLibraries implements Runnable {
         String url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
         String fileName = "libraries.zip";
         Locale locale = Locale.getDefault();
+        if (locale.getCountry().equals("zh_CN") || locale.getCountry().equals("CN") || locale.getCountry().equals("zh_TW") || locale.getCountry().equals("TW")) {
+            url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
+        }
+        new Download(url,fileName);
+        System.out.println(Message.getFormatString(Message.Dw_Ok,new Object[] {fileName}));
+        int size = 0;
+        try {
+            @SuppressWarnings("resource")
+            ZipFile zip = new ZipFile(new File(fileName), Charset.forName("GBK"));
+            File filepath = new File(".");
+            if(!(filepath.exists())) {
+                filepath.mkdirs();
+            }
+            System.out.println(Message.getFormatString(Message.UnZip_Start,new Object[]{fileName}));
+            for(Enumeration<? extends ZipEntry> entries = zip.entries(); entries.hasMoreElements();) {
+                ZipEntry entry = entries.nextElement();
+                String zipEntryName = entry.getName();
+                InputStream is = zip.getInputStream(entry);
+                String outPath = ("."+"/"+ zipEntryName).replaceAll("\\*", "/");
+                File file1 = new File(outPath.substring(0, outPath.lastIndexOf('/')));
+                if(!(file1.exists())) {
+                    file1.mkdirs();
+                }
+                if(new File(outPath).isDirectory()) {
+                    continue;
+                }
+                FileOutputStream fos = new FileOutputStream(outPath);
+                byte[] b = new byte[1024];
+                int i;
+
+                size++;
+                System.out.println(Message.getFormatString(Message.UnZip_Now,new Object[]{fileName,size,zip.size()}));
+
+                while((i = is.read(b)) > 0) {
+                    fos.write(b,0,i);
+                }
+                is.close();
+                fos.close();
+            }
+            System.out.println(Message.getFormatString(Message.UnZip_Ok,new Object[]{fileName}));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*
+        String url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
+        String fileName = "libraries.zip";
+        Locale locale = Locale.getDefault();
         Object[] o1 = {fileName};
         System.out.println(Message.getFormatString(Message.Dw_File,o1));
         BufferedOutputStream bos = null;
@@ -66,45 +113,7 @@ public class DownloadLibraries implements Runnable {
             }
 
         }
-        System.out.println(Message.getFormatString(Message.Dw_Ok,new Object[] {fileName}));
-        int size = 0;
-        try {
-            @SuppressWarnings("resource")
-            ZipFile zip = new ZipFile(new File(fileName), Charset.forName("GBK"));
-            File filepath = new File(".");
-            if(!(filepath.exists())) {
-                filepath.mkdirs();
-            }
-            System.out.println(Message.getFormatString(Message.UnZip_Start,new Object[]{fileName}));
-            for(Enumeration<? extends ZipEntry> entries = zip.entries(); entries.hasMoreElements();) {
-                ZipEntry entry = entries.nextElement();
-                String zipEntryName = entry.getName();
-                InputStream is = zip.getInputStream(entry);
-                String outPath = ("."+"/"+ zipEntryName).replaceAll("\\*", "/");
-                File file1 = new File(outPath.substring(0, outPath.lastIndexOf('/')));
-                if(!(file1.exists())) {
-                    file1.mkdirs();
-                }
-                if(new File(outPath).isDirectory()) {
-                    continue;
-                }
-                FileOutputStream fos = new FileOutputStream(outPath);
-                byte[] b = new byte[1024];
-                int i;
-
-                size++;
-                System.out.println(Message.getFormatString(Message.UnZip_Now,new Object[]{fileName,size,zip.size()}));
-
-                while((i = is.read(b)) > 0) {
-                    fos.write(b,0,i);
-                }
-                is.close();
-                fos.close();
-            }
-            System.out.println(Message.getFormatString(Message.UnZip_Ok,new Object[]{fileName}));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+         */
     }
 
 }

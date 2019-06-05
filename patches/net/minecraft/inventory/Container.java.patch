@@ -131,7 +131,18 @@
      }
  
      public boolean enchantItem(EntityPlayer playerIn, int id)
-@@ -174,7 +260,7 @@
+@@ -117,6 +203,10 @@
+ 
+     public Slot getSlot(int slotId)
+     {
++        // Mohist start - vanilla compatibility. fixes NPE with ProjectRed's Item Stock Keeper
++        if (slotId < 0 || slotId > this.inventorySlots.size())
++            return null;
++        // Mohist end
+         return this.inventorySlots.get(slotId);
+     }
+ 
+@@ -174,7 +264,7 @@
                  {
                      ItemStack itemstack9 = inventoryplayer.getItemStack().copy();
                      int k1 = inventoryplayer.getItemStack().getCount();
@@ -140,7 +151,7 @@
                      for (Slot slot8 : this.dragSlots)
                      {
                          ItemStack itemstack13 = inventoryplayer.getItemStack();
-@@ -192,12 +278,50 @@
+@@ -192,12 +282,50 @@
                              }
  
                              k1 -= itemstack14.getCount() - j3;
@@ -194,7 +205,7 @@
                  }
  
                  this.resetDrag();
-@@ -219,8 +343,9 @@
+@@ -219,8 +347,9 @@
                  {
                      if (dragType == 0)
                      {
@@ -205,7 +216,7 @@
                      }
  
                      if (dragType == 1)
-@@ -348,6 +473,15 @@
+@@ -348,6 +477,15 @@
                      }
  
                      slot6.onSlotChanged();
@@ -221,7 +232,7 @@
                  }
              }
          }
-@@ -797,7 +931,9 @@
+@@ -797,7 +935,9 @@
                  p_192389_4_.setRecipeUsed(irecipe);
                  itemstack = irecipe.getCraftingResult(p_192389_3_);
              }

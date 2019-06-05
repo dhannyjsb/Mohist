@@ -884,25 +884,33 @@ public class CraftEventFactory {
 
     public static Container callInventoryOpenEvent(EntityPlayerMP player, Container container, boolean cancelled) {
         if (AsyncCatcher.catchInv()) return container;
-            if (player.openContainer != player.inventoryContainer) { // fire INVENTORY_CLOSE if one already open
-                player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
-            }
+        if (player.openContainer != player.inventoryContainer && cancelled) { // fire INVENTORY_CLOSE if one already open
+            player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
+        }
 
-            CraftServer server = player.world.getServer();
-            CraftPlayer craftPlayer = player.getBukkitEntity();
-            try {
-                player.openContainer.transferTo(container, craftPlayer);
-            } catch (AbstractMethodError e) {
-            }
+        CraftServer server = player.world.getServer();
+        // Cauldron start - vanilla compatibility
+        CraftPlayer craftPlayer = player.getBukkitEntity();
+        try {
+            player.openContainer.transferTo(container, craftPlayer);
+        } catch (AbstractMethodError e) {
+        }
+        // Cauldron end
+        InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
+        event.setCancelled(cancelled);
+        if (container.getBukkitView() != null) server.getPluginManager().callEvent(event); // Cauldron - allow vanilla mods to bypass
 
-            InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
-            event.setCancelled(cancelled);
-            if (container.getBukkitView() != null) server.getPluginManager().callEvent(event);
-
-            if (event.isCancelled()) {
-                container.transferTo(player.openContainer, craftPlayer);
-                return null;
+        if (event.isCancelled()) {
+            container.transferTo(player.openContainer, craftPlayer);
+            // Cauldron start - handle close for modded containers
+            if (!cancelled) { // fire INVENTORY_CLOSE if one already open
+                player.openContainer = container; // make sure the right container is processed
+                player.closeScreen();
+                player.openContainer = player.inventoryContainer;
             }
+            // Cauldron end
+            return null;
+        }
             
 	  return container;
     }

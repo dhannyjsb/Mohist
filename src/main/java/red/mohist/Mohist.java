@@ -4,6 +4,7 @@ import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.configuration.file.YamlConfiguration;
 import red.mohist.i18n.UTF8Control;
+import red.mohist.update.Update;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class Mohist implements Runnable{
     }
 
     public static void main(String[] args){
+        /*
         File f = new File("mohist.yml");
         YamlConfiguration y;
         if(!f.exists()){
@@ -67,6 +69,7 @@ public class Mohist implements Runnable{
             case "default":
                 rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(y.getString("locale")), new UTF8Control());
         }
+        */
         Mohist.args = args;
         Thread t = new Thread(new Mohist(),"Mohist");
         t.start();

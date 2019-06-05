@@ -5,19 +5,11 @@
      public final NetworkManager manager;
      private final PlayerList scm;
 -    private EntityPlayerMP player;
-+    public EntityPlayerMP player; // Cauldron
++    public EntityPlayerMP player;
      private ConnectionState state;
      private ConnectionType connectionType;
      private final Side side;
-@@ -347,6 +347,7 @@
-     private boolean handleClientSideCustomPacket(SPacketCustomPayload msg, ChannelHandlerContext context)
-     {
-         String channelName = msg.getChannelName();
-+        player.getBukkitEntity().addChannel(channelName); // Cauldron - register channel for bukkit player
-         if ("FML|MP".equals(channelName))
-         {
-             boolean result = handleMultiPartCustomPacket(msg, context);
-@@ -597,7 +598,7 @@
+@@ -597,7 +597,7 @@
              }
              else
              {

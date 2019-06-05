@@ -2,11 +2,14 @@ package red.mohist;
 
 import com.google.common.base.Throwables;
 import net.minecraft.server.MinecraftServer;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.spigotmc.SpigotConfig;
 import red.mohist.command.defaultcomamnd.Commandmohist;
 import red.mohist.command.defaultcomamnd.VersionCommand;
+import red.mohist.i18n.Message;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +24,12 @@ import java.util.regex.Pattern;
 
 public class MohistConfig {
 
+    public static String unknownCommandMessage = Message.getString(Message.Use_Unkonw_Comamnd);
+    public static String outdatedClientMessage = Message.getString(Message.outdated_Client);
+    public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
     private static File CONFIG_FILE;
-    private static final String HEADER = "This is the main configuration file for Mohist.";
+    private static final String HEADER = "This is the main configuration file for Mohist.\n"
+            + "You can change \"update: \n  version: Stable or Debug to get universal version or debug version\"\n";
     /*========================================================================*/
     public static YamlConfiguration config;
     static int version;
@@ -48,7 +55,23 @@ public class MohistConfig {
 
         version = getInt("config-version", 1);
         set("config-version", 1);
+        if(version < 0){
+            config.options().header(HEADER);
+            set("messages.use-unknow-command",unknownCommandMessage);
+            set("messages.Outdate-Client",outdatedClientMessage);
+            set("messages.Outdate-Server",outdatedServerMessage);
+            set("update.version","Stable");
+			set("update.autoget",false);
+        }
+        unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
+        outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
+        outdatedServerMessage = transform(  getString("messages.Outdate-Server",outdatedServerMessage) );
         readConfig(MohistConfig.class, null);
+    }
+
+    private static String transform(String s)
+    {
+        return ChatColor.translateAlternateColorCodes( '&', s ).replaceAll( "\\\\n", "\n" );
     }
 
     public static void registerCommands() {
@@ -153,5 +176,21 @@ public class MohistConfig {
     private static String getString(String path, String def) {
         config.addDefault(path, def);
         return config.getString(path, config.getString(path));
+    }
+
+    public static void reload(){
+        try {
+            config.save(CONFIG_FILE);
+            config.load(CONFIG_FILE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        // Reload read
+        unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
+        outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
+        outdatedServerMessage = transform(  getString("messages.Outdate-Server",outdatedServerMessage) );
     }
 }
