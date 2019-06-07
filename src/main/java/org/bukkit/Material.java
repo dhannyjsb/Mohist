@@ -539,8 +539,8 @@ public enum Material {
 
     private final int id;
     private final Constructor<? extends MaterialData> ctor;
-    private static Material[] byId = new Material[38000];
-    private static Material[] byBlockId = new Material[4096];
+    private static Material[] byId = new Material[32676];
+    private static Material[] byBlockId = new Material[32676];
     private final static Map<String, Material> BY_NAME = Maps.newHashMap();
     private final int maxStack;
     private final short durability;
