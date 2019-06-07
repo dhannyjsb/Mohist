@@ -166,7 +166,7 @@
                  {
                      if (playerprofilecache$profileentry != null)
                      {
-@@ -247,36 +229,39 @@
+@@ -247,36 +229,38 @@
  
      public void save()
      {
@@ -174,7 +174,7 @@
 -        BufferedWriter bufferedwriter = null;
 +        String s = this.gson.toJson(this.getEntriesWithLimit(org.spigotmc.SpigotConfig.userCacheCap)); // Spigot
 +        // Mohist Start
-+        BufferedWriter bufferedwriter;
++        final BufferedWriter[] bufferedwriter = new BufferedWriter[1];
  
 -        try
 -        {
@@ -195,22 +195,21 @@
 -            IOUtils.closeQuietly((Writer)bufferedwriter);
 -        }
 +        new Thread(() -> {
-+            bufferedwriter = null;
++            bufferedwriter[0] = null;
 +            try {
 +                synchronized (usercacheFile) {
-+                    bufferedwriter = Files.newWriter(usercacheFile, StandardCharsets.UTF_8);
-+                    bufferedwriter.write(s);
++                    bufferedwriter[0] = Files.newWriter(usercacheFile, StandardCharsets.UTF_8);
++                    bufferedwriter[0].write(s);
 +                    return;
 +                }
 +            }
 +            catch (FileNotFoundException ex) {
-+                ;
 +            }
 +            catch (IOException ex2) {
 +                return;
 +            }
 +            finally {
-+                IOUtils.closeQuietly((Writer)bufferedwriter);
++                IOUtils.closeQuietly(bufferedwriter[0]);
 +            }
 +        }).start();
 +        // Mohist End
@@ -229,7 +228,7 @@
  
              if (playerprofilecache$profileentry != null)
              {
-@@ -309,13 +294,13 @@
+@@ -309,13 +293,13 @@
          }
      }
  
@@ -245,7 +244,7 @@
          {
              JsonObject jsonobject = new JsonObject();
              jsonobject.addProperty("name", p_serialize_1_.getGameProfile().getName());
-@@ -325,7 +310,7 @@
+@@ -325,7 +309,7 @@
              return jsonobject;
          }
  
