@@ -20,6 +20,7 @@ public class BukkitHookForgeEvent extends org.bukkit.event.Event {
         return this.event;
     }
 
+    @Override
     public String getEventName() {
         return event.getClass().getSimpleName();
     }

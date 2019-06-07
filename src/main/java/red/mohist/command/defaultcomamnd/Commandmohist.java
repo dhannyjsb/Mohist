@@ -28,15 +28,18 @@ public class Commandmohist extends Command {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location location) throws IllegalArgumentException {
-        if (args.length <= 1)
+        if (args.length <= 1) {
             return CommandBase.getListOfStringsMatchingLastWord(args, "potions", "enchants", "materials");
+        }
 
         return Collections.emptyList();
     }
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        if (!testPermission(sender)) return true;
+        if (!testPermission(sender)) {
+            return true;
+        }
 
         if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);

@@ -85,8 +85,9 @@ public class UTF8Properties extends Properties {
             }
             switch(aChar) {
                 case ' ':
-                    if (x == 0 || escapeSpace)
+                    if (x == 0 || escapeSpace) {
                         outBuffer.append('\\');
+                    }
                     outBuffer.append(' ');
                     break;
                 case '\t':outBuffer.append('\\'); outBuffer.append('t');

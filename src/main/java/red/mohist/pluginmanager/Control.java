@@ -83,7 +83,7 @@ public class Control {
 		return null;
 	}
 
-	public static boolean unloadPlugin(Plugin plugin, Boolean ReloadDependents) {
+	public static boolean unloadPlugin(Plugin plugin, Boolean reloaddependents) {
 		SimpleCommandMap commandMap;
 		PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -93,7 +93,7 @@ public class Control {
 		Map<String, Command> commands;
 		ArrayList<Plugin> reload = new ArrayList<>();
 		disablePlugin(plugin);
-		if (ReloadDependents) {
+		if (reloaddependents) {
 			for (Plugin p : pluginManager.getPlugins()) {
 				List<String> depend = p.getDescription().getDepend();
 				if (depend != null) {
@@ -164,11 +164,13 @@ public class Control {
 		
 
 		synchronized (pluginManager) {
-			if (plugins != null && plugins.contains(plugin))
+			if (plugins != null && plugins.contains(plugin)) {
 				plugins.remove(plugin);
+			}
 
-			if (names != null && names.containsKey(pName))
+			if (names != null && names.containsKey(pName)) {
 				names.remove(pName);
+			}
 		}
 
 		JavaPluginLoader jpl = (JavaPluginLoader) plugin.getPluginLoader();
@@ -199,7 +201,7 @@ public class Control {
 
 		System.gc();
 
-		if (ReloadDependents) {
+		if (reloaddependents) {
 			for (int i = 0; i < reload.size(); i++) {
 				enablePlugin(loadPlugin(getFile((JavaPlugin) reload.get(i))));
 			}

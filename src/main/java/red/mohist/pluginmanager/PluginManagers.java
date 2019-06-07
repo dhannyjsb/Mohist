@@ -14,8 +14,9 @@ public class PluginManagers {
 
 	public static boolean hasPermission(CommandSender sender) {
 		if (sender != Bukkit.getServer().getConsoleSender()) {
-			if (sender.isOp())
+			if (sender.isOp()) {
 				return true;
+			}
 
 			sender.sendMessage(Message.getString(Message.command_nopermission));
 			return false;
@@ -24,8 +25,9 @@ public class PluginManagers {
 	}
 
 	public static boolean loadPluginCommand(CommandSender sender, String label, String[] split) {
-		if (!hasPermission(sender))
+		if (!hasPermission(sender)) {
 			return true;
+		}
 
 		if (split.length < 2) {
 			Object[] f = {label};
@@ -79,8 +81,9 @@ public class PluginManagers {
 	}
 
 	public static boolean unloadPluginCommand(CommandSender sender, String label, String[] split) {
-		if (!hasPermission(sender))
+		if (!hasPermission(sender)) {
 			return true;
+		}
 
 		if (split.length < 2) {
 			Object[] f = {label};
@@ -107,8 +110,9 @@ public class PluginManagers {
 	}
 
 	public static boolean reloadPluginCommand(CommandSender sender, String label, String[] split) {
-		if (!hasPermission(sender))
+		if (!hasPermission(sender)) {
 			return true;
+		}
 
 		if (split.length < 2) {
 			Object[] f = {label};

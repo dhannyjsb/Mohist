@@ -10,26 +10,26 @@ public class Mohist implements Runnable{
     public static Logger LOGGER;
     public static ResourceBundle rb;
     private static String[] args;
-    private static final String name = "Mohist";
-    private static final String version = "0.0.9";
-    private static final String native_verson = "v1_12_R1";
-    private static final String nms_prefix = "net/minecraft/server/";
+    private static final String NAME = "Mohist";
+    private static final String VERSION = "0.0.9";
+    private static final String NATIVE_VERSON = "v1_12_R1";
+    private static final String NMS_PREFIX = "net/minecraft/server/";
 
     public static String getName(){
-        return name;
+        return NAME;
     }
 
     public static String getVersion(){
-        return version;
+        return VERSION;
     }
 
     public static String getNativeVersion() {
-        return native_verson;
+        return NATIVE_VERSON;
     }
 
     public static String getNmsPrefix()
     {
-        return nms_prefix;
+        return NMS_PREFIX;
     }
 
     public static void main(String[] args){
