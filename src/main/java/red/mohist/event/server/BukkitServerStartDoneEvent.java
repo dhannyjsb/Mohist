@@ -1,6 +1,5 @@
 package red.mohist.event.server;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

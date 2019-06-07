@@ -23,7 +23,6 @@
 
 package com.destroystokyo.paper.event.server;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

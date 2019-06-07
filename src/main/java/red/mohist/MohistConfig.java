@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.spigotmc.SpigotConfig;
 import red.mohist.command.defaultcomamnd.Commandmohist;
 import red.mohist.command.defaultcomamnd.VersionCommand;
 import red.mohist.i18n.Message;

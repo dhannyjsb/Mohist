@@ -10,7 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
-import org.bukkit.permissions.Permission;
 import org.bukkit.potion.PotionEffectType;
 import red.mohist.MohistConfig;
 

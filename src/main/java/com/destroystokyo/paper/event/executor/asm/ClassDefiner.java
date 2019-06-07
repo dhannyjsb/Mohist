@@ -1,7 +1,5 @@
 package com.destroystokyo.paper.event.executor.asm;
 
-import com.destroystokyo.paper.utils.UnsafeUtils;
-
 public interface ClassDefiner {
 
     /**

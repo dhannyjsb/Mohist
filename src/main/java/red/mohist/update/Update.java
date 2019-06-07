@@ -3,15 +3,14 @@ package red.mohist.update;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.bukkit.Bukkit;
 import red.mohist.Mohist;
-import red.mohist.MohistConfig;
 import red.mohist.down.Download;
 import red.mohist.i18n.Message;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Update implements Runnable{

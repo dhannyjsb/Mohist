@@ -1,7 +1,5 @@
 package org.bukkit.craftbukkit.v1_12_R1.scheduler;
 
-import com.destroystokyo.paper.event.server.ServerExceptionEvent;
-import com.destroystokyo.paper.exception.ServerSchedulerException;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.Plugin;
