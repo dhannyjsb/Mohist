@@ -166,17 +166,54 @@
                  {
                      if (playerprofilecache$profileentry != null)
                      {
-@@ -247,7 +229,7 @@
+@@ -247,36 +229,39 @@
  
      public void save()
      {
 -        String s = this.gson.toJson(this.getEntriesWithLimit(1000));
+-        BufferedWriter bufferedwriter = null;
 +        String s = this.gson.toJson(this.getEntriesWithLimit(org.spigotmc.SpigotConfig.userCacheCap)); // Spigot
-         BufferedWriter bufferedwriter = null;
++        // Mohist Start
++        BufferedWriter bufferedwriter;
  
-         try
-@@ -270,13 +252,13 @@
-         }
+-        try
+-        {
+-            bufferedwriter = Files.newWriter(this.usercacheFile, StandardCharsets.UTF_8);
+-            bufferedwriter.write(s);
+-            return;
+-        }
+-        catch (FileNotFoundException var8)
+-        {
+-            ;
+-        }
+-        catch (IOException var9)
+-        {
+-            return;
+-        }
+-        finally
+-        {
+-            IOUtils.closeQuietly((Writer)bufferedwriter);
+-        }
++        new Thread(() -> {
++            bufferedwriter = null;
++            try {
++                synchronized (usercacheFile) {
++                    bufferedwriter = Files.newWriter(usercacheFile, StandardCharsets.UTF_8);
++                    bufferedwriter.write(s);
++                    return;
++                }
++            }
++            catch (FileNotFoundException ex) {
++                ;
++            }
++            catch (IOException ex2) {
++                return;
++            }
++            finally {
++                IOUtils.closeQuietly((Writer)bufferedwriter);
++            }
++        }).start();
++        // Mohist End
      }
  
 -    private List<PlayerProfileCache.ProfileEntry> getEntriesWithLimit(int limitSize)
@@ -192,7 +229,7 @@
  
              if (playerprofilecache$profileentry != null)
              {
-@@ -309,13 +291,13 @@
+@@ -309,13 +294,13 @@
          }
      }
  
@@ -208,7 +245,7 @@
          {
              JsonObject jsonobject = new JsonObject();
              jsonobject.addProperty("name", p_serialize_1_.getGameProfile().getName());
-@@ -325,7 +307,7 @@
+@@ -325,7 +310,7 @@
              return jsonobject;
          }
  
