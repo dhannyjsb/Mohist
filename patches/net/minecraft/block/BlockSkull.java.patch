@@ -40,16 +40,7 @@
      public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
      {
          if (player.capabilities.isCreativeMode)
-@@ -135,8 +161,6 @@
-             state = state.withProperty(NODROP, Boolean.valueOf(true));
-             worldIn.setBlockState(pos, state, 4);
-         }
--        this.dropBlockAsItem(worldIn, pos, state, 0);
--
-         super.onBlockHarvested(worldIn, pos, state, player);
-     }
- 
-@@ -147,7 +171,9 @@
+@@ -147,7 +173,9 @@
      public void getDrops(net.minecraft.util.NonNullList<ItemStack> drops, IBlockAccess worldIn, BlockPos pos, IBlockState state, int fortune)
      {
          {
@@ -60,7 +51,7 @@
              {
                  TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -189,6 +215,7 @@
+@@ -189,6 +217,7 @@
  
      public void checkWitherSpawn(World worldIn, BlockPos pos, TileEntitySkull te)
      {
@@ -68,7 +59,7 @@
          if (te.getSkullType() == 1 && pos.getY() >= 2 && worldIn.getDifficulty() != EnumDifficulty.PEACEFUL && !worldIn.isRemote)
          {
              BlockPattern blockpattern = this.getWitherPattern();
-@@ -196,10 +223,14 @@
+@@ -196,10 +225,14 @@
  
              if (blockpattern$patternhelper != null)
              {
@@ -84,7 +75,7 @@
                  }
  
                  for (int j = 0; j < blockpattern.getPalmLength(); ++j)
-@@ -207,7 +238,10 @@
+@@ -207,7 +240,10 @@
                      for (int k = 0; k < blockpattern.getThumbLength(); ++k)
                      {
                          BlockWorldState blockworldstate1 = blockpattern$patternhelper.translateOffset(j, k, 0);
@@ -96,7 +87,7 @@
                      }
                  }
  
-@@ -217,25 +251,24 @@
+@@ -217,25 +253,24 @@
                  entitywither.setLocationAndAngles((double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 0.55D, (double)blockpos1.getZ() + 0.5D, blockpattern$patternhelper.getForwards().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F, 0.0F);
                  entitywither.renderYawOffset = blockpattern$patternhelper.getForwards().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F;
                  entitywither.ignite();
