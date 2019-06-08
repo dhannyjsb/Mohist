@@ -725,7 +725,7 @@
          this.profiler.endSection();
          this.profiler.endSection();
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onPostServerTick();
-+        WatchMohist.update();
++        WatchMohist.update(); // Mohist
      }
  
      public void updateTimeLightAndEntities()
