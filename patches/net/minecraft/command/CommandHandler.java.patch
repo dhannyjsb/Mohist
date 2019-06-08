@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/command/CommandHandler.java
 +++ ../src-work/minecraft/net/minecraft/command/CommandHandler.java
-@@ -14,8 +14,12 @@
+@@ -14,8 +14,13 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.text.TextComponentTranslation;
  import net.minecraft.util.text.TextFormatting;
@@ -10,10 +10,11 @@
 +import org.bukkit.command.CommandWrapper;
 +import org.bukkit.craftbukkit.v1_12_R1.command.CraftSimpleCommandMap;
 +import org.bukkit.craftbukkit.v1_12_R1.command.ModCustomCommand;
++import red.mohist.i18n.Message;
  
  public abstract class CommandHandler implements ICommandManager
  {
-@@ -27,15 +31,11 @@
+@@ -27,15 +32,11 @@
      {
          rawCommand = rawCommand.trim();
  
@@ -30,7 +31,7 @@
          int i = 0;
  
          try
-@@ -48,7 +48,7 @@
+@@ -48,7 +49,7 @@
                  textcomponenttranslation1.getStyle().setColor(TextFormatting.RED);
                  sender.sendMessage(textcomponenttranslation1);
              }
@@ -39,7 +40,7 @@
              {
                  net.minecraftforge.event.CommandEvent event = new net.minecraftforge.event.CommandEvent(icommand, sender, astring);
                  if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event))
-@@ -144,18 +144,23 @@
+@@ -144,18 +145,23 @@
  
      protected abstract MinecraftServer getServer();
  
@@ -63,7 +64,7 @@
 +        customCommand.setPermission(command.getClass().getCanonicalName());
 +        if (list != null) customCommand.setAliases(list);
 +        commandMap.register(command.getName(), customCommand);
-+        LogManager.getLogger().info("Registered command " + command.getName() + " with permission node " + command.getClass().getCanonicalName());
++        LogManager.getLogger().info(Message.getFormatString(Message.Command_Register, new Object[]{command.getName(), command.getClass().getCanonicalName()}));
 +        if (list != null) {
 +            for (String s : list) {
 +                ICommand icommand = (ICommand)this.commandMap.get(s);

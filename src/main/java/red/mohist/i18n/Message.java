@@ -220,7 +220,9 @@ public enum Message {
     WatchMohist_1("watchmohist.1"),
     WatchMohist_2("watchmohist.2"),
     WatchMohist_3("watchmohist.3"),
-    WatchMohist_4("watchmohist.4");
+    WatchMohist_4("watchmohist.4"),
+
+    Command_Register("command_register");
 
 
     private final String value;
