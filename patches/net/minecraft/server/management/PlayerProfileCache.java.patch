@@ -173,7 +173,7 @@
 -        String s = this.gson.toJson(this.getEntriesWithLimit(1000));
 -        BufferedWriter bufferedwriter = null;
 +        String s = this.gson.toJson(this.getEntriesWithLimit(org.spigotmc.SpigotConfig.userCacheCap)); // Spigot
-+        // Mohist Start
++        // Mohist start
 +        final BufferedWriter[] bufferedwriter = new BufferedWriter[1];
  
 -        try
@@ -212,7 +212,7 @@
 +                IOUtils.closeQuietly(bufferedwriter[0]);
 +            }
 +        }).start();
-+        // Mohist End
++        // Mohist end
      }
  
 -    private List<PlayerProfileCache.ProfileEntry> getEntriesWithLimit(int limitSize)
