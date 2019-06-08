@@ -215,8 +215,13 @@ public enum Message {
 	forge_loader_54("forge_loader_54"),
 	forge_loader_55("forge_loader_55"),
 	forge_loader_56("forge_loader_56"),
-	forge_loader_57("forge_loader_57")
-    ;
+	forge_loader_57("forge_loader_57"),
+
+    WatchMohist_1("watchmohist.1"),
+    WatchMohist_2("watchmohist.2"),
+    WatchMohist_3("watchmohist.3"),
+    WatchMohist_4("watchmohist.4");
+
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
