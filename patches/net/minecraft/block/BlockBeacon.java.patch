@@ -13,7 +13,7 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.world.World;
  import net.minecraft.world.WorldServer;
-@@ -104,35 +100,23 @@
+@@ -104,35 +100,24 @@
          return BlockRenderLayer.CUTOUT;
      }
  
@@ -28,6 +28,7 @@
 -                for (int i = glassPos.getY() - 1; i >= 0; --i)
 -                {
 +    public static void updateColorAsync(final World worldIn, final BlockPos glassPos) {
++        // Mohist start
 +        HttpUtil.DOWNLOADER_EXECUTOR.submit((Runnable)new Runnable() {
 +            @Override
 +            public void run() {
@@ -61,3 +62,10 @@
                                      ((TileEntityBeacon)tileentity).updateBeacon();
                                      worldIn.addBlockEvent(blockpos, Blocks.BEACON, 1, 0);
                                  }
+@@ -142,5 +127,6 @@
+                 }
+             }
+         });
++        // Mohist end
+     }
+ }
