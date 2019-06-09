@@ -1,10 +1,12 @@
 package org.bukkit.event.player;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
 import java.net.InetAddress;
 import java.util.UUID;
+
+import com.destroystokyo.paper.profile.PlayerProfile;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * Stores details for players attempting to log in.
@@ -19,13 +21,37 @@ public class AsyncPlayerPreLoginEvent extends Event {
     private final InetAddress ipAddress;
     private final UUID uniqueId;
 
-	@Deprecated
+    @Deprecated
     public AsyncPlayerPreLoginEvent(final String name, final InetAddress ipAddress) {
         this(name, ipAddress, null);
     }
 
     public AsyncPlayerPreLoginEvent(final String name, final InetAddress ipAddress, final UUID uniqueId) {
-		super(true);
+        // Paper start
+        this(name, ipAddress, uniqueId, Bukkit.createProfile(uniqueId, name));
+    }
+    private PlayerProfile profile;
+
+    /**
+     * Gets the PlayerProfile of the player logging in
+     * @return The Profile
+     */
+    public PlayerProfile getPlayerProfile() {
+        return profile;
+    }
+
+    /**
+     * Changes the PlayerProfile the player will login as
+     * @param profile The profile to use
+     */
+    public void setPlayerProfile(PlayerProfile profile) {
+        this.profile = profile;
+    }
+
+    public AsyncPlayerPreLoginEvent(final String name, final InetAddress ipAddress, final UUID uniqueId, PlayerProfile profile) {
+        super(true);
+        this.profile = profile;
+        // Paper end
         this.result = Result.ALLOWED;
         this.message = "";
         this.name = name;
@@ -50,7 +76,7 @@ public class AsyncPlayerPreLoginEvent extends Event {
      *     PlayerPreLoginEvent}
      * @see #getLoginResult()
      */
-	@Deprecated
+    @Deprecated
     public PlayerPreLoginEvent.Result getResult() {
         return result == null ? null : result.old();
     }
@@ -72,7 +98,7 @@ public class AsyncPlayerPreLoginEvent extends Event {
      *     PlayerPreLoginEvent}
      * @see #setLoginResult(Result)
      */
-	@Deprecated
+    @Deprecated
     public void setResult(final PlayerPreLoginEvent.Result result) {
         this.result = result == null ? null : Result.valueOf(result.name());
     }
@@ -124,7 +150,7 @@ public class AsyncPlayerPreLoginEvent extends Event {
      *     PlayerPreLoginEvent}
      * @see #disallow(Result, String)
      */
-	@Deprecated
+    @Deprecated
     public void disallow(final PlayerPreLoginEvent.Result result, final String message) {
         this.result = result == null ? null : Result.valueOf(result.name());
         this.message = message;
@@ -193,7 +219,7 @@ public class AsyncPlayerPreLoginEvent extends Event {
          */
         KICK_OTHER;
 
-		@Deprecated
+        @Deprecated
         private PlayerPreLoginEvent.Result old() {
             return PlayerPreLoginEvent.Result.valueOf(name());
         }
