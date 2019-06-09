@@ -357,7 +357,7 @@
                              }
                              catch (Throwable var2)
                              {
-@@ -664,7 +824,6 @@
+@@ -664,11 +824,45 @@
              {
                  pos = new BlockPos(pos.getX(), 255, pos.getZ());
              }
@@ -365,7 +365,46 @@
              return this.getChunkFromBlockCoords(pos).getLightSubtracted(pos, 0);
          }
      }
-@@ -793,7 +952,7 @@
+ 
++    // Paper start - test if meets light level, return faster
++    // logic copied from below
++    public boolean isLightLevel(BlockPos blockposition, int level) {
++        if (blockposition.isValidLocation()) {
++            if (this.getBlockState(blockposition).useNeighborBrightness()) {
++                if (this.getLight(blockposition.up(), false) >= level) {
++                    return true;
++                }
++                if (this.getLight(blockposition.east(), false) >= level) {
++                    return true;
++                }
++                if (this.getLight(blockposition.west(), false) >= level) {
++                    return true;
++                }
++                if (this.getLight(blockposition.south(), false) >= level) {
++                    return true;
++                }
++                if (this.getLight(blockposition.north(), false) >= level) {
++                    return true;
++                }
++                return false;
++            } else {
++                if (blockposition.getY() >= 256) {
++                    blockposition = new BlockPos(blockposition.getX(), 255, blockposition.getZ());
++                }
++
++                Chunk chunk = this.getChunkFromBlockCoords(blockposition);
++                return chunk.getLightSubtracted(blockposition, this.getSkylightSubtracted()) >= level;
++            }
++        } else {
++            return true;
++        }
++    }
++    // Paper end
++
+     public int getLightFromNeighbors(BlockPos pos)
+     {
+         return this.getLight(pos, true);
+@@ -793,7 +987,7 @@
              }
  
              if (!this.isValid(pos))
@@ -374,7 +413,7 @@
                  return type.defaultLightValue;
              }
              else if (!this.isBlockLoaded(pos))
-@@ -846,7 +1005,7 @@
+@@ -846,7 +1040,7 @@
          }
  
          if (!this.isValid(pos))
@@ -383,7 +422,7 @@
              return type.defaultLightValue;
          }
          else if (!this.isBlockLoaded(pos))
-@@ -863,7 +1022,7 @@
+@@ -863,7 +1057,7 @@
      public void setLightFor(EnumSkyBlock type, BlockPos pos, int lightValue)
      {
          if (this.isValid(pos))
@@ -392,7 +431,7 @@
              if (this.isBlockLoaded(pos))
              {
                  Chunk chunk = this.getChunkFromBlockCoords(pos);
-@@ -902,6 +1061,17 @@
+@@ -902,6 +1096,17 @@
  
      public IBlockState getBlockState(BlockPos pos)
      {
@@ -410,7 +449,7 @@
          if (this.isOutsideBuildHeight(pos))
          {
              return Blocks.AIR.getDefaultState();
-@@ -1178,14 +1348,67 @@
+@@ -1178,14 +1383,67 @@
  
      public boolean spawnEntity(Entity entityIn)
      {
@@ -483,7 +522,7 @@
          {
              flag = true;
          }
-@@ -1196,18 +1419,18 @@
+@@ -1196,18 +1454,18 @@
          }
          else
          {
@@ -508,7 +547,7 @@
              return true;
          }
      }
-@@ -1216,18 +1439,20 @@
+@@ -1216,18 +1474,20 @@
      {
          for (int i = 0; i < this.eventListeners.size(); ++i)
          {
@@ -531,7 +570,7 @@
      }
  
      public void removeEntity(Entity entityIn)
-@@ -1270,8 +1495,15 @@
+@@ -1270,8 +1530,15 @@
          {
              this.getChunkFromChunkCoords(i, j).removeEntity(entityIn);
          }
@@ -549,7 +588,7 @@
          this.onEntityRemoved(entityIn);
      }
  
-@@ -1674,7 +1906,11 @@
+@@ -1674,7 +1941,11 @@
          for (int i = 0; i < this.weatherEffects.size(); ++i)
          {
              Entity entity = this.weatherEffects.get(i);
@@ -562,7 +601,7 @@
              try
              {
                  if(entity.updateBlocked) continue;
-@@ -1697,7 +1933,7 @@
+@@ -1697,7 +1968,7 @@
  
                  if (net.minecraftforge.common.ForgeModContainer.removeErroringEntities)
                  {
@@ -571,7 +610,7 @@
                      removeEntity(entity);
                  }
                  else
-@@ -1711,7 +1947,12 @@
+@@ -1711,7 +1982,12 @@
          }
  
          this.profiler.endStartSection("remove");
@@ -585,7 +624,7 @@
  
          for (int k = 0; k < this.unloadedEntityList.size(); ++k)
          {
-@@ -1734,9 +1975,15 @@
+@@ -1734,9 +2010,15 @@
          this.tickPlayers();
          this.profiler.endStartSection("regular");
  
@@ -604,7 +643,7 @@
              Entity entity3 = entity2.getRidingEntity();
  
              if (entity3 != null)
-@@ -1766,11 +2013,12 @@
+@@ -1766,11 +2048,12 @@
                      entity2.addEntityCrashInfo(crashreportcategory1);
                      if (net.minecraftforge.common.ForgeModContainer.removeErroringEntities)
                      {
@@ -618,7 +657,7 @@
                  }
              }
  
-@@ -1786,8 +2034,8 @@
+@@ -1786,8 +2069,8 @@
                  {
                      this.getChunkFromChunkCoords(l1, i2).removeEntity(entity2);
                  }
@@ -629,7 +668,7 @@
                  this.onEntityRemoved(entity2);
              }
  
-@@ -1806,23 +2054,31 @@
+@@ -1806,23 +2089,31 @@
              }
  
              // forge: faster "contains" makes this removal much more efficient
@@ -668,7 +707,7 @@
                  if (this.isBlockLoaded(blockpos, false) && this.worldBorder.contains(blockpos)) //Forge: Fix TE's getting an extra tick on the client side....
                  {
                      try
-@@ -1843,26 +2099,27 @@
+@@ -1843,26 +2134,27 @@
                          tileentity.addInfoToCrashReport(crashreportcategory2);
                          if (net.minecraftforge.common.ForgeModContainer.removeErroringTileEntities)
                          {
@@ -700,7 +739,7 @@
                          chunk.removeTileEntity(tileentity.getPos());
                  }
              }
-@@ -1879,10 +2136,12 @@
+@@ -1879,10 +2171,12 @@
  
                  if (!tileentity1.isInvalid())
                  {
@@ -713,7 +752,7 @@
  
                      if (this.isBlockLoaded(tileentity1.getPos()))
                      {
-@@ -1890,6 +2149,12 @@
+@@ -1890,6 +2184,12 @@
                          IBlockState iblockstate = chunk.getBlockState(tileentity1.getPos());
                          chunk.addTileEntity(tileentity1.getPos(), tileentity1);
                          this.notifyBlockUpdate(tileentity1.getPos(), iblockstate, iblockstate, 3);
@@ -726,7 +765,7 @@
                      }
                  }
              }
-@@ -1973,6 +2238,14 @@
+@@ -1973,6 +2273,14 @@
              }
          }
  
@@ -741,7 +780,7 @@
          entityIn.lastTickPosX = entityIn.posX;
          entityIn.lastTickPosY = entityIn.posY;
          entityIn.lastTickPosZ = entityIn.posZ;
-@@ -1991,6 +2264,7 @@
+@@ -1991,6 +2299,7 @@
              {
                  if(!entityIn.updateBlocked)
                  entityIn.onUpdate();
@@ -749,7 +788,7 @@
              }
          }
  
-@@ -2382,25 +2656,25 @@
+@@ -2382,25 +2691,25 @@
      public TileEntity getTileEntity(BlockPos pos)
      {
          if (this.isOutsideBuildHeight(pos))
@@ -781,7 +820,7 @@
                  tileentity2 = this.getPendingTileEntityAt(pos);
              }
  
-@@ -2428,7 +2702,7 @@
+@@ -2428,7 +2737,7 @@
      {
          pos = pos.toImmutable(); // Forge - prevent mutable BlockPos leaks
          if (!this.isOutsideBuildHeight(pos))
@@ -790,7 +829,7 @@
              if (tileEntityIn != null && !tileEntityIn.isInvalid())
              {
                  if (this.processingLoadedTiles)
-@@ -2449,6 +2723,7 @@
+@@ -2449,6 +2758,7 @@
                          }
                      }
  
@@ -798,7 +837,7 @@
                      this.addedTileEntityList.add(tileEntityIn);
                  }
                  else
-@@ -2500,7 +2775,7 @@
+@@ -2500,7 +2810,7 @@
      public boolean isBlockNormalCube(BlockPos pos, boolean _default)
      {
          if (this.isOutsideBuildHeight(pos))
@@ -807,7 +846,7 @@
              return false;
          }
          else
-@@ -2657,6 +2932,11 @@
+@@ -2657,6 +2967,11 @@
                  }
  
                  this.rainingStrength = MathHelper.clamp(this.rainingStrength, 0.0F, 1.0F);
@@ -819,7 +858,7 @@
              }
          }
      }
-@@ -2846,8 +3126,11 @@
+@@ -2846,8 +3161,11 @@
  
      public boolean checkLightFor(EnumSkyBlock lightType, BlockPos pos)
      {
@@ -832,7 +871,7 @@
              return false;
          }
          else
-@@ -3028,15 +3311,15 @@
+@@ -3028,15 +3346,15 @@
          return list;
      }
  
@@ -854,7 +893,7 @@
              }
          }
  
-@@ -3137,7 +3420,16 @@
+@@ -3137,7 +3455,16 @@
  
          for (Entity entity4 : this.loadedEntityList)
          {
@@ -872,7 +911,7 @@
              {
                  ++j2;
              }
-@@ -3152,6 +3444,9 @@
+@@ -3152,6 +3479,9 @@
          {
              if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.EntityJoinWorldEvent(entity4, this)))
              {
@@ -882,7 +921,7 @@
                  loadedEntityList.add(entity4);
                  this.onEntityAdded(entity4);
              }
-@@ -3168,19 +3463,24 @@
+@@ -3168,19 +3498,24 @@
          IBlockState iblockstate1 = this.getBlockState(pos);
          AxisAlignedBB axisalignedbb = skipCollisionCheck ? null : blockIn.getDefaultState().getCollisionBoundingBox(this, pos);
  
@@ -910,7 +949,7 @@
      }
  
      public int getSeaLevel()
-@@ -3345,6 +3645,12 @@
+@@ -3345,6 +3680,12 @@
          {
              EntityPlayer entityplayer1 = this.playerEntities.get(j2);
  
@@ -923,7 +962,7 @@
              if (p_190525_9_.apply(entityplayer1))
              {
                  double d1 = entityplayer1.getDistanceSq(x, y, z);
-@@ -3367,7 +3673,7 @@
+@@ -3367,7 +3708,7 @@
              EntityPlayer entityplayer = this.playerEntities.get(j2);
  
              if (EntitySelectors.NOT_SPECTATING.apply(entityplayer))
@@ -932,7 +971,7 @@
                  double d0 = entityplayer.getDistanceSq(x, y, z);
  
                  if (range < 0.0D || d0 < range * range)
-@@ -3592,6 +3898,16 @@
+@@ -3592,6 +3933,16 @@
      {
      }
  
@@ -949,7 +988,7 @@
      public float getThunderStrength(float delta)
      {
          return (this.prevThunderingStrength + (this.thunderingStrength - this.prevThunderingStrength) * delta) * this.getRainStrength(delta);
-@@ -3880,7 +4196,7 @@
+@@ -3880,7 +4231,7 @@
          int j2 = x * 16 + 8 - blockpos1.getX();
          int k2 = z * 16 + 8 - blockpos1.getZ();
          int l2 = 128;
