@@ -127,7 +127,15 @@
              if (event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  if (f >= 1.0F)
-@@ -230,6 +279,7 @@
+@@ -221,6 +270,7 @@
+                 this.destroyPos = pos;
+                 int i = (int)(f * 10.0F);
+                 this.world.sendBlockBreakProgress(this.player.getEntityId(), pos, i);
++                this.player.connection.sendPacket(new SPacketBlockChange(world, pos)); // Paper - MC-54026 - backport from 1.13
+                 this.durabilityRemainingOnBlock = i;
+             }
+         }
+@@ -230,6 +280,7 @@
      {
          if (pos.equals(this.destroyPos))
          {
@@ -135,7 +143,7 @@
              int i = this.curblockDamage - this.initialDamage;
              IBlockState iblockstate = this.world.getBlockState(pos);
  
-@@ -251,6 +301,15 @@
+@@ -251,6 +302,15 @@
                      this.initialBlockDamage = this.initialDamage;
                  }
              }
@@ -151,7 +159,7 @@
          }
      }
  
-@@ -279,25 +338,25 @@
+@@ -279,25 +339,25 @@
      }
  
      public boolean tryHarvestBlock(BlockPos pos)
@@ -184,7 +192,7 @@
                  ItemStack stack = player.getHeldItemMainhand();
                  if (!stack.isEmpty() && stack.getItem().onBlockStartBreak(stack, pos, player)) return false;
  
-@@ -305,33 +364,33 @@
+@@ -305,33 +365,33 @@
                  boolean flag1 = false;
  
                  if (this.isCreative())
@@ -225,7 +233,7 @@
                  }
                  return flag1;
              }
-@@ -396,9 +455,58 @@
+@@ -396,9 +456,58 @@
          }
      }
  
@@ -285,7 +293,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -432,8 +540,8 @@
+@@ -432,8 +541,8 @@
              net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock event = net.minecraftforge.common.ForgeHooks
                      .onRightClickBlock(player, hand, pos, facing, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
              if (event.isCanceled()) return event.getCancellationResult();
@@ -295,7 +303,7 @@
              if (event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  result = stack.onItemUseFirst(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-@@ -446,10 +554,10 @@
+@@ -446,10 +555,10 @@
              {
                  IBlockState iblockstate = worldIn.getBlockState(pos);
                  if(event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
@@ -310,7 +318,7 @@
              }
  
              if (stack.isEmpty())
-@@ -460,7 +568,7 @@
+@@ -460,7 +569,7 @@
              {
                  return EnumActionResult.PASS;
              }
@@ -319,7 +327,7 @@
              {
                  if (stack.getItem() instanceof ItemBlock && !player.canUseCommandBlock())
                  {
-@@ -478,10 +586,10 @@
+@@ -478,10 +587,10 @@
                      int i = stack.getCount();
                      if (result != EnumActionResult.SUCCESS && event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
                              || result == EnumActionResult.SUCCESS && event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW) {
@@ -334,7 +342,7 @@
                      } else return result;
                  }
                  else
-@@ -496,6 +604,8 @@
+@@ -496,6 +605,8 @@
              }
          }
      }
