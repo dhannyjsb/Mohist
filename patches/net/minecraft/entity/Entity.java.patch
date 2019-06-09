@@ -34,7 +34,7 @@
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.init.Blocks;
-@@ -39,62 +28,79 @@
+@@ -39,64 +28,81 @@
  import net.minecraft.inventory.EntityEquipmentSlot;
  import net.minecraft.item.Item;
  import net.minecraft.item.ItemStack;
@@ -138,8 +138,11 @@
 -    private final List<Entity> riddenByEntities;
 +    public final List<Entity> riddenByEntities;  // Spigot
      protected int rideCooldown;
-     private Entity ridingEntity;
+-    private Entity ridingEntity;
++    private Entity au;public void setVehicle(Entity entity) { this.au = entity; } // Paper // OBFHELPER
      public boolean forceSpawn;
+     public World world;
+     public double prevPosX;
 @@ -137,8 +143,8 @@
      public float entityCollisionReduction;
      protected Random rand;
@@ -700,10 +703,11 @@
              if (!this.world.isRemote && passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer))
              {
                  this.riddenByEntities.add(0, passenger);
-@@ -2129,6 +2323,21 @@
+@@ -2129,6 +2323,27 @@
          }
          else
          {
++            passenger.setVehicle(this); // Paper - Set the vehicle back for the event
 +            CraftEntity craft = (CraftEntity) passenger.getBukkitEntity().getVehicle();
 +            Entity orig = craft == null ? null : craft.getHandle();
 +            if (getBukkitEntity() instanceof Vehicle && passenger.getBukkitEntity() instanceof LivingEntity) {
@@ -718,11 +722,16 @@
 +                    return;
 +                }
 +            }
-+            Bukkit.getPluginManager().callEvent( new org.spigotmc.event.entity.EntityDismountEvent(passenger.getBukkitEntity(), this.getBukkitEntity())); // Spigot
++            // Paper start - make EntityDismountEvent cancellable
++            if (!new org.spigotmc.event.entity.EntityDismountEvent(passenger.getBukkitEntity(), this.getBukkitEntity()).callEvent()) {
++                return;
++            }
++            passenger.setVehicle(null);
++            // Paper end
              this.riddenByEntities.remove(passenger);
              passenger.rideCooldown = 60;
          }
-@@ -2325,12 +2534,12 @@
+@@ -2325,12 +2540,12 @@
          this.setFlag(5, invisible);
      }
  
@@ -737,7 +746,7 @@
      {
          byte b0 = ((Byte)this.dataManager.get(FLAGS)).byteValue();
  
-@@ -2351,17 +2560,52 @@
+@@ -2351,17 +2566,52 @@
  
      public void setAir(int air)
      {
@@ -792,7 +801,7 @@
          }
      }
  
-@@ -2502,7 +2746,7 @@
+@@ -2502,7 +2752,7 @@
  
      public String toString()
      {
@@ -801,7 +810,7 @@
      }
  
      public boolean isEntityInvulnerable(DamageSource source)
-@@ -2540,7 +2784,7 @@
+@@ -2540,7 +2790,7 @@
      public Entity changeDimension(int dimensionIn)
      {
          if (this.world.isRemote || this.isDead) return null;
@@ -810,7 +819,7 @@
      }
  
      @Nullable // Forge: Entities that require custom handling should override this method, not the other
-@@ -2551,53 +2795,67 @@
+@@ -2551,53 +2801,67 @@
              if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
              this.world.profiler.startSection("changeDimension");
              MinecraftServer minecraftserver = this.getServer();
@@ -918,7 +927,7 @@
              this.world.profiler.endStartSection("reloading");
              Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
  
-@@ -2605,28 +2863,26 @@
+@@ -2605,28 +2869,26 @@
              {
                  entity.copyDataFromOld(this);
  
@@ -956,7 +965,7 @@
              return entity;
          }
          else
-@@ -2755,6 +3011,11 @@
+@@ -2755,6 +3017,11 @@
  
      public void setCustomNameTag(String name)
      {
@@ -968,7 +977,7 @@
          this.dataManager.set(CUSTOM_NAME, name);
      }
  
-@@ -2838,7 +3099,25 @@
+@@ -2838,7 +3105,25 @@
  
      public void setEntityBoundingBox(AxisAlignedBB bb)
      {
@@ -995,7 +1004,7 @@
      }
  
      public float getEyeHeight()
-@@ -2897,11 +3176,11 @@
+@@ -2897,11 +3182,11 @@
  
      public void setCommandStat(CommandResultStats.Type type, int amount)
      {
@@ -1011,7 +1020,7 @@
  
      @Nullable
      public MinecraftServer getServer()
-@@ -2974,7 +3253,6 @@
+@@ -2974,7 +3259,6 @@
      public void onRemovedFromWorld() {
          this.isAddedToWorld = false;
      }
@@ -1019,7 +1028,7 @@
      /**
       * Returns a NBTTagCompound that can be used to store custom data for this entity.
       * It will be written, and read from disc, so it persists over world saves.
-@@ -3030,7 +3308,7 @@
+@@ -3030,7 +3314,7 @@
          {
              return ((net.minecraft.entity.item.EntityMinecart)this).getCartItem();
          }
@@ -1028,7 +1037,7 @@
          {
              return new ItemStack(((EntityBoat)this).getItemBoat());
          }
-@@ -3109,14 +3387,14 @@
+@@ -3109,14 +3393,14 @@
      }
  
      @Override
@@ -1045,7 +1054,7 @@
      {
          return capabilities == null ? null : capabilities.getCapability(capability, facing);
      }
-@@ -3319,7 +3597,7 @@
+@@ -3319,7 +3603,7 @@
          return SoundCategory.NEUTRAL;
      }
  
