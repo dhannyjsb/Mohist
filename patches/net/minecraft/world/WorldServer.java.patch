@@ -874,6 +874,15 @@
              return false;
          }
          else
+@@ -1085,7 +1318,7 @@
+             {
+                 Entity entity = this.entitiesByUuid.get(uuid);
+ 
+-                if (this.unloadedEntityList.contains(entity))
++                if (this.unloadedEntityList.contains(entity) || entity.isDead) // Paper - if dupe is dead, overwrite
+                 {
+                     this.unloadedEntityList.remove(entity);
+                 }
 @@ -1093,7 +1326,6 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))

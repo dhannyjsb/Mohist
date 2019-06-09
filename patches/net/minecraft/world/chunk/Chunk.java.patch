@@ -243,7 +243,20 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -864,7 +938,7 @@
+@@ -854,17 +928,18 @@
+     {
+         this.loaded = true;
+         this.world.addTileEntities(this.tileEntities.values());
+-
++        List<Entity> toAdd = new java.util.ArrayList<>(32); // Paper
+         for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
+         {
+-            this.world.loadEntities(com.google.common.collect.ImmutableList.copyOf(classinheritancemultimap));
++            toAdd.addAll(classinheritancemultimap);
+         }
+         net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Load(this));
++        this.world.loadEntities(toAdd); // Paper - add all at same time to avoid entities adding to world modifying slice state
+     }
  
      public void onUnload()
      {
@@ -252,7 +265,7 @@
          this.loaded = false;
  
          for (TileEntity tileentity : this.tileEntities.values())
-@@ -874,7 +948,14 @@
+@@ -874,7 +949,14 @@
  
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
          {
@@ -268,7 +281,7 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -1001,6 +1082,63 @@
+@@ -1001,6 +1083,63 @@
          }
      }
  
@@ -332,7 +345,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1155,26 @@
+@@ -1017,6 +1156,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -359,7 +372,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1233,7 @@
+@@ -1075,7 +1234,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -368,7 +381,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1244,7 @@
+@@ -1086,7 +1245,7 @@
  
      public boolean isPopulated()
      {
@@ -377,7 +390,7 @@
      }
  
      public boolean wasTicked()
-@@ -1418,7 +1576,7 @@
+@@ -1418,7 +1577,7 @@
      {
          return this.loaded;
      }
@@ -386,7 +399,7 @@
      @SideOnly(Side.CLIENT)
      public void markLoaded(boolean loaded)
      {
-@@ -1540,11 +1698,11 @@
+@@ -1540,11 +1699,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.
