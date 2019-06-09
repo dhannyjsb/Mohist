@@ -129,7 +129,7 @@
              }
  
 -            this.world.spawnEntity(entitywitch);
-+            this.world.spawnEntity(entitywitch, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING); // Paper - Added lightning spawn reason for this entity
++            this.world.addEntity(entitywitch, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING); // Paper - Added lightning spawn reason for this entity
              this.setDead();
          }
      }

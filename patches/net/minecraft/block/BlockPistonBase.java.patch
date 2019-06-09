@@ -46,6 +46,15 @@
                  {
                      this.doMove(worldIn, pos, enumfacing, false);
                  }
+@@ -273,7 +289,7 @@
+     {
+         Block block = blockStateIn.getBlock();
+ 
+-        if (block == Blocks.OBSIDIAN)
++        if (block == Blocks.OBSIDIAN || (block instanceof BlockRailBase))
+         {
+             return false;
+         }
 @@ -349,6 +365,71 @@
              IBlockState[] aiblockstate = new IBlockState[k];
              EnumFacing enumfacing = extending ? direction : direction.getOpposite();

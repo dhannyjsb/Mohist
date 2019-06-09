@@ -862,7 +862,7 @@
 +    public boolean spawnEntity(Entity entityIn, CreatureSpawnEvent.SpawnReason spawnReason) {
 +        // World.spawnEntity(Entity) will call this, and we still want to perform
 +        // existing entity checking when it's called with a SpawnReason
-+        return this.canAddEntity(entityIn) ? super.spawnEntity(entityIn, spawnReason) : false;
++        return this.canAddEntity(entityIn) ? super.addEntity(entityIn, spawnReason) : false;
      }
  
      public void loadEntities(Collection<Entity> entityCollection)
