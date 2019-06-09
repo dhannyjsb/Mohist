@@ -35,7 +35,7 @@
          }
          else if (entityIn instanceof EntityEnderCrystal)
          {
-@@ -217,6 +220,7 @@
+@@ -217,11 +220,12 @@
  
      public void track(Entity entityIn, int trackingRange, final int updateFrequency, boolean sendVelocityUpdates)
      {
@@ -43,3 +43,9 @@
          try
          {
              if (this.trackedEntityHashTable.containsItem(entityIn.getEntityId()))
+             {
+-                throw new IllegalStateException("Entity is already tracked!");
++                return;
+             }
+ 
+             EntityTrackerEntry entitytrackerentry = new EntityTrackerEntry(entityIn, trackingRange, this.maxTrackingDistanceThreshold, updateFrequency, sendVelocityUpdates);
