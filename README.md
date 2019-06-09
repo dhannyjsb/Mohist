@@ -49,7 +49,7 @@ Mohist-xxxxx-universal.jar - is the server we should run it
 [**CraftBukkit**](https://hub.spigotmc.org/stash/scm/spigot/craftbukkit.git)
 [**Spigot**](https://hub.spigotmc.org/stash/scm/spigot/spigot.git)
 [**MinecraftForge**](https://github.com/MinecraftForge/MinecraftForge.git)
-[**Atom**](https://gitlab.com/AtomMC/Atom.git)
+[**Atom**](https://gitlab.com/divinecode/atom/Atom)
 [**Thermos**](https://github.com/CyberdyneCC/Thermos.git)
 [**ReflectionRemapper**](https://github.com/Maxqia/ReflectionRemapper)
 
