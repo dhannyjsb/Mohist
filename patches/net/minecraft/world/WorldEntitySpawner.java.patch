@@ -19,7 +19,7 @@
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.init.Blocks;
  import net.minecraft.server.management.PlayerChunkMapEntry;
-@@ -21,12 +15,36 @@
+@@ -21,14 +15,39 @@
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.biome.Biome;
  import net.minecraft.world.chunk.Chunk;
@@ -55,8 +55,11 @@
 +
      public int findChunksForSpawning(WorldServer worldServerIn, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate)
      {
++        org.spigotmc.AsyncCatcher.catchOp("check for eligible spawn chunks"); // Paper - At least until we figure out what is calling this async
          if (!spawnHostileMobs && !spawnPeacefulMobs)
-@@ -46,11 +64,14 @@
+         {
+             return 0;
+@@ -46,11 +65,14 @@
                      int k = MathHelper.floor(entityplayer.posZ / 16.0D);
                      int l = 8;
  
@@ -76,7 +79,7 @@
                              ChunkPos chunkpos = new ChunkPos(i1 + j, j1 + k);
  
                              if (!this.eligibleChunksForSpawning.contains(chunkpos))
-@@ -77,20 +98,43 @@
+@@ -77,20 +99,45 @@
  
              for (EnumCreatureType enumcreaturetype : EnumCreatureType.values())
              {
@@ -106,8 +109,10 @@
                  {
 -                    int k4 = worldServerIn.countEntities(enumcreaturetype, true);
 -                    int l4 = enumcreaturetype.getMaxNumberOfCreature() * i / MOB_COUNT_DIV;
++                    /* Paper start - As far as I can tell neither of these are even used
 +                    int k4 = worldServerIn.countEntities(enumcreaturetype.getCreatureClass());
 +                    int l4 = limit * i / MOB_COUNT_DIV; // CraftBukkit - use per-world limits
++                    */ // Paper end
  
 -                    if (k4 <= l4)
 +                    if ((mobcnt = getEntityCount(worldServerIn, enumcreaturetype.getCreatureClass())) <= limit * i / 256)
@@ -126,7 +131,7 @@
                              BlockPos blockpos = getRandomChunkPosition(worldServerIn, chunkpos1.x, chunkpos1.z);
                              int k1 = blockpos.getX();
                              int l1 = blockpos.getY();
-@@ -156,15 +200,17 @@
+@@ -156,15 +203,17 @@
  
                                                      if (entityliving.isNotColliding())
                                                      {
@@ -147,7 +152,7 @@
                                                      {
                                                          continue label134;
                                                      }
-@@ -295,8 +341,11 @@
+@@ -295,8 +344,11 @@
  
                              if (net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(entityliving, worldIn, j + 0.5f, (float) blockpos.getY(), k +0.5f, false) == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY) continue;
                              entityliving.setLocationAndAngles((double)((float)j + 0.5F), (double)blockpos.getY(), (double)((float)k + 0.5F), randomIn.nextFloat() * 360.0F, 0.0F);
