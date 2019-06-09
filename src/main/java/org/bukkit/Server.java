@@ -35,6 +35,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -1017,4 +1018,29 @@ public interface Server extends PluginMessageRecipient {
      */
     boolean suggestPlayerNamesWhenNullTabCompletions();
 
+    /**
+     * Creates a PlayerProfile for the specified uuid, with name as null
+     * @param uuid UUID to create profile for
+     * @return A PlayerProfile object
+     */
+    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid);
+
+    /**
+     * Creates a PlayerProfile for the specified name, with UUID as null
+     * @param name Name to create profile for
+     * @return A PlayerProfile object
+     */
+    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name);
+
+    /**
+     * Creates a PlayerProfile for the specified name/uuid
+     *
+     * Both UUID and Name can not be null at same time. One must be supplied.
+     *
+     * @param uuid UUID to create profile for
+     * @param name Name to create profile for
+     * @return A PlayerProfile object
+     */
+    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
+    // Paper end
 }

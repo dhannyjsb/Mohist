@@ -41,7 +41,7 @@
              return new EpollEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Epoll Client IO #%d").setDaemon(true).build());
          }
      };
-@@ -74,63 +75,69 @@
+@@ -74,63 +75,74 @@
          }
      };
      private final EnumPacketDirection direction;
@@ -64,6 +64,11 @@
  
 -    public NetworkManager(EnumPacketDirection packetDirection)
 -    {
++    // Paper start - NetworkClient implementation
++    public int protocolVersion;
++    public java.net.InetSocketAddress virtualHost;
++    // Paper end
++
 +    public NetworkManager(EnumPacketDirection packetDirection) 
 +	{
          this.direction = packetDirection;
@@ -136,7 +141,7 @@
              textcomponenttranslation = new TextComponentTranslation("disconnect.genericReason", new Object[] {"Internal Exception: " + p_exceptionCaught_2_});
          }
  
-@@ -173,7 +180,7 @@
+@@ -173,7 +185,7 @@
  
              try
              {
@@ -145,7 +150,7 @@
              }
              finally
              {
-@@ -195,7 +202,7 @@
+@@ -195,7 +207,7 @@
  
              try
              {
@@ -154,7 +159,7 @@
              }
              finally
              {
-@@ -265,7 +272,7 @@
+@@ -265,7 +277,7 @@
              {
                  while (!this.outboundPacketsQueue.isEmpty())
                  {
@@ -163,7 +168,7 @@
                      this.dispatchPacket(networkmanager$inboundhandlertuplepacketlistener.packet, networkmanager$inboundhandlertuplepacketlistener.futureListeners);
                  }
              }
-@@ -276,18 +283,19 @@
+@@ -276,18 +288,19 @@
          }
      }
  
@@ -190,7 +195,7 @@
          }
      }
  
-@@ -296,16 +304,19 @@
+@@ -296,16 +309,19 @@
          return this.socketAddress;
      }
  
@@ -216,7 +221,7 @@
      {
          return this.channel instanceof LocalChannel || this.channel instanceof LocalServerChannel;
      }
-@@ -410,7 +421,7 @@
+@@ -410,7 +426,7 @@
              }
              else
              {
@@ -225,7 +230,7 @@
              }
  
              if (this.channel.pipeline().get("compress") instanceof NettyCompressionEncoder)
-@@ -476,4 +487,12 @@
+@@ -476,4 +492,12 @@
                  this.futureListeners = inFutureListeners;
              }
          }

@@ -144,6 +144,7 @@ import red.mohist.Mohist;
 import red.mohist.MohistConfig;
 import red.mohist.i18n.Message;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -1689,4 +1690,21 @@ public final class CraftServer implements Server {
     {
         return spigot;
     }
+
+    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid) {
+        return createProfile(uuid, null);
+    }
+
+    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name) {
+        return createProfile(null, name);
+    }
+
+    public com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
+        Player player = uuid != null ? Bukkit.getPlayer(uuid) : (name != null ? Bukkit.getPlayerExact(name) : null);
+        if (player != null) {
+            return new com.destroystokyo.paper.profile.CraftPlayerProfile((CraftPlayer)player);
+        }
+        return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
+    }
+    // Paper end
 }

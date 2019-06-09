@@ -34,6 +34,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
 import red.mohist.Mohist;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -1191,4 +1192,36 @@ public final class Bukkit {
     public static boolean suggestPlayerNamesWhenNullTabCompletions() {
         return server.suggestPlayerNamesWhenNullTabCompletions();
     }
+
+    /**
+     * Creates a PlayerProfile for the specified uuid, with name as null
+     * @param uuid UUID to create profile for
+     * @return A PlayerProfile object
+     */
+    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid) {
+        return server.createProfile(uuid);
+    }
+
+    /**
+     * Creates a PlayerProfile for the specified name, with UUID as null
+     * @param name Name to create profile for
+     * @return A PlayerProfile object
+     */
+    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name) {
+        return server.createProfile(name);
+    }
+
+    /**
+     * Creates a PlayerProfile for the specified name/uuid
+     *
+     * Both UUID and Name can not be null at same time. One must be supplied.
+     *
+     * @param uuid UUID to create profile for
+     * @param name Name to create profile for
+     * @return A PlayerProfile object
+     */
+    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
+        return server.createProfile(uuid, name);
+    }
+    // Paper end
 }

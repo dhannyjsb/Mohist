@@ -132,7 +132,17 @@
          return playerprofilecache$profileentry == null ? null : playerprofilecache$profileentry.getGameProfile();
      }
  
-@@ -190,13 +172,13 @@
+@@ -187,16 +169,23 @@
+         return (String[])list.toArray(new String[list.size()]);
+     }
+ 
++    // Paper start
++    @Nullable public GameProfile getProfileIfCached(String name) {
++        ProfileEntry entry = this.usernameToProfileEntryMap.get(name.toLowerCase(Locale.ROOT));
++        return entry == null ? null : entry.gameProfile;
++    }
++    // Paper end
++
      @Nullable
      public GameProfile getProfileByUUID(UUID uuid)
      {
@@ -149,7 +159,7 @@
  
          if (playerprofilecache$profileentry != null)
          {
-@@ -215,14 +197,14 @@
+@@ -215,14 +204,14 @@
          try
          {
              bufferedreader = Files.newReader(this.usercacheFile, StandardCharsets.UTF_8);
@@ -166,7 +176,7 @@
                  {
                      if (playerprofilecache$profileentry != null)
                      {
-@@ -247,36 +229,38 @@
+@@ -247,36 +236,38 @@
  
      public void save()
      {
@@ -228,7 +238,7 @@
  
              if (playerprofilecache$profileentry != null)
              {
-@@ -309,13 +293,13 @@
+@@ -309,13 +300,13 @@
          }
      }
  
@@ -244,7 +254,7 @@
          {
              JsonObject jsonobject = new JsonObject();
              jsonobject.addProperty("name", p_serialize_1_.getGameProfile().getName());
-@@ -325,7 +309,7 @@
+@@ -325,7 +316,7 @@
              return jsonobject;
          }
  
