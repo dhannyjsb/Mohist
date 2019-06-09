@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/entity/monster/EntityCreeper.java
 +++ ../src-work/minecraft/net/minecraft/entity/monster/EntityCreeper.java
-@@ -36,6 +36,8 @@
+@@ -36,16 +36,18 @@
  import net.minecraft.world.storage.loot.LootTableList;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -9,8 +9,10 @@
  
  public class EntityCreeper extends EntityMob
  {
-@@ -44,8 +46,8 @@
-     private static final DataParameter<Boolean> IGNITED = EntityDataManager.<Boolean>createKey(EntityCreeper.class, DataSerializers.BOOLEAN);
+     private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityCreeper.class, DataSerializers.VARINT);
+     private static final DataParameter<Boolean> POWERED = EntityDataManager.<Boolean>createKey(EntityCreeper.class, DataSerializers.BOOLEAN);
+-    private static final DataParameter<Boolean> IGNITED = EntityDataManager.<Boolean>createKey(EntityCreeper.class, DataSerializers.BOOLEAN);
++    private static final DataParameter<Boolean> IGNITED = EntityDataManager.<Boolean>createKey(EntityCreeper.class, DataSerializers.BOOLEAN); private static final DataParameter<Boolean> isIgnitedDW = IGNITED; // Paper OBFHELPER
      private int lastActiveTime;
      private int timeSinceIgnited;
 -    private int fuseTime = 30;
@@ -62,7 +64,7 @@
      protected boolean processInteract(EntityPlayer player, EnumHand hand)
      {
          ItemStack itemstack = player.getHeldItem(hand);
-@@ -267,10 +282,20 @@
+@@ -267,10 +282,21 @@
          {
              boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this);
              float f = this.getPowered() ? 2.0F : 1.0F;
@@ -83,11 +85,12 @@
 +                this.spawnLingeringCloud();
 +            } else {
 +                timeSinceIgnited = 0;
++                this.dataManager.set(isIgnitedDW, Boolean.valueOf(false)); // Paper
 +            }
          }
      }
  
-@@ -281,6 +306,7 @@
+@@ -281,6 +307,7 @@
          if (!collection.isEmpty())
          {
              EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.world, this.posX, this.posY, this.posZ);
