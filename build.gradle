@@ -23,7 +23,7 @@ apply plugin: 'net.minecraftforge.gradle.launch4j'
 apply plugin: 'net.nemerosa.versioning'
 
 group = 'red.mohist'
-version = '0.0.9-'+versioning {
+version = '0.0.9a-'+versioning {
     full {it.abbreviated}
     dirty = { t -> t }
 }.info.full

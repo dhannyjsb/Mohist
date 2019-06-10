@@ -11,7 +11,7 @@ public class Mohist implements Runnable{
     public static ResourceBundle rb;
     private static String[] args;
     private static final String NAME = "Mohist";
-    private static final String VERSION = "0.0.9";
+    private static final String VERSION = "0.0.9a";
     private static final String NATIVE_VERSON = "v1_12_R1";
     private static final String NMS_PREFIX = "net/minecraft/server/";
 
