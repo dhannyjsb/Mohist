@@ -29,8 +29,7 @@ public class Download {
             int count = 0;
             System.out.println(Message.getString(Message.Dw_Start));
             while ( (count = is.read(buff)) != -1) {
-                String s =  String.valueOf(file.length()).replaceAll(",","");
-                System.out.println(Message.getFormatString(Message.Dw_Now,new Object[]{fileName,s.replaceAll(" ",""),l}));
+                System.out.println(Message.getFormatString(Message.Dw_Now, new Object[]{fileName,String.valueOf(file.length()),String.valueOf(l)}));
                 bos.write(buff, 0, count);
             }
         }
@@ -58,8 +57,6 @@ public class Download {
     }
 
     public Download(String url,String fileName,boolean logOut){
-        //String url = "https://s3.amazonaws.com/Minecraft.Download/versions/1.12.2/minecraft_server.1.12.2.jar";
-        //String fileName = "minecraft_server.1.12.2.jar";
         Object[] o1 = {fileName};
         System.out.println(Message.getFormatString(Message.Dw_File,o1));
         BufferedOutputStream bos = null;
@@ -79,8 +76,7 @@ public class Download {
             }
             while ( (count = is.read(buff)) != -1) {
                 if(logOut){
-                    String s =  String.valueOf(file.length()).replaceAll(",","");
-                    System.out.println(Message.getFormatString(Message.Dw_Now,new Object[]{fileName,s.replaceAll(" ",""),l}));
+                    System.out.println(Message.getFormatString(Message.Dw_Now, new Object[]{fileName,String.valueOf(file.length()),String.valueOf(l)}));
                 }
                 bos.write(buff, 0, count);
             }
@@ -103,7 +99,6 @@ public class Download {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 }

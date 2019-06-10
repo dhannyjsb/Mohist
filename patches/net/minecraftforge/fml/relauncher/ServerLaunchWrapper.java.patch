@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,32 +19,31 @@
+@@ -19,47 +19,54 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -44,23 +44,25 @@
          }
          Class<?> launchwrapper = null;
          try
-@@ -54,12 +53,21 @@
+         {
+             launchwrapper = Class.forName("net.minecraft.launchwrapper.Launch",true,getClass().getClassLoader());
+             Class.forName("org.objectweb.asm.Type",true,getClass().getClassLoader());
++            Mohist.LOGGER = LogManager.getLogger("Mohist");
++            Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
          }
          catch (Exception e)
          {
 -            System.err.printf("We appear to be missing one or more essential library files.\n" +
 -            		"You will need to add them to your server before FML and Forge will run successfully.");
-+            System.out.println(Message.getString(Message.Not_Have_Library));
-+            System.out.println(Message.getString(Message.Dw_Start));
-             e.printStackTrace(System.err);
+-            e.printStackTrace(System.err);
 -            System.exit(1);
++            System.out.println(Message.getString(Message.Not_Have_Library));
++            //e.printStackTrace(System.err);
 +            Thread t = new Thread(new DownloadServer(),"Server Download Thread");
 +            Thread t1 = new Thread(new DownloadLibraries(),"Server Libraries Thread");
 +            t.start();
 +            t1.start();
          }
-+        Mohist.LOGGER = LogManager.getLogger("Mohist");
-+        Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
 +        j = System.nanoTime();
  
 +        //Thread t = new Thread(new Update(),"Mohist Update Thread");
@@ -69,12 +71,14 @@
          try
          {
              Method main = launchwrapper.getMethod("main", String[].class);
-@@ -71,7 +79,7 @@
+@@ -71,9 +78,7 @@
          }
          catch (Exception e)
          {
 -            System.err.printf("A problem occurred running the Server launcher.");
-+            System.err.printf(Message.rb.getString(Message.Mohist_Start_Error.toString()));
-             e.printStackTrace(System.err);
-             System.exit(1);
+-            e.printStackTrace(System.err);
+-            System.exit(1);
++            System.out.println(Message.rb.getString(Message.Mohist_Start_Error.toString()));
          }
+     }
+ 
