@@ -13,8 +13,6 @@ import java.net.URL;
 public class Download {
 
     public Download(String url,String fileName){
-        //String url = "https://s3.amazonaws.com/Minecraft.Download/versions/1.12.2/minecraft_server.1.12.2.jar";
-        //String fileName = "minecraft_server.1.12.2.jar";
         Object[] o1 = {fileName};
         System.out.println(Message.getFormatString(Message.Dw_File,o1));
         BufferedOutputStream bos = null;

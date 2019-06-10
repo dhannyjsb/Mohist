@@ -61,56 +61,6 @@ public class DownloadLibraries implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*
-        String url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
-        String fileName = "libraries.zip";
-        Locale locale = Locale.getDefault();
-        Object[] o1 = {fileName};
-        System.out.println(Message.getFormatString(Message.Dw_File,o1));
-        BufferedOutputStream bos = null;
-        InputStream is1 = null;
-        try {
-            byte[] buff = new byte[8192];
-            if (locale.getCountry().equals("CN")) {
-                url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
-            }
-            is1 = new URL(url).openStream();
-            File file = new File(".", fileName);
-            file.getParentFile().mkdirs();
-            bos = new BufferedOutputStream(new FileOutputStream(file));
-            HttpURLConnection urlcon=(HttpURLConnection)new URL(url).openConnection();
-            long l = urlcon.getContentLengthLong();
-            urlcon.disconnect();
-            int count = 0;
-            System.out.println(Message.getString(Message.Dw_Start));
-            while ( (count = is1.read(buff)) != -1) {
-                Object[] o = {fileName,file.length(),l};
-                System.out.println(Message.getFormatString(Message.Dw_Now,o));
-                bos.write(buff, 0, count);
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            if (is1 != null) {
-                try {
-                    is1.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-         */
     }
 
 }
