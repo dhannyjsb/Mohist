@@ -19,7 +19,7 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.crash.ICrashReportDetail;
-@@ -21,11 +9,19 @@
+@@ -21,13 +9,21 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -39,8 +39,11 @@
 -    private final Map<String, NBTBase> tagMap = Maps.<String, NBTBase>newHashMap();
 +    private final Map<String, NBTBase> tagMap = Maps.newHashMap(); // Paper
  
-     void write(DataOutput output) throws IOException
+-    void write(DataOutput output) throws IOException
++    public void write(DataOutput output) throws IOException
      {
+         for (String s : this.tagMap.keySet())
+         {
 @@ -82,7 +78,6 @@
  
      public void setTag(String key, NBTBase value)
