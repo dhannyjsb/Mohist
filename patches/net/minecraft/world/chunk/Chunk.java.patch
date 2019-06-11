@@ -281,7 +281,21 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -1001,6 +1083,63 @@
+@@ -950,12 +1032,8 @@
+                 return true;
+             }
+         }
+-        else if (this.hasEntities && this.world.getTotalWorldTime() >= this.lastSaveTime + 600L)
+-        {
+-            return true;
+-        }
+ 
+-        return this.dirty;
++        return ((this.dirty || this.hasEntities) && this.world.getTotalWorldTime() >= this.lastSaveTime +  MinecraftServer.getServerInst().autosavePeriod);
+     }
+ 
+     public Random getRandomWithSeed(long seed)
+@@ -1001,6 +1079,63 @@
          }
      }
  
@@ -345,7 +359,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1156,26 @@
+@@ -1017,6 +1152,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -372,7 +386,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1234,7 @@
+@@ -1075,7 +1230,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -381,7 +395,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1245,7 @@
+@@ -1086,7 +1241,7 @@
  
      public boolean isPopulated()
      {
@@ -390,7 +404,7 @@
      }
  
      public boolean wasTicked()
-@@ -1418,7 +1577,7 @@
+@@ -1418,7 +1573,7 @@
      {
          return this.loaded;
      }
@@ -399,7 +413,7 @@
      @SideOnly(Side.CLIENT)
      public void markLoaded(boolean loaded)
      {
-@@ -1540,11 +1699,11 @@
+@@ -1540,11 +1695,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.

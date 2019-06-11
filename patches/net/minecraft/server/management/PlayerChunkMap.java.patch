@@ -60,6 +60,15 @@
                  }
              }
          }
+@@ -213,7 +215,7 @@
+         {
+             WorldProvider worldprovider = this.world.provider;
+ 
+-            if (!worldprovider.canRespawnHere())
++            if (!worldprovider.canRespawnHere() && !this.world.disableLevelSaving) // Paper - respect saving disabled setting
+             {
+                 this.world.getChunkProvider().queueUnloadAll();
+             }
 @@ -257,6 +259,14 @@
          return playerchunkmapentry;
      }
