@@ -110,7 +110,7 @@ public class Commandmohist extends Command {
 
     private void getCommands(CommandSender sender){
         for (Command per : MinecraftServer.getServerInst().server.getCommandMap().getCommands()) {
-            sender.sendMessage(per.getName());
+            sender.sendMessage(per.getName() + ": "+  per.getPermission());
         }
     }
 
