@@ -383,6 +383,11 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     }
 
     public World getWorld() {
+        if (entity.world.getWorld() == null)
+        {
+            return DimensionManager.getWorld(0).getWorld();
+        }
+        // Cauldron end
         return entity.world.getWorld();
     }
 

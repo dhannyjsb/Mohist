@@ -263,7 +263,12 @@ public final class AsynchronousExecutor<P, T, C, E extends Throwable> {
     public boolean drop(P parameter, C callback) throws IllegalStateException {
         final Task task = tasks.get(parameter);
         if (task == null) {
-            return true;
+            // Cauldron start - Print debug info for QueuedChunk and avoid crash
+            //throw new IllegalStateException("Unknown " + parameter);
+            System.out.println("Unknown " + parameter);
+            System.out.println("This should not happen. Please report this error to Mohist dev team.");
+            return false;
+            // Cauldron end
         }
         if (!task.callbacks.remove(callback)) {
             throw new IllegalStateException("Unknown " + callback + " for " + parameter);

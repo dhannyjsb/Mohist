@@ -116,10 +116,12 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
 
     public Recipe getRecipe() {
         IRecipe recipe = ((InventoryCrafting)getInventory()).currentRecipe;
+        // Cauldron start - handle custom recipe classes without Bukkit API equivalents
         try {
             return recipe == null ? null : recipe.toBukkitRecipe();
         } catch (AbstractMethodError ex) {
-            return recipe == null ? null : new CraftCustomModRecipe(recipe, recipe.getRegistryName());
+            return new CraftCustomModRecipe(recipe, recipe.getRegistryName());
         }
+        // Cauldron end
     }
 }

@@ -26,12 +26,15 @@ public class RecipeIterator implements Iterator<Recipe> {
     public Recipe next() {
         if (recipes.hasNext()) {
             removeFrom = recipes;
+            // Cauldron start - handle custom recipe classes without Bukkit API equivalents
             IRecipe recipe = recipes.next();
             try {
                 return recipe.toBukkitRecipe();
          	} catch (AbstractMethodError ex) {
-                return recipe == null ? null :new CraftCustomModRecipe(recipe, recipe.getRegistryName());
+                // No Bukkit wrapper provided
+                return new CraftCustomModRecipe(recipe, recipe.getRegistryName());
             }
+            // Cauldron end
         } else {
             net.minecraft.item.ItemStack item;
             if (smeltingCustom.hasNext()) {

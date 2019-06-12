@@ -482,7 +482,7 @@ public class CraftEventFactory {
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         victim.expToDrop = event.getDroppedExp();
-
+        // Cauldron start - handle any drop changes from plugins
 		victim.capturedDrops.clear();
         for (org.bukkit.inventory.ItemStack stack : event.getDrops())
 		{
@@ -492,6 +492,8 @@ public class CraftEventFactory {
                 victim.capturedDrops.add((EntityItem)entityitem);
             }
         }
+        // Cauldron end
+
         return event;
     }
 
@@ -509,21 +511,17 @@ public class CraftEventFactory {
         if (event.getKeepInventory()) {
             return event;
         }
-        victim.capturedDrops.clear();
+        victim.capturedDrops.clear(); // Cauldron - we must clear pre-capture to avoid duplicates
         for (final org.bukkit.inventory.ItemStack stack : event.getDrops()) {
-            if (stack != null) {
-                if (stack.getType() == Material.AIR) {
-                    continue;
-                }
-				if (victim.captureDrops)
-                {
-                    net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
-                    if (entityitem != null)
-                    {
-                        victim.capturedDrops.add((EntityItem)entityitem);
-                    }
+            if (stack == null || stack.getType() == Material.AIR) continue;
+            // Cauldron start - add support for Forge's PlayerDropsEvent
+            if (victim.captureDrops) {
+                net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
+                if (entityitem != null) {
+                    victim.capturedDrops.add((EntityItem) entityitem);
                 }
             }
+            // Cauldron end
         }
         return event;
     }
@@ -567,6 +565,7 @@ public class CraftEventFactory {
 
             if (source instanceof EntityDamageSourceIndirect) {
                 damager = ((EntityDamageSourceIndirect) source).getProximateDamageSource();
+                // Cauldron start - vanilla compatibility
 			    if (damager != null) {
                     if (damager.getBukkitEntity() instanceof ThrownPotion) {
                         cause = DamageCause.MAGIC;

@@ -40,8 +40,7 @@ public class CraftBlockState implements BlockState {
         this.type = block.getTypeId();
         this.chunk = (CraftChunk) block.getChunk();
         this.flag = 3;
-
-        createData(block.getData());
+        // Cauldron start - save TE data
         TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
         if (te != null)
         {
@@ -49,6 +48,8 @@ public class CraftBlockState implements BlockState {
             te.writeToNBT(nbt);
         }
         else nbt = null;
+        // Cauldron end
+        createData(block.getData());
     }
 	
 	public CraftBlockState(final Block block, int flag) {
@@ -201,7 +202,7 @@ public class CraftBlockState implements BlockState {
         if (applyPhysics && getData() instanceof Attachable) {
             world.getHandle().notifyNeighborsOfStateChange(pos.offset(CraftBlock.blockFaceToNotch(((Attachable) getData()).getAttachedFace())), newBlock.getBlock(), false);
         }
-
+        // Cauldron start - restore TE data from snapshot
         if (nbt != null)
         {
             TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
@@ -210,6 +211,7 @@ public class CraftBlockState implements BlockState {
                 te.readFromNBT(nbt);
             }
         }
+        // Cauldron end
         return true;
     }
 

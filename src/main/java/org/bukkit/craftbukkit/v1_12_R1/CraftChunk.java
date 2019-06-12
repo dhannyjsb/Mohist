@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 public class CraftChunk implements Chunk {
     private WeakReference<net.minecraft.world.chunk.Chunk> weakChunk;
-    private final WorldServer worldServer;
+    private final net.minecraft.world.World worldServer;
     private final int x;
     private final int z;
     private static final byte[] emptyData = new byte[2048];
@@ -29,7 +29,7 @@ public class CraftChunk implements Chunk {
     public CraftChunk(net.minecraft.world.chunk.Chunk chunk) {
         this.weakChunk = new WeakReference<net.minecraft.world.chunk.Chunk>(chunk);
 
-        worldServer = (WorldServer) getHandle().getWorld();
+        worldServer = getHandle().getWorld() instanceof net.minecraft.world.World ? (net.minecraft.world.World) getHandle().getWorld() : null; // Thermos - use world instead of worldserver for NatureOverhaul
         x = getHandle().x;
         z = getHandle().z;
     }

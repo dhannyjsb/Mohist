@@ -29,6 +29,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class ActivationRange
 {
@@ -47,12 +48,15 @@ public class ActivationRange
      */
     public static byte initializeEntityActivationType(Entity entity)
     {
-        if ( entity instanceof EntityMob || entity instanceof EntitySlime )
+        // Cauldron start - account for entities that dont extend EntityMob, EntityAmbientCreature, EntityCreature
+        if ( entity instanceof EntityMob || entity instanceof EntitySlime || entity.isCreatureType(EnumCreatureType.MONSTER, false)) // Cauldron - account for entities that dont extend EntityMob
         {
             return 1; // Monster
-        } else if ( entity instanceof EntityCreature || entity instanceof EntityAmbientCreature)
+        } else if ( entity instanceof EntityCreature || entity instanceof EntityAmbientCreature || entity.isCreatureType(EnumCreatureType.CREATURE, false)
+                || entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false) || entity.isCreatureType(EnumCreatureType.AMBIENT, false))
         {
             return 2; // Animal
+            // Cauldron end
         } else
         {
             return 3; // Misc
@@ -79,7 +83,7 @@ public class ActivationRange
         if ( ( entity.activationType == 3 && config.miscActivationRange == 0 )
                 || ( entity.activationType == 2 && config.animalActivationRange == 0 )
                 || ( entity.activationType == 1 && config.monsterActivationRange == 0 )
-                || entity instanceof EntityPlayer
+                || entity instanceof EntityPlayer && !(entity instanceof FakePlayer) // Cauldron
                 || entity instanceof EntityThrowable
                 || entity instanceof MultiPartEntityPart
                 || entity instanceof EntityWither

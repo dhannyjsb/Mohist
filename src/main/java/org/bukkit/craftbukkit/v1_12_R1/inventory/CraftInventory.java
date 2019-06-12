@@ -21,6 +21,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import red.mohist.util.CauldronUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -495,9 +496,7 @@ public class CraftInventory implements Inventory {
             return inventory.getOwner();
         } catch (AbstractMethodError e) {
             if (inventory instanceof net.minecraft.tileentity.TileEntity) {
-                net.minecraft.tileentity.TileEntity tileentity = (net.minecraft.tileentity.TileEntity) inventory;
-                BlockState state = tileentity.getWorld().getWorld().getBlockAt(tileentity.getPos().getX(), tileentity.getPos().getY(), tileentity.getPos().getZ()).getState();
-                return (state instanceof InventoryHolder ? (InventoryHolder) state : null);
+                return CauldronUtils.getOwner((net.minecraft.tileentity.TileEntity)inventory);
             }else{
                 return null;
             }

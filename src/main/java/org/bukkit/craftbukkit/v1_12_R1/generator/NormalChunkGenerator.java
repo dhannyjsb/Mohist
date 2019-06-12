@@ -69,4 +69,11 @@ public class NormalChunkGenerator extends InternalChunkGenerator {
     public boolean isInsideStructure(World world, String string, BlockPos bp) {
         return generator.isInsideStructure(world, string, bp);
     }
+
+    // Cauldron start - return vanilla compatible IChunkGenerator for forge
+    public IChunkGenerator getForgeChunkGenerator()
+    {
+        return this.generator;
+    }
+    // Cauldron end
 }

@@ -26,6 +26,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
 import org.bukkit.inventory.ItemStack;
@@ -276,6 +277,7 @@ public class CraftBlock implements Block {
 
     public BlockState getState() {
         Material material = getType();
+        // Cauldron start - if null, check for TE that implements IInventory
         if (material == null) {
             TileEntity tileEntity = chunk.getCraftWorld().getTileEntityAt(x, y, z);
             if (tileEntity != null) {
@@ -357,6 +359,7 @@ public class CraftBlock implements Block {
         case BED_BLOCK:
             return new CraftBed(this);
         default:
+            // Cauldron start
             TileEntity tileEntity = chunk.getCraftWorld().getTileEntityAt(x, y, z);
             if (tileEntity != null && tileEntity instanceof IInventory) {
                 // block with unhandled TileEntity:
@@ -455,7 +458,12 @@ public class CraftBlock implements Block {
     }
 
     public boolean isEmpty() {
-        return getType() == Material.AIR;
+        // Cauldron start - support custom air blocks (Railcraft player aura tracking block)
+        //return getType() == Material.AIR;
+        if (getType() == Material.AIR) return true;
+        if (!(getWorld() instanceof CraftWorld)) return false;
+        return ((CraftWorld) getWorld()).getHandle().isAirBlock(new BlockPos(getX(), getY(), getZ()));
+        // Cauldron end
     }
 
     public boolean isLiquid() {

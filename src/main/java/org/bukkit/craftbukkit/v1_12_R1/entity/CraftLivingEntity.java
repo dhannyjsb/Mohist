@@ -8,6 +8,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityEnderPearl;
 import net.minecraft.entity.item.EntityExpBottle;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityDragonFireball;
 import net.minecraft.entity.projectile.EntityEgg;
@@ -102,12 +103,13 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
                     + ". (attribute base value: " + this.getHandle().getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue()
                     + (this instanceof CraftPlayer ? ", player: " + this.getName() + ')' : ')'));
         }
-
+        // Cauldron start - setHealth must be set before onDeath to respect events that may prevent death.
         getHandle().setHealth((float) health);
 
-        if (health == 0) {
-            getHandle().onDeath(DamageSource.GENERIC);
+        if (entity instanceof EntityPlayerMP && health == 0) {
+            ((EntityPlayerMP) entity).onDeath(DamageSource.GENERIC);
         }
+        // Cauldron end
     }
 
     public double getMaxHealth() {
@@ -295,6 +297,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public Collection<PotionEffect> getActivePotionEffects() {
         List<PotionEffect> effects = new ArrayList<PotionEffect>();
         for (net.minecraft.potion.PotionEffect handle : getHandle().getActivePotionMap().values()) {
+            if (PotionEffectType.getById(Potion.getIdFromPotion(handle.getPotion())) == null) continue; // Cauldron - ignore null types
             effects.add(new PotionEffect(PotionEffectType.getById(Potion.getIdFromPotion(handle.getPotion())), handle.getDuration(), handle.getAmplifier(), handle.getIsAmbient(), handle.doesShowParticles()));
         }
         return effects;

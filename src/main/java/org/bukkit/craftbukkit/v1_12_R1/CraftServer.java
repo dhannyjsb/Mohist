@@ -206,10 +206,6 @@ public final class CraftServer implements Server {
     private final List<CraftPlayer> playerView;
     public int reloadCount;
 
-    public CraftSimpleCommandMap getCraftCommandMap() {
-        return this.craftCommandMap;
-    }
-
     private final class BooleanWrapper {
         private boolean value = true;
     }
@@ -1350,9 +1346,11 @@ public final class CraftServer implements Server {
 
     @Override
     public File getWorldContainer() {
+        // Cauldron start - return the proper container
         if (DimensionManager.getWorld(0) != null) {
             return ((SaveHandler)DimensionManager.getWorld(0).getSaveHandler()).getWorldDirectory();
         }
+        // Cauldron end
         if (this.getServer().anvilFile != null) {
             return this.getServer().anvilFile;
         }
@@ -1445,6 +1443,12 @@ public final class CraftServer implements Server {
     public SimpleCommandMap getCommandMap() {
         return commandMap;
     }
+
+    // Cauldron start
+    public CraftSimpleCommandMap getCraftCommandMap() {
+        return craftCommandMap;
+    }
+    // Cauldron end
 
     @Override
     public int getMonsterSpawnLimit() {
