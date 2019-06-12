@@ -11,12 +11,11 @@
  
  public class SlotFurnaceOutput extends Slot
  {
-@@ -69,6 +72,20 @@
- 
+@@ -70,6 +73,21 @@
                  i = j;
              }
-+			
-+			// Mohist - mods bypass
+ 
++            // Cauldron start - validate inventory before attempting to cast it
 +            if (this.inventory instanceof TileEntityFurnace) {
 +                // CraftBukkit - fire FurnaceExtractEvent
 +                Player player = (Player) this.player.getBukkitEntity();
@@ -29,6 +28,8 @@
 +                    i = event.getExpToDrop();
 +                }
 +            }
- 
++            // Cauldron end
++
              while (i > 0)
              {
+                 int k = EntityXPOrb.getXPSplit(i);

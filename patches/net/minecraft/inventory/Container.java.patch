@@ -114,7 +114,20 @@
      protected Slot addSlotToContainer(Slot slotIn)
      {
          slotIn.slotNumber = this.inventorySlots.size();
-@@ -79,7 +164,7 @@
+@@ -44,7 +129,11 @@
+     {
+         if (this.listeners.contains(listener))
+         {
+-            throw new IllegalArgumentException("Listener already listening");
++            // Cauldron start - As we do not create a new player object on respawn, we need to update the client with changes if listener already exists
++            //throw new IllegalArgumentException("Listener already listening");
++            listener.sendAllContents(this, this.getInventory());
++            this.detectAndSendChanges();
++            // Cauldron end
+         }
+         else
+         {
+@@ -79,7 +168,7 @@
              ItemStack itemstack = ((Slot)this.inventorySlots.get(i)).getStack();
              ItemStack itemstack1 = this.inventoryItemStacks.get(i);
  
@@ -123,7 +136,7 @@
              {
                  boolean clientStackChanged = !ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack);
                  itemstack1 = itemstack.isEmpty() ? ItemStack.EMPTY : itemstack.copy();
-@@ -92,6 +177,7 @@
+@@ -92,6 +181,7 @@
                  }
              }
          }
@@ -131,7 +144,7 @@
      }
  
      public boolean enchantItem(EntityPlayer playerIn, int id)
-@@ -117,6 +203,10 @@
+@@ -117,6 +207,10 @@
  
      public Slot getSlot(int slotId)
      {
@@ -142,7 +155,7 @@
          return this.inventorySlots.get(slotId);
      }
  
-@@ -174,7 +264,7 @@
+@@ -174,7 +268,7 @@
                  {
                      ItemStack itemstack9 = inventoryplayer.getItemStack().copy();
                      int k1 = inventoryplayer.getItemStack().getCount();
@@ -151,7 +164,7 @@
                      for (Slot slot8 : this.dragSlots)
                      {
                          ItemStack itemstack13 = inventoryplayer.getItemStack();
-@@ -192,12 +282,50 @@
+@@ -192,12 +286,50 @@
                              }
  
                              k1 -= itemstack14.getCount() - j3;
@@ -205,7 +218,7 @@
                  }
  
                  this.resetDrag();
-@@ -219,8 +347,9 @@
+@@ -219,8 +351,9 @@
                  {
                      if (dragType == 0)
                      {
@@ -216,7 +229,7 @@
                      }
  
                      if (dragType == 1)
-@@ -348,6 +477,15 @@
+@@ -348,6 +481,15 @@
                      }
  
                      slot6.onSlotChanged();
@@ -232,7 +245,7 @@
                  }
              }
          }
-@@ -797,7 +935,9 @@
+@@ -797,7 +939,9 @@
                  p_192389_4_.setRecipeUsed(irecipe);
                  itemstack = irecipe.getCraftingResult(p_192389_3_);
              }

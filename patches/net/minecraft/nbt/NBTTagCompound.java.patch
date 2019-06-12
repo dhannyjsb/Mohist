@@ -37,7 +37,7 @@
 +	private static final Logger LOGGER = LogManager.getLogger();
      private static final Pattern SIMPLE_VALUE = Pattern.compile("[A-Za-z0-9._+-]+");
 -    private final Map<String, NBTBase> tagMap = Maps.<String, NBTBase>newHashMap();
-+    private final Map<String, NBTBase> tagMap = Maps.newHashMap(); // Paper
++    private Map<String, NBTBase> tagMap = Maps.newHashMap(); // Paper
  
 -    void write(DataOutput output) throws IOException
 +    public void write(DataOutput output) throws IOException
@@ -52,3 +52,17 @@
          this.tagMap.put(key, value);
      }
  
+@@ -446,10 +441,10 @@
+     public NBTTagCompound copy()
+     {
+         NBTTagCompound nbttagcompound = new NBTTagCompound();
+-
+-        for (String s : this.tagMap.keySet())
++        nbttagcompound.tagMap = new HashMap<String, NBTBase>((int)(this.tagMap.size()*1.35)+1); //compaction factor
++        for (Map.Entry<String, NBTBase> s : this.tagMap.entrySet())
+         {
+-            nbttagcompound.setTag(s, ((NBTBase)this.tagMap.get(s)).copy());
++            nbttagcompound.setTag(s.getKey(), s.getValue().copy());
+         }
+ 
+         return nbttagcompound;

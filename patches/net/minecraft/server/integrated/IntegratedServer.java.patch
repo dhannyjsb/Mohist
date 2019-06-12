@@ -31,18 +31,19 @@
  import net.minecraft.world.storage.ISaveHandler;
  import net.minecraft.world.storage.WorldInfo;
  import net.minecraftforge.fml.relauncher.Side;
-@@ -36,6 +27,10 @@
+@@ -36,6 +27,11 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
 +import java.io.File;
 +import java.io.IOException;
 +import java.net.InetAddress;
++import java.net.UnknownHostException;
 +
  @SideOnly(Side.CLIENT)
  public class IntegratedServer extends MinecraftServer
  {
-@@ -48,7 +43,7 @@
+@@ -48,7 +44,7 @@
  
      public IntegratedServer(Minecraft clientIn, String folderNameIn, String worldNameIn, WorldSettings worldSettingsIn, YggdrasilAuthenticationService authServiceIn, MinecraftSessionService sessionServiceIn, GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)
      {
@@ -51,7 +52,7 @@
          this.setServerOwner(clientIn.getSession().getUsername());
          this.setFolderName(folderNameIn);
          this.setWorldName(worldNameIn);
-@@ -60,6 +55,11 @@
+@@ -60,6 +56,11 @@
          this.worldSettings = this.isDemo() ? WorldServerDemo.DEMO_WORLD_SETTINGS : worldSettingsIn;
      }
  
@@ -63,7 +64,16 @@
      public ServerCommandManager createCommandManager()
      {
          return new IntegratedServerCommandManager(this);
-@@ -369,7 +369,11 @@
+@@ -142,7 +143,7 @@
+         this.initialWorldChunkLoad();
+     }
+ 
+-    public boolean init() throws IOException
++    public boolean init() throws UnknownHostException // Cauldron
+     {
+         LOGGER.info("Starting integrated minecraft server version 1.12.2");
+         this.setOnlineMode(true);
+@@ -369,7 +370,11 @@
  
      public void stopServer()
      {
