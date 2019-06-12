@@ -1,8 +1,10 @@
 package red.mohist;
 
-import java.util.*;
 import net.minecraft.server.MinecraftServer;
 import red.mohist.i18n.Message;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class WatchMohist extends TimerTask
 {

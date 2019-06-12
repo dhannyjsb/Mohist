@@ -11,10 +11,9 @@ import net.minecraft.network.status.server.SPacketServerInfo;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
-
-import javax.annotation.Nonnull;
 
 public final class StandardPaperServerListPingEventImpl extends PaperServerListPingEventImpl {
 
