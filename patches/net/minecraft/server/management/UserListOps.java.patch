@@ -12,7 +12,7 @@
  
      protected String getObjectKey(GameProfile obj)
      {
-+        if (obj == null || obj.getId() == null) return "invalid"; // Mohist - handle GameProfiles with no ID
++        if (obj == null || obj.getId() == null) return "invalid"; // Cauldron - handle GameProfiles with no ID
          return obj.getId().toString();
      }
  
