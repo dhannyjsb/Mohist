@@ -24,7 +24,6 @@ public class ExactMatchConversationCanceller implements ConversationCanceller {
     }
 
     public ConversationCanceller clone() {
-        ConversationCanceller conversationCanceller = (ConversationCanceller) super.clone();
         return new ExactMatchConversationCanceller(escapeSequence);
     }
 }
