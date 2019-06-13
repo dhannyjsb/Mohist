@@ -36,7 +36,6 @@ public class InactivityConversationCanceller implements ConversationCanceller {
     }
 
     public ConversationCanceller clone() {
-        ConversationCanceller conversationCanceller = (ConversationCanceller) super.clone();
         return new InactivityConversationCanceller(plugin, timeoutSeconds);
     }
 
