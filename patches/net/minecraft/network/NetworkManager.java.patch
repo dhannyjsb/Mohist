@@ -195,7 +195,7 @@
          }
      }
  
-@@ -296,16 +309,19 @@
+@@ -296,11 +309,14 @@
          return this.socketAddress;
      }
  
@@ -214,12 +214,6 @@
 +            this.channel.close();
              this.terminationReason = message;
          }
-     }
- 
--    public boolean isLocalChannel()
-+        public boolean isLocalChannel()
-     {
-         return this.channel instanceof LocalChannel || this.channel instanceof LocalServerChannel;
      }
 @@ -410,7 +426,7 @@
              }
