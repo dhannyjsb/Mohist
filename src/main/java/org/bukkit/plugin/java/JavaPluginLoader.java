@@ -141,7 +141,7 @@ public class JavaPluginLoader implements PluginLoader {
     private File getDataFolder(File file) {
         File dataFolder = null;
         String filename = file.getName();
-        int index = file.getName().lastIndexOf(".");
+        int index = file.getName().lastIndexOf('.');
         if (index != -1) {
             String name = filename.substring(0, index);
             dataFolder = new File(file.getParentFile(), name);
@@ -249,12 +249,8 @@ public class JavaPluginLoader implements PluginLoader {
             Method[] publicMethods = listener.getClass().getMethods();
             Method[] privateMethods = listener.getClass().getDeclaredMethods();
             methods = new HashSet<Method>(publicMethods.length + privateMethods.length, 1.0f);
-            for (Method method : publicMethods) {
-                methods.add(method);
-            }
-            for (Method method : privateMethods) {
-                methods.add(method);
-            }
+            methods.addAll(Arrays.asList(publicMethods));
+            methods.addAll(Arrays.asList(privateMethods));
         } catch (NoClassDefFoundError e) {
             Mohist.LOGGER.error("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
             return ret;
@@ -275,11 +271,7 @@ public class JavaPluginLoader implements PluginLoader {
             }
             Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
             method.setAccessible(true);
-            Set<RegisteredListener> eventSet = ret.get(eventClass);
-            if (eventSet == null) {
-                eventSet = new HashSet<RegisteredListener>();
-                ret.put(eventClass, eventSet);
-            }
+            Set<RegisteredListener> eventSet = ret.computeIfAbsent(eventClass, k -> new HashSet<RegisteredListener>());
 
             for (Class<?> clazz = eventClass; Event.class.isAssignableFrom(clazz); clazz = clazz.getSuperclass()) {
                 // This loop checks for extending deprecated events
@@ -302,18 +294,16 @@ public class JavaPluginLoader implements PluginLoader {
                 }
             }
 
-            EventExecutor executor = new EventExecutor() {
-                public void execute(Listener listener, Event event) throws EventException {
-                    try {
-                        if (!eventClass.isAssignableFrom(event.getClass())) {
-                            return;
-                        }
-                        method.invoke(listener, event);
-                    } catch (InvocationTargetException ex) {
-                        throw new EventException(ex.getCause());
-                    } catch (Throwable t) {
-                        throw new EventException(t);
+            EventExecutor executor = (listener1, event) -> {
+                try {
+                    if (!eventClass.isAssignableFrom(event.getClass())) {
+                        return;
                     }
+                    method.invoke(listener1, event);
+                } catch (InvocationTargetException ex) {
+                    throw new EventException(ex.getCause());
+                } catch (Throwable t) {
+                    throw new EventException(t);
                 }
             };
             eventSet.add(new RegisteredListener(listener, executor, eh.priority(), plugin, eh.ignoreCancelled()));

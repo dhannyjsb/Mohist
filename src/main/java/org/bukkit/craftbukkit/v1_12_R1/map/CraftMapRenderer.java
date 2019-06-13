@@ -9,6 +9,8 @@ import org.bukkit.map.MapCursorCollection;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
+import java.util.Map;
+
 public class CraftMapRenderer extends MapRenderer {
 
     private final MapData worldMap;
@@ -33,14 +35,14 @@ public class CraftMapRenderer extends MapRenderer {
             cursors.removeCursor(cursors.getCursor(0));
         }
 
-        for (Object key : worldMap.mapDecorations.keySet()) {
+        for (Map.Entry<String, MapDecoration> entry : worldMap.mapDecorations.entrySet()) {
             // If this cursor is for a player check visibility with vanish system
-            Player other = Bukkit.getPlayerExact((String) key);
+            Player other = Bukkit.getPlayerExact((String) entry.getKey());
             if (other != null && !player.canSee(other)) {
                 continue;
             }
 
-            MapDecoration decoration = worldMap.mapDecorations.get(key);
+            MapDecoration decoration = entry.getValue();
             cursors.addCursor(decoration.getX(), decoration.getY(), (byte) (decoration.getRotation() & 15), decoration.getImage());
         }
     }

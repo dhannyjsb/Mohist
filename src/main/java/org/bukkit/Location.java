@@ -254,8 +254,8 @@ public class Location implements Cloneable, ConfigurationSerializable {
     public Vector getDirection() {
         Vector vector = new Vector();
 
-        double rotX = this.getYaw();
-        double rotY = this.getPitch();
+        double rotX = this.yaw;
+        double rotY = this.pitch;
 
         vector.setY(-Math.sin(Math.toRadians(rotY)));
 
@@ -312,7 +312,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
      * @throws IllegalArgumentException for differing worlds
      */
     public Location add(Location vec) {
-        if (vec == null || vec.getWorld() != getWorld()) {
+        if (vec == null || vec.world != world) {
             throw new IllegalArgumentException("Cannot add Locations of differing worlds");
         }
 
@@ -361,7 +361,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
      * @throws IllegalArgumentException for differing worlds
      */
     public Location subtract(Location vec) {
-        if (vec == null || vec.getWorld() != getWorld()) {
+        if (vec == null || vec.world != world) {
             throw new IllegalArgumentException("Cannot add Locations of differing worlds");
         }
 
@@ -455,10 +455,10 @@ public class Location implements Cloneable, ConfigurationSerializable {
     public double distanceSquared(Location o) {
         if (o == null) {
             throw new IllegalArgumentException("Cannot measure distance to a null location");
-        } else if (o.getWorld() == null || getWorld() == null) {
+        } else if (o.world == null || world == null) {
             throw new IllegalArgumentException("Cannot measure distance to a null world");
-        } else if (o.getWorld() != getWorld()) {
-            throw new IllegalArgumentException("Cannot measure distance between " + getWorld().getName() + " and " + o.getWorld().getName());
+        } else if (o.world != world) {
+            throw new IllegalArgumentException("Cannot measure distance between " + world.getName() + " and " + o.world.getName());
         }
 
         return NumberConversions.square(x - o.x) + NumberConversions.square(y - o.y) + NumberConversions.square(z - o.z);

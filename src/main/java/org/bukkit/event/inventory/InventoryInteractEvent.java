@@ -57,7 +57,7 @@ public abstract class InventoryInteractEvent extends InventoryEvent implements C
      * @return whether the event is cancelled
      */
     public boolean isCancelled() {
-        return getResult() == Result.DENY;
+        return result == Result.DENY;
     }
 
     /**

@@ -60,7 +60,7 @@ public class Metrics {
     // A list with all custom charts
     private final List<CustomChart> charts = new ArrayList<>();
 
-    private final String pluginName = "Mohist";
+    private static final String pluginName = "Mohist";
     private final String pluginVersion = (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown";
 
     public Metrics() {
@@ -215,6 +215,7 @@ public class Metrics {
     /**
      * Collects the data and sends it afterwards.
      */
+    @SuppressWarnings("unchecked")
     private void submitData() {
         final JSONObject data = getServerData();
         JSONArray pluginData = new JSONArray();
@@ -276,7 +277,7 @@ public class Metrics {
         }
         bufferedReader.close();
         if (logResponseStatusText) {
-            Bukkit.getLogger().info("Sent data to bStats and received response: " + builder.toString());
+            Bukkit.getLogger().info("Sent data to bStats and received response: " + builder);
         }
     }
 

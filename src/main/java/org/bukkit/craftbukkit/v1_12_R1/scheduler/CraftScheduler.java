@@ -56,13 +56,11 @@ public class CraftScheduler implements BukkitScheduler {
      * Main thread logic only
      */
     final PriorityQueue<CraftTask> pending = new PriorityQueue<CraftTask>(10, // Paper
-            new Comparator<CraftTask>() {
-                public int compare(final CraftTask o1, final CraftTask o2) {
-                    int value = Long.compare(o1.getNextRun(), o2.getNextRun());
+            (o1, o2) -> {
+                int value = Long.compare(o1.getNextRun(), o2.getNextRun());
 
-                    // If the tasks should run on the same tick they should be run FIFO
-                    return value != 0 ? value : Integer.compare(o1.getTaskId(), o2.getTaskId());
-                }
+                // If the tasks should run on the same tick they should be run FIFO
+                return value != 0 ? value : Integer.compare(o1.getTaskId(), o2.getTaskId());
             });
     /**
      * Main thread logic only
@@ -275,19 +273,17 @@ public class CraftScheduler implements BukkitScheduler {
         }
         // Paper end
         final CraftTask task = new CraftTask(
-                new Runnable() {
-                    public void run() {
-                        Iterator<CraftTask> it = CraftScheduler.this.runners.values().iterator();
-                        while (it.hasNext()) {
-                            CraftTask task = it.next();
-                            task.cancel0();
-                            if (task.isSync()) {
-                                it.remove();
-                            }
+                () -> {
+                    Iterator<CraftTask> it = CraftScheduler.this.runners.values().iterator();
+                    while (it.hasNext()) {
+                        CraftTask task1 = it.next();
+                        task1.cancel0();
+                        if (task1.isSync()) {
+                            it.remove();
                         }
-                        CraftScheduler.this.pending.clear();
-                        CraftScheduler.this.temp.clear();
                     }
+                    CraftScheduler.this.pending.clear();
+                    CraftScheduler.this.temp.clear();
                 }); // Paper
         handle(task, 0L);
         for (CraftTask taskPending = head.getNext(); taskPending != null; taskPending = taskPending.getNext()) {

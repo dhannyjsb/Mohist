@@ -199,8 +199,8 @@ public enum DyeColor {
         for (DyeColor color : values()) {
             BY_WOOL_DATA[color.woolData & 0xff] = color;
             BY_DYE_DATA[color.dyeData & 0xff] = color;
-            byColor.put(color.getColor(), color);
-            byFirework.put(color.getFireworkColor(), color);
+            byColor.put(color.color, color);
+            byFirework.put(color.firework, color);
         }
 
         BY_COLOR = byColor.build();

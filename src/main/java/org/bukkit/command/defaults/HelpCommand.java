@@ -17,6 +17,7 @@ import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class HelpCommand extends BukkitCommand {
         this.description = "Shows the help menu";
         this.usageMessage = "/help <pageNumber>\n/help <topic>\n/help <topic> <pageNumber>";
         this.setPermission("bukkit.command.help");
-        this.setAliases(Arrays.asList("?"));
+        this.setAliases(Collections.singletonList("?"));
     }
 
     @Override

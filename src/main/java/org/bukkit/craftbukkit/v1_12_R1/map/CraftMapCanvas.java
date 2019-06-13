@@ -92,7 +92,7 @@ public class CraftMapCanvas implements MapCanvas {
                         i = j;
                         continue;
                     }
-                    catch (NumberFormatException ex) {}
+                    catch (NumberFormatException ignored) {}
                 }
                 throw new IllegalArgumentException("Text contains unterminated color string");
             }

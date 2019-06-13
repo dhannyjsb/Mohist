@@ -49,7 +49,7 @@ public class BlockPistonExtendEvent extends BlockPistonEvent {
     public List<Block> getBlocks() {
         if (blocks == null) {
             ArrayList<Block> tmp = new ArrayList<Block>();
-            for (int i = 0; i < this.getLength(); i++) {
+            for (int i = 0; i < this.length; i++) {
                 tmp.add(block.getRelative(getDirection(), i + 1));
             }
             blocks = Collections.unmodifiableList(tmp);

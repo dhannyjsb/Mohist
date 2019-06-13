@@ -205,7 +205,7 @@ public class CraftBlock implements Block {
     }
 
     public Block getRelative(final int modX, final int modY, final int modZ) {
-        return getWorld().getBlockAt(getX() + modX, getY() + modY, getZ() + modZ);
+        return getWorld().getBlockAt(x + modX, y + modY, z + modZ);
     }
 
     public Block getRelative(BlockFace face) {
@@ -220,9 +220,9 @@ public class CraftBlock implements Block {
         BlockFace[] values = BlockFace.values();
 
         for (BlockFace face : values) {
-            if ((this.getX() + face.getModX() == block.getX()) &&
-                (this.getY() + face.getModY() == block.getY()) &&
-                (this.getZ() + face.getModZ() == block.getZ())
+            if ((this.x + face.getModX() == block.getX()) &&
+                (this.y + face.getModY() == block.getY()) &&
+                (this.z + face.getModZ() == block.getZ())
             ) {
                 return face;
             }
@@ -462,7 +462,7 @@ public class CraftBlock implements Block {
         //return getType() == Material.AIR;
         if (getType() == Material.AIR) return true;
         if (!(getWorld() instanceof CraftWorld)) return false;
-        return ((CraftWorld) getWorld()).getHandle().isAirBlock(new BlockPos(getX(), getY(), getZ()));
+        return ((CraftWorld) getWorld()).getHandle().isAirBlock(new BlockPos(x, y, z));
         // Cauldron end
     }
 

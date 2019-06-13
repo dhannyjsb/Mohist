@@ -75,7 +75,7 @@ public enum CropState {
 
     static {
         for (CropState cropState : values()) {
-            BY_DATA.put(cropState.getData(), cropState);
+            BY_DATA.put(cropState.data, cropState);
         }
     }
 }

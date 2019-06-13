@@ -82,7 +82,7 @@ public enum Instrument {
 
     static {
         for (Instrument instrument : Instrument.values()) {
-            BY_DATA.put(instrument.getType(), instrument);
+            BY_DATA.put(instrument.type, instrument);
         }
     }
 }

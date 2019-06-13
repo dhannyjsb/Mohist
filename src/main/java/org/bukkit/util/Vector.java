@@ -671,9 +671,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<String, Object>();
 
-        result.put("x", getX());
-        result.put("y", getY());
-        result.put("z", getZ());
+        result.put("x", x);
+        result.put("y", y);
+        result.put("z", z);
 
         return result;
     }

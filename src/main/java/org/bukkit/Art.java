@@ -4,6 +4,8 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang.Validate;
 
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Represents the art on a painting
@@ -36,6 +38,7 @@ public enum Art {
     SKELETON(24, 4, 3),
     DONKEYKONG(25, 4, 3);
 
+    private static final Pattern COMPILE = Pattern.compile("_");
     private int id, width, height;
     private static final HashMap<String, Art> BY_NAME = Maps.newHashMap();
     private static final HashMap<Integer, Art> BY_ID = Maps.newHashMap();
@@ -98,13 +101,13 @@ public enum Art {
     public static Art getByName(String name) {
         Validate.notNull(name, "Name cannot be null");
 
-        return BY_NAME.get(name.toLowerCase(java.util.Locale.ENGLISH).replaceAll("_", ""));
+        return BY_NAME.get(COMPILE.matcher(name.toLowerCase(Locale.ENGLISH)).replaceAll(""));
     }
 
     static {
         for (Art art : values()) {
             BY_ID.put(art.id, art);
-            BY_NAME.put(art.toString().toLowerCase(java.util.Locale.ENGLISH).replaceAll("_", ""), art);
+            BY_NAME.put(art.toString().toLowerCase(Locale.ENGLISH).replaceAll("_", ""), art);
         }
     }
 }

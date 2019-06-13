@@ -18,7 +18,7 @@ public class CustomNameAPI {
         String name = String.valueOf(textc);
         String string = name.substring(0, name.indexOf("', siblings=[]"));
 
-        return string.substring(string.lastIndexOf("'") + 1);
+        return string.substring(string.lastIndexOf('\'') + 1);
     }
 
     /**
@@ -32,7 +32,7 @@ public class CustomNameAPI {
         String name = String.valueOf(textc);
         String string = name.substring(0, name.indexOf("', siblings=[]"));
 
-        return string.substring(string.lastIndexOf("'") + 1);
+        return string.substring(string.lastIndexOf('\'') + 1);
     }
 
     public static Entity toNMS(org.bukkit.entity.Entity entity) {

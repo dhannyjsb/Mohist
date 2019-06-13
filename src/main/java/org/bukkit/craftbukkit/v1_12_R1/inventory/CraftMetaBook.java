@@ -94,7 +94,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
     CraftMetaBook(Map<String, Object> map) {
         super(map);
 
-        setAuthor(SerializableMeta.getString(map, BOOK_AUTHOR.BUKKIT, true));
+        author = SerializableMeta.getString(map, BOOK_AUTHOR.BUKKIT, true);
 
         setTitle(SerializableMeta.getString(map, BOOK_TITLE.BUKKIT, true));
 

@@ -233,7 +233,7 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
 
         if (data.hasKey("SpawnX") && data.hasKey("SpawnY") && data.hasKey("SpawnZ")) {
             String spawnWorld = data.getString("SpawnWorld");
-            if (spawnWorld.equals("")) {
+            if (spawnWorld.isEmpty()) {
                 spawnWorld = server.getWorlds().get(0).getName();
             }
             return new Location(server.getWorld(spawnWorld), data.getInteger("SpawnX"), data.getInteger("SpawnY"), data.getInteger("SpawnZ"));

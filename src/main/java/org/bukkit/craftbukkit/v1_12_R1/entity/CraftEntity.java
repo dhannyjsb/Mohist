@@ -490,12 +490,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public List<org.bukkit.entity.Entity> getPassengers() {
-        return Lists.newArrayList(Lists.transform(getHandle().getPassengers(), new Function<Entity, org.bukkit.entity.Entity>() {
-            @Override
-            public org.bukkit.entity.Entity apply(Entity input) {
-                return input.getBukkitEntity();
-            }
-        }));
+        return Lists.newArrayList(Lists.transform(getHandle().getPassengers(), (Function<Entity, org.bukkit.entity.Entity>) input -> input.getBukkitEntity()));
     }
 
     @Override

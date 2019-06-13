@@ -219,7 +219,7 @@ public class CraftPlayerProfile implements PlayerProfile {
 
     public static GameProfile asAuthlib(PlayerProfile profile) {
         CraftPlayerProfile craft = ((CraftPlayerProfile) profile);
-        return craft.getGameProfile();
+        return craft.profile;
     }
 
     private class PropertySet extends AbstractSet<ProfileProperty> {

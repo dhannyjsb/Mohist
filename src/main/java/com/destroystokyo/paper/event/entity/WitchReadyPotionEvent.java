@@ -23,10 +23,10 @@ public class WitchReadyPotionEvent extends EntityEvent implements Cancellable {
      */
     public static ItemStack process(Witch witch, ItemStack potion) {
         WitchReadyPotionEvent event = new WitchReadyPotionEvent(witch, potion);
-        if (!event.callEvent() || event.getPotion() == null) {
+        if (!event.callEvent() || event.potion == null) {
             return new ItemStack(Material.AIR);
         }
-        return event.getPotion();
+        return event.potion;
     }
 
     @Override

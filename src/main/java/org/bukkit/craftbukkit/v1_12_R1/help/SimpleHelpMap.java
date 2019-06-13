@@ -56,7 +56,7 @@ public class SimpleHelpMap implements HelpMap {
     }
 
     public synchronized HelpTopic getHelpTopic(String topicName) {
-        if (topicName.equals("")) {
+        if (topicName.isEmpty()) {
             return defaultTopic;
         }
 
@@ -126,14 +126,15 @@ public class SimpleHelpMap implements HelpMap {
             }
 
             // Register a topic
-            for (Class c : topicFactoryMap.keySet()) {
+            for (Map.Entry<Class, HelpTopicFactory<Command>> entry : topicFactoryMap.entrySet()) {
+                Class c = entry.getKey();
                 if (c.isAssignableFrom(command.getClass())) {
-                    HelpTopic t = topicFactoryMap.get(c).createTopic(command);
+                    HelpTopic t = entry.getValue().createTopic(command);
                     if (t != null) addTopic(t);
                     continue outer;
                 }
                 if (command instanceof PluginCommand && c.isAssignableFrom(((PluginCommand)command).getExecutor().getClass())) {
-                    HelpTopic t = topicFactoryMap.get(c).createTopic(command);
+                    HelpTopic t = entry.getValue().createTopic(command);
                     if (t != null) addTopic(t);
                     continue outer;
                 }
@@ -224,7 +225,7 @@ public class SimpleHelpMap implements HelpMap {
         topicFactoryMap.put(commandClass, factory);
     }
 
-    private class IsCommandTopicPredicate implements Predicate<HelpTopic> {
+    private static class IsCommandTopicPredicate implements Predicate<HelpTopic> {
 
         public boolean apply(HelpTopic topic) {
             return topic.getName().charAt(0) == '/';

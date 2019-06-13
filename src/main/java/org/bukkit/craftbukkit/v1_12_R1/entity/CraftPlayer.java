@@ -6,7 +6,9 @@ import com.google.common.io.BaseEncoding;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
 import io.netty.util.internal.ConcurrentSet;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.entity.Entity;
@@ -37,7 +39,9 @@ import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.network.play.server.SPacketSpawnPosition;
 import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.network.play.server.SPacketUpdateHealth;
+import net.minecraft.stats.StatBase;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
@@ -64,6 +68,7 @@ import org.bukkit.Statistic;
 import org.bukkit.Statistic.Type;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -96,6 +101,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.StandardMessenger;
 import org.bukkit.scoreboard.Scoreboard;
+import org.spigotmc.AsyncCatcher;
 import org.spigotmc.SpigotConfig;
 import red.mohist.Mohist;
 
@@ -107,6 +113,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -117,9 +124,12 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @DelegateDeserialization(CraftOfflinePlayer.class)
 public class CraftPlayer extends CraftHumanEntity implements Player {
+    private static final Pattern COMPILE = Pattern.compile("_", Pattern.LITERAL);
     private long firstPlayed = 0;
     private long lastPlayed = 0;
     private boolean hasPlayedBefore = false;
@@ -257,7 +267,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void kickPlayer(String message) {
-		org.spigotmc.AsyncCatcher.catchOp( "player kick"); // Spigot
+		AsyncCatcher.catchOp( "player kick"); // Spigot
         if (getHandle().connection == null) return;
 
         getHandle().connection.disconnect(message == null ? "" : message);
@@ -535,7 +545,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         location.checkFinite();
         EntityPlayerMP entity = getHandle();
 
-        if (getHealth() == 0 || entity.isDead || entity instanceof FakePlayer) {
+        if (health == 0 || entity.isDead || entity instanceof FakePlayer) {
             return false;
         }
 
@@ -680,7 +690,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.isTrue(statistic.getType() == Type.UNTYPED, "Must supply additional paramater for this statistic");
         Validate.isTrue(newValue >= 0, "Value must be greater than or equal to 0");
-        net.minecraft.stats.StatBase nmsStatistic = CraftStatistic.getNMSStatistic(statistic);
+        StatBase nmsStatistic = CraftStatistic.getNMSStatistic(statistic);
         getHandle().getStatFile().unlockAchievement(getHandle(), nmsStatistic, newValue);
     }
 
@@ -699,7 +709,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.notNull(material, "Material cannot be null");
         Validate.isTrue(statistic.getType() == Type.BLOCK || statistic.getType() == Type.ITEM, "This statistic does not take a Material parameter");
-        net.minecraft.stats.StatBase nmsStatistic = CraftStatistic.getMaterialStatistic(statistic, material);
+        StatBase nmsStatistic = CraftStatistic.getMaterialStatistic(statistic, material);
         Validate.notNull(nmsStatistic, "The supplied Material does not have a corresponding statistic");
         return getHandle().getStatFile().readStat(nmsStatistic);
     }
@@ -722,7 +732,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         Validate.notNull(material, "Material cannot be null");
         Validate.isTrue(newValue >= 0, "Value must be greater than or equal to 0");
         Validate.isTrue(statistic.getType() == Type.BLOCK || statistic.getType() == Type.ITEM, "This statistic does not take a Material parameter");
-        net.minecraft.stats.StatBase nmsStatistic = CraftStatistic.getMaterialStatistic(statistic, material);
+        StatBase nmsStatistic = CraftStatistic.getMaterialStatistic(statistic, material);
         Validate.notNull(nmsStatistic, "The supplied Material does not have a corresponding statistic");
         getHandle().getStatFile().unlockAchievement(getHandle(), nmsStatistic, newValue);
     }
@@ -742,7 +752,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.notNull(entityType, "EntityType cannot be null");
         Validate.isTrue(statistic.getType() == Type.ENTITY, "This statistic does not take an EntityType parameter");
-        net.minecraft.stats.StatBase nmsStatistic = CraftStatistic.getEntityStatistic(statistic, entityType);
+        StatBase nmsStatistic = CraftStatistic.getEntityStatistic(statistic, entityType);
         Validate.notNull(nmsStatistic, "The supplied EntityType does not have a corresponding statistic");
         return getHandle().getStatFile().readStat(nmsStatistic);
     }
@@ -765,7 +775,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         Validate.notNull(entityType, "EntityType cannot be null");
         Validate.isTrue(newValue >= 0, "Value must be greater than or equal to 0");
         Validate.isTrue(statistic.getType() == Type.ENTITY, "This statistic does not take an EntityType parameter");
-        net.minecraft.stats.StatBase nmsStatistic = CraftStatistic.getEntityStatistic(statistic, entityType);
+        StatBase nmsStatistic = CraftStatistic.getEntityStatistic(statistic, entityType);
         Validate.notNull(nmsStatistic, "The supplied EntityType does not have a corresponding statistic");
         getHandle().getStatFile().unlockAchievement(getHandle(), nmsStatistic, newValue);
     }
@@ -1134,7 +1144,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         data.setInteger("newLevel", handle.newLevel);
         data.setInteger("expToDrop", handle.expToDrop);
         data.setBoolean("keepLevel", handle.keepLevel);
-        data.setLong("firstPlayed", getFirstPlayed());
+        data.setLong("firstPlayed", firstPlayed);
         data.setLong("lastPlayed", System.currentTimeMillis());
         data.setString("lastKnownName", handle.getName());
     }
@@ -1418,7 +1428,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public float getScaledHealth() {
-        return (float) (isHealthScaled() ? getHealth() * getHealthScale() / getMaxHealth() : getHealth());
+        return (float) (scaledHealth ? health * healthScale / getMaxHealth() : health);
     }
 
     @Override
@@ -1580,7 +1590,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
-    public org.bukkit.advancement.AdvancementProgress getAdvancementProgress(org.bukkit.advancement.Advancement advancement) {
+    public org.bukkit.advancement.AdvancementProgress getAdvancementProgress(Advancement advancement) {
         Preconditions.checkArgument(advancement != null, "advancement");
 
         CraftAdvancement craft = (CraftAdvancement) advancement;
@@ -1636,16 +1646,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                 packet = new SPacketEffect( packetData, new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ() ), id, false );
             } else
             {
-                net.minecraft.util.EnumParticleTypes particle = null;
+                EnumParticleTypes particle = null;
                 int[] extra = null;
-                for ( net.minecraft.util.EnumParticleTypes p : net.minecraft.util.EnumParticleTypes.values() )
+                for ( EnumParticleTypes p : EnumParticleTypes.values() )
                 {
-                    if ( effect.getName().startsWith( p.getParticleName().replace("_", "") ) )
+                    if ( effect.getName().startsWith(COMPILE.matcher(p.getParticleName()).replaceAll(Matcher.quoteReplacement(""))) )
                     {
                         particle = p;
                         if ( effect.getData() != null )
                         {
-                            if ( effect.getData().equals( org.bukkit.Material.class ) )
+                            if ( effect.getData().equals( Material.class ) )
                             {
                                 extra = new int[]{ id };
                             } else
@@ -1695,7 +1705,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                 ret.add( getServer().getPlayer( u ) );
             }
 
-            return java.util.Collections.unmodifiableSet( ret );
+            return Collections.unmodifiableSet( ret );
         }
 @Override
         public void sendMessage(BaseComponent component) {
@@ -1712,18 +1722,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
 
         @Override
-        public void sendMessage(net.md_5.bungee.api.ChatMessageType position, BaseComponent component) {
+        public void sendMessage(ChatMessageType position, BaseComponent component) {
             sendMessage( position, new BaseComponent[] { component } );
         }
 
         @Override
-        public void sendMessage(net.md_5.bungee.api.ChatMessageType position, BaseComponent... components) {
+        public void sendMessage(ChatMessageType position, BaseComponent... components) {
             if ( getHandle().connection == null ) return;
 
             SPacketChat packet = new SPacketChat(null, ChatType.byId((byte) position.ordinal()));
             // Action bar doesn't render colours, replace colours with legacy section symbols
-            if (position == net.md_5.bungee.api.ChatMessageType.ACTION_BAR) {
-                components = new BaseComponent[]{new net.md_5.bungee.api.chat.TextComponent(BaseComponent.toLegacyText(components))};
+            if (position == ChatMessageType.ACTION_BAR) {
+                components = new BaseComponent[]{new TextComponent(BaseComponent.toLegacyText(components))};
             }
             packet.components = components;
             getHandle().connection.sendPacket(packet);
