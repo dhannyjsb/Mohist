@@ -14,14 +14,14 @@ public interface Arrow extends Projectile {
      *
      * @return the knockback strength value
      */
-    public int getKnockbackStrength();
+    int getKnockbackStrength();
 
     /**
      * Sets the knockback strength for an arrow.
      *
      * @param knockbackStrength the knockback strength value
      */
-    public void setKnockbackStrength(int knockbackStrength);
+    void setKnockbackStrength(int knockbackStrength);
 
     /**
      * Gets whether this arrow is critical.
@@ -33,14 +33,14 @@ public interface Arrow extends Projectile {
      *
      * @return true if it is critical
      */
-    public boolean isCritical();
+    boolean isCritical();
 
     /**
      * Sets whether or not this arrow should be critical.
      *
      * @param critical whether or not it should be critical
      */
-    public void setCritical(boolean critical);
+    void setCritical(boolean critical);
 
     /**
      * Gets whether this arrow is in a block or not.
@@ -49,33 +49,33 @@ public interface Arrow extends Projectile {
      *
      * @return true if in a block
      */
-    public boolean isInBlock();
+    boolean isInBlock();
 
     /**
      * Gets the block to which this arrow is attached.
      *
      * @return the attached block or null if not attached
      */
-    public Block getAttachedBlock();
+    Block getAttachedBlock();
 
     /**
      * Gets the current pickup status of this arrow.
      *
      * @return the pickup status of this arrow.
      */
-    public PickupStatus getPickupStatus();
+    PickupStatus getPickupStatus();
 
     /**
      * Sets the current pickup status of this arrow.
      *
      * @param status new pickup status of this arrow.
      */
-    public void setPickupStatus(PickupStatus status);
+    void setPickupStatus(PickupStatus status);
 
     /**
      * Represents the pickup status of this arrow.
      */
-    public enum PickupStatus {
+    enum PickupStatus {
         /**
          * The arrow cannot be picked up.
          */
@@ -91,7 +91,7 @@ public interface Arrow extends Projectile {
     }
 
     // Spigot start
-    public class Spigot extends Entity.Spigot
+    class Spigot extends Entity.Spigot
     {
 
         public double getDamage()

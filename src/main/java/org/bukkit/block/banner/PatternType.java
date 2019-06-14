@@ -53,7 +53,7 @@ public enum PatternType {
         }
     }
 
-    private PatternType(String key) {
+    PatternType(String key) {
         this.identifier = key;
     }
 

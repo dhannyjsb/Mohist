@@ -80,9 +80,9 @@ public class ActivationRange
             return true;
         }
 
-        if ( ( entity.activationType == 3 && config.miscActivationRange == 0 )
-                || ( entity.activationType == 2 && config.animalActivationRange == 0 )
-                || ( entity.activationType == 1 && config.monsterActivationRange == 0 )
+        return (entity.activationType == 3 && config.miscActivationRange == 0)
+                || (entity.activationType == 2 && config.animalActivationRange == 0)
+                || (entity.activationType == 1 && config.monsterActivationRange == 0)
                 || entity instanceof EntityPlayer && !(entity instanceof FakePlayer) // Cauldron
                 || entity instanceof EntityThrowable
                 || entity instanceof MultiPartEntityPart
@@ -95,12 +95,7 @@ public class ActivationRange
                 || entity instanceof EntityFireworkRocket
                 || (entity.getClass().getSuperclass() == Entity.class && !entity.isCreatureType(EnumCreatureType.CREATURE, false)
                 && !entity.isCreatureType(EnumCreatureType.AMBIENT, false) && !entity.isCreatureType(EnumCreatureType.MONSTER, false)
-                && !entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false)))
-        {
-            return true;
-        }
-
-        return false;
+                && !entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false));
     }
 
     /**
@@ -245,9 +240,8 @@ public class ActivationRange
                     return true;
                 }
             }
-            if (entity instanceof EntityCreeper && ((EntityCreeper) entity).hasIgnited()) { // isExplosive
-                return true;
-            }
+            // isExplosive
+            return entity instanceof EntityCreeper && ((EntityCreeper) entity).hasIgnited();
         }
         return false;
     }

@@ -586,7 +586,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
 
     @Override
     public Map<Enchantment, Integer> getEnchants() {
-        return hasEnchants() ? ImmutableMap.copyOf(enchantments) : ImmutableMap.<Enchantment, Integer>of();
+        return hasEnchants() ? ImmutableMap.copyOf(enchantments) : ImmutableMap.of();
     }
 
     @Override

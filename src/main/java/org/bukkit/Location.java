@@ -598,10 +598,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
         if (Float.floatToIntBits(this.pitch) != Float.floatToIntBits(other.pitch)) {
             return false;
         }
-        if (Float.floatToIntBits(this.yaw) != Float.floatToIntBits(other.yaw)) {
-            return false;
-        }
-        return true;
+        return Float.floatToIntBits(this.yaw) == Float.floatToIntBits(other.yaw);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class TitleAPI {
 
     public static void sendPlayerTitle(Player player, int fadeIn, int stay, int fadeOut, String title) {
         NetHandlerPlayServer connection = ((CraftPlayer)player).getHandle().connection;
-        SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, (ITextComponent) null, fadeIn, stay, fadeOut);
+        SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, null, fadeIn, stay, fadeOut);
         connection.sendPacket(packetPlayOutTimes);
         ITextComponent titleMain = ITextComponent.Serializer.fromJsonLenient("{\"text\": \"" + title + "\"}");
         SPacketTitle SPacketTitle = new SPacketTitle(Type.TIMES, titleMain);
@@ -28,7 +28,7 @@ public class TitleAPI {
 
     public static void sendPlayerSubTitle(Player player, int fadeIn, int stay, int fadeOut, String subTitle) {
         NetHandlerPlayServer connection = ((CraftPlayer)player).getHandle().connection;
-        SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, (ITextComponent) null, fadeIn, stay, fadeOut);
+        SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, null, fadeIn, stay, fadeOut);
         connection.sendPacket(packetPlayOutTimes);
         ITextComponent titleSub = ITextComponent.Serializer.fromJsonLenient("{\"text\": \"" + subTitle + "\"}");
         SPacketTitle packetPlayOutSubTitle = new SPacketTitle(Type.SUBTITLE, titleSub);
@@ -40,7 +40,7 @@ public class TitleAPI {
 
     public static void sendFullTitle(Player player, int fadeIn, int stay, int fadeOut, String title, String subtitle) {
         NetHandlerPlayServer connection = ((CraftPlayer)player).getHandle().connection;
-        SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, (ITextComponent) null, fadeIn, stay, fadeOut);
+        SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, null, fadeIn, stay, fadeOut);
         connection.sendPacket(packetPlayOutTimes);
         ITextComponent titleSub = ITextComponent.Serializer.fromJsonLenient("{\"text\": \"" + subtitle + "\"}");
         SPacketTitle packetPlayOutSubTitle = new SPacketTitle(Type.SUBTITLE, titleSub);

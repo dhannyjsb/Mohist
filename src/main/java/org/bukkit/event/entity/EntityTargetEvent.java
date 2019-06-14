@@ -152,6 +152,6 @@ public class EntityTargetEvent extends EntityEvent implements Cancellable {
         /**
          * A currently unknown reason for the entity changing target.
          */
-        UNKNOWN;
+        UNKNOWN
     }
 }

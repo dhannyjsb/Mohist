@@ -111,6 +111,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1289,7 +1290,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
             for (String channel : listening) {
                 try {
-                    stream.write(channel.getBytes("UTF8"));
+                    stream.write(channel.getBytes(StandardCharsets.UTF_8));
                     stream.write((byte) 0);
                 } catch (IOException ex) {
                     Logger.getLogger(CraftPlayer.class.getName()).log(Level.SEVERE, "Could not send Plugin Channel REGISTER to " + getName(), ex);
@@ -1499,7 +1500,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             getHandle().connection.sendPacket(new SPacketEntityProperties(getHandle().getEntityId(), set));
             sendHealthUpdate();
         }
-        getHandle().getDataManager().set(EntityLiving.HEALTH, (float) getScaledHealth());
+        getHandle().getDataManager().set(EntityLiving.HEALTH, getScaledHealth());
 
         getHandle().maxHealthCache = getMaxHealth();
     }

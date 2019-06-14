@@ -8,7 +8,7 @@ public interface Spellcaster extends Illager {
     /**
      * Represents the current spell the entity is using.
      */
-    public enum Spell {
+    enum Spell {
 
         /**
          * No spell is being used..
@@ -33,7 +33,7 @@ public interface Spellcaster extends Illager {
         /**
          * The spell that makes the target blind.
          */
-        BLINDNESS;
+        BLINDNESS
     }
 
     /**

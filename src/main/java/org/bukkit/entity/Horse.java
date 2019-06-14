@@ -11,7 +11,7 @@ public interface Horse extends AbstractHorse {
      * @deprecated different variants are differing classes
      */
     @Deprecated
-    public enum Variant {
+    enum Variant {
         /**
          * A normal horse
          */
@@ -36,13 +36,12 @@ public interface Horse extends AbstractHorse {
          * Not really a horse :)
          */
         LLAMA
-        ;
     }
 
     /**
      * Represents the base color that the horse has.
      */
-    public enum Color {
+    enum Color {
         /**
          * Snow white
          */
@@ -77,7 +76,7 @@ public interface Horse extends AbstractHorse {
     /**
      * Represents the style, or markings, that the horse has.
      */
-    public enum Style {
+    enum Style {
         /**
          * No markings
          */
@@ -109,7 +108,7 @@ public interface Horse extends AbstractHorse {
      *
      * @return a {@link Color} representing the horse's group
      */
-    public Color getColor();
+    Color getColor();
 
     /**
      * Sets the horse's color.
@@ -119,7 +118,7 @@ public interface Horse extends AbstractHorse {
      *
      * @param color a {@link Color} for this horse
      */
-    public void setColor(Color color);
+    void setColor(Color color);
 
     /**
      * Gets the horse's style.
@@ -130,7 +129,7 @@ public interface Horse extends AbstractHorse {
      *
      * @return a {@link Style} representing the horse's style
      */
-    public Style getStyle();
+    Style getStyle();
 
     /**
      * Sets the style of this horse.
@@ -141,22 +140,22 @@ public interface Horse extends AbstractHorse {
      *
      * @param style a {@link Style} for this horse
      */
-    public void setStyle(Style style);
+    void setStyle(Style style);
 
     /**
      * @return carrying chest status
      * @deprecated see {@link ChestedHorse}
      */
     @Deprecated
-    public boolean isCarryingChest();
+    boolean isCarryingChest();
 
     /**
      * @param chest
      * @deprecated see {@link ChestedHorse}
      */
     @Deprecated
-    public void setCarryingChest(boolean chest);
+    void setCarryingChest(boolean chest);
 
     @Override
-    public HorseInventory getInventory();
+    HorseInventory getInventory();
 }

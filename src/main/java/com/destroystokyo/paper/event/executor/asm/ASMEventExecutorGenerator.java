@@ -25,7 +25,7 @@ public class ASMEventExecutorGenerator {
         methodGenerator.returnValue();
         methodGenerator.endMethod();
         // Generate the execute method
-        methodGenerator = new GeneratorAdapter(writer.visitMethod(ACC_PUBLIC, "execute", "(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Event;)V", null, null), ACC_PUBLIC, "execute", "(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Listener;)V");;
+        methodGenerator = new GeneratorAdapter(writer.visitMethod(ACC_PUBLIC, "execute", "(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Event;)V", null, null), ACC_PUBLIC, "execute", "(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Listener;)V");
         methodGenerator.loadArg(0);
         methodGenerator.checkCast(Type.getType(m.getDeclaringClass()));
         methodGenerator.loadArg(1);

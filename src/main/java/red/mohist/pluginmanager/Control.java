@@ -164,11 +164,11 @@ public class Control {
 		
 
 		synchronized (pluginManager) {
-			if (plugins != null && plugins.contains(plugin)) {
+			if (plugins != null) {
 				plugins.remove(plugin);
 			}
 
-			if (names != null && names.containsKey(pName)) {
+			if (names != null) {
 				names.remove(pName);
 			}
 		}

@@ -14,7 +14,7 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      *
      * @return true if they are online
      */
-    public boolean isOnline();
+    boolean isOnline();
 
     /**
      * Returns the name of this player
@@ -25,7 +25,7 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      * @return Player name or null if we have not seen a name for this player yet
      */
     @Override
-    public String getName();
+    String getName();
 
     /**
      * Returns the UUID of this player
@@ -33,28 +33,28 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      * @return Player UUID
      */
     @Override
-    public UUID getUniqueId();
+    UUID getUniqueId();
 
     /**
      * Checks if this player is banned or not
      *
      * @return true if banned, otherwise false
      */
-    public boolean isBanned();
+    boolean isBanned();
 
     /**
      * Checks if this player is whitelisted or not
      *
      * @return true if whitelisted
      */
-    public boolean isWhitelisted();
+    boolean isWhitelisted();
 
     /**
      * Sets if this player is whitelisted or not
      *
      * @param value true if whitelisted
      */
-    public void setWhitelisted(boolean value);
+    void setWhitelisted(boolean value);
 
     /**
      * Gets a {@link Player} object that this represents, if there is one
@@ -64,7 +64,7 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      *
      * @return Online player
      */
-    public Player getPlayer();
+    Player getPlayer();
 
     /**
      * Gets the first date and time that this player was witnessed on this
@@ -76,7 +76,7 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      *
      * @return Date of first log-in for this player, or 0
      */
-    public long getFirstPlayed();
+    long getFirstPlayed();
 
     /**
      * Gets the last date and time that this player was witnessed on this
@@ -88,14 +88,14 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      *
      * @return Date of last log-in for this player, or 0
      */
-    public long getLastPlayed();
+    long getLastPlayed();
 
     /**
      * Checks if this player has played on this server before.
      *
      * @return True if the player has played before, otherwise false
      */
-    public boolean hasPlayedBefore();
+    boolean hasPlayedBefore();
 
     /**
      * Gets the Location where the player will spawn at their bed, null if
@@ -103,6 +103,6 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      *
      * @return Bed Spawn Location if bed exists, otherwise null.
      */
-    public Location getBedSpawnLocation();
+    Location getBedSpawnLocation();
 
 }

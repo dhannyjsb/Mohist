@@ -10,7 +10,7 @@ public interface Llama extends ChestedHorse {
     /**
      * Represents the base color that the llama has.
      */
-    public enum Color {
+    enum Color {
 
         /**
          * A cream-colored llama.
@@ -27,7 +27,7 @@ public interface Llama extends ChestedHorse {
         /**
          * A gray llama.
          */
-        GRAY;
+        GRAY
     }
 
     /**

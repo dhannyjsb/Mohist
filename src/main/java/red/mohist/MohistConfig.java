@@ -118,7 +118,7 @@ public class MohistConfig {
         switch (unit) {
             case 'd': num *= (double) 60*60*24; break;
             case 'h': num *= (double) 60*60; break;
-            case 'm': num *= (double) 60; break;
+            case 'm': num *= 60; break;
             default: case 's': break;
         }
         return (int) num;
@@ -159,7 +159,7 @@ public class MohistConfig {
 
     private static float getFloat(String path, float def) {
         // TODO: Figure out why getFloat() always returns the default value.
-        return (float) getDouble(path, (double) def);
+        return (float) getDouble(path, def);
     }
 
     private static int getInt(String path, int def) {
@@ -169,7 +169,7 @@ public class MohistConfig {
 
     private static <T> List getList(String path, T def) {
         config.addDefault(path, def);
-        return (List<T>) config.getList(path, config.getList(path));
+        return config.getList(path, config.getList(path));
     }
 
     private static String getString(String path, String def) {

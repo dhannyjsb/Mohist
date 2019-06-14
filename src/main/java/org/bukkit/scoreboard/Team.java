@@ -287,7 +287,7 @@ public interface Team {
     /**
      * Represents an option which may be applied to this team.
      */
-    public enum Option {
+    enum Option {
 
         /**
          * How to display the name tags of players on this team.
@@ -300,13 +300,13 @@ public interface Team {
         /**
          * How players of this team collide with others.
          */
-        COLLISION_RULE;
+        COLLISION_RULE
     }
 
     /**
      * How an option may be applied to members of this team.
      */
-    public enum OptionStatus {
+    enum OptionStatus {
 
         /**
          * Apply this option to everyone.
@@ -323,6 +323,6 @@ public interface Team {
         /**
          * Apply this option for only team members.
          */
-        FOR_OWN_TEAM;
+        FOR_OWN_TEAM
     }
 }

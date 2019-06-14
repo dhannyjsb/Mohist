@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
  */
 public final class AsynchronousExecutor<P, T, C, E extends Throwable> {
 
-    public static interface CallBackProvider<P, T, C, E extends Throwable> extends ThreadFactory {
+    public interface CallBackProvider<P, T, C, E extends Throwable> extends ThreadFactory {
 
         /**
          * Normally an asynchronous call, but can be synchronous

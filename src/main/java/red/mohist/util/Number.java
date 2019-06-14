@@ -21,12 +21,9 @@ public class Number {
 
 	  public static boolean isDouble(String value) {  
 	      try {  
-	          Double.parseDouble(value);  
-	          if (value.contains(".")) {
-				  return true;
-			  }
-	          return false;  
-	      } catch (NumberFormatException e) {  
+	          Double.parseDouble(value);
+              return value.contains(".");
+          } catch (NumberFormatException e) {
 	          return false;  
 	      }  
 	  }  

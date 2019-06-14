@@ -29,7 +29,7 @@ public class Note {
         /** The number of tones including sharped tones. */
         public static final byte TONES_COUNT = 12;
 
-        private Tone(int id, boolean sharpable) {
+        Tone(int id, boolean sharpable) {
             this.id = (byte) (id % TONES_COUNT);
             this.sharpable = sharpable;
         }
@@ -266,10 +266,7 @@ public class Note {
             return false;
         }
         Note other = (Note) obj;
-        if (note != other.note) {
-            return false;
-        }
-        return true;
+        return note == other.note;
     }
 
     @Override

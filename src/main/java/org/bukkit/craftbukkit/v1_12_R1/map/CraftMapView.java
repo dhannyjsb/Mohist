@@ -143,7 +143,7 @@ public final class CraftMapView implements MapView {
             renderCache.put(context ? player : null, render);
         }
 
-        if (context && renderCache.containsKey(null)) {
+        if (context) {
             renderCache.remove(null);
         }
 

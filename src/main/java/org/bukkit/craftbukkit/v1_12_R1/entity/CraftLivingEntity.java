@@ -539,7 +539,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public boolean hasAI() {
-        return (this.getHandle() instanceof EntityLiving) ? !((EntityLiving) this.getHandle()).isAIDisabled(): false;
+        return (this.getHandle() instanceof EntityLiving) && !((EntityLiving) this.getHandle()).isAIDisabled();
     }
 
     @Override

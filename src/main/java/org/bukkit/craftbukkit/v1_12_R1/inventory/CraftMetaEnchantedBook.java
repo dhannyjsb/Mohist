@@ -140,7 +140,7 @@ class CraftMetaEnchantedBook extends CraftMetaItem implements EnchantmentStorage
 
     @Override
     public Map<Enchantment, Integer> getStoredEnchants() {
-        return hasStoredEnchants() ? ImmutableMap.copyOf(enchantments) : ImmutableMap.<Enchantment, Integer>of();
+        return hasStoredEnchants() ? ImmutableMap.copyOf(enchantments) : ImmutableMap.of();
     }
 
     @Override

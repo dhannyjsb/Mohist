@@ -5,5 +5,5 @@ package org.bukkit.entity;
  */
 public interface EnderDragonPart extends ComplexEntityPart, Damageable {
     @Override
-    public EnderDragon getParent();
+    EnderDragon getParent();
 }

@@ -31,7 +31,7 @@ public class HandlerList {
     /**
      * List of all HandlerLists which have been created, for use in bakeAll()
      */
-    private static ArrayList<HandlerList> allLists = new ArrayList<HandlerList>();
+    private static final ArrayList<HandlerList> allLists = new ArrayList<HandlerList>();
 
     /**
      * Bake all handler lists. Best used just after all normal event

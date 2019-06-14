@@ -754,7 +754,7 @@ public final class CraftServer implements Server {
         Map<String, Map<String, Object>> perms;
 
         try {
-            perms = (Map<String, Map<String, Object>>) yaml.load(stream);
+            perms = yaml.load(stream);
         } catch (MarkedYAMLException ex) {
             Mohist.LOGGER.warn( "Server permissions file " + file + " is not valid YAML: " + ex.toString());
             return;
@@ -1358,7 +1358,7 @@ public final class CraftServer implements Server {
     public File getWorldContainer() {
         // Cauldron start - return the proper container
         if (DimensionManager.getWorld(0) != null) {
-            return ((SaveHandler)DimensionManager.getWorld(0).getSaveHandler()).getWorldDirectory();
+            return DimensionManager.getWorld(0).getSaveHandler().getWorldDirectory();
         }
         // Cauldron end
         if (this.console.anvilFile != null) {
@@ -1536,7 +1536,7 @@ public final class CraftServer implements Server {
             Mohist.LOGGER.error( "Exception when " + player.getName() + " attempted to tab complete " + message, ex);
         }
 
-        return completions == null ? ImmutableList.<String>of() : completions;
+        return completions == null ? ImmutableList.of() : completions;
     }
 
     public List<String> tabCompleteChat(Player player, String message) {

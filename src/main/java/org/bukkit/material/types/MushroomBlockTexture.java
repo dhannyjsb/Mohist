@@ -69,7 +69,7 @@ public enum MushroomBlockTexture {
     private final Byte data;
     private final BlockFace capFace;
 
-    private MushroomBlockTexture(final int data, final BlockFace capFace) {
+    MushroomBlockTexture(final int data, final BlockFace capFace) {
         this.data = (byte) data;
         this.capFace = capFace;
     }

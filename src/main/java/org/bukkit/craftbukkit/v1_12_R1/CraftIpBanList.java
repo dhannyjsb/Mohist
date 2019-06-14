@@ -23,7 +23,7 @@ public class CraftIpBanList implements org.bukkit.BanList {
     public org.bukkit.BanEntry getBanEntry(String target) {
         Validate.notNull(target, "Target cannot be null");
 
-        UserListIPBansEntry entry = (UserListIPBansEntry) list.getEntry(target);
+        UserListIPBansEntry entry = list.getEntry(target);
         if (entry == null) {
             return null;
         }
@@ -54,7 +54,7 @@ public class CraftIpBanList implements org.bukkit.BanList {
     public Set<org.bukkit.BanEntry> getBanEntries() {
         ImmutableSet.Builder<org.bukkit.BanEntry> builder = ImmutableSet.builder();
         for (String target : list.getKeys()) {
-            builder.add(new CraftIpBanEntry(target, (UserListIPBansEntry) list.getEntry(target), list));
+            builder.add(new CraftIpBanEntry(target, list.getEntry(target), list));
         }
 
         return builder.build();

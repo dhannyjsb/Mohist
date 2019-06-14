@@ -125,7 +125,7 @@ public class PotionEffect implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        return ImmutableMap.<String, Object>of(
+        return ImmutableMap.of(
             TYPE, type.getId(),
             DURATION, duration,
             AMPLIFIER, amplifier,

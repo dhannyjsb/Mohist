@@ -64,7 +64,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(args, "Arguments cannot be null");
         Validate.notNull(alias, "Alias cannot be null");
-        return (List<String>) vanillaCommand.getTabCompletions(MinecraftServer.getServerInst(), getListener(sender), args, (location) == null ? null : new BlockPos(location.getX(), location.getY(), location.getZ()));
+        return vanillaCommand.getTabCompletions(MinecraftServer.getServerInst(), getListener(sender), args, (location) == null ? null : new BlockPos(location.getX(), location.getY(), location.getZ()));
     }
 
     public static CommandSender lastSender = null; // Nasty :(
@@ -80,7 +80,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
         try {
             if (vanillaCommand.checkPermission(server, icommandlistener)) {
                 if (i > -1) {
-                    List<Entity> list = ((List<Entity>) EntitySelector.matchEntitiesDefault(icommandlistener, as[i], Entity.class));
+                    List<Entity> list = EntitySelector.matchEntitiesDefault(icommandlistener, as[i], Entity.class);
                     String s2 = as[i];
 
                     icommandlistener.setCommandStat(CommandResultStats.Type.AFFECTED_ENTITIES, list.size());
@@ -93,7 +93,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
                             vanillaCommand.execute(server, icommandlistener, as);
                             j++;
                         } catch (WrongUsageException exceptionusage) {
-                            TextComponentTranslation chatmessage = new TextComponentTranslation("commands.generic.usage", new Object[]{new TextComponentTranslation(exceptionusage.getMessage(), exceptionusage.getErrorObjects())});
+                            TextComponentTranslation chatmessage = new TextComponentTranslation("commands.generic.usage", new TextComponentTranslation(exceptionusage.getMessage(), exceptionusage.getErrorObjects()));
                             chatmessage.getStyle().setColor(TextFormatting.RED);
                             icommandlistener.sendMessage(chatmessage);
                         } catch (CommandException commandexception) {
@@ -109,18 +109,18 @@ public final class VanillaCommandWrapper extends BukkitCommand {
                     j++;
                 }
             } else {
-                TextComponentTranslation chatmessage = new TextComponentTranslation("commands.generic.permission", new Object[0]);
+                TextComponentTranslation chatmessage = new TextComponentTranslation("commands.generic.permission");
                 chatmessage.getStyle().setColor(TextFormatting.RED);
                 icommandlistener.sendMessage(chatmessage);
             }
         } catch (WrongUsageException exceptionusage) {
-            TextComponentTranslation chatmessage1 = new TextComponentTranslation("commands.generic.usage", new Object[] { new TextComponentTranslation(exceptionusage.getMessage(), exceptionusage.getErrorObjects()) });
+            TextComponentTranslation chatmessage1 = new TextComponentTranslation("commands.generic.usage", new TextComponentTranslation(exceptionusage.getMessage(), exceptionusage.getErrorObjects()));
             chatmessage1.getStyle().setColor(TextFormatting.RED);
             icommandlistener.sendMessage(chatmessage1);
         } catch (CommandException commandexception) {
             CommandBase.notifyCommandListener(icommandlistener, vanillaCommand, 0, commandexception.getMessage(), commandexception.getErrorObjects());
         } catch (Throwable throwable) {
-            TextComponentTranslation chatmessage3 = new TextComponentTranslation("commands.generic.exception", new Object[0]);
+            TextComponentTranslation chatmessage3 = new TextComponentTranslation("commands.generic.exception");
             chatmessage3.getStyle().setColor(TextFormatting.RED);
             icommandlistener.sendMessage(chatmessage3);
             if (icommandlistener.getCommandSenderEntity() instanceof EntityMinecartCommandBlock) {
@@ -145,7 +145,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
             return ((CraftBlockCommandSender) sender).getTileEntity();
         }
         if (sender instanceof CommandMinecart) {
-            return ((EntityMinecartCommandBlock) ((CraftMinecartCommand) sender).getHandle()).getCommandBlockLogic();
+            return ((CraftMinecartCommand) sender).getHandle().getCommandBlockLogic();
         }
         if (sender instanceof RemoteConsoleCommandSender) {
             return ((DedicatedServer)MinecraftServer.getServerInst()).rconConsoleSource;
@@ -172,7 +172,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
     }
 
     public static String[] dropFirstArgument(String as[]) {
-        String as1[] = new String[as.length - 1];
+        String[] as1 = new String[as.length - 1];
         System.arraycopy(as, 1, as1, 0, as.length - 1);
 
         return as1;

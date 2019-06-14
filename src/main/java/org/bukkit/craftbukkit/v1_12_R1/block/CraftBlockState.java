@@ -298,10 +298,7 @@ public class CraftBlockState implements BlockState {
         if (this.data != other.data && (this.data == null || !this.data.equals(other.data))) {
             return false;
         }
-        if (this.nbt != other.nbt && (this.nbt == null || !this.nbt.equals(other.nbt))) {
-            return false;
-        }
-        return true;
+        return this.nbt == other.nbt || (this.nbt != null && this.nbt.equals(other.nbt));
     }
 
     @Override

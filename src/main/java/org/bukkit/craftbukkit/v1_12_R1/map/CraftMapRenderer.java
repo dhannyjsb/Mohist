@@ -37,7 +37,7 @@ public class CraftMapRenderer extends MapRenderer {
 
         for (Map.Entry<String, MapDecoration> entry : worldMap.mapDecorations.entrySet()) {
             // If this cursor is for a player check visibility with vanish system
-            Player other = Bukkit.getPlayerExact((String) entry.getKey());
+            Player other = Bukkit.getPlayerExact(entry.getKey());
             if (other != null && !player.canSee(other)) {
                 continue;
             }
