@@ -179,7 +179,9 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
                         if (entity instanceof EntityWolf) { return new CraftWolf(server, (EntityWolf) entity); }
                         else if (entity instanceof EntityOcelot) { return new CraftOcelot(server, (EntityOcelot) entity); }
                         else if (entity instanceof EntityParrot) { return new CraftParrot(server, (EntityParrot) entity); }
-                        else return new CraftTameableAnimal(server, (EntityTameable) entity);
+                        else {
+                            return new CraftTameableAnimal(server, (EntityTameable) entity);
+                        }
                     }
                     else if (entity instanceof EntitySheep) { return new CraftSheep(server, (EntitySheep) entity); }
                     else if (entity instanceof AbstractHorse) {
@@ -329,7 +331,9 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         else if (entity instanceof EntityEvokerFangs) { return new CraftEvokerFangs(server, (EntityEvokerFangs) entity); }
         else if (entity instanceof EntityLlamaSpit) { return new CraftLlamaSpit(server, (EntityLlamaSpit) entity); }
         else if (entity != null) {
-            if (entity instanceof net.minecraft.entity.IProjectile) return new CraftCustomProjectile(server, entity);
+            if (entity instanceof net.minecraft.entity.IProjectile) {
+                return new CraftCustomProjectile(server, entity);
+            }
             return new CraftCustomEntity(server, entity);
         }
         throw new AssertionError("Unknown entity " + (entity == null ? " is null" : entity.getClass() + ": " + entity));
@@ -681,7 +685,9 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         String name = getHandle().getCustomNameTag();
 
         if (name == null || name.length() == 0) {
-            if (getType().getEntityClass() == CraftCustomEntity.class && this instanceof CraftLivingEntity) return ((CraftLivingEntity) this).entity.getName();
+            if (getType().getEntityClass() == CraftCustomEntity.class && this instanceof CraftLivingEntity) {
+                return ((CraftLivingEntity) this).entity.getName();
+            }
             return null;
         }
 

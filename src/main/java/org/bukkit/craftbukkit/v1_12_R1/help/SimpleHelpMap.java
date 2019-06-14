@@ -135,12 +135,16 @@ public class SimpleHelpMap implements HelpMap {
                 Class c = entry.getKey();
                 if (c.isAssignableFrom(command.getClass())) {
                     HelpTopic t = entry.getValue().createTopic(command);
-                    if (t != null) addTopic(t);
+                    if (t != null) {
+                        addTopic(t);
+                    }
                     continue outer;
                 }
                 if (command instanceof PluginCommand && c.isAssignableFrom(((PluginCommand)command).getExecutor().getClass())) {
                     HelpTopic t = entry.getValue().createTopic(command);
-                    if (t != null) addTopic(t);
+                    if (t != null) {
+                        addTopic(t);
+                    }
                     continue outer;
                 }
             }

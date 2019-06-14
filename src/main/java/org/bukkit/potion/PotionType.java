@@ -90,11 +90,13 @@ public enum PotionType {
      */
 
     public static PotionType getByEffect(PotionEffectType effectType) {
-        if (effectType == null)
+        if (effectType == null) {
             return WATER;
+        }
         for (PotionType type : PotionType.values()) {
-            if (effectType.equals(type.effect))
+            if (effectType.equals(type.effect)) {
                 return type;
+            }
         }
         return null;
     }

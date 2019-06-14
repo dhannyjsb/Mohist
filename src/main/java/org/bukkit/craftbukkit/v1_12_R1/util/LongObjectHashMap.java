@@ -61,7 +61,9 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
     public V get(long key) {
         int index = (int) (keyIndex(key) & (BUCKET_SIZE - 1));
         long[] inner = keys[index];
-        if (inner == null) return null;
+        if (inner == null) {
+            return null;
+        }
 
         for (int i = 0; i < inner.length; i++) {
             long innerKey = inner[i];

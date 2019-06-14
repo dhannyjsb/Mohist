@@ -462,7 +462,9 @@ public final class CraftServer implements Server {
                     found = player;
                     delta = curDelta;
                 }
-                if (curDelta == 0) break;
+                if (curDelta == 0) {
+                    break;
+                }
             }
         }
         return found;
@@ -919,7 +921,9 @@ public final class CraftServer implements Server {
             try {
                 dimension = Integer.parseInt(name.substring(3));
                 WorldServer worldserver = console.getWorld(dimension);
-                if (worldserver != null) world = worldserver.getWorld();
+                if (worldserver != null) {
+                    world = worldserver.getWorld();
+                }
             } catch (NumberFormatException e) {}
         }
         return world;

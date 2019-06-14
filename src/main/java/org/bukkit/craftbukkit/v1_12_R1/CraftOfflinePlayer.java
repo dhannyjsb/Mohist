@@ -200,7 +200,9 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
     @Override
     public long getFirstPlayed() {
         Player player = getPlayer();
-        if (player != null) return player.getFirstPlayed();
+        if (player != null) {
+            return player.getFirstPlayed();
+        }
 
         NBTTagCompound data = getBukkitData();
 
@@ -219,7 +221,9 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
     @Override
     public long getLastPlayed() {
         Player player = getPlayer();
-        if (player != null) return player.getLastPlayed();
+        if (player != null) {
+            return player.getLastPlayed();
+        }
 
         NBTTagCompound data = getBukkitData();
 
@@ -243,7 +247,9 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
     @Override
     public Location getBedSpawnLocation() {
         NBTTagCompound data = getData();
-        if (data == null) return null;
+        if (data == null) {
+            return null;
+        }
 
         if (data.hasKey("SpawnX") && data.hasKey("SpawnY") && data.hasKey("SpawnZ")) {
             String spawnWorld = data.getString("SpawnWorld");

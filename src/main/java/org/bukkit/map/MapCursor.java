@@ -204,7 +204,9 @@ public final class MapCursor {
 
         public static Type byValue(byte value) {
             for (Type t : values()) {
-                if (t.value == value) return t;
+                if (t.value == value) {
+                    return t;
+                }
             }
             return null;
         }

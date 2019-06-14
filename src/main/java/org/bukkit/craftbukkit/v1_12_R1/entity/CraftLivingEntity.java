@@ -87,8 +87,9 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
             equipment = new CraftEntityEquipment(this);
         }
         this.entityName = EntityRegistry.entityTypeMap.get(entity.getClass());
-        if (entityName == null)
+        if (entityName == null) {
             entityName = entity.getName();
+        }
     }
 
     @Override
@@ -327,7 +328,9 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public Collection<PotionEffect> getActivePotionEffects() {
         List<PotionEffect> effects = new ArrayList<PotionEffect>();
         for (net.minecraft.potion.PotionEffect handle : getHandle().getActivePotionMap().values()) {
-            if (PotionEffectType.getById(Potion.getIdFromPotion(handle.getPotion())) == null) continue; // Cauldron - ignore null types
+            if (PotionEffectType.getById(Potion.getIdFromPotion(handle.getPotion())) == null) {
+                continue; // Cauldron - ignore null types
+            }
             effects.add(new PotionEffect(PotionEffectType.getById(Potion.getIdFromPotion(handle.getPotion())), handle.getDuration(), handle.getAmplifier(), handle.getIsAmbient(), handle.doesShowParticles()));
         }
         return effects;

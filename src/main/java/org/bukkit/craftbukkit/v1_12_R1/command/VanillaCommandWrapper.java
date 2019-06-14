@@ -43,7 +43,9 @@ public final class VanillaCommandWrapper extends BukkitCommand {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        if (!testPermission(sender)) return true;
+        if (!testPermission(sender)) {
+            return true;
+        }
 
         ICommandSender icommandlistener = getListener(sender);
         try {

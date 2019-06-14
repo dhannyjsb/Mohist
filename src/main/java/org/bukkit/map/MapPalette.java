@@ -218,7 +218,9 @@ public final class MapPalette {
      */
 
     public static byte matchColor(Color color) {
-        if (color.getAlpha() < 128) return 0;
+        if (color.getAlpha() < 128) {
+            return 0;
+        }
 
         int index = 0;
         double best = -1;

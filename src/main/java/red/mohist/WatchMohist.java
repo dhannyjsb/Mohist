@@ -3,14 +3,16 @@ package red.mohist;
 import net.minecraft.server.MinecraftServer;
 import red.mohist.i18n.Message;
 
-import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class WatchMohist extends TimerTask
 {
-    private static Timer timer;
-    private static long Time;
-    private static long WarnTime;
+    private static ScheduledExecutorService timer = Executors.newScheduledThreadPool(2);
+    private static long Time = 0L;
+    private static long WarnTime = 0L;
     
     @Override
     public void run() {
@@ -32,16 +34,10 @@ public class WatchMohist extends TimerTask
     }
     
     public static void start() {
-        WatchMohist.timer.schedule(new WatchMohist(), 30000L, 500L);
+        timer.scheduleWithFixedDelay(new WatchMohist(), 30000L, 500L, TimeUnit.SECONDS);
     }
     
     public static void stop() {
-        WatchMohist.timer.cancel();
-    }
-    
-    static {
-        WatchMohist.timer = new Timer();
-        WatchMohist.Time = 0L;
-        WatchMohist.WarnTime = 0L;
+        timer.shutdownNow();
     }
 }

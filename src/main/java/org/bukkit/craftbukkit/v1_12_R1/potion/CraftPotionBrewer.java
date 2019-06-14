@@ -18,8 +18,9 @@ public class CraftPotionBrewer implements PotionBrewer {
 
     @Override
     public Collection<PotionEffect> getEffects(PotionType damage, boolean upgraded, boolean extended) {
-        if (cache.containsKey(damage))
+        if (cache.containsKey(damage)) {
             return cache.get(damage);
+        }
 
         List<net.minecraft.potion.PotionEffect> mcEffects = net.minecraft.potion.PotionType.getPotionTypeForName(CraftPotionUtil.fromBukkit(new PotionData(damage, extended, upgraded))).getEffects();
 

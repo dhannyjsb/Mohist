@@ -38,8 +38,9 @@ public class CraftMapCanvas implements MapCanvas {
 
     @Override
     public void setPixel(int x, int y, byte color) {
-        if (x < 0 || y < 0 || x >= 128 || y >= 128)
+        if (x < 0 || y < 0 || x >= 128 || y >= 128) {
             return;
+        }
         if (buffer[y * 128 + x] != color) {
             buffer[y * 128 + x] = color;
             mapView.worldMap.updateMapData(x, y);
@@ -48,15 +49,17 @@ public class CraftMapCanvas implements MapCanvas {
 
     @Override
     public byte getPixel(int x, int y) {
-        if (x < 0 || y < 0 || x >= 128 || y >= 128)
+        if (x < 0 || y < 0 || x >= 128 || y >= 128) {
             return 0;
+        }
         return buffer[y * 128 + x];
     }
 
     @Override
     public byte getBasePixel(int x, int y) {
-        if (x < 0 || y < 0 || x >= 128 || y >= 128)
+        if (x < 0 || y < 0 || x >= 128 || y >= 128) {
             return 0;
+        }
         return base[y * 128 + x];
     }
 

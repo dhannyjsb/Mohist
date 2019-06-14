@@ -234,7 +234,9 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     @Override
     public InventoryView openInventory(Inventory inventory) {
-        if(!(getHandle() instanceof EntityPlayerMP)) return null;
+        if(!(getHandle() instanceof EntityPlayerMP)) {
+            return null;
+        }
         EntityPlayerMP player = (EntityPlayerMP) getHandle();
         InventoryType type = inventory.getType();
         Container formerContainer = getHandle().openContainer;
@@ -323,11 +325,15 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     private void openCustomInventory(Inventory inventory, EntityPlayerMP player, String windowType) {
-        if (player.connection == null) return;
+        if (player.connection == null) {
+            return;
+        }
         Container container = new CraftContainer(inventory, this.getHandle(), player.getNextWindowIdCB());
 
         container = CraftEventFactory.callInventoryOpenEvent(player, container);
-        if(container == null) return;
+        if(container == null) {
+            return;
+        }
 
         String title = container.getBukkitView().getTitle();
         int size = container.getBukkitView().getTopInventory().getSize();
@@ -393,8 +399,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     @Override
     public void openInventory(InventoryView inventory) {
-        if (!(getHandle() instanceof EntityPlayerMP)) return;
-        if (((EntityPlayerMP) getHandle()).connection == null) return;
+        if (!(getHandle() instanceof EntityPlayerMP)) {
+            return;
+        }
+        if (((EntityPlayerMP) getHandle()).connection == null) {
+            return;
+        }
         if (getHandle().openContainer != getHandle().openContainer) {
             // fire INVENTORY_CLOSE if one already open
             ((EntityPlayerMP)getHandle()).connection.processCloseWindow(new CPacketCloseWindow(getHandle().openContainer.windowId));

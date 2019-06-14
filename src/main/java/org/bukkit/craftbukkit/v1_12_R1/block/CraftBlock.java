@@ -259,7 +259,9 @@ public class CraftBlock implements Block {
     }
 
     public static BlockFace notchToBlockFace(EnumFacing notch) {
-        if (notch == null) return BlockFace.SELF;
+        if (notch == null) {
+            return BlockFace.SELF;
+        }
         switch (notch) {
         case DOWN:
             return BlockFace.DOWN;
@@ -442,8 +444,12 @@ public class CraftBlock implements Block {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof CraftBlock)) return false;
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof CraftBlock)) {
+            return false;
+        }
         CraftBlock other = (CraftBlock) o;
 
         return this.x == other.x && this.y == other.y && this.z == other.z && this.getWorld().equals(other.getWorld());
@@ -476,12 +482,24 @@ public class CraftBlock implements Block {
         int power = 0;
         BlockRedstoneWire wire = Blocks.REDSTONE_WIRE;
         net.minecraft.world.World world = chunk.getHandle().getWorld();
-        if ((face == BlockFace.DOWN || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y - 1, z), EnumFacing.DOWN)) power = wire.getMaxCurrentStrength(world, new BlockPos(x, y - 1, z), power);
-        if ((face == BlockFace.UP || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y + 1, z), EnumFacing.UP)) power = wire.getMaxCurrentStrength(world, new BlockPos(x, y + 1, z), power);
-        if ((face == BlockFace.EAST || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x + 1, y, z), EnumFacing.EAST)) power = wire.getMaxCurrentStrength(world, new BlockPos(x + 1, y, z), power);
-        if ((face == BlockFace.WEST || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x - 1, y, z), EnumFacing.WEST)) power = wire.getMaxCurrentStrength(world, new BlockPos(x - 1, y, z), power);
-        if ((face == BlockFace.NORTH || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y, z - 1), EnumFacing.NORTH)) power = wire.getMaxCurrentStrength(world, new BlockPos(x, y, z - 1), power);
-        if ((face == BlockFace.SOUTH || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y, z + 1), EnumFacing.SOUTH)) power = wire.getMaxCurrentStrength(world, new BlockPos(x, y, z - 1), power);
+        if ((face == BlockFace.DOWN || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y - 1, z), EnumFacing.DOWN)) {
+            power = wire.getMaxCurrentStrength(world, new BlockPos(x, y - 1, z), power);
+        }
+        if ((face == BlockFace.UP || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y + 1, z), EnumFacing.UP)) {
+            power = wire.getMaxCurrentStrength(world, new BlockPos(x, y + 1, z), power);
+        }
+        if ((face == BlockFace.EAST || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x + 1, y, z), EnumFacing.EAST)) {
+            power = wire.getMaxCurrentStrength(world, new BlockPos(x + 1, y, z), power);
+        }
+        if ((face == BlockFace.WEST || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x - 1, y, z), EnumFacing.WEST)) {
+            power = wire.getMaxCurrentStrength(world, new BlockPos(x - 1, y, z), power);
+        }
+        if ((face == BlockFace.NORTH || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y, z - 1), EnumFacing.NORTH)) {
+            power = wire.getMaxCurrentStrength(world, new BlockPos(x, y, z - 1), power);
+        }
+        if ((face == BlockFace.SOUTH || face == BlockFace.SELF) && world.isSidePowered(new BlockPos(x, y, z + 1), EnumFacing.SOUTH)) {
+            power = wire.getMaxCurrentStrength(world, new BlockPos(x, y, z - 1), power);
+        }
         return power > 0 ? power : (face == BlockFace.SELF ? isBlockIndirectlyPowered() : isBlockFaceIndirectlyPowered(face)) ? 15 : 0;
     }
 
@@ -494,8 +512,12 @@ public class CraftBlock implements Block {
     public boolean isEmpty() {
         // Cauldron start - support custom air blocks (Railcraft player aura tracking block)
         //return getType() == Material.AIR;
-        if (getType() == Material.AIR) return true;
-        if (!(getWorld() instanceof CraftWorld)) return false;
+        if (getType() == Material.AIR) {
+            return true;
+        }
+        if (!(getWorld() instanceof CraftWorld)) {
+            return false;
+        }
         return ((CraftWorld) getWorld()).getHandle().isAirBlock(new BlockPos(x, y, z));
         // Cauldron end
     }

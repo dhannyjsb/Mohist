@@ -30,7 +30,9 @@ public class MethodHandleEventExecutor implements EventExecutor {
 
     @Override
     public void execute(Listener listener, Event event) throws EventException {
-        if (!eventClass.isInstance(event)) return;
+        if (!eventClass.isInstance(event)) {
+            return;
+        }
         try {
             handle.invoke(listener, event);
         } catch (Throwable t) {

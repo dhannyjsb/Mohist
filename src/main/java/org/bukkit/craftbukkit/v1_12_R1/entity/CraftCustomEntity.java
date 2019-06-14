@@ -32,9 +32,11 @@ public class CraftCustomEntity extends CraftEntity {
     @Override
     public EntityType getType() {
         EntityType type = EntityType.fromName(this.entityName);
-        if (type != null)
+        if (type != null) {
             return type;
-        else return EntityType.FORGE_MOD;
+        } else {
+            return EntityType.FORGE_MOD;
+        }
     }
 
     @Override

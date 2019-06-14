@@ -88,11 +88,21 @@ public class CommandWrapper implements ICommand {
 
     @Nullable
     public static CommandSender toBukkitSender(ICommandSender sender) {
-        if (sender instanceof MinecraftServer) return MinecraftServer.getServerInst().console;
-        if (sender instanceof RConConsoleSource) return new CraftRemoteConsoleCommandSender((RConConsoleSource) sender);
-        if (sender instanceof CommandBlockBaseLogic) return new CraftBlockCommandSender(sender);
-        if (sender instanceof FunctionManager.CustomFunctionListener) return new CraftFunctionCommandSender(sender);
-        if (sender instanceof Entity) return ((Entity) sender).getBukkitEntity();
+        if (sender instanceof MinecraftServer) {
+            return MinecraftServer.getServerInst().console;
+        }
+        if (sender instanceof RConConsoleSource) {
+            return new CraftRemoteConsoleCommandSender((RConConsoleSource) sender);
+        }
+        if (sender instanceof CommandBlockBaseLogic) {
+            return new CraftBlockCommandSender(sender);
+        }
+        if (sender instanceof FunctionManager.CustomFunctionListener) {
+            return new CraftFunctionCommandSender(sender);
+        }
+        if (sender instanceof Entity) {
+            return ((Entity) sender).getBukkitEntity();
+        }
         return null;
     }
 }

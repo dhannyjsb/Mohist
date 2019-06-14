@@ -148,7 +148,9 @@ public final class CraftChatMessage {
     }
 
     public static String fromComponent(ITextComponent component, TextFormatting defaultColor) {
-        if (component == null) return "";
+        if (component == null) {
+            return "";
+        }
         StringBuilder out = new StringBuilder();
         
         for (ITextComponent c : (Iterable<ITextComponent>) component) {

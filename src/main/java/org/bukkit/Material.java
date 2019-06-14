@@ -650,7 +650,9 @@ public enum Material {
      */
     public boolean isBlock() {
         for (Material material : byBlockId) {
-            if (this == material) return true;
+            if (this == material) {
+                return true;
+            }
         }
         return false;
     }

@@ -21,7 +21,9 @@ public abstract class BooleanPrompt extends ValidatingPrompt {
 
     @Override
     protected Prompt acceptValidatedInput(ConversationContext context, String input) {
-        if (input.equalsIgnoreCase("y") || input.equals("1") || input.equalsIgnoreCase("right") || input.equalsIgnoreCase("correct") || input.equalsIgnoreCase("valid")) input = "true"; // Spigot
+        if (input.equalsIgnoreCase("y") || input.equals("1") || input.equalsIgnoreCase("right") || input.equalsIgnoreCase("correct") || input.equalsIgnoreCase("valid")) {
+            input = "true"; // Spigot
+        }
         return acceptValidatedInput(context, BooleanUtils.toBoolean(input));
     }
 

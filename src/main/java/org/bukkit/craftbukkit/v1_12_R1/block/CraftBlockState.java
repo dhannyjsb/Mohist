@@ -47,7 +47,9 @@ public class CraftBlockState implements BlockState {
             nbt = new NBTTagCompound();
             te.writeToNBT(nbt);
         }
-        else nbt = null;
+        else {
+            nbt = null;
+        }
         // Cauldron end
         createData(block.getData());
     }
@@ -316,9 +318,11 @@ public class CraftBlockState implements BlockState {
     }
 
     public TileEntity getTileEntity() {
-        if (nbt != null)
+        if (nbt != null) {
             return TileEntity.create(this.world.getHandle(), nbt);
-        else return null;
+        } else {
+            return null;
+        }
     }
 
     @Override

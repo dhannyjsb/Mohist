@@ -262,7 +262,9 @@ public class JavaPluginLoader implements PluginLoader {
 
         for (Method method : methods) {
             EventHandler eh = method.getAnnotation(EventHandler.class);
-            if (eh == null) continue;
+            if (eh == null) {
+                continue;
+            }
             // Do not register bridge or synthetic methods to avoid event duplication
             // Fixes SPIGOT-893
             if (method.isBridge() || method.isSynthetic()) {

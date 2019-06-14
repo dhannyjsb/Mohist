@@ -24,11 +24,9 @@ public class Update implements Runnable{
         String version = json.getString("name");
         if(!version.equals(Mohist.getVersion())) {
 			Mohist.LOGGER.info(pre + Message.getFormatString(Message.Mohist_update_program_check_hasupdate,new Object[] {version,Mohist.getVersion()}));
-            //Mohist.LOGGER.info(pre + "发现更新,最新版本号为: §7(§e" + version + "§7) §b目前版本为: §7(§e" + Mohist.getVersion() + "§7)");
             return true;
         }
 		Mohist.LOGGER.info(pre + Message.getFormatString(Message.Mohist_update_program_check_noupdate,new Object[] {version,Mohist.getVersion()}));
-        //Mohist.LOGGER.info(pre + "没有发现更新,最新版本号为: §7(§e" + version + "§7) §b目前版本为: §7(§e" + Mohist.getVersion() + "§7)");
         Mohist.LOGGER.info(pre + Message.getString(Message.Mohist_update_program_tips_stopautoget));
         return false;
     }

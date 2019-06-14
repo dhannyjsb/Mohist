@@ -355,8 +355,9 @@ public class Potion {
 
     public static Potion fromItemStack(ItemStack item) {
         Validate.notNull(item, "item cannot be null");
-        if (item.getType() != Material.POTION)
+        if (item.getType() != Material.POTION) {
             throw new IllegalArgumentException("item is not a potion");
+        }
         return fromDamage(item.getDurability());
     }
 
@@ -376,8 +377,9 @@ public class Potion {
      * @param other The new PotionBrewer
      */
     public static void setPotionBrewer(PotionBrewer other) {
-        if (brewer != null)
+        if (brewer != null) {
             brewer = other;
+        }
         brewer = other;
     }
 

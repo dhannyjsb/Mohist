@@ -254,7 +254,9 @@ public class CraftInventory implements Inventory {
         }
         ItemStack[] inventory = getStorageContents();
         for (int i = 0; i < inventory.length; i++) {
-            if (inventory[i] == null) continue;
+            if (inventory[i] == null) {
+                continue;
+            }
 
             if (withAmount ? item.equals(inventory[i]) : item.isSimilar(inventory[i])) {
                 return i;

@@ -166,10 +166,18 @@ public class CraftEventFactory {
         WorldServer worldServer = world.getHandle();
         int spawnSize = Bukkit.getServer().getSpawnRadius();
 
-        if (world.getHandle().dimension != 0) return true;
-        if (spawnSize <= 0) return true;
-        if (((CraftServer) Bukkit.getServer()).getHandle().getOppedPlayers().isEmpty()) return true;
-        if (player.isOp()) return true;
+        if (world.getHandle().dimension != 0) {
+            return true;
+        }
+        if (spawnSize <= 0) {
+            return true;
+        }
+        if (((CraftServer) Bukkit.getServer()).getHandle().getOppedPlayers().isEmpty()) {
+            return true;
+        }
+        if (player.isOp()) {
+            return true;
+        }
 
         BlockPos chunkcoordinates = worldServer.getSpawnPoint();
 
@@ -513,7 +521,9 @@ public class CraftEventFactory {
         }
         victim.capturedDrops.clear(); // Cauldron - we must clear pre-capture to avoid duplicates
         for (final org.bukkit.inventory.ItemStack stack : event.getDrops()) {
-            if (stack == null || stack.getType() == Material.AIR) continue;
+            if (stack == null || stack.getType() == Material.AIR) {
+                continue;
+            }
             // Cauldron start - add support for Forge's PlayerDropsEvent
             if (victim.captureDrops) {
                 net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
@@ -882,7 +892,9 @@ public class CraftEventFactory {
     }
 
     public static Container callInventoryOpenEvent(EntityPlayerMP player, Container container, boolean cancelled) {
-        if (AsyncCatcher.catchInv()) return container;
+        if (AsyncCatcher.catchInv()) {
+            return container;
+        }
         if (player.openContainer != player.inventoryContainer && cancelled) { // fire INVENTORY_CLOSE if one already open
             player.connection.processCloseWindow(new CPacketCloseWindow(player.openContainer.windowId));
         }
@@ -897,7 +909,9 @@ public class CraftEventFactory {
         // Cauldron end
         InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
         event.setCancelled(cancelled);
-        if (container.getBukkitView() != null) server.getPluginManager().callEvent(event); // Cauldron - allow vanilla mods to bypass
+        if (container.getBukkitView() != null) {
+            server.getPluginManager().callEvent(event); // Cauldron - allow vanilla mods to bypass
+        }
 
         if (event.isCancelled()) {
             container.transferTo(player.openContainer, craftPlayer);
@@ -1033,7 +1047,9 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human) {
-			if (!AsyncCatcher.catchInv()) return;
+			if (!AsyncCatcher.catchInv()) {
+                return;
+            }
             InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
             if (human.openContainer.getBukkitView() != null) {
                 human.world.getServer().getPluginManager().callEvent(event);
@@ -1247,7 +1263,9 @@ public class CraftEventFactory {
                 }
                 blockBreakEvent.setExpToDrop(exp);
             }
-            else blockBreakEvent.setCancelled(true);
+            else {
+                blockBreakEvent.setCancelled(true);
+            }
         }
 
         world.getServer().getPluginManager().callEvent(blockBreakEvent);

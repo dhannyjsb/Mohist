@@ -256,15 +256,19 @@ public class Note {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Note other = (Note) obj;
-        if (note != other.note)
+        if (note != other.note) {
             return false;
+        }
         return true;
     }
 

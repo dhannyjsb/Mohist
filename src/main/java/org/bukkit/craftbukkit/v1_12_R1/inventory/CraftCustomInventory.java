@@ -33,11 +33,21 @@ public class CraftCustomInventory implements InventoryHolder {
 
     @Nullable
     public static InventoryHolder holderFromForge(IItemHandler handler) {
-        if (handler == null) return null;
-        if (handler instanceof ItemStackHandler) return new CraftCustomInventory((ItemStackHandler) handler);
-        if (handler instanceof SlotItemHandler) return new CraftCustomInventory(((SlotItemHandler) handler).inventory);
-        if (handler instanceof InvWrapper) return new CraftCustomInventory(((InvWrapper) handler).getInv());
-        if (handler instanceof SidedInvWrapper) return new CraftCustomInventory(((SidedInvWrapper) handler).getInv());
+        if (handler == null) {
+            return null;
+        }
+        if (handler instanceof ItemStackHandler) {
+            return new CraftCustomInventory((ItemStackHandler) handler);
+        }
+        if (handler instanceof SlotItemHandler) {
+            return new CraftCustomInventory(((SlotItemHandler) handler).inventory);
+        }
+        if (handler instanceof InvWrapper) {
+            return new CraftCustomInventory(((InvWrapper) handler).getInv());
+        }
+        if (handler instanceof SidedInvWrapper) {
+            return new CraftCustomInventory(((SidedInvWrapper) handler).getInv());
+        }
         return null;
     }
 

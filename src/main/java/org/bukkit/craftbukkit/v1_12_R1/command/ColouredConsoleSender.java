@@ -52,7 +52,9 @@ public class ColouredConsoleSender extends CraftConsoleCommandSender {
     }
 
     public static String toAnsiStr(String pMsg) {
-        if (terminal != null && !terminal.isAnsiSupported()) return ChatColor.stripColor(pMsg);
+        if (terminal != null && !terminal.isAnsiSupported()) {
+            return ChatColor.stripColor(pMsg);
+        }
         String result = pMsg + "§r";
         for (int length = colors.length, i = 0; i < length; ++i) {
             final ChatColor color = colors[i];

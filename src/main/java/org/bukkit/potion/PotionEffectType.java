@@ -244,7 +244,9 @@ public abstract class PotionEffectType {
 
     public static PotionEffectType getById(int id) {
         if (id >= byId.size() || id < 0) // Cauldron
+        {
             return null;
+        }
         return byId.get(id); // Cauldron
     }
 
@@ -298,7 +300,9 @@ public abstract class PotionEffectType {
     public static PotionEffectType[] values() {
         // Cauldron start
         int maxId = 0;
-        for(int id : byId.keySet()) maxId = Math.max(maxId, id);
+        for(int id : byId.keySet()) {
+            maxId = Math.max(maxId, id);
+        }
         PotionEffectType[] result = new PotionEffectType[maxId + 1];
         return byId.values().toArray(result); // Cauldron change underlying storage to map
         // Cauldron end

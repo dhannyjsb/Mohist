@@ -22,7 +22,9 @@ public abstract class CraftChestedHorse extends CraftAbstractHorse implements Ch
 
     @Override
     public void setCarryingChest(boolean chest) {
-        if (chest == isCarryingChest()) return;
+        if (chest == isCarryingChest()) {
+            return;
+        }
         getHandle().setChested(chest);
         getHandle().initHorseChest();
     }

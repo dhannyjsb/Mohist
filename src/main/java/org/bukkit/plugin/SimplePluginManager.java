@@ -127,7 +127,9 @@ public final class SimplePluginManager implements PluginManager {
                 }
             }
 
-            if (loader == null) continue;
+            if (loader == null) {
+                continue;
+            }
 
             PluginDescriptionFile description = null;
             try {

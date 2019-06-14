@@ -768,14 +768,18 @@ public class CraftWorld implements World {
     @Override
     public long getTime() {
         long time = getFullTime() % 24000;
-        if (time < 0) time += 24000;
+        if (time < 0) {
+            time += 24000;
+        }
         return time;
     }
 
     @Override
     public void setTime(long time) {
         long margin = (time - getFullTime()) % 24000;
-        if (margin < 0) margin += 24000;
+        if (margin < 0) {
+            margin += 24000;
+        }
         setFullTime(getFullTime() + margin);
     }
 
@@ -791,7 +795,9 @@ public class CraftWorld implements World {
         // Forces the client to update to the new time immediately
         for (Player p : getPlayers()) {
             CraftPlayer cp = (CraftPlayer) p;
-            if (cp.getHandle().connection == null) continue;
+            if (cp.getHandle().connection == null) {
+                continue;
+            }
 
             cp.getHandle().connection.sendPacket(new SPacketTimeUpdate(cp.getHandle().world.getTotalWorldTime(), cp.getHandle().getPlayerTime(), cp.getHandle().world.getGameRules().getBoolean("doDaylightCycle")));
         }
@@ -1766,7 +1772,9 @@ public class CraftWorld implements World {
 
     @Override
     public void playSound(Location loc, Sound sound, org.bukkit.SoundCategory category, float volume, float pitch) {
-        if (loc == null || sound == null || category == null) return;
+        if (loc == null || sound == null || category == null) {
+            return;
+        }
 
         double x = loc.getX();
         double y = loc.getY();
@@ -1777,7 +1785,9 @@ public class CraftWorld implements World {
 
     @Override
     public void playSound(Location loc, String sound, org.bukkit.SoundCategory category, float volume, float pitch) {
-        if (loc == null || sound == null || category == null) return;
+        if (loc == null || sound == null || category == null) {
+            return;
+        }
 
         double x = loc.getX();
         double y = loc.getY();
@@ -1795,9 +1805,13 @@ public class CraftWorld implements World {
     @Override
     public boolean setGameRuleValue(String rule, String value) {
         // No null values allowed
-        if (rule == null || value == null) return false;
+        if (rule == null || value == null) {
+            return false;
+        }
 
-        if (!isGameRule(rule)) return false;
+        if (!isGameRule(rule)) {
+            return false;
+        }
 
         world.getGameRules().setOrCreateGameRule(rule, value);
         return true;

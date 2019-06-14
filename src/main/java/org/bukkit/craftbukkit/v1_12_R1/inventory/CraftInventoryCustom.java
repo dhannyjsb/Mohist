@@ -90,7 +90,9 @@ public class CraftInventoryCustom extends CraftInventory {
         public ItemStack decrStackSize(int i, int j) {
             ItemStack stack = this.getStackInSlot(i);
             ItemStack result;
-            if (stack == ItemStack.EMPTY) return stack;
+            if (stack == ItemStack.EMPTY) {
+                return stack;
+            }
             if (stack.getCount() <= j) {
                 this.setInventorySlotContents(i, ItemStack.EMPTY);
                 result = stack;
@@ -106,7 +108,9 @@ public class CraftInventoryCustom extends CraftInventory {
         public ItemStack removeStackFromSlot(int i) {
             ItemStack stack = this.getStackInSlot(i);
             ItemStack result;
-            if (stack == ItemStack.EMPTY) return stack;
+            if (stack == ItemStack.EMPTY) {
+                return stack;
+            }
             if (stack.getCount() <= 1) {
                 this.setInventorySlotContents(i, null);
                 result = stack;

@@ -61,9 +61,13 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
     @Override
     public void setItem(int index, ItemStack item) {
         super.setItem(index, item);
-        if (this.getHolder() == null) return;
+        if (this.getHolder() == null) {
+            return;
+        }
         EntityPlayerMP player = ((CraftPlayer) this.getHolder()).getHandle();
-        if (player.connection == null) return;
+        if (player.connection == null) {
+            return;
+        }
         if (index < InventoryPlayer.getHotbarSize()) {
             index += 36;
         } else if (index > 39) {
@@ -173,9 +177,15 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
 
         for (int i = 0; i < items.length; i++) {
             ItemStack item = items[i];
-            if (item == null) continue;
-            if (id > -1 && item.getTypeId() != id) continue;
-            if (data > -1 && item.getData().getData() != data) continue;
+            if (item == null) {
+                continue;
+            }
+            if (id > -1 && item.getTypeId() != id) {
+                continue;
+            }
+            if (data > -1 && item.getData().getData() != data) {
+                continue;
+            }
 
             count += item.getAmount();
             setItem(i, null);

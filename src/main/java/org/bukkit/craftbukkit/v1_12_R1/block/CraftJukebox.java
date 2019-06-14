@@ -77,7 +77,9 @@ public class CraftJukebox extends CraftBlockEntityState<TileEntityJukebox> imple
     public boolean eject() {
         requirePlaced();
         TileEntity tileEntity = this.getTileEntityFromWorld();
-        if (!(tileEntity instanceof TileEntityJukebox)) return false;
+        if (!(tileEntity instanceof TileEntityJukebox)) {
+            return false;
+        }
 
         TileEntityJukebox jukebox = (TileEntityJukebox) tileEntity;
         boolean result = !jukebox.getRecord().isEmpty();

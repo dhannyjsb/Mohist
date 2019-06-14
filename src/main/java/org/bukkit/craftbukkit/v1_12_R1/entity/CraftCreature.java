@@ -22,7 +22,9 @@ public class CraftCreature extends CraftLivingEntity implements Creature {
 
     @Override
     public CraftLivingEntity getTarget() {
-        if (getHandle().getAttackTarget() == null) return null;
+        if (getHandle().getAttackTarget() == null) {
+            return null;
+        }
 
         return (CraftLivingEntity) getHandle().getAttackTarget().getBukkitEntity();
     }

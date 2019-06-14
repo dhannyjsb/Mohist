@@ -73,7 +73,9 @@ public abstract class CraftAbstractHorse extends CraftAnimals implements Abstrac
 
     @Override
     public AnimalTamer getOwner() {
-        if (getOwnerUUID() == null) return null;
+        if (getOwnerUUID() == null) {
+            return null;
+        }
         return getServer().getOfflinePlayer(getOwnerUUID());
     }
 
