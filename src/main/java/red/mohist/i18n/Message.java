@@ -222,7 +222,9 @@ public enum Message {
     WatchMohist_3("watchmohist.3"),
     WatchMohist_4("watchmohist.4"),
 
-    Command_Register("command.register");
+    Command_Register("command.register"),
+
+    CraftBukkit_CraftServer_1("craftbukkit_craftserver_1");
 
 
     private final String value;
