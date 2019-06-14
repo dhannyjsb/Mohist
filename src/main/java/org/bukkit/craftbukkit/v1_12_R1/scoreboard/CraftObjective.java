@@ -22,18 +22,21 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
         return objective;
     }
 
+    @Override
     public String getName() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
         return objective.getName();
     }
 
+    @Override
     public String getDisplayName() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
         return objective.getDisplayName();
     }
 
+    @Override
     public void setDisplayName(String displayName) throws IllegalStateException, IllegalArgumentException {
         Validate.notNull(displayName, "Display name cannot be null");
         Validate.isTrue(displayName.length() <= 32, "Display name '" + displayName + "' is longer than the limit of 32 characters");
@@ -42,18 +45,21 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
         objective.setDisplayName(displayName);
     }
 
+    @Override
     public String getCriteria() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
         return criteria.bukkitName;
     }
 
+    @Override
     public boolean isModifiable() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
         return !criteria.criteria.isReadOnly();
     }
 
+    @Override
     public void setDisplaySlot(DisplaySlot slot) throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
         Scoreboard board = scoreboard.board;
@@ -70,6 +76,7 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
         }
     }
 
+    @Override
     public DisplaySlot getDisplaySlot() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
         Scoreboard board = scoreboard.board;
@@ -83,6 +90,7 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
         return null;
     }
 
+    @Override
     public Score getScore(OfflinePlayer player) throws IllegalArgumentException, IllegalStateException {
         Validate.notNull(player, "Player cannot be null");
         CraftScoreboard scoreboard = checkState();
@@ -90,6 +98,7 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
         return new CraftScore(this, player.getName());
     }
 
+    @Override
     public Score getScore(String entry) throws IllegalArgumentException, IllegalStateException {
         Validate.notNull(entry, "Entry cannot be null");
         CraftScoreboard scoreboard = checkState();

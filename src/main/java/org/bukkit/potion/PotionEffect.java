@@ -123,6 +123,7 @@ public class PotionEffect implements ConfigurationSerializable {
         return def;
     }
 
+    @Override
     public Map<String, Object> serialize() {
         return ImmutableMap.<String, Object>of(
             TYPE, type.getId(),

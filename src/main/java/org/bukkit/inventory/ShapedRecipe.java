@@ -157,6 +157,7 @@ public class ShapedRecipe implements Recipe, Keyed {
      *
      * @return The result stack.
      */
+    @Override
     public ItemStack getResult() {
         return output.clone();
     }

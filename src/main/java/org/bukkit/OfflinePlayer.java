@@ -24,6 +24,7 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      *
      * @return Player name or null if we have not seen a name for this player yet
      */
+    @Override
     public String getName();
 
     /**
@@ -31,6 +32,7 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
      *
      * @return Player UUID
      */
+    @Override
     public UUID getUniqueId();
 
     /**

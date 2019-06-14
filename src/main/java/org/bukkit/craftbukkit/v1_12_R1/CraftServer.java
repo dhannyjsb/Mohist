@@ -1176,6 +1176,7 @@ public final class CraftServer implements Server {
     }
 
     // Paper start
+    @Override
     @Nullable
     public UUID getPlayerUniqueId(String name) {
         Player player = Bukkit.getPlayerExact(name);
@@ -1665,6 +1666,7 @@ public final class CraftServer implements Server {
     private final Spigot spigot = new Spigot()
     {
 
+        @Override
         public YamlConfiguration getConfig()
         {
             return SpigotConfig.config;
@@ -1685,19 +1687,23 @@ public final class CraftServer implements Server {
         }
     };
 
+    @Override
     public Spigot spigot()
     {
         return spigot;
     }
 
+    @Override
     public PlayerProfile createProfile(@Nonnull UUID uuid) {
         return createProfile(uuid, null);
     }
 
+    @Override
     public PlayerProfile createProfile(@Nonnull String name) {
         return createProfile(null, name);
     }
 
+    @Override
     public PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
         Player player = uuid != null ? Bukkit.getPlayer(uuid) : (name != null ? Bukkit.getPlayerExact(name) : null);
         if (player != null) {

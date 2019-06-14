@@ -157,6 +157,7 @@ public class AsyncTabCompleteEvent extends Event implements Cancellable {
         this.cancelled = cancelled;
     }
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

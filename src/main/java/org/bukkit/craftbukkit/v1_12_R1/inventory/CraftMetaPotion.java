@@ -172,10 +172,12 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
         return type;
     }
 
+    @Override
     public boolean hasCustomEffects() {
         return customEffects != null;
     }
 
+    @Override
     public List<PotionEffect> getCustomEffects() {
         if (hasCustomEffects()) {
             return ImmutableList.copyOf(customEffects);
@@ -183,6 +185,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
         return ImmutableList.of();
     }
 
+    @Override
     public boolean addCustomEffect(PotionEffect effect, boolean overwrite) {
         Validate.notNull(effect, "Potion effect must not be null");
 
@@ -207,6 +210,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
         }
     }
 
+    @Override
     public boolean removeCustomEffect(PotionEffectType type) {
         Validate.notNull(type, "Potion effect type must not be null");
 
@@ -229,11 +233,13 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
         return changed;
     }
 
+    @Override
     public boolean hasCustomEffect(PotionEffectType type) {
         Validate.notNull(type, "Potion effect type must not be null");
         return indexOfEffect(type) != -1;
     }
 
+    @Override
     public boolean setMainEffect(PotionEffectType type) {
         Validate.notNull(type, "Potion effect type must not be null");
         int index = indexOfEffect(type);
@@ -260,6 +266,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
         return -1;
     }
 
+    @Override
     public boolean clearCustomEffects() {
         boolean changed = hasCustomEffects();
         customEffects = null;

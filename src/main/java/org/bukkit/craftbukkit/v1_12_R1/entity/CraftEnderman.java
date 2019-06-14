@@ -14,11 +14,13 @@ public class CraftEnderman extends CraftMonster implements Enderman {
         super(server, entity);
     }
 
+    @Override
     public MaterialData getCarriedMaterial() {
         IBlockState blockData = getHandle().getHeldBlockState();
         return (blockData == null) ? Material.AIR.getNewData((byte) 0) : CraftMagicNumbers.getMaterial(blockData.getBlock()).getNewData((byte) blockData.getBlock().getMetaFromState(blockData));
     }
 
+    @Override
     public void setCarriedMaterial(MaterialData data) {
         getHandle().setHeldBlockState(CraftMagicNumbers.getBlock(data.getItemTypeId()).getStateFromMeta(data.getData()));
     }
@@ -33,6 +35,7 @@ public class CraftEnderman extends CraftMonster implements Enderman {
         return "CraftEnderman";
     }
 
+    @Override
     public EntityType getType() {
         return EntityType.ENDERMAN;
     }

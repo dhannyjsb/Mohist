@@ -12,14 +12,17 @@ public class CraftHanging extends CraftEntity implements Hanging {
         super(server, entity);
     }
 
+    @Override
     public BlockFace getAttachedFace() {
         return getFacing().getOppositeFace();
     }
 
+    @Override
     public void setFacingDirection(BlockFace face) {
         setFacingDirection(face, false);
     }
 
+    @Override
     public boolean setFacingDirection(BlockFace face, boolean force) {
         EntityHanging hanging = getHandle();
         EnumFacing dir = hanging.facingDirection;
@@ -46,6 +49,7 @@ public class CraftHanging extends CraftEntity implements Hanging {
         return true;
     }
 
+    @Override
     public BlockFace getFacing() {
         EnumFacing direction = this.getHandle().facingDirection;
         if (direction == null) return BlockFace.SELF;
@@ -72,6 +76,7 @@ public class CraftHanging extends CraftEntity implements Hanging {
         return "CraftHanging";
     }
 
+    @Override
     public EntityType getType() {
         return EntityType.UNKNOWN;
     }

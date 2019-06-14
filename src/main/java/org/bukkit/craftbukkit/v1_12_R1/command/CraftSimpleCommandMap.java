@@ -24,6 +24,7 @@ public class CraftSimpleCommandMap extends SimpleCommandMap {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean dispatch(CommandSender sender, String commandLine) throws CommandException {
         String[] args = PATTERN_ON_SPACE.split(commandLine);
 

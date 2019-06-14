@@ -130,6 +130,7 @@ public class CraftInventoryCustom extends CraftInventory {
             return maxStack;
         }
 
+        @Override
         public void setMaxStackSize(int size) {
             maxStack = size;
         }
@@ -147,14 +148,17 @@ public class CraftInventoryCustom extends CraftInventory {
             return items;
         }
 
+        @Override
         public void onOpen(CraftHumanEntity who) {
             viewers.add(who);
         }
 
+        @Override
         public void onClose(CraftHumanEntity who) {
             viewers.remove(who);
         }
 
+        @Override
         public List<HumanEntity> getViewers() {
             return viewers;
         }

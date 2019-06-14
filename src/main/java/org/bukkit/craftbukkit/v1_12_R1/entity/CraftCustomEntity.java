@@ -6,13 +6,17 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.entity.EntityType;
 
 public class CraftCustomEntity extends CraftEntity {
+
+    public Class<? extends Entity> entityClass;
     private String entityName;
 
     public CraftCustomEntity(CraftServer server, net.minecraft.entity.Entity entity) {
         super(server, entity);
+        this.entityClass = entity.getClass();
         this.entityName = EntityRegistry.entityTypeMap.get(entity.getClass());
-        if (entityName == null)
+        if (entityName == null) {
             entityName = entity.getName();
+        }
     }
 
     @Override
@@ -25,6 +29,7 @@ public class CraftCustomEntity extends CraftEntity {
         return this.entityName;
     }
 
+    @Override
     public EntityType getType() {
         EntityType type = EntityType.fromName(this.entityName);
         if (type != null)
@@ -32,6 +37,7 @@ public class CraftCustomEntity extends CraftEntity {
         else return EntityType.FORGE_MOD;
     }
 
+    @Override
     public String getCustomName() {
         String name = getHandle().getCustomNameTag();
 

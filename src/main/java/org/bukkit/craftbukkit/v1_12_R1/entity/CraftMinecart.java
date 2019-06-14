@@ -15,44 +15,54 @@ public class CraftMinecart extends CraftVehicle implements Minecart {
         super(server, entity);
     }
 
+    @Override
     public void setDamage(double damage) {
         getHandle().setDamage((float) damage);
     }
 
+    @Override
     public double getDamage() {
         return getHandle().getDamage();
     }
 
+    @Override
     public double getMaxSpeed() {
         return getHandle().maxSpeed;
     }
 
+    @Override
     public void setMaxSpeed(double speed) {
         if (speed >= 0D) {
             getHandle().maxSpeed = speed;
         }
     }
 
+    @Override
     public boolean isSlowWhenEmpty() {
         return getHandle().slowWhenEmpty;
     }
 
+    @Override
     public void setSlowWhenEmpty(boolean slow) {
         getHandle().slowWhenEmpty = slow;
     }
 
+    @Override
     public Vector getFlyingVelocityMod() {
         return getHandle().getFlyingVelocityMod();
     }
 
+    @Override
     public void setFlyingVelocityMod(Vector flying) {
         getHandle().setFlyingVelocityMod(flying);
     }
 
+    @Override
     public Vector getDerailedVelocityMod() {
         return getHandle().getDerailedVelocityMod();
     }
 
+    @Override
     public void setDerailedVelocityMod(Vector derailed) {
         getHandle().setDerailedVelocityMod(derailed);
     }
@@ -62,6 +72,7 @@ public class CraftMinecart extends CraftVehicle implements Minecart {
         return (EntityMinecart) entity;
     }
 
+    @Override
     public void setDisplayBlock(MaterialData material) {
         if(material != null) {
             IBlockState block = CraftMagicNumbers.getBlock(material.getItemTypeId()).getStateFromMeta(material.getData());
@@ -73,15 +84,18 @@ public class CraftMinecart extends CraftVehicle implements Minecart {
         }
     }
 
+    @Override
     public MaterialData getDisplayBlock() {
         IBlockState blockData = getHandle().getDisplayTile();
         return CraftMagicNumbers.getMaterial(blockData.getBlock()).getNewData((byte) blockData.getBlock().getMetaFromState(blockData));
     }
 
+    @Override
     public void setDisplayBlockOffset(int offset) {
         getHandle().setDisplayTileOffset(offset);
     }
 
+    @Override
     public int getDisplayBlockOffset() {
         return getHandle().getDisplayTileOffset();
     }

@@ -20,6 +20,7 @@ public class TerminalConsoleWriterThread implements Runnable {
         this.reader = reader;
     }
 
+    @Override
     public void run() {
         String message;
 

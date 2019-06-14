@@ -12,10 +12,12 @@ public class CraftProjectile extends AbstractProjectile implements Projectile {
         super(server, entity);
     }
 
+    @Override
     public ProjectileSource getShooter() {
         return getHandle().projectileSource;
     }
 
+    @Override
     public void setShooter(ProjectileSource shooter) {
         if (shooter instanceof CraftLivingEntity) {
             getHandle().thrower = (EntityLivingBase) ((CraftLivingEntity) shooter).entity;

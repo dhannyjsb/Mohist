@@ -72,5 +72,6 @@ public interface MapMeta extends ItemMeta {
      */
     void setColor(Color color);
 
+    @Override
     MapMeta clone();
 }

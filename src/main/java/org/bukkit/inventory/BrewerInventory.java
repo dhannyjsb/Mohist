@@ -37,5 +37,6 @@ public interface BrewerInventory extends Inventory {
      */
     void setFuel(ItemStack fuel);
 
+    @Override
     BrewingStand getHolder();
 }

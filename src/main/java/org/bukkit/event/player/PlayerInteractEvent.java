@@ -59,6 +59,7 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
      *
      * @return boolean cancellation state
      */
+    @Override
     public boolean isCancelled() {
         return useInteractedBlock() == Result.DENY;
     }
@@ -73,6 +74,7 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
      *
      * @param cancel true if you wish to cancel this event
      */
+    @Override
     public void setCancelled(boolean cancel) {
         setUseInteractedBlock(cancel ? Result.DENY : useInteractedBlock() == Result.DENY ? Result.DEFAULT : useInteractedBlock());
         setUseItemInHand(cancel ? Result.DENY : useItemInHand() == Result.DENY ? Result.DEFAULT : useItemInHand());

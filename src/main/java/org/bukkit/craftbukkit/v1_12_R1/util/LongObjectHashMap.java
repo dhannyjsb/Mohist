@@ -200,6 +200,7 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
         return set;
     }
 
+    @Override
     public Object clone() throws CloneNotSupportedException {
         LongObjectHashMap clone = (LongObjectHashMap) super.clone();
         // Make sure we clear any existing information from the clone
@@ -273,10 +274,12 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
             expectedModCount = LongObjectHashMap.this.modCount;
         }
 
+        @Override
         public boolean hasNext() {
             return count < LongObjectHashMap.this.size;
         }
 
+        @Override
         public void remove() {
             if (LongObjectHashMap.this.modCount != expectedModCount) {
                 throw new ConcurrentModificationException();
@@ -292,6 +295,7 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
             expectedModCount = LongObjectHashMap.this.modCount;
         }
 
+        @Override
         public V next() {
             if (LongObjectHashMap.this.modCount != expectedModCount) {
                 throw new ConcurrentModificationException();
@@ -337,14 +341,17 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
             iterator = new ValueIterator();
         }
 
+        @Override
         public void remove() {
             iterator.remove();
         }
 
+        @Override
         public boolean hasNext() {
             return iterator.hasNext();
         }
 
+        @Override
         public Long next() {
             iterator.next();
             return iterator.prevKey;
@@ -353,23 +360,28 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
 
 
     private class KeySet extends AbstractSet<Long> {
+        @Override
         public void clear() {
             LongObjectHashMap.this.clear();
         }
 
+        @Override
         public int size() {
             return LongObjectHashMap.this.size();
         }
 
+        @Override
         public boolean contains(Object key) {
             return key instanceof Long && LongObjectHashMap.this.containsKey((Long) key);
 
         }
 
+        @Override
         public boolean remove(Object key) {
             return LongObjectHashMap.this.remove((Long) key) != null;
         }
 
+        @Override
         public Iterator<Long> iterator() {
             return new KeyIterator();
         }
@@ -377,18 +389,22 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
 
 
     private class ValueCollection extends AbstractCollection<V> {
+        @Override
         public void clear() {
             LongObjectHashMap.this.clear();
         }
 
+        @Override
         public int size() {
             return LongObjectHashMap.this.size();
         }
 
+        @Override
         public boolean contains(Object value) {
             return LongObjectHashMap.this.containsValue((V) value);
         }
 
+        @Override
         public Iterator<V> iterator() {
             return new ValueIterator();
         }
@@ -404,14 +420,17 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
             value = v;
         }
 
+        @Override
         public Long getKey() {
             return key;
         }
 
+        @Override
         public V getValue() {
             return value;
         }
 
+        @Override
         public V setValue(V v) {
             V old = value;
             value = v;

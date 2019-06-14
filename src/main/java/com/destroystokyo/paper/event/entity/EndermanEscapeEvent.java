@@ -27,6 +27,7 @@ public class EndermanEscapeEvent extends EntityEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

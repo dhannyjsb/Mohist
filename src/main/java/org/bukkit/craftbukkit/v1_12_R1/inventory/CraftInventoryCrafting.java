@@ -83,18 +83,21 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
         }
     }
 
+    @Override
     public ItemStack[] getMatrix() {
         List<net.minecraft.item.ItemStack> matrix = inventory.getContents();
 
         return asCraftMirror(matrix);
     }
 
+    @Override
     public ItemStack getResult() {
         net.minecraft.item.ItemStack item = resultInventory.getStackInSlot(0);
         if (!item.isEmpty()) return CraftItemStack.asCraftMirror(item);
         return null;
     }
 
+    @Override
     public void setMatrix(ItemStack[] contents) {
         if (inventory.getSizeInventory() > contents.length) {
             throw new IllegalArgumentException("Invalid inventory size; expected " + inventory.getSizeInventory() + " or less");
@@ -109,11 +112,13 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
         }
     }
 
+    @Override
     public void setResult(ItemStack item) {
         List<net.minecraft.item.ItemStack> contents = resultInventory.getContents();
         contents.set(0, CraftItemStack.asNMSCopy(item));
     }
 
+    @Override
     public Recipe getRecipe() {
         IRecipe recipe = ((InventoryCrafting)getInventory()).currentRecipe;
         // Cauldron start - handle custom recipe classes without Bukkit API equivalents

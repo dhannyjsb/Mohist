@@ -44,6 +44,7 @@ public class IllegalPacketEvent extends PlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

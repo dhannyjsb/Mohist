@@ -49,6 +49,7 @@ public class PlayerPickupExperienceEvent extends PlayerEvent implements Cancella
 
     private static final HandlerList handlers = new HandlerList();
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

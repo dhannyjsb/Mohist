@@ -15,6 +15,7 @@ public class EntityRemoveFromWorldEvent extends EntityEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

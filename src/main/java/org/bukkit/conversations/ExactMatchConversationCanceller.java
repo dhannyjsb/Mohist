@@ -17,12 +17,15 @@ public class ExactMatchConversationCanceller implements ConversationCanceller {
         this.escapeSequence = escapeSequence;
     }
     
+    @Override
     public void setConversation(Conversation conversation) {}
 
+    @Override
     public boolean cancelBasedOnInput(ConversationContext context, String input) {
         return input.equals(escapeSequence);
     }
 
+    @Override
     public ConversationCanceller clone() {
         return new ExactMatchConversationCanceller(escapeSequence);
     }

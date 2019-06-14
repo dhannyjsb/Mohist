@@ -196,6 +196,7 @@ final class PluginClassLoader extends URLClassLoader {
         return result;
     }
 
+    @Override
     protected Package getPackage(String name) {
         if (name == "org.bukkit.craftbukkit")
             name = "org.bukkit.craftbukkit." + Mohist.getNativeVersion();

@@ -17,6 +17,7 @@ public class CraftEnderDragon extends CraftComplexLivingEntity implements EnderD
         super(server, entity);
     }
 
+    @Override
     public Set<ComplexEntityPart> getParts() {
         Builder<ComplexEntityPart> builder = ImmutableSet.builder();
 
@@ -37,6 +38,7 @@ public class CraftEnderDragon extends CraftComplexLivingEntity implements EnderD
         return "CraftEnderDragon";
     }
 
+    @Override
     public EntityType getType() {
         return EntityType.ENDER_DRAGON;
     }

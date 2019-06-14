@@ -91,10 +91,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
             entityName = entity.getName();
     }
 
+    @Override
     public double getHealth() {
         return Math.min(Math.max(0, getHandle().getHealth()), getMaxHealth());
     }
 
+    @Override
     public void setHealth(double health) {
         health = (float) health;
         if ((health < 0) || (health > getMaxHealth())) {
@@ -112,10 +114,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         // Cauldron end
     }
 
+    @Override
     public double getMaxHealth() {
         return getHandle().getMaxHealth();
     }
 
+    @Override
     public void setMaxHealth(double amount) {
         Validate.isTrue(amount > 0, "Max health must be greater than 0");
 
@@ -126,14 +130,17 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         }
     }
 
+    @Override
     public void resetMaxHealth() {
         setMaxHealth(getHandle().getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttribute().getDefaultValue());
     }
 
+    @Override
     public double getEyeHeight() {
         return getHandle().getEyeHeight();
     }
 
+    @Override
     public double getEyeHeight(boolean ignorePose) {
         return getEyeHeight();
     }
@@ -164,39 +171,48 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return blocks;
     }
 
+    @Override
     public List<Block> getLineOfSight(Set<Material> transparent, int maxDistance) {
         return getLineOfSight(transparent, maxDistance, 0);
     }
 
+    @Override
     public Block getTargetBlock(Set<Material> transparent, int maxDistance) {
         List<Block> blocks = getLineOfSight(transparent, maxDistance, 1);
         return blocks.get(0);
     }
 
+    @Override
     public List<Block> getLastTwoTargetBlocks(Set<Material> transparent, int maxDistance) {
         return getLineOfSight(transparent, maxDistance, 2);
     }
 
+    @Override
     public int getRemainingAir() {
         return getHandle().getAir();
     }
 
+    @Override
     public void setRemainingAir(int ticks) {
         getHandle().setAir(ticks);
     }
 
+    @Override
     public int getMaximumAir() {
         return getHandle().maxAirTicks;
     }
 
+    @Override
     public void setMaximumAir(int ticks) {
         getHandle().maxAirTicks = ticks;
     }
 
+    @Override
     public void damage(double amount) {
         damage(amount, null);
     }
 
+    @Override
     public void damage(double amount, Entity source) {
         DamageSource reason = DamageSource.GENERIC;
 
@@ -209,32 +225,39 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         entity.attackEntityFrom(reason, (float) amount);
     }
 
+    @Override
     public Location getEyeLocation() {
         Location loc = getLocation();
         loc.setY(loc.getY() + getEyeHeight());
         return loc;
     }
 
+    @Override
     public int getMaximumNoDamageTicks() {
         return getHandle().maxHurtResistantTime;
     }
 
+    @Override
     public void setMaximumNoDamageTicks(int ticks) {
         getHandle().maxHurtResistantTime = ticks;
     }
 
+    @Override
     public double getLastDamage() {
         return getHandle().lastDamage;
     }
 
+    @Override
     public void setLastDamage(double damage) {
         getHandle().lastDamage = (float) damage;
     }
 
+    @Override
     public int getNoDamageTicks() {
         return getHandle().hurtResistantTime;
     }
 
+    @Override
     public void setNoDamageTicks(int ticks) {
         getHandle().hurtResistantTime = ticks;
     }
@@ -253,14 +276,17 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return "CraftLivingEntity{" + "id=" + getEntityId() + ", name=" + this.entityName + "}";
     }
 
+    @Override
     public Player getKiller() {
         return getHandle().attackingPlayer == null ? null : (Player) getHandle().attackingPlayer.getBukkitEntity();
     }
 
+    @Override
     public boolean addPotionEffect(PotionEffect effect) {
         return addPotionEffect(effect, false);
     }
 
+    @Override
     public boolean addPotionEffect(PotionEffect effect, boolean force) {
         if (hasPotionEffect(effect.getType())) {
             if (!force) {
@@ -272,6 +298,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return true;
     }
 
+    @Override
     public boolean addPotionEffects(Collection<PotionEffect> effects) {
         boolean success = true;
         for (PotionEffect effect : effects) {
@@ -280,6 +307,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return success;
     }
 
+    @Override
     public boolean hasPotionEffect(PotionEffectType type) {
         return getHandle().isPotionActive(Potion.getPotionById(type.getId()));
     }
@@ -290,10 +318,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return (handle == null) ? null : new PotionEffect(PotionEffectType.getById(Potion.getIdFromPotion(handle.getPotion())), handle.getDuration(), handle.getAmplifier(), handle.getIsAmbient(), handle.doesShowParticles());
     }
 
+    @Override
     public void removePotionEffect(PotionEffectType type) {
         getHandle().removePotionEffect(Potion.getPotionById(type.getId()));
     }
 
+    @Override
     public Collection<PotionEffect> getActivePotionEffects() {
         List<PotionEffect> effects = new ArrayList<PotionEffect>();
         for (net.minecraft.potion.PotionEffect handle : getHandle().getActivePotionMap().values()) {
@@ -303,10 +333,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return effects;
     }
 
+    @Override
     public <T extends Projectile> T launchProjectile(Class<? extends T> projectile) {
         return launchProjectile(projectile, null);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends Projectile> T launchProjectile(Class<? extends T> projectile, Vector velocity) {
         net.minecraft.world.World world = ((CraftWorld) getWorld()).getHandle();
@@ -385,6 +417,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return (T) launch.getBukkitEntity();
     }
 
+    @Override
     public EntityType getType() {
         // Cauldron start
         EntityType type = EntityType.fromName(this.entityName);
@@ -395,28 +428,34 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         // Cauldron end
     }
 
+    @Override
     public boolean hasLineOfSight(Entity other) {
         return getHandle().canEntityBeSeen(((CraftEntity) other).getHandle());
     }
 
+    @Override
     public boolean getRemoveWhenFarAway() {
         return getHandle() instanceof EntityLiving && !((EntityLiving) getHandle()).persistenceRequired;
     }
 
+    @Override
     public void setRemoveWhenFarAway(boolean remove) {
         if (getHandle() instanceof EntityLiving) {
             ((EntityLiving) getHandle()).persistenceRequired = !remove;
         }
     }
 
+    @Override
     public EntityEquipment getEquipment() {
         return equipment;
     }
 
+    @Override
     public void setCanPickupItems(boolean pickup) {
         getHandle().canPickUpLoot1 = pickup;
     }
 
+    @Override
     public boolean getCanPickupItems() {
         return getHandle().canPickUpLoot1;
     }
@@ -430,6 +469,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return super.teleport(location, cause);
     }
 
+    @Override
     public boolean isLeashed() {
         if (!(getHandle() instanceof EntityLiving)) {
             return false;
@@ -437,6 +477,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return ((EntityLiving) getHandle()).getLeashHolder() != null;
     }
 
+    @Override
     public Entity getLeashHolder() throws IllegalStateException {
         if (!isLeashed()) {
             throw new IllegalStateException("Entity not leashed");
@@ -452,6 +493,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return true;
     }
 
+    @Override
     public boolean setLeashHolder(Entity holder) {
         if ((getHandle() instanceof EntityWither) || !(getHandle() instanceof EntityLiving)) {
             return false;

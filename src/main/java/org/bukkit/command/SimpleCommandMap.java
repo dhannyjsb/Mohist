@@ -41,6 +41,7 @@ public class SimpleCommandMap implements CommandMap {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void registerAll(String fallbackPrefix, List<Command> commands) {
         if (commands != null) {
             for (Command c : commands) {
@@ -52,6 +53,7 @@ public class SimpleCommandMap implements CommandMap {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean register(String fallbackPrefix, Command command) {
         return register(command.getName(), fallbackPrefix, command);
     }
@@ -59,6 +61,7 @@ public class SimpleCommandMap implements CommandMap {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean register(String label, String fallbackPrefix, Command command) {
         label = label.toLowerCase(java.util.Locale.ENGLISH).trim();
         fallbackPrefix = fallbackPrefix.toLowerCase(java.util.Locale.ENGLISH).trim();
@@ -121,6 +124,7 @@ public class SimpleCommandMap implements CommandMap {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean dispatch(CommandSender sender, String commandLine) throws CommandException {
         String[] args = PATTERN_ON_SPACE.split(commandLine);
 
@@ -148,6 +152,7 @@ public class SimpleCommandMap implements CommandMap {
         return true;
     }
 
+    @Override
     public synchronized void clearCommands() {
         for (Map.Entry<String, Command> entry : knownCommands.entrySet()) {
             entry.getValue().unregister(this);
@@ -156,15 +161,18 @@ public class SimpleCommandMap implements CommandMap {
         setDefaultCommands();
     }
 
+    @Override
     public Command getCommand(String name) {
         Command target = knownCommands.get(name.toLowerCase(java.util.Locale.ENGLISH));
         return target;
     }
 
+    @Override
     public List<String> tabComplete(CommandSender sender, String cmdLine) {
         return tabComplete(sender, cmdLine, null);
     }
 
+    @Override
     public List<String> tabComplete(CommandSender sender, String cmdLine, Location location) {
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(cmdLine, "Command line cannot null");

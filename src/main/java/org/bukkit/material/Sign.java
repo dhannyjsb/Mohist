@@ -59,6 +59,7 @@ public class Sign extends MaterialData implements Attachable {
      *
      * @return BlockFace attached to
      */
+    @Override
     public BlockFace getAttachedFace() {
         if (isWallSign()) {
             byte data = getData();
@@ -88,6 +89,7 @@ public class Sign extends MaterialData implements Attachable {
      *
      * @return BlockFace indicating where this sign is facing
      */
+    @Override
     public BlockFace getFacing() {
         byte data = getData();
 
@@ -148,6 +150,7 @@ public class Sign extends MaterialData implements Attachable {
         }
     }
 
+    @Override
     public void setFacingDirection(BlockFace face) {
         byte data;
 

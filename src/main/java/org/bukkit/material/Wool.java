@@ -54,6 +54,7 @@ public class Wool extends MaterialData implements Colorable {
      *
      * @return DyeColor of this dye
      */
+    @Override
     public DyeColor getColor() {
         return DyeColor.getByWoolData(getData());
     }
@@ -63,6 +64,7 @@ public class Wool extends MaterialData implements Colorable {
      *
      * @param color New color of this dye
      */
+    @Override
     public void setColor(DyeColor color) {
         setData(color.getWoolData());
     }

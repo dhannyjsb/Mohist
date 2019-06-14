@@ -185,6 +185,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         safelyAddEffects(effects);
     }
 
+    @Override
     public boolean hasEffects() {
         return !(effects == null || effects.isEmpty());
     }
@@ -331,6 +332,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         return meta;
     }
 
+    @Override
     public void addEffect(FireworkEffect effect) {
         Validate.notNull(effect, "Effect cannot be null");
         if (this.effects == null) {
@@ -339,6 +341,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         this.effects.add(effect);
     }
 
+    @Override
     public void addEffects(FireworkEffect...effects) {
         Validate.notNull(effects, "Effects cannot be null");
         if (effects.length == 0) {
@@ -356,19 +359,23 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         }
     }
 
+    @Override
     public void addEffects(Iterable<FireworkEffect> effects) {
         Validate.notNull(effects, "Effects cannot be null");
         safelyAddEffects(effects);
     }
 
+    @Override
     public List<FireworkEffect> getEffects() {
         return this.effects == null ? ImmutableList.<FireworkEffect>of() : ImmutableList.copyOf(this.effects);
     }
 
+    @Override
     public int getEffectsSize() {
         return this.effects == null ? 0 : this.effects.size();
     }
 
+    @Override
     public void removeEffect(int index) {
         if (this.effects == null) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: 0");
@@ -377,14 +384,17 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         }
     }
 
+    @Override
     public void clearEffects() {
         this.effects = null;
     }
 
+    @Override
     public int getPower() {
         return this.power;
     }
 
+    @Override
     public void setPower(int power) {
         Validate.isTrue(power >= 0, "Power cannot be less than zero: ", power);
         Validate.isTrue(power < 0x80, "Power cannot be more than 127: ", power);

@@ -74,48 +74,59 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
         player.connection.sendPacket(new SPacketSetSlot(player.inventoryContainer.windowId, index, CraftItemStack.asNMSCopy(item)));
     }
 
+    @Override
     public int getHeldItemSlot() {
         return getInventory().currentItem;
     }
 
+    @Override
     public void setHeldItemSlot(int slot) {
         Validate.isTrue(slot >= 0 && slot < InventoryPlayer.getHotbarSize(), "Slot is not between 0 and 8 inclusive");
         this.getInventory().currentItem = slot;
         ((CraftPlayer) this.getHolder()).getHandle().connection.sendPacket(new SPacketHeldItemChange(slot));
     }
 
+    @Override
     public ItemStack getHelmet() {
         return getItem(getSize() - 2);
     }
 
+    @Override
     public ItemStack getChestplate() {
         return getItem(getSize() - 3);
     }
 
+    @Override
     public ItemStack getLeggings() {
         return getItem(getSize() - 4);
     }
 
+    @Override
     public ItemStack getBoots() {
         return getItem(getSize() - 5);
     }
 
+    @Override
     public void setHelmet(ItemStack helmet) {
         setItem(getSize() - 2, helmet);
     }
 
+    @Override
     public void setChestplate(ItemStack chestplate) {
         setItem(getSize() - 3, chestplate);
     }
 
+    @Override
     public void setLeggings(ItemStack leggings) {
         setItem(getSize() - 4, leggings);
     }
 
+    @Override
     public void setBoots(ItemStack boots) {
         setItem(getSize() - 5, boots);
     }
 
+    @Override
     public ItemStack[] getArmorContents() {
         return asCraftMirror(getInventory().armorInventory);
     }
@@ -155,6 +166,7 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
         setSlots(items, getInventory().mainInventory.size() + getInventory().armorInventory.size(), getInventory().offHandInventory.size());
     }
 
+    @Override
     public int clear(int id, int data) {
         int count = 0;
         ItemStack[] items = getContents();
@@ -207,34 +219,42 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public float getHelmetDropChance() {
         return 1;
     }
 
+    @Override
     public void setHelmetDropChance(float chance) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public float getChestplateDropChance() {
         return 1;
     }
 
+    @Override
     public void setChestplateDropChance(float chance) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public float getLeggingsDropChance() {
         return 1;
     }
 
+    @Override
     public void setLeggingsDropChance(float chance) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public float getBootsDropChance() {
         return 1;
     }
 
+    @Override
     public void setBootsDropChance(float chance) {
         throw new UnsupportedOperationException();
     }

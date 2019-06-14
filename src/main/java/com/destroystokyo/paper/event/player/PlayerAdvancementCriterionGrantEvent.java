@@ -39,10 +39,12 @@ public class PlayerAdvancementCriterionGrantEvent extends PlayerEvent implements
         return criterion;
     }
 
+    @Override
     public boolean isCancelled() {
         return cancel;
     }
 
+    @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }

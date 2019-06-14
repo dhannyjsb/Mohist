@@ -173,6 +173,7 @@ public interface BookMeta extends ItemMeta {
      */
     int getPageCount();
 
+    @Override
     BookMeta clone();
 
     // Spigot start

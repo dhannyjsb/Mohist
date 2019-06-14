@@ -37,6 +37,7 @@ public class CraftShapelessRecipe extends ShapelessRecipe implements CraftRecipe
         return ret;
     }
 
+    @Override
     public void addToCraftingManager() {
         List<ItemStack> ingred = this.getIngredientList();
         NonNullList<Ingredient> data = NonNullList.withSize(ingred.size(), Ingredient.EMPTY);

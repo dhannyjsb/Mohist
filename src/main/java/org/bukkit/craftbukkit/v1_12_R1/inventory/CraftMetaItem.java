@@ -155,6 +155,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
             }
         }
 
+        @Override
         public Map<String, Object> serialize() {
             throw new AssertionError();
         }
@@ -527,14 +528,17 @@ class CraftMetaItem implements ItemMeta, Repairable {
         return !(hasDisplayName() || hasLocalizedName() || hasEnchants() || hasLore() || hasRepairCost() || !unhandledTags.isEmpty() || hideFlag != 0 || unbreakable);
     }
 
+    @Override
     public String getDisplayName() {
         return displayName;
     }
 
+    @Override
     public final void setDisplayName(String name) {
         this.displayName = name;
     }
 
+    @Override
     public boolean hasDisplayName() {
         return !Strings.isNullOrEmpty(displayName);
     }
@@ -554,19 +558,23 @@ class CraftMetaItem implements ItemMeta, Repairable {
         return !Strings.isNullOrEmpty(locName);
     }
 
+    @Override
     public boolean hasLore() {
         return this.lore != null && !this.lore.isEmpty();
     }
 
+    @Override
     public boolean hasRepairCost() {
         return repairCost > 0;
     }
 
+    @Override
     public boolean hasEnchant(Enchantment ench) {
         Validate.notNull(ench, "Enchantment cannot be null");
         return hasEnchants() && enchantments.containsKey(ench);
     }
 
+    @Override
     public int getEnchantLevel(Enchantment ench) {
         Validate.notNull(ench, "Enchantment cannot be null");
         Integer level = hasEnchants() ? enchantments.get(ench) : null;
@@ -576,10 +584,12 @@ class CraftMetaItem implements ItemMeta, Repairable {
         return level;
     }
 
+    @Override
     public Map<Enchantment, Integer> getEnchants() {
         return hasEnchants() ? ImmutableMap.copyOf(enchantments) : ImmutableMap.<Enchantment, Integer>of();
     }
 
+    @Override
     public boolean addEnchant(Enchantment ench, int level, boolean ignoreRestrictions) {
         Validate.notNull(ench, "Enchantment cannot be null");
         if (enchantments == null) {
@@ -593,15 +603,18 @@ class CraftMetaItem implements ItemMeta, Repairable {
         return false;
     }
 
+    @Override
     public boolean removeEnchant(Enchantment ench) {
         Validate.notNull(ench, "Enchantment cannot be null");
         return hasEnchants() && enchantments.remove(ench) != null;
     }
 
+    @Override
     public boolean hasEnchants() {
         return !(enchantments == null || enchantments.isEmpty());
     }
 
+    @Override
     public boolean hasConflictingEnchant(Enchantment ench) {
         return checkConflictingEnchants(enchantments, ench);
     }
@@ -643,10 +656,12 @@ class CraftMetaItem implements ItemMeta, Repairable {
         return (byte) (1 << hideFlag.ordinal());
     }
 
+    @Override
     public List<String> getLore() {
         return this.lore == null ? null : new ArrayList<String>(this.lore);
     }
 
+    @Override
     public void setLore(List<String> lore) { // too tired to think if .clone is better
         if (lore == null) {
             this.lore = null;
@@ -660,10 +675,12 @@ class CraftMetaItem implements ItemMeta, Repairable {
         }
     }
 
+    @Override
     public int getRepairCost() {
         return repairCost;
     }
 
+    @Override
     public void setRepairCost(int cost) { // TODO: Does this have limits?
         repairCost = cost;
     }
@@ -757,6 +774,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
         }
     }
 
+    @Override
     public final Map<String, Object> serialize() {
         ImmutableMap.Builder<String, Object> map = ImmutableMap.builder();
         map.put(SerializableMeta.TYPE_FIELD, SerializableMeta.classMap.get(getClass()));

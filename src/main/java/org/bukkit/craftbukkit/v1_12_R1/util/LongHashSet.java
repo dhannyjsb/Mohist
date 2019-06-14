@@ -255,10 +255,12 @@ public class LongHashSet {
             expectedModCount = modCount;
         }
 
+        @Override
         public boolean hasNext() {
             return index != values.length;
         }
 
+        @Override
         public Long next() {
             if (modCount != expectedModCount) {
                 throw new ConcurrentModificationException();
@@ -282,6 +284,7 @@ public class LongHashSet {
             }
         }
 
+        @Override
         public void remove() {
             if (modCount != expectedModCount) {
                 throw new ConcurrentModificationException();
