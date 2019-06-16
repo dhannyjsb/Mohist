@@ -23,7 +23,7 @@ apply plugin: 'net.minecraftforge.gradle.launch4j'
 apply plugin: 'net.nemerosa.versioning'
 
 group = 'red.mohist'
-version = '0.0.9a-'+versioning {
+version = '1.0-'+versioning {
     full {it.abbreviated}
     dirty = { t -> t }
 }.info.full
@@ -101,7 +101,7 @@ dependencies {
     compile 'org.xerial:sqlite-jdbc:3.21.0.1'
     compile 'mysql:mysql-connector-java:5.1.45'
     compile 'net.md-5:bungeecord-chat:1.12-SNAPSHOT'    
-    // compile 'com.maxqia:ReflectionRemapper:0.2-SNAPSHOT'
+    // compile 'com.maxqia:ReflectionRemapper:0.3-SNAPSHOT'
 }
 
 minecraft.version = "1.12.2"

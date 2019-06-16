@@ -199,7 +199,7 @@
       "serverreq":true
     },
     {
-      "name": "com.maxqia:ReflectionRemapper:0.2-SNAPSHOT",
+      "name": "com.maxqia:ReflectionRemapper:0.3-SNAPSHOT",
       "url" : "https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository",
       "clientreq":true,
       "serverreq":true
