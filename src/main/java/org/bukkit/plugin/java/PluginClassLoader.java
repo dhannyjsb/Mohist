@@ -13,6 +13,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import red.mohist.Mohist;
+import thermos.ThermosRemapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +66,7 @@ final class PluginClassLoader extends URLClassLoader {
         provider.add(new ClassInheritanceProvider());
         provider.add(new ClassLoaderProvider(this));
         this.jarMapping.setFallbackInheritanceProvider(provider);
-        remapper = new JarRemapper(jarMapping);
+        remapper = new ThermosRemapper(jarMapping);
 
         try {
             Class<?> jarClass;
