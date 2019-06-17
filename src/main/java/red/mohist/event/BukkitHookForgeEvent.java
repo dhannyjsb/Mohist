@@ -4,6 +4,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Using Bukkit to handle Forge's Event
+ * look red.mohist.test.BukkitHookForgeEventTest
+ */
 public class BukkitHookForgeEvent extends org.bukkit.event.Event {
     private static final HandlerList handlers = new HandlerList();
     private final Event event;

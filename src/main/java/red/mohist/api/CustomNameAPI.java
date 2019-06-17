@@ -1,8 +1,6 @@
 package red.mohist.api;
 
-import net.minecraft.entity.Entity;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,10 +32,4 @@ public class CustomNameAPI {
 
         return string.substring(string.lastIndexOf('\'') + 1);
     }
-
-    public static Entity toNMS(org.bukkit.entity.Entity entity) {
-        return ((CraftEntity) entity).getHandle();
-    }
-
-
 }
