@@ -43,7 +43,7 @@ public class Update implements Runnable{
         Mohist.LOGGER.info(pre + "Total §e" + size + "§b Files");
         for (int i = 0;i < size;i++){
             Mohist.LOGGER.info(pre + Message.getString(Message.Dw_Start));
-            new Download(ja.getJSONObject(i).getString("browser_download_url"),"Mohist-update.jar",true);
+            new Download(ja.getJSONObject(i).getString("browser_download_url"),"Mohist-update.jar");
             Mohist.LOGGER.info(pre + Message.getFormatString(Message.Mohist_update_message,new Object[] {releasesMsg}));
             Mohist.LOGGER.info(pre + Message.getFormatString(Message.Mohist_update_date,new Object[] {releasesDate}));
         }

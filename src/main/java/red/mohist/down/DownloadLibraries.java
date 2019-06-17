@@ -23,7 +23,6 @@ public class DownloadLibraries implements Runnable {
         }
         new Download(url,fileName);
         System.out.println(Message.getFormatString(Message.Dw_Ok,new Object[] {fileName}));
-        int size = 0;
         try {
             @SuppressWarnings("resource")
             ZipFile zip = new ZipFile(new File(fileName), Charset.forName("GBK"));
@@ -47,9 +46,6 @@ public class DownloadLibraries implements Runnable {
                 FileOutputStream fos = new FileOutputStream(outPath);
                 byte[] b = new byte[1024];
                 int i;
-
-                size++;
-                System.out.println(Message.getFormatString(Message.UnZip_Now,new Object[]{fileName,size,zip.size()}));
 
                 while((i = is.read(b)) > 0) {
                     fos.write(b,0,i);
