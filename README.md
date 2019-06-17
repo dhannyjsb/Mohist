@@ -4,7 +4,6 @@
 
 Since CraftBukkit has modified a lot of underlying layers, some of the core mods are not available, we are working hard to improve.
 ## Mohist-1.12.2 will continue to be maintained..
-## Mohist is still in beta and you may encounter issues in using it with your server. You have been warned!
 
 ## Getting Help
    [**Discord**](https://discord.gg/HNmmrCV)
