@@ -16,14 +16,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Represents a Command, which executes various tasks upon user input
  */
 public abstract class Command {
-    private static final Pattern COMPILE = Pattern.compile("<permission>", Pattern.LITERAL);
     private String name;
     private String nextLabel;
     private String label;
@@ -111,7 +108,7 @@ public abstract class Command {
             }
         }
 
-        matchedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
+        Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
         return matchedPlayers;
     }
 
@@ -181,7 +178,7 @@ public abstract class Command {
         if (permissionMessage == null) {
             target.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error.");
         } else if (permissionMessage.length() != 0) {
-            for (String line : COMPILE.matcher(permissionMessage).replaceAll(Matcher.quoteReplacement(permission)).split("\n")) {
+            for (String line : permissionMessage.replace("<permission>", permission).split("\n")) {
                 target.sendMessage(line);
             }
         }

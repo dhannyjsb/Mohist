@@ -176,7 +176,7 @@ public abstract class JavaPlugin extends PluginBase {
 
     @Override
     public void saveResource(String resourcePath, boolean replace) {
-        if (resourcePath == null || resourcePath.isEmpty()) {
+        if (resourcePath == null || resourcePath.equals("")) {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
         }
 
@@ -219,7 +219,7 @@ public abstract class JavaPlugin extends PluginBase {
         }
 
         try {
-            URL url = classLoader.getResource(filename);
+            URL url = getClassLoader().getResource(filename);
 
             if (url == null) {
                 return null;
@@ -297,10 +297,10 @@ public abstract class JavaPlugin extends PluginBase {
      */
     public PluginCommand getCommand(String name) {
         String alias = name.toLowerCase(java.util.Locale.ENGLISH);
-        PluginCommand command = server.getPluginCommand(alias);
+        PluginCommand command = getServer().getPluginCommand(alias);
 
         if (command == null || command.getPlugin() != this) {
-            command = server.getPluginCommand(description.getName().toLowerCase(java.util.Locale.ENGLISH) + ":" + alias);
+            command = getServer().getPluginCommand(description.getName().toLowerCase(java.util.Locale.ENGLISH) + ":" + alias);
         }
 
         if (command != null && command.getPlugin() == this) {

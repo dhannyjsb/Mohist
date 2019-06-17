@@ -199,7 +199,7 @@ public class SimpleCommandMap implements CommandMap {
                 }
             }
 
-            completions.sort(String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(completions, String.CASE_INSENSITIVE_ORDER);
             return completions;
         }
 

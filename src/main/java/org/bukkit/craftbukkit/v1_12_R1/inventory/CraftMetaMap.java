@@ -86,7 +86,7 @@ class CraftMetaMap extends CraftMetaItem implements MapMeta {
         }
 
         if (hasLocationName()) {
-            setDisplayTag(tag, MAP_LOC_NAME.NBT, new NBTTagString(locName));
+            setDisplayTag(tag, MAP_LOC_NAME.NBT, new NBTTagString(getLocationName()));
         }
 
         if (hasColor()) {
@@ -210,11 +210,11 @@ class CraftMetaMap extends CraftMetaItem implements MapMeta {
         }
 
         if (hasLocationName()) {
-            builder.put(MAP_LOC_NAME.BUKKIT, locName);
+            builder.put(MAP_LOC_NAME.BUKKIT, getLocationName());
         }
 
         if (hasColor()) {
-            builder.put(MAP_COLOR.BUKKIT, color);
+            builder.put(MAP_COLOR.BUKKIT, getColor());
         }
 
         return builder;

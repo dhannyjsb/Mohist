@@ -1663,7 +1663,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
         }
 
         public static void registerEnvironment(Environment env) {
-            lookup.put(env.id,env);
+            lookup.put(env.getId(),env);
         }
 
         /**
@@ -1691,7 +1691,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
 
         static {
             for (Environment env : values()) {
-                lookup.put(env.id, env);
+                lookup.put(env.getId(), env);
             }
         }
     }

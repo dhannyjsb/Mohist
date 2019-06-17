@@ -84,8 +84,11 @@ public final class VanillaCommandWrapper extends BukkitCommand {
                     String s2 = as[i];
 
                     icommandlistener.setCommandStat(CommandResultStats.Type.AFFECTED_ENTITIES, list.size());
+                    Iterator<Entity> iterator = list.iterator();
 
-                    for (Entity entity : list) {
+                    while (iterator.hasNext()) {
+                        Entity entity = iterator.next();
+
                         CommandSender oldSender = lastSender;
                         lastSender = bSender;
                         try {
@@ -129,7 +132,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
                 CommandBlockBaseLogic listener = (CommandBlockBaseLogic) icommandlistener;
                 MinecraftServer.LOGGER.log(Level.WARN, String.format("CommandBlock at (%d,%d,%d) failed to handle command", listener.getPosition().getX(), listener.getPosition().getY(), listener.getPosition().getZ()), throwable);
             } else {
-                MinecraftServer.LOGGER.log(Level.WARN, "Unknown CommandBlock failed to handle command", throwable);
+                MinecraftServer.LOGGER.log(Level.WARN, String.format("Unknown CommandBlock failed to handle command"), throwable);
             }
         } finally {
             icommandlistener.setCommandStat(CommandResultStats.Type.SUCCESS_COUNT, j);
@@ -172,8 +175,10 @@ public final class VanillaCommandWrapper extends BukkitCommand {
     }
 
     public static String[] dropFirstArgument(String as[]) {
-        String[] as1 = new String[as.length - 1];
-        System.arraycopy(as, 1, as1, 0, as.length - 1);
+        String as1[] = new String[as.length - 1];
+        for (int i = 1; i < as.length; i++) {
+            as1[i - 1] = as[i];
+        }
 
         return as1;
     }

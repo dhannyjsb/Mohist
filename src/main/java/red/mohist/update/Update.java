@@ -13,11 +13,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.Pattern;
 
 public class Update implements Runnable{
 
-    private static final Pattern T = Pattern.compile("T");
     private static String pre = Message.getString(Message.Mohist_update_program);
 
     public static boolean getUpdate(){
@@ -40,7 +38,7 @@ public class Update implements Runnable{
 
         JSONArray ja = json.getJSONArray("assets");
         int size = ja.size();
-        String releasesDate = T.matcher(json.getString("created_at")).replaceAll("T ");
+        String releasesDate = json.getString("created_at").replaceAll("T","T ");
         String releasesMsg = json.getString("body");
         Mohist.LOGGER.info(pre + "Total §e" + size + "§b Files");
         for (int i = 0;i < size;i++){
@@ -57,7 +55,7 @@ public class Update implements Runnable{
         URL url = null;
         HttpURLConnection httpConn = null;
         BufferedReader in = null;
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
         try{
             url = new URL("https://api.github.com/repos/PFCraft/Mohist/releases/latest");
             in = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8) );

@@ -40,94 +40,94 @@ public class ProxiedNativeCommandSender implements ProxiedCommandSender {
 
     @Override
     public void sendMessage(String message) {
-        caller.sendMessage(message);
+        getCaller().sendMessage(message);
     }
 
     @Override
     public void sendMessage(String[] messages) {
-        caller.sendMessage(messages);
+        getCaller().sendMessage(messages);
     }
 
     @Override
     public Server getServer() {
-        return callee.getServer();
+        return getCallee().getServer();
     }
 
     @Override
     public String getName() {
-        return callee.getName();
+        return getCallee().getName();
     }
 
     @Override
     public boolean isPermissionSet(String name) {
-        return caller.isPermissionSet(name);
+        return getCaller().isPermissionSet(name);
     }
 
     @Override
     public boolean isPermissionSet(Permission perm) {
-        return caller.isPermissionSet(perm);
+        return getCaller().isPermissionSet(perm);
     }
 
     @Override
     public boolean hasPermission(String name) {
-        return caller.hasPermission(name);
+        return getCaller().hasPermission(name);
     }
 
     @Override
     public boolean hasPermission(Permission perm) {
-        return caller.hasPermission(perm);
+        return getCaller().hasPermission(perm);
     }
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
-        return caller.addAttachment(plugin, name, value);
+        return getCaller().addAttachment(plugin, name, value);
     }
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin) {
-        return caller.addAttachment(plugin);
+        return getCaller().addAttachment(plugin);
     }
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
-        return caller.addAttachment(plugin, name, value, ticks);
+        return getCaller().addAttachment(plugin, name, value, ticks);
     }
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
-        return caller.addAttachment(plugin, ticks);
+        return getCaller().addAttachment(plugin, ticks);
     }
 
     @Override
     public void removeAttachment(PermissionAttachment attachment) {
-        caller.removeAttachment(attachment);
+        getCaller().removeAttachment(attachment);
     }
 
     @Override
     public void recalculatePermissions() {
-        caller.recalculatePermissions();
+        getCaller().recalculatePermissions();
     }
 
     @Override
     public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        return caller.getEffectivePermissions();
+        return getCaller().getEffectivePermissions();
     }
 
     @Override
     public boolean isOp() {
-        return caller.isOp();
+        return getCaller().isOp();
     }
 
     @Override
     public void setOp(boolean value) {
-        caller.setOp(value);
+        getCaller().setOp(value);
     }
 
     // Spigot start
     @Override
     public Spigot spigot()
     {
-        return caller.spigot();
+        return getCaller().spigot();
     }
     // Spigot end
 }

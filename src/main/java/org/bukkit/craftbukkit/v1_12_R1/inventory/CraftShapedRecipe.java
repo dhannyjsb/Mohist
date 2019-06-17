@@ -34,10 +34,10 @@ public class CraftShapedRecipe extends ShapedRecipe implements CraftRecipe {
         String[] shape = recipe.getShape();
         ret.shape(shape);
         Map<Character, ItemStack> ingredientMap = recipe.getIngredientMap();
-        for (Map.Entry<Character, ItemStack> entry : ingredientMap.entrySet()) {
-            ItemStack stack = entry.getValue();
+        for (char c : ingredientMap.keySet()) {
+            ItemStack stack = ingredientMap.get(c);
             if (stack != null) {
-                ret.setIngredient(entry.getKey(), stack.getType(), stack.getDurability());
+                ret.setIngredient(c, stack.getType(), stack.getDurability());
             }
         }
         return ret;

@@ -201,8 +201,8 @@ public class CraftEventFactory {
         Block blockClicked = craftWorld.getBlockAt(clickedX, clickedY, clickedZ);
 
         boolean canBuild = true;
-        for (BlockState blockState : blockStates) {
-            if (!canBuild(craftWorld, player, blockState.getX(), blockState.getZ())) {
+        for (int i = 0; i < blockStates.size(); i++) {
+            if (!canBuild(craftWorld, player, blockStates.get(i).getX(), blockStates.get(i).getZ())) {
                 canBuild = false;
                 break;
             }
@@ -904,7 +904,7 @@ public class CraftEventFactory {
         CraftPlayer craftPlayer = player.getBukkitEntity();
         try {
             player.openContainer.transferTo(container, craftPlayer);
-        } catch (AbstractMethodError ignored) {
+        } catch (AbstractMethodError e) {
         }
         // Cauldron end
         InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());

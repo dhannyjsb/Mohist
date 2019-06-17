@@ -110,12 +110,12 @@ public class CraftStatistic {
 
     public static EntityType getEntityTypeFromStatistic(StatBase statistic) {
         String statisticString = statistic.statId;
-        return EntityType.fromName(statisticString.substring(statisticString.lastIndexOf('.') + 1));
+        return EntityType.fromName(statisticString.substring(statisticString.lastIndexOf(".") + 1));
     }
 
     public static Material getMaterialFromStatistic(StatBase statistic) {
         String statisticString = statistic.statId;
-        String val = statisticString.substring(statisticString.lastIndexOf('.') + 1);
+        String val = statisticString.substring(statisticString.lastIndexOf(".") + 1);
         Item item = Item.REGISTRY.getObject(new ResourceLocation(val));
         if (item != null) {
             return Material.getMaterial(Item.getIdFromItem(item));

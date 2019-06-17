@@ -75,7 +75,7 @@ public class MemorySection implements ConfigurationSection {
     public Set<String> getKeys(boolean deep) {
         Set<String> result = new LinkedHashSet<String>();
 
-        Configuration root = this.root;
+        Configuration root = getRoot();
         if (root != null && root.options().copyDefaults()) {
             ConfigurationSection defaults = getDefaultSection();
 
@@ -93,7 +93,7 @@ public class MemorySection implements ConfigurationSection {
     public Map<String, Object> getValues(boolean deep) {
         Map<String, Object> result = new LinkedHashMap<String, Object>();
 
-        Configuration root = this.root;
+        Configuration root = getRoot();
         if (root != null && root.options().copyDefaults()) {
             ConfigurationSection defaults = getDefaultSection();
 
@@ -119,7 +119,7 @@ public class MemorySection implements ConfigurationSection {
 
     @Override
     public boolean isSet(String path) {
-        Configuration root = this.root;
+        Configuration root = getRoot();
         if (root == null) {
             return false;
         }
@@ -153,7 +153,7 @@ public class MemorySection implements ConfigurationSection {
     public void addDefault(String path, Object value) {
         Validate.notNull(path, "Path cannot be null");
 
-        Configuration root = this.root;
+        Configuration root = getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot add default without root");
         }
@@ -165,12 +165,12 @@ public class MemorySection implements ConfigurationSection {
 
     @Override
     public ConfigurationSection getDefaultSection() {
-        Configuration root = this.root;
+        Configuration root = getRoot();
         Configuration defaults = root == null ? null : root.getDefaults();
 
         if (defaults != null) {
-            if (defaults.isConfigurationSection(fullPath)) {
-                return defaults.getConfigurationSection(fullPath);
+            if (defaults.isConfigurationSection(getCurrentPath())) {
+                return defaults.getConfigurationSection(getCurrentPath());
             }
         }
 
@@ -181,7 +181,7 @@ public class MemorySection implements ConfigurationSection {
     public void set(String path, Object value) {
         Validate.notEmpty(path, "Cannot set to an empty path");
 
-        Configuration root = this.root;
+        Configuration root = getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot use section without a root");
         }
@@ -230,7 +230,7 @@ public class MemorySection implements ConfigurationSection {
             return this;
         }
 
-        Configuration root = this.root;
+        Configuration root = getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot access section without a root");
         }
@@ -258,7 +258,7 @@ public class MemorySection implements ConfigurationSection {
     @Override
     public ConfigurationSection createSection(String path) {
         Validate.notEmpty(path, "Cannot create section at empty path");
-        Configuration root = this.root;
+        Configuration root = getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot create section without a root");
         }
@@ -450,7 +450,7 @@ public class MemorySection implements ConfigurationSection {
                 } catch (Exception ex) {
                 }
             } else if (object instanceof Character) {
-                result.add((int) (Character) object);
+                result.add((int) ((Character) object).charValue());
             } else if (object instanceof Number) {
                 result.add(((Number) object).intValue());
             }
@@ -503,7 +503,7 @@ public class MemorySection implements ConfigurationSection {
                 } catch (Exception ex) {
                 }
             } else if (object instanceof Character) {
-                result.add((double) (Character) object);
+                result.add((double) ((Character) object).charValue());
             } else if (object instanceof Number) {
                 result.add(((Number) object).doubleValue());
             }
@@ -531,7 +531,7 @@ public class MemorySection implements ConfigurationSection {
                 } catch (Exception ex) {
                 }
             } else if (object instanceof Character) {
-                result.add((float) (Character) object);
+                result.add((float) ((Character) object).charValue());
             } else if (object instanceof Number) {
                 result.add(((Number) object).floatValue());
             }
@@ -559,7 +559,7 @@ public class MemorySection implements ConfigurationSection {
                 } catch (Exception ex) {
                 }
             } else if (object instanceof Character) {
-                result.add((long) (Character) object);
+                result.add((long) ((Character) object).charValue());
             } else if (object instanceof Number) {
                 result.add(((Number) object).longValue());
             }
@@ -771,7 +771,7 @@ public class MemorySection implements ConfigurationSection {
     protected Object getDefault(String path) {
         Validate.notNull(path, "Path cannot be null");
 
-        Configuration root = this.root;
+        Configuration root = getRoot();
         Configuration defaults = root == null ? null : root.getDefaults();
         return (defaults == null) ? null : defaults.get(createPath(this, path));
     }
@@ -878,11 +878,11 @@ public class MemorySection implements ConfigurationSection {
 
     @Override
     public String toString() {
-        Configuration root = this.root;
+        Configuration root = getRoot();
         return new StringBuilder()
             .append(getClass().getSimpleName())
             .append("[path='")
-            .append(fullPath)
+            .append(getCurrentPath())
             .append("', root='")
             .append(root == null ? null : root.getClass().getSimpleName())
             .append("']")

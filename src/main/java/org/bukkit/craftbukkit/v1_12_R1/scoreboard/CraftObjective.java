@@ -72,7 +72,7 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
         }
         if (slot != null) {
             int slotNumber = CraftScoreboardTranslations.fromBukkitSlot(slot);
-            board.setObjectiveInDisplaySlot(slotNumber, this.objective);
+            board.setObjectiveInDisplaySlot(slotNumber, getHandle());
         }
     }
 

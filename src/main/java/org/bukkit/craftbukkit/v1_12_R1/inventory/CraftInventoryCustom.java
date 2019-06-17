@@ -124,8 +124,8 @@ public class CraftInventoryCustom extends CraftInventory {
         @Override
         public void setInventorySlotContents(int i, ItemStack itemstack) {
             items.set(i, itemstack);
-            if (itemstack != ItemStack.EMPTY && this.maxStack > 0 && itemstack.getCount() > this.maxStack) {
-                itemstack.setCount(this.maxStack);
+            if (itemstack != ItemStack.EMPTY && this.getInventoryStackLimit() > 0 && itemstack.getCount() > this.getInventoryStackLimit()) {
+                itemstack.setCount(this.getInventoryStackLimit());
             }
         }
 

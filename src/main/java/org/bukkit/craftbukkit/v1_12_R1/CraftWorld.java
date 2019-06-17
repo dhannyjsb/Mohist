@@ -661,22 +661,22 @@ public class CraftWorld implements World {
             break;
         case JUNGLE:
             IBlockState iblockdata1 = Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.JUNGLE);
-            IBlockState iblockdata2 = Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE).withProperty(BlockLeaves.CHECK_DECAY, Boolean.FALSE);
+            IBlockState iblockdata2 = Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false));
             gen = new WorldGenMegaJungle(true, 10, 20, iblockdata1, iblockdata2); // Magic values as in BlockSapling
             break;
         case SMALL_JUNGLE:
             iblockdata1 = Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.JUNGLE);
-            iblockdata2 = Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE).withProperty(BlockLeaves.CHECK_DECAY, Boolean.FALSE);
+            iblockdata2 = Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false));
             gen = new WorldGenTrees(true, 4 + rand.nextInt(7), iblockdata1, iblockdata2, false);
             break;
         case COCOA_TREE:
             iblockdata1 = Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.JUNGLE);
-            iblockdata2 = Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE).withProperty(BlockLeaves.CHECK_DECAY, Boolean.FALSE);
+            iblockdata2 = Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false));
             gen = new WorldGenTrees(true, 4 + rand.nextInt(7), iblockdata1, iblockdata2, true);
             break;
         case JUNGLE_BUSH:
             iblockdata1 = Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.JUNGLE);
-            iblockdata2 = Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK).withProperty(BlockLeaves.CHECK_DECAY, Boolean.FALSE);
+            iblockdata2 = Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false));
             gen = new WorldGenShrub(iblockdata1, iblockdata2);
             break;
         case RED_MUSHROOM:
@@ -1019,7 +1019,7 @@ public class CraftWorld implements World {
         }
 
         AxisAlignedBB bb = new AxisAlignedBB(location.getX() - x, location.getY() - y, location.getZ() - z, location.getX() + x, location.getY() + y, location.getZ() + z);
-        List<net.minecraft.entity.Entity> entityList = world.getEntitiesInAABBexcluding(null, bb, null);
+        List<net.minecraft.entity.Entity> entityList = getHandle().getEntitiesInAABBexcluding(null, bb, null);
         List<Entity> bukkitEntityList = new ArrayList<Entity>(entityList.size());
         for (Object entity : entityList) {
             bukkitEntityList.add(((net.minecraft.entity.Entity) entity).getBukkitEntity());
@@ -1082,12 +1082,12 @@ public class CraftWorld implements World {
 
     @Override
     public void setDifficulty(Difficulty difficulty) {
-        this.world.worldInfo.setDifficulty(EnumDifficulty.getDifficultyEnum(difficulty.getValue()));
+        this.getHandle().worldInfo.setDifficulty(EnumDifficulty.getDifficultyEnum(difficulty.getValue()));
     }
 
     @Override
     public Difficulty getDifficulty() {
-        return Difficulty.getByValue(this.world.getDifficulty().ordinal());
+        return Difficulty.getByValue(this.getHandle().getDifficulty().ordinal());
     }
 
     public BlockMetadataStore getBlockMetadata() {
@@ -1537,7 +1537,7 @@ public class CraftWorld implements World {
         Preconditions.checkArgument(entity != null, "Cannot spawn null entity");
 
         if (entity instanceof EntityLiving) {
-            ((EntityLiving) entity).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), null);
+            ((EntityLiving) entity).onInitialSpawn(getHandle().getDifficultyForLocation(new BlockPos(entity)), null);
         }
 
         if (function != null) {
@@ -1780,7 +1780,7 @@ public class CraftWorld implements World {
         double y = loc.getY();
         double z = loc.getZ();
 
-        world.playSound(null, x, y, z, CraftSound.getSoundEffect(CraftSound.getSound(sound)), SoundCategory.valueOf(category.name()), volume, pitch); // PAIL: rename
+        getHandle().playSound(null, x, y, z, CraftSound.getSoundEffect(CraftSound.getSound(sound)), SoundCategory.valueOf(category.name()), volume, pitch); // PAIL: rename
     }
 
     @Override
@@ -1799,7 +1799,7 @@ public class CraftWorld implements World {
 
     @Override
     public String getGameRuleValue(String rule) {
-        return world.getGameRules().getString(rule);
+        return getHandle().getGameRules().getString(rule);
     }
 
     @Override
@@ -1813,18 +1813,18 @@ public class CraftWorld implements World {
             return false;
         }
 
-        world.getGameRules().setOrCreateGameRule(rule, value);
+        getHandle().getGameRules().setOrCreateGameRule(rule, value);
         return true;
     }
 
     @Override
     public String[] getGameRules() {
-        return world.getGameRules().getRules();
+        return getHandle().getGameRules().getRules();
     }
 
     @Override
     public boolean isGameRule(String rule) {
-        return world.getGameRules().hasRule(rule);
+        return getHandle().getGameRules().hasRule(rule);
     }
 
     @Override
@@ -1896,7 +1896,7 @@ public class CraftWorld implements World {
         if (data != null && !particle.getDataType().isInstance(data)) {
             throw new IllegalArgumentException("data should be " + particle.getDataType() + " got " + data.getClass());
         }
-        world.sendParticles(
+        getHandle().sendParticles(
                 null, // Sender
                 CraftParticle.toNMS(particle), // Particle
                 true, // Extended range

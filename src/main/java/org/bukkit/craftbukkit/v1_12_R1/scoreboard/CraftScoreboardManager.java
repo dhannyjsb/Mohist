@@ -49,7 +49,7 @@ public final class CraftScoreboardManager implements ScoreboardManager {
     // CraftBukkit method
     public CraftScoreboard getPlayerBoard(CraftPlayer player) {
         CraftScoreboard board = playerBoards.get(player);
-        return board == null ? mainScoreboard : board;
+        return (CraftScoreboard) (board == null ? getMainScoreboard() : board);
     }
 
     // CraftBukkit method
@@ -82,7 +82,9 @@ public final class CraftScoreboardManager implements ScoreboardManager {
         }
 
         // Old team tracking
-        for (ScorePlayerTeam scoreboardteam : oldboard.getTeams()) {
+        Iterator<?> iterator = oldboard.getTeams().iterator();
+        while (iterator.hasNext()) {
+            ScorePlayerTeam scoreboardteam = (ScorePlayerTeam) iterator.next();
             entityplayer.connection.sendPacket(new SPacketTeams(scoreboardteam, 1));
         }
 

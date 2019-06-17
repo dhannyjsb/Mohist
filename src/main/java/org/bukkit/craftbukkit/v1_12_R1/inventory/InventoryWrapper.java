@@ -15,7 +15,6 @@ import org.bukkit.inventory.InventoryHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 public class InventoryWrapper implements IInventory {
 
@@ -184,6 +183,6 @@ public class InventoryWrapper implements IInventory {
 
     @Override
     public boolean isEmpty() {
-        return StreamSupport.stream(inventory.spliterator(), false).anyMatch(Predicates.notNull()::apply);
+        return Iterables.any(inventory, Predicates.notNull());
     }
 }
