@@ -33,7 +33,7 @@ public class BukkitHookForgeEventTest implements Listener {
      */
     @Deprecated
     @SubscribeEvent
-    public void onExplosionStart(ForgeHookBukkitEvent event) {
+    public void test1(ForgeHookBukkitEvent event) {
         if (event.getEvent() instanceof PlayerJoinEvent) {
             PlayerJoinEvent playerJoinEvent = (PlayerJoinEvent)event.getEvent();
             playerJoinEvent.setJoinMessage("Thank you for using Mohist!");
