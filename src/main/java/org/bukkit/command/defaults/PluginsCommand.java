@@ -8,7 +8,6 @@ import red.mohist.pluginmanager.PluginManagers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class PluginsCommand extends BukkitCommand {
         this.description = "Gets a list of plugins running on the server";
         this.usageMessage = "/plugins [load|unload|reload] [name]";
         this.setPermission("bukkit.command.plugins");
-        this.setAliases(Collections.singletonList("pl"));
+        this.setAliases(Arrays.asList("pl"));
     }
 
     @Override
@@ -89,7 +88,7 @@ public class PluginsCommand extends BukkitCommand {
             pluginList.append(entry.getKey());
         }
 
-        return "(" + plugins.size() + "): " + pluginList;
+        return "(" + plugins.size() + "): " + pluginList.toString();
         // Paper end
     }
 }

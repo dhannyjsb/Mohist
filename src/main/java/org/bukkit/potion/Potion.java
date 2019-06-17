@@ -152,7 +152,7 @@ public class Potion {
      * @return The effects that this potion applies
      */
     public Collection<PotionEffect> getEffects() {
-        return brewer.getEffects(type, level == 2, extended);
+        return getBrewer().getEffects(type, level == 2, extended);
     }
 
     /**
@@ -263,7 +263,7 @@ public class Potion {
      */
     public ItemStack toItemStack(int amount) {
         Material material;
-        if (splash) {
+        if (isSplash()) {
             material = Material.SPLASH_POTION;
         } else {
             material = Material.POTION;

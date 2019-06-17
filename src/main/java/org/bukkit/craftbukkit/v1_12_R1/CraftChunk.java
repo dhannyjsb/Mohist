@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.v1_12_R1;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.NibbleArray;
@@ -70,12 +71,12 @@ public class CraftChunk implements Chunk {
 
     @Override
     public String toString() {
-        return "CraftChunk{" + "x=" + x + "z=" + z + '}';
+        return "CraftChunk{" + "x=" + getX() + "z=" + getZ() + '}';
     }
 
     @Override
     public Block getBlock(int x, int y, int z) {
-        return new CraftBlock(this, (this.x << 4) | (x & 0xF), y, (this.z << 4) | (z & 0xF));
+        return new CraftBlock(this, (getX() << 4) | (x & 0xF), y, (getZ() << 4) | (z & 0xF));
     }
 
     @Override
@@ -129,17 +130,17 @@ public class CraftChunk implements Chunk {
 
     @Override
     public boolean load() {
-        return getWorld().loadChunk(x, z, true);
+        return getWorld().loadChunk(getX(), getZ(), true);
     }
 
     @Override
     public boolean load(boolean generate) {
-        return getWorld().loadChunk(x, z, generate);
+        return getWorld().loadChunk(getX(), getZ(), generate);
     }
 
     @Override
     public boolean unload() {
-        return getWorld().unloadChunk(x, z);
+        return getWorld().unloadChunk(getX(), getZ());
     }
 
     @Override
@@ -150,12 +151,12 @@ public class CraftChunk implements Chunk {
 
     @Override
     public boolean unload(boolean save) {
-        return getWorld().unloadChunk(x, z, save);
+        return getWorld().unloadChunk(getX(), getZ(), save);
     }
 
     @Override
     public boolean unload(boolean save, boolean safe) {
-        return getWorld().unloadChunk(x, z, save, safe);
+        return getWorld().unloadChunk(getX(), getZ(), save, safe);
     }
 
     @Override
@@ -232,7 +233,7 @@ public class CraftChunk implements Chunk {
             if (includeBiomeTempRain) {
                 biomeTemp = new double[256];
                 biomeRain = new double[256];
-                float[] dat = getTemperatures(wcm, x << 4, z << 4);
+                float[] dat = getTemperatures(wcm, getX() << 4, getZ() << 4);
 
                 for (int i = 0; i < 256; i++) {
                     biomeTemp[i] = dat[i];
@@ -249,7 +250,7 @@ public class CraftChunk implements Chunk {
         }
 
         World world = getWorld();
-        return new CraftChunkSnapshot(x, z, world.getName(), world.getFullTime(), sectionBlockIDs, sectionBlockData, sectionSkyLights, sectionEmitLights, sectionEmpty, hmap, biome, biomeTemp, biomeRain);
+        return new CraftChunkSnapshot(getX(), getZ(), world.getName(), world.getFullTime(), sectionBlockIDs, sectionBlockData, sectionSkyLights, sectionEmitLights, sectionEmpty, hmap, biome, biomeTemp, biomeRain);
     }
 
     public static ChunkSnapshot getEmptyChunkSnapshot(int x, int z, CraftWorld world, boolean includeBiome, boolean includeBiomeTempRain) {

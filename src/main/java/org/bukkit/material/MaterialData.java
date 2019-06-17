@@ -110,12 +110,12 @@ public class MaterialData implements Cloneable {
 
     @Override
     public String toString() {
-        return getItemType() + "(" + data + ")";
+        return getItemType() + "(" + getData() + ")";
     }
 
     @Override
     public int hashCode() {
-        return ((type << 8) ^ data);
+        return ((getItemTypeId() << 8) ^ getData());
     }
 
     @Override
@@ -123,7 +123,7 @@ public class MaterialData implements Cloneable {
         if (obj != null && obj instanceof MaterialData) {
             MaterialData md = (MaterialData) obj;
 
-            return (md.type == type && md.data == data);
+            return (md.getItemTypeId() == getItemTypeId() && md.getData() == getData());
         } else {
             return false;
         }

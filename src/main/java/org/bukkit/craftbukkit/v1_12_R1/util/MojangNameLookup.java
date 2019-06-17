@@ -55,7 +55,7 @@ public class MojangNameLookup {
         return null;
     }
 
-    private static class Response {
+    private class Response {
         String errorMessage;
         String cause;
         String name;

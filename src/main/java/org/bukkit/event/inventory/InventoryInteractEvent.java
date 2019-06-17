@@ -58,7 +58,7 @@ public abstract class InventoryInteractEvent extends InventoryEvent implements C
      */
     @Override
     public boolean isCancelled() {
-        return result == Result.DENY;
+        return getResult() == Result.DENY;
     }
 
     /**

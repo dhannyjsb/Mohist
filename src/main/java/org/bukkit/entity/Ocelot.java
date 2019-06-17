@@ -34,7 +34,7 @@ public interface Ocelot extends Animals, Tameable, Sittable {
 
         static {
             for (Type type : values()) {
-                types[type.id] = type;
+                types[type.getId()] = type;
             }
         }
 

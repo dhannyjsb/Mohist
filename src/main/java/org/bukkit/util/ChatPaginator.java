@@ -90,7 +90,9 @@ public class ChatPaginator {
 
             if (c == ' ' || c == '\n') {
                 if (line.length() == 0 && word.length() > lineLength) { // special case: extremely long word begins a line
-                    lines.addAll(Arrays.asList(word.toString().split("(?<=\\G.{" + lineLength + "})")));
+                    for (String partialWord : word.toString().split("(?<=\\G.{" + lineLength + "})")) {
+                        lines.add(partialWord);
+                    }
                 } else if (line.length() + 1 + word.length() - lineColorChars == lineLength) { // Line exactly the correct length...newline
                     if (line.length() > 0) {
                         line.append(' ');

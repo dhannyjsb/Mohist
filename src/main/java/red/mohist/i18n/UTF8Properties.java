@@ -18,7 +18,9 @@ public class UTF8Properties extends Properties {
 
     public UTF8Properties(Properties properties)  {
         super(properties);
-        for (Object key : properties.keySet()) {
+        Iterator<Object> iterator = properties.keySet().iterator();
+        while(iterator.hasNext()) {
+            Object key = iterator.next();
             this.commentMap.put((String) key, null);
         }
     }
@@ -46,16 +48,18 @@ public class UTF8Properties extends Properties {
             UTF8Properties.writeComments(bufferedWriter, comments);
         }
         synchronized (this)   {
-            for (String key : this.commentMap.keySet()) {
+            Iterator<String> iterator = this.commentMap.keySet().iterator();
+            while(iterator.hasNext())  {
+                String key = iterator.next();
                 String value = this.getProperty(key);
                 String comment = this.commentMap.get(key);
                 key = saveConvert(key, true, false);
                 value = saveConvert(value, false, false);
                 key = saveConvert(key, true, false);
-                if (comment != null && !comment.isEmpty()) {
+                if(comment != null && ! comment.equals(""))  {
                     writeComments(bufferedWriter, comment);
                 }
-                bufferedWriter.write(key + "=" + value);
+                bufferedWriter.write(key+"="+value);
                 bufferedWriter.newLine();
             }
         }
@@ -68,7 +72,7 @@ public class UTF8Properties extends Properties {
         if (bufLen < 0) {
             bufLen = Integer.MAX_VALUE;
         }
-        StringBuilder outBuffer = new StringBuilder(bufLen);
+        StringBuffer outBuffer = new StringBuffer(bufLen);
         for(int x=0; x<len; x++) {
             char aChar = theString.charAt(x);
             if ((aChar > 61) && (aChar < 127)) {

@@ -55,7 +55,7 @@ public enum GrassSpecies {
 
     static {
         for (GrassSpecies grassSpecies : values()) {
-            BY_DATA.put(grassSpecies.data, grassSpecies);
+            BY_DATA.put(grassSpecies.getData(), grassSpecies);
         }
     }
 }

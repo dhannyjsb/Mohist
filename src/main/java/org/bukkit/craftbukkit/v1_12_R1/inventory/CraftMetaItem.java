@@ -467,7 +467,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
             itemTag.setInteger(REPAIR.NBT, repairCost);
         }
 
-        if (unbreakable) {
+        if (isUnbreakable()) {
             itemTag.setBoolean(UNBREAKABLE.NBT, unbreakable);
         }
 
@@ -525,7 +525,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
 
     @Overridden
     boolean isEmpty() {
-        return !(hasDisplayName() || hasLocalizedName() || hasEnchants() || hasLore() || hasRepairCost() || !unhandledTags.isEmpty() || hideFlag != 0 || unbreakable);
+        return !(hasDisplayName() || hasLocalizedName() || hasEnchants() || hasLore() || hasRepairCost() || !unhandledTags.isEmpty() || hideFlag != 0 || isUnbreakable());
     }
 
     @Override
@@ -723,7 +723,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
                 && (this.hasRepairCost() ? that.hasRepairCost() && this.repairCost == that.repairCost : !that.hasRepairCost())
                 && (this.unhandledTags.equals(that.unhandledTags))
                 && (this.hideFlag == that.hideFlag)
-                && (this.unbreakable == that.unbreakable);
+                && (this.isUnbreakable() == that.isUnbreakable());
     }
 
     /**
@@ -751,7 +751,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
         hash = 61 * hash + (hasRepairCost() ? this.repairCost : 0);
         hash = 61 * hash + unhandledTags.hashCode();
         hash = 61 * hash + hideFlag;
-        hash = 61 * hash + (unbreakable ? 1231 : 1237);
+        hash = 61 * hash + (isUnbreakable() ? 1231 : 1237);
         return hash;
     }
 
@@ -809,7 +809,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
             builder.put(HIDEFLAGS.BUKKIT, hideFlags);
         }
 
-        if (unbreakable) {
+        if (isUnbreakable()) {
             builder.put(UNBREAKABLE.BUKKIT, unbreakable);
         }
 

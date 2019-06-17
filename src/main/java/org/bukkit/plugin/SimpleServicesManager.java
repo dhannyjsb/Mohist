@@ -38,7 +38,11 @@ public class SimpleServicesManager implements ServicesManager {
     public <T> void register(Class<T> service, T provider, Plugin plugin, ServicePriority priority) {
         RegisteredServiceProvider<T> registeredProvider = null;
         synchronized (providers) {
-            List<RegisteredServiceProvider<?>> registered = providers.computeIfAbsent(service, k -> new ArrayList<RegisteredServiceProvider<?>>());
+            List<RegisteredServiceProvider<?>> registered = providers.get(service);
+            if (registered == null) {
+                registered = new ArrayList<RegisteredServiceProvider<?>>();
+                providers.put(service, registered);
+            }
 
             registeredProvider = new RegisteredServiceProvider<T>(service, provider, priority, plugin);
 

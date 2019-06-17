@@ -202,7 +202,7 @@ public class Permission {
      * @param value The value to set this permission to
      */
     public void addParent(Permission perm, boolean value) {
-        perm.children.put(name, value);
+        perm.getChildren().put(getName(), value);
         perm.recalculatePermissibles();
     }
 
@@ -327,7 +327,7 @@ public class Permission {
             } else if ((entry.getValue() instanceof Map)) {
                 try {
                     Permission perm = loadPermission(entry.getKey().toString(), (Map<?, ?>) entry.getValue(), def, output);
-                    children.put(perm.name, Boolean.TRUE);
+                    children.put(perm.getName(), Boolean.TRUE);
 
                     if (output != null) {
                         output.add(perm);

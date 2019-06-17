@@ -332,7 +332,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
         }
 
         if (hasColor()) {
-            builder.put(POTION_COLOR.BUKKIT, color);
+            builder.put(POTION_COLOR.BUKKIT, getColor());
         }
 
         if (hasCustomEffects()) {

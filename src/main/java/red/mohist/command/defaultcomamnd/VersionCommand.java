@@ -13,7 +13,6 @@ import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class VersionCommand extends BukkitCommand {
@@ -23,7 +22,7 @@ public class VersionCommand extends BukkitCommand {
         this.description = "Gets the version of this server including any plugins in use";
         this.usageMessage = "/version [plugin name]";
         this.setPermission("bukkit.command.version");
-        this.setAliases(Collections.singletonList("ver"));
+        this.setAliases(Arrays.asList("ver"));
     }
 
     @Override

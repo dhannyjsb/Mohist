@@ -108,7 +108,7 @@ public class Note {
                 int id = tone.id % TONES_COUNT;
                 BY_DATA.put((byte) id, tone);
 
-                if (tone.sharpable) {
+                if (tone.isSharpable()) {
                     id = (id + 1) % TONES_COUNT;
                     BY_DATA.put((byte) id, tone);
                 }

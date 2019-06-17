@@ -177,7 +177,9 @@ public final class WeakCollection<T> implements Collection<T> {
 
     private Collection<T> toCollection() {
         ArrayList<T> collection = new ArrayList<T>();
-        collection.addAll(this);
+        for (T value : this) {
+            collection.add(value);
+        }
         return collection;
     }
 }

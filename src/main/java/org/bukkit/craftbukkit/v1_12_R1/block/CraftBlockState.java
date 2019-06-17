@@ -156,7 +156,7 @@ public class CraftBlockState implements BlockState {
 
     @Override
     public Material getType() {
-        return Material.getBlockMaterial(type);
+        return Material.getBlockMaterial(getTypeId());
     }
 
     public void setFlag(int flag) {
@@ -208,7 +208,7 @@ public class CraftBlockState implements BlockState {
 
         BlockPos pos = new BlockPos(x, y, z);
         IBlockState newBlock = CraftMagicNumbers.getBlock(getType()).getStateFromMeta(this.getRawData());
-        block.setTypeIdAndData(type, getRawData(), applyPhysics);
+        block.setTypeIdAndData(getTypeId(), getRawData(), applyPhysics);
         world.getHandle().notifyBlockUpdate(
                 pos,
                 CraftMagicNumbers.getBlock(block).getStateFromMeta(block.getData()),
@@ -217,8 +217,8 @@ public class CraftBlockState implements BlockState {
         );
 
         // Update levers etc
-        if (applyPhysics && data instanceof Attachable) {
-            world.getHandle().notifyNeighborsOfStateChange(pos.offset(CraftBlock.blockFaceToNotch(((Attachable) data).getAttachedFace())), newBlock.getBlock(), false);
+        if (applyPhysics && getData() instanceof Attachable) {
+            world.getHandle().notifyNeighborsOfStateChange(pos.offset(CraftBlock.blockFaceToNotch(((Attachable) getData()).getAttachedFace())), newBlock.getBlock(), false);
         }
         // Cauldron start - restore TE data from snapshot
         if (nbt != null)
