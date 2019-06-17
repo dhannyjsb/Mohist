@@ -10,9 +10,6 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**Home**](https://www.mohist.red/)
    [**QQ**](https://jq.qq.com/?_wv=1027&k=5q7lcCb)
    [**Metrics**](https://bstats.org/plugin/bukkit/Mohist)
-   [**PayPal**](https://www.paypal.me/Mgazul)
-   [**afdian(中文)**](https://afdian.net/@Mgazul)
-   
    [**Jenkins**](https://ci.codemc.org/job/PFCraft/job/Mohist/)
 
 ## Info
@@ -57,5 +54,9 @@ Mohist-xxxxx-universal.jar - is the server we should run it
 2. We are not responsible for any legal disputes arising from your use of Mohist for commercial activities.
 1. 源代码可以在遵守[**GPL-3.0**](https://github.com/PFCraft/Mohist/blob/master/LICENSE)的前提下自由分发和复制。
 2. 对于因使用Mohist进行商业活动而引起的任何法律纠纷，我们概不负责。
+
+## Donation
+   [**PayPal**](https://www.paypal.me/Mgazul)
+   [**afdian(中文)**](https://afdian.net/@Mgazul)
 
 Welcome everyone to participate in development, unity is power.
