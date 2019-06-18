@@ -1,47 +1,27 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockRedstoneTorch.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockRedstoneTorch.java
-@@ -20,10 +20,12 @@
+@@ -20,6 +20,7 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.event.block.BlockRedstoneEvent;
  
-+
  public class BlockRedstoneTorch extends BlockTorch
  {
--    private static final Map<World, List<BlockRedstoneTorch.Toggle>> toggles = new java.util.WeakHashMap<World, List<Toggle>>(); // FORGE - fix vanilla MC-101233
-+    private static final Map<World, List<Toggle>> toggles = new java.util.WeakHashMap<World, List<Toggle>>(); // FORGE - fix vanilla MC-101233
-     private final boolean isOn;
+@@ -109,20 +110,46 @@
+     {
+     }
  
-     private boolean isBurnedOut(World worldIn, BlockPos pos, boolean turnOff)
-@@ -33,18 +35,18 @@
-             toggles.put(worldIn, Lists.newArrayList());
-         }
- 
--        List<BlockRedstoneTorch.Toggle> list = (List)toggles.get(worldIn);
-+        List<Toggle> list = (List)toggles.get(worldIn);
- 
-         if (turnOff)
-         {
--            list.add(new BlockRedstoneTorch.Toggle(pos, worldIn.getTotalWorldTime()));
-+            list.add(new Toggle(pos, worldIn.getTotalWorldTime()));
-         }
- 
-         int i = 0;
- 
-         for (int j = 0; j < list.size(); ++j)
-         {
--            BlockRedstoneTorch.Toggle blockredstonetorch$toggle = list.get(j);
-+            Toggle blockredstonetorch$toggle = list.get(j);
- 
-             if (blockredstonetorch$toggle.pos.equals(pos))
-             {
-@@ -112,17 +114,37 @@
++    private long last = 0L;
      public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
      {
++        if (System.currentTimeMillis() - last <= -1)
++        {
++            return;
++        }
++        last = System.currentTimeMillis();
          boolean flag = this.shouldBeOff(worldIn, pos, state);
--        List<BlockRedstoneTorch.Toggle> list = (List)toggles.get(worldIn);
-+        List<Toggle> list = toggles.get(worldIn);
+         List<BlockRedstoneTorch.Toggle> list = (List)toggles.get(worldIn);
  
 -        while (list != null && !list.isEmpty() && worldIn.getTotalWorldTime() - (list.get(0)).time > 60L)
 -        {
@@ -78,7 +58,7 @@
                  worldIn.setBlockState(pos, Blocks.UNLIT_REDSTONE_TORCH.getDefaultState().withProperty(FACING, state.getValue(FACING)), 3);
  
                  if (this.isBurnedOut(worldIn, pos, true))
-@@ -143,6 +165,13 @@
+@@ -143,6 +170,13 @@
          }
          else if (!flag && !this.isBurnedOut(worldIn, pos, false))
          {
@@ -92,7 +72,7 @@
              worldIn.setBlockState(pos, Blocks.REDSTONE_TORCH.getDefaultState().withProperty(FACING, state.getValue(FACING)), 3);
          }
      }
-@@ -210,6 +239,7 @@
+@@ -210,6 +244,7 @@
          {
              BlockPos pos;
              long time;

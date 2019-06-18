@@ -8,7 +8,21 @@
  
  public abstract class BlockRedstoneDiode extends BlockHorizontal
  {
-@@ -61,10 +62,16 @@
+@@ -53,18 +54,30 @@
+     {
+     }
+ 
++    private long last = 0L;
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+     {
++        if (System.currentTimeMillis() - last <= -1)
++        {
++            return;
++        }
++        last = System.currentTimeMillis();
+         if (!this.isLocked(worldIn, pos, state))
+         {
+             boolean flag = this.shouldBePowered(worldIn, pos, state);
  
              if (this.isRepeaterPowered && !flag)
              {
