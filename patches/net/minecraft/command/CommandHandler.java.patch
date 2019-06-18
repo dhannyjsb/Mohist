@@ -31,15 +31,6 @@
          int i = 0;
  
          try
-@@ -48,7 +49,7 @@
-                 textcomponenttranslation1.getStyle().setColor(TextFormatting.RED);
-                 sender.sendMessage(textcomponenttranslation1);
-             }
--            else if (icommand.checkPermission(this.getServer(), sender))
-+            else if (true || icommand.checkPermission(this.getServer(), sender)) // Cauldron start - disable check for permissions since we handle it on Bukkit side
-             {
-                 net.minecraftforge.event.CommandEvent event = new net.minecraftforge.event.CommandEvent(icommand, sender, astring);
-                 if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event))
 @@ -146,16 +147,32 @@
  
      public ICommand registerCommand(ICommand command)
@@ -66,7 +57,7 @@
 +        this.commandMap.put(command.getName(), command);
 +        this.commandSet.add(command);
 +        // register vanilla commands with Bukkit to support permissions.
-+        CraftSimpleCommandMap commandMap = FMLCommonHandler.instance().getMinecraftServerInstance().server.getCraftCommandMap();
++        CraftSimpleCommandMap commandMap = MinecraftServer.getServerInst().server.getCraftCommandMap();
 +        ModCustomCommand customCommand = new ModCustomCommand(command.getName());
 +        customCommand.setPermission(permissionNode);
 +        if (list != null) customCommand.setAliases(list);

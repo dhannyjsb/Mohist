@@ -47,7 +47,7 @@
 -                            this.world.spawnEntity(entityzombie);
 -                            if (entitylivingbase != null) entityzombie.setAttackTarget(entitylivingbase);
 +                            this.world.addEntity(entityzombie, CreatureSpawnEvent.SpawnReason.REINFORCEMENTS);
-+                            if (entitylivingbase != null) entityzombie.setAttackTarget(entitylivingbase, EntityTargetEvent.TargetReason.REINFORCEMENT_TARGET, true);
++                            if (entitylivingbase != null) entityzombie.setGoalTarget(entitylivingbase, EntityTargetEvent.TargetReason.REINFORCEMENT_TARGET, true);
                              entityzombie.onInitialSpawn(this.world.getDifficultyForLocation(new BlockPos(entityzombie)), (IEntityLivingData)null);
                              this.getEntityAttribute(SPAWN_REINFORCEMENTS_CHANCE).applyModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05000000074505806D, 0));
                              entityzombie.getEntityAttribute(SPAWN_REINFORCEMENTS_CHANCE).applyModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05000000074505806D, 0));
