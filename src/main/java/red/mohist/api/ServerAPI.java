@@ -7,6 +7,6 @@ public class ServerAPI {
     public static HashMap<String, Integer> mods = new HashMap();
 
     public static int getModSize() {
-        return mods.get("mods") - 4;
+        return mods.get("mods") == null ? 0 : mods.get("mods") - 4;
     }
 }

@@ -27,6 +27,6 @@ public class PlayerAPI {
     }
 
     public static int getModSize(Player player) {
-        return mods.get(getNMSPlayer(player)) - 4;
+        return mods.get(getNMSPlayer(player)) == null ? 0 : mods.get(getNMSPlayer(player)) - 4;
     }
 }
