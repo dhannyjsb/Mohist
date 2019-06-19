@@ -271,3 +271,15 @@
          FMLLog.log.info("Forge Mod Loader has successfully loaded {} mod{}", mods.size(), mods.size() == 1 ? "" : "s");
          progressBar.step("Completing Minecraft initialization");
      }
+@@ -896,8 +897,10 @@
+             }
+         }
+ 
+-        if (difference.size() > 0)
++        if (difference.size() > 0) {
++            ServerAPI.modlists.addAll(difference);
+             FMLLog.log.info("Attempting connection with missing mods {} at {}", difference, side);
++        }
+         return true;
+     }
+ 

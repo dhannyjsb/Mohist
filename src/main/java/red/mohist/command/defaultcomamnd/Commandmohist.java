@@ -2,6 +2,7 @@ package red.mohist.command.defaultcomamnd;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.server.MinecraftServer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,8 +11,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import red.mohist.MohistConfig;
+import red.mohist.api.PlayerAPI;
+import red.mohist.api.ServerAPI;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,14 +26,14 @@ public class Commandmohist extends Command {
     public Commandmohist(String name) {
         super(name);
         this.description = "Mohist related commands";
-        this.usageMessage = "/mohist [potions|enchants|materials]";
+        this.usageMessage = "/mohist [potions|enchants|materials|commands|mods|playermods|entitytypes|biomes]";
         this.setPermission("bukkit.command.mohist");
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location location) throws IllegalArgumentException {
         if (args.length <= 1) {
-            return CommandBase.getListOfStringsMatchingLastWord(args, "potions", "enchants", "materials");
+            return CommandBase.getListOfStringsMatchingLastWord(args, "potions", "enchants", "materials", "commands", "mods", "playermods", "entitytypes", "biomes");
         }
 
         return Collections.emptyList();
@@ -71,9 +75,28 @@ public class Commandmohist extends Command {
                 // Not recommended for use in games, only test output
                 getBiomes(sender);
                 break;
+            case "mods":
+                // Not recommended for use in games, only test output
+                sender.sendMessage(ChatColor.GREEN + "" + ServerAPI.getModSize() + " " + ServerAPI.getModList());
+                break;
+            case "playermods":
+                // Not recommended for use in games, only test output
+                if(args.length == 1){
+                    sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
+                    return false;
+                }
+                Player player = Bukkit.getPlayer(args[1].toString());
+                if (player != null) {
+                    sender.sendMessage(ChatColor.GREEN + "" + PlayerAPI.getModSize(player) + " " + PlayerAPI.getModlist(player));
+                }
+                else{
+                    sender.sendMessage(ChatColor.RED + "The player ["+ args[1] +"] is not online.");
+                }
+                break;
             case "reload":
                 MohistConfig.reload();
                 sender.sendMessage(ChatColor.GREEN + "Config reload success");
+                break;
             default:
                 sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
                 return false;

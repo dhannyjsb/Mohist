@@ -16,9 +16,9 @@
 -            FMLLog.log.info("Client attempting to join with {} mods : {}", client.modListSize(), client.modListAsString());
 +            if (client.modListSize() > 0) {
 +                PlayerAPI.mods.put(dispatcher.player, client.modListSize());
++                PlayerAPI.modlist.put(dispatcher.player, client.modListAsString());
 +            }
-+            Object[] mods = {client.modListSize()};
-+            FMLLog.log.info(Message.getFormatString(Message.client_join_mods, mods));
++            FMLLog.log.info(Message.getFormatString(Message.client_join_mods, new Object[]{ client.modListSize() }));
 +            FMLLog.log.debug("Client attempting to join with {} mods : {}", client.modListSize(), client.modListAsString());
              String modRejections = FMLNetworkHandler.checkModList(client, Side.CLIENT);
              if (modRejections != null)
