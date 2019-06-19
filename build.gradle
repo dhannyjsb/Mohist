@@ -23,7 +23,7 @@ apply plugin: 'net.minecraftforge.gradle.launch4j'
 apply plugin: 'net.nemerosa.versioning'
 
 group = 'red.mohist'
-version = '1.0-'+versioning {
+version = '1.1-'+versioning {
     full {it.abbreviated}
     dirty = { t -> t }
 }.info.full
@@ -38,11 +38,13 @@ repositories {
     maven { url 'https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository' }
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
 configurations.all {
     transitive = false
 }
-
-[compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
 
 dependencies {
     compile 'org.avaje:ebean:2.8.1'
@@ -149,9 +151,7 @@ minecraft {
 }
 
 sourceCompatibility = 1.8
-[compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
 tasks.generateXmlConfig.dependsOn installer
-tasks.compileJava.enabled = false
 tasks.build.dependsOn 'launch4j'
 
 installer {
