@@ -1,8 +1,10 @@
 package org.bukkit.craftbukkit.v1_12_R1;
 
+import jline.UnsupportedTerminal;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.logging.log4j.LogManager;
+import org.fusesource.jansi.AnsiConsole;
 import red.mohist.Mohist;
 import red.mohist.i18n.Message;
 
@@ -178,7 +180,12 @@ public class Main {
                     System.setProperty("user.language", "en");
                     useJline = false;
                 }
-
+                if (Main.useJline) {
+                    AnsiConsole.systemInstall();
+                }
+                else {
+                    System.setProperty("jline.terminal", UnsupportedTerminal.class.getName());
+                }
 
 
                 if (options.has("noconsole")) {

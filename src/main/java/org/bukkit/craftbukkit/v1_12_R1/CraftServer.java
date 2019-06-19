@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.base64.Base64;
+import jline.console.ConsoleReader;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -948,6 +949,10 @@ public final class CraftServer implements Server {
     @Override
     public Logger getLogger() {
         return logger;
+    }
+
+    public ConsoleReader getReader() {
+        return this.console.reader;
     }
 
     @Override

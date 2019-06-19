@@ -31,7 +31,9 @@ public class ConversationTracker {
             if (conversationQueue.getFirst() == conversation) {
                 conversation.abandon(details);
             }
-            conversationQueue.remove(conversation);
+            if (this.conversationQueue.contains(conversation)) {
+                this.conversationQueue.remove(conversation);
+            }
             if (!conversationQueue.isEmpty()) {
                 conversationQueue.getFirst().outputNextPrompt();
             }

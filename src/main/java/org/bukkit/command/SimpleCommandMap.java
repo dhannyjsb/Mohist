@@ -214,7 +214,7 @@ public class SimpleCommandMap implements CommandMap {
             return null;
         }
 
-        String argLine = cmdLine.substring(spaceIndex + 1);
+        String argLine = cmdLine.substring(spaceIndex + 1, cmdLine.length());
         String[] args = PATTERN_ON_SPACE.split(argLine, -1);
 
         try {

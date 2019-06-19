@@ -138,7 +138,7 @@ public final class CraftMapView implements MapView {
         boolean context = isContextual();
         RenderData render = renderCache.get(context ? player : null);
 
-        if (render == null) {
+        if (render == null && this.renderCache.containsKey(null)) {
             render = new RenderData();
             renderCache.put(context ? player : null, render);
         }
