@@ -21,7 +21,7 @@
  import net.minecraft.inventory.ItemStackHelper;
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
-@@ -27,13 +27,46 @@
+@@ -27,13 +27,49 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.World;
@@ -35,6 +35,8 @@
  
 +import javax.annotation.Nullable;
 +import java.util.List;
++import java.util.concurrent.locks.Lock;
++import java.util.concurrent.locks.ReentrantLock;
 +
  public class TileEntityHopper extends TileEntityLockableLoot implements IHopper, ITickable
  {
@@ -42,6 +44,7 @@
      private int transferCooldown = -1;
      private long tickedGameTime;
 -
++    public Lock lock = new ReentrantLock();; // Mohist
 +    // CraftBukkit start - add fields and methods
 +    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 +    private int maxStack = MAX_STACK;
@@ -69,7 +72,32 @@
      public static void registerFixesHopper(DataFixer fixer)
      {
          fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityHopper.class, new String[] {"Items"}));
-@@ -106,7 +139,7 @@
+@@ -90,13 +126,19 @@
+ 
+     public void setInventorySlotContents(int index, ItemStack stack)
+     {
+-        this.fillWithLoot((EntityPlayer)null);
+-        this.getItems().set(index, stack);
++        this.lock.lock();
++        try {
++            this.fillWithLoot((EntityPlayer)null);
++            this.getItems().set(index, stack);
+ 
+-        if (stack.getCount() > this.getInventoryStackLimit())
+-        {
+-            stack.setCount(this.getInventoryStackLimit());
++            if (stack.getCount() > this.getInventoryStackLimit())
++            {
++                stack.setCount(this.getInventoryStackLimit());
++            }
+         }
++        finally {
++            this.lock.unlock();
++        }
+     }
+ 
+     public String getName()
+@@ -106,11 +148,12 @@
  
      public int getInventoryStackLimit()
      {
@@ -78,7 +106,33 @@
      }
  
      public void update()
-@@ -144,7 +177,7 @@
+     {
++        this.world.addHopperQueue(this); // Mohist
+         if (this.world != null && !this.world.isRemote)
+         {
+             --this.transferCooldown;
+@@ -119,12 +162,18 @@
+             if (!this.isOnTransferCooldown())
+             {
+                 this.setTransferCooldown(0);
+-                this.updateHopper();
++                this.lock.lock();
++                try {
++                    this.updateHopper();
++                }
++                finally {
++                    this.lock.unlock();
++                }
+             }
+         }
+     }
+ 
+-    protected boolean updateHopper()
++    public boolean updateHopper()
+     {
+         if (this.world != null && !this.world.isRemote)
+         {
+@@ -144,7 +193,7 @@
  
                  if (flag)
                  {
@@ -87,7 +141,7 @@
                      this.markDirty();
                      return true;
                  }
-@@ -213,11 +246,11 @@
+@@ -213,11 +262,11 @@
                      if (!this.getStackInSlot(i).isEmpty())
                      {
                          ItemStack itemstack = this.getStackInSlot(i).copy();
@@ -101,7 +155,7 @@
                              return true;
                          }
  
-@@ -358,14 +391,46 @@
+@@ -358,14 +407,46 @@
          if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction))
          {
              ItemStack itemstack1 = itemstack.copy();
@@ -151,7 +205,7 @@
              inventoryIn.setInventorySlotContents(index, itemstack1);
          }
  
-@@ -382,6 +447,11 @@
+@@ -382,6 +463,11 @@
          }
          else
          {
@@ -163,7 +217,7 @@
              ItemStack itemstack = entity.getItem().copy();
              ItemStack itemstack1 = putStackInInventoryAllSlots(source, destination, itemstack, (EnumFacing)null);
  
-@@ -491,7 +561,7 @@
+@@ -491,7 +577,7 @@
                              }
                          }
  
@@ -172,7 +226,7 @@
                      }
                  }
  
-@@ -525,6 +595,7 @@
+@@ -525,6 +611,7 @@
          int j = MathHelper.floor(y);
          int k = MathHelper.floor(z);
          BlockPos blockpos = new BlockPos(i, j, k);
