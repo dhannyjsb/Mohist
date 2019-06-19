@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/server/console/TerminalHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/server/console/TerminalHandler.java
-@@ -19,73 +19,52 @@
+@@ -19,73 +19,53 @@
  
  package net.minecraftforge.server.console;
  
@@ -17,6 +17,7 @@
 -import org.jline.terminal.Terminal;
 +import org.apache.logging.log4j.LogManager;
 +import org.apache.logging.log4j.Logger;
++import red.mohist.util.ConsoleFormatter;
  
 +import java.io.IOException;
 +
