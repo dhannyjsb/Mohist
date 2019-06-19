@@ -1,9 +1,8 @@
 --- ../src-base/minecraft/net/minecraft/entity/EntityLiving.java
 +++ ../src-work/minecraft/net/minecraft/entity/EntityLiving.java
-@@ -1,32 +1,21 @@
+@@ -1,32 +1,20 @@
  package net.minecraft.entity;
  
-+import red.mohist.Mohist;
  import com.google.common.collect.Maps;
 -import java.util.Arrays;
 -import java.util.Map;
@@ -37,7 +36,7 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.nbt.NBTTagFloat;
  import net.minecraft.nbt.NBTTagList;
-@@ -37,13 +26,7 @@
+@@ -37,13 +25,7 @@
  import net.minecraft.pathfinding.PathNavigate;
  import net.minecraft.pathfinding.PathNavigateGround;
  import net.minecraft.pathfinding.PathNodeType;
@@ -52,7 +51,7 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
  import net.minecraft.util.datafix.walkers.ItemStackDataLists;
-@@ -57,7 +40,20 @@
+@@ -57,7 +39,20 @@
  import net.minecraft.world.storage.loot.LootTable;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -73,7 +72,7 @@
  public abstract class EntityLiving extends EntityLivingBase
  {
      private static final DataParameter<Byte> AI_FLAGS = EntityDataManager.<Byte>createKey(EntityLiving.class, DataSerializers.BYTE);
-@@ -68,16 +64,16 @@
+@@ -68,16 +63,16 @@
      protected EntityJumpHelper jumpHelper;
      private final EntityBodyHelper bodyHelper;
      protected PathNavigate navigator;
@@ -95,7 +94,7 @@
      private final Map<PathNodeType, Float> mapPathPriority = Maps.newEnumMap(PathNodeType.class);
      private ResourceLocation deathLootTable;
      private long deathLootTableSeed;
-@@ -96,6 +92,7 @@
+@@ -96,6 +91,7 @@
          this.bodyHelper = this.createBodyHelper();
          this.navigator = this.createNavigator(worldIn);
          this.senses = new EntitySenses(this);
@@ -103,7 +102,7 @@
          Arrays.fill(this.inventoryArmorDropChances, 0.085F);
          Arrays.fill(this.inventoryHandsDropChances, 0.085F);
  
-@@ -171,8 +168,40 @@
+@@ -171,8 +167,37 @@
      {
          this.attackTarget = entitylivingbaseIn;
          net.minecraftforge.common.ForgeHooks.onLivingSetAttackTarget(this, entitylivingbaseIn);
@@ -116,9 +115,6 @@
 +        if (fireEvent) {
 +            if (reason == EntityTargetEvent.TargetReason.UNKNOWN && getAttackTarget() != null && entityliving == null) {
 +                reason = getAttackTarget().isEntityAlive() ? EntityTargetEvent.TargetReason.FORGOT_TARGET : EntityTargetEvent.TargetReason.TARGET_DIED;
-+            }
-+            if (reason == EntityTargetEvent.TargetReason.UNKNOWN) {
-+                Mohist.LOGGER.warn("Unknown target reason, please report on the issue tracker", new Exception());
 +            }
 +            CraftLivingEntity ctarget = null;
 +            if (entityliving != null) {
@@ -144,7 +140,7 @@
      public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
      {
          return cls != EntityGhast.class;
-@@ -447,12 +476,21 @@
+@@ -447,12 +472,21 @@
      {
          super.readEntityFromNBT(compound);
  
@@ -168,7 +164,7 @@
  
          if (compound.hasKey("ArmorItems", 9))
          {
-@@ -653,8 +691,14 @@
+@@ -653,8 +687,14 @@
              }
          }
  
@@ -185,7 +181,7 @@
              double d0;
  
              switch (entityequipmentslot.getSlotType())
-@@ -696,7 +740,7 @@
+@@ -696,7 +736,7 @@
          return true;
      }
  
@@ -194,7 +190,7 @@
      {
          return true;
      }
-@@ -722,9 +766,9 @@
+@@ -722,9 +762,9 @@
          else
          {
              Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
@@ -206,7 +202,7 @@
                  double d0 = entity.posX - this.posX;
                  double d1 = entity.posY - this.posY;
                  double d2 = entity.posZ - this.posZ;
-@@ -753,6 +797,12 @@
+@@ -753,6 +793,12 @@
          this.world.profiler.startSection("checkDespawn");
          this.despawnEntity();
          this.world.profiler.endSection();
@@ -219,7 +215,7 @@
          this.world.profiler.startSection("sensing");
          this.senses.clearSensingCache();
          this.world.profiler.endSection();
-@@ -1209,6 +1259,10 @@
+@@ -1209,6 +1255,10 @@
      {
          if (this.getLeashed() && this.getLeashHolder() == player)
          {
@@ -230,7 +226,7 @@
              this.clearLeashed(true, !player.capabilities.isCreativeMode);
              return true;
          }
-@@ -1218,6 +1272,10 @@
+@@ -1218,6 +1268,10 @@
  
              if (itemstack.getItem() == Items.LEAD && this.canBeLeashedTo(player))
              {
@@ -241,7 +237,7 @@
                  this.setLeashHolder(player, true);
                  itemstack.shrink(1);
                  return true;
-@@ -1245,11 +1303,13 @@
+@@ -1245,11 +1299,13 @@
          {
              if (!this.isEntityAlive())
              {
@@ -255,7 +251,7 @@
                  this.clearLeashed(true, true);
              }
          }
-@@ -1348,6 +1408,7 @@
+@@ -1348,6 +1404,7 @@
              }
              else
              {
@@ -263,7 +259,7 @@
                  this.clearLeashed(false, true);
              }
          }
-@@ -1448,7 +1509,6 @@
+@@ -1448,7 +1505,6 @@
          ON_GROUND,
          IN_AIR,
          IN_WATER;
