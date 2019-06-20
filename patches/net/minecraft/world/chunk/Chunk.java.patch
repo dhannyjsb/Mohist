@@ -1,7 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/Chunk.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/Chunk.java
-@@ -3,23 +3,21 @@
+@@ -1,25 +1,24 @@
+ package net.minecraft.world.chunk;
+ 
  import com.google.common.base.Predicate;
++import com.google.common.collect.ImmutableList;
  import com.google.common.collect.Maps;
  import com.google.common.collect.Queues;
 -import java.util.Arrays;
@@ -29,7 +32,7 @@
  import net.minecraft.tileentity.TileEntity;
  import net.minecraft.util.ClassInheritanceMultiMap;
  import net.minecraft.util.EnumFacing;
-@@ -40,7 +38,13 @@
+@@ -40,7 +39,14 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -37,13 +40,14 @@
  
 +import javax.annotation.Nullable;
 +import java.util.*;
++import java.util.concurrent.ConcurrentHashMap;
 +import java.util.concurrent.ConcurrentLinkedQueue;
 +import java.util.stream.Collectors;
 +
  public class Chunk implements net.minecraftforge.common.capabilities.ICapabilityProvider
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -50,13 +54,13 @@
+@@ -50,13 +56,13 @@
      private final int[] precipitationHeightMap;
      private final boolean[] updateSkylightColumns;
      private boolean loaded;
@@ -61,7 +65,7 @@
      private boolean isTerrainPopulated;
      private boolean isLightPopulated;
      private boolean ticked;
-@@ -68,7 +72,36 @@
+@@ -68,14 +74,43 @@
      private int queuedLightChecks;
      private final ConcurrentLinkedQueue<BlockPos> tileEntityPosQueue;
      public boolean unloadQueued;
@@ -98,7 +102,15 @@
      public Chunk(World worldIn, int x, int z)
      {
          this.storageArrays = new ExtendedBlockStorage[16];
-@@ -92,8 +125,13 @@
+         this.blockBiomeArray = new byte[256];
+         this.precipitationHeightMap = new int[256];
+         this.updateSkylightColumns = new boolean[256];
+-        this.tileEntities = Maps.<BlockPos, TileEntity>newHashMap();
++        this.tileEntities = new ConcurrentHashMap<BlockPos, TileEntity>();
+         this.queuedLightChecks = 4096;
+         this.tileEntityPosQueue = Queues.<BlockPos>newConcurrentLinkedQueue();
+         this.entityLists = (ClassInheritanceMultiMap[])(new ClassInheritanceMultiMap[16]);
+@@ -92,8 +127,13 @@
          Arrays.fill(this.precipitationHeightMap, -999);
          Arrays.fill(this.blockBiomeArray, (byte) - 1);
          capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
@@ -112,7 +124,7 @@
      public Chunk(World worldIn, ChunkPrimer primer, int x, int z)
      {
          this(worldIn, x, z);
-@@ -332,8 +370,8 @@
+@@ -332,8 +372,8 @@
  
      private void updateSkylightNeighborHeight(int x, int z, int startY, int endY)
      {
@@ -123,7 +135,7 @@
              for (int i = startY; i < endY; ++i)
              {
                  this.world.checkLightFor(EnumSkyBlock.SKY, new BlockPos(x, i, z));
-@@ -468,7 +506,7 @@
+@@ -468,7 +508,7 @@
      }
  
      public IBlockState getBlockState(final int x, final int y, final int z)
@@ -132,7 +144,7 @@
          if (this.world.getWorldType() == WorldType.DEBUG_ALL_BLOCK_STATES)
          {
              IBlockState iblockstate = null;
-@@ -565,12 +603,12 @@
+@@ -565,12 +605,12 @@
                  {
                      if (block1 != block) //Only fire block breaks when the block changes.
                      block1.breakBlock(this.world, pos, iblockstate);
@@ -147,7 +159,7 @@
                      if (te != null && te.shouldRefresh(this.world, pos, iblockstate, state))
                      this.world.removeTileEntity(pos);
                  }
-@@ -608,6 +646,7 @@
+@@ -608,6 +648,7 @@
                      }
                  }
  
@@ -155,7 +167,7 @@
                  // If capturing blocks, only run block physics for TE's. Non-TE's are handled in ForgeHooks.onPlaceItemIntoWorld
                  if (!this.world.isRemote && block1 != block && (!this.world.captureBlockSnapshots || block.hasTileEntity(state)))
                  {
-@@ -616,7 +655,7 @@
+@@ -616,7 +657,7 @@
  
                  if (block.hasTileEntity(state))
                  {
@@ -164,7 +176,7 @@
  
                      if (tileentity1 == null)
                      {
-@@ -743,6 +782,22 @@
+@@ -743,6 +784,22 @@
          entityIn.chunkCoordZ = this.z;
          this.entityLists[k].add(entityIn);
          this.markDirty(); // Forge - ensure chunks are marked to save after an entity add
@@ -187,7 +199,7 @@
      }
  
      public void removeEntity(Entity entityIn)
-@@ -764,6 +819,22 @@
+@@ -764,6 +821,22 @@
  
          this.entityLists[index].remove(entityIn);
          this.markDirty(); // Forge - ensure chunks are marked to save after entity removals
@@ -210,7 +222,7 @@
      }
  
      public boolean canSeeSky(BlockPos pos)
-@@ -781,11 +852,14 @@
+@@ -781,11 +854,14 @@
          Block block = iblockstate.getBlock();
          return !block.hasTileEntity(iblockstate) ? null : block.createTileEntity(this.world, iblockstate);
      }
@@ -228,7 +240,7 @@
  
          if (tileentity != null && tileentity.isInvalid())
          {
-@@ -795,12 +869,12 @@
+@@ -795,12 +871,12 @@
  
          if (tileentity == null)
          {
@@ -243,19 +255,17 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -854,17 +928,18 @@
+@@ -854,17 +930,16 @@
      {
          this.loaded = true;
          this.world.addTileEntities(this.tileEntities.values());
 -
-+        List<Entity> toAdd = new java.util.ArrayList<>(32); // Paper
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
          {
 -            this.world.loadEntities(com.google.common.collect.ImmutableList.copyOf(classinheritancemultimap));
-+            toAdd.addAll(classinheritancemultimap);
++            this.world.loadEntities(ImmutableList.copyOf(classinheritancemultimap));
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Load(this));
-+        this.world.loadEntities(toAdd); // Paper - add all at same time to avoid entities adding to world modifying slice state
      }
  
      public void onUnload()

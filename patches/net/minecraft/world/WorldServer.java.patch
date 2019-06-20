@@ -638,15 +638,15 @@
      }
  
      protected void tickPlayers()
-@@ -686,6 +857,7 @@
-         {
-             int i = this.pendingTickListEntriesTreeSet.size();
+@@ -688,13 +859,21 @@
  
-+            // TODO: Check if this condition should be always false(HashTreeSet from CB related)
              if (i != this.pendingTickListEntriesHashSet.size())
              {
-                 throw new IllegalStateException("TickNextTick list out of synch");
-@@ -694,7 +866,14 @@
+-                throw new IllegalStateException("TickNextTick list out of synch");
++                this.pendingTickListEntriesHashSet.clear();
++                this.pendingTickListEntriesHashSet.addAll(this.pendingTickListEntriesTreeSet);
+             }
+             else
              {
                  if (i > 65536)
                  {
