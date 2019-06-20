@@ -767,7 +767,7 @@ public final class CraftServer implements Server {
         }
 
         if (perms == null) {
-            Mohist.LOGGER.info( Message.getFormatString(Message.CraftBukkit_CraftServer_1, new Object[]{(file)}) );
+            Mohist.LOGGER.debug( Message.getFormatString(Message.CraftBukkit_CraftServer_1, new Object[]{(file)}) );
 
             return;
         }
