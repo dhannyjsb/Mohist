@@ -1,9 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/entity/EntityTrackerEntry.java
 +++ ../src-work/minecraft/net/minecraft/entity/EntityTrackerEntry.java
-@@ -1,72 +1,37 @@
+@@ -1,72 +1,36 @@
  package net.minecraft.entity;
  
- import com.google.common.collect.Sets;
+-import com.google.common.collect.Sets;
 -import java.util.Collection;
 -import java.util.Collections;
 -import java.util.List;
@@ -86,7 +86,7 @@
  public class EntityTrackerEntry
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -94,7 +59,7 @@
+@@ -94,10 +58,11 @@
      private boolean ridingEntity;
      private boolean onGround;
      public boolean playerEntitiesUpdated;
@@ -95,6 +95,10 @@
  
      public EntityTrackerEntry(Entity entityIn, int rangeIn, int maxRangeIn, int updateFrequencyIn, boolean sendVelocityUpdatesIn)
      {
++        entityIn.trackedEntity = this; // Paper
+         this.trackedEntity = entityIn;
+         this.range = rangeIn;
+         this.maxRange = maxRangeIn;
 @@ -148,19 +113,19 @@
          if (!list.equals(this.passengers))
          {
@@ -255,7 +259,70 @@
                      if (this.trackedEntity instanceof EntityLivingBase)
                      {
                          EntityLivingBase entitylivingbase = (EntityLivingBase)this.trackedEntity;
-@@ -491,11 +524,14 @@
+@@ -457,6 +490,7 @@
+ 
+                     this.trackedEntity.addTrackingPlayer(playerMP);
+                     playerMP.addEntity(this.trackedEntity);
++                    updatePassengers(playerMP); // Paper
+                     net.minecraftforge.event.ForgeEventFactory.onStartEntityTracking(trackedEntity, playerMP);
+                 }
+             }
+@@ -465,6 +499,7 @@
+                 this.trackingPlayers.remove(playerMP);
+                 this.trackedEntity.removeTrackingPlayer(playerMP);
+                 playerMP.removeEntity(this.trackedEntity);
++                updatePassengers(playerMP); // Paper
+                 net.minecraftforge.event.ForgeEventFactory.onStopEntityTracking(trackedEntity, playerMP);
+             }
+         }
+@@ -472,6 +507,46 @@
+ 
+     public boolean isVisibleTo(EntityPlayerMP playerMP)
+     {
++        // Paper start
++        if (trackedEntity.isRiding()) {
++            return isTrackedBy(trackedEntity.getLowestRidingEntity(), playerMP);
++        } else if (hasPassengerInRange(trackedEntity, playerMP)) {
++            return true;
++        }
++
++        return isInRangeOfPlayer(playerMP);
++    }
++    private static boolean hasPassengerInRange(Entity entity, EntityPlayerMP entityplayer) {
++        if (!entity.isBeingRidden()) {
++            return false;
++        }
++        for (Entity passenger : entity.riddenByEntities) {
++            if (passenger.trackedEntity != null && passenger.trackedEntity.isInRangeOfPlayer(entityplayer)) {
++                return true;
++            }
++            if (passenger.isBeingRidden()) {
++                if (hasPassengerInRange(passenger, entityplayer)) {
++                    return true;
++                }
++            }
++        }
++        return false;
++    }
++    private static boolean isTrackedBy(Entity entity, EntityPlayerMP entityplayer) {
++        return entity == entityplayer || entity.trackedEntity != null && entity.trackedEntity.trackingPlayers.contains(entityplayer);
++    }
++    private void updatePassengers(EntityPlayerMP player) {
++        if (trackedEntity.isBeingRidden()) {
++            trackedEntity.riddenByEntities.forEach((e) -> {
++                if (e.trackedEntity != null) {
++                    e.trackedEntity.updatePlayerEntity(player);
++                }
++            });
++            player.connection.sendPacket(new SPacketSetPassengers(this.trackedEntity));
++        }
++    }
++    private boolean isInRangeOfPlayer(EntityPlayerMP playerMP) {
++        // Paper end
+         double d0 = playerMP.posX - (double)this.encodedPosX / 4096.0D;
+         double d1 = playerMP.posZ - (double)this.encodedPosZ / 4096.0D;
+         int i = Math.min(this.range, this.maxRange);
+@@ -491,11 +566,14 @@
          }
      }
  
@@ -271,13 +338,21 @@
          }
  
          Packet pkt = net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.getEntitySpawningPacket(this.trackedEntity);
-@@ -656,7 +692,8 @@
+@@ -656,7 +734,8 @@
          }
          else
          {
 -            throw new IllegalArgumentException("Don't know how to add " + this.trackedEntity.getClass() + "!");
 +            FMLLog.log.warn(new IllegalArgumentException("Don't know how to add " + this.trackedEntity.getClass() + "!").getMessage() + "x:{}, y:{}x z:{}", this.trackedEntity.posX, this.trackedEntity.posY, this.trackedEntity.posZ);
 +            return null;
+         }
+     }
+ 
+@@ -667,6 +746,7 @@
+             this.trackingPlayers.remove(playerMP);
+             this.trackedEntity.removeTrackingPlayer(playerMP);
+             playerMP.removeEntity(this.trackedEntity);
++            updatePassengers(playerMP); // Paper
          }
      }
  

@@ -638,31 +638,134 @@
      }
  
      protected void tickPlayers()
-@@ -688,13 +859,21 @@
+@@ -682,79 +853,70 @@
+         {
+             return false;
+         }
+-        else
+-        {
++        else {
+             int i = this.pendingTickListEntriesTreeSet.size();
  
-             if (i != this.pendingTickListEntriesHashSet.size())
-             {
+-            if (i != this.pendingTickListEntriesHashSet.size())
+-            {
 -                throw new IllegalStateException("TickNextTick list out of synch");
++            if (i != this.pendingTickListEntriesHashSet.size()) {
 +                this.pendingTickListEntriesHashSet.clear();
 +                this.pendingTickListEntriesHashSet.addAll(this.pendingTickListEntriesTreeSet);
              }
-             else
-             {
-                 if (i > 65536)
-                 {
--                    i = 65536;
-+                    // i = 65536;
-+                    // CraftBukkit start - If the server has too much to process over time, try to alleviate that
-+                    if (i > 20 * 65536) {
-+                        i = i / 20;
-+                    } else {
-+                        i = 65536;
-+                    }
-+                    // CraftBukkit end
+-            else
+-            {
+-                if (i > 65536)
+-                {
++            if (i > 65536) {
++                // i = 65536;
++                // CraftBukkit start - If the server has too much to process over time, try to alleviate that
++                if (i > 20 * 65536) {
++                    i = i / 20;
++                } else {
+                     i = 65536;
+                 }
++                // CraftBukkit end
++            }
+ 
+-                this.profiler.startSection("cleaning");
++            this.profiler.startSection("cleaning");
+ 
+-                for (int j = 0; j < i; ++j)
+-                {
+-                    NextTickListEntry nextticklistentry = this.pendingTickListEntriesTreeSet.first();
++            for (int j = 0; j < i; ++j) {
++                NextTickListEntry nextticklistentry = this.pendingTickListEntriesTreeSet.first();
+ 
+-                    if (!runAllPending && nextticklistentry.scheduledTime > this.worldInfo.getWorldTotalTime())
+-                    {
+-                        break;
+-                    }
+-
+-                    this.pendingTickListEntriesTreeSet.remove(nextticklistentry);
+-                    this.pendingTickListEntriesHashSet.remove(nextticklistentry);
+-                    this.pendingTickListEntriesThisTick.add(nextticklistentry);
++                if (!runAllPending && nextticklistentry.scheduledTime > this.worldInfo.getWorldTotalTime()) {
++                    break;
                  }
  
-                 this.profiler.startSection("cleaning");
-@@ -796,7 +975,8 @@
+-                this.profiler.endSection();
+-                this.profiler.startSection("ticking");
+-                Iterator<NextTickListEntry> iterator = this.pendingTickListEntriesThisTick.iterator();
++                this.pendingTickListEntriesTreeSet.remove(nextticklistentry);
++                this.pendingTickListEntriesHashSet.remove(nextticklistentry);
++                this.pendingTickListEntriesThisTick.add(nextticklistentry);
++            }
+ 
+-                while (iterator.hasNext())
+-                {
+-                    NextTickListEntry nextticklistentry1 = iterator.next();
+-                    iterator.remove();
+-                    //Keeping here as a note for future when it may be restored.
+-                    //boolean isForced = getPersistentChunks().containsKey(new ChunkPos(nextticklistentry.xCoord >> 4, nextticklistentry.zCoord >> 4));
+-                    //byte b0 = isForced ? 0 : 8;
+-                    int k = 0;
++            this.profiler.endSection();
++            this.profiler.startSection("ticking");
++            Iterator<NextTickListEntry> iterator = this.pendingTickListEntriesThisTick.iterator();
+ 
+-                    if (this.isAreaLoaded(nextticklistentry1.position.add(0, 0, 0), nextticklistentry1.position.add(0, 0, 0)))
+-                    {
+-                        IBlockState iblockstate = this.getBlockState(nextticklistentry1.position);
++            while (iterator.hasNext()) {
++                NextTickListEntry nextticklistentry1 = iterator.next();
++                iterator.remove();
++                //Keeping here as a note for future when it may be restored.
++                //boolean isForced = getPersistentChunks().containsKey(new ChunkPos(nextticklistentry.xCoord >> 4, nextticklistentry.zCoord >> 4));
++                //byte b0 = isForced ? 0 : 8;
++                int k = 0;
+ 
+-                        if (iblockstate.getMaterial() != Material.AIR && Block.isEqualTo(iblockstate.getBlock(), nextticklistentry1.getBlock()))
+-                        {
+-                            try
+-                            {
+-                                iblockstate.getBlock().updateTick(this, nextticklistentry1.position, iblockstate, this.rand);
+-                            }
+-                            catch (Throwable throwable)
+-                            {
+-                                CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Exception while ticking a block");
+-                                CrashReportCategory crashreportcategory = crashreport.makeCategory("Block being ticked");
+-                                CrashReportCategory.addBlockInfo(crashreportcategory, nextticklistentry1.position, iblockstate);
+-                                throw new ReportedException(crashreport);
+-                            }
++                if (this.isAreaLoaded(nextticklistentry1.position.add(0, 0, 0), nextticklistentry1.position.add(0, 0, 0))) {
++                    IBlockState iblockstate = this.getBlockState(nextticklistentry1.position);
++
++                    if (iblockstate.getMaterial() != Material.AIR && Block.isEqualTo(iblockstate.getBlock(), nextticklistentry1.getBlock())) {
++                        try {
++                            iblockstate.getBlock().updateTick(this, nextticklistentry1.position, iblockstate, this.rand);
++                        } catch (Throwable throwable) {
++                            CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Exception while ticking a block");
++                            CrashReportCategory crashreportcategory = crashreport.makeCategory("Block being ticked");
++                            CrashReportCategory.addBlockInfo(crashreportcategory, nextticklistentry1.position, iblockstate);
++                            throw new ReportedException(crashreport);
+                         }
+                     }
+-                    else
+-                    {
+-                        this.scheduleUpdate(nextticklistentry1.position, nextticklistentry1.getBlock(), 0);
+-                    }
++                } else {
++                    this.scheduleUpdate(nextticklistentry1.position, nextticklistentry1.getBlock(), 0);
+                 }
+-
+-                this.profiler.endSection();
+-                this.pendingTickListEntriesThisTick.clear();
+-                return !this.pendingTickListEntriesTreeSet.isEmpty();
+             }
++            this.profiler.endSection();
++            this.pendingTickListEntriesThisTick.clear();
++            return !this.pendingTickListEntriesTreeSet.isEmpty();
+         }
+     }
+ 
+@@ -796,7 +958,8 @@
                  {
                      if (remove)
                      {
@@ -672,7 +775,7 @@
                          {
                              this.pendingTickListEntriesHashSet.remove(nextticklistentry);
                          }
-@@ -806,7 +986,7 @@
+@@ -806,7 +969,7 @@
  
                      if (list == null)
                      {
@@ -681,7 +784,7 @@
                      }
  
                      list.add(nextticklistentry);
-@@ -817,21 +997,6 @@
+@@ -817,21 +980,6 @@
          return list;
      }
  
@@ -703,7 +806,7 @@
      private boolean canSpawnNPCs()
      {
          return this.mcServer.getCanSpawnNPCs();
-@@ -845,9 +1010,62 @@
+@@ -845,9 +993,62 @@
      protected IChunkProvider createChunkProvider()
      {
          IChunkLoader ichunkloader = this.saveHandler.getChunkLoader(this.provider);
@@ -767,7 +870,7 @@
      public boolean isBlockModifiable(EntityPlayer player, BlockPos pos)
      {
          return super.isBlockModifiable(player, pos);
-@@ -929,6 +1147,23 @@
+@@ -929,6 +1130,23 @@
              int j = this.provider.getAverageGroundLevel();
              int k = 8;
  
@@ -791,7 +894,7 @@
              if (blockpos != null)
              {
                  i = blockpos.getX();
-@@ -941,7 +1176,7 @@
+@@ -941,7 +1159,7 @@
  
              int l = 0;
  
@@ -800,7 +903,7 @@
              {
                  i += random.nextInt(64) - random.nextInt(64);
                  k += random.nextInt(64) - random.nextInt(64);
-@@ -987,33 +1222,25 @@
+@@ -987,33 +1205,25 @@
      }
  
      public void saveAllChunks(boolean all, @Nullable IProgressUpdate progressCallback) throws MinecraftException
@@ -839,7 +942,7 @@
          }
      }
  
-@@ -1039,6 +1266,12 @@
+@@ -1039,6 +1249,12 @@
              }
          }
  
@@ -852,7 +955,7 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1053,9 +1286,10 @@
+@@ -1053,9 +1269,10 @@
          this.perWorldStorage.saveAllData();
      }
  
@@ -866,7 +969,7 @@
      }
  
      public void loadEntities(Collection<Entity> entityCollection)
-@@ -1074,7 +1308,6 @@
+@@ -1074,7 +1291,6 @@
      {
          if (entityIn.isDead)
          {
@@ -874,7 +977,7 @@
              return false;
          }
          else
-@@ -1085,7 +1318,7 @@
+@@ -1085,7 +1301,7 @@
              {
                  Entity entity = this.entitiesByUuid.get(uuid);
  
@@ -883,7 +986,7 @@
                  {
                      this.unloadedEntityList.remove(entity);
                  }
-@@ -1093,7 +1326,6 @@
+@@ -1093,7 +1309,6 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
@@ -891,7 +994,7 @@
                          return false;
                      }
  
-@@ -1141,9 +1373,15 @@
+@@ -1141,9 +1356,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -908,7 +1011,7 @@
              return true;
          }
          else
-@@ -1164,11 +1402,12 @@
+@@ -1164,11 +1385,12 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -925,7 +1028,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1450,8 @@
+@@ -1211,7 +1433,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -935,7 +1038,7 @@
                  }
              }
  
-@@ -1298,11 +1538,19 @@
+@@ -1298,11 +1521,19 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
