@@ -15,6 +15,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.AuthorNagException;
 import org.bukkit.plugin.EventExecutor;
+import org.bukkit.plugin.EventExecutor1;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
@@ -308,20 +309,14 @@ public class JavaPluginLoader implements PluginLoader {
                 }
             }
 
-            EventExecutor executor = new EventExecutor() {
-                public void execute(Listener listener, Event event) throws EventException {
-                    try {
-                        if (!eventClass.isAssignableFrom(event.getClass())) {
-                            return;
-                        }
-                        method.invoke(listener, event);
-                    } catch (InvocationTargetException ex) {
-                        throw new EventException(ex.getCause());
-                    } catch (Throwable t) {
-                        throw new EventException(t);
-                    }
-                }
-            };
+            EventExecutor executor;
+            try {
+                executor = EventExecutor.create(method, eventClass);
+            }
+            catch (Exception e2) {
+                executor = new EventExecutor1(method, eventClass);
+            }
+            // Spigot // Paper - Use factory method `EventExecutor.create()`
             eventSet.add(new RegisteredListener(listener, executor, eh.priority(), plugin, eh.ignoreCancelled()));
         }
         return ret;
