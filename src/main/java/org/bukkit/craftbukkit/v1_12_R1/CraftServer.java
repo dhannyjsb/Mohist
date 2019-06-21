@@ -144,6 +144,7 @@ import org.yaml.snakeyaml.error.MarkedYAMLException;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
 import red.mohist.i18n.Message;
+import red.mohist.util.CauldronHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -829,6 +830,7 @@ public final class CraftServer implements Server {
         WorldServer internal = DimensionManager.initDimension(creator, worldSettings);
 
         pluginManager.callEvent(new WorldInitEvent(internal.getWorld()));
+        CauldronHooks.craftWorldLoading = true;
         System.out.println("Preparing start region for level " + (console.worldServerList.size() - 1) + " (Seed: " + internal.getSeed() + ")");
 
         if (internal.getWorld().getKeepSpawnInMemory()) {
@@ -856,6 +858,7 @@ public final class CraftServer implements Server {
             }
         }
         pluginManager.callEvent(new WorldLoadEvent(internal.getWorld()));
+        CauldronHooks.craftWorldLoading = false;
         return internal.getWorld();
     }
 

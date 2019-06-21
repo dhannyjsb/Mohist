@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/common/DimensionManager.java
 +++ ../src-work/minecraft/net/minecraftforge/common/DimensionManager.java
-@@ -19,46 +19,30 @@
+@@ -19,46 +19,31 @@
  
  package net.minecraftforge.common;
  
@@ -53,6 +53,7 @@
 +import net.minecraftforge.fml.common.FMLCommonHandler;
 +import org.bukkit.WorldCreator;
 +import org.bukkit.generator.ChunkGenerator;
++import red.mohist.util.CauldronHooks;
  
  import javax.annotation.Nullable;
 +import java.io.File;
@@ -61,7 +62,7 @@
  
  public class DimensionManager
  {
-@@ -83,6 +67,7 @@
+@@ -83,6 +68,7 @@
      private static final IntSet usedIds = new IntOpenHashSet();
      private static final ConcurrentMap<World, World> weakWorldMap = new MapMaker().weakKeys().weakValues().makeMap();
      private static final Multiset<Integer> leakedWorlds = HashMultiset.create();
@@ -69,7 +70,7 @@
  
      /**
       * Returns a list of dimensions associated with this DimensionType.
-@@ -138,6 +123,11 @@
+@@ -138,6 +124,11 @@
          {
              usedIds.add(id);
          }
@@ -81,7 +82,7 @@
      }
  
      /**
-@@ -187,17 +177,16 @@
+@@ -187,17 +178,16 @@
                  int leakCount = leakedWorlds.count(System.identityHashCode(w));
                  if (leakCount == 5)
                  {
@@ -101,7 +102,7 @@
      public static Integer[] getIDs()
      {
          return worlds.keySet().toArray(new Integer[0]); // Only loaded dims, since usually used to cycle through loaded worlds
-@@ -209,14 +198,22 @@
+@@ -209,14 +199,22 @@
          {
              worlds.put(id, world);
              weakWorldMap.put(world, world);
@@ -126,7 +127,17 @@
          }
  
          ArrayList<WorldServer> tmp = new ArrayList<WorldServer>();
-@@ -253,16 +250,45 @@
+@@ -249,20 +247,55 @@
+         }
+         try
+         {
++            // Cauldron start - Fixes MultiVerse issue when mods such as Twilight Forest try to hotload their dimension when using its WorldProvider
++            if(CauldronHooks.craftWorldLoading)
++            {
++                return;
++            }
++            // Cauldron end
+             DimensionManager.getProviderType(dim);
          }
          catch (Exception e)
          {
@@ -175,7 +186,7 @@
          if (!mcServer.isSinglePlayer())
          {
              world.getWorldInfo().setGameType(mcServer.getGameType());
-@@ -303,7 +329,6 @@
+@@ -303,7 +336,6 @@
      {
          return dimensions.keySet().toArray(new Integer[0]);
      }
@@ -183,7 +194,7 @@
      public static WorldProvider createProviderFor(int dim)
      {
          try
-@@ -321,7 +346,7 @@
+@@ -321,7 +353,7 @@
          }
          catch (Exception e)
          {
@@ -192,7 +203,7 @@
                      dim, getProviderType(dim), e);
              throw new RuntimeException(e);
          }
-@@ -357,7 +382,7 @@
+@@ -357,7 +389,7 @@
  
          if (unloadQueue.add(id))
          {
@@ -201,7 +212,7 @@
          }
      }
  
-@@ -387,23 +412,10 @@
+@@ -387,23 +419,10 @@
              // Don't unload the world if the status changed
              if (w == null || !canUnloadWorld(w))
              {
@@ -227,7 +238,7 @@
          }
      }
  
-@@ -499,4 +511,109 @@
+@@ -499,4 +518,109 @@
              return null;
          }
      }

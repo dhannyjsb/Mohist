@@ -100,7 +100,9 @@
 -    /**
 -     * The prefix used for all system properties in TerminalConsoleAppender.
 -     */
--    public static final String PROPERTY_PREFIX = "terminal";
++
++    private static final boolean ENABLE_JLINE = PropertiesUtil.getProperties().getBooleanProperty("jline.enable", true);
+     public static final String PROPERTY_PREFIX = "terminal";
 -    /**
 -     * System property that allows overriding the default detection of the
 -     * console to force enable or force disable the use of JLine. In some
@@ -124,6 +126,7 @@
 -     */
 -    public static final String ANSI_OVERRIDE_PROPERTY = PROPERTY_PREFIX + ".ansi";
 -    public static final Boolean ANSI_OVERRIDE = getOptionalBooleanProperty(ANSI_OVERRIDE_PROPERTY);
++    private static final PrintStream out = System.out;
  
 -    /**
 -     * We grab the standard output {@link PrintStream} early, otherwise we
@@ -131,10 +134,7 @@
 -     * {@link System#out} to Log4J.
 -     */
 -    private static final PrintStream stdout = System.out;
-+    private static final boolean ENABLE_JLINE = PropertiesUtil.getProperties().getBooleanProperty("jline.enable", true);
- 
-+    private static final PrintStream out = System.out;
-+
+-
      private static boolean initialized;
 -    @Nullable
 -    private static Terminal terminal;

@@ -746,15 +746,118 @@
      public void updatePermissionLevel(EntityPlayerMP player)
      {
          GameProfile gameprofile = player.getGameProfile();
-@@ -635,14 +974,16 @@
+@@ -605,28 +944,87 @@
+         transferPlayerToDimension(player, dimensionIn, mcServer.getWorld(dimensionIn).getDefaultTeleporter());
+     }
+ 
++    public void changePlayerDimension(EntityPlayerMP player, int dimensionIn, PlayerTeleportEvent.TeleportCause cause)
++    {
++        transferPlayerToDimension(player, dimensionIn, mcServer.getWorld(dimensionIn).getDefaultTeleporter(), cause);
++    }
++
+     // TODO: Remove (1.13)
+     public void transferPlayerToDimension(EntityPlayerMP player, int dimensionIn, net.minecraft.world.Teleporter teleporter)
+     {
+-        transferPlayerToDimension(player, dimensionIn, (net.minecraftforge.common.util.ITeleporter) teleporter);
++        transferPlayerToDimension(player, dimensionIn, (net.minecraftforge.common.util.ITeleporter) teleporter, PlayerTeleportEvent.TeleportCause.MOD);
+     }
+ 
+-    public void transferPlayerToDimension(EntityPlayerMP player, int dimensionIn, net.minecraftforge.common.util.ITeleporter teleporter)
++    public void transferPlayerToDimension(EntityPlayerMP player, int dimensionIn, net.minecraftforge.common.util.ITeleporter teleporter, PlayerTeleportEvent.TeleportCause cause)
+     {
+-        int i = player.dimension;
+-        WorldServer worldserver = this.mcServer.getWorld(player.dimension);
++        // Allow Forge hotloading on teleport
++        WorldServer fromWorld = this.mcServer.getWorld(player.dimension);
++        WorldServer exitWorld = this.mcServer.getWorld(dimensionIn);
++
++        // CraftBukkit start - Replaced the standard handling of portals with a more customised method.
++        Location enter = player.getBukkitEntity().getLocation();
++        Location exit = null;
++        boolean useTravelAgent = false;
++
++        if (exitWorld != null)
++        {
++            exit = this.calculateTarget(enter, exitWorld);
++            if (cause != PlayerTeleportEvent.TeleportCause.MOD) // don't use travel agent for custom dimensions
++                 {
++                    useTravelAgent = true;
++                 }
++        }
++        // allow forge mods to be the teleporter
++        TravelAgent agent = null;
++        if (exit != null && teleporter == null)
++        {
++            teleporter = ((CraftWorld) exit.getWorld()).getHandle().getDefaultTeleporter();
++                if (teleporter instanceof TravelAgent)
++                {
++                    agent = (TravelAgent) teleporter;
++                }
++        }
++        else
++            {
++                if (teleporter instanceof TravelAgent)
++                {
++                    agent = (TravelAgent) teleporter;
++                }
++            }
++        if (agent == null) // mod teleporter such as Twilight Forest
++            {
++                agent = org.bukkit.craftbukkit.v1_12_R1.CraftTravelAgent.DEFAULT; // return arbitrary TA to compensate for implementation dependent plugins
++            }
++        PlayerPortalEvent event = new PlayerPortalEvent(player.getBukkitEntity(), enter, exit, agent, cause);
++        event.useTravelAgent(useTravelAgent);
++        Bukkit.getServer().getPluginManager().callEvent(event);
++        if (event.isCancelled() || event.getTo() == null)
++        {
++            return;
++        }
++        exit = event.useTravelAgent() && cause != PlayerTeleportEvent.TeleportCause.MOD ? event.getPortalTravelAgent().findOrCreate(event.getTo()) : event.getTo(); // make sure plugins don't override travelagent for mods
++        if (exit == null)
++        {
++            return;
++        }
++        exitWorld = ((CraftWorld) exit.getWorld()).getHandle();
++        Vector velocity = player.getBukkitEntity().getVelocity();
++        boolean before = exitWorld.getChunkProvider().loadChunkOnProvideRequest;
++        exitWorld.getChunkProvider().loadChunkOnProvideRequest = true;
++        exitWorld.getDefaultTeleporter().adjustExit(player, exit, velocity);
++        exitWorld.getChunkProvider().loadChunkOnProvideRequest = before;
++        // CraftBukkit end
++
+         player.dimension = dimensionIn;
+-        WorldServer worldserver1 = this.mcServer.getWorld(player.dimension);
+-        player.connection.sendPacket(new SPacketRespawn(player.dimension, worldserver1.getDifficulty(), worldserver1.getWorldInfo().getTerrainType(), player.interactionManager.getGameType())); // Forge: Use new dimensions information
+-        this.updatePermissionLevel(player);
+-        worldserver.removeEntityDangerously(player);
++        player.connection.sendPacket(new SPacketRespawn(player.dimension, player.getEntityWorld().getDifficulty(), player.getEntityWorld().getWorldInfo().getTerrainType(), player.interactionManager.getGameType()));
++        fromWorld.removeEntityDangerously(player);
+         player.isDead = false;
+-        this.transferEntityToWorld(player, i, worldserver, worldserver1, teleporter);
+-        this.preparePlayer(player, worldserver);
+-        player.connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+-        player.interactionManager.setWorld(worldserver1);
+-        player.connection.sendPacket(new SPacketPlayerAbilities(player.capabilities));
+-        this.updateTimeAndWeatherForPlayer(player, worldserver1);
++        this.transferEntityToWorld(player, fromWorld.provider.getDimension(), fromWorld, exitWorld, teleporter);
++        this.preparePlayer(player, fromWorld);
++        player.connection.setPlayerLocation(player.posX, player.posY, player.posZ,
++                player.rotationYaw, player.rotationPitch);
++        player.interactionManager.setWorld(exitWorld);
++        this.updateTimeAndWeatherForPlayer(player, exitWorld);
+         this.syncPlayerInventory(player);
+ 
+         for (PotionEffect potioneffect : player.getActivePotionEffects())
+@@ -635,14 +1033,16 @@
          }
          // Fix MC-88179: on non-death SPacketRespawn, also resend attributes
          net.minecraft.entity.ai.attributes.AttributeMap attributemap = (net.minecraft.entity.ai.attributes.AttributeMap) player.getAttributeMap();
 -        java.util.Collection<net.minecraft.entity.ai.attributes.IAttributeInstance> watchedAttribs = attributemap.getWatchedAttributes();
 -        if (!watchedAttribs.isEmpty()) player.connection.sendPacket(new net.minecraft.network.play.server.SPacketEntityProperties(player.getEntityId(), watchedAttribs));
+-        net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, i, dimensionIn);
 +        Collection<net.minecraft.entity.ai.attributes.IAttributeInstance> watchedAttribs = attributemap.getWatchedAttributes();
 +        if (!watchedAttribs.isEmpty()) player.connection.sendPacket(new SPacketEntityProperties(player.getEntityId(), watchedAttribs));
-         net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, i, dimensionIn);
++        net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, fromWorld.dimension, dimensionIn);
      }
  
      public void transferEntityToWorld(Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn)
@@ -766,7 +869,7 @@
      }
  
      // TODO: Remove (1.13)
-@@ -729,11 +1070,155 @@
+@@ -729,11 +1129,155 @@
          entityIn.setWorld(toWorldIn);
      }
  
@@ -923,7 +1026,7 @@
              this.playerPingIndex = 0;
          }
      }
-@@ -746,6 +1231,24 @@
+@@ -746,6 +1290,24 @@
          }
      }
  
@@ -948,7 +1051,7 @@
      public void sendPacketToAllPlayersInDimension(Packet<?> packetIn, int dimension)
      {
          for (int i = 0; i < this.playerEntityList.size(); ++i)
-@@ -861,12 +1364,20 @@
+@@ -861,12 +1423,20 @@
          int i = this.mcServer.getOpPermissionLevel();
          this.ops.addEntry(new UserListOpsEntry(profile, this.mcServer.getOpPermissionLevel(), this.ops.bypassesPlayerLimit(profile)));
          this.sendPlayerPermissionLevel(this.getPlayerByUUID(profile.getId()), i);
@@ -969,7 +1072,7 @@
      }
  
      private void sendPlayerPermissionLevel(EntityPlayerMP player, int permLevel)
-@@ -918,11 +1429,33 @@
+@@ -918,11 +1488,33 @@
  
      public void sendToAllNearExcept(@Nullable EntityPlayer except, double x, double y, double z, double radius, int dimension, Packet<?> packetIn)
      {
@@ -1007,7 +1110,7 @@
              {
                  double d0 = x - entityplayermp.posX;
                  double d1 = y - entityplayermp.posY;
-@@ -938,12 +1471,24 @@
+@@ -938,12 +1530,24 @@
  
      public void saveAllPlayerData()
      {
@@ -1036,7 +1139,7 @@
      public void addWhitelistedPlayer(GameProfile profile)
      {
          this.whiteListedPlayers.addEntry(new UserListWhitelistEntry(profile));
-@@ -988,16 +1533,21 @@
+@@ -988,16 +1592,21 @@
  
          if (worldIn.isRaining())
          {
@@ -1062,7 +1165,7 @@
          playerIn.connection.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
      }
  
-@@ -1079,17 +1629,26 @@
+@@ -1079,17 +1688,26 @@
  
      public void removeAllPlayers()
      {
@@ -1093,7 +1196,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -1097,10 +1656,19 @@
+@@ -1097,10 +1715,19 @@
          this.sendMessage(component, true);
      }
  
@@ -1115,7 +1218,7 @@
  
          if (statisticsmanagerserver == null)
          {
-@@ -1119,7 +1687,7 @@
+@@ -1119,7 +1746,7 @@
  
              statisticsmanagerserver = new StatisticsManagerServer(this.mcServer, file2);
              statisticsmanagerserver.readStatFile();
@@ -1124,7 +1227,7 @@
          }
  
          return statisticsmanagerserver;
-@@ -1128,14 +1696,14 @@
+@@ -1128,14 +1755,14 @@
      public PlayerAdvancements getPlayerAdvancements(EntityPlayerMP p_192054_1_)
      {
          UUID uuid = p_192054_1_.getUniqueID();
@@ -1141,7 +1244,7 @@
          }
  
          playeradvancements.setPlayer(p_192054_1_);
-@@ -1148,7 +1716,7 @@
+@@ -1148,7 +1775,7 @@
  
          if (this.mcServer.worlds != null)
          {
@@ -1150,7 +1253,7 @@
              {
                  if (worldserver != null)
                  {
-@@ -1176,9 +1744,10 @@
+@@ -1176,9 +1803,10 @@
  
      public void reloadResources()
      {
