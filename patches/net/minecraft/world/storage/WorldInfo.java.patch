@@ -1,56 +1,41 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/WorldInfo.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/WorldInfo.java
-@@ -1,27 +1,28 @@
- package net.minecraft.world.storage;
- 
- import com.google.common.collect.Maps;
--import java.util.Map;
--import java.util.Map.Entry;
--import javax.annotation.Nullable;
+@@ -6,7 +6,10 @@
+ import javax.annotation.Nullable;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.crash.ICrashReportDetail;
++import net.minecraft.entity.player.EntityPlayer;
 +import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.nbt.NBTTagCompound;
 +import net.minecraft.network.play.server.SPacketServerDifficulty;
  import net.minecraft.server.MinecraftServer;
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
- import net.minecraft.util.datafix.IDataFixer;
- import net.minecraft.util.datafix.IDataWalker;
- import net.minecraft.util.math.BlockPos;
--import net.minecraft.world.DimensionType;
--import net.minecraft.world.EnumDifficulty;
--import net.minecraft.world.GameRules;
--import net.minecraft.world.GameType;
--import net.minecraft.world.WorldSettings;
--import net.minecraft.world.WorldType;
-+import net.minecraft.world.*;
+@@ -17,10 +20,14 @@
+ import net.minecraft.world.EnumDifficulty;
+ import net.minecraft.world.GameRules;
+ import net.minecraft.world.GameType;
++import net.minecraft.world.WorldServer;
+ import net.minecraft.world.WorldSettings;
+ import net.minecraft.world.WorldType;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.Bukkit;
 +import org.bukkit.event.weather.ThunderChangeEvent;
 +import org.bukkit.event.weather.WeatherChangeEvent;
  
-+import javax.annotation.Nullable;
-+import java.util.Map;
-+import java.util.Map.Entry;
-+
  public class WorldInfo
  {
-     private String versionName;
-@@ -65,8 +66,10 @@
-     private int borderWarningTime = 15;
-     private final Map<Integer, NBTTagCompound> dimensionData = Maps.newHashMap();
+@@ -67,6 +74,8 @@
      private GameRules gameRules = new GameRules();
--    private java.util.Map<String, net.minecraft.nbt.NBTBase> additionalProperties;
-+    private Map<String, net.minecraft.nbt.NBTBase> additionalProperties;
+     private java.util.Map<String, net.minecraft.nbt.NBTBase> additionalProperties;
  
 +    public WorldServer world;
 +
      protected WorldInfo()
      {
      }
-@@ -161,6 +164,7 @@
+@@ -161,6 +170,7 @@
          this.thunderTime = nbt.getInteger("thunderTime");
          this.thundering = nbt.getBoolean("thundering");
          this.hardcore = nbt.getBoolean("hardcore");
@@ -58,7 +43,7 @@
  
          if (nbt.hasKey("initialized", 99))
          {
-@@ -376,6 +380,7 @@
+@@ -376,6 +386,7 @@
  
          nbt.setBoolean("DifficultyLocked", this.difficultyLocked);
          nbt.setTag("GameRules", this.gameRules.writeToNBT());
@@ -66,7 +51,7 @@
          NBTTagCompound nbttagcompound1 = new NBTTagCompound();
  
          for (Entry<Integer, NBTTagCompound> entry : this.dimensionData.entrySet())
-@@ -511,6 +516,14 @@
+@@ -511,6 +522,14 @@
  
      public void setThundering(boolean thunderingIn)
      {
@@ -81,7 +66,7 @@
          this.thundering = thunderingIn;
      }
  
-@@ -531,6 +544,14 @@
+@@ -531,6 +550,14 @@
  
      public void setRaining(boolean isRaining)
      {
@@ -96,27 +81,20 @@
          this.raining = isRaining;
      }
  
-@@ -712,6 +733,10 @@
+@@ -712,6 +739,12 @@
      public void setDifficulty(EnumDifficulty newDifficulty)
      {
          net.minecraftforge.common.ForgeHooks.onDifficultyChange(newDifficulty, this.difficulty);
 +        SPacketServerDifficulty packet = new SPacketServerDifficulty(this.getDifficulty(), this.isDifficultyLocked());
-+        for (EntityPlayerMP player :(java.util.List<EntityPlayerMP>) (java.util.List) world.playerEntities) {
-+            player.connection.sendPacket(packet);
++        for (EntityPlayer player : world.playerEntities) {
++            if (player != null) {
++                ((EntityPlayerMP) player).connection.sendPacket(packet);
++            }
 +        }
          this.difficulty = newDifficulty;
      }
  
-@@ -815,7 +840,7 @@
-      * Used by Forge to store the dimensions available to a world
-      * @param additionalProperties
-      */
--    public void setAdditionalProperties(java.util.Map<String,net.minecraft.nbt.NBTBase> additionalProperties)
-+    public void setAdditionalProperties(Map<String,net.minecraft.nbt.NBTBase> additionalProperties)
-     {
-         // one time set for this
-         if (this.additionalProperties == null)
-@@ -869,4 +894,29 @@
+@@ -869,4 +902,29 @@
      {
          return this.versionName;
      }
