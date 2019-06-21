@@ -33,35 +33,6 @@ public class Mohist implements Runnable{
     }
 
     public static void main(String[] args){
-        /*
-        File f = new File("mohist.yml");
-        YamlConfiguration y;
-        if(!f.exists()){
-            try {
-                f.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        y = YamlConfiguration.loadConfiguration(f);
-        if(y.getString("locale") == null){
-            y.set("locale","Default");
-            try {
-                y.save(f);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            y = YamlConfiguration.loadConfiguration(f);
-        }
-        switch (y.getString("locale")){
-            default:
-                rb = ResourceBundle.getBundle("assets.mohist.lang.message", Locale.getDefault(), new UTF8Control());
-            case "Default":
-                rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(y.getString("locale")), new UTF8Control());
-            case "default":
-                rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(y.getString("locale")), new UTF8Control());
-        }
-        */
         Mohist.args = args;
         Thread t = new Thread(new Mohist(),"Mohist");
         t.start();
