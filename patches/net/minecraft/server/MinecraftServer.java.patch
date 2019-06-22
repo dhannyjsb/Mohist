@@ -999,6 +999,15 @@
      }
  
      public String getName()
+@@ -953,7 +1101,7 @@
+         LOGGER.info(component.getUnformattedText());
+     }
+ 
+-    public boolean canUseCommand(int permLevel, String commandName)
++    public boolean canUseCommand(int permLevel, String commandName, String perm)
+     {
+         return true;
+     }
 @@ -993,13 +1141,11 @@
          this.folderName = name;
      }
