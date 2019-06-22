@@ -7,7 +7,7 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import org.bukkit.craftbukkit.v1_12_R1.util.AsynchronousExecutor;
 
 public class ChunkIOExecutor {
-    static final int BASE_THREADS = 1;
+    static final int BASE_THREADS = 2;
     static final int PLAYERS_PER_THREAD = 50;
 
     private static final AsynchronousExecutor<QueuedChunk, Chunk, Runnable, RuntimeException> instance = new AsynchronousExecutor<QueuedChunk, Chunk, Runnable, RuntimeException>(new ChunkIOProvider(), BASE_THREADS);
