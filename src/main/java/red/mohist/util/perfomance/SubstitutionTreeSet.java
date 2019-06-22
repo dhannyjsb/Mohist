@@ -45,6 +45,6 @@ public class SubstitutionTreeSet<N> extends TreeSet
             return new SubstitutionTreeSet<NextTickListEntry>(worldServer);
         }
 
-        return new TreeSet<NextTickListEntry>();
+        return new SafetyTreeSet();
     }
 }
