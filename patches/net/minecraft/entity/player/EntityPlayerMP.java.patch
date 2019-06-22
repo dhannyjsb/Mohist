@@ -800,9 +800,12 @@
          this.interactionManager.setGameType(gameType);
          this.connection.sendPacket(new SPacketChangeGameState(3, (float)gameType.getID()));
  
-@@ -1280,34 +1492,15 @@
+@@ -1278,36 +1490,22 @@
+         this.connection.sendPacket(new SPacketChat(component));
+     }
  
-     public boolean canUseCommand(int permLevel, String commandName)
+-    public boolean canUseCommand(int permLevel, String commandName)
++    public boolean canUseCommand(int permLevel, String commandName, String perm)
      {
 -        if ("seed".equals(commandName) && !this.mcServer.isDedicatedServer())
 -        {
@@ -834,15 +837,18 @@
 +            return getBukkitEntity().isOp();
          }
 -        else
--        {
++        if (!perm.equals("minecraft"))
+         {
 -            return true;
--        }
++        	return getBukkitEntity().hasPermission(perm);
+         }
 +        return getBukkitEntity().hasPermission("minecraft.command." + commandName);
++        
 +        // CraftBukkit end
      }
  
      public String getPlayerIP()
-@@ -1320,6 +1513,14 @@
+@@ -1320,6 +1518,14 @@
  
      public void handleClientSettings(CPacketClientSettings packetIn)
      {
@@ -857,7 +863,7 @@
          this.language = packetIn.getLang();
          this.chatVisibility = packetIn.getChatVisibility();
          this.chatColours = packetIn.isColorsEnabled();
-@@ -1327,7 +1528,7 @@
+@@ -1327,7 +1533,7 @@
          this.getDataManager().set(MAIN_HAND, Byte.valueOf((byte)(packetIn.getMainHand() == EnumHandSide.LEFT ? 0 : 1)));
      }
  
@@ -866,7 +872,7 @@
      {
          return this.chatVisibility;
      }
-@@ -1402,7 +1603,7 @@
+@@ -1402,7 +1608,7 @@
          if (entity != this.spectatingEntity)
          {
              this.connection.sendPacket(new SPacketCamera(this.spectatingEntity));
@@ -875,7 +881,7 @@
          }
      }
  
-@@ -1434,7 +1635,8 @@
+@@ -1434,7 +1640,8 @@
      @Nullable
      public ITextComponent getTabListDisplayName()
      {
@@ -885,7 +891,7 @@
      }
  
      public void swingArm(EnumHand hand)
-@@ -1455,13 +1657,16 @@
+@@ -1455,13 +1662,16 @@
  
      public void setElytraFlying()
      {
@@ -905,7 +911,7 @@
      }
  
      public PlayerAdvancements getAdvancements()
-@@ -1474,4 +1679,145 @@
+@@ -1474,4 +1684,145 @@
      {
          return this.enteredNetherPosition;
      }

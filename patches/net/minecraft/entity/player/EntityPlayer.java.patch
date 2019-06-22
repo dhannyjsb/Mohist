@@ -703,6 +703,15 @@
      {
          this.dataManager.set(RIGHT_SHOULDER_ENTITY, tag);
      }
+@@ -2531,7 +2676,7 @@
+ 
+     public boolean canUseCommandBlock()
+     {
+-        return this.capabilities.isCreativeMode && this.canUseCommand(2, "");
++        return this.capabilities.isCreativeMode && this.canUseCommand(2, "", "minecraft");
+     }
+ 
+     /**
 @@ -2671,7 +2816,7 @@
      @SuppressWarnings("unchecked")
      @Override

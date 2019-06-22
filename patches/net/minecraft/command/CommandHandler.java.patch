@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/command/CommandHandler.java
 +++ ../src-work/minecraft/net/minecraft/command/CommandHandler.java
-@@ -14,8 +14,13 @@
+@@ -14,28 +14,30 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.text.TextComponentTranslation;
  import net.minecraft.util.text.TextFormatting;
@@ -14,7 +14,12 @@
  
  public abstract class CommandHandler implements ICommandManager
  {
-@@ -27,15 +32,11 @@
+     private static final Logger LOGGER = LogManager.getLogger();
+     private final Map<String, ICommand> commandMap = Maps.<String, ICommand>newHashMap();
++    private final Map<String, ICommand> commandMod = Maps.<String, ICommand>newHashMap();
+     private final Set<ICommand> commandSet = Sets.<ICommand>newHashSet();
+ 
+     public int executeCommand(ICommandSender sender, String rawCommand)
      {
          rawCommand = rawCommand.trim();
  
@@ -31,27 +36,35 @@
          int i = 0;
  
          try
-@@ -146,16 +147,32 @@
+@@ -146,16 +148,40 @@
  
      public ICommand registerCommand(ICommand command)
      {
 -        this.commandMap.put(command.getName(), command);
 -        this.commandSet.add(command);
-+        String pre = command.getClass().getName().substring(command.getClass().getName().lastIndexOf('.')+1).toLowerCase() + "." + command.getName();
-+        return registerCommand(command, pre);
-+    }
- 
+-
 -        for (String s : command.getAliases())
--        {
++        String pre = command.getClass().getName().substring(command.getClass().getName().lastIndexOf('.')+1).toLowerCase() + "." + command.getName();
++        if (command instanceof CommandBase)
+         {
 -            ICommand icommand = this.commandMap.get(s);
-+    public ICommand registerCommand(String permissionGroup, ICommand par1ICommand)
-+    {
-+        return registerCommand(par1ICommand, permissionGroup + "." + par1ICommand.getName());
++        	if (!((CommandBase)command).permissionNode.equals("minecraft"))
++        	{
++        		pre = ((CommandBase)command).permissionNode;
++        		this.commandMod.put(command.getName(), command);
++        	}
++        }
++        return registerCommand(command, pre);
 +    }
  
 -            if (icommand == null || !icommand.getName().equals(s))
 -            {
 -                this.commandMap.put(s, command);
++    public ICommand registerCommand(String permissionGroup, ICommand par1ICommand)
++    {
++        return registerCommand(par1ICommand, permissionGroup + "." + par1ICommand.getName());
++    }
++
 +    public ICommand registerCommand(ICommand command, String permissionNode) {
 +        List<String> list = command.getAliases();
 +        this.commandMap.put(command.getName(), command);
@@ -72,3 +85,15 @@
              }
          }
  
+@@ -223,6 +249,11 @@
+     {
+         return this.commandMap;
+     }
++    
++    public Map<String, ICommand> getCommandMod()
++    {
++        return this.commandMod;
++    }
+ 
+     private int getUsernameIndex(ICommand command, String[] args) throws CommandException
+     {

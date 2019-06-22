@@ -1005,6 +1005,15 @@
      }
  
      public float getEyeHeight()
+@@ -2865,7 +3152,7 @@
+     {
+     }
+ 
+-    public boolean canUseCommand(int permLevel, String commandName)
++    public boolean canUseCommand(int permLevel, String commandName, String perm)
+     {
+         return true;
+     }
 @@ -2897,11 +3184,11 @@
  
      public void setCommandStat(CommandResultStats.Type type, int amount)

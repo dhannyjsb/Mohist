@@ -36,6 +36,15 @@
          this.stats.writeStatsToNBT(compound);
          return compound;
      }
+@@ -57,7 +63,7 @@
+             {
+                 return "Sign";
+             }
+-            public boolean canUseCommand(int permLevel, String commandName)
++            public boolean canUseCommand(int permLevel, String commandName, String perm)
+             {
+                 return permLevel <= 2; //Forge: Fixes  MC-75630 - Exploit with signs and command blocks
+             }
 @@ -79,19 +85,38 @@
              }
          };
@@ -81,6 +90,15 @@
          }
  
          this.stats.readStatsFromNBT(compound);
+@@ -154,7 +179,7 @@
+             public void sendMessage(ITextComponent component)
+             {
+             }
+-            public boolean canUseCommand(int permLevel, String commandName)
++            public boolean canUseCommand(int permLevel, String commandName, String perm)
+             {
+                 return permLevel <= 2;
+             }
 @@ -201,7 +226,12 @@
  
                  if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)

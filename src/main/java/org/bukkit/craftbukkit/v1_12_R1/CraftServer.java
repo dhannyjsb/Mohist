@@ -374,6 +374,7 @@ public final class CraftServer implements Server {
             CraftDefaultPermissions.registerCorePermissions();
             helpMap.initializeCommands();
         }
+       
     }
 
     @Override
@@ -389,6 +390,8 @@ public final class CraftServer implements Server {
         Map<String, ICommand> commands = console.getCommandManager().getCommands();
         for (ICommand cmd : commands.values()) {
             // Spigot start
+        	if (console.getCommandManager().getCommandMod().containsValue(cmd))
+        		continue;
             VanillaCommandWrapper wrapper = new VanillaCommandWrapper((CommandBase) cmd, I18n.translateToLocal(cmd.getUsage(null)));
             if (org.spigotmc.SpigotConfig.replaceCommands.contains(wrapper.getName())) {
                 if (first) {
