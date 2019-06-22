@@ -695,13 +695,13 @@
 +    protected boolean damageEntity_CB(final DamageSource damagesource, float f) { // void -> boolean, add final
 +        if (!this.isEntityInvulnerable(damagesource)) {
 +            final boolean human = this instanceof EntityPlayer;
-+            float originalDamage = f;
-+
-+            f = ForgeHooks.onLivingHurt(this, damagesource, f);
-+            if (f < 1) {
-+                return true;
++            f = net.minecraftforge.common.ForgeHooks.onLivingHurt(this, damagesource, f);
++            if (f < 0) return true;
++            if (human) {
++                f = net.minecraftforge.common.ISpecialArmor.ArmorProperties.applyArmor(this, ((EntityPlayer)this).inventory.armorInventory, damagesource, f);
++                if (f <= 0) return false;
              }
-+
++            float originalDamage = f;
 +            Function<Double, Double> hardHat = new Function<Double, Double>() {
 +                @Override
 +                public Double apply(Double f) {
@@ -815,8 +815,8 @@
 +                }
 +                // CraftBukkit end
 +                float f2 = this.getHealth();
-+                this.getCombatTracker().trackDamage(damagesource, f2, f);
 +                this.setHealth(f2 - f);
++                this.getCombatTracker().trackDamage(damagesource, f2, f);
 +                // CraftBukkit start
 +                if (!human) {
 +                    this.setAbsorptionAmount(this.getAbsorptionAmount() - f);
