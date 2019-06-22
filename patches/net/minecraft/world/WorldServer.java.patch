@@ -69,7 +69,7 @@
  import net.minecraft.village.VillageCollection;
  import net.minecraft.village.VillageSiege;
  import net.minecraft.world.biome.Biome;
-@@ -77,16 +44,26 @@
+@@ -77,19 +44,32 @@
  import net.minecraft.world.storage.WorldInfo;
  import net.minecraft.world.storage.WorldSavedDataCallableSave;
  import net.minecraft.world.storage.loot.LootTableManager;
@@ -81,6 +81,9 @@
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.event.entity.CreatureSpawnEvent;
 +import org.bukkit.event.weather.LightningStrikeEvent;
++import red.mohist.MohistConfig;
++import red.mohist.util.perfomance.SubstitutionArrayList;
++import red.mohist.util.perfomance.SubstitutionTreeSet;
  
 +import javax.annotation.Nullable;
 +import java.io.File;
@@ -96,17 +99,22 @@
 +    public EntityTracker entityTracker;
      private final PlayerChunkMap playerChunkMap;
      private final Set<NextTickListEntry> pendingTickListEntriesHashSet = Sets.<NextTickListEntry>newHashSet();
-     private final TreeSet<NextTickListEntry> pendingTickListEntriesTreeSet = new TreeSet<NextTickListEntry>();
-@@ -97,7 +74,7 @@
+-    private final TreeSet<NextTickListEntry> pendingTickListEntriesTreeSet = new TreeSet<NextTickListEntry>();
++    private final TreeSet<NextTickListEntry> pendingTickListEntriesTreeSet = SubstitutionTreeSet.getSubstitutionTreeSet(this); //Goodvise code replace
+     private final Map<UUID, Entity> entitiesByUuid = Maps.<UUID, Entity>newHashMap();
+     public boolean disableLevelSaving;
+     private boolean allPlayersSleeping;
+@@ -97,39 +77,77 @@
      private final Teleporter worldTeleporter;
      private final WorldEntitySpawner entitySpawner = new WorldEntitySpawner();
      protected final VillageSiege villageSiege = new VillageSiege(this);
 -    private final WorldServer.ServerBlockEventList[] blockEventQueue = new WorldServer.ServerBlockEventList[] {new WorldServer.ServerBlockEventList(), new WorldServer.ServerBlockEventList()};
 +    private final ServerBlockEventList[] blockEventQueue = new ServerBlockEventList[] {new ServerBlockEventList(), new ServerBlockEventList()};
      private int blockEventCacheIndex;
-     private final List<NextTickListEntry> pendingTickListEntriesThisTick = Lists.<NextTickListEntry>newArrayList();
+-    private final List<NextTickListEntry> pendingTickListEntriesThisTick = Lists.<NextTickListEntry>newArrayList();
++    private final List<NextTickListEntry> pendingTickListEntriesThisTick = SubstitutionArrayList.getSubstitutionArrayList(this); //Goodvise code replace
  
-@@ -105,31 +82,69 @@
+     /** Stores the recently processed (lighting) chunks */
      protected Set<ChunkPos> doneChunks = new java.util.HashSet<ChunkPos>();
      public List<Teleporter> customTeleporters = new ArrayList<Teleporter>();
  
@@ -180,7 +188,7 @@
          if (villagecollection == null)
          {
              this.villageCollection = new VillageCollection(this);
-@@ -140,20 +155,31 @@
+@@ -140,20 +158,31 @@
              this.villageCollection = villagecollection;
              this.villageCollection.setWorldsForAll(this);
          }
@@ -221,7 +229,7 @@
          this.functionManager = new FunctionManager(new File(new File(this.saveHandler.getWorldDirectory(), "data"), "functions"), this.mcServer);
          this.getWorldBorder().setCenter(this.worldInfo.getBorderCenterX(), this.worldInfo.getBorderCenterZ());
          this.getWorldBorder().setDamageAmount(this.worldInfo.getBorderDamagePerBlock());
-@@ -171,9 +197,145 @@
+@@ -171,9 +200,145 @@
          }
  
          this.initCapabilities();
@@ -367,7 +375,7 @@
      public void tick()
      {
          super.tick();
-@@ -198,9 +360,12 @@
+@@ -198,9 +363,12 @@
  
          this.profiler.startSection("mobSpawner");
  
@@ -382,7 +390,7 @@
          }
  
          this.profiler.endStartSection("chunkSource");
-@@ -212,7 +377,7 @@
+@@ -212,7 +380,7 @@
              this.setSkylightSubtracted(j);
          }
  
@@ -391,7 +399,7 @@
  
          if (this.getGameRules().getBoolean("doDaylightCycle"))
          {
-@@ -236,6 +401,7 @@
+@@ -236,6 +404,7 @@
          }
          this.profiler.endSection();
          this.sendQueuedBlockEvents();
@@ -399,7 +407,7 @@
      }
  
      @Nullable
-@@ -243,7 +409,7 @@
+@@ -243,7 +412,7 @@
      {
          List<Biome.SpawnListEntry> list = this.getChunkProvider().getPossibleCreatures(creatureType, pos);
          list = net.minecraftforge.event.ForgeEventFactory.getPotentialSpawns(this, creatureType, pos, list);
@@ -408,7 +416,7 @@
      }
  
      public boolean canCreatureTypeSpawnHere(EnumCreatureType creatureType, Biome.SpawnListEntry spawnListEntry, BlockPos pos)
-@@ -268,7 +434,7 @@
+@@ -268,7 +437,7 @@
                  {
                      ++i;
                  }
@@ -417,7 +425,7 @@
                  {
                      ++j;
                  }
-@@ -298,19 +464,26 @@
+@@ -298,19 +467,26 @@
          this.provider.resetRainAndThunder();
      }
  
@@ -446,7 +454,7 @@
          }
          else
          {
-@@ -346,7 +519,7 @@
+@@ -346,7 +522,7 @@
          this.worldInfo.setSpawnZ(j);
      }
  
@@ -455,7 +463,7 @@
      {
          return this.getChunkProvider().chunkExists(x, z);
      }
-@@ -355,7 +528,7 @@
+@@ -355,7 +531,7 @@
      {
          this.profiler.startSection("playerCheckLight");
  
@@ -464,7 +472,7 @@
          {
              int i = this.rand.nextInt(this.playerEntities.size());
              EntityPlayer entityplayer = this.playerEntities.get(i);
-@@ -392,97 +565,94 @@
+@@ -392,97 +568,94 @@
              {
                  this.profiler.startSection("getChunk");
                  Chunk chunk = iterator.next();
@@ -630,7 +638,7 @@
              this.profiler.endSection();
          }
      }
-@@ -611,6 +781,7 @@
+@@ -611,6 +784,7 @@
  
          this.provider.onWorldUpdateEntities();
          super.updateEntities();
@@ -638,7 +646,7 @@
      }
  
      protected void tickPlayers()
-@@ -682,79 +853,70 @@
+@@ -682,79 +856,70 @@
          {
              return false;
          }
@@ -765,7 +773,20 @@
          }
      }
  
-@@ -796,7 +958,8 @@
+@@ -766,6 +931,12 @@
+         int j = i + 16 + 2;
+         int k = (chunkpos.z << 4) - 2;
+         int l = k + 16 + 2;
++
++        if (MohistConfig.useChunksMapForPendingBlocks)
++        {
++            return getPendingBlockUpdatesForSave(chunkIn, remove);
++        }
++
+         return this.getPendingBlockUpdates(new StructureBoundingBox(i, 0, k, j, 256, l), remove);
+     }
+ 
+@@ -796,7 +967,8 @@
                  {
                      if (remove)
                      {
@@ -775,7 +796,7 @@
                          {
                              this.pendingTickListEntriesHashSet.remove(nextticklistentry);
                          }
-@@ -806,7 +969,7 @@
+@@ -806,7 +978,7 @@
  
                      if (list == null)
                      {
@@ -784,7 +805,7 @@
                      }
  
                      list.add(nextticklistentry);
-@@ -817,21 +980,6 @@
+@@ -817,21 +989,6 @@
          return list;
      }
  
@@ -806,7 +827,7 @@
      private boolean canSpawnNPCs()
      {
          return this.mcServer.getCanSpawnNPCs();
-@@ -845,9 +993,62 @@
+@@ -845,9 +1002,62 @@
      protected IChunkProvider createChunkProvider()
      {
          IChunkLoader ichunkloader = this.saveHandler.getChunkLoader(this.provider);
@@ -815,7 +836,7 @@
 +        if (this.provider.getClass().toString().length() <= 3 || this.provider.getClass().toString().contains("net.minecraft")) {
 +            // CraftBukkit start
 +            org.bukkit.craftbukkit.v1_12_R1.generator.InternalChunkGenerator gen;
-+    
++
 +            if (this.generator != null) {
 +                gen = new org.bukkit.craftbukkit.v1_12_R1.generator.CustomChunkGenerator(this, this.getSeed(), this.generator);
 +            } else if (this.provider instanceof WorldProviderHell) {
@@ -825,7 +846,7 @@
 +            } else {
 +                gen = new org.bukkit.craftbukkit.v1_12_R1.generator.NormalChunkGenerator(this, this.getSeed());
 +            }
-+    
++
 +            this.chunkProvider = new ChunkProviderServer(this, ichunkloader, gen);
 +            // CraftBukkit end
 +        } else { // custom provider, load normally for forge compatibility
@@ -870,7 +891,7 @@
      public boolean isBlockModifiable(EntityPlayer player, BlockPos pos)
      {
          return super.isBlockModifiable(player, pos);
-@@ -929,6 +1130,23 @@
+@@ -929,6 +1139,23 @@
              int j = this.provider.getAverageGroundLevel();
              int k = 8;
  
@@ -894,7 +915,7 @@
              if (blockpos != null)
              {
                  i = blockpos.getX();
-@@ -941,7 +1159,7 @@
+@@ -941,7 +1168,7 @@
  
              int l = 0;
  
@@ -903,7 +924,7 @@
              {
                  i += random.nextInt(64) - random.nextInt(64);
                  k += random.nextInt(64) - random.nextInt(64);
-@@ -987,33 +1205,25 @@
+@@ -987,33 +1214,25 @@
      }
  
      public void saveAllChunks(boolean all, @Nullable IProgressUpdate progressCallback) throws MinecraftException
@@ -942,7 +963,7 @@
          }
      }
  
-@@ -1039,6 +1249,12 @@
+@@ -1039,6 +1258,12 @@
              }
          }
  
@@ -955,7 +976,7 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1053,9 +1269,10 @@
+@@ -1053,9 +1278,10 @@
          this.perWorldStorage.saveAllData();
      }
  
@@ -969,7 +990,7 @@
      }
  
      public void loadEntities(Collection<Entity> entityCollection)
-@@ -1074,7 +1291,6 @@
+@@ -1074,7 +1300,6 @@
      {
          if (entityIn.isDead)
          {
@@ -977,7 +998,7 @@
              return false;
          }
          else
-@@ -1085,7 +1301,7 @@
+@@ -1085,7 +1310,7 @@
              {
                  Entity entity = this.entitiesByUuid.get(uuid);
  
@@ -986,7 +1007,7 @@
                  {
                      this.unloadedEntityList.remove(entity);
                  }
-@@ -1093,7 +1309,6 @@
+@@ -1093,7 +1318,6 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
@@ -994,7 +1015,7 @@
                          return false;
                      }
  
-@@ -1141,9 +1356,15 @@
+@@ -1141,9 +1365,15 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -1011,7 +1032,7 @@
              return true;
          }
          else
-@@ -1164,11 +1385,12 @@
+@@ -1164,11 +1394,12 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -1028,7 +1049,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1433,8 @@
+@@ -1211,7 +1442,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -1038,7 +1059,7 @@
                  }
              }
  
-@@ -1298,11 +1521,19 @@
+@@ -1298,11 +1530,19 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
@@ -1058,3 +1079,98 @@
              this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
+@@ -1367,4 +1607,94 @@
+             {
+             }
+         }
++
++	//Goodvise code add start
++
++    private final Map<ChunkPos, NavigableSet<NextTickListEntry>> pendingTickListEntriesTreeSetChunks = Maps.<ChunkPos, NavigableSet<NextTickListEntry>>newHashMap();
++    private final Map<ChunkPos, List<NextTickListEntry>> pendingTickListEntriesThisTickChunks = Maps.<ChunkPos, List<NextTickListEntry>>newHashMap();
++
++    @Nullable
++    public List<NextTickListEntry> getPendingBlockUpdatesForSave(Chunk chunkIn, boolean remove) {
++
++        ChunkPos chunkpos = chunkIn.getPos();
++        List<NextTickListEntry> list = null;
++
++        for (int i = 0; i < 2; ++i) {
++            Collection<NextTickListEntry> collection = null;
++
++            if (i == 0) {
++                collection = remove ? this.pendingTickListEntriesTreeSetChunks.remove(chunkpos)
++                        : this.pendingTickListEntriesTreeSetChunks.get(chunkpos);
++            } else {
++                collection = remove ? this.pendingTickListEntriesThisTickChunks.remove(chunkpos)
++                        : this.pendingTickListEntriesThisTickChunks.get(chunkpos);
++            }
++
++            Iterator<NextTickListEntry> iterator = collection == null ? Collections.emptyIterator()
++                    : collection.iterator();
++
++            while (iterator.hasNext()) {
++                NextTickListEntry nextticklistentry = iterator.next();
++
++                if (remove) {
++                    if (i == 0) {
++                        this.pendingTickListEntriesHashSet.remove(nextticklistentry);
++                        this.pendingTickListEntriesTreeSet.remove(nextticklistentry);
++                    } else {
++                        this.pendingTickListEntriesThisTick.remove(nextticklistentry);
++                    }
++                }
++
++                if (list == null) {
++                    list = Lists.<NextTickListEntry>newArrayList();
++                }
++
++                list.add(nextticklistentry);
++            }
++        }
++
++        return list;
++    }
++
++    public void removePendingTickListEntriesThisTickChunks(NextTickListEntry entry) {
++
++        ChunkPos chunkPos = new ChunkPos(entry.position);
++        List<NextTickListEntry> list = this.pendingTickListEntriesThisTickChunks.get(chunkPos);
++
++        if (list != null && list.remove(entry) && list.isEmpty()) {
++            this.pendingTickListEntriesThisTickChunks.remove(chunkPos);
++        }
++    }
++
++    public void addPendingTickListEntriesThisTickChunks(NextTickListEntry nextTickListEntry) {
++        this.pendingTickListEntriesThisTickChunks
++                .computeIfAbsent(new ChunkPos(nextTickListEntry.position), ignoredKey -> new ArrayList<>())
++                .add(nextTickListEntry);
++    }
++
++    public void clearPendingTickListEntriesThisTickChunks() {
++        this.pendingTickListEntriesThisTickChunks.clear();
++    }
++
++    public void removePendingTickListEntriesTreeSetChunks(NextTickListEntry entry) {
++
++        ChunkPos chunkPos = new ChunkPos(entry.position);
++        NavigableSet<NextTickListEntry> set = this.pendingTickListEntriesTreeSetChunks.get(chunkPos);
++
++        if (set != null && set.remove(entry) && set.isEmpty()) {
++            this.pendingTickListEntriesTreeSetChunks.remove(chunkPos);
++        }
++    }
++
++    public void addPendingTickListEntriesTreeSetChunks(NextTickListEntry nextTickListEntry) {
++        this.pendingTickListEntriesTreeSetChunks
++                .computeIfAbsent(new ChunkPos(nextTickListEntry.position), ignoredKey -> new TreeSet<>())
++                .add(nextTickListEntry);
++    }
++
++    public void clearPendingTickListEntriesTreeSetChunks(){
++        this.pendingTickListEntriesTreeSetChunks.clear();
++    }
++	
++	//Goodvise code add end.
+ }

@@ -26,6 +26,8 @@ public class MohistConfig {
     public static String unknownCommandMessage = Message.getString(Message.Use_Unkonw_Comamnd);
     public static String outdatedClientMessage = Message.getString(Message.outdated_Client);
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
+    public static boolean useChunksMapForPendingBlocks = false; //Goodvise code add
+
     private static File CONFIG_FILE;
     private static final String HEADER = "This is the main configuration file for Mohist.\n"
             + "You can change \"update: \n  version: Stable or Debug to get universal version or debug version\"\n";
@@ -61,10 +63,12 @@ public class MohistConfig {
             set("messages.Outdate-Server",outdatedServerMessage);
             set("update.version","Stable");
 			set("update.autoget",false);
+			set("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
         }
         unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
         outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
         outdatedServerMessage = transform(  getString("messages.Outdate-Server",outdatedServerMessage) );
+        useChunksMapForPendingBlocks = getBoolean("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
         readConfig(MohistConfig.class, null);
     }
 
@@ -191,5 +195,6 @@ public class MohistConfig {
         unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
         outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
         outdatedServerMessage = transform(  getString("messages.Outdate-Server",outdatedServerMessage) );
+        useChunksMapForPendingBlocks = getBoolean("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
     }
 }
