@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ResourceBundle;
 
-public class Mohist implements Runnable{
+public class Mohist{
 
     public static Logger LOGGER;
     public static ResourceBundle rb;
