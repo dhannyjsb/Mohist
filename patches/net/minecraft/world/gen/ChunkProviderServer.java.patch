@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/gen/ChunkProviderServer.java
 +++ ../src-work/minecraft/net/minecraft/world/gen/ChunkProviderServer.java
-@@ -2,18 +2,14 @@
+@@ -2,15 +2,10 @@
  
  import com.google.common.collect.Lists;
  import com.google.common.collect.Sets;
@@ -17,11 +17,7 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.entity.EnumCreatureType;
-+import net.minecraft.server.MinecraftServer;
- import net.minecraft.util.ReportedException;
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.util.math.ChunkPos;
-@@ -23,20 +19,31 @@
+@@ -23,14 +18,23 @@
  import net.minecraft.world.biome.Biome;
  import net.minecraft.world.chunk.Chunk;
  import net.minecraft.world.chunk.IChunkProvider;
@@ -46,15 +42,7 @@
      public final IChunkGenerator chunkGenerator;
      public final IChunkLoader chunkLoader;
      public final Long2ObjectMap<Chunk> id2ChunkMap = new Long2ObjectOpenHashMap<Chunk>(8192);
-     public final WorldServer world;
-     private final Set<Long> loadingChunks = com.google.common.collect.Sets.newHashSet();
- 
-+    public boolean loadChunkOnProvideRequest = true; // Cauldron - if true, allows mods to force load chunks. to disable, set load-chunk-on-request in cauldron.yml to false
-+
-     public ChunkProviderServer(WorldServer worldObjIn, IChunkLoader chunkLoaderIn, IChunkGenerator chunkGeneratorIn)
-     {
-         this.world = worldObjIn;
-@@ -83,6 +90,11 @@
+@@ -83,6 +87,11 @@
          return chunk;
      }
  
@@ -66,7 +54,7 @@
      @Nullable
      public Chunk loadChunk(int x, int z)
      {
-@@ -106,7 +118,7 @@
+@@ -106,7 +115,7 @@
                  {
                  this.id2ChunkMap.put(ChunkPos.asLong(x, z), chunk);
                  chunk.onLoad();
@@ -75,7 +63,7 @@
                  }
  
                  loadingChunks.remove(pos);
-@@ -154,7 +166,7 @@
+@@ -154,7 +163,7 @@
  
              this.id2ChunkMap.put(i, chunk);
              chunk.onLoad();
@@ -84,7 +72,7 @@
          }
  
          return chunk;
-@@ -177,7 +189,7 @@
+@@ -177,7 +186,7 @@
          }
          catch (Exception exception)
          {
@@ -93,7 +81,7 @@
              return null;
          }
      }
-@@ -190,7 +202,7 @@
+@@ -190,7 +199,7 @@
          }
          catch (Exception exception)
          {
@@ -102,7 +90,7 @@
          }
      }
  
-@@ -203,12 +215,12 @@
+@@ -203,12 +212,12 @@
          }
          catch (IOException ioexception)
          {
@@ -118,7 +106,7 @@
      }
  
      public boolean saveChunks(boolean all)
-@@ -232,7 +244,7 @@
+@@ -232,7 +241,7 @@
                  ++i;
  
                  if (i == 24 && !all)
@@ -127,7 +115,7 @@
                      return false;
                  }
              }
-@@ -266,24 +278,52 @@
+@@ -266,24 +275,52 @@
  
                      if (chunk != null && chunk.unloadQueued)
                      {
