@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerAPI {
 
-    public static Map<String, Integer> mods = new ConcurrentHashMap<String, Integer>();
+    public static Map<String, Integer> mods = new ConcurrentHashMap();
     public static Set<String> modlists= new ConcurrentSet();
 
     public static int getModSize() {

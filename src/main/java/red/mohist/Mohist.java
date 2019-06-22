@@ -9,7 +9,6 @@ public class Mohist implements Runnable{
 
     public static Logger LOGGER;
     public static ResourceBundle rb;
-    private static String[] args;
     private static final String NAME = "Mohist";
     private static final String VERSION = "1.1";
     private static final String NATIVE_VERSON = "v1_12_R1";
@@ -33,14 +32,6 @@ public class Mohist implements Runnable{
     }
 
     public static void main(String[] args){
-        Mohist.args = args;
-        Thread t = new Thread(new Mohist(),"Mohist");
-        t.start();
-    }
-
-    @Override
-    public void run() {
         new ServerLaunchWrapper().run(args);
     }
-
 }
