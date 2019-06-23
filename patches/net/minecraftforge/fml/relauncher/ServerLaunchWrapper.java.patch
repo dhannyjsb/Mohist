@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,47 +19,53 @@
+@@ -19,47 +19,54 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -48,6 +48,7 @@
              Class.forName("org.objectweb.asm.Type",true,getClass().getClassLoader());
 +            Mohist.LOGGER = LogManager.getLogger("Mohist");
 +            Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
++            Mohist.LOGGER.info(Message.getString(Message.Load_libraries));
          }
          catch (Exception e)
          {
@@ -70,7 +71,7 @@
          try
          {
              Method main = launchwrapper.getMethod("main", String[].class);
-@@ -71,9 +77,7 @@
+@@ -71,9 +78,7 @@
          }
          catch (Exception e)
          {

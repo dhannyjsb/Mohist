@@ -191,8 +191,6 @@ public class Main {
                 if (options.has("noconsole")) {
                     useConsole = false;
                 }
-				
-                Mohist.LOGGER.info(Message.getString(Message.Load_libraries));
             } catch (Throwable t) {
                 t.printStackTrace();
             }

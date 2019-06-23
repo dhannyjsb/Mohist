@@ -214,7 +214,7 @@ public class SpigotWorldConfig
     private void arrowDespawnRate()
     {
         arrowDespawnRate = getInt( "arrow-despawn-rate", 1200  );
-        log(Message.getFormatString(Message.arrow_despawn_rate, new Object[] {arrowDespawnRate}));
+        log(Message.getFormatString(Message.arrow_despawn_rate, new Object[] { String.valueOf(arrowDespawnRate) }));
     }
 
     public boolean zombieAggressiveTowardsVillager;
@@ -260,7 +260,7 @@ public class SpigotWorldConfig
         largeFeatureSeed = getInt( "seed-feature", 14357617 );
         monumentSeed = getInt( "seed-monument", 10387313 );
         slimeSeed = getInt( "seed-slime", 987234911 );
-        log( Message.getFormatString(Message.custom_map_seeds, new Object[] {villageSeed, largeFeatureSeed, monumentSeed, slimeSeed}));
+        log( Message.getFormatString(Message.custom_map_seeds, new Object[] { String.valueOf(villageSeed), String.valueOf(largeFeatureSeed), String.valueOf(monumentSeed), String.valueOf(slimeSeed) }));
     }
 
     public float jumpWalkExhaustion;
