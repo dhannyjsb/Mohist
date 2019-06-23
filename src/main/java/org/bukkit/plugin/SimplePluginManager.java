@@ -1,7 +1,6 @@
 package org.bukkit.plugin;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -16,7 +15,6 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.util.FileUtil;
 import red.mohist.Mohist;
-import red.mohist.event.ForgeHookBukkitEvent;
 import red.mohist.i18n.Message;
 
 import java.io.File;
@@ -504,7 +502,6 @@ public final class SimplePluginManager implements PluginManager {
      */
     @Override
     public void callEvent(Event event) {
-        MinecraftForge.EVENT_BUS.post(new ForgeHookBukkitEvent(event));
         // Paper - replace callEvent by merging to below method
         HandlerList handlers = event.getHandlers();
         RegisteredListener[] listeners = handlers.getRegisteredListeners();
