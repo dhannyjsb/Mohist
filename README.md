@@ -9,7 +9,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**Discord**](https://discord.gg/HNmmrCV)
    [**Home**](https://www.mohist.red/)
    [**QQ**](https://jq.qq.com/?_wv=1027&k=5q7lcCb)
-   [**Metrics**](https://bstats.org/plugin/bukkit/Mohist)
+   [**bStats**](https://bstats.org/plugin/bukkit/Mohist)
    [**Jenkins**](https://ci.codemc.org/job/PFCraft/job/Mohist/)
 
 ## Info
