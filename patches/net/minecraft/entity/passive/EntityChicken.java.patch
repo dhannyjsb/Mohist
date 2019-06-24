@@ -10,7 +10,17 @@
          super.onLivingUpdate();
          this.oFlap = this.wingRotation;
          this.oFlapSpeed = this.destPos;
-@@ -174,7 +177,7 @@
+@@ -101,7 +104,9 @@
+         if (!this.world.isRemote && !this.isChild() && !this.isChickenJockey() && --this.timeUntilNextEgg <= 0)
+         {
+             this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
++            this.forceDrops = true;
+             this.dropItem(Items.EGG, 1);
++            this.forceDrops = false;
+             this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
+         }
+     }
+@@ -174,7 +179,7 @@
          compound.setInteger("EggLayTime", this.timeUntilNextEgg);
      }
  

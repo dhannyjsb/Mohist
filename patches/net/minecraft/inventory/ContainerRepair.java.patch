@@ -7,10 +7,11 @@
  import net.minecraft.block.BlockAnvil;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.enchantment.Enchantment;
-@@ -18,7 +17,10 @@
+@@ -18,7 +17,11 @@
  import org.apache.commons.lang3.StringUtils;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
  
 +import java.util.Map;
@@ -18,7 +19,7 @@
  public class ContainerRepair extends Container
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -28,9 +30,13 @@
+@@ -28,9 +31,13 @@
      private final BlockPos selfPosition;
      public int maximumCost;
      public int materialCost;
@@ -33,7 +34,7 @@
      @SideOnly(Side.CLIENT)
      public ContainerRepair(InventoryPlayer playerInventory, World worldIn, EntityPlayer player)
      {
-@@ -39,6 +45,7 @@
+@@ -39,6 +46,7 @@
  
      public ContainerRepair(InventoryPlayer playerInventory, final World worldIn, final BlockPos blockPosIn, EntityPlayer player)
      {
@@ -41,7 +42,33 @@
          this.outputSlot = new InventoryCraftResult();
          this.inputSlots = new InventoryBasic("Repair", true, 2)
          {
-@@ -178,8 +185,11 @@
+@@ -155,7 +163,9 @@
+ 
+         if (itemstack.isEmpty())
+         {
+-            this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
++            if (this.getBukkitView() != null) {
++                CraftEventFactory.callPrepareAnvilEvent(this.getBukkitView(), ItemStack.EMPTY);
++            }
+             this.maximumCost = 0;
+         }
+         else
+@@ -169,7 +179,13 @@
+ 
+             if (!itemstack2.isEmpty())
+             {
+-                if (!net.minecraftforge.common.ForgeHooks.onAnvilChange(this, itemstack, itemstack2, outputSlot, repairedItemName, j)) return;
++                if (!net.minecraftforge.common.ForgeHooks.onAnvilChange(this, itemstack, itemstack2, outputSlot, repairedItemName, j))
++                {
++                    if (this.getBukkitView() != null) {
++                        CraftEventFactory.callPrepareAnvilEvent(this.getBukkitView(), this.outputSlot.getStackInSlot(0));
++                    }
++                    return;
++                }
+                 flag = itemstack2.getItem() == Items.ENCHANTED_BOOK && !ItemEnchantedBook.getEnchantments(itemstack2).hasNoTags();
+ 
+                 if (itemstack1.isItemStackDamageable() && itemstack1.getItem().getIsRepairable(itemstack, itemstack2))
+@@ -178,8 +194,11 @@
  
                      if (l2 <= 0)
                      {
@@ -55,7 +82,18 @@
                          return;
                      }
  
-@@ -299,8 +309,11 @@
+@@ -199,7 +218,9 @@
+                 {
+                     if (!flag && (itemstack1.getItem() != itemstack2.getItem() || !itemstack1.isItemStackDamageable()))
+                     {
+-                        this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
++                        if (this.getBukkitView() != null) {
++                            CraftEventFactory.callPrepareAnvilEvent(this.getBukkitView(), ItemStack.EMPTY);
++                        }
+                         this.maximumCost = 0;
+                         return;
+                     }
+@@ -299,8 +320,11 @@
  
                      if (flag3 && !flag2)
                      {
@@ -69,7 +107,7 @@
                          return;
                      }
                  }
-@@ -358,8 +371,11 @@
+@@ -358,8 +382,11 @@
                  EnchantmentHelper.setEnchantments(map, itemstack1);
              }
  
@@ -83,7 +121,7 @@
          }
      }
  
-@@ -390,6 +406,7 @@
+@@ -390,6 +417,7 @@
  
      public boolean canInteractWith(EntityPlayer playerIn)
      {
@@ -91,7 +129,7 @@
          if (this.world.getBlockState(this.selfPosition).getBlock() != Blocks.ANVIL)
          {
              return false;
-@@ -471,4 +488,29 @@
+@@ -471,4 +499,29 @@
  
          this.updateRepairOutput();
      }

@@ -268,7 +268,7 @@
      public boolean setBlockState(BlockPos pos, IBlockState newState, int flags)
      {
 +        // CraftBukkit start - tree generation
-+        if (this.captureTreeGeneration) {
++        if (this.captureTreeGeneration && Bukkit.isPrimaryThread()) {
 +            net.minecraftforge.common.util.BlockSnapshot blocksnapshot = null;
 +
 +            for (net.minecraftforge.common.util.BlockSnapshot previous : this.capturedBlockSnapshots)
