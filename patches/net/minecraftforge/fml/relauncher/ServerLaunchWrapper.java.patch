@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,47 +19,54 @@
+@@ -19,47 +19,66 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -46,6 +46,18 @@
          {
              launchwrapper = Class.forName("net.minecraft.launchwrapper.Launch",true,getClass().getClassLoader());
              Class.forName("org.objectweb.asm.Type",true,getClass().getClassLoader());
++
++            System.out.println("");
++            System.out.println("");
++            System.out.println(" /'\\_/`\\          /\\ \\       __          /\\ \\__   ");
++            System.out.println("/\\      \\     ___ \\ \\ \\___  /\\_\\     ____\\ \\ ,_\\  ");
++            System.out.println("\\ \\ \\__\\ \\   / __`\\\\ \\  _ `\\\\/\\ \\   /',__\\\\ \\ \\/  ");
++            System.out.println(" \\ \\ \\_/\\ \\ /\\ \\L\\ \\\\ \\ \\ \\ \\\\ \\ \\ /\\__, `\\\\ \\ \\_ ");
++            System.out.println("  \\ \\_\\\\ \\_\\\\ \\____/ \\ \\_\\ \\_\\\\ \\_\\\\/\\____/ \\ \\__\\");
++            System.out.println("   \\/_/ \\/_/ \\/___/   \\/_/\\/_/ \\/_/ \\/___/   \\/__/");
++            System.out.println("");
++            System.out.println("");
++
 +            Mohist.LOGGER = LogManager.getLogger("Mohist");
 +            Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
 +            Mohist.LOGGER.info(Message.getString(Message.Load_libraries));
@@ -71,7 +83,7 @@
          try
          {
              Method main = launchwrapper.getMethod("main", String[].class);
-@@ -71,9 +78,7 @@
+@@ -71,9 +90,7 @@
          }
          catch (Exception e)
          {
