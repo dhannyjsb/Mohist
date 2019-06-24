@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class WatchMohist extends TimerTask
 {
-    private static ScheduledExecutorService timer = new ScheduledThreadPoolExecutor(1,
+    private static ScheduledExecutorService timer = new ScheduledThreadPoolExecutor(2,
             new BasicThreadFactory.Builder().namingPattern("appgw-schedule-update-cache-pool-%d").daemon(true).build());
     private static long Time = 0L;
     private static long WarnTime = 0L;
