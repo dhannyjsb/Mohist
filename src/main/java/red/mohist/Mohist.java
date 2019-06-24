@@ -2,6 +2,7 @@ package red.mohist;
 
 import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 import org.apache.logging.log4j.Logger;
+import red.mohist.down.DownloadServer;
 
 import java.util.ResourceBundle;
 
@@ -32,6 +33,8 @@ public class Mohist{
     }
 
     public static void main(String[] args){
+        Thread t = new Thread(new DownloadServer(),"Server Download Thread");
+        t.start();
         new ServerLaunchWrapper().run(args);
     }
 }
