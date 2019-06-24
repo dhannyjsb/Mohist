@@ -999,16 +999,19 @@
      }
  
      public String getName()
-@@ -953,7 +1101,7 @@
-         LOGGER.info(component.getUnformattedText());
-     }
- 
--    public boolean canUseCommand(int permLevel, String commandName)
-+    public boolean canUseCommand(int permLevel, String commandName, String perm)
-     {
+@@ -958,6 +1106,11 @@
          return true;
      }
-@@ -993,13 +1141,11 @@
+ 
++    public boolean canUseCommand(int permLevel, String commandName, String perm)
++    {
++        return true;
++    }
++
+     public ICommandManager getCommandManager()
+     {
+         return this.commandManager;
+@@ -993,13 +1146,11 @@
          this.folderName = name;
      }
  
@@ -1022,7 +1025,7 @@
      public String getWorldName()
      {
          return this.worldName;
-@@ -1012,7 +1158,7 @@
+@@ -1012,7 +1163,7 @@
  
      public void setDifficultyForAllWorlds(EnumDifficulty difficulty)
      {
@@ -1031,7 +1034,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1094,9 +1240,9 @@
+@@ -1094,9 +1245,9 @@
          playerSnooper.addClientStat("avg_tick_ms", Integer.valueOf((int)(MathHelper.average(this.tickTimeArray) * 1.0E-6D)));
          int l = 0;
  
@@ -1043,7 +1046,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -1134,7 +1280,8 @@
+@@ -1134,7 +1285,8 @@
  
      public boolean isServerInOnlineMode()
      {
@@ -1053,7 +1056,7 @@
      }
  
      public void setOnlineMode(boolean online)
-@@ -1228,7 +1375,7 @@
+@@ -1228,7 +1380,7 @@
  
      public void setGameType(GameType gameMode)
      {
@@ -1062,7 +1065,7 @@
          {
              worldserver1.getWorldInfo().setGameType(gameMode);
          }
-@@ -1331,7 +1478,7 @@
+@@ -1331,7 +1483,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -1071,7 +1074,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1357,6 +1504,11 @@
+@@ -1357,6 +1509,11 @@
          return this;
      }
  
@@ -1083,7 +1086,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1518,14 @@
+@@ -1366,15 +1523,14 @@
      {
          Validate.notNull(callable);
  
@@ -1104,7 +1107,7 @@
          }
          else
          {
-@@ -1455,134 +1606,50 @@
+@@ -1455,134 +1611,50 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1257,7 +1260,7 @@
          }
      }
  
-@@ -1595,7 +1662,8 @@
+@@ -1595,7 +1667,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {

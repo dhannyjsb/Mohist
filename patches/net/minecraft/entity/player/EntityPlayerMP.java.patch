@@ -812,17 +812,13 @@
          this.interactionManager.setGameType(gameType);
          this.connection.sendPacket(new SPacketChangeGameState(3, (float)gameType.getID()));
  
-@@ -1278,36 +1502,22 @@
-         this.connection.sendPacket(new SPacketChat(component));
-     }
+@@ -1280,34 +1504,32 @@
  
--    public boolean canUseCommand(int permLevel, String commandName)
-+    public boolean canUseCommand(int permLevel, String commandName, String perm)
+     public boolean canUseCommand(int permLevel, String commandName)
      {
 -        if ("seed".equals(commandName) && !this.mcServer.isDedicatedServer())
 -        {
 -            return true;
-+        
 +        if ("@".equals(commandName)) {
 +            return getBukkitEntity().hasPermission("minecraft.command.selector");
          }
@@ -831,7 +827,14 @@
 -            if (this.mcServer.getPlayerList().canSendCommands(this.getGameProfile()))
 -            {
 -                UserListOpsEntry userlistopsentry = (UserListOpsEntry)this.mcServer.getPlayerList().getOppedPlayers().getEntry(this.getGameProfile());
--
++        if ("".equals(commandName)) {
++            return getBukkitEntity().isOp();
++        }
++        return getBukkitEntity().hasPermission("minecraft.command." + commandName);
++        
++        // CraftBukkit end
++    }
+ 
 -                if (userlistopsentry != null)
 -                {
 -                    return userlistopsentry.getPermissionLevel() >= permLevel;
@@ -845,22 +848,27 @@
 -            {
 -                return false;
 -            }
-+        if ("".equals(commandName)) {
-+            return getBukkitEntity().isOp();
++    public boolean canUseCommand(int permLevel, String commandName, String perm)
++    {
++        if ("@".equals(commandName)) {
++            return getBukkitEntity().hasPermission("minecraft.command.selector");
          }
 -        else
++        if ("".equals(commandName)) {
++            return getBukkitEntity().isOp();
++        }
 +        if (!perm.equals("minecraft"))
          {
 -            return true;
 +        	return getBukkitEntity().hasPermission(perm);
          }
 +        return getBukkitEntity().hasPermission("minecraft.command." + commandName);
-+        
++
 +        // CraftBukkit end
      }
  
      public String getPlayerIP()
-@@ -1320,6 +1530,14 @@
+@@ -1320,6 +1542,14 @@
  
      public void handleClientSettings(CPacketClientSettings packetIn)
      {
@@ -875,7 +883,7 @@
          this.language = packetIn.getLang();
          this.chatVisibility = packetIn.getChatVisibility();
          this.chatColours = packetIn.isColorsEnabled();
-@@ -1327,7 +1545,7 @@
+@@ -1327,7 +1557,7 @@
          this.getDataManager().set(MAIN_HAND, Byte.valueOf((byte)(packetIn.getMainHand() == EnumHandSide.LEFT ? 0 : 1)));
      }
  
@@ -884,7 +892,7 @@
      {
          return this.chatVisibility;
      }
-@@ -1402,7 +1620,7 @@
+@@ -1402,7 +1632,7 @@
          if (entity != this.spectatingEntity)
          {
              this.connection.sendPacket(new SPacketCamera(this.spectatingEntity));
@@ -893,7 +901,7 @@
          }
      }
  
-@@ -1434,7 +1652,8 @@
+@@ -1434,7 +1664,8 @@
      @Nullable
      public ITextComponent getTabListDisplayName()
      {
@@ -903,7 +911,7 @@
      }
  
      public void swingArm(EnumHand hand)
-@@ -1455,13 +1674,16 @@
+@@ -1455,13 +1686,16 @@
  
      public void setElytraFlying()
      {
@@ -923,7 +931,7 @@
      }
  
      public PlayerAdvancements getAdvancements()
-@@ -1474,4 +1696,145 @@
+@@ -1474,4 +1708,145 @@
      {
          return this.enteredNetherPosition;
      }

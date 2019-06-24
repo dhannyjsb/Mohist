@@ -51,16 +51,19 @@
  
      public int getSuccessCount()
      {
-@@ -117,7 +131,7 @@
-         this.resultStats.readStatsFromNBT(nbt);
-     }
- 
--    public boolean canUseCommand(int permLevel, String commandName)
-+    public boolean canUseCommand(int permLevel, String commandName, String perm)
-     {
+@@ -122,6 +136,11 @@
          return permLevel <= 2;
      }
-@@ -152,7 +166,8 @@
+ 
++    public boolean canUseCommand(int permLevel, String commandName, String perm)
++    {
++        return permLevel <= 2;
++    }
++
+     public void setCommand(String command)
+     {
+         this.commandStored = command;
+@@ -152,7 +171,8 @@
                      try
                      {
                          this.lastOutput = null;
@@ -70,7 +73,7 @@
                      }
                      catch (Throwable throwable)
                      {
-@@ -198,6 +213,169 @@
+@@ -198,6 +218,169 @@
          }
      }
  
