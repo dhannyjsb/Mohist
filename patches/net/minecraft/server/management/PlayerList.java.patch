@@ -316,7 +316,7 @@
 +        joinMessage = playerJoinEvent.getJoinMessage();
 +
 +        if (joinMessage != null && joinMessage.length() > 0) {
-+            for (ITextComponent line : CraftChatMessage.fromString(joinMessage)) {
++            for (ITextComponent line : org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage.fromString(joinMessage)) {
 +                mcServer.getPlayerList().sendPacketToAllPlayers(new SPacketChat(line));
 +            }
 +        }
@@ -727,7 +727,7 @@
 +        }
 +        exitWorld = ((CraftWorld) exit.getWorld()).getHandle();
 +
-+        PlayerTeleportEvent tpEvent = new PlayerTeleportEvent(entityplayer.getBukkitEntity(), enter, exit, cause);
++        org.bukkit.event.player.PlayerTeleportEvent tpEvent = new org.bukkit.event.player.PlayerTeleportEvent(entityplayer.getBukkitEntity(), enter, exit, cause);
 +        Bukkit.getServer().getPluginManager().callEvent(tpEvent);
 +        if (tpEvent.isCancelled() || tpEvent.getTo() == null) {
 +            return;
@@ -746,16 +746,7 @@
      public void updatePermissionLevel(EntityPlayerMP player)
      {
          GameProfile gameprofile = player.getGameProfile();
-@@ -635,14 +974,16 @@
-         }
-         // Fix MC-88179: on non-death SPacketRespawn, also resend attributes
-         net.minecraft.entity.ai.attributes.AttributeMap attributemap = (net.minecraft.entity.ai.attributes.AttributeMap) player.getAttributeMap();
--        java.util.Collection<net.minecraft.entity.ai.attributes.IAttributeInstance> watchedAttribs = attributemap.getWatchedAttributes();
--        if (!watchedAttribs.isEmpty()) player.connection.sendPacket(new net.minecraft.network.play.server.SPacketEntityProperties(player.getEntityId(), watchedAttribs));
-+        Collection<net.minecraft.entity.ai.attributes.IAttributeInstance> watchedAttribs = attributemap.getWatchedAttributes();
-+        if (!watchedAttribs.isEmpty()) player.connection.sendPacket(new SPacketEntityProperties(player.getEntityId(), watchedAttribs));
-         net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, i, dimensionIn);
-     }
+@@ -642,7 +981,9 @@
  
      public void transferEntityToWorld(Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn)
      {
