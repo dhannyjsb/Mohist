@@ -1,18 +1,14 @@
 package red.mohist;
 
 import net.minecraft.server.MinecraftServer;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import red.mohist.i18n.Message;
 
-import java.util.TimerTask;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class WatchMohist extends TimerTask
-{
-    private static ScheduledExecutorService timer = new ScheduledThreadPoolExecutor(2,
-            new BasicThreadFactory.Builder().namingPattern("appgw-schedule-update-cache-pool-%d").daemon(true).build());
+public class WatchMohist implements Runnable {
+
+    private static ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
     private static long Time = 0L;
     private static long WarnTime = 0L;
     
