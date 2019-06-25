@@ -232,7 +232,7 @@
 +                Mohist.LOGGER.info(Message.getFormatString(Message.Server_Start_Done, new Object[]{s3}));
  
 +                Bukkit.getPluginManager().callEvent(new BukkitServerStartDoneEvent());//Mohist
-+                Object[] p1 = {this.getServerHostname(), String.valueOf(this.getServerPort())};
++                Object[] p1 = {this.getServerHostname().isEmpty() ? "0.0.0.0" : this.getServerHostname(), String.valueOf(this.getServerPort())};
 +                Mohist.LOGGER.info(Message.getFormatString(Message.Server_Ip, p1));
                  if (this.settings.hasProperty("announce-player-achievements"))
                  {
