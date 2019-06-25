@@ -185,7 +185,7 @@
              LOGGER.info("Generating keypair");
              this.setKeyPair(CryptManager.generateKeyPair());
 -            LOGGER.info("Starting Minecraft server on {}:{}", this.getServerHostname().isEmpty() ? "*" : this.getServerHostname(), Integer.valueOf(this.getServerPort()));
-+            Object[] p = {this.getServerHostname(), String.valueOf(this.getServerPort())};
++            Object[] p = {this.getServerHostname().isEmpty() ? "0.0.0.0" : this.getServerHostname(), String.valueOf(this.getServerPort())};
 +            Mohist.LOGGER.info(Message.getFormatString(Message.Server_Ip, p));
  
 +		if(!SpigotConfig.lateBind) {
