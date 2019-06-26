@@ -9,14 +9,3 @@
              ((LoggerContext) LogManager.getContext(false)).reconfigure();
          }
      }
-@@ -61,5 +61,10 @@
- 
-         FMLLaunchHandler.configureForServerLaunch(classLoader, this);
-         FMLLaunchHandler.appendCoreMods();
-+
-+//        Mohist 把字节码转换委托出去
-+//        Mohist start
-+        classLoader.registerTransformer("red.mohist.common.asm.CompositeClassTransformer");
-+//        Mohist end
-     }
- }
