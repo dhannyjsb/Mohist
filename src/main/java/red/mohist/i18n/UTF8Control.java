@@ -95,8 +95,4 @@ public class UTF8Control extends ResourceBundle.Control {
         }
     }
 
-    public static void main(String[] args) {
-        ResourceBundle.getBundle("baseName",new UTF8Control());
-    }
-
 }
