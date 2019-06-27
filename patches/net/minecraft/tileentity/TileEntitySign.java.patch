@@ -7,7 +7,7 @@
  import net.minecraft.command.CommandException;
  import net.minecraft.command.CommandResultStats;
  import net.minecraft.command.ICommandSender;
-@@ -20,13 +19,16 @@
+@@ -20,13 +19,17 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -22,10 +22,11 @@
      private EntityPlayer player;
      private final CommandResultStats stats = new CommandResultStats();
 +    private static final boolean CONVERT_LEGACY_SIGNS = Boolean.getBoolean("convertLegacySigns");
++    public java.util.UUID signEditor; // Paper
  
      public NBTTagCompound writeToNBT(NBTTagCompound compound)
      {
-@@ -38,6 +40,10 @@
+@@ -38,6 +41,10 @@
              compound.setString("Text" + (i + 1), s);
          }
  
@@ -36,7 +37,7 @@
          this.stats.writeStatsToNBT(compound);
          return compound;
      }
-@@ -61,6 +67,10 @@
+@@ -61,6 +68,10 @@
              {
                  return permLevel <= 2; //Forge: Fixes  MC-75630 - Exploit with signs and command blocks
              }
@@ -47,7 +48,7 @@
              public BlockPos getPosition()
              {
                  return TileEntitySign.this.pos;
-@@ -79,19 +89,38 @@
+@@ -79,19 +90,38 @@
              }
          };
  
@@ -92,7 +93,19 @@
          }
  
          this.stats.readStatsFromNBT(compound);
-@@ -158,6 +187,11 @@
+@@ -131,7 +161,10 @@
+ 
+     public void setPlayer(EntityPlayer playerIn)
+     {
+-        this.player = playerIn;
++        // Paper start
++        //this.player = playerIn;
++        signEditor = playerIn != null ? playerIn.getUniqueID() : null;
++        // Paper end
+     }
+ 
+     public EntityPlayer getPlayer()
+@@ -158,6 +191,11 @@
              {
                  return permLevel <= 2;
              }
@@ -104,7 +117,7 @@
              public BlockPos getPosition()
              {
                  return TileEntitySign.this.pos;
-@@ -201,7 +235,12 @@
+@@ -201,7 +239,12 @@
  
                  if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)
                  {

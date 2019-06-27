@@ -1674,8 +1674,12 @@
          this.player.markPlayerActive();
          WorldServer worldserver = this.serverController.getWorld(this.player.dimension);
          BlockPos blockpos = packetIn.getPosition();
-@@ -1303,16 +2332,32 @@
-             if (!tileentitysign.getIsEditable() || tileentitysign.getPlayer() != this.player)
+@@ -1300,19 +2329,35 @@
+ 
+             TileEntitySign tileentitysign = (TileEntitySign)tileentity;
+ 
+-            if (!tileentitysign.getIsEditable() || tileentitysign.getPlayer() != this.player)
++            if (!tileentitysign.getIsEditable() || tileentitysign.signEditor == null || !tileentitysign.signEditor.equals(this.player.getUniqueID())) // Paper
              {
                  this.serverController.logWarning("Player " + this.player.getName() + " just tried to change non-editable sign");
 +                this.sendPacket(tileentity.getUpdatePacket());
