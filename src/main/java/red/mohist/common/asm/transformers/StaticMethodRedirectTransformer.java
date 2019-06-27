@@ -1,6 +1,5 @@
 package red.mohist.common.asm.transformers;
 
-import com.google.common.collect.Sets;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -11,6 +10,7 @@ import org.objectweb.asm.tree.MethodNode;
 import red.mohist.common.asm.IAutoRegisterClassTransformer;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * 负责静态方法的重定向
@@ -27,13 +27,14 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
 
     private void register() {
 //        将所有Math.sin和Math.cos调用转换成MathHelper.sin和MathHelper.cos调用
+//        只能转换nms的,不能转换mod的.如果转换mod的,会产生精度问题
         register(StaticMethodRedirect.builder()
                 .fromType("java/lang/Math")
                 .name("sin")
                 .desc("(D)D")
                 .toType("net/minecraft/util/math/MathHelper")
                 .toName("sin")
-                .ignoreFromTypes(Sets.newHashSet("net/minecraft/util/math/MathHelper"))
+                .classFilter(cf -> cf.name.startsWith("net.minecraft.") || cf.name.startsWith("net.minecraftforge."))
                 .build());
         register(StaticMethodRedirect.builder()
                 .fromType("java/lang/Math")
@@ -41,7 +42,7 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
                 .desc("(D)D")
                 .toType("net/minecraft/util/math/MathHelper")
                 .toName("cos")
-                .ignoreFromTypes(Sets.newHashSet("net/minecraft/util/math/MathHelper"))
+                .classFilter(cf -> cf.name.startsWith("net.minecraft.") || cf.name.startsWith("net.minecraftforge."))
                 .build());
     }
 
@@ -64,7 +65,7 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
         classReader.accept(classNode, 0);
         int count = 0;
         for (MethodNode m : classNode.methods) {
-            if (redirectMethod(m)) {
+            if (redirectMethod(classNode, m)) {
                 count++;
             }
         }
@@ -76,7 +77,7 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
         return writer.toByteArray();
     }
 
-    private boolean redirectMethod(MethodNode methodNode) {
+    private boolean redirectMethod(ClassNode classNode, MethodNode methodNode) {
         int count = 0;
         for (ListIterator<AbstractInsnNode> it = methodNode.instructions.iterator(); it.hasNext(); ) {
             AbstractInsnNode insnNode = it.next();
@@ -84,29 +85,38 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
                 continue;
             }
             MethodInsnNode node = (MethodInsnNode) insnNode;
-            if (node.getOpcode() == Opcodes.INVOKESTATIC) {
-                if (redirectMethod(node)) {
-                    count++;
-                }
+            if (node.getOpcode() != Opcodes.INVOKESTATIC) {
+                continue;
             }
+            if (!redirectMethod(classNode, methodNode, node)) {
+                continue;
+            }
+            count++;
         }
         return count > 0;
     }
 
-    private boolean redirectMethod(MethodInsnNode node) {
+    private boolean redirectMethod(ClassNode classNode, MethodNode methodNode, MethodInsnNode node) {
         List<StaticMethodRedirect> rules = redirects.get(node.owner);
         if (rules == null) {
             return false;
         }
         for (StaticMethodRedirect rule : rules) {
-            if (rule.name.equals(node.name) && rule.desc.equals(node.desc)) {
-                if (rule.getIgnoreFromTypes().contains(node.owner)) {
-                    continue;
-                }
-                node.owner = rule.toType;
-                node.name = rule.toName;
-                return true;
+            if (!rule.name.equals(node.name) || !rule.desc.equals(node.desc)) {
+                continue;
             }
+            if (rule.getClassFilter() != null && !rule.getClassFilter().test(classNode)) {
+                continue;
+            }
+            if (rule.getMethodFilter() != null && !rule.getMethodFilter().test(methodNode)) {
+                continue;
+            }
+            if (rule.getMethodInsnFilter() != null && !rule.getMethodInsnFilter().test(node)) {
+                continue;
+            }
+            node.owner = rule.toType;
+            node.name = rule.toName;
+            return true;
         }
         return false;
     }
@@ -117,7 +127,9 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
         private String name;
         private String toType;
         private String toName;
-        private Set<String> ignoreFromTypes;
+        private Predicate<ClassNode> classFilter;
+        private Predicate<MethodNode> methodFilter;
+        private Predicate<MethodInsnNode> methodInsnFilter;
 
         private StaticMethodRedirect(Builder builder) {
             fromType = builder.fromType;
@@ -125,28 +137,14 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
             name = builder.name;
             toType = builder.toType;
             toName = builder.toName;
-            ignoreFromTypes = builder.ignoreFromTypes;
-            if (ignoreFromTypes == null) {
-                ignoreFromTypes = new HashSet<>();
-            }
-            ignoreFromTypes.add(toType);
+            classFilter = builder.classFilter;
+            methodFilter = builder.methodFilter;
+            methodInsnFilter = builder.methodInsnFilter;
         }
 
         public static Builder builder() {
             return new Builder();
         }
-
-        public static Builder newBuilder(StaticMethodRedirect copy) {
-            Builder builder = new Builder();
-            builder.fromType = copy.getFromType();
-            builder.desc = copy.getDesc();
-            builder.name = copy.getName();
-            builder.toType = copy.getToType();
-            builder.toName = copy.getToName();
-            builder.ignoreFromTypes = copy.getIgnoreFromTypes();
-            return builder;
-        }
-
 
         public String getFromType() {
             return fromType;
@@ -168,8 +166,16 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
             return toName;
         }
 
-        public Set<String> getIgnoreFromTypes() {
-            return ignoreFromTypes;
+        public Predicate<ClassNode> getClassFilter() {
+            return classFilter;
+        }
+
+        public Predicate<MethodNode> getMethodFilter() {
+            return methodFilter;
+        }
+
+        public Predicate<MethodInsnNode> getMethodInsnFilter() {
+            return methodInsnFilter;
         }
 
         /**
@@ -181,7 +187,9 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
             private String name;
             private String toType;
             private String toName;
-            private Set<String> ignoreFromTypes;
+            private Predicate<ClassNode> classFilter;
+            private Predicate<MethodNode> methodFilter;
+            private Predicate<MethodInsnNode> methodInsnFilter;
 
             private Builder() {
             }
@@ -236,13 +244,18 @@ public class StaticMethodRedirectTransformer implements IAutoRegisterClassTransf
                 return this;
             }
 
-            /**
-             * Sets the {@code ignoreFromTypes} and returns a reference to this Builder so that the methods can be chained together.
-             * @param ignoreFromTypes the {@code ignoreFromTypes} to set
-             * @return a reference to this Builder
-             */
-            public Builder ignoreFromTypes(Set<String> ignoreFromTypes) {
-                this.ignoreFromTypes = ignoreFromTypes;
+            public Builder classFilter(Predicate<ClassNode> classFilter) {
+                this.classFilter = classFilter;
+                return this;
+            }
+
+            public Builder methodFilter(Predicate<MethodNode> methodFilter) {
+                this.methodFilter = methodFilter;
+                return this;
+            }
+
+            public Builder methodInsnFilter(Predicate<MethodInsnNode> methodInsnFilter) {
+                this.methodInsnFilter = methodInsnFilter;
                 return this;
             }
 
