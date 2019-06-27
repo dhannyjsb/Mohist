@@ -129,18 +129,19 @@
      protected boolean canDie(World worldIn, BlockPos pos)
      {
          return worldIn.isRainingAt(pos) || worldIn.isRainingAt(pos.west()) || worldIn.isRainingAt(pos.east()) || worldIn.isRainingAt(pos.north()) || worldIn.isRainingAt(pos.south());
-@@ -302,6 +328,47 @@
+@@ -302,6 +328,48 @@
          }
      }
  
 +    // Atom: Create a new method, instead of the method modification above for sanity
 +    private void tryCatchFire(World worldIn, BlockPos pos, int chance, Random random, int age, EnumFacing face, BlockPos sourcePos)
 +    {
++        final IBlockState iblockstate = worldIn.getBlockState(pos);
++        if (iblockstate == null) return;
 +        int i = worldIn.getBlockState(pos).getBlock().getFlammability(worldIn, pos, face);
 +
 +        if (random.nextInt(chance) < i)
 +        {
-+            IBlockState iblockstate = worldIn.getBlockState(pos);
 +            org.bukkit.block.Block theBlock = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 +            org.bukkit.block.Block sourceBlock = worldIn.getWorld().getBlockAt(sourcePos.getX(), sourcePos.getY(), sourcePos.getZ());
 +
@@ -177,7 +178,7 @@
      private boolean canNeighborCatchFire(World worldIn, BlockPos pos)
      {
          for (EnumFacing enumfacing : EnumFacing.values())
-@@ -354,7 +421,7 @@
+@@ -354,7 +422,7 @@
      {
          if (!worldIn.getBlockState(pos.down()).isTopSolid() && !this.canNeighborCatchFire(worldIn, pos))
          {
@@ -186,7 +187,7 @@
          }
      }
  
-@@ -364,7 +431,7 @@
+@@ -364,7 +432,7 @@
          {
              if (!worldIn.getBlockState(pos.down()).isTopSolid() && !this.canNeighborCatchFire(worldIn, pos))
              {
@@ -195,7 +196,7 @@
              }
              else
              {
-@@ -495,4 +562,10 @@
+@@ -495,4 +563,10 @@
      {
          return BlockFaceShape.UNDEFINED;
      }
