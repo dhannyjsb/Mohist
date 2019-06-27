@@ -410,7 +410,7 @@
      public boolean isPopulated()
      {
 -        return this.ticked && this.isTerrainPopulated && this.isLightPopulated;
-+        return this.ticked && this.isTerrainPopulated;
++        return !this.world.spigotConfig.randomLightUpdates || (this.ticked && this.isTerrainPopulated && this.isLightPopulated);
      }
  
      public boolean wasTicked()
