@@ -4,12 +4,12 @@
         <TerminalConsole name="Console">
             <PatternLayout>
                 <LoggerNamePatternSelector
-                        defaultPattern="%highlightError{[%d{HH:mm:ss}] [%t/%level]: %minecraftFormatting{%msg}%n%xEx}">
+                        defaultPattern="%highlightError{[%d{HH:mm:ss} %level]: %minecraftFormatting{%msg}%n%xEx}">
                 </LoggerNamePatternSelector>
             </PatternLayout>
         </TerminalConsole>
         <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.zip">
-            <PatternLayout pattern="[%d{HH:mm:ss} %level]: %minecraftFormatting{%msg}{strip}%n"/>
+            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %minecraftFormatting{%msg}{strip}%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
                 <OnStartupTriggeringPolicy/>

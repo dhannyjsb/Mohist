@@ -1,6 +1,7 @@
 package red.mohist;
 
 import net.minecraft.server.MinecraftServer;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.bukkit.Bukkit;
 import red.mohist.i18n.Message;
 
@@ -12,14 +13,15 @@ import static org.spigotmc.TicksPerSecondCommand.format;
 
 public class WatchMohist implements Runnable {
 
-    private static ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
+    private static ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1,
+            new BasicThreadFactory.Builder().namingPattern("WatchMohist").daemon(true).build());
     private static long Time = 0L;
     private static long WarnTime = 0L;
     
     @Override
     public void run() {
         long curTime = System.currentTimeMillis();
-        if (WatchMohist.Time > 0L && curTime - WatchMohist.Time > 2000L && curTime - WatchMohist.WarnTime > 30000L) {
+        if (WatchMohist.Time > 0L && curTime - WatchMohist.Time > 2400L && curTime - WatchMohist.WarnTime > 48000L && String.valueOf(curTime - WatchMohist.Time).contains("-")) {
             WatchMohist.WarnTime = curTime;
             Mohist.LOGGER.warn(Message.getString(Message.WatchMohist_1));
 
@@ -43,7 +45,7 @@ public class WatchMohist implements Runnable {
     }
     
     public static void start() {
-        timer.scheduleAtFixedRate(new WatchMohist(), 30000L, 500L, TimeUnit.MILLISECONDS);
+        timer.scheduleAtFixedRate(new WatchMohist(), 48000L, 600L, TimeUnit.MILLISECONDS);
     }
     
     public static void stop() {
