@@ -1,7 +1,5 @@
 package red.mohist;
 
-import com.maxqia.ReflectionRemapper.NetworkTransformer;
-import com.maxqia.ReflectionRemapper.SideTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import red.mohist.common.asm.CompositeClassTransformer;
 
@@ -12,8 +10,6 @@ public class CorePlugin implements IFMLLoadingPlugin {
     @Override
     public String[] getASMTransformerClass() {
         return new String[]{
-                NetworkTransformer.class.getCanonicalName(),
-                SideTransformer.class.getCanonicalName(),
                 CompositeClassTransformer.class.getCanonicalName()
         };
     }

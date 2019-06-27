@@ -24,7 +24,7 @@
   "libraries": [
     {
       "name": "@artifact@",
-      "url": "http://files.minecraftforge.net/maven/"
+      "url": "https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository"
     },
     {
       "name": "net.minecraft:launchwrapper:1.12",
@@ -133,7 +133,7 @@
       "clientreq":true
     },
     {
-      "name" : "org.yaml:snakeyaml:1.23",
+      "name" : "org.yaml:snakeyaml:1.19",
       "url" : "http://repo.maven.apache.org/maven2",
       "serverreq":true,
       "clientreq":true
@@ -199,7 +199,7 @@
       "serverreq":true
     },
     {
-      "name": "com.maxqia:ReflectionRemapper:0.3-SNAPSHOT",
+      "name": "com.maxqia:ReflectionRemapper:0.3.1-SNAPSHOT",
       "url" : "https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository",
       "clientreq":true,
       "serverreq":true
@@ -208,12 +208,6 @@
       "name": "org.apache.maven:maven-artifact:3.5.3",
       "url" : "http://files.minecraftforge.net/maven/",
       "clientreq":true,
-      "serverreq":true
-    },
-	{
-      "name": "com.alibaba:fastjson:1.2.58",
-      "url" : "http://repo.maven.apache.org/maven2",
-	  "clientreq":true,
       "serverreq":true
     }
   ]

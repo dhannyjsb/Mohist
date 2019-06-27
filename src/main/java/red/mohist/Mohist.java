@@ -11,7 +11,7 @@ public class Mohist{
     public static Logger LOGGER;
     public static ResourceBundle rb;
     private static final String NAME = "Mohist";
-    private static final String VERSION = "1.1";
+    private static final String VERSION = "1.2";
     private static final String NATIVE_VERSON = "v1_12_R1";
     private static final String NMS_PREFIX = "net/minecraft/server/";
 

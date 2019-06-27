@@ -90,7 +90,7 @@
       "url" : "http://repo.maven.apache.org/maven2"
     },
     {
-      "name" : "org.yaml:snakeyaml:1.23",
+      "name" : "org.yaml:snakeyaml:1.19",
       "children" : ["sources"],
       "url" : "http://repo.maven.apache.org/maven2"
     },
@@ -124,7 +124,7 @@
       "url" : "https://hub.spigotmc.org/nexus/content/groups/public/"
     },
     {
-      "name": "com.maxqia:ReflectionRemapper:0.3-SNAPSHOT",
+      "name": "com.maxqia:ReflectionRemapper:0.3.1-SNAPSHOT",
       "children" : ["sources"],
       "url" : "https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository"
     },
@@ -140,11 +140,6 @@
     },
     {
       "name": "org.apache.maven:maven-artifact:3.5.3",
-      "children" : ["sources"],
-      "url" : "http://repo.maven.apache.org/maven2"
-    },
-	{
-      "name": "com.alibaba:fastjson:1.2.58",
       "children" : ["sources"],
       "url" : "http://repo.maven.apache.org/maven2"
     }

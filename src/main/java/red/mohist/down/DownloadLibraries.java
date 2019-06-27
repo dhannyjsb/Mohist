@@ -15,11 +15,11 @@ import java.util.zip.ZipFile;
 public class DownloadLibraries implements Runnable {
     @Override
     public void run() {
-        String url = "https://github.com/PFCraft/Mohist/releases/download/libraries/libraries.zip";
+        String url = "https://github.com/PFCraft/Mohist/releases/download/libraries-1.2/libraries-1.2.zip";
         String fileName = "libraries.zip";
         Locale locale = Locale.getDefault();
         if (locale.getCountry().equals("zh_CN") || locale.getCountry().equals("CN") || locale.getCountry().equals("zh_TW") || locale.getCountry().equals("TW")) {
-            url = "https://pfcraft.gitee.io/mohistdown/libraries.zip";
+            url = "https://pfcraft.gitee.io/mohistdown/libraries-1.2.zip";
         }
         new Download(url,fileName);
         System.out.println(Message.getFormatString(Message.Dw_Ok,new Object[] {fileName}));
