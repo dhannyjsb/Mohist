@@ -206,7 +206,7 @@
          }
 +
 +        this.displayName = this.getName();
-+        this.canPickUpLoot1 = true;
++        this.canPickUpLoot = true;
 +        this.maxHealthCache = this.getMaxHealth();
      }
  

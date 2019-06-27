@@ -172,7 +172,7 @@
 +            if (this.pickupDelay <= 0 && canHold > 0) {
 +                itemstack.setCount(canHold);
 +                PlayerPickupItemEvent playerEvent = new PlayerPickupItemEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
-+                playerEvent.setCancelled(!entityIn.canPickUpLoot1);
++                playerEvent.setCancelled(!entityIn.canPickUpLoot);
 +                this.world.getServer().getPluginManager().callEvent(playerEvent);
 +                if (playerEvent.isCancelled()) {
 +                    return;
@@ -180,7 +180,7 @@
 +
 +                // Call newer event afterwards
 +                EntityPickupItemEvent entityEvent = new EntityPickupItemEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
-+                entityEvent.setCancelled(!entityIn.canPickUpLoot1);
++                entityEvent.setCancelled(!entityIn.canPickUpLoot);
 +                this.world.getServer().getPluginManager().callEvent(entityEvent);
 +                if (entityEvent.isCancelled()) {
 +                    return;

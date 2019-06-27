@@ -87,22 +87,15 @@
 +    public float[] inventoryHandsDropChances = new float[2];
      private final NonNullList<ItemStack> inventoryArmor = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
 -    protected float[] inventoryArmorDropChances = new float[4];
-+    public float[] inventoryArmorDropChances = new float[4];
-     private boolean canPickUpLoot;
+-    private boolean canPickUpLoot;
 -    private boolean persistenceRequired;
++    public float[] inventoryArmorDropChances = new float[4];
++    // private boolean canPickUpLoot; // CraftBukkit - moved up to EntityLivingBase
 +    public boolean persistenceRequired;
      private final Map<PathNodeType, Float> mapPathPriority = Maps.newEnumMap(PathNodeType.class);
      private ResourceLocation deathLootTable;
      private long deathLootTableSeed;
-@@ -96,6 +91,7 @@
-         this.bodyHelper = this.createBodyHelper();
-         this.navigator = this.createNavigator(worldIn);
-         this.senses = new EntitySenses(this);
-+        this.canPickUpLoot1 = canPickUpLoot;
-         Arrays.fill(this.inventoryArmorDropChances, 0.085F);
-         Arrays.fill(this.inventoryHandsDropChances, 0.085F);
- 
-@@ -171,8 +167,37 @@
+@@ -171,8 +166,37 @@
      {
          this.attackTarget = entitylivingbaseIn;
          net.minecraftforge.common.ForgeHooks.onLivingSetAttackTarget(this, entitylivingbaseIn);
@@ -140,7 +133,7 @@
      public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
      {
          return cls != EntityGhast.class;
-@@ -447,12 +472,21 @@
+@@ -447,12 +471,21 @@
      {
          super.readEntityFromNBT(compound);
  
@@ -164,7 +157,7 @@
  
          if (compound.hasKey("ArmorItems", 9))
          {
-@@ -653,8 +687,14 @@
+@@ -653,8 +686,14 @@
              }
          }
  
@@ -181,7 +174,7 @@
              double d0;
  
              switch (entityequipmentslot.getSlotType())
-@@ -671,7 +711,9 @@
+@@ -671,7 +710,9 @@
  
              if (!itemstack1.isEmpty() && (double)(this.rand.nextFloat() - 0.1F) < d0)
              {
@@ -191,7 +184,7 @@
              }
  
              this.setItemStackToSlot(entityequipmentslot, itemstack);
-@@ -696,7 +738,7 @@
+@@ -696,7 +737,7 @@
          return true;
      }
  
@@ -200,7 +193,7 @@
      {
          return true;
      }
-@@ -722,9 +764,9 @@
+@@ -722,9 +763,9 @@
          else
          {
              Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
@@ -212,7 +205,7 @@
                  double d0 = entity.posX - this.posX;
                  double d1 = entity.posY - this.posY;
                  double d2 = entity.posZ - this.posZ;
-@@ -753,6 +795,12 @@
+@@ -753,6 +794,12 @@
          this.world.profiler.startSection("checkDespawn");
          this.despawnEntity();
          this.world.profiler.endSection();
@@ -225,7 +218,7 @@
          this.world.profiler.startSection("sensing");
          this.senses.clearSensingCache();
          this.world.profiler.endSection();
-@@ -1209,6 +1257,10 @@
+@@ -1209,6 +1256,10 @@
      {
          if (this.getLeashed() && this.getLeashHolder() == player)
          {
@@ -236,7 +229,7 @@
              this.clearLeashed(true, !player.capabilities.isCreativeMode);
              return true;
          }
-@@ -1218,6 +1270,10 @@
+@@ -1218,6 +1269,10 @@
  
              if (itemstack.getItem() == Items.LEAD && this.canBeLeashedTo(player))
              {
@@ -247,7 +240,7 @@
                  this.setLeashHolder(player, true);
                  itemstack.shrink(1);
                  return true;
-@@ -1245,11 +1301,13 @@
+@@ -1245,11 +1300,13 @@
          {
              if (!this.isEntityAlive())
              {
@@ -261,7 +254,7 @@
                  this.clearLeashed(true, true);
              }
          }
-@@ -1264,7 +1322,9 @@
+@@ -1264,7 +1321,9 @@
  
              if (!this.world.isRemote && dropLead)
              {
@@ -271,7 +264,7 @@
              }
  
              if (!this.world.isRemote && sendPacket && this.world instanceof WorldServer)
-@@ -1348,6 +1408,7 @@
+@@ -1348,6 +1407,7 @@
              }
              else
              {
@@ -279,7 +272,7 @@
                  this.clearLeashed(false, true);
              }
          }
-@@ -1448,7 +1509,6 @@
+@@ -1448,7 +1508,6 @@
          ON_GROUND,
          IN_AIR,
          IN_WATER;
