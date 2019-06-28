@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,47 +19,64 @@
+@@ -19,47 +19,65 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -72,6 +72,7 @@
 +            //e.printStackTrace(System.err);
 +            Thread t = new Thread(new DownloadLibraries(),"Server Libraries Thread");
 +            t.start();
++			System.exit(1);
          }
 +        j = System.nanoTime();
  
@@ -81,14 +82,14 @@
          try
          {
              Method main = launchwrapper.getMethod("main", String[].class);
-@@ -71,9 +88,7 @@
+@@ -71,8 +89,8 @@
          }
          catch (Exception e)
          {
 -            System.err.printf("A problem occurred running the Server launcher.");
 -            e.printStackTrace(System.err);
--            System.exit(1);
 +            System.out.println(Message.rb.getString(Message.Mohist_Start_Error.toString()));
++			e.printStackTrace(System.err);
+             System.exit(1);
          }
      }
- 

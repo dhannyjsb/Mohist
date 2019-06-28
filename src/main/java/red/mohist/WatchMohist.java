@@ -23,7 +23,7 @@ public class WatchMohist implements Runnable {
         long curTime = System.currentTimeMillis();
         if (WatchMohist.Time > 0L && curTime - WatchMohist.Time > 2400L && curTime - WatchMohist.WarnTime > 48000L && String.valueOf(curTime - WatchMohist.Time).contains("-")) {
             WatchMohist.WarnTime = curTime;
-            Mohist.LOGGER.warn(Message.getString(Message.WatchMohist_1));
+            Mohist.LOGGER.debug(Message.getString(Message.WatchMohist_1));
 
             double[] tps = Bukkit.getTPS();
             String[] tpsAvg = new String[tps.length];
@@ -31,12 +31,12 @@ public class WatchMohist implements Runnable {
                 tpsAvg[i] = format( tps[i] );
             }
 
-            Mohist.LOGGER.warn(Message.getFormatString(Message.WatchMohist_2, new Object[]{ String.valueOf(curTime - WatchMohist.Time), join(tpsAvg, ", ") }));
-            Mohist.LOGGER.warn(Message.getString(Message.WatchMohist_3));
+            Mohist.LOGGER.debug(Message.getFormatString(Message.WatchMohist_2, new Object[]{ String.valueOf(curTime - WatchMohist.Time), join(tpsAvg, ", ") }));
+            Mohist.LOGGER.debug(Message.getString(Message.WatchMohist_3));
             for (StackTraceElement stack : MinecraftServer.getServerInst().primaryThread.getStackTrace()) {
-                Mohist.LOGGER.warn(Message.getString(Message.WatchMohist_4) + stack);
+                Mohist.LOGGER.debug(Message.getString(Message.WatchMohist_4) + stack);
             }
-            Mohist.LOGGER.warn(Message.getString(Message.WatchMohist_1));
+            Mohist.LOGGER.debug(Message.getString(Message.WatchMohist_1));
         }
     }
 
