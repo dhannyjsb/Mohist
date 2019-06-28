@@ -81,14 +81,14 @@
          try
          {
              Method main = launchwrapper.getMethod("main", String[].class);
-@@ -71,8 +88,8 @@
+@@ -71,9 +88,7 @@
          }
          catch (Exception e)
          {
 -            System.err.printf("A problem occurred running the Server launcher.");
 -            e.printStackTrace(System.err);
-+            System.out.println(Message.rb.getString(Message.Mohist_Start_Error.toString()));
-+			e.printStackTrace(System.err);
-             System.exit(1);
+-            System.exit(1);
++            System.out.println(Message.rb.getString(Message.Mohist_Start_Error.toString()), e);
          }
      }
+ 
