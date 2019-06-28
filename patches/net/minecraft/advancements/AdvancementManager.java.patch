@@ -24,3 +24,12 @@
                          if (!map.containsKey(resourcelocation))
                          {
                              BufferedReader bufferedreader = null;
+@@ -186,7 +190,7 @@
+                             }
+                             catch (JsonParseException jsonparseexception)
+                             {
+-                                LOGGER.error("Parsing error loading built-in advancement " + resourcelocation, (Throwable)jsonparseexception);
++                                LOGGER.debug("Parsing error loading built-in advancement " + resourcelocation, (Throwable)jsonparseexception);
+                                 this.hasErrored = true;
+                             }
+                             catch (IOException ioexception)
