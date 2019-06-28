@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,47 +19,65 @@
+@@ -19,47 +19,64 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -72,7 +72,6 @@
 +            //e.printStackTrace(System.err);
 +            Thread t = new Thread(new DownloadLibraries(),"Server Libraries Thread");
 +            t.start();
-+			System.exit(1);
          }
 +        j = System.nanoTime();
  
@@ -82,7 +81,7 @@
          try
          {
              Method main = launchwrapper.getMethod("main", String[].class);
-@@ -71,8 +89,8 @@
+@@ -71,8 +88,8 @@
          }
          catch (Exception e)
          {
