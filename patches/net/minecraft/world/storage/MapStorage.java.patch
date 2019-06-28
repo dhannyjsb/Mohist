@@ -25,3 +25,57 @@
  public class MapStorage
  {
      private final ISaveHandler saveHandler;
+@@ -103,30 +100,34 @@
+         }
+     }
+ 
+-    private void saveData(WorldSavedData data)
+-    {
+-        if (this.saveHandler != null)
+-        {
+-            try
+-            {
+-                File file1 = this.saveHandler.getMapFileFromName(data.mapName);
+-
+-                if (file1 != null)
+-                {
+-                    NBTTagCompound nbttagcompound = new NBTTagCompound();
+-                    nbttagcompound.setTag("data", data.writeToNBT(new NBTTagCompound()));
+-                    FileOutputStream fileoutputstream = new FileOutputStream(file1);
+-                    CompressedStreamTools.writeCompressed(nbttagcompound, fileoutputstream);
+-                    fileoutputstream.close();
++    private void saveData(WorldSavedData data) {
++        if (this.saveHandler == null) {
++            return;
++        }
++        File file1 = this.saveHandler.getMapFileFromName(data.mapName);
++        if (file1 == null) {
++            return;
++        }
++        NBTTagCompound nbttagcompound = new NBTTagCompound();
++        nbttagcompound.setTag("data", data.writeToNBT(new NBTTagCompound()));
++//        Mohist start
++        ThreadedFileIOBase.getThreadedIOInstance().queueIO(() -> {
++            try {
++                if (!file1.exists()) {
++                    file1.createNewFile();
+                 }
+-            }
+-            catch (Exception exception)
+-            {
++                FileOutputStream fileoutputstream = new FileOutputStream(file1);
++                CompressedStreamTools.writeCompressed(nbttagcompound, fileoutputstream);
++                fileoutputstream.close();
++            } catch (Exception exception) {
+                 exception.printStackTrace();
+             }
+-        }
++            return true;
++        });
++//        Mohist end
+     }
+ 
++
+     private void loadIdCounts()
+     {
+         try
