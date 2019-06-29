@@ -142,6 +142,10 @@ public final class Bukkit {
         return server.getOnlinePlayers();
     }
 
+    public static Player[] _INVALID_getOnlinePlayers() {
+        return server._INVALID_getOnlinePlayers();
+    }
+
     /**
      * Get the maximum amount of players which can login to this server.
      *

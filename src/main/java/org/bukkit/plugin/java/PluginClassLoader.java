@@ -66,6 +66,7 @@ final class PluginClassLoader extends URLClassLoader {
             jarMapping.packages.put("org/bukkit/craftbukkit/libs/it/unimi/dsi/fastutil", "it/unimi/dsi/fastutil");
             jarMapping.packages.put("org/bukkit/craftbukkit/libs/jline", "jline");
             jarMapping.packages.put("org/bukkit/craftbukkit/libs/joptsimple", "joptsimple");
+            jarMapping.methods.put("org/bukkit/Bukkit/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
 
             Map<String, String> relocations = new HashMap<String, String>();
             relocations.put("net.minecraft.server", "net.minecraft.server." + Mohist.getNativeVersion());
