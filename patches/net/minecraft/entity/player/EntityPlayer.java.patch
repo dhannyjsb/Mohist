@@ -478,27 +478,6 @@
                      }
                  }
              }
-@@ -1527,9 +1612,9 @@
-         return this.gameProfile;
-     }
- 
--    public EntityPlayer.SleepResult trySleep(BlockPos bedLocation)
-+    public SleepResult trySleep(BlockPos bedLocation)
-     {
--        EntityPlayer.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(this, bedLocation);
-+        SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(this, bedLocation);
-         if (ret != null) return ret;
-         final IBlockState state = this.world.isBlockLoaded(bedLocation) ? this.world.getBlockState(bedLocation) : null;
-         final boolean isBed = state != null && state.getBlock().isBed(state, this.world, bedLocation, this);
-@@ -1563,7 +1648,7 @@
- 
-             if (!list.isEmpty())
-             {
--                return EntityPlayer.SleepResult.NOT_SAFE;
-+                return SleepResult.NOT_SAFE;
-             }
-         }
- 
 @@ -1572,6 +1657,20 @@
              this.dismountRidingEntity();
          }
@@ -512,7 +491,7 @@
 +            this.world.getServer().getPluginManager().callEvent(event);
 +
 +            if (event.isCancelled()) {
-+                return SleepResult.OTHER_PROBLEM;
++                return EntityPlayer.SleepResult.OTHER_PROBLEM;
 +            }
 +        }
 +        // CraftBukkit end

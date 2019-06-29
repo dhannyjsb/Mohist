@@ -1,13 +1,13 @@
 package org.bukkit.plugin.java;
 
 import com.maxqia.ReflectionRemapper.ClassInheritanceProvider;
-import com.maxqia.ReflectionRemapper.MappingLoader;
-import com.maxqia.ReflectionRemapper.ReflectionTransformer;
+import com.maxqia.ReflectionRemapper.Transformer;
 import net.md_5.specialsource.JarMapping;
 import net.md_5.specialsource.JarRemapper;
 import net.md_5.specialsource.provider.ClassLoaderProvider;
 import net.md_5.specialsource.provider.JointProvider;
 import net.md_5.specialsource.repo.RuntimeRepo;
+import net.md_5.specialsource.transformer.MavenShade;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
@@ -15,9 +15,11 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import red.mohist.Mohist;
 import thermos.ThermosRemapper;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -59,13 +61,28 @@ final class PluginClassLoader extends URLClassLoader {
         this.jar = new JarFile(file);
         this.manifest = jar.getManifest();
         this.url = file.toURI().toURL();
+        jarMapping = new JarMapping();
+        try {
+            jarMapping.packages.put("org/bukkit/craftbukkit/libs/it/unimi/dsi/fastutil", "it/unimi/dsi/fastutil");
+            jarMapping.packages.put("org/bukkit/craftbukkit/libs/jline", "jline");
+            jarMapping.packages.put("org/bukkit/craftbukkit/libs/joptsimple", "joptsimple");
 
-        jarMapping = MappingLoader.loadMapping();
+            Map<String, String> relocations = new HashMap<String, String>();
+            relocations.put("net.minecraft.server", "net.minecraft.server." + Mohist.getNativeVersion());
+
+            jarMapping.loadMappings(
+                    new BufferedReader(new InputStreamReader(Mohist.class.getClassLoader().getResourceAsStream("mappings/nms.srg"))),
+                    new MavenShade(relocations),
+                    null, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         JointProvider provider = new JointProvider();
         provider.add(new ClassInheritanceProvider());
         provider.add(new ClassLoaderProvider(this));
         this.jarMapping.setFallbackInheritanceProvider(provider);
         remapper = new ThermosRemapper(jarMapping);
+        Transformer.init(jarMapping, remapper);
 
         try {
             Class<?> jarClass;
@@ -98,8 +115,7 @@ final class PluginClassLoader extends URLClassLoader {
     Class<?> findClass(String name, boolean checkGlobal) throws ClassNotFoundException {
         if (name.startsWith("net.minecraft.server." + Mohist.getNativeVersion())) {
             String remappedClass = jarMapping.classes.get(name.replaceAll("\\.", "\\/"));
-            Class<?> clazz = ((net.minecraft.launchwrapper.LaunchClassLoader)MinecraftServer.getServerInst().getClass().getClassLoader()).findClass(remappedClass);
-            return clazz;
+            return ((net.minecraft.launchwrapper.LaunchClassLoader)MinecraftServer.getServerInst().getClass().getClassLoader()).findClass(remappedClass);
         }
 
         if (name.startsWith("org.bukkit.")) {
@@ -171,7 +187,7 @@ final class PluginClassLoader extends URLClassLoader {
 
                     // Remap the classes
                     bytecode = remapper.remapClassFile(stream, RuntimeRepo.getInstance());
-                    bytecode = ReflectionTransformer.transform(bytecode);
+                    bytecode = Transformer.transform(bytecode);
 
                     // Define (create) the class using the modified byte code
                     // The top-child class loader is used for this to prevent access violations
@@ -194,13 +210,5 @@ final class PluginClassLoader extends URLClassLoader {
         }
 
         return result;
-    }
-
-    @Override
-    protected Package getPackage(String name) {
-        if (name == "org.bukkit.craftbukkit") {
-            name = "org.bukkit.craftbukkit." + Mohist.getNativeVersion();
-        }
-        return super.getPackage(name);
     }
 }
