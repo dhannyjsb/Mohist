@@ -156,6 +156,15 @@ public class MohistConfig {
         return config.getBoolean(path, config.getBoolean(path));
     }
 
+    public static <T> T getValue(String path, Class<T> valueType, T def) {
+        Object val = config.get(path);
+        if (valueType.isInstance(val)) {
+            return (T) val;
+        }
+        config.set(path, def);
+        return def;
+    }
+
     private static double getDouble(String path, double def) {
         config.addDefault(path, def);
         return config.getDouble(path, config.getDouble(path));
