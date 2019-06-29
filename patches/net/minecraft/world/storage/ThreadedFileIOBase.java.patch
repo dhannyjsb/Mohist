@@ -1,100 +1,34 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/ThreadedFileIOBase.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/ThreadedFileIOBase.java
-@@ -1,16 +1,18 @@
- package net.minecraft.world.storage;
- 
- import com.google.common.collect.Lists;
--import java.util.Collections;
--import java.util.List;
- 
-+import java.util.*;
-+import java.util.concurrent.*;
-+
- public class ThreadedFileIOBase implements Runnable
- {
-     private static final ThreadedFileIOBase INSTANCE = new ThreadedFileIOBase();
--    private final List<IThreadedFileIO> threadedIOQueue = Collections.<IThreadedFileIO>synchronizedList(Lists.newArrayList());
-     private volatile long writeQueuedCounter;
-     private volatile long savedIOCounter;
-     private volatile boolean isThreadWaiting;
-+    private final LinkedBlockingQueue<IThreadedFileIO> ioQueue = new LinkedBlockingQueue<>();
-+    private final Set<Integer> taskId = Collections.newSetFromMap(new ConcurrentHashMap<>());
- 
-     private ThreadedFileIOBase()
-     {
-@@ -28,52 +30,34 @@
-     {
-         while (true)
+@@ -37,14 +37,20 @@
+         for (int i = 0; i < this.threadedIOQueue.size(); ++i)
          {
--            this.processQueue();
-+            processQueue();
-         }
-     }
- 
-     private void processQueue()
-     {
--        for (int i = 0; i < this.threadedIOQueue.size(); ++i)
--        {
--            IThreadedFileIO ithreadedfileio = this.threadedIOQueue.get(i);
+             IThreadedFileIO ithreadedfileio = this.threadedIOQueue.get(i);
 -            boolean flag = ithreadedfileio.writeNextIO();
--
++            boolean retain = false;
++            try {
++                retain = ithreadedfileio.writeNextIO();
++            } catch (Throwable e) {
++                e.printStackTrace();
++            }
+ 
 -            if (!flag)
--            {
--                this.threadedIOQueue.remove(i--);
-+        List<IThreadedFileIO> pending = new ArrayList<>();
-+        try {
-+            IThreadedFileIO task = ioQueue.take();
-+            boolean retain = task.writeNextIO();
-+            if (retain) {
-+                pending.add(task);
-+            } else {
++            if (!retain)
+             {
+                 this.threadedIOQueue.remove(i--);
                  ++this.savedIOCounter;
              }
--
--            try
--            {
--                Thread.sleep(this.isThreadWaiting ? 0L : 10L);
--            }
--            catch (InterruptedException interruptedexception1)
--            {
--                interruptedexception1.printStackTrace();
--            }
-+        } catch (Throwable e) {
-+            e.printStackTrace();
-         }
--
--        if (this.threadedIOQueue.isEmpty())
--        {
--            try
--            {
--                Thread.sleep(25L);
--            }
--            catch (InterruptedException interruptedexception)
--            {
--                interruptedexception.printStackTrace();
--            }
-+        for (IThreadedFileIO iThreadedFileIO : pending) {
-+            ioQueue.add(iThreadedFileIO);
-         }
-     }
  
-     public void queueIO(IThreadedFileIO fileIo)
-     {
--        if (!this.threadedIOQueue.contains(fileIo))
--        {
-+        if (taskId.add(System.identityHashCode(fileIo))) {
-             ++this.writeQueuedCounter;
--            this.threadedIOQueue.add(fileIo);
-+            this.ioQueue.add(fileIo);
++            // Spigot start - don't sleep in between chunks so we unload faster.
+             try
+             {
+                 Thread.sleep(this.isThreadWaiting ? 0L : 10L);
+@@ -52,7 +58,7 @@
+             catch (InterruptedException interruptedexception1)
+             {
+                 interruptedexception1.printStackTrace();
+-            }
++            } // Spigot end
          }
-     }
  
-@@ -81,7 +65,7 @@
-     {
-         this.isThreadWaiting = true;
- 
--        while (this.writeQueuedCounter != this.savedIOCounter)
-+        while (!this.ioQueue.isEmpty())
-         {
-             Thread.sleep(10L);
-         }
+         if (this.threadedIOQueue.isEmpty())
