@@ -124,7 +124,27 @@
      public Chunk(World worldIn, ChunkPrimer primer, int x, int z)
      {
          this(worldIn, x, z);
-@@ -332,8 +372,8 @@
+@@ -271,6 +311,19 @@
+         this.isGapLightingUpdated = true;
+     }
+ 
++    /**
++     * PaperSpigot - Recheck gaps asynchronously.
++     */
++    public void recheckGapsAsync(boolean isStatic) {
++
++        world.lightingExecutor.submit(new Runnable() {
++            @Override
++            public void run() {
++                Chunk.this.recheckGaps(isStatic);
++            }
++        });
++    }
++
+     private void recheckGaps(boolean onlyOne)
+     {
+         this.world.profiler.startSection("recheckGaps");
+@@ -332,8 +385,8 @@
  
      private void updateSkylightNeighborHeight(int x, int z, int startY, int endY)
      {
@@ -135,7 +155,7 @@
              for (int i = startY; i < endY; ++i)
              {
                  this.world.checkLightFor(EnumSkyBlock.SKY, new BlockPos(x, i, z));
-@@ -468,7 +508,7 @@
+@@ -468,7 +521,7 @@
      }
  
      public IBlockState getBlockState(final int x, final int y, final int z)
@@ -144,7 +164,7 @@
          if (this.world.getWorldType() == WorldType.DEBUG_ALL_BLOCK_STATES)
          {
              IBlockState iblockstate = null;
-@@ -565,12 +605,12 @@
+@@ -565,12 +618,12 @@
                  {
                      if (block1 != block) //Only fire block breaks when the block changes.
                      block1.breakBlock(this.world, pos, iblockstate);
@@ -159,7 +179,7 @@
                      if (te != null && te.shouldRefresh(this.world, pos, iblockstate, state))
                      this.world.removeTileEntity(pos);
                  }
-@@ -608,6 +648,7 @@
+@@ -608,6 +661,7 @@
                      }
                  }
  
@@ -167,7 +187,7 @@
                  // If capturing blocks, only run block physics for TE's. Non-TE's are handled in ForgeHooks.onPlaceItemIntoWorld
                  if (!this.world.isRemote && block1 != block && (!this.world.captureBlockSnapshots || block.hasTileEntity(state)))
                  {
-@@ -616,7 +657,7 @@
+@@ -616,7 +670,7 @@
  
                  if (block.hasTileEntity(state))
                  {
@@ -176,7 +196,7 @@
  
                      if (tileentity1 == null)
                      {
-@@ -743,6 +784,22 @@
+@@ -743,6 +797,22 @@
          entityIn.chunkCoordZ = this.z;
          this.entityLists[k].add(entityIn);
          this.markDirty(); // Forge - ensure chunks are marked to save after an entity add
@@ -199,7 +219,7 @@
      }
  
      public void removeEntity(Entity entityIn)
-@@ -764,6 +821,22 @@
+@@ -764,6 +834,22 @@
  
          this.entityLists[index].remove(entityIn);
          this.markDirty(); // Forge - ensure chunks are marked to save after entity removals
@@ -222,7 +242,7 @@
      }
  
      public boolean canSeeSky(BlockPos pos)
-@@ -781,11 +854,14 @@
+@@ -781,11 +867,14 @@
          Block block = iblockstate.getBlock();
          return !block.hasTileEntity(iblockstate) ? null : block.createTileEntity(this.world, iblockstate);
      }
@@ -240,7 +260,7 @@
  
          if (tileentity != null && tileentity.isInvalid())
          {
-@@ -795,12 +871,12 @@
+@@ -795,12 +884,12 @@
  
          if (tileentity == null)
          {
@@ -255,7 +275,7 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -854,17 +930,16 @@
+@@ -854,17 +943,16 @@
      {
          this.loaded = true;
          this.world.addTileEntities(this.tileEntities.values());
@@ -275,7 +295,7 @@
          this.loaded = false;
  
          for (TileEntity tileentity : this.tileEntities.values())
-@@ -874,7 +949,14 @@
+@@ -874,7 +962,14 @@
  
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
          {
@@ -291,7 +311,7 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -950,12 +1032,8 @@
+@@ -950,12 +1045,8 @@
                  return true;
              }
          }
@@ -305,7 +325,7 @@
      }
  
      public Random getRandomWithSeed(long seed)
-@@ -1001,6 +1079,63 @@
+@@ -1001,6 +1092,63 @@
          }
      }
  
@@ -369,7 +389,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1152,26 @@
+@@ -1017,6 +1165,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -396,7 +416,16 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1230,7 @@
+@@ -1061,7 +1229,7 @@
+     {
+         if (this.isGapLightingUpdated && this.world.provider.hasSkyLight() && !skipRecheckGaps)
+         {
+-            this.recheckGaps(this.world.isRemote);
++            this.recheckGapsAsync(this.world.isRemote);
+         }
+ 
+         this.ticked = true;
+@@ -1075,7 +1243,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -405,7 +434,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1241,7 @@
+@@ -1086,7 +1254,7 @@
  
      public boolean isPopulated()
      {
@@ -414,7 +443,16 @@
      }
  
      public boolean wasTicked()
-@@ -1418,7 +1573,7 @@
+@@ -1336,7 +1504,7 @@
+             this.updateSkylightColumns[i] = true;
+         }
+ 
+-        this.recheckGaps(false);
++        this.recheckGapsAsync(false);
+     }
+ 
+     private void checkLightSide(EnumFacing facing)
+@@ -1418,7 +1586,7 @@
      {
          return this.loaded;
      }
@@ -423,7 +461,7 @@
      @SideOnly(Side.CLIENT)
      public void markLoaded(boolean loaded)
      {
-@@ -1540,11 +1695,11 @@
+@@ -1540,11 +1708,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.
