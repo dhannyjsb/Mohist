@@ -11,7 +11,7 @@ public class DownloadServer implements Runnable {
     public void run() {
         String url = "https://launcher.mojang.com/v1/objects/886945bfb2b978778c3a0288fd7fab09d315b25f/server.jar";
         Locale locale = Locale.getDefault();
-        if (locale.getCountry().startsWith("zh_")) {
+        if (locale.getCountry().equals("zh_CN") || locale.getCountry().equals("CN") || locale.getCountry().equals("zh_TW") || locale.getCountry().equals("TW")) {
             url = "https://pfcraft.gitee.io/mohistdown/minecraft_server.1.12.2.jar";
         }
         String fileName = "minecraft_server.1.12.2.jar";
