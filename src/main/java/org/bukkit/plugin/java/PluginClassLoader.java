@@ -9,17 +9,16 @@ import net.md_5.specialsource.provider.JointProvider;
 import net.md_5.specialsource.repo.RuntimeRepo;
 import net.md_5.specialsource.transformer.MavenShade;
 import net.minecraft.server.MinecraftServer;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import red.mohist.Mohist;
+import red.mohist.MohistConfig;
+import red.mohist.common.asm.transformers.VersionTransformer;
 import thermos.ThermosRemapper;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -35,6 +34,7 @@ import java.util.jar.Manifest;
  * A ClassLoader for plugins, to allow shared classes across multiple plugins
  */
 final class PluginClassLoader extends URLClassLoader {
+    private static final VersionTransformer VERSION_TRANSFORMER = new VersionTransformer();
     private final JavaPluginLoader loader;
     private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
     private final PluginDescriptionFile description;
@@ -50,9 +50,16 @@ final class PluginClassLoader extends URLClassLoader {
     private JarRemapper remapper;
     private JarMapping jarMapping;
 
+    private boolean nmsRemap = false;
+
     PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException {
-        super(new URL[] {file.toURI().toURL()}, parent);
+        super(new URL[]{file.toURI().toURL()}, parent);
         Validate.notNull(loader, "Loader cannot be null");
+
+        if (MohistConfig.multiVersinoNMSRemap && MohistConfig.versionNMSRemapPlugins != null && (MohistConfig.versionNMSRemapPlugins.contains("*") || MohistConfig.versionNMSRemapPlugins.contains(description.getName()))) {
+//            启用了nmsRemap
+            nmsRemap = true;
+        }
 
         this.loader = loader;
         this.description = description;
@@ -116,7 +123,7 @@ final class PluginClassLoader extends URLClassLoader {
     Class<?> findClass(String name, boolean checkGlobal) throws ClassNotFoundException {
         if (name.startsWith("net.minecraft.server." + Mohist.getNativeVersion())) {
             String remappedClass = jarMapping.classes.get(name.replaceAll("\\.", "\\/"));
-            return ((net.minecraft.launchwrapper.LaunchClassLoader)MinecraftServer.getServerInst().getClass().getClassLoader()).findClass(remappedClass);
+            return ((net.minecraft.launchwrapper.LaunchClassLoader) MinecraftServer.getServerInst().getClass().getClassLoader()).findClass(remappedClass);
         }
 
         if (name.startsWith("org.bukkit.")) {
@@ -129,10 +136,10 @@ final class PluginClassLoader extends URLClassLoader {
                 if (checkGlobal) {
                     result = loader.getClassByName(name);
                 }
-    
+
                 if (result == null) {
                     result = remappedFindClass(name);
-    
+
                     if (result != null) {
                         loader.setClass(name, result);
                     }
@@ -141,7 +148,7 @@ final class PluginClassLoader extends URLClassLoader {
                 if (result == null) {
                     throw new ClassNotFoundException(name);
                 }
-    
+
                 classes.put(name, result);
             }
         }
@@ -173,7 +180,7 @@ final class PluginClassLoader extends URLClassLoader {
 
         javaPlugin.init(loader, loader.server, description, dataFolder, file, this);
     }
-    
+
     private Class<?> remappedFindClass(String name) throws ClassNotFoundException {
         Class<?> result = null;
 
@@ -185,6 +192,13 @@ final class PluginClassLoader extends URLClassLoader {
                 InputStream stream = url.openStream();
                 if (stream != null) {
                     byte[] bytecode = null;
+
+                    if (nmsRemap) {
+//                        将插件nms转换为当前核心版本
+                        bytecode = IOUtils.toByteArray(stream);
+                        bytecode = VERSION_TRANSFORMER.transform(name, name, bytecode);
+                        stream = new ByteArrayInputStream(bytecode, 0, bytecode.length);
+                    }
 
                     // Remap the classes
                     bytecode = remapper.remapClassFile(stream, RuntimeRepo.getInstance());
@@ -207,7 +221,7 @@ final class PluginClassLoader extends URLClassLoader {
                 }
             }
         } catch (Throwable t) {
-            throw new ClassNotFoundException("Failed to remap class "+name, t);
+            throw new ClassNotFoundException("Failed to remap class " + name, t);
         }
 
         return result;

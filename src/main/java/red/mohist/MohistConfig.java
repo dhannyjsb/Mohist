@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,32 @@ public class MohistConfig {
     public static String outdatedClientMessage = Message.getString(Message.outdated_Client);
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
     public static boolean useChunksMapForPendingBlocks = false; //Goodvise code add
+    /**
+     * 是否请用插件nms多版本兼容
+     */
+    public static boolean multiVersinoNMSRemap = true;
+    /**
+     * 进行nmsRemap的插件
+     * *表示所有
+     */
+    public static List<String> versionNMSRemapPlugins = new ArrayList<>();
 
+    static {
+        versionNMSRemapPlugins.add("*");
+    }
+
+    /**
+     * 是否导出经过NMSRemap的类
+     */
+    public static boolean dumpNMSRemppedClass = false;
+    /**
+     * 非玩家实体碰撞其他实体的间隔时间
+     */
+    public static int entityCollideFrequency = 2;
+    /**
+     * 一个tick内,一个实体可以碰撞或被碰撞多少次
+     */
+    public static int maxEntityCollisionsPerTick = 8;
     private static File CONFIG_FILE;
     private static final String HEADER = "This is the main configuration file for Mohist.\n"
             + "You can change \"update: \n  version: Stable or Debug to get universal version or debug version\"\n";
@@ -56,25 +82,29 @@ public class MohistConfig {
 
         version = getInt("config-version", 1);
         set("config-version", 1);
-        if(version < 0){
+        if (version < 0) {
             config.options().header(HEADER);
-            set("messages.use-unknow-command",unknownCommandMessage);
-            set("messages.Outdate-Client",outdatedClientMessage);
-            set("messages.Outdate-Server",outdatedServerMessage);
-            set("update.version","Stable");
-			set("update.autoget",false);
-			set("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
+            set("messages.use-unknow-command", unknownCommandMessage);
+            set("messages.Outdate-Client", outdatedClientMessage);
+            set("messages.Outdate-Server", outdatedServerMessage);
+            set("update.version", "Stable");
+            set("update.autoget", false);
+            set("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
         }
-        unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
-        outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
-        outdatedServerMessage = transform(  getString("messages.Outdate-Server",outdatedServerMessage) );
+        unknownCommandMessage = transform(getString("messages.use-unknow-command", unknownCommandMessage));
+        outdatedClientMessage = transform(getString("messages.Outdate-Client", outdatedClientMessage));
+        outdatedServerMessage = transform(getString("messages.Outdate-Server", outdatedServerMessage));
         useChunksMapForPendingBlocks = getBoolean("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
+        entityCollideFrequency = getInt("perfomance.entityCollideFrequency", entityCollideFrequency);
+        maxEntityCollisionsPerTick = getInt("perfomance.maxEntityCollisionsPerTick", maxEntityCollisionsPerTick);
+        multiVersinoNMSRemap = getBoolean("remap.multiVersinoNMSRemap", multiVersinoNMSRemap);
+        versionNMSRemapPlugins = getList("remap.versionNMSRemapPlugins", versionNMSRemapPlugins);
+        dumpNMSRemppedClass = getBoolean("remap.dumpNMSRemppedClass", dumpNMSRemppedClass);
         readConfig(MohistConfig.class, null);
     }
 
-    private static String transform(String s)
-    {
-        return ChatColor.translateAlternateColorCodes( '&', s ).replaceAll( "\\\\n", "\n" );
+    private static String transform(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s).replaceAll("\\\\n", "\n");
     }
 
     public static void registerCommands() {
@@ -109,6 +139,7 @@ public class MohistConfig {
 
     private static final Pattern SPACE = Pattern.compile(" ");
     private static final Pattern NOT_NUMERIC = Pattern.compile("[^-\\d.]");
+
     public static int getSeconds(String str) {
         str = SPACE.matcher(str).replaceAll("");
         final char unit = str.charAt(str.length() - 1);
@@ -120,10 +151,18 @@ public class MohistConfig {
             num = 0D;
         }
         switch (unit) {
-            case 'd': num *= (double) 60*60*24; break;
-            case 'h': num *= (double) 60*60; break;
-            case 'm': num *= 60; break;
-            default: case 's': break;
+            case 'd':
+                num *= (double) 60 * 60 * 24;
+                break;
+            case 'h':
+                num *= (double) 60 * 60;
+                break;
+            case 'm':
+                num *= 60;
+                break;
+            default:
+            case 's':
+                break;
         }
         return (int) num;
     }
@@ -190,7 +229,7 @@ public class MohistConfig {
         return config.getString(path, config.getString(path));
     }
 
-    public static void reload(){
+    public static void reload() {
         try {
             config.save(CONFIG_FILE);
             config.load(CONFIG_FILE);
@@ -201,9 +240,9 @@ public class MohistConfig {
         }
 
         // Reload read
-        unknownCommandMessage = transform(  getString("messages.use-unknow-command",unknownCommandMessage) );
-        outdatedClientMessage = transform(  getString("messages.Outdate-Client",outdatedClientMessage) );
-        outdatedServerMessage = transform(  getString("messages.Outdate-Server",outdatedServerMessage) );
+        unknownCommandMessage = transform(getString("messages.use-unknow-command", unknownCommandMessage));
+        outdatedClientMessage = transform(getString("messages.Outdate-Client", outdatedClientMessage));
+        outdatedServerMessage = transform(getString("messages.Outdate-Server", outdatedServerMessage));
         useChunksMapForPendingBlocks = getBoolean("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
     }
 }
