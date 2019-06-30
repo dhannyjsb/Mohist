@@ -43,15 +43,15 @@ public class Utils {
                 // Check type to see if it matches
                 String[] str = entry.getKey().split("\\s+");
                 int i = 0;
-                boolean failed = false;
                 for (Type type : Type.getArgumentTypes(str[1])) {
                     if (!type.getClassName().equals(reverseMapExternal(parameterTypes[i]))) {
-                        failed = true;
+                        i=-1;
                         break;
                     }
+                    i++;
                 }
 
-                if (!failed) {
+                if (i >= parameterTypes.length) {
                     return entry.getValue();
                 }
             }
