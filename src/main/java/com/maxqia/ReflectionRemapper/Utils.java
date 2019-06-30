@@ -15,12 +15,7 @@ public class Utils {
     }
 
     public static String reverseMap(String check) {
-        for (Map.Entry<String, String> entry : Transformer.jarMapping.classes.entrySet()) {
-            if (entry.getValue().equals(check)) {
-                return entry.getKey();
-            }
-        }
-        return check;
+        return  Transformer.jarMapping.classes.getOrDefault(check, check);
     }
 
     public static String mapMethod(Class<?> inst, String name, Class<?>... parameterTypes) {
@@ -34,12 +29,9 @@ public class Utils {
     public static String mapMethodInternal(Class<?> inst, String name, Class<?>... parameterTypes) {
         String match = reverseMap(inst) + "/" + name;
 
-        for (Map.Entry<String, String> entry : Transformer.jarMapping.methods.entrySet()) {
-            if (entry.getKey().startsWith(match)) {
-                //System.out.println(entry.getValue());
-
-                // Check type to see if it matches
-                String[] str = entry.getKey().split("\\s+");
+        Map<String, String> map = Transformer.jarMapping.methods;
+        for (String value : map.keySet()) {
+                String[] str = value.split("\\s+");
                 int i = 0;
                 for (Type type : Type.getArgumentTypes(str[1])) {
                     if (i >= parameterTypes.length || !type.getClassName().equals(reverseMapExternal(parameterTypes[i]))) {
@@ -50,11 +42,10 @@ public class Utils {
                 }
 
                 if (i >= parameterTypes.length) {
-                    return entry.getValue();
+                    return map.get(value);
                 }
             }
             //System.out.println(entry.getKey());
-        }
 
         // return superMethodName
         Class interfaces = inst.getSuperclass();

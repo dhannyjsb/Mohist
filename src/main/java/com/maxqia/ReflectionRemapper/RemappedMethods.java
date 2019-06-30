@@ -4,6 +4,7 @@ import red.mohist.Mohist;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Map;
 
 import static com.maxqia.ReflectionRemapper.Utils.mapMethod;
@@ -62,16 +63,14 @@ class RemappedMethods {
         }
         String name = field.getName();
         String match = reverseMap(field.getDeclaringClass());
-
-        for (Map.Entry<String, String> entry : Transformer.jarMapping.fields.entrySet()) {
-            if (entry.getKey().startsWith(match) && entry.getValue().equals(name)) {
-                String[] matched = entry.getKey().split("\\/");
-                String rtr =  matched[matched.length-1];
-                //System.out.println(matched[matched.length-1] + " field matched " + name);
+        Map<String, String> map = Transformer.jarMapping.fields;
+        for (String value : map.keySet()) {
+            if (map.get(name).startsWith(match)) {
+                String[] matched = value.split("\\/");
+                String rtr =  matched[matched.length - 1];
                 return rtr;
             }
         }
-
         //System.out.println("Could not get field reverse of : " + name);
         return name;
     }
@@ -82,12 +81,11 @@ class RemappedMethods {
         }
         String name = method.getName();
         String match = reverseMap(method.getDeclaringClass());
-
-        for (Map.Entry<String, String> entry : Transformer.jarMapping.methods.entrySet()) {
-            if (entry.getKey().startsWith(match) && entry.getValue().equals(name)) {
-                String[] matched = entry.getKey().split("\\s+")[0].split("\\/");
+        Map<String, String> map = Transformer.jarMapping.methods;
+        for (String value : map.keySet()) {
+            if (map.get(name).startsWith(match)) {
+                String[] matched = value.split("\\s+")[0].split("\\/");
                 String rtr =  matched[matched.length-1];
-                //System.out.println(matched[matched.length-1] + " method matched " + name);
                 return rtr;
             }
         }
