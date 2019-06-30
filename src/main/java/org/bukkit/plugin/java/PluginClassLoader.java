@@ -14,6 +14,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import red.mohist.Mohist;
+import red.mohist.MohistConfig;
 import red.mohist.common.asm.transformers.VersionTransformer;
 import thermos.ThermosRemapper;
 
@@ -49,9 +50,16 @@ final class PluginClassLoader extends URLClassLoader {
     private JarRemapper remapper;
     private JarMapping jarMapping;
 
+    private boolean nmsRemap = false;
+
     PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException {
         super(new URL[]{file.toURI().toURL()}, parent);
         Validate.notNull(loader, "Loader cannot be null");
+
+        if (MohistConfig.multiVersinoNMSRemap && MohistConfig.versionNMSRemapPlugins != null && (MohistConfig.versionNMSRemapPlugins.contains("*") || MohistConfig.versionNMSRemapPlugins.contains(description.getName()))) {
+//            启用了nmsRemap
+            nmsRemap = true;
+        }
 
         this.loader = loader;
         this.description = description;
@@ -183,10 +191,14 @@ final class PluginClassLoader extends URLClassLoader {
             if (url != null) {
                 InputStream stream = url.openStream();
                 if (stream != null) {
-                    byte[] bytecode = IOUtils.toByteArray(stream);
+                    byte[] bytecode = null;
 
-                    bytecode = VERSION_TRANSFORMER.transform(name, name, bytecode);
-                    stream = new ByteArrayInputStream(bytecode, 0, bytecode.length);
+                    if (nmsRemap) {
+//                        将插件nms转换为当前核心版本
+                        bytecode = IOUtils.toByteArray(stream);
+                        bytecode = VERSION_TRANSFORMER.transform(name, name, bytecode);
+                        stream = new ByteArrayInputStream(bytecode, 0, bytecode.length);
+                    }
 
                     // Remap the classes
                     bytecode = remapper.remapClassFile(stream, RuntimeRepo.getInstance());

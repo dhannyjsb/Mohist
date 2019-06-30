@@ -943,18 +943,14 @@
          }
      }
  
-@@ -2434,38 +2692,51 @@
+@@ -2434,38 +2692,42 @@
      {
      }
  
 -    protected void collideWithNearbyEntities()
 -    {
 +    protected void collideWithNearbyEntities() {
-+        /**
-+         * 非玩家实体碰撞周围实体的间隔时间
-+         */
-+        int entityCollideInterval = MohistConfig.getValue("perfomance.entityCollideInterval", Integer.class,2);
-+        if (!(this instanceof EntityPlayerMP) && this.ticksExisted % entityCollideInterval == 0) {
++        if (!(this instanceof EntityPlayerMP) && this.ticksExisted % MohistConfig.entityCollideFrequency == 0) {
 +            return;
 +        }
          List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(), EntitySelectors.getTeamCollisionPredicate(this));
@@ -999,14 +995,9 @@
 -            {
 -                Entity entity = list.get(l);
 -                this.collideWithEntity(entity);
-+        /**
-+         * 实体每tick最大碰撞次数
-+         */
-+        int maxEntityCollisionsPerEntity = MohistConfig.getValue("perfomance.maxEntityCollisionsPerEntity", Integer.class,8);
-+
 +        for (int l = 0; l < list.size(); ++l) {
 +            Entity entity = list.get(l);
-+            if (this.collisionCount > maxEntityCollisionsPerEntity) {
++            if (this.collisionCount > MohistConfig.maxEntityCollisionsPerTick) {
 +                break;
              }
 +            if (!entity.canBePushed()) {
@@ -1020,7 +1011,7 @@
      }
  
      protected void collideWithEntity(Entity entityIn)
-@@ -2560,12 +2831,12 @@
+@@ -2560,12 +2822,12 @@
  
      public boolean canBeCollidedWith()
      {
@@ -1035,7 +1026,7 @@
      }
  
      protected void markVelocityChanged()
-@@ -2629,7 +2900,7 @@
+@@ -2629,7 +2891,7 @@
          {
              PotionEffect effect = iterator.next();
  
@@ -1044,7 +1035,7 @@
              {
                  onFinishedPotionEffect(effect);
                  iterator.remove();
-@@ -2667,7 +2938,8 @@
+@@ -2667,7 +2929,8 @@
          if (this.isHandActive())
          {
              ItemStack itemstack = this.getHeldItem(this.getActiveHand());
@@ -1054,7 +1045,7 @@
  
              if (itemstack == this.activeItemStack)
              {
-@@ -2785,8 +3057,25 @@
+@@ -2785,8 +3048,25 @@
          if (!this.activeItemStack.isEmpty() && this.isHandActive())
          {
              this.updateItemUse(this.activeItemStack, 16);
@@ -1082,7 +1073,7 @@
              itemstack = net.minecraftforge.event.ForgeEventFactory.onItemUseFinish(this, activeItemStackCopy, getItemInUseCount(), itemstack);
              this.setHeldItem(this.getActiveHand(), itemstack);
              this.resetActiveHand();
-@@ -2897,11 +3186,14 @@
+@@ -2897,11 +3177,14 @@
  
              if (flag1)
              {
@@ -1102,7 +1093,7 @@
                  }
              }
          }
-@@ -2936,6 +3228,11 @@
+@@ -2936,6 +3219,11 @@
          }
      }
  
@@ -1114,7 +1105,7 @@
      public boolean canBeHitWithPotion()
      {
          return true;
-@@ -2949,7 +3246,7 @@
+@@ -2949,7 +3237,7 @@
      @SuppressWarnings("unchecked")
      @Override
      @Nullable
@@ -1123,7 +1114,7 @@
      {
          if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
          {
-@@ -2961,7 +3258,7 @@
+@@ -2961,7 +3249,7 @@
      }
  
      @Override
@@ -1132,7 +1123,7 @@
      {
          return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
      }
-@@ -2975,7 +3272,7 @@
+@@ -2975,7 +3263,7 @@
      public void setPartying(BlockPos pos, boolean p_191987_2_)
      {
      }
