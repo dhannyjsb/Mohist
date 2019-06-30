@@ -125,7 +125,14 @@ public class RemappedMethods {
         if (!inst.getName().startsWith("net.minecraft.")) {
             return inst.getSimpleName();
         }
-        String[] name = reverseMapExternal(inst).split("\\.");
+        String[] name = getName(inst).split("\\.");
         return name[name.length - 1];
+    }
+
+    public static String getName(Class<?> inst) {
+        if (!inst.getName().startsWith("net.minecraft.")) {
+            return inst.getName();
+        }
+        return reverseMapExternal(inst);
     }
 }
