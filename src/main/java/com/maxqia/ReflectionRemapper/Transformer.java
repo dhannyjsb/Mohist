@@ -59,15 +59,15 @@ public class Transformer {
         return writer.toByteArray();
     }
 
-    public static void remapForName(AbstractInsnNode insn) {
+    private static void remapForName(AbstractInsnNode insn) {
         MethodInsnNode method = (MethodInsnNode) insn;
         if (!"java/lang/Class".equals(method.owner) || !"forName".equals(method.name)) {
             return;
         }
-        method.owner = "com/maxqia/ReflectionRemapper/RemappedMethods";;
+        method.owner = "com/maxqia/ReflectionRemapper/RemappedMethods";
     }
 
-    public static void remapVirtual(AbstractInsnNode insn) {
+    private static void remapVirtual(AbstractInsnNode insn) {
         MethodInsnNode method = (MethodInsnNode) insn;
         /*if (method.owner.equals("java/lang/Package") && method.name.equals("getName"))
             System.out.println("getName");*/
@@ -89,7 +89,7 @@ public class Transformer {
 
         Type returnType = Type.getReturnType(method.desc);
 
-        ArrayList<Type> args = new ArrayList<Type>();
+        ArrayList<Type> args = new ArrayList<>();
         args.add(Type.getObjectType(method.owner));
         args.addAll(Arrays.asList(Type.getArgumentTypes(method.desc)));
 

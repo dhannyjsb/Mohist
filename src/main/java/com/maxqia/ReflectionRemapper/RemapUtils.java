@@ -7,15 +7,14 @@ import java.lang.reflect.Method;
  * Based on Apache's ReflectionUtil
  * @author Maxqia
  */
-public class RemapUtils {
+class RemapUtils {
 
     private static final Method GET_CALLER_CLASS;
 
     static {
         try {
             final Class<?> reflection = Class.forName("sun.reflect.Reflection");
-            Method getCallerClass = reflection.getMethod("getCallerClass", int.class);
-            GET_CALLER_CLASS = getCallerClass;
+            GET_CALLER_CLASS = reflection.getMethod("getCallerClass", int.class);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("getCallerClass doesn't exist!");
         }

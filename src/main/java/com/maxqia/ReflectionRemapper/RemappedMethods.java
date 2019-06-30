@@ -10,7 +10,7 @@ import static com.maxqia.ReflectionRemapper.Utils.mapMethod;
 import static com.maxqia.ReflectionRemapper.Utils.reverseMap;
 import static com.maxqia.ReflectionRemapper.Utils.reverseMapExternal;
 
-public class RemappedMethods {
+class RemappedMethods {
 
     // Classes
     public static Class<?> forName(String className) throws ClassNotFoundException {

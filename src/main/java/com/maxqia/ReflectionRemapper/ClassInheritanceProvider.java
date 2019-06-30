@@ -11,7 +11,7 @@ public class ClassInheritanceProvider implements InheritanceProvider {
         className = Transformer.remapper.map(className);
 
         try {
-            Collection<String> parents = new HashSet<String>();
+            Collection<String> parents = new HashSet<>();
             Class<?> reference = Class.forName(className.replace('/', '.').replace('$', '.'), false, this.getClass().getClassLoader()/*RemappedMethods.loader*/);
             Class<?> extend = reference.getSuperclass();
             if (extend != null) {

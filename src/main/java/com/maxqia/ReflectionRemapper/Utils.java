@@ -2,8 +2,6 @@ package com.maxqia.ReflectionRemapper;
 
 import org.objectweb.asm.Type;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 
 public class Utils {
@@ -58,16 +56,11 @@ public class Utils {
             //System.out.println(entry.getKey());
         }
 
-        // Search interfaces
-        ArrayList<Class<?>> parents = new ArrayList<Class<?>>();
-        parents.add(inst.getSuperclass());
-        parents.addAll(Arrays.asList(inst.getInterfaces()));
-
-        for (Class<?> superClass : parents) {
-            if (superClass == null) {
-                continue;
-            }
-            mapMethodInternal(superClass, name, parameterTypes);
+        // return superMethodName
+        Class interfaces = inst.getSuperclass();
+        if (interfaces != null) {
+            String superMethodName = mapMethodInternal(interfaces, name, parameterTypes);
+            return String.valueOf(superMethodName);
         }
         return null;
     }
