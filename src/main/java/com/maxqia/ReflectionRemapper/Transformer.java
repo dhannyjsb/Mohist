@@ -43,12 +43,16 @@ public class Transformer {
             ListIterator<AbstractInsnNode> insnIterator = method.instructions.iterator();
             while (insnIterator.hasNext()) {
                 AbstractInsnNode insn = insnIterator.next();
-                switch (insn.getOpcode()) {
+                if (!(insn instanceof MethodInsnNode)) {
+                    continue;
+                }
+                MethodInsnNode mi = (MethodInsnNode) insn;
+                switch (mi.getOpcode()) {
                     case Opcodes.INVOKEVIRTUAL:
-                        remapVirtual(insn);
+                        remapVirtual(mi);
                         break;
                     case Opcodes.INVOKESTATIC:
-                        remapForName(insn);
+                        remapForName(mi);
                         break;
                 }
             }
@@ -72,11 +76,15 @@ public class Transformer {
         /*if (method.owner.equals("java/lang/Package") && method.name.equals("getName"))
             System.out.println("getName");*/
 
-        if (!("java/lang/Class".equals(method.owner) && ("getField".equals(method.name) || "getDeclaredField".equals(method.name)
-                        || "getMethod".equals(method.name) || "getDeclaredMethod".equals(method.name)
-                        || "getName".equals(method.name) || "getSimpleName".equals(method.name))) &&
-                !("java/lang/reflect/Field".equals(method.owner) && "getName".equals(method.name)) &&
-                !("java/lang/reflect/Method".equals(method.owner) && "getName".equals(method.name))) {
+        if (!(("java/lang/Class".equals(method.owner) && ("getField".equals(method.name)
+                || "getDeclaredField".equals(method.name)
+                || "getMethod".equals(method.name)
+                || "getDeclaredMethod".equals(method.name)
+                || "getSimpleName".equals(method.name))
+                )
+                || ("getName".equals(method.name) && ("java/lang/reflect/Field".equals(method.owner)
+                || "java/lang/reflect/Method".equals(method.owner)))
+                || ("java/lang/ClassLoader".equals(method.owner) && "loadClass".equals(method.name)))) {
             return;
         }
 
