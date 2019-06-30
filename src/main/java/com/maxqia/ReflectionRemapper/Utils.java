@@ -44,7 +44,7 @@ public class Utils {
                 String[] str = entry.getKey().split("\\s+");
                 int i = 0;
                 for (Type type : Type.getArgumentTypes(str[1])) {
-                    if (!type.getClassName().equals(reverseMapExternal(parameterTypes[i]))) {
+                    if (i >= parameterTypes.length || !type.getClassName().equals(reverseMapExternal(parameterTypes[i]))) {
                         i=-1;
                         break;
                     }
