@@ -96,30 +96,6 @@ class RemappedMethods {
         return name;
     }
 
-    // Package names
-    public static String getName(Package inst) {
-        if (!inst.getName().startsWith("net.minecraft.")) {
-            return inst.getName();
-        }
-        if (inst == null)
-        {
-            return null;
-        }
-        String name = inst.getName();
-        //return Transformer.remapper.map(Type.getInternalName(inst)).replace('/', '.');
-        String check = name.replace('.', '/').concat("/");
-        for (Map.Entry<String, String> entry : Transformer.jarMapping.packages.entrySet()) {
-            if (entry.getValue().equals(check)) {
-                String match = entry.getKey().replace('/', '.');
-                match = match.substring(0, match.length()-1);
-                return match;
-            }
-
-        }
-        //System.out.println(name);
-        return name;
-    }
-
     // getSimpleName
     public static String getSimpleName(Class<?> inst) {
         if (!inst.getName().startsWith("net.minecraft.")) {

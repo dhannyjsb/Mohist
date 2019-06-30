@@ -72,8 +72,7 @@ public class Transformer {
         /*if (method.owner.equals("java/lang/Package") && method.name.equals("getName"))
             System.out.println("getName");*/
 
-        if (!("java/lang/Package".equals(method.owner) && "getName".equals(method.name)) &&
-                !("java/lang/Class".equals(method.owner) && ("getField".equals(method.name) || "getDeclaredField".equals(method.name)
+        if (!("java/lang/Class".equals(method.owner) && ("getField".equals(method.name) || "getDeclaredField".equals(method.name)
                         || "getMethod".equals(method.name) || "getDeclaredMethod".equals(method.name)
                         || "getName".equals(method.name) || "getSimpleName".equals(method.name))) &&
                 !("java/lang/reflect/Field".equals(method.owner) && "getName".equals(method.name)) &&
