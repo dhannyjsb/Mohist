@@ -4,7 +4,7 @@
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomModRecipe;
++import net.minecraftforge.cauldron.inventory.CustomModRecipe;
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapedRecipe;
 +import org.bukkit.inventory.Recipe;
@@ -27,7 +27,7 @@
 +    @Override
 +    public Recipe toBukkitRecipe() {
 +        if (this.recipeHeight < 1 || this.recipeHeight > 3 || this.recipeWidth < 1 || this.recipeWidth > 3) {
-+            return new CraftCustomModRecipe((IRecipe) this, this.getRegistryName());
++            return new CustomModRecipe((IRecipe) this, this.getRegistryName());
 +        }
 +        CraftItemStack result = CraftItemStack.asCraftMirror(this.recipeOutput);
 +        CraftShapedRecipe recipe = new CraftShapedRecipe(result, this);
