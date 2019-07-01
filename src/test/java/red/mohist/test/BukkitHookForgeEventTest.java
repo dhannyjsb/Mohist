@@ -43,7 +43,7 @@ public class BukkitHookForgeEventTest implements Listener {
             player.getInventory().addItem(new ItemStack(Material.APPLE));
         }
     }
-    
+
     @SubscribeEvent
     public void test2(BukkitStateForgeEvent.PluginsEnable event) {
         if(event.getType().equals(PluginLoadOrder.POSTWORLD) && event.getServer().getPluginManager().getPlugin("Mohist") != null){
