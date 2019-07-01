@@ -90,7 +90,6 @@ final class PluginClassLoader extends URLClassLoader {
         provider.add(new ClassLoaderProvider(this));
         this.jarMapping.setFallbackInheritanceProvider(provider);
         remapper = new ThermosRemapper(jarMapping);
-        Transformer.init(jarMapping, remapper);
 
         try {
             Class<?> jarClass;
