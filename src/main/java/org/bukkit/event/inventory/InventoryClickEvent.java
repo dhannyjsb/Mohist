@@ -54,7 +54,7 @@ public class InventoryClickEvent extends InventoryInteractEvent {
     private ItemStack current = null;
     private int hotbarKey = -1;
 
-    public InventoryClickEvent(InventoryView view, SlotType type, int slot, ClickType click, InventoryAction action) {
+    public InventoryClickEvent(InventoryView view, InventoryType.SlotType type, int slot, ClickType click, InventoryAction action) {
         super(view);
         this.slot_type = type;
         this.rawSlot = slot;

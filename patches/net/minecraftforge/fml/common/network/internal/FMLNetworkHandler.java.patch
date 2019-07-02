@@ -39,11 +39,11 @@
 +                        {
 +                            IInventory teInv = (IInventory)tileEntity;
 +                            CraftInventory inventory = new CraftInventory(teInv);
-+                            remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), inventory, remoteGuiContainer));
++                            remoteGuiContainer.bukkitView = new CraftInventoryView(entityPlayer.getBukkitEntity(), inventory, remoteGuiContainer);
 +                        }
 +                        else
 +                        {
-+                            remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), MinecraftServer.getServerInst().server.createInventory(entityPlayer.getBukkitEntity(), InventoryType.CHEST), remoteGuiContainer));
++                            remoteGuiContainer.bukkitView = new CraftInventoryView(entityPlayer.getBukkitEntity(), MinecraftServer.getServerInst().server.createInventory(entityPlayer.getBukkitEntity(), InventoryType.CHEST), remoteGuiContainer);
 +                        }
 +                    }
 +                    remoteGuiContainer = CraftEventFactory.callInventoryOpenEvent((EntityPlayerMP) entityPlayer, remoteGuiContainer, false);

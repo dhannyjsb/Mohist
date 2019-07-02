@@ -61,7 +61,7 @@ import java.util.Set;
 
 public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     private CraftInventoryPlayer inventory;
-    private final CraftInventory enderChest;
+    private CraftInventory enderChest;
     protected final PermissibleBase perm = new PermissibleBase(this);
     private boolean op;
     private GameMode mode;
@@ -69,8 +69,6 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     public CraftHumanEntity(final CraftServer server, final EntityPlayer entity) {
         super(server, entity);
         mode = server.getDefaultGameMode();
-        this.inventory = new CraftInventoryPlayer(entity.inventory);
-        enderChest = new CraftInventory(entity.getInventoryEnderChest());
     }
 
     @Override
@@ -80,16 +78,25 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     @Override
     public PlayerInventory getInventory() {
+        if (inventory == null) {
+            inventory = new CraftInventoryPlayer(((EntityPlayer) entity).inventory);
+        }
         return inventory;
     }
 
     @Override
     public EntityEquipment getEquipment() {
+        if (inventory == null) {
+            inventory = new CraftInventoryPlayer(((EntityPlayer) entity).inventory);
+        }
         return inventory;
     }
 
     @Override
     public Inventory getEnderChest() {
+        if (enderChest == null) {
+            enderChest = new CraftInventory(((EntityPlayer) entity).getInventoryEnderChest());
+        }
         return enderChest;
     }
 
