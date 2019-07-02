@@ -1,24 +1,16 @@
 package org.bukkit.plugin.java;
 
-import com.maxqia.ReflectionRemapper.ClassInheritanceProvider;
-import com.maxqia.ReflectionRemapper.Transformer;
-import net.md_5.specialsource.JarMapping;
-import net.md_5.specialsource.JarRemapper;
-import net.md_5.specialsource.provider.ClassLoaderProvider;
-import net.md_5.specialsource.provider.JointProvider;
-import net.md_5.specialsource.repo.RuntimeRepo;
-import net.md_5.specialsource.transformer.MavenShade;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import red.mohist.Mohist;
-import red.mohist.MohistConfig;
-import red.mohist.common.asm.transformers.VersionTransformer;
-import thermos.ThermosRemapper;
+import red.mohist.common.asm.remap.RemapUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -34,7 +26,6 @@ import java.util.jar.Manifest;
  * A ClassLoader for plugins, to allow shared classes across multiple plugins
  */
 final class PluginClassLoader extends URLClassLoader {
-    private static final VersionTransformer VERSION_TRANSFORMER = new VersionTransformer();
     private final JavaPluginLoader loader;
     private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
     private final PluginDescriptionFile description;
@@ -47,20 +38,11 @@ final class PluginClassLoader extends URLClassLoader {
     private JavaPlugin pluginInit;
     private IllegalStateException pluginState;
 
-    private JarRemapper remapper;
-    private JarMapping jarMapping;
-
     private boolean nmsRemap = false;
 
     PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException {
         super(new URL[]{file.toURI().toURL()}, parent);
         Validate.notNull(loader, "Loader cannot be null");
-
-        if (MohistConfig.multiVersinoNMSRemap && MohistConfig.versionNMSRemapPlugins != null && (MohistConfig.versionNMSRemapPlugins.contains("*") || MohistConfig.versionNMSRemapPlugins.contains(description.getName()))) {
-//            启用了nmsRemap
-            nmsRemap = true;
-        }
-
         this.loader = loader;
         this.description = description;
         this.dataFolder = dataFolder;
@@ -68,28 +50,6 @@ final class PluginClassLoader extends URLClassLoader {
         this.jar = new JarFile(file);
         this.manifest = jar.getManifest();
         this.url = file.toURI().toURL();
-        jarMapping = new JarMapping();
-        try {
-            jarMapping.packages.put("org/bukkit/craftbukkit/libs/it/unimi/dsi/fastutil", "it/unimi/dsi/fastutil");
-            jarMapping.packages.put("org/bukkit/craftbukkit/libs/jline", "jline");
-            jarMapping.packages.put("org/bukkit/craftbukkit/libs/joptsimple", "joptsimple");
-            jarMapping.methods.put("org/bukkit/Bukkit/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
-
-            Map<String, String> relocations = new HashMap<String, String>();
-            relocations.put("net.minecraft.server", "net.minecraft.server." + Mohist.getNativeVersion());
-
-            jarMapping.loadMappings(
-                    new BufferedReader(new InputStreamReader(Mohist.class.getClassLoader().getResourceAsStream("mappings/nms.srg"))),
-                    new MavenShade(relocations),
-                    null, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        JointProvider provider = new JointProvider();
-        provider.add(new ClassInheritanceProvider());
-        provider.add(new ClassLoaderProvider(this));
-        this.jarMapping.setFallbackInheritanceProvider(provider);
-        remapper = new ThermosRemapper(jarMapping);
 
         try {
             Class<?> jarClass;
@@ -121,7 +81,7 @@ final class PluginClassLoader extends URLClassLoader {
 
     Class<?> findClass(String name, boolean checkGlobal) throws ClassNotFoundException {
         if (name.startsWith("net.minecraft.server." + Mohist.getNativeVersion())) {
-            String remappedClass = jarMapping.classes.get(name.replaceAll("\\.", "\\/"));
+            String remappedClass = RemapUtils.jarMapping.classes.get(name.replaceAll("\\.", "\\/"));
             return ((net.minecraft.launchwrapper.LaunchClassLoader) MinecraftServer.getServerInst().getClass().getClassLoader()).findClass(remappedClass);
         }
 
@@ -190,19 +150,9 @@ final class PluginClassLoader extends URLClassLoader {
             if (url != null) {
                 InputStream stream = url.openStream();
                 if (stream != null) {
-                    byte[] bytecode = null;
-
-                    if (nmsRemap) {
-//                        将插件nms转换为当前核心版本
-                        bytecode = IOUtils.toByteArray(stream);
-                        bytecode = VERSION_TRANSFORMER.transform(name, name, bytecode);
-                        stream = new ByteArrayInputStream(bytecode, 0, bytecode.length);
-                    }
-
-                    // Remap the classes
-                    bytecode = remapper.remapClassFile(stream, RuntimeRepo.getInstance());
-                    bytecode = Transformer.transform(bytecode);
-
+//                  remap
+                    byte[] bytecode = IOUtils.toByteArray(stream);
+                    bytecode = RemapUtils.remapFindClass(name, name.replace('.', '/'), bytecode);
                     // Define (create) the class using the modified byte code
                     // The top-child class loader is used for this to prevent access violations
                     // Set the codesource to the jar, not within the jar, for compatibility with
