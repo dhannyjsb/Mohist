@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.v1_12_R1.inventory;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.cauldron.inventory.CustomModRecipe;
 import org.bukkit.inventory.Recipe;
 
 import java.util.Iterator;
@@ -34,7 +35,7 @@ public class RecipeIterator implements Iterator<Recipe> {
                 return recipe.toBukkitRecipe();
          	} catch (AbstractMethodError ex) {
                 // No Bukkit wrapper provided
-                return new CraftCustomModRecipe(recipe, recipe.getRegistryName());
+                return new CustomModRecipe(recipe, recipe.getRegistryName());
             }
             // Cauldron end
         } else {

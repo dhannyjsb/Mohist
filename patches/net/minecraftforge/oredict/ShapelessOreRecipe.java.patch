@@ -1,10 +1,17 @@
 --- ../src-base/minecraft/net/minecraftforge/oredict/ShapelessOreRecipe.java
 +++ ../src-work/minecraft/net/minecraftforge/oredict/ShapelessOreRecipe.java
-@@ -42,6 +42,8 @@
+@@ -31,6 +31,7 @@
+ import net.minecraft.util.NonNullList;
+ import net.minecraft.util.ResourceLocation;
+ import net.minecraft.world.World;
++import net.minecraftforge.cauldron.inventory.CustomModRecipe;
+ import net.minecraftforge.common.crafting.CraftingHelper;
+ import net.minecraftforge.common.crafting.JsonContext;
+ import net.minecraftforge.common.util.RecipeMatcher;
+@@ -42,6 +43,7 @@
  import com.google.gson.JsonElement;
  import com.google.gson.JsonObject;
  import com.google.gson.JsonParseException;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomModRecipe;
 +import org.bukkit.inventory.Recipe;
  
  public class ShapelessOreRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
@@ -26,7 +33,7 @@
 +    @Override
 +    public Recipe toBukkitRecipe() {
 +        if (bukkitRecip == null)
-+            bukkitRecip = new CraftCustomModRecipe(this, this.getRegistryName());
++            bukkitRecip = new CustomModRecipe(this, this.getRegistryName());
 +        return this.bukkitRecip;
 +    }
 +

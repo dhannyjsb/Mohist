@@ -7,8 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginLoadOrder;
 import red.mohist.event.BukkitHookForgeEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import red.mohist.event.BukkitStateForgeEvent;
 import red.mohist.event.ForgeHookBukkitEvent;
 
 public class BukkitHookForgeEventTest implements Listener {
@@ -39,6 +41,13 @@ public class BukkitHookForgeEventTest implements Listener {
             playerJoinEvent.setJoinMessage("Thank you for using Mohist!");
             Player player = playerJoinEvent.getPlayer();
             player.getInventory().addItem(new ItemStack(Material.APPLE));
+        }
+    }
+
+    @SubscribeEvent
+    public void test2(BukkitStateForgeEvent.PluginsEnable event) {
+        if(event.getType().equals(PluginLoadOrder.POSTWORLD) && event.getServer().getPluginManager().getPlugin("Mohist") != null){
+            event.getServer().getConsoleSender().sendMessage("Thank you for using Mohist!");
         }
     }
 }

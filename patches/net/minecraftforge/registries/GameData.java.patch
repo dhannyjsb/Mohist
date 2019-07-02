@@ -1,10 +1,17 @@
 --- ../src-base/minecraft/net/minecraftforge/registries/GameData.java
 +++ ../src-work/minecraft/net/minecraftforge/registries/GameData.java
-@@ -84,6 +84,8 @@
+@@ -47,6 +47,7 @@
+ import net.minecraft.util.registry.RegistryNamespacedDefaultedByKey;
+ import net.minecraft.world.World;
+ import net.minecraft.world.biome.Biome;
++import net.minecraftforge.cauldron.inventory.CustomModRecipe;
+ import net.minecraftforge.common.MinecraftForge;
+ import net.minecraftforge.event.RegistryEvent;
+ import net.minecraftforge.event.RegistryEvent.MissingMappings;
+@@ -84,6 +85,7 @@
  
  import org.apache.commons.lang3.Validate;
  import org.apache.logging.log4j.Level;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomModRecipe;
 +import org.bukkit.inventory.Recipe;
  
  /**
@@ -21,7 +28,7 @@
              @Override public boolean canFit(int width, int height) { return false; }
              @Override public ItemStack getRecipeOutput() { return result; }
              @Override public boolean isDynamic() { return true; }
-+            @Override public Recipe toBukkitRecipe() { if (bukkitRecip == null) bukkitRecip = new CraftCustomModRecipe(this, this.getRegistryName()); return this.bukkitRecip; }
++            @Override public Recipe toBukkitRecipe() { if (bukkitRecip == null) bukkitRecip = new CustomModRecipe(this, this.getRegistryName()); return this.bukkitRecip; }
 +            @Override public void setKey(ResourceLocation key) { }
          }
      }

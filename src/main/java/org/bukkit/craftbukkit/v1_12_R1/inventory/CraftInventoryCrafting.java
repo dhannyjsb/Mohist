@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.v1_12_R1.inventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.cauldron.inventory.CustomModRecipe;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -127,7 +128,7 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
         try {
             return recipe == null ? null : recipe.toBukkitRecipe();
         } catch (AbstractMethodError ex) {
-            return new CraftCustomModRecipe(recipe, recipe.getRegistryName());
+            return new CustomModRecipe(recipe, recipe.getRegistryName());
         }
         // Cauldron end
     }

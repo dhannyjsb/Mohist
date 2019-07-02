@@ -1,10 +1,17 @@
 package org.bukkit.craftbukkit.v1_12_R1.inventory;
 
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.PlayerArmorInvWrapper;
+import net.minecraftforge.items.wrapper.PlayerInvWrapper;
+import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -47,6 +54,22 @@ public class CraftCustomInventory implements InventoryHolder {
         }
         if (handler instanceof SidedInvWrapper) {
             return new CraftCustomInventory(((SidedInvWrapper) handler).getInv());
+        }
+        if (handler instanceof PlayerInvWrapper) {
+            return new CraftCustomInventory(getPlayerInv((PlayerInvWrapper)handler));
+        }
+        return null;
+    }
+
+    public static InventoryPlayer getPlayerInv(PlayerInvWrapper inv) {
+        IItemHandlerModifiable[] piw = ObfuscationReflectionHelper.getPrivateValue(CombinedInvWrapper.class, inv, "itemHandler");
+        for (IItemHandlerModifiable itemHandler : piw) {
+            if (itemHandler instanceof PlayerMainInvWrapper) {
+                return ((PlayerMainInvWrapper) itemHandler).getInventoryPlayer();
+            }
+            if (itemHandler instanceof PlayerArmorInvWrapper) {
+                return ((PlayerArmorInvWrapper) itemHandler).getInventoryPlayer();
+            }
         }
         return null;
     }

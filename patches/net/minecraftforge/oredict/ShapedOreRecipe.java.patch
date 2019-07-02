@@ -1,14 +1,15 @@
 --- ../src-base/minecraft/net/minecraftforge/oredict/ShapedOreRecipe.java
 +++ ../src-work/minecraft/net/minecraftforge/oredict/ShapedOreRecipe.java
-@@ -29,7 +29,6 @@
+@@ -29,7 +29,7 @@
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.world.World;
 -import net.minecraftforge.common.ForgeHooks;
++import net.minecraftforge.cauldron.inventory.CustomModRecipe;
  import net.minecraftforge.common.crafting.CraftingHelper;
  import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
  import net.minecraftforge.common.crafting.IShapedRecipe;
-@@ -41,7 +40,6 @@
+@@ -41,7 +41,6 @@
  import java.util.Map.Entry;
  
  import javax.annotation.Nonnull;
@@ -16,11 +17,10 @@
  
  import com.google.common.collect.Maps;
  import com.google.common.collect.Sets;
-@@ -49,6 +47,8 @@
+@@ -49,6 +48,7 @@
  import com.google.gson.JsonElement;
  import com.google.gson.JsonObject;
  import com.google.gson.JsonSyntaxException;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomModRecipe;
 +import org.bukkit.inventory.Recipe;
  
  public class ShapedOreRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IShapedRecipe
@@ -41,7 +41,7 @@
 +    @Override
 +    public Recipe toBukkitRecipe() {
 +        if (bukkitRecip == null)
-+            bukkitRecip = new CraftCustomModRecipe(this, this.getRegistryName());
++            bukkitRecip = new CustomModRecipe(this, this.getRegistryName());
 +        return this.bukkitRecip;
 +    }
 +
