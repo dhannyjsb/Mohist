@@ -1,7 +1,10 @@
 package org.bukkit;
 
 import com.google.common.collect.Maps;
+import net.minecraftforge.cauldron.api.inventory.BukkitOreDictionary;
+import net.minecraftforge.cauldron.api.inventory.OreDictionaryEntry;
 import org.apache.commons.lang.Validate;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
 import org.bukkit.material.Banner;
 import org.bukkit.material.Bed;
@@ -62,6 +65,7 @@ import org.bukkit.material.Wool;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -756,6 +760,25 @@ public enum Material {
             result = BY_NAME.get(filtered);
             // Cauldron end
         }
+
+        // Cauldron start - Try the ore dictionary
+        if (result == null) {
+            BukkitOreDictionary dict = net.minecraftforge.cauldron.api.Cauldron.getOreDictionary();
+            OreDictionaryEntry entry = dict.getOreEntry(name);
+            if (entry != null) {
+                List<ItemStack> items = dict.getDefinitions(entry);
+                if (items.size() > 0) {
+                    // TODO check sanity on multiple item results
+                    ItemStack item = items.get(0);
+                    if (item.getDurability() == 0 || item.getDurability() == Short.MAX_VALUE) {
+                        result = item.getType();
+                    } else {
+                        // bad! we have an item with data!
+                    }
+                }
+            }
+        }
+        // Cauldron end
 
         return result;
     }
