@@ -29,23 +29,9 @@ public class MohistConfig {
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
     public static boolean useChunksMapForPendingBlocks = false; //Goodvise code add
     /**
-     * 是否请用插件nms多版本兼容
+     * 是否导出经过remap的插件类
      */
-    public static boolean multiVersinoNMSRemap = true;
-    /**
-     * 进行nmsRemap的插件
-     * *表示所有
-     */
-    public static List<String> versionNMSRemapPlugins = new ArrayList<>();
-
-    static {
-        versionNMSRemapPlugins.add("*");
-    }
-
-    /**
-     * 是否导出经过NMSRemap的类
-     */
-    public static boolean dumpNMSRemppedClass = false;
+    public static boolean dumpRemapPluginClass = false;
     /**
      * 非玩家实体碰撞其他实体的间隔时间
      */
@@ -97,9 +83,7 @@ public class MohistConfig {
         useChunksMapForPendingBlocks = getBoolean("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
         entityCollideFrequency = getInt("perfomance.entityCollideFrequency", entityCollideFrequency);
         maxEntityCollisionsPerTick = getInt("perfomance.maxEntityCollisionsPerTick", maxEntityCollisionsPerTick);
-        multiVersinoNMSRemap = getBoolean("remap.multiVersinoNMSRemap", multiVersinoNMSRemap);
-        versionNMSRemapPlugins = getList("remap.versionNMSRemapPlugins", versionNMSRemapPlugins);
-        dumpNMSRemppedClass = getBoolean("remap.dumpNMSRemppedClass", dumpNMSRemppedClass);
+        dumpRemapPluginClass = getBoolean("remap.dumpRemapPluginClass", dumpRemapPluginClass);
         readConfig(MohistConfig.class, null);
     }
 

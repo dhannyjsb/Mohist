@@ -7,13 +7,13 @@ package red.mohist.common.asm.remap.model;
  */
 public class MethodRedirectRule {
     private final String owner;
-    private final String descWithoutReturnType;
+    private final String desc;
     private final String name;
     private final String remapOwner;
 
-    public MethodRedirectRule(String owner, String name, String descWithoutReturnType, String remapOwner) {
+    public MethodRedirectRule(String owner, String name, String desc, String remapOwner) {
         this.owner = owner;
-        this.descWithoutReturnType = descWithoutReturnType;
+        this.desc = desc;
         this.name = name;
         this.remapOwner = remapOwner;
     }
@@ -26,8 +26,8 @@ public class MethodRedirectRule {
         return owner;
     }
 
-    public String getDescWithoutReturnType() {
-        return descWithoutReturnType;
+    public String getDesc() {
+        return desc;
     }
 
     public String getName() {
