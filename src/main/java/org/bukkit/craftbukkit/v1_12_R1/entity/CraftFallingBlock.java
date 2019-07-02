@@ -30,7 +30,7 @@ public class CraftFallingBlock extends CraftEntity implements FallingBlock {
 
     @Override
     public Material getMaterial() {
-        return Material.getBlockMaterial(getBlockId());
+        return Material.getMaterial(getBlockId());
     }
 
     @Override

@@ -156,7 +156,7 @@ public class CraftBlockState implements BlockState {
 
     @Override
     public Material getType() {
-        return Material.getBlockMaterial(getTypeId());
+        return Material.getMaterial(getTypeId());
     }
 
     public void setFlag(int flag) {

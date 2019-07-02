@@ -40,7 +40,7 @@ public class BlockPhysicsEvent extends BlockEvent implements Cancellable {
      * @return Changed block's type
      */
     public Material getChangedType() {
-        return Material.getBlockMaterial(changed);
+        return Material.getMaterial(changed);
     }
 
     @Override

@@ -189,7 +189,7 @@ public class CraftBlock implements Block {
 
     @Override
     public Material getType() {
-        return Material.getBlockMaterial(getTypeId());
+        return Material.getMaterial(getTypeId());
     }
 
     @Deprecated

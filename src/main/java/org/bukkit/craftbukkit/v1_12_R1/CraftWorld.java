@@ -1219,7 +1219,7 @@ public class CraftWorld implements World {
 
     @Override
     public FallingBlock spawnFallingBlock(Location location, int blockId, byte blockData) throws IllegalArgumentException {
-        return spawnFallingBlock(location, org.bukkit.Material.getBlockMaterial(blockId), blockData);
+        return spawnFallingBlock(location, org.bukkit.Material.getMaterial(blockId), blockData);
     }
 
     @SuppressWarnings("unchecked")

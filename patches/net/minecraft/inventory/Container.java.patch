@@ -33,7 +33,7 @@
  public abstract class Container
  {
      public NonNullList<ItemStack> inventoryItemStacks = NonNullList.<ItemStack>create();
-@@ -31,7 +43,98 @@
+@@ -31,7 +43,100 @@
      private final Set<Slot> dragSlots = Sets.<Slot>newHashSet();
      protected List<IContainerListener> listeners = Lists.<IContainerListener>newArrayList();
      private final Set<EntityPlayer> playerList = Sets.<EntityPlayer>newHashSet();
@@ -101,6 +101,8 @@
 +
 +    public void transferTo(Container other, org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity player) {
 +        InventoryView source = this.getBukkitView(), destination = other.getBukkitView();
++        // Cauldron start - add null checks to skip modded inventories with no Bukkit wrappers, and
++        // catch AbstractMethodErrors for modded IInventory's with no onClose()
 +        if (source != null) {
 +            try {
 +                ((CraftInventory) source.getTopInventory()).getInventory().onClose(player);
@@ -132,7 +134,7 @@
      protected Slot addSlotToContainer(Slot slotIn)
      {
          slotIn.slotNumber = this.inventorySlots.size();
-@@ -46,12 +149,9 @@
+@@ -46,12 +151,9 @@
          {
              throw new IllegalArgumentException("Listener already listening");
          }
@@ -148,7 +150,7 @@
      }
  
      public NonNullList<ItemStack> getInventory()
-@@ -79,7 +179,7 @@
+@@ -79,7 +181,7 @@
              ItemStack itemstack = ((Slot)this.inventorySlots.get(i)).getStack();
              ItemStack itemstack1 = this.inventoryItemStacks.get(i);
  
@@ -157,7 +159,7 @@
              {
                  boolean clientStackChanged = !ItemStack.areItemStacksEqualUsingNBTShareTag(itemstack1, itemstack);
                  itemstack1 = itemstack.isEmpty() ? ItemStack.EMPTY : itemstack.copy();
-@@ -92,6 +192,7 @@
+@@ -92,6 +194,7 @@
                  }
              }
          }
@@ -165,7 +167,7 @@
      }
  
      public boolean enchantItem(EntityPlayer playerIn, int id)
-@@ -174,7 +275,7 @@
+@@ -174,7 +277,7 @@
                  {
                      ItemStack itemstack9 = inventoryplayer.getItemStack().copy();
                      int k1 = inventoryplayer.getItemStack().getCount();
@@ -174,7 +176,7 @@
                      for (Slot slot8 : this.dragSlots)
                      {
                          ItemStack itemstack13 = inventoryplayer.getItemStack();
-@@ -192,12 +293,50 @@
+@@ -192,12 +295,50 @@
                              }
  
                              k1 -= itemstack14.getCount() - j3;
@@ -228,7 +230,7 @@
                  }
  
                  this.resetDrag();
-@@ -219,8 +358,9 @@
+@@ -219,8 +360,9 @@
                  {
                      if (dragType == 0)
                      {
@@ -239,7 +241,7 @@
                      }
  
                      if (dragType == 1)
-@@ -348,6 +488,15 @@
+@@ -348,6 +490,15 @@
                      }
  
                      slot6.onSlotChanged();
@@ -255,7 +257,7 @@
                  }
              }
          }
-@@ -797,7 +946,9 @@
+@@ -797,7 +948,9 @@
                  p_192389_4_.setRecipeUsed(irecipe);
                  itemstack = irecipe.getCraftingResult(p_192389_3_);
              }

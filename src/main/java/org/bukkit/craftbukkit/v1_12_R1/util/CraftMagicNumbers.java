@@ -47,7 +47,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     public static Block getBlock(int id) {
-        return getBlock(Material.getBlockMaterial(id));
+        return getBlock(Material.getMaterial(id));
     }
 
     public static int getId(Block block) {
@@ -55,7 +55,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     public static Material getMaterial(Block block) {
-        return Material.getBlockMaterial(Block.getIdFromBlock(block));
+        return Material.getMaterial(Block.getIdFromBlock(block));
     }
 
     public static Item getItem(Material material) {
@@ -84,6 +84,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     public static Block getBlock(Material material) {
+        // MCPC+ - BOP sometimes ends up with a null material here
 		material = material == null ? Material.AIR : material;
 
         // TODO: Don't use ID

@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/SaveHandler.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/SaveHandler.java
-@@ -1,25 +1,42 @@
+@@ -1,25 +1,43 @@
  package net.minecraft.world.storage;
  
 -import java.io.DataInputStream;
@@ -28,6 +28,7 @@
  import net.minecraft.world.chunk.storage.IChunkLoader;
  import net.minecraft.world.gen.structure.template.TemplateManager;
 +import net.minecraftforge.common.util.EnumHelper;
++import net.minecraftforge.fml.common.FMLLog;
 +import net.minecraftforge.fml.common.registry.EntityRegistry;
 +import net.minecraftforge.fml.common.registry.ForgeRegistries;
 +import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -50,7 +51,7 @@
  public class SaveHandler implements ISaveHandler, IPlayerFileData
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -31,6 +48,8 @@
+@@ -31,6 +49,8 @@
      private final TemplateManager structureTemplateManager;
      protected final DataFixer dataFixer;
  
@@ -59,7 +60,7 @@
      public SaveHandler(File p_i46648_1_, String saveDirectoryNameIn, boolean p_i46648_3_, DataFixer dataFixerIn)
      {
          this.dataFixer = dataFixerIn;
-@@ -208,7 +227,6 @@
+@@ -208,7 +228,6 @@
          try
          {
              File file1 = new File(this.playersDirectory, player.getCachedUniqueIdString() + ".dat");
@@ -67,7 +68,7 @@
              if (file1.exists() && file1.isFile())
              {
                  nbttagcompound = CompressedStreamTools.readCompressed(new FileInputStream(file1));
-@@ -221,6 +239,16 @@
+@@ -221,6 +240,16 @@
  
          if (nbttagcompound != null)
          {
@@ -84,7 +85,7 @@
              player.readFromNBT(this.dataFixer.process(FixTypes.PLAYER, nbttagcompound));
          }
  
-@@ -228,6 +256,22 @@
+@@ -228,6 +257,22 @@
          return nbttagcompound;
      }
  
@@ -107,7 +108,7 @@
      public IPlayerFileData getPlayerNBTManager()
      {
          return this;
-@@ -267,7 +311,7 @@
+@@ -267,7 +312,7 @@
          return this.structureTemplateManager;
      }
  
@@ -116,7 +117,7 @@
      {
          try
          {
-@@ -284,4 +328,120 @@
+@@ -284,4 +329,114 @@
          }
          return null;
      }
@@ -174,31 +175,25 @@
 +        {
 +            for (Map.Entry<ResourceLocation, Item> entry : ForgeRegistries.ITEMS.getEntries()) {
 +                ResourceLocation key = entry.getKey();
-+                Item item = entry.getValue();
 +                if(!key.getResourceDomain().equals("minecraft")) {
-+                    String materialName = key.toString().toUpperCase().replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
-+                    Material material = Material.addMaterial(EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Integer.TYPE}, new Object[]{Item.getIdFromItem(item), item.getItemStackLimit()}));
++                    String materialName = Material.normalizeName(key.toString());
++                    Item item = entry.getValue();
++                    // inject item materials into Bukkit for FML
++                    Material material = Material.addMaterial(Item.getIdFromItem(item), materialName, false);
 +                    if (material != null) {
-+                        Mohist.LOGGER.debug("Injected new Forge item material " + material.name() + " with ID " + material.getId());
-+                    } else {
-+                        Mohist.LOGGER.debug("Inject item failure " + materialName + " with ID " + Item.getIdFromItem(item));
++                        FMLLog.info("Injected new Forge item material %s with ID %d.", material.name(), material.getId());
 +                    }
 +                }
 +            }
-+            for (Material material : Material.values()) {
-+                if (material.getId() < 256)
-+                    Material.addBlockMaterial(material);
-+            }
 +            for (Map.Entry<ResourceLocation, Block> entry : ForgeRegistries.BLOCKS.getEntries()) {
 +                ResourceLocation key = entry.getKey();
-+                Block block = entry.getValue();
 +                if(!key.getResourceDomain().equals("minecraft")) {
-+                    String materialName = key.toString().toUpperCase().replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
-+                    Material material = Material.addBlockMaterial(EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE}, new Object[]{Block.getIdFromBlock(block)}));
++                    String materialName = Material.normalizeName(key.toString());
++                    Block block = entry.getValue();
++                    // inject block materials into Bukkit for FML
++                    Material material = Material.addMaterial(Block.getIdFromBlock(block), materialName , true);
 +                    if (material != null) {
-+                        Mohist.LOGGER.debug("Injected new Forge block material "+ material.name()+ " with ID " + material.getId());
-+                    } else {
-+                        Mohist.LOGGER.debug("Inject block failure " + materialName + " with ID " +  Block.getIdFromBlock(block));
++                        FMLLog.info("Injected new Forge block material %s with ID %d.", material.name(), material.getId());
 +                    }
 +                }
 +            }

@@ -3,6 +3,7 @@ package org.bukkit;
 import com.google.common.collect.Maps;
 import net.minecraftforge.cauldron.api.inventory.BukkitOreDictionary;
 import net.minecraftforge.cauldron.api.inventory.OreDictionaryEntry;
+import net.minecraftforge.common.util.EnumHelper;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
@@ -544,14 +545,21 @@ public enum Material {
     private final int id;
     private final Constructor<? extends MaterialData> ctor;
     private static Material[] byId = new Material[32676];
-    private static Material[] byBlockId = new Material[32676];
-    private final static Map<String, Material> BY_NAME = Maps.newHashMap();
+    private static Map<String, Material> BY_NAME = Maps.newHashMap(); // Cauldron - remove final
     private final int maxStack;
     private final short durability;
+    private  boolean isForgeBlock =  false ;
 
     Material(final int id) {
         this(id, 64);
     }
+
+    // Cauldron start - constructor used to set if the Material is a block or not
+    private Material(final int id, boolean flag) {
+        this(id, 64);
+        this.isForgeBlock = flag;
+    }
+    // Cauldron end
 
     Material(final int id, final int stack) {
         this(id, stack, MaterialData.class);
@@ -653,12 +661,17 @@ public enum Material {
      * @return true if this material is a block
      */
     public boolean isBlock() {
-        for (Material material : byBlockId) {
-            if (this == material) {
-                return true;
-            }
-        }
-        return false;
+        return id < 256 || isForgeBlock; // MCPC+
+    }
+
+    /**
+     * Checks if the material is a forge block
+     *
+     * @return true if this material is a forge block
+     */
+    public boolean isForgeBlock()
+    {
+        return isForgeBlock;
     }
 
     /**
@@ -790,31 +803,44 @@ public enum Material {
         return name.toUpperCase(java.util.Locale.ENGLISH).replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
     }
 
+    public static Material addMaterial(int id, boolean isBlock)
+    {
+        return addMaterial(id, "X" + String.valueOf(id), isBlock);
+    }
+
     @Nullable
-    public static Material addMaterial(Material material) {
-        if (byId[material.id] == null) {
-            byId[material.id] = material;
-            BY_NAME.put(material.name().toUpperCase().replaceAll("(:|\\s)", "_").replaceAll("\\W", ""), material);
+    public static Material addMaterial(int id, String name, boolean isBlock) {
+        if (byId[id] == null) {
+            String materialName = normalizeName(name);
+            Material material = (Material) EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Boolean.TYPE}, new Object[]{Integer.valueOf(id), isBlock});
+            byId[id] = material;
+            BY_NAME.put(materialName, material);
             BY_NAME.put("X" + material.id, material);
             return material;
         }
         return null;
     }
 
-    @Nullable
-    public static Material addBlockMaterial(Material Blockmaterial) {
-        if (byBlockId[Blockmaterial.id] == null) {
-            byBlockId[Blockmaterial.id] = Blockmaterial;
-            return Blockmaterial;
-        }
-        return null;
-    }
+    public static void setMaterialName(int id, String name, boolean flag) {
+        String materialName = normalizeName(name);
 
-    public static Material getBlockMaterial(final int id) {
-        if (byBlockId.length > id && id >= 0) {
-            return byBlockId[id];
-        } else {
-            return null;
+        if (byId[id] == null)
+        {
+            addMaterial(id, materialName, flag);
+        }
+        else // replace existing enum
+        {
+          /* TODO: find out how to do this with Forge's EnumHelper (addEnum?) - used for enabling descriptive (vs numeric) Material names
+          Material material = getMaterial(id);
+          BY_NAME.remove(material);
+          Material newMaterial = EnumHelper.replaceEnum(Material.class, material_name, material.ordinal(), new Class[] { Integer.TYPE }, new Object[] { Integer.valueOf(id) });
+          if (newMaterial == null)
+              System.out.println("Error replacing Material " + name + " with id " + id);
+          else {
+              byId[id] = newMaterial;
+              BY_NAME.put(material_name, newMaterial);
+          }
+          */
         }
     }
 
