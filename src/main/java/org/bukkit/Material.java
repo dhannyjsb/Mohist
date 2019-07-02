@@ -751,13 +751,20 @@ public enum Material {
         } catch (NumberFormatException ex) {}
 
         if (result == null) {
-            String filtered = name.toUpperCase(java.util.Locale.ENGLISH);
-
-            filtered = filtered.replaceAll("\\s+", "_").replaceAll("\\W", "");
+            // Cauldron start - extract to normalizeName()
+            String filtered = normalizeName(name);
             result = BY_NAME.get(filtered);
+            // Cauldron end
         }
 
         return result;
+    }
+
+    /* ===============================  Cauldron START ============================= */
+
+    // use a normalize() function to ensure it is accessible after a round-trip
+    public static String normalizeName(String name) {
+        return name.toUpperCase(java.util.Locale.ENGLISH).replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
     }
 
     @Nullable
