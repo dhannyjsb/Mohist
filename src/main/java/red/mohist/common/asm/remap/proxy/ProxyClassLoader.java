@@ -1,6 +1,5 @@
 package red.mohist.common.asm.remap.proxy;
 
-import org.objectweb.asm.Type;
 import red.mohist.common.asm.remap.RemapUtils;
 
 /**
@@ -9,10 +8,10 @@ import red.mohist.common.asm.remap.RemapUtils;
  * @date 2019/7/1 8:09 PM
  */
 public class ProxyClassLoader {
-    public static final String desc = Type.getDescriptor(ProxyClassLoader.class);
+    public static final String desc = ProxyClassLoader.class.getName().replace('.', '/');
 
     public static Class<?> loadClass(final ClassLoader inst, String className) throws ClassNotFoundException {
-        className = RemapUtils.remapClassNameV1(className);
+        className = RemapUtils.remapClassNameV2(className.replace('.', '/'));
         return inst.loadClass(className);
     }
 
