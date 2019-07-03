@@ -229,7 +229,9 @@ public enum Message {
     forge_FMLServerHandler_1("forge.FMLServerHandler.1"),
     forge_FMLServerHandler_2("forge.FMLServerHandler.2"),
     forge_FMLServerHandler_3("forge.FMLServerHandler.3"),
-    forge_FMLServerHandler_4("forge.FMLServerHandler.4");
+    forge_FMLServerHandler_4("forge.FMLServerHandler.4"),
+
+    forge_ServerLanunchWrapper_1("forge.ServerLanunchWrapper.1");
 
     private final String value;
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());

@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,46 +19,69 @@
+@@ -19,46 +19,61 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -57,17 +57,9 @@
 +            System.out.println("  \\ \\_\\\\ \\_\\\\ \\____/ \\ \\_\\ \\_\\\\ \\_\\\\/\\____/ \\ \\__\\");
 +            System.out.println("   \\/_/ \\/_/ \\/___/   \\/_/\\/_/ \\/_/ \\/___/   \\/__/");
 +            System.out.println("");
-+            Locale locale = Locale.getDefault();
-+            if (locale.getCountry().equals("zh_CN") || locale.getCountry().equals("CN") || locale.getCountry().equals("zh_TW") || locale.getCountry().equals("TW")) {
-+                String thx = "-- 感 谢 您 的 使 用";
-+                System.out.println("                              " + thx);
-+            }
-+            else{
-+                String thx = "-- Thank you for using Mohist";
-+                System.out.println("                        " + thx);
-+            }
 +            System.out.println("");
-+
++            System.out.println("                        " + Message.getString(Message.forge_ServerLanunchWrapper_1));
++            System.out.println("");
 +            Mohist.LOGGER = LogManager.getLogger("Mohist");
 +            Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
 +            Mohist.LOGGER.info(Message.getString(Message.Load_libraries));
@@ -86,7 +78,7 @@
  
          try
          {
-@@ -71,9 +94,8 @@
+@@ -71,9 +86,8 @@
          }
          catch (Exception e)
          {
