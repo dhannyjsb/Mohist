@@ -2,20 +2,24 @@ package red.mohist.common.asm.remap.remappers;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.MethodRemapper;
 import org.objectweb.asm.commons.Remapper;
-import red.mohist.common.asm.remap.RemapUtils;
+import red.mohist.common.asm.remap.ASMUtils;
 import red.mohist.common.asm.remap.model.MethodRedirectRule;
-import red.mohist.common.asm.remap.proxy.ProxyClass;
-import red.mohist.common.asm.remap.proxy.ProxyClassLoader;
-import red.mohist.common.asm.remap.proxy.ProxyMethodHandles_Lookup;
-import red.mohist.common.asm.remap.proxy.ProxyMethodType;
+import red.mohist.common.asm.remap.proxy.*;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 负责反射remap
  *
  * @author pyz
  * @date 2019/7/2 8:51 PM
@@ -25,29 +29,24 @@ public class ReflectMethodRemapper extends MethodRemapper {
 
     static {
 //        注册重定向规则
-        registerMethodRemapper("java/lang/Class", "forName", new Class[]{String.class}, ProxyClass.class);
-        registerMethodRemapper("java/lang/Class", "forName", new Class[]{String.class, Boolean.TYPE, ClassLoader.class}, ProxyClass.class);
-        registerMethodRemapper("java/lang/Class", "getField", new Class[]{String.class}, ProxyClass.class);
-        registerMethodRemapper("java/lang/Class", "getMethod", new Class[]{String.class, Class[].class}, ProxyClass.class);
-        registerMethodRemapper("java/lang/Class", "getDeclaredMethod", new Class[]{String.class, Class[].class}, ProxyClass.class);
-        registerMethodRemapper("java/lang/invoke/MethodType", "fromMethodDescriptorString", new Class[]{String.class, ClassLoader.class}, ProxyMethodType.class);
-        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "unreflect", new Class[]{String.class, ClassLoader.class}, ProxyMethodHandles_Lookup.class);
-        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findSpecial", new Class[]{Class.class, String.class, MethodType.class, Class.class}, ProxyMethodHandles_Lookup.class);
-        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findStatic", new Class[]{Class.class, String.class, MethodType.class}, ProxyMethodHandles_Lookup.class);
-        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findVirtual", new Class[]{Class.class, String.class, MethodType.class}, ProxyMethodHandles_Lookup.class);
-        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findVirtual", new Class[]{Class.class, String.class, MethodType.class}, ProxyMethodHandles_Lookup.class);
-        registerMethodRemapper("java/lang/ClassLoader", "loadClass", new Class[]{String.class}, ProxyClassLoader.class);
-        registerMethodRemapper("java/lang/ClassLoader", "<init>", new Class[]{}, ProxyClassLoader.class);
-
+        registerMethodRemapper("java/lang/Class", "forName", Class.class, new Class[]{String.class}, ProxyClass.class);
+        registerMethodRemapper("java/lang/Class", "forName", Class.class, new Class[]{String.class, Boolean.TYPE, ClassLoader.class}, ProxyClass.class);
+        registerMethodRemapper("java/lang/Class", "getField", Field.class, new Class[]{String.class}, ProxyClass.class);
+        registerMethodRemapper("java/lang/Class", "getDeclaredField", Field.class, new Class[]{String.class}, ProxyClass.class);
+        registerMethodRemapper("java/lang/Class", "getMethod", Method.class, new Class[]{String.class, Class[].class}, ProxyClass.class);
+        registerMethodRemapper("java/lang/Class", "getDeclaredMethod", Method.class, new Class[]{String.class, Class[].class}, ProxyClass.class);
+        registerMethodRemapper("java/lang/invoke/MethodType", "fromMethodDescriptorString", MethodType.class, new Class[]{String.class, ClassLoader.class}, ProxyMethodType.class);
+        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "unreflect", MethodHandle.class, new Class[]{String.class, ClassLoader.class}, ProxyMethodHandles_Lookup.class);
+        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findSpecial", MethodHandle.class, new Class[]{Class.class, String.class, MethodType.class, Class.class}, ProxyMethodHandles_Lookup.class);
+        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findStatic", MethodHandle.class, new Class[]{Class.class, String.class, MethodType.class}, ProxyMethodHandles_Lookup.class);
+        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findVirtual", MethodHandle.class, new Class[]{Class.class, String.class, MethodType.class}, ProxyMethodHandles_Lookup.class);
+        registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findVirtual", MethodHandle.class, new Class[]{Class.class, String.class, MethodType.class}, ProxyMethodHandles_Lookup.class);
+        registerMethodRemapper("java/lang/ClassLoader", "loadClass", Class.class, new Class[]{String.class}, ProxyClassLoader.class);
+        registerMethodRemapper("java/net/URLClassLoader", "loadClass", Class.class, new Class[]{String.class}, ProxyClassLoader.class);
+        registerMethodRemapper("java/net/URLClassLoader", "<init>", void.class, new Class[]{URL[].class, ClassLoader.class, URLStreamHandlerFactory.class}, DelegateURLClassLoder.class);
+        registerMethodRemapper("java/net/URLClassLoader", "<init>", void.class, new Class[]{URL[].class, ClassLoader.class}, DelegateURLClassLoder.class);
+        registerMethodRemapper("java/net/URLClassLoader", "<init>", void.class, new Class[]{URL[].class}, DelegateURLClassLoder.class);
     }
-
-    private static void registerMethodRemapper(String owner, String name, Class[] args, Class remapOwner) {
-        Map<String, Map<String, MethodRedirectRule>> byName = methodRedirectMapping.computeIfAbsent(owner, k -> new HashMap<>());
-        Map<String, MethodRedirectRule> byDesc = byName.computeIfAbsent(name, k -> new HashMap<>());
-        String desc = RemapUtils.toMethodArgDesc(args);
-        byDesc.put(RemapUtils.toMethodArgDesc(args), new MethodRedirectRule(owner, name, desc, remapOwner.getName().replace('.', '/')));
-    }
-
 
     public ReflectMethodRemapper(MethodVisitor mv, Remapper remapper) {
         super(mv, remapper);
@@ -57,64 +56,82 @@ public class ReflectMethodRemapper extends MethodRemapper {
         super(api, mv, remapper);
     }
 
+    private static void registerMethodRemapper(String owner, String name, Class returnType, Class[] args, Class remapOwner) {
+        Map<String, Map<String, MethodRedirectRule>> byName = methodRedirectMapping.computeIfAbsent(owner, k -> new HashMap<>());
+        Map<String, MethodRedirectRule> byDesc = byName.computeIfAbsent(name, k -> new HashMap<>());
+        String methodDescriptor = ASMUtils.toMethodDescriptor(returnType, args);
+        byDesc.put(methodDescriptor, new MethodRedirectRule(owner, name, methodDescriptor, remapOwner.getName().replace('.', '/')));
+    }
+
     @Override
     public void visitTypeInsn(int opcode, String type) {
         if (opcode == Opcodes.NEW && "java/net/URLClassLoader".equals(type)) {
-            type = ProxyClassLoader.desc;
+//        光这样改还不行,需要配合上面的配置,把<init>方法也重定向
+            type = DelegateURLClassLoder.desc;
         }
         super.visitTypeInsn(opcode, type);
     }
 
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-        if (Opcodes.INVOKESTATIC == opcode) {
+        if (Opcodes.INVOKEVIRTUAL == opcode) {
             redirectVirtual(opcode, owner, name, desc, itf);
-        } else if (Opcodes.INVOKEVIRTUAL == opcode) {
+        } else if (Opcodes.INVOKESTATIC == opcode) {
             redirectStatic(opcode, owner, name, desc, itf);
+        } else if (Opcodes.INVOKESPECIAL == opcode) {
+            redirectSpecial(opcode, owner, name, desc, itf);
         } else {
             super.visitMethodInsn(opcode, owner, name, desc, itf);
         }
     }
 
+    private MethodRedirectRule findRule(int opcode, String owner, String name, String desc, boolean itf) {
+        Map<String, Map<String, MethodRedirectRule>> byOwner = methodRedirectMapping.get(owner);
+        if (byOwner == null) {
+            return null;
+        }
+        Map<String, MethodRedirectRule> byName = byOwner.get(name);
+        if (byName == null) {
+            return null;
+        }
+        MethodRedirectRule rule = byName.get(desc);
+        return rule;
+    }
+
+    private void redirectSpecial(int opcode, String owner, String name, String desc, boolean itf) {
+        MethodRedirectRule rule = findRule(opcode, owner, name, desc, itf);
+        if (rule != null) {
+            owner = rule.getRemapOwner();
+        }
+        super.visitMethodInsn(opcode, owner, name, desc, itf);
+    }
+
     private void redirectVirtual(int opcode, String owner, String name, String desc, boolean itf) {
-        try {
-            Map<String, Map<String, MethodRedirectRule>> byOwner = methodRedirectMapping.get(owner);
-            if (byOwner == null) {
-                return;
-            }
-            Map<String, MethodRedirectRule> byName = byOwner.get(name);
-            if (byName == null) {
-                return;
-            }
-            MethodRedirectRule rule = byName.get(desc);
-            if (rule == null) {
-                return;
+        MethodRedirectRule rule = findRule(opcode, owner, name, desc, itf);
+        if (rule != null) {
+            opcode = Opcodes.INVOKESTATIC;
+            Type r = Type.getReturnType(desc);
+            Type[] args = Type.getArgumentTypes(desc);
+            Type[] newArgs = new Type[args.length + 1];
+            if ("red/mohist/common/asm/remap/proxy/ProxyClassLoader".equals(rule.getOwner()) && "loadClass".equals(name)) {
+//                实际可能是子类,这里必须使用顶级类ClassLoader
+                newArgs[0] = Type.getObjectType("java/lang/ClassLoader");
+            } else {
+                newArgs[0] = Type.getObjectType(owner);
             }
             owner = rule.getRemapOwner();
-            opcode = Opcodes.INVOKESTATIC;
-        } finally {
-            super.visitMethodInsn(opcode, owner, name, desc, itf);
+            System.arraycopy(args, 0, newArgs, 1, args.length);
+            desc = Type.getMethodDescriptor(r, newArgs);
         }
+        super.visitMethodInsn(opcode, owner, name, desc, itf);
     }
 
     private void redirectStatic(int opcode, String owner, String name, String desc, boolean itf) {
-        try {
-            Map<String, Map<String, MethodRedirectRule>> byOwner = methodRedirectMapping.get(owner);
-            if (byOwner == null) {
-                return;
-            }
-            Map<String, MethodRedirectRule> byName = byOwner.get(name);
-            if (byName == null) {
-                return;
-            }
-            MethodRedirectRule rule = byName.get(desc);
-            if (rule == null) {
-                return;
-            }
+        MethodRedirectRule rule = findRule(opcode, owner, name, desc, itf);
+        if (rule != null) {
             owner = rule.getRemapOwner();
-        } finally {
-            super.visitMethodInsn(opcode, owner, name, desc, itf);
         }
+        super.visitMethodInsn(opcode, owner, name, desc, itf);
     }
 
 }

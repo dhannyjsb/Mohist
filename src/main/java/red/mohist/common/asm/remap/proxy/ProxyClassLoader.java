@@ -1,5 +1,6 @@
 package red.mohist.common.asm.remap.proxy;
 
+import red.mohist.common.asm.remap.ASMUtils;
 import red.mohist.common.asm.remap.RemapUtils;
 
 /**
@@ -8,11 +9,8 @@ import red.mohist.common.asm.remap.RemapUtils;
  * @date 2019/7/1 8:09 PM
  */
 public class ProxyClassLoader {
-    public static final String desc = ProxyClassLoader.class.getName().replace('.', '/');
-
     public static Class<?> loadClass(final ClassLoader inst, String className) throws ClassNotFoundException {
-        className = RemapUtils.remapClassNameV2(className.replace('.', '/'));
+        className = ASMUtils.toClassName(RemapUtils.map(ASMUtils.toInternalName(className)));
         return inst.loadClass(className);
     }
-
 }

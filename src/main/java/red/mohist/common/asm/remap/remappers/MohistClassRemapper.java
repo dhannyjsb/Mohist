@@ -8,6 +8,7 @@ import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 
 /**
+ * 负责反射remap,
  *
  * @author pyz
  * @date 2019/7/2 9:16 PM
@@ -38,6 +39,16 @@ public class MohistClassRemapper extends ClassRemapper {
         return super.visitMethod(modifyAccess, name, desc, signature, exceptions);
     }
 
+    /**
+     * 把所有类改成public
+     *
+     * @param version
+     * @param access
+     * @param name
+     * @param signature
+     * @param superName
+     * @param interfaces
+     */
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         int modifyAccess = toPublic(access);
@@ -70,7 +81,6 @@ public class MohistClassRemapper extends ClassRemapper {
     protected MethodVisitor createMethodRemapper(MethodVisitor mv) {
         return new ReflectMethodRemapper(mv, remapper);
     }
-
 
     private int toPublic(int access) {
         access |= Opcodes.ACC_PUBLIC;
