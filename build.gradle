@@ -35,6 +35,8 @@ repositories {
     maven { url 'https://libraries.minecraft.net/' }
     maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
     maven { url 'https://raw.githubusercontent.com/PFCraft/MohistCentral/master/repository' }
+    maven { url 'http://repo.spongepowered.org/maven'
+    }
 }
 
 tasks.withType(JavaCompile) {
@@ -71,6 +73,7 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.21.0.1'
     implementation 'mysql:mysql-connector-java:5.1.45'
     implementation 'net.md-5:bungeecord-chat:1.12-SNAPSHOT'
+    implementation 'org.spongepowered:mixin:0.7.10-SNAPSHOT'
 }
 
 minecraft.version = "1.12.2"
