@@ -1,17 +1,28 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
-@@ -48,6 +48,16 @@
+@@ -32,6 +32,7 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ 
+ import com.google.common.collect.ImmutableSet;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+ 
+ public class ChannelRegistrationHandler extends SimpleChannelInboundHandler<FMLProxyPacket> {
+     @Override
+@@ -48,6 +49,19 @@
              Set<String> channelSet = ImmutableSet.copyOf(split);
              FMLCommonHandler.instance().fireNetRegistrationEvent(manager, channelSet, msg.channel(), side);
              msg.payload().release();
 +            // Cauldron start - register bukkit channels for players
-+            org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer player = ((net.minecraft.network.NetHandlerPlayServer) ctx.attr(NetworkDispatcher.FML_DISPATCHER).get().getNetHandler()).getPlayer();
++            NetworkDispatcher dispatcher = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get();
++            CraftPlayer player = dispatcher.getPlayer().getBukkitEntity();
 +            if (msg.channel().equals("REGISTER")) {
-+                for (String channel : channelSet)
++                for (String channel : channelSet) {
 +                    player.addChannel(channel);
++                }
 +            } else {
-+                for (String channel : channelSet)
++                for (String channel : channelSet) {
 +                    player.removeChannel(channel);
++                }
 +            }
 +            // Cauldron end
          }
