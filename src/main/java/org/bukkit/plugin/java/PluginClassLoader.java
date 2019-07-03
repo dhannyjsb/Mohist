@@ -6,6 +6,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import red.mohist.Mohist;
+import red.mohist.common.asm.remap.ClassLoaderContext;
 import red.mohist.common.asm.remap.RemapUtils;
 
 import java.io.File;
@@ -80,36 +81,41 @@ final class PluginClassLoader extends URLClassLoader {
     }
 
     Class<?> findClass(String name, boolean checkGlobal) throws ClassNotFoundException {
-        if (name.startsWith("net.minecraft.server." + Mohist.getNativeVersion())) {
-            String remappedClass = RemapUtils.jarMapping.classes.get(name.replaceAll("\\.", "\\/"));
-            return ((net.minecraft.launchwrapper.LaunchClassLoader) MinecraftServer.getServerInst().getClass().getClassLoader()).findClass(remappedClass);
-        }
-
-        if (name.startsWith("org.bukkit.")) {
-            throw new ClassNotFoundException(name);
-        }
-
-        Class<?> result = classes.get(name);
-        synchronized (name.intern()) {
-            if (result == null) {
-                if (checkGlobal) {
-                    result = loader.getClassByName(name);
-                }
-
-                if (result == null) {
-                    result = remappedFindClass(name);
-
-                    if (result != null) {
-                        loader.setClass(name, result);
-                    }
-                }
-
-                if (result == null) {
-                    throw new ClassNotFoundException(name);
-                }
-
-                classes.put(name, result);
+        ClassLoaderContext.put(this);
+        Class<?> result;
+        try {
+            if (name.startsWith("net.minecraft.server." + Mohist.getNativeVersion())) {
+                String remappedClass = RemapUtils.jarMapping.classes.get(name.replaceAll("\\.", "\\/"));
+                return ((net.minecraft.launchwrapper.LaunchClassLoader) MinecraftServer.getServerInst().getClass().getClassLoader()).findClass(remappedClass);
             }
+
+            if (name.startsWith("org.bukkit.")) {
+                throw new ClassNotFoundException(name);
+            }
+            result = classes.get(name);
+            synchronized (name.intern()) {
+                if (result == null) {
+                    if (checkGlobal) {
+                        result = loader.getClassByName(name);
+                    }
+
+                    if (result == null) {
+                        result = remappedFindClass(name);
+
+                        if (result != null) {
+                            loader.setClass(name, result);
+                        }
+                    }
+
+                    if (result == null) {
+                        throw new ClassNotFoundException(name);
+                    }
+
+                    classes.put(name, result);
+                }
+            }
+        } finally {
+            ClassLoaderContext.pop();
         }
         return result;
     }

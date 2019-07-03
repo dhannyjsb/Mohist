@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * @date 2019/7/1 7:45 PM
  */
 public class ProxyMethodHandles_Lookup {
-    public MethodHandle findVirtual(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
+    public static MethodHandle findVirtual(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
         if (clazz.getName().startsWith("net.minecraft.")) {
             name = RemapUtils.remapMethodName(clazz, name, type);
         } else if (clazz == Class.class) {
@@ -34,7 +34,7 @@ public class ProxyMethodHandles_Lookup {
         return lookup.findVirtual(clazz, name, type);
     }
 
-    public MethodHandle findStatic(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
+    public static MethodHandle findStatic(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
         if (clazz.getName().startsWith("net.minecraft.")) {
             name = RemapUtils.remapMethodName(clazz, name, type);
         } else if (clazz == Class.class && name.equals("forName")) {
@@ -43,14 +43,14 @@ public class ProxyMethodHandles_Lookup {
         return lookup.findStatic(clazz, name, type);
     }
 
-    public MethodHandle findSpecial(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type, Class<?> specialCaller) throws NoSuchMethodException, IllegalAccessException {
+    public static MethodHandle findSpecial(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type, Class<?> specialCaller) throws NoSuchMethodException, IllegalAccessException {
         if (clazz.getName().startsWith("net.minecraft.")) {
             name = RemapUtils.remapMethodName(clazz, name, type);
         }
         return lookup.findSpecial(clazz, name, type, specialCaller);
     }
 
-    public MethodHandle unreflect(MethodHandles.Lookup lookup, Method m) throws IllegalAccessException, NoSuchMethodException {
+    public static MethodHandle unreflect(MethodHandles.Lookup lookup, Method m) throws IllegalAccessException, NoSuchMethodException {
         if (m.getDeclaringClass() == Class.class) {
             String name = m.getName();
             switch (name) {

@@ -14,7 +14,9 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.function.BiConsumer;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -26,6 +28,7 @@ public class ASMUtils {
     private static final Map<Integer, String> opcodeMap = new HashMap<>();
     private static final Map<Integer, String> typeMap = new HashMap<>();
     private static final Map<Integer, BiConsumer<String, AbstractInsnNode>> printerMap = new HashMap<>();
+    private static final Pattern illegalSignaturePattern = Pattern.compile("^[0-9a-zA-Z_/();<>\\[]+$");
 
     static {
         for (Field field : Opcodes.class.getDeclaredFields()) {
@@ -86,6 +89,81 @@ public class ASMUtils {
         });
     }
 
+    public static String toDescriptorV1(String className) {
+        if (className.startsWith("[")) {
+            return className.replace('.', '/');
+        }
+        switch (className) {
+            case "byte":
+                return "B";
+            case "short":
+                return "S";
+            case "int":
+                return "I";
+            case "long":
+                return "J";
+            case "float":
+                return "F";
+            case "double":
+                return "D";
+            case "boolean":
+                return "Z";
+            case "char":
+                return "C";
+            case "void":
+                return "V";
+            default:
+                return "L" + className.replace('.', '/') + ";";
+        }
+    }
+
+    public static String toDescriptorV2(String internalName) {
+        if (internalName.startsWith("[")) {
+            return internalName;
+        }
+        if (internalName.length() == 1) {
+            return internalName;
+        }
+        return "L" + internalName.replace('.', '/') + ";";
+    }
+
+    public static String toClassName(String internalName) {
+        return internalName.replace('/', '.');
+    }
+
+    public static Type toType(Class clazz) {
+        return Type.getType(clazz);
+    }
+
+    public static String toDescriptor(Class clazz) {
+        return Type.getDescriptor(clazz);
+    }
+
+    public static String toInternalName(Class clazz) {
+        return Type.getInternalName(clazz);
+    }
+
+    public static String toInternalName(String className) {
+        return className.replace('.', '/');
+    }
+
+    public static String toArgumentDescriptor(Class... classes) {
+        StringJoiner sj = new StringJoiner("", "(", ")");
+        for (Class aClass : classes) {
+            sj.add(Type.getDescriptor(aClass));
+        }
+        return sj.toString();
+    }
+
+
+    public static String toMethodDescriptor(Class returnType, Class... classes) {
+        StringJoiner sj = new StringJoiner("", "(", ")");
+        for (Class aClass : classes) {
+            sj.add(toDescriptor(aClass));
+        }
+        return sj.toString() + toDescriptor(returnType);
+    }
+
     public static void dump(String dir, byte[] bs) throws IOException {
         ClassReader classReader = new ClassReader(bs);
         ClassNode classNode = new ClassNode();
@@ -113,19 +191,41 @@ public class ASMUtils {
         ClassReader classReader = new ClassReader(bs);
         classReader.accept(classNode, 0);
         System.out.println("============ " + classNode.name + " ============");
-        for (FieldNode field : classNode.fields) {
-            System.out.println("  field " + field.desc + " " + field.name + " " + field.signature);
-        }
-        for (MethodNode method : classNode.methods) {
-            System.out.println("  method " + method.name + " " + method.desc);
-            ListIterator<AbstractInsnNode> it = method.instructions.iterator();
-            while (it.hasNext()) {
-                print("    insn", it.next());
-            }
-            for (LocalVariableNode localVariable : method.localVariables) {
-                System.out.println("    localVariable " + localVariable.getClass().getSimpleName() + " " + localVariable.name + " " + localVariable.desc + " " + localVariable.signature);
+        if (classNode.fields != null) {
+            for (FieldNode field : classNode.fields) {
+                System.out.println("  field " + field.desc + " " + field.name + " " + field.signature);
             }
         }
+        if (classNode.methods != null) {
+            for (MethodNode method : classNode.methods) {
+                System.out.println("  method " + method.name + " " + method.desc);
+                if (method.instructions == null) {
+                    continue;
+                }
+                ListIterator<AbstractInsnNode> it = method.instructions.iterator();
+                while (it.hasNext()) {
+                    print("    insn", it.next());
+                }
+                if (method.localVariables == null) {
+                    continue;
+                }
+                for (LocalVariableNode localVariable : method.localVariables) {
+                    System.out.println("    localVariable " + localVariable.getClass().getSimpleName() + " " + localVariable.name + " " + localVariable.desc + " " + localVariable.signature);
+                }
+            }
+        }
+    }
+
+    /**
+     * 校验是否是正确的签名
+     *
+     * 只有正确的签名才能进行remap,错误的直接返回
+     *
+     * @param signature
+     * @return
+     */
+    public static boolean isValidSingnature(String signature) {
+        return signature != null && !signature.isEmpty() && illegalSignaturePattern.matcher(signature).matches();
     }
 
     private static void print(String prefix, Handle o) {
