@@ -120,7 +120,12 @@
      }
  
      public boolean enchantItem(EntityPlayer playerIn, int id)
-@@ -174,7 +225,7 @@
+@@ -170,11 +221,11 @@
+             }
+             else if (this.dragEvent == 2)
+             {
+-                if (!this.dragSlots.isEmpty())
++                if (!this.dragSlots.isEmpty() && getBukkitView() != null) // MCPC+ - only for containers with Bukkit wrappers
                  {
                      ItemStack itemstack9 = inventoryplayer.getItemStack().copy();
                      int k1 = inventoryplayer.getItemStack().getCount();
