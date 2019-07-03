@@ -1,18 +1,20 @@
 --- ../src-base/minecraft/net/minecraftforge/common/util/EnumHelper.java
 +++ ../src-work/minecraft/net/minecraftforge/common/util/EnumHelper.java
-@@ -51,7 +51,11 @@
+@@ -51,7 +51,13 @@
  import net.minecraft.world.IBlockAccess;
  import net.minecraft.world.gen.structure.StructureStrongholdPieces.Stronghold.Door;
  import net.minecraftforge.classloading.FMLForgePlugin;
++import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 +import net.minecraftforge.fml.relauncher.ReflectionHelper;
  import org.apache.commons.lang3.ArrayUtils;
 +import org.bukkit.World;
 +import org.bukkit.WorldType;
 +import org.bukkit.block.Biome;
++import org.bukkit.entity.EntityType;
  
  import javax.annotation.Nullable;
  
-@@ -428,4 +432,27 @@
+@@ -428,4 +434,40 @@
              setup();
          }
      }
@@ -35,8 +37,21 @@
 +            setup();
 +        }
 +        WorldType worldType = addEnum(WorldType.class, name, new Class [] { String.class }, new Object[] { name });
-+        Map<String, WorldType> BY_NAME = ReflectionHelper.getPrivateValue(WorldType.class, null, "BY_NAME");
++        Map<String, WorldType> BY_NAME = ObfuscationReflectionHelper.getPrivateValue(WorldType.class, null, "BY_NAME");
 +        BY_NAME.put(name.toUpperCase(), worldType);
 +        return worldType;
++    }
++
++    public static EntityType addBukkitEntityType(String name, Class <? extends org.bukkit.entity.Entity> clazz, int typeId, boolean independent) {
++        String entityType = name.replace("-", "_").toUpperCase();
++        EntityType bukkitType = addEnum(EntityType.class, entityType, new Class[] { String.class, Class.class, Integer.TYPE, Boolean.TYPE }, new Object[] { name, clazz, typeId, independent });
++
++        Map<String, EntityType> NAME_MAP = ObfuscationReflectionHelper.getPrivateValue(EntityType.class, null, "NAME_MAP");
++        Map<Short, EntityType> ID_MAP = ObfuscationReflectionHelper.getPrivateValue(EntityType.class, null, "ID_MAP");
++
++        NAME_MAP.put(name.toLowerCase(), bukkitType);
++        ID_MAP.put((short)typeId, bukkitType);
++
++        return bukkitType;
 +    }
  }

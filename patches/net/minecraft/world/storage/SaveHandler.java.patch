@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/SaveHandler.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/SaveHandler.java
-@@ -1,25 +1,43 @@
+@@ -1,25 +1,39 @@
  package net.minecraft.world.storage;
  
 -import java.io.DataInputStream;
@@ -12,7 +12,6 @@
 -import javax.annotation.Nullable;
 +import net.minecraft.block.Block;
 +import net.minecraft.enchantment.Enchantment;
-+import net.minecraft.entity.Entity;
  import net.minecraft.entity.player.EntityPlayer;
 +import net.minecraft.entity.player.EntityPlayerMP;
 +import net.minecraft.item.Item;
@@ -29,19 +28,16 @@
  import net.minecraft.world.gen.structure.template.TemplateManager;
 +import net.minecraftforge.common.util.EnumHelper;
 +import net.minecraftforge.fml.common.FMLLog;
-+import net.minecraftforge.fml.common.registry.EntityRegistry;
 +import net.minecraftforge.fml.common.registry.ForgeRegistries;
-+import net.minecraftforge.fml.relauncher.ReflectionHelper;
-+import net.minecraftforge.registries.GameData;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
++import org.bukkit.Bukkit;
 +import org.bukkit.Material;
 +import org.bukkit.block.Biome;
-+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftCustomEntity;
++import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 +import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
-+import org.bukkit.entity.EntityType;
++import org.bukkit.plugin.PluginLoadOrder;
 +import org.bukkit.potion.PotionEffectType;
-+import red.mohist.Mohist;
  
 +import javax.annotation.Nullable;
 +import java.io.*;
@@ -51,16 +47,53 @@
  public class SaveHandler implements ISaveHandler, IPlayerFileData
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -31,6 +49,8 @@
+@@ -31,6 +45,9 @@
      private final TemplateManager structureTemplateManager;
      protected final DataFixer dataFixer;
  
 +    private UUID uuid = null; // CraftBukkit
++    private static boolean initializedBukkit = false; // Cauldron
 +
      public SaveHandler(File p_i46648_1_, String saveDirectoryNameIn, boolean p_i46648_3_, DataFixer dataFixerIn)
      {
          this.dataFixer = dataFixerIn;
-@@ -208,7 +228,6 @@
+@@ -116,20 +133,30 @@
+     public WorldInfo loadWorldInfo()
+     {
+         File file1 = new File(this.worldDirectory, "level.dat");
+-
++        WorldInfo worldInfo = null;
+         if (file1.exists())
+         {
+-            WorldInfo worldinfo = SaveFormatOld.loadAndFix(file1, this.dataFixer, this);
++            worldInfo = SaveFormatOld.loadAndFix(file1, this.dataFixer, this);
+ 
+-            if (worldinfo != null)
++            if (worldInfo != null)
+             {
+-                return worldinfo;
++                return worldInfo;
+             }
+         }
+ 
+         net.minecraftforge.fml.common.FMLCommonHandler.instance().confirmBackupLevelDatUse(this);
+         file1 = new File(this.worldDirectory, "level.dat_old");
+-        return file1.exists() ? SaveFormatOld.loadAndFix(file1, this.dataFixer, this) : null;
++        if (file1.exists())
++        {
++            worldInfo = SaveFormatOld.loadAndFix(file1, this.dataFixer, this);
++
++            if (worldInfo != null)
++            {
++                return worldInfo;
++            }
++        }
++        this.initBukkitData(worldInfo); // Cauldron
++        return null;
+     }
+ 
+     public void saveWorldInfoWithPlayer(WorldInfo worldInformation, @Nullable NBTTagCompound tagCompound)
+@@ -208,7 +235,6 @@
          try
          {
              File file1 = new File(this.playersDirectory, player.getCachedUniqueIdString() + ".dat");
@@ -68,7 +101,7 @@
              if (file1.exists() && file1.isFile())
              {
                  nbttagcompound = CompressedStreamTools.readCompressed(new FileInputStream(file1));
-@@ -221,6 +240,16 @@
+@@ -221,6 +247,16 @@
  
          if (nbttagcompound != null)
          {
@@ -85,7 +118,7 @@
              player.readFromNBT(this.dataFixer.process(FixTypes.PLAYER, nbttagcompound));
          }
  
-@@ -228,6 +257,22 @@
+@@ -228,6 +264,22 @@
          return nbttagcompound;
      }
  
@@ -108,7 +141,7 @@
      public IPlayerFileData getPlayerNBTManager()
      {
          return this;
-@@ -267,7 +312,7 @@
+@@ -267,7 +319,7 @@
          return this.structureTemplateManager;
      }
  
@@ -117,7 +150,7 @@
      {
          try
          {
-@@ -284,4 +329,114 @@
+@@ -284,4 +336,105 @@
          }
          return null;
      }
@@ -169,9 +202,9 @@
 +    // CraftBukkit end
 +
 +    // Mohist start
-+    public static void initBukkitData(WorldInfo worldInfo) {
++    public void initBukkitData(WorldInfo worldInfo) {
 +        // inject bukkit materials before plugins load
-+        if ((worldInfo == null || worldInfo.getDimension() == 0))
++        if (!this.initializedBukkit && (worldInfo == null || worldInfo.getDimension() == 0))
 +        {
 +            for (Map.Entry<ResourceLocation, Item> entry : ForgeRegistries.ITEMS.getEntries()) {
 +                ResourceLocation key = entry.getKey();
@@ -197,19 +230,7 @@
 +                    }
 +                }
 +            }
-+            Map<String, EntityType> NAME_MAP = ReflectionHelper.getPrivateValue(EntityType.class, null, "NAME_MAP");
-+            Map<Short, EntityType> ID_MAP = ReflectionHelper.getPrivateValue(EntityType.class, null, "ID_MAP");
 +
-+            for (Map.Entry<String, Class<? extends Entity>> entity : EntityRegistry.entityClassMap.entrySet()) {
-+                String entityname = entity.getKey();
-+                String entityType = entityname.replace("-", "_").toUpperCase();
-+
-+                int typeId = GameData.getEntityRegistry().getID(EntityRegistry.getEntry(entity.getValue()));
-+                EntityType bukkitType = EnumHelper.addEnum(EntityType.class, entityType, new Class[] { String.class, Class.class, Integer.TYPE, Boolean.TYPE }, new Object[] { entityname, CraftCustomEntity.class, typeId, false });
-+
-+                NAME_MAP.put(entityname.toLowerCase(), bukkitType);
-+                ID_MAP.put((short)typeId, bukkitType);
-+            }
 +            for (Object enchantment : Enchantment.REGISTRY) {
 +                org.bukkit.enchantments.Enchantment.registerEnchantment(new org.bukkit.craftbukkit.v1_12_R1.enchantments.CraftEnchantment((Enchantment) enchantment));
 +            }
@@ -226,8 +247,11 @@
 +                }
 +                EnumHelper.addBukkitBiome(biomeName);
 +            }
-+            MinecraftServer.getServerInst().server.loadPlugins();
-+            MinecraftServer.getServerInst().server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
++            // since we modify bukkit enums, we need to guarantee that plugins are
++            // loaded after all mods have been loaded by FML to avoid race conditions.
++            ((CraftServer) Bukkit.getServer()).loadPlugins();
++            ((CraftServer) Bukkit.getServer()).enablePlugins(PluginLoadOrder.STARTUP);
++            initializedBukkit = true;
 +        }
 +    }
 +    // Mohist end

@@ -1,8 +1,8 @@
 package org.bukkit.entity;
 
+import net.minecraftforge.cauldron.entity.CraftCustomEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftCustomEntity;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.entity.minecart.HopperMinecart;
