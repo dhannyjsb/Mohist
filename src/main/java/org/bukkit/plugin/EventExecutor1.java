@@ -1,9 +1,10 @@
 package org.bukkit.plugin;
 
-import java.lang.reflect.InvocationTargetException;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
-import org.bukkit.event.Event;
+
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class EventExecutor1 implements EventExecutor
