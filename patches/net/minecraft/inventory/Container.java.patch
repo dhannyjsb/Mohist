@@ -120,7 +120,18 @@
      }
  
      public boolean enchantItem(EntityPlayer playerIn, int id)
-@@ -170,11 +221,11 @@
+@@ -117,6 +168,10 @@
+ 
+     public Slot getSlot(int slotId)
+     {
++        // Cauldron start - vanilla compatibility. fixes NPE with ProjectRed's Item Stock Keeper
++        if (slotId < 0 || slotId > this.inventorySlots.size())
++            return null;
++        // Cauldron end
+         return this.inventorySlots.get(slotId);
+     }
+ 
+@@ -170,11 +225,11 @@
              }
              else if (this.dragEvent == 2)
              {
@@ -134,7 +145,7 @@
                      for (Slot slot8 : this.dragSlots)
                      {
                          ItemStack itemstack13 = inventoryplayer.getItemStack();
-@@ -192,12 +243,50 @@
+@@ -192,12 +247,50 @@
                              }
  
                              k1 -= itemstack14.getCount() - j3;
@@ -188,7 +199,7 @@
                  }
  
                  this.resetDrag();
-@@ -219,8 +308,9 @@
+@@ -219,8 +312,9 @@
                  {
                      if (dragType == 0)
                      {
@@ -199,7 +210,7 @@
                      }
  
                      if (dragType == 1)
-@@ -348,6 +438,15 @@
+@@ -348,6 +442,15 @@
                      }
  
                      slot6.onSlotChanged();
@@ -215,7 +226,7 @@
                  }
              }
          }
-@@ -797,7 +896,9 @@
+@@ -797,7 +900,9 @@
                  p_192389_4_.setRecipeUsed(irecipe);
                  itemstack = irecipe.getCraftingResult(p_192389_3_);
              }

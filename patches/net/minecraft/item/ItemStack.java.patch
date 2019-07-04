@@ -28,7 +28,7 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
  import net.minecraft.util.datafix.walkers.BlockEntityTag;
-@@ -49,14 +40,21 @@
+@@ -49,18 +40,25 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -52,6 +52,11 @@
      private NBTTagCompound stackTagCompound;
      private boolean isEmpty;
      int itemDamage;
+-    private EntityItemFrame itemFrame;
++    private transient EntityItemFrame itemFrame;
+     private Block canDestroyCacheBlock;
+     private boolean canDestroyCacheResult;
+     private Block canPlaceOnCacheBlock;
 @@ -119,47 +117,57 @@
  
      public ItemStack(NBTTagCompound compound)
