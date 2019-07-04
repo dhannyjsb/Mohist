@@ -44,6 +44,7 @@ public class MohistConfig {
      * 一个tick内,一个实体可以碰撞或被碰撞多少次
      */
     public static int maxEntityCollisionsPerTick = 8;
+    public static boolean dumpThreadCpuTime = false;
     private static File CONFIG_FILE;
     private static final String HEADER = "This is the main configuration file for Mohist.\n"
             + "You can change \"update: \n  version: Stable or Debug to get universal version or debug version\"\n";
