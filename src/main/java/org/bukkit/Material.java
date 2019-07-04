@@ -774,7 +774,7 @@ public enum Material {
             // Cauldron end
         }
 
-        // Cauldron start - Try the ore dictionary
+        /*/ Cauldron start - Try the ore dictionary
         if (result == null) {
             BukkitOreDictionary dict = net.minecraftforge.cauldron.api.Cauldron.getOreDictionary();
             OreDictionaryEntry entry = dict.getOreEntry(name);
@@ -792,6 +792,7 @@ public enum Material {
             }
         }
         // Cauldron end
+         */
 
         return result;
     }
