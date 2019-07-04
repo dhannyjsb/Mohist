@@ -118,7 +118,7 @@
                      }
                  }
                  catch (IOException ioexception1)
-@@ -113,9 +126,29 @@
+@@ -113,9 +126,33 @@
                  }
              }
          };
@@ -138,7 +138,11 @@
 +            }
 +        }
 +
-+        new Thread((Runnable)new TerminalConsoleWriterThread((OutputStream)System.out, this.reader)).start();
++        Thread terminalConsoleWriterThread = new Thread((Runnable)new TerminalConsoleWriterThread((OutputStream)System.out, this.reader));
++        terminalConsoleWriterThread.setName("terminalConsoleWriter");
++        terminalConsoleWriterThread.setPriority(1);
++        terminalConsoleWriterThread.start();
++
 +        System.setOut(new PrintStream(new LoggerOutputStream(logger, Level.INFO), true));
 +        System.setErr(new PrintStream(new LoggerOutputStream(logger, Level.WARN), true));
 +        // CraftBukkit end
@@ -149,7 +153,7 @@
  
          if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
          {
-@@ -125,7 +158,7 @@
+@@ -125,7 +162,7 @@
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStart(this);
  
          LOGGER.info("Loading properties");
@@ -158,7 +162,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -144,7 +177,7 @@
+@@ -144,7 +181,7 @@
              {
                  this.setOnlineMode(this.settings.getBooleanProperty("online-mode", true));
                  this.setPreventProxyConnections(this.settings.getBooleanProperty("prevent-proxy-connections", false));
@@ -167,7 +171,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +214,23 @@
+@@ -181,10 +218,23 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -192,7 +196,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +242,7 @@
+@@ -196,15 +246,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -209,7 +213,7 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,8 +255,7 @@
+@@ -217,8 +259,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -219,7 +223,7 @@
  
                  if (this.getFolderName() == null)
                  {
-@@ -268,11 +305,14 @@
+@@ -268,11 +309,14 @@
                  if (!net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerAboutToStart(this)) return false;
                  LOGGER.info("Preparing level \"{}\"", (Object)this.getFolderName());
                  this.loadAllWorlds(this.getFolderName(), this.getFolderName(), k, worldtype, s2);
@@ -237,7 +241,7 @@
                  if (this.settings.hasProperty("announce-player-achievements"))
                  {
                      this.worlds[0].getGameRules().setOrCreateGameRule("announceAdvancements", this.settings.getBooleanProperty("announce-player-achievements", true) ? "true" : "false");
-@@ -292,16 +332,28 @@
+@@ -292,16 +336,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -272,7 +276,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +479,19 @@
+@@ -427,11 +483,19 @@
  
      public void executePendingCommands()
      {
@@ -296,7 +300,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -592,8 +652,11 @@
+@@ -592,8 +656,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -310,7 +314,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +747,66 @@
+@@ -684,13 +751,66 @@
  
      public String getPlugins()
      {
