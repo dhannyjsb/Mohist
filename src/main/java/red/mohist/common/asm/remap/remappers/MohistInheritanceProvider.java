@@ -5,42 +5,44 @@ import org.objectweb.asm.tree.ClassNode;
 import red.mohist.common.asm.remap.RemapUtils;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class MohistInheritanceProvider implements InheritanceProvider {
     @Override
     public Set<String> getParents(String className) {
-        Set<String> parents = new HashSet<>();
-        try {
-            if (!className.startsWith("net/minecraft/")) {
-                ClassNode cn = MohistClassRepo.getInstance().findClass(className);
-                if (cn != null) {
-                    if (cn.superName != null) {
-                        parents.add(cn.superName);
-                    }
-                    if (cn.interfaces != null) {
-                        for (String anInterface : cn.interfaces) {
-                            parents.add(anInterface);
-                        }
-                    }
-                    return parents.isEmpty() ? null : parents;
-                }
-            }
-            if (className.startsWith("net/minecraft/")) {
-                className = RemapUtils.map(className);
-            }
-            Class<?> reference = Class.forName(className.replace('/', '.').replace('$', '.'), false, Thread.currentThread().getContextClassLoader());
-            Class<?> extend = reference.getSuperclass();
-            if (extend != null) {
-                parents.add(RemapUtils.reverseMap(extend.getName().replace('.', '/')));
-            }
-            for (Class<?> inter : reference.getInterfaces()) {
-                parents.add(RemapUtils.reverseMap(inter.getName().replace('.', '/')));
-            }
-            return parents.isEmpty() ? null : parents;
-        } catch (Exception e) {
+        if (className.startsWith("org/springframework/")) {
+//            不处理spring的类
             return null;
         }
+        return fineParents(className, true);
     }
 
+    protected Set<String> fineParents(String className, boolean remap) {
+        if (className.startsWith("org/springframework/")) {
+//            不处理spring的类
+            return null;
+        }
+        ClassNode cn = MohistClassRepo.getInstance().findClass(className);
+        if (cn == null) {
+            if (!remap) {
+                return null;
+            }
+            String remapClassName = RemapUtils.map(className);
+            if (Objects.equals(remapClassName, className)) {
+                return null;
+            }
+            return fineParents(remapClassName, false);
+        }
+        Set<String> parents = new HashSet<>();
+        if (cn.superName != null) {
+            parents.add(RemapUtils.reverseMap(cn.superName));
+        }
+        if (cn.interfaces != null) {
+            for (String anInterface : cn.interfaces) {
+                parents.add(RemapUtils.reverseMap(anInterface));
+            }
+        }
+        return parents.isEmpty() ? null : parents;
+    }
 }
