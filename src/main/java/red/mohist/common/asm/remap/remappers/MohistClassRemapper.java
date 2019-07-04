@@ -6,6 +6,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
+import red.mohist.common.asm.remap.proxy.DelegateURLClassLoder;
 
 /**
  * 负责反射remap,
@@ -52,6 +53,9 @@ public class MohistClassRemapper extends ClassRemapper {
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         int modifyAccess = toPublic(access);
+        if ("java/net/URLClassLoader".equals(superName)) {
+            superName = DelegateURLClassLoder.desc;
+        }
         super.visit(version, modifyAccess, name, signature, superName, interfaces);
     }
 

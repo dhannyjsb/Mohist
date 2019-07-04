@@ -9,6 +9,7 @@ import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
+import red.mohist.common.asm.remap.proxy.DelegateURLClassLoder;
 import red.mohist.common.asm.remap.remappers.*;
 import sun.reflect.Reflection;
 
