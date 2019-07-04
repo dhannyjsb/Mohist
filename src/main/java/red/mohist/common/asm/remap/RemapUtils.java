@@ -1,6 +1,5 @@
 package red.mohist.common.asm.remap;
 
-import net.md_5.specialsource.provider.JointProvider;
 import net.md_5.specialsource.transformer.MavenShade;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -9,7 +8,6 @@ import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
-import red.mohist.common.asm.remap.proxy.DelegateURLClassLoder;
 import red.mohist.common.asm.remap.remappers.*;
 import sun.reflect.Reflection;
 
@@ -41,9 +39,8 @@ public class RemapUtils {
         jarMapping.packages.put("org/bukkit/craftbukkit/libs/jline/", "jline/");
         jarMapping.packages.put("org/bukkit/craftbukkit/libs/joptsimple/", "joptsimple/");
         jarMapping.methods.put("org/bukkit/Bukkit/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
-        JointProvider provider = new JointProvider();
-        provider.add(new MohistInheritanceProvider());
-        jarMapping.setFallbackInheritanceProvider(provider);
+        jarMapping.setInheritanceMap(new MohistInheritanceMap());
+        jarMapping.setFallbackInheritanceProvider(new MohistInheritanceProvider());
 
         Map<String, String> relocations = new HashMap<String, String>();
         relocations.put("net.minecraft.server", "net.minecraft.server." + Mohist.getNativeVersion());
