@@ -41,6 +41,12 @@ public class BukkitObjectInputStream extends ObjectInputStream {
         super.enableResolveObject(true);
     }
 
+    private static IOException newIOException(String string, Throwable cause) {
+        IOException exception = new IOException(string);
+        exception.initCause(cause);
+        return exception;
+    }
+
     @Override
     protected Object resolveObject(Object obj) throws IOException {
         if (obj instanceof Wrapper) {
@@ -52,11 +58,5 @@ public class BukkitObjectInputStream extends ObjectInputStream {
         }
 
         return super.resolveObject(obj);
-    }
-
-    private static IOException newIOException(String string, Throwable cause) {
-        IOException exception = new IOException(string);
-        exception.initCause(cause);
-        return exception;
     }
 }

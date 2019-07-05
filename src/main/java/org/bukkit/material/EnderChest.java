@@ -26,7 +26,7 @@ public class EnderChest extends DirectionalContainer {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public EnderChest(final int type) {
         super(type);
     }
@@ -40,7 +40,7 @@ public class EnderChest extends DirectionalContainer {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public EnderChest(final int type, final byte data) {
         super(type, data);
     }
@@ -50,7 +50,7 @@ public class EnderChest extends DirectionalContainer {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public EnderChest(final Material type, final byte data) {
         super(type, data);
     }

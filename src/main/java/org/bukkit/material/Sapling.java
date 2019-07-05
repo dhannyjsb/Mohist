@@ -75,7 +75,7 @@ public class Sapling extends Wood {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Sapling(final int type, final byte data) {
         super(type, data);
     }
@@ -85,7 +85,7 @@ public class Sapling extends Wood {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Sapling(final Material type, final byte data) {
         super(type, data);
     }

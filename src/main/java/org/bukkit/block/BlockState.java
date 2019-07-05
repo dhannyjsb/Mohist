@@ -34,11 +34,25 @@ public interface BlockState extends Metadatable {
     MaterialData getData();
 
     /**
+     * Sets the metadata for this block state.
+     *
+     * @param data New block specific metadata
+     */
+    void setData(MaterialData data);
+
+    /**
      * Gets the type of this block state.
      *
      * @return block type
      */
     Material getType();
+
+    /**
+     * Sets the type of this block state.
+     *
+     * @param type Material to change this block state to
+     */
+    void setType(Material type);
 
     /**
      * Gets the type-id of this block state.
@@ -115,20 +129,6 @@ public interface BlockState extends Metadatable {
      * @throws IllegalStateException if this block state is not placed
      */
     Chunk getChunk();
-
-    /**
-     * Sets the metadata for this block state.
-     *
-     * @param data New block specific metadata
-     */
-    void setData(MaterialData data);
-
-    /**
-     * Sets the type of this block state.
-     *
-     * @param type Material to change this block state to
-     */
-    void setType(Material type);
 
     /**
      * Sets the type-id of this block state.

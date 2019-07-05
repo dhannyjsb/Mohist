@@ -15,7 +15,7 @@ public class Dye extends MaterialData implements Colorable {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public Dye(final int type) {
         super(type);
     }
@@ -29,7 +29,7 @@ public class Dye extends MaterialData implements Colorable {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Dye(final int type, final byte data) {
         super(type, data);
     }
@@ -39,7 +39,7 @@ public class Dye extends MaterialData implements Colorable {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Dye(final Material type, final byte data) {
         super(type, data);
     }

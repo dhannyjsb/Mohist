@@ -76,7 +76,7 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable {
      * <p>
      * Plugins should check if hasLore() returns <code>true</code> before
      * calling this method.
-     * 
+     *
      * @return a list of lore that is set
      */
     List<String> getLore();
@@ -197,21 +197,10 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable {
     @SuppressWarnings("javadoc")
     ItemMeta clone();
 
-    // Spigot start
-    public class Spigot
-    {
-		/**
-		 * Sets the unbreakable tag
-         *
-         * @param unbreakable true if set unbreakable
-         * @deprecated see {@link ItemMeta#setUnbreakable(boolean)}
-         */
-        @Deprecated
-        public void setUnbreakable(boolean unbreakable)
-       {
-            throw new UnsupportedOperationException( "Not supported yet." );
-        }
+    Spigot spigot();
 
+    // Spigot start
+    public class Spigot {
         /**
          * Return if the unbreakable tag is true
          *
@@ -219,12 +208,20 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable {
          * @deprecated see {@link ItemMeta#isUnbreakable()}
          */
         @Deprecated
-        public boolean isUnbreakable()
-        {
-            throw new UnsupportedOperationException( "Not supported yet." );
+        public boolean isUnbreakable() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        /**
+         * Sets the unbreakable tag
+         *
+         * @param unbreakable true if set unbreakable
+         * @deprecated see {@link ItemMeta#setUnbreakable(boolean)}
+         */
+        @Deprecated
+        public void setUnbreakable(boolean unbreakable) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
-
-    Spigot spigot();
     // Spigot end
 }

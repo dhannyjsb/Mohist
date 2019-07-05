@@ -26,11 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.network.play.server.SPacketSetSlot;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -60,87 +56,20 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaBook;
 import org.bukkit.craftbukkit.v1_12_R1.util.CraftDamageSource;
 import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.AreaEffectCloud;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockFormEvent;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.event.block.BlockMultiPlaceEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.EntityBlockFormEvent;
-import org.bukkit.event.block.NotePlayEvent;
-import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.CreeperPowerEvent;
-import org.bukkit.event.entity.EntityBreakDoorEvent;
-import org.bukkit.event.entity.EntityBreedEvent;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.EntityTameEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.entity.ExpBottleEvent;
-import org.bukkit.event.entity.FireworkExplodeEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.HorseJumpEvent;
-import org.bukkit.event.entity.ItemDespawnEvent;
-import org.bukkit.event.entity.ItemMergeEvent;
-import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.entity.LingeringPotionSplashEvent;
-import org.bukkit.event.entity.PigZapEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.PlayerLeashEntityEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerEditBookEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.event.player.PlayerItemMendEvent;
-import org.bukkit.event.player.PlayerLevelChangeEvent;
-import org.bukkit.event.player.PlayerStatisticIncrementEvent;
-import org.bukkit.event.player.PlayerUnleashEntityEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -158,6 +87,7 @@ import java.util.Map;
 public class CraftEventFactory {
     public static final DamageSource MELTING = CraftDamageSource.copyOf(DamageSource.ON_FIRE);
     public static final DamageSource POISON = CraftDamageSource.copyOf(DamageSource.MAGIC);
+    private static final Function<? super Double, Double> ZERO = Functions.constant(-0.0);
     public static Block blockDamage; // For use in EntityDamageByBlockEvent
     public static Entity entityDamage; // For use in EntityDamageByEntityEvent
 
@@ -491,13 +421,11 @@ public class CraftEventFactory {
 
         victim.expToDrop = event.getDroppedExp();
         // Cauldron start - handle any drop changes from plugins
-		victim.capturedDrops.clear();
-        for (org.bukkit.inventory.ItemStack stack : event.getDrops())
-		{
+        victim.capturedDrops.clear();
+        for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
             net.minecraft.entity.item.EntityItem entityitem = new net.minecraft.entity.item.EntityItem(victim.world, entity.getLocation().getX(), entity.getLocation().getY(), entity.getLocation().getZ(), CraftItemStack.asNMSCopy(stack));
-            if (entityitem != null)
-            {
-                victim.capturedDrops.add((EntityItem)entityitem);
+            if (entityitem != null) {
+                victim.capturedDrops.add((EntityItem) entityitem);
             }
         }
         // Cauldron end
@@ -576,12 +504,12 @@ public class CraftEventFactory {
             if (source instanceof EntityDamageSourceIndirect) {
                 damager = ((EntityDamageSourceIndirect) source).getProximateDamageSource();
                 // Cauldron start - vanilla compatibility
-			    if (damager != null) {
+                if (damager != null) {
                     if (damager.getBukkitEntity() instanceof ThrownPotion) {
                         cause = DamageCause.MAGIC;
                     } else if (damager.getBukkitEntity() instanceof Projectile) {
                         cause = DamageCause.PROJECTILE;
- 				    }
+                    }
                 }
             } else if ("thorns".equals(source.damageType)) {
                 cause = DamageCause.THORNS;
@@ -608,7 +536,7 @@ public class CraftEventFactory {
                 cause = DamageCause.CONTACT;
             } else if (source == DamageSource.HOT_FLOOR) {
                 cause = DamageCause.HOT_FLOOR;
-			} else if (source == DamageSource.FALL) {
+            } else if (source == DamageSource.FALL) {
                 cause = DamageCause.FALL;
             } else if (source == DamageSource.ANVIL || source == DamageSource.FALLING_BLOCK) {
                 cause = DamageCause.FALLING_BLOCK;
@@ -650,7 +578,7 @@ public class CraftEventFactory {
                 cause = DamageCause.DRAGON_BREATH;
             } else if (source == DamageSource.MAGIC) {
                 cause = DamageCause.MAGIC;
-			} else if (source == DamageSource.CACTUS) {
+            } else if (source == DamageSource.CACTUS) {
                 cause = DamageCause.CONTACT;
             } else if (source == DamageSource.IN_FIRE) {
                 cause = DamageCause.FIRE;
@@ -724,8 +652,6 @@ public class CraftEventFactory {
 
         return event;
     }
-
-    private static final Function<? super Double, Double> ZERO = Functions.constant(-0.0);
 
     public static EntityDamageEvent handleLivingEntityDamageEvent(Entity damagee, DamageSource source, double rawDamage, double hardHatModifier, double blockingModifier, double armorModifier, double resistanceModifier, double magicModifier, double absorptionModifier, Function<Double, Double> hardHat, Function<Double, Double> blocking, Function<Double, Double> armor, Function<Double, Double> resistance, Function<Double, Double> magic, Function<Double, Double> absorption) {
         Map<DamageModifier, Double> modifiers = new EnumMap<DamageModifier, Double>(DamageModifier.class);
@@ -924,8 +850,8 @@ public class CraftEventFactory {
             // Cauldron end
             return null;
         }
-            
-	  return container;
+
+        return container;
     }
 
 
@@ -1047,14 +973,14 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human) {
-			if (!AsyncCatcher.catchInv()) {
-                return;
-            }
-            InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
-            if (human.openContainer.getBukkitView() != null) {
-                human.world.getServer().getPluginManager().callEvent(event);
-            }
-            human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
+        if (!AsyncCatcher.catchInv()) {
+            return;
+        }
+        InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
+        if (human.openContainer.getBukkitView() != null) {
+            human.world.getServer().getPluginManager().callEvent(event);
+        }
+        human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());
     }
 
     public static void handleEditBookEvent(EntityPlayerMP player, ItemStack newBookItem) {
@@ -1243,27 +1169,22 @@ public class CraftEventFactory {
         return !event.isCancelled();
     }
 
-    public static BlockBreakEvent callBlockBreakEvent(net.minecraft.world.World world, BlockPos pos, IBlockState iBlockState, net.minecraft.entity.player.EntityPlayerMP player)
-    {
-        org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(pos.getX(),pos.getY(),pos.getZ());
-        org.bukkit.event.block.BlockBreakEvent blockBreakEvent = new org.bukkit.event.block.BlockBreakEvent(bukkitBlock, ((EntityPlayerMP)player).getBukkitEntity());
-        EntityPlayerMP playermp = (EntityPlayerMP)player;
+    public static BlockBreakEvent callBlockBreakEvent(net.minecraft.world.World world, BlockPos pos, IBlockState iBlockState, net.minecraft.entity.player.EntityPlayerMP player) {
+        org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
+        org.bukkit.event.block.BlockBreakEvent blockBreakEvent = new org.bukkit.event.block.BlockBreakEvent(bukkitBlock, ((EntityPlayerMP) player).getBukkitEntity());
+        EntityPlayerMP playermp = (EntityPlayerMP) player;
         net.minecraft.block.Block block = iBlockState.getBlock();
-        if (!(playermp instanceof FakePlayer))
-        {
+        if (!(playermp instanceof FakePlayer)) {
             boolean isSwordNoBreak = playermp.interactionManager.getGameType().isCreative() && !playermp.getHeldItemMainhand().isEmpty() && playermp.getHeldItemMainhand().getItem() instanceof ItemSword;
-            if (!isSwordNoBreak)
-            {
+            if (!isSwordNoBreak) {
                 int exp = 0;
-                if (!(block == null || !player.canHarvestBlock(block.getDefaultState()) || block.canSilkHarvest(world, pos, block.getBlockState().getBaseState(), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH,player.getHeldItemMainhand()) > 0))
-                {
+                if (!(block == null || !player.canHarvestBlock(block.getDefaultState()) || block.canSilkHarvest(world, pos, block.getBlockState().getBaseState(), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand()) > 0)) {
                     int meta = block.getMetaFromState(block.getBlockState().getBaseState());
                     int bonusLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, player.getHeldItemMainhand());
-                    exp = block.getExpDrop(iBlockState,world, pos, bonusLevel);
+                    exp = block.getExpDrop(iBlockState, world, pos, bonusLevel);
                 }
                 blockBreakEvent.setExpToDrop(exp);
-            }
-            else {
+            } else {
                 blockBreakEvent.setCancelled(true);
             }
         }

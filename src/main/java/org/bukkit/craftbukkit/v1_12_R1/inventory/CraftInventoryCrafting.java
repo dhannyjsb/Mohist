@@ -33,20 +33,12 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
     }
 
     @Override
-    public void setContents(ItemStack[] items) {
-        if (getSize() > items.length) {
-            throw new IllegalArgumentException("Invalid inventory size; expected " + getSize() + " or less");
-        }
-        setContents(items[0], Arrays.copyOfRange(items, 1, items.length));
-    }
-
-    @Override
     public ItemStack[] getContents() {
         ItemStack[] items = new ItemStack[getSize()];
         List<net.minecraft.item.ItemStack> mcResultItems = getResultInventory().getContents();
 
         int i = 0;
-        for (i = 0; i < mcResultItems.size(); i++ ) {
+        for (i = 0; i < mcResultItems.size(); i++) {
             items[i] = CraftItemStack.asCraftMirror(mcResultItems.get(i));
         }
 
@@ -57,6 +49,14 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
         }
 
         return items;
+    }
+
+    @Override
+    public void setContents(ItemStack[] items) {
+        if (getSize() > items.length) {
+            throw new IllegalArgumentException("Invalid inventory size; expected " + getSize() + " or less");
+        }
+        setContents(items[0], Arrays.copyOfRange(items, 1, items.length));
     }
 
     public void setContents(ItemStack result, ItemStack[] contents) {
@@ -90,14 +90,6 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
         return asCraftMirror(matrix);
     }
 
-    public ItemStack getResult() {
-        net.minecraft.item.ItemStack item = resultInventory.getStackInSlot(0);
-        if (!item.isEmpty()) {
-            return CraftItemStack.asCraftMirror(item);
-        }
-        return null;
-    }
-
     public void setMatrix(ItemStack[] contents) {
         if (getMatrixInventory().getSizeInventory() > contents.length) {
             throw new IllegalArgumentException("Invalid inventory size; expected " + getMatrixInventory().getSizeInventory() + " or less");
@@ -112,13 +104,21 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
         }
     }
 
+    public ItemStack getResult() {
+        net.minecraft.item.ItemStack item = resultInventory.getStackInSlot(0);
+        if (!item.isEmpty()) {
+            return CraftItemStack.asCraftMirror(item);
+        }
+        return null;
+    }
+
     public void setResult(ItemStack item) {
         List<net.minecraft.item.ItemStack> contents = getResultInventory().getContents();
         contents.set(0, CraftItemStack.asNMSCopy(item));
     }
 
     public Recipe getRecipe() {
-        IRecipe recipe = ((InventoryCrafting)getInventory()).currentRecipe;
+        IRecipe recipe = ((InventoryCrafting) getInventory()).currentRecipe;
         // Cauldron start - handle custom recipe classes without Bukkit API equivalents
         try {
             return recipe == null ? null : recipe.toBukkitRecipe();

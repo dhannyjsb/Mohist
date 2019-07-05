@@ -37,6 +37,10 @@ public class PreLookupProfileEvent extends Event {
         this.name = name;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     /**
      * @return Name of the profile
      */
@@ -139,10 +143,6 @@ public class PreLookupProfileEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 

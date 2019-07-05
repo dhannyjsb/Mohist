@@ -20,7 +20,7 @@ public class LongGrass extends MaterialData {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public LongGrass(final int type) {
         super(type);
     }
@@ -34,7 +34,7 @@ public class LongGrass extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public LongGrass(final int type, final byte data) {
         super(type, data);
     }
@@ -44,7 +44,7 @@ public class LongGrass extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public LongGrass(final Material type, final byte data) {
         super(type, data);
     }

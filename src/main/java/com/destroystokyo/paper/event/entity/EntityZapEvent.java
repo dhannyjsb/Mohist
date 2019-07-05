@@ -14,9 +14,9 @@ import javax.annotation.Nonnull;
  */
 public class EntityZapEvent extends EntityEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private boolean cancelled;
     private final LightningStrike bolt;
     private final Entity replacementEntity;
+    private boolean cancelled;
 
     public EntityZapEvent(final Entity entity, @Nonnull final LightningStrike bolt, @Nonnull final Entity replacementEntity) {
         super(entity);
@@ -24,6 +24,10 @@ public class EntityZapEvent extends EntityEvent implements Cancellable {
         Validate.notNull(replacementEntity);
         this.bolt = bolt;
         this.replacementEntity = replacementEntity;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public boolean isCancelled() {
@@ -54,10 +58,6 @@ public class EntityZapEvent extends EntityEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

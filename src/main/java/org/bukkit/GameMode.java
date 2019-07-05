@@ -33,22 +33,18 @@ public enum GameMode {
      */
     SPECTATOR(3);
 
-    private final int value;
     private final static Map<Integer, GameMode> BY_ID = Maps.newHashMap();
+
+    static {
+        for (GameMode mode : values()) {
+            BY_ID.put(mode.getValue(), mode);
+        }
+    }
+
+    private final int value;
 
     private GameMode(final int value) {
         this.value = value;
-    }
-
-    /**
-     * Gets the mode value associated with this GameMode
-     *
-     * @return An integer value of this gamemode
-     * @deprecated Magic value
-     */
-    
-    public int getValue() {
-        return value;
     }
 
     /**
@@ -59,14 +55,19 @@ public enum GameMode {
      *     it doesn't exist
      * @deprecated Magic value
      */
-    
+
     public static GameMode getByValue(final int value) {
         return BY_ID.get(value);
     }
 
-    static {
-        for (GameMode mode : values()) {
-            BY_ID.put(mode.getValue(), mode);
-        }
+    /**
+     * Gets the mode value associated with this GameMode
+     *
+     * @return An integer value of this gamemode
+     * @deprecated Magic value
+     */
+
+    public int getValue() {
+        return value;
     }
 }

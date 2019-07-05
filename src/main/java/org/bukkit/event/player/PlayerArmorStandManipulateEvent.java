@@ -24,6 +24,10 @@ public class PlayerArmorStandManipulateEvent extends PlayerInteractEntityEvent {
         this.slot = slot;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     /**
      * Returns the item held by the player. If this Item is null and the armor stand Item is also null,
      * there will be no transaction between the player and the armor stand.
@@ -66,10 +70,6 @@ public class PlayerArmorStandManipulateEvent extends PlayerInteractEntityEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

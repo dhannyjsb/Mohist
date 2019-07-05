@@ -21,14 +21,14 @@ import java.util.Set;
  * Represents a Command, which executes various tasks upon user input
  */
 public abstract class Command {
+    protected String description = "";
+    protected String usageMessage;
     private String name;
     private String nextLabel;
     private String label;
     private List<String> aliases;
     private List<String> activeAliases;
     private CommandMap commandMap = null;
-    protected String description = "";
-    protected String usageMessage;
     private String permission;
     private String permissionMessage;
 
@@ -44,6 +44,49 @@ public abstract class Command {
         this.usageMessage = usageMessage;
         this.aliases = aliases;
         this.activeAliases = new ArrayList<String>(aliases);
+    }
+
+    public static void broadcastCommandMessage(CommandSender source, String message) {
+        broadcastCommandMessage(source, message, true);
+    }
+
+    public static void broadcastCommandMessage(CommandSender source, String message, boolean sendToSource) {
+        String result = source.getName() + ": " + message;
+
+        if (source instanceof BlockCommandSender) {
+            BlockCommandSender blockCommandSender = (BlockCommandSender) source;
+
+            if (blockCommandSender.getBlock().getWorld().getGameRuleValue("commandBlockOutput").equalsIgnoreCase("false")) {
+                Bukkit.getConsoleSender().sendMessage(result);
+                return;
+            }
+        } else if (source instanceof CommandMinecart) {
+            CommandMinecart commandMinecart = (CommandMinecart) source;
+
+            if (commandMinecart.getWorld().getGameRuleValue("commandBlockOutput").equalsIgnoreCase("false")) {
+                Bukkit.getConsoleSender().sendMessage(result);
+                return;
+            }
+        }
+
+        Set<Permissible> users = Bukkit.getPluginManager().getPermissionSubscriptions(Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
+        String colored = ChatColor.GRAY + "" + ChatColor.ITALIC + "[" + result + ChatColor.GRAY + ChatColor.ITALIC + "]";
+
+        if (sendToSource && !(source instanceof ConsoleCommandSender)) {
+            source.sendMessage(message);
+        }
+
+        for (Permissible user : users) {
+            if (user instanceof CommandSender && user.hasPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE)) {
+                CommandSender target = (CommandSender) user;
+
+                if (target instanceof ConsoleCommandSender) {
+                    target.sendMessage(result);
+                } else if (target != source) {
+                    target.sendMessage(colored);
+                }
+            }
+        }
     }
 
     /**
@@ -298,34 +341,6 @@ public abstract class Command {
     }
 
     /**
-     * Returns a message to be displayed on a failed permission check for this
-     * command
-     *
-     * @return Permission check failed message
-     */
-    public String getPermissionMessage() {
-        return permissionMessage;
-    }
-
-    /**
-     * Gets a brief description of this command
-     *
-     * @return Description of this command
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Gets an example usage of this command
-     *
-     * @return One or more example usages
-     */
-    public String getUsage() {
-        return usageMessage;
-    }
-
-    /**
      * Sets the list of aliases to request on registration for this command.
      * This is not effective outside of defining aliases in the {@link
      * PluginDescriptionFile#getCommands()} (under the
@@ -343,16 +358,13 @@ public abstract class Command {
     }
 
     /**
-     * Sets a brief description of this command. Defining a description in the
-     * {@link PluginDescriptionFile#getCommands()} (under the
-     * `<code>description</code>' node) is equivalent to this method.
+     * Returns a message to be displayed on a failed permission check for this
+     * command
      *
-     * @param description new command description
-     * @return this command object, for chaining
+     * @return Permission check failed message
      */
-    public Command setDescription(String description) {
-        this.description = description;
-        return this;
+    public String getPermissionMessage() {
+        return permissionMessage;
     }
 
     /**
@@ -368,6 +380,37 @@ public abstract class Command {
     }
 
     /**
+     * Gets a brief description of this command
+     *
+     * @return Description of this command
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets a brief description of this command. Defining a description in the
+     * {@link PluginDescriptionFile#getCommands()} (under the
+     * `<code>description</code>' node) is equivalent to this method.
+     *
+     * @param description new command description
+     * @return this command object, for chaining
+     */
+    public Command setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Gets an example usage of this command
+     *
+     * @return One or more example usages
+     */
+    public String getUsage() {
+        return usageMessage;
+    }
+
+    /**
      * Sets the example usage of this command
      *
      * @param usage new example usage
@@ -376,49 +419,6 @@ public abstract class Command {
     public Command setUsage(String usage) {
         this.usageMessage = usage;
         return this;
-    }
-
-    public static void broadcastCommandMessage(CommandSender source, String message) {
-        broadcastCommandMessage(source, message, true);
-    }
-
-    public static void broadcastCommandMessage(CommandSender source, String message, boolean sendToSource) {
-        String result = source.getName() + ": " + message;
-
-        if (source instanceof BlockCommandSender) {
-            BlockCommandSender blockCommandSender = (BlockCommandSender) source;
-
-            if (blockCommandSender.getBlock().getWorld().getGameRuleValue("commandBlockOutput").equalsIgnoreCase("false")) {
-                Bukkit.getConsoleSender().sendMessage(result);
-                return;
-            }
-        } else if (source instanceof CommandMinecart) {
-            CommandMinecart commandMinecart = (CommandMinecart) source;
-
-            if (commandMinecart.getWorld().getGameRuleValue("commandBlockOutput").equalsIgnoreCase("false")) {
-                Bukkit.getConsoleSender().sendMessage(result);
-                return;
-            }
-        }
-
-        Set<Permissible> users = Bukkit.getPluginManager().getPermissionSubscriptions(Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
-        String colored = ChatColor.GRAY + "" + ChatColor.ITALIC + "[" + result + ChatColor.GRAY + ChatColor.ITALIC + "]";
-
-        if (sendToSource && !(source instanceof ConsoleCommandSender)) {
-            source.sendMessage(message);
-        }
-
-        for (Permissible user : users) {
-            if (user instanceof CommandSender && user.hasPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE)) {
-                CommandSender target = (CommandSender) user;
-
-                if (target instanceof ConsoleCommandSender) {
-                    target.sendMessage(result);
-                } else if (target != source) {
-                    target.sendMessage(colored);
-                }
-            }
-        }
     }
 
     @Override

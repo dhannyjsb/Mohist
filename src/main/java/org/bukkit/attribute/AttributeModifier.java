@@ -33,6 +33,10 @@ public class AttributeModifier implements ConfigurationSerializable {
         this.operation = operation;
     }
 
+    public static AttributeModifier deserialize(Map<String, Object> args) {
+        return new AttributeModifier(UUID.fromString((String) args.get("uuid")), (String) args.get("name"), NumberConversions.toDouble(args.get("amount")), Operation.values()[NumberConversions.toInt(args.get("operation"))]);
+    }
+
     /**
      * Get the unique ID for this modifier.
      *
@@ -77,10 +81,6 @@ public class AttributeModifier implements ConfigurationSerializable {
         data.put("operation", operation.ordinal());
         data.put("amount", amount);
         return data;
-    }
-
-    public static AttributeModifier deserialize(Map<String, Object> args) {
-        return new AttributeModifier(UUID.fromString((String) args.get("uuid")), (String) args.get("name"), NumberConversions.toDouble(args.get("amount")), Operation.values()[NumberConversions.toInt(args.get("operation"))]);
     }
 
     /**

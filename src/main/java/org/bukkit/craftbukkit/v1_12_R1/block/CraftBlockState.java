@@ -27,17 +27,17 @@ public class CraftBlockState implements BlockState {
     private final int x;
     private final int y;
     private final int z;
-    private NBTTagCompound nbt;
     protected int type;
     protected MaterialData data;
     protected int flag;
+    private NBTTagCompound nbt;
     private TileEntity te;
 
     public CraftBlockState(final Block block) {
-        this(block, ((CraftWorld)block.getWorld()).getHandle().getTileEntity(new BlockPos(block.getX(), block.getY(), block.getZ())));
+        this(block, ((CraftWorld) block.getWorld()).getHandle().getTileEntity(new BlockPos(block.getX(), block.getY(), block.getZ())));
     }
 
-    public CraftBlockState(final Block block ,final TileEntity te) {
+    public CraftBlockState(final Block block, final TileEntity te) {
         this.world = (CraftWorld) block.getWorld();
         this.x = block.getX();
         this.y = block.getY();
@@ -49,7 +49,7 @@ public class CraftBlockState implements BlockState {
         this.te = te;
     }
 
-	public CraftBlockState(final Block block, int flag) {
+    public CraftBlockState(final Block block, int flag) {
         this(block);
         this.flag = flag;
     }
@@ -62,8 +62,7 @@ public class CraftBlockState implements BlockState {
         this.nbt = null;
     }
 
-    public CraftBlockState(BlockSnapshot blocksnapshot)
-    {
+    public CraftBlockState(BlockSnapshot blocksnapshot) {
         this.world = blocksnapshot.getWorld().getWorld();
         this.x = blocksnapshot.getPos().getX();
         this.y = blocksnapshot.getPos().getY();
@@ -75,7 +74,6 @@ public class CraftBlockState implements BlockState {
 
         this.createData((byte) blocksnapshot.getMeta());
     }
-
 
 
     public static CraftBlockState getBlockState(net.minecraft.world.World world, int x, int y, int z) {
@@ -120,6 +118,10 @@ public class CraftBlockState implements BlockState {
         return chunk;
     }
 
+    public MaterialData getData() {
+        return data;
+    }
+
     public void setData(final MaterialData data) {
         Material mat = getType();
 
@@ -135,14 +137,6 @@ public class CraftBlockState implements BlockState {
         }
     }
 
-    public MaterialData getData() {
-        return data;
-    }
-
-    public void setType(final Material type) {
-        setTypeId(type.getId());
-    }
-
     public boolean setTypeId(final int type) {
         if (this.type != type) {
             this.type = type;
@@ -156,12 +150,16 @@ public class CraftBlockState implements BlockState {
         return Material.getMaterial(getTypeId());
     }
 
-    public void setFlag(int flag) {
-        this.flag = flag;
+    public void setType(final Material type) {
+        setTypeId(type.getId());
     }
 
     public int getFlag() {
         return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 
     public int getTypeId() {
@@ -212,11 +210,9 @@ public class CraftBlockState implements BlockState {
             world.getHandle().notifyNeighborsOfStateChange(pos.offset(CraftBlock.blockFaceToNotch(((Attachable) getData()).getAttachedFace())), newBlock.getBlock(), false);
         }
         // Cauldron start - restore TE data from snapshot
-        if (getNBT() != null)
-        {
+        if (getNBT() != null) {
             TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
-            if (te != null)
-            {
+            if (te != null) {
                 NBTTagCompound nbt2 = new NBTTagCompound();
                 te.writeToNBT(nbt2);
                 if (!nbt2.equals(this.getNBT())) {
@@ -241,6 +237,10 @@ public class CraftBlockState implements BlockState {
         return data.getData();
     }
 
+    public void setRawData(byte data) {
+        this.data.setData(data);
+    }
+
     public Location getLocation() {
         return new Location(world, x, y, z);
     }
@@ -256,10 +256,6 @@ public class CraftBlockState implements BlockState {
         }
 
         return loc;
-    }
-
-    public void setRawData(byte data) {
-        this.data.setData(data);
     }
 
     @Override
@@ -301,7 +297,7 @@ public class CraftBlockState implements BlockState {
         hash = 73 * hash + this.z;
         hash = 73 * hash + this.type;
         hash = 73 * hash + (this.data != null ? this.data.hashCode() : 0);
- 		hash = 73 * hash + (this.getNBT() != null ? this.getNBT().hashCode() : 0);
+        hash = 73 * hash + (this.getNBT() != null ? this.getNBT().hashCode() : 0);
         return hash;
     }
 

@@ -1,4 +1,3 @@
-
 package org.bukkit.event.inventory;
 
 import org.bukkit.entity.HumanEntity;
@@ -18,6 +17,10 @@ public class InventoryEvent extends Event {
 
     public InventoryEvent(InventoryView transaction) {
         this.transaction = transaction;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -50,10 +53,6 @@ public class InventoryEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

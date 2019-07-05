@@ -28,6 +28,7 @@ import java.util.jar.Manifest;
  * A ClassLoader for plugins, to allow shared classes across multiple plugins
  */
 final class PluginClassLoader extends URLClassLoader {
+    final JavaPlugin plugin;
     private final JavaPluginLoader loader;
     private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
     private final PluginDescriptionFile description;
@@ -36,14 +37,13 @@ final class PluginClassLoader extends URLClassLoader {
     private final JarFile jar;
     private final Manifest manifest;
     private final URL url;
-    final JavaPlugin plugin;
     private JavaPlugin pluginInit;
     private IllegalStateException pluginState;
 
     private boolean nmsRemap = false;
 
     PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException, MalformedURLException {
-        super(new URL[] {file.toURI().toURL()}, parent);
+        super(new URL[]{file.toURI().toURL()}, parent);
         Validate.notNull(loader, "Loader cannot be null");
         this.loader = loader;
         this.description = description;

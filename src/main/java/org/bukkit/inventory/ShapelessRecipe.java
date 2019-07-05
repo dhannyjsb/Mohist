@@ -33,10 +33,10 @@ public class ShapelessRecipe implements Recipe, Keyed {
      * @param result The item you want the recipe to create.
      * @see ShapelessRecipe#addIngredient(Material)
      * @see ShapelessRecipe#addIngredient(MaterialData)
-     * @see ShapelessRecipe#addIngredient(Material,int)
-     * @see ShapelessRecipe#addIngredient(int,Material)
-     * @see ShapelessRecipe#addIngredient(int,MaterialData)
-     * @see ShapelessRecipe#addIngredient(int,Material,int)
+     * @see ShapelessRecipe#addIngredient(Material, int)
+     * @see ShapelessRecipe#addIngredient(int, Material)
+     * @see ShapelessRecipe#addIngredient(int, MaterialData)
+     * @see ShapelessRecipe#addIngredient(int, Material, int)
      */
     public ShapelessRecipe(NamespacedKey key, ItemStack result) {
         this.key = key;

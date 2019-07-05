@@ -45,7 +45,7 @@ public class Tree extends Wood {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public Tree(final int type) {
         super(type);
     }
@@ -87,7 +87,7 @@ public class Tree extends Wood {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Tree(final int type, final byte data) {
         super(type, data);
     }
@@ -97,7 +97,7 @@ public class Tree extends Wood {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Tree(final Material type, final byte data) {
         super(type, data);
     }

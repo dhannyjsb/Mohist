@@ -105,6 +105,16 @@ public final class Color implements ConfigurationSerializable {
     private final byte green;
     private final byte blue;
 
+    private Color(int red, int green, int blue) {
+        Validate.isTrue(red >= 0 && red <= BIT_MASK, "Red is not between 0-255: ", red);
+        Validate.isTrue(green >= 0 && green <= BIT_MASK, "Green is not between 0-255: ", green);
+        Validate.isTrue(blue >= 0 && blue <= BIT_MASK, "Blue is not between 0-255: ", blue);
+
+        this.red = (byte) red;
+        this.green = (byte) green;
+        this.blue = (byte) blue;
+    }
+
     /**
      * Creates a new Color object from a red, green, and blue
      *
@@ -159,14 +169,24 @@ public final class Color implements ConfigurationSerializable {
         return fromBGR(bgr >> 16 & BIT_MASK, bgr >> 8 & BIT_MASK, bgr >> 0 & BIT_MASK);
     }
 
-    private Color(int red, int green, int blue) {
-        Validate.isTrue(red >= 0 && red <= BIT_MASK, "Red is not between 0-255: ", red);
-        Validate.isTrue(green >= 0 && green <= BIT_MASK, "Green is not between 0-255: ", green);
-        Validate.isTrue(blue >= 0 && blue <= BIT_MASK, "Blue is not between 0-255: ", blue);
+    @SuppressWarnings("javadoc")
+    public static Color deserialize(Map<String, Object> map) {
+        return fromRGB(
+                asInt("RED", map),
+                asInt("GREEN", map),
+                asInt("BLUE", map)
+        );
+    }
 
-        this.red = (byte) red;
-        this.green = (byte) green;
-        this.blue = (byte) blue;
+    private static int asInt(String string, Map<String, Object> map) {
+        Object value = map.get(string);
+        if (value == null) {
+            throw new IllegalArgumentException(string + " not in map " + map);
+        }
+        if (!(value instanceof Number)) {
+            throw new IllegalArgumentException(string + '(' + value + ") is not a number");
+        }
+        return ((Number) value).intValue();
     }
 
     /**
@@ -310,30 +330,10 @@ public final class Color implements ConfigurationSerializable {
 
     public Map<String, Object> serialize() {
         return ImmutableMap.<String, Object>of(
-            "RED", getRed(),
-            "BLUE", getBlue(),
-            "GREEN", getGreen()
+                "RED", getRed(),
+                "BLUE", getBlue(),
+                "GREEN", getGreen()
         );
-    }
-
-    @SuppressWarnings("javadoc")
-    public static Color deserialize(Map<String, Object> map) {
-        return fromRGB(
-            asInt("RED", map),
-            asInt("GREEN", map),
-            asInt("BLUE", map)
-        );
-    }
-
-    private static int asInt(String string, Map<String, Object> map) {
-        Object value = map.get(string);
-        if (value == null) {
-            throw new IllegalArgumentException(string + " not in map " + map);
-        }
-        if (!(value instanceof Number)) {
-            throw new IllegalArgumentException(string + '(' + value + ") is not a number");
-        }
-        return ((Number) value).intValue();
     }
 
     @Override

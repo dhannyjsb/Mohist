@@ -13,8 +13,7 @@ import org.bukkit.craftbukkit.v1_12_R1.projectiles.CraftBlockProjectileSource;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.projectiles.BlockProjectileSource;
 
-public class CraftDispenser extends CraftLootable<TileEntityDispenser> implements Dispenser
-{
+public class CraftDispenser extends CraftLootable<TileEntityDispenser> implements Dispenser {
 
     public CraftDispenser(final Block block) {
         super(block, TileEntityDispenser.class);

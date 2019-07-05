@@ -7,12 +7,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.PlayerArmorInvWrapper;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.items.wrapper.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -33,11 +28,6 @@ public class CraftCustomInventory implements InventoryHolder {
         this.inventory = this.container.getInventory();
     }
 
-    @Override
-    public Inventory getInventory() {
-        return this.container;
-    }
-
     @Nullable
     public static InventoryHolder holderFromForge(IItemHandler handler) {
         if (handler == null) {
@@ -56,7 +46,7 @@ public class CraftCustomInventory implements InventoryHolder {
             return new CraftCustomInventory(((SidedInvWrapper) handler).getInv());
         }
         if (handler instanceof PlayerInvWrapper) {
-            return new CraftCustomInventory(getPlayerInv((PlayerInvWrapper)handler));
+            return new CraftCustomInventory(getPlayerInv((PlayerInvWrapper) handler));
         }
         return null;
     }
@@ -78,5 +68,10 @@ public class CraftCustomInventory implements InventoryHolder {
     public static Inventory inventoryFromForge(IItemHandler handler) {
         InventoryHolder holder = holderFromForge(handler);
         return holder != null ? holder.getInventory() : null;
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return this.container;
     }
 }
