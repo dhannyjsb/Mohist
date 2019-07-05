@@ -1,0 +1,28 @@
+--- ../src-base/minecraft/net/minecraftforge/client/model/pipeline/TRSRTransformer.java
++++ ../src-work/minecraft/net/minecraftforge/client/model/pipeline/TRSRTransformer.java
+@@ -24,21 +24,17 @@
+ import javax.vecmath.Vector3f;
+ import javax.vecmath.Vector4f;
+ 
+-public class TRSRTransformer extends VertexTransformer
+-{
++public class TRSRTransformer extends VertexTransformer {
+     private final TRSRTransformation transform;
+ 
+-    public TRSRTransformer(IVertexConsumer parent, TRSRTransformation transform)
+-    {
++    public TRSRTransformer(IVertexConsumer parent, TRSRTransformation transform) {
+         super(parent);
+         this.transform = transform;
+     }
+ 
+     @Override
+-    public void put(int element, float... data)
+-    {
+-        switch (getVertexFormat().getElement(element).getUsage())
+-        {
++    public void put(int element, float... data) {
++        switch (getVertexFormat().getElement(element).getUsage()) {
+             case POSITION:
+                 Vector4f pos = new Vector4f(data);
+                 transform.transformPosition(pos);

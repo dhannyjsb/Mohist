@@ -56,6 +56,15 @@ public final class PluginCommand extends Command implements PluginIdentifiableCo
     }
 
     /**
+     * Gets the {@link CommandExecutor} associated with this command
+     *
+     * @return CommandExecutor object linked to this command
+     */
+    public CommandExecutor getExecutor() {
+        return executor;
+    }
+
+    /**
      * Sets the {@link CommandExecutor} to run when parsing this command
      *
      * @param executor New executor to run
@@ -65,12 +74,12 @@ public final class PluginCommand extends Command implements PluginIdentifiableCo
     }
 
     /**
-     * Gets the {@link CommandExecutor} associated with this command
+     * Gets the {@link TabCompleter} associated with this command.
      *
-     * @return CommandExecutor object linked to this command
+     * @return TabCompleter object linked to this command
      */
-    public CommandExecutor getExecutor() {
-        return executor;
+    public TabCompleter getTabCompleter() {
+        return completer;
     }
 
     /**
@@ -83,15 +92,6 @@ public final class PluginCommand extends Command implements PluginIdentifiableCo
      */
     public void setTabCompleter(TabCompleter completer) {
         this.completer = completer;
-    }
-
-    /**
-     * Gets the {@link TabCompleter} associated with this command.
-     *
-     * @return TabCompleter object linked to this command
-     */
-    public TabCompleter getTabCompleter() {
-        return completer;
     }
 
     /**

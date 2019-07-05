@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/network/login/INetHandlerLoginServer.java
++++ ../src-work/minecraft/net/minecraft/network/login/INetHandlerLoginServer.java
+@@ -4,8 +4,7 @@
+ import net.minecraft.network.login.client.CPacketEncryptionResponse;
+ import net.minecraft.network.login.client.CPacketLoginStart;
+ 
+-public interface INetHandlerLoginServer extends INetHandler
+-{
++public interface INetHandlerLoginServer extends INetHandler {
+     void processLoginStart(CPacketLoginStart packetIn);
+ 
+     void processEncryptionResponse(CPacketEncryptionResponse packetIn);

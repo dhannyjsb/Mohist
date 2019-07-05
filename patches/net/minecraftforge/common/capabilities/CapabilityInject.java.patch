@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraftforge/common/capabilities/CapabilityInject.java
++++ ../src-work/minecraft/net/minecraftforge/common/capabilities/CapabilityInject.java
+@@ -19,7 +19,10 @@
+ 
+ package net.minecraftforge.common.capabilities;
+ 
+-import java.lang.annotation.*;
++import java.lang.annotation.ElementType;
++import java.lang.annotation.Retention;
++import java.lang.annotation.RetentionPolicy;
++import java.lang.annotation.Target;
+ 
+ /**
+  * When placed on a FIELD, the field will be set to an
+@@ -42,8 +45,7 @@
+  */
+ @Retention(RetentionPolicy.RUNTIME)
+ @Target({ElementType.FIELD, ElementType.METHOD})
+-public @interface CapabilityInject
+-{
++public @interface CapabilityInject {
+     /**
+      * The capability interface to listen for registration.
+      * Note:

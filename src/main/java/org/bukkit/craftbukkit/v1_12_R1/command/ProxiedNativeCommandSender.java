@@ -1,4 +1,3 @@
-
 package org.bukkit.craftbukkit.v1_12_R1.command;
 
 import net.minecraft.command.ICommandSender;
@@ -125,8 +124,7 @@ public class ProxiedNativeCommandSender implements ProxiedCommandSender {
 
     // Spigot start
     @Override
-    public Spigot spigot()
-    {
+    public Spigot spigot() {
         return getCaller().spigot();
     }
     // Spigot end

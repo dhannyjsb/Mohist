@@ -1,0 +1,114 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/Mod.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/Mod.java
+@@ -19,29 +19,19 @@
+ 
+ package net.minecraftforge.fml.common;
+ 
+-import java.lang.annotation.ElementType;
+-import java.lang.annotation.Retention;
+-import java.lang.annotation.RetentionPolicy;
+-import java.lang.annotation.Target;
+-
+ import net.minecraftforge.fml.client.IModGuiFactory;
+-import net.minecraftforge.fml.common.event.FMLEvent;
+-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
+-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+-import net.minecraftforge.fml.common.event.FMLInterModComms;
+-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+-import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
++import net.minecraftforge.fml.common.event.*;
+ import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
+ import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+ import net.minecraftforge.fml.common.registry.GameRegistry;
+ import net.minecraftforge.fml.common.versioning.VersionRange;
+ import net.minecraftforge.fml.relauncher.Side;
+ 
++import java.lang.annotation.ElementType;
++import java.lang.annotation.Retention;
++import java.lang.annotation.RetentionPolicy;
++import java.lang.annotation.Target;
++
+ /**
+  * This defines a Mod to FML.
+  * Any class found with this annotation applied will be loaded as a Mod. The instance that is loaded will
+@@ -74,8 +64,7 @@
+  */
+ @Retention(RetentionPolicy.RUNTIME)
+ @Target(ElementType.TYPE)
+-public @interface Mod
+-{
++public @interface Mod {
+     /**
+      * The unique mod identifier for this mod.
+      * <b>Required to be lowercased in the english locale for compatibility. Will be truncated to 64 characters long.</b>
+@@ -168,6 +157,7 @@
+      * @return A version range as specified by the maven version range specification or the empty string
+      */
+     String acceptedMinecraftVersions() default "";
++
+     /**
+      * A replacement for the no-longer-existing "versionRange" of NetworkMod. Specify a remote version range
+      * that this mod will accept as valid. Defaults to nothing, which is interpreted as "only this version".
+@@ -187,6 +177,7 @@
+      * @return A version range as specified by the maven version range specification or the empty string
+      */
+     String acceptableSaveVersions() default "";
++
+     /**
+      * Specifying this field allows for a mod to expect a signed jar with a fingerprint matching this value.
+      * The fingerprint should be SHA-1 encoded, lowercase with ':' removed. An empty value indicates that
+@@ -260,19 +251,20 @@
+      */
+     @Retention(RetentionPolicy.RUNTIME)
+     @Target({})
+-    @interface CustomProperty
+-    {
++    @interface CustomProperty {
+         /**
+          * A key. Should be unique.
+          * @return A key
+          */
+         String k();
++
+         /**
+          * A value. Can be anything.
+          * @return A value
+          */
+         String v();
+     }
++
+     /**
+      * Marks the associated method as handling an FML lifecycle event.
+      * The method must have a single parameter, one of the following types. This annotation
+@@ -314,7 +306,8 @@
+      */
+     @Retention(RetentionPolicy.RUNTIME)
+     @Target(ElementType.METHOD)
+-    @interface EventHandler{}
++    @interface EventHandler {
++    }
+ 
+     /**
+      * Populate the annotated field with the mod instance based on the specified ModId. This can be used
+@@ -336,6 +329,7 @@
+          */
+         String owner() default "";
+     }
++
+     /**
+      * Populate the annotated field with the mod's metadata.
+      * @author cpw
+@@ -372,7 +366,7 @@
+     @Retention(RetentionPolicy.RUNTIME)
+     @Target(ElementType.TYPE)
+     @interface EventBusSubscriber {
+-        Side[] value() default { Side.CLIENT, Side.SERVER };
++        Side[] value() default {Side.CLIENT, Side.SERVER};
+ 
+         /**
+          * Optional value, only nessasary if tis annotation is not on the same class that has a @Mod annotation.

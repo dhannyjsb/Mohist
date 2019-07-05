@@ -1,0 +1,39 @@
+--- ../src-base/minecraft/net/minecraftforge/common/brewing/VanillaBrewingRecipe.java
++++ ../src-work/minecraft/net/minecraftforge/common/brewing/VanillaBrewingRecipe.java
+@@ -37,8 +37,7 @@
+      * Code adapted from TileEntityBrewingStand.isItemValidForSlot(int index, ItemStack stack)
+      */
+     @Override
+-    public boolean isInput(@Nonnull ItemStack stack)
+-    {
++    public boolean isInput(@Nonnull ItemStack stack) {
+         Item item = stack.getItem();
+         return item == Items.POTIONITEM || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE;
+     }
+@@ -47,8 +46,7 @@
+      * Code adapted from TileEntityBrewingStand.isItemValidForSlot(int index, ItemStack stack)
+      */
+     @Override
+-    public boolean isIngredient(@Nonnull ItemStack stack)
+-    {
++    public boolean isIngredient(@Nonnull ItemStack stack) {
+         return PotionHelper.isReagent(stack);
+     }
+ 
+@@ -59,13 +57,10 @@
+      */
+     @Override
+     @Nonnull
+-    public ItemStack getOutput(@Nonnull ItemStack input, @Nonnull ItemStack ingredient)
+-    {
+-        if (!input.isEmpty() && !ingredient.isEmpty() && isIngredient(ingredient))
+-        {
++    public ItemStack getOutput(@Nonnull ItemStack input, @Nonnull ItemStack ingredient) {
++        if (!input.isEmpty() && !ingredient.isEmpty() && isIngredient(ingredient)) {
+             ItemStack result = PotionHelper.doReaction(ingredient, input);
+-            if (result != input)
+-            {
++            if (result != input) {
+                 return result;
+             }
+             return ItemStack.EMPTY;

@@ -1,0 +1,77 @@
+--- ../src-base/minecraft/net/minecraftforge/client/event/MouseEvent.java
++++ ../src-work/minecraft/net/minecraftforge/client/event/MouseEvent.java
+@@ -19,18 +19,16 @@
+ 
+ package net.minecraftforge.client.event;
+ 
+-import org.lwjgl.input.Mouse;
+-
+ import net.minecraftforge.fml.common.eventhandler.Cancelable;
+ import net.minecraftforge.fml.common.eventhandler.Event;
++import org.lwjgl.input.Mouse;
+ 
+ /**
+  * Author: MachineMuse (Claire Semple)
+  * Created: 2:46 PM, 9/4/13
+  */
+ @Cancelable
+-public class MouseEvent extends Event
+-{
++public class MouseEvent extends Event {
+     private final int x;
+     private final int y;
+     private final int dx;
+@@ -40,8 +38,7 @@
+     private final boolean buttonstate;
+     private final long nanoseconds;
+ 
+-    public MouseEvent()
+-    {
++    public MouseEvent() {
+         this.x = Mouse.getEventX();
+         this.y = Mouse.getEventY();
+         this.dx = Mouse.getEventDX();
+@@ -52,12 +49,35 @@
+         this.nanoseconds = Mouse.getEventNanoseconds();
+     }
+ 
+-    public int getX() { return x; }
+-    public int getY() { return y; }
+-    public int getDx() { return dx; }
+-    public int getDy() { return dy; }
+-    public int getDwheel() { return dwheel; }
+-    public int getButton() { return button; }
+-    public boolean isButtonstate() { return buttonstate; }
+-    public long getNanoseconds() { return nanoseconds; }
++    public int getX() {
++        return x;
++    }
++
++    public int getY() {
++        return y;
++    }
++
++    public int getDx() {
++        return dx;
++    }
++
++    public int getDy() {
++        return dy;
++    }
++
++    public int getDwheel() {
++        return dwheel;
++    }
++
++    public int getButton() {
++        return button;
++    }
++
++    public boolean isButtonstate() {
++        return buttonstate;
++    }
++
++    public long getNanoseconds() {
++        return nanoseconds;
++    }
+ }

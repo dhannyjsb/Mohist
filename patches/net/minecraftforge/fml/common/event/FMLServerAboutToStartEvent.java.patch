@@ -1,0 +1,26 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/event/FMLServerAboutToStartEvent.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/event/FMLServerAboutToStartEvent.java
+@@ -34,19 +34,17 @@
+ 
+     private MinecraftServer server;
+ 
+-    public FMLServerAboutToStartEvent(Object... data)
+-    {
++    public FMLServerAboutToStartEvent(Object... data) {
+         super(data);
+         this.server = (MinecraftServer) data[0];
+     }
++
+     @Override
+-    public ModState getModState()
+-    {
++    public ModState getModState() {
+         return ModState.AVAILABLE;
+     }
+ 
+-    public MinecraftServer getServer()
+-    {
++    public MinecraftServer getServer() {
+         return server;
+     }
+ }

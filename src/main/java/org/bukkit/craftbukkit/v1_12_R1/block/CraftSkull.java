@@ -27,15 +27,6 @@ public class CraftSkull extends CraftBlockEntityState<TileEntitySkull> implement
         super(material, te);
     }
 
-    @Override
-    public void load(TileEntitySkull skull) {
-        super.load(skull);
-
-        profile = skull.getPlayerProfile();
-        skullType = getSkullType(skull.getSkullType());
-        rotation = (byte) skull.skullRotation;
-    }
-
     static SkullType getSkullType(int id) {
         switch (id) {
             default:
@@ -55,7 +46,7 @@ public class CraftSkull extends CraftBlockEntityState<TileEntitySkull> implement
     }
 
     static int getSkullType(SkullType type) {
-        switch(type) {
+        switch (type) {
             default:
             case SKELETON:
                 return 0;
@@ -148,6 +139,15 @@ public class CraftSkull extends CraftBlockEntityState<TileEntitySkull> implement
             default:
                 throw new AssertionError(rotation);
         }
+    }
+
+    @Override
+    public void load(TileEntitySkull skull) {
+        super.load(skull);
+
+        profile = skull.getPlayerProfile();
+        skullType = getSkullType(skull.getSkullType());
+        rotation = (byte) skull.skullRotation;
     }
 
     @Override

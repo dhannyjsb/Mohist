@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/IFuelHandler.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/IFuelHandler.java
+@@ -27,7 +27,6 @@
+  * @deprecated set your item's {@link Item#getItemBurnTime(ItemStack)} or subscribe to {@link FurnaceFuelBurnTimeEvent} instead.
+  */
+ @Deprecated
+-public interface IFuelHandler
+-{
++public interface IFuelHandler {
+     int getBurnTime(ItemStack fuel);
+ }

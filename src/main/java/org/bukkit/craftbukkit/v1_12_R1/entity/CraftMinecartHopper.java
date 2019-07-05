@@ -7,8 +7,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.inventory.Inventory;
 
-final class CraftMinecartHopper extends CraftMinecart implements HopperMinecart
-{
+final class CraftMinecartHopper extends CraftMinecart implements HopperMinecart {
     private final CraftInventory inventory;
 
     CraftMinecartHopper(CraftServer server, EntityMinecartHopper entity) {

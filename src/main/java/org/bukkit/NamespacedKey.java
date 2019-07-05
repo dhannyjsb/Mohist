@@ -43,7 +43,7 @@ public final class NamespacedKey {
      * @param key
      * @deprecated should never be used by plugins, for internal use only!!
      */
-    
+
     public NamespacedKey(String namespace, String key) {
         Preconditions.checkArgument(namespace != null && VALID_NAMESPACE.matcher(namespace).matches(), "namespace");
         Preconditions.checkArgument(key != null && VALID_KEY.matcher(key).matches(), "key");
@@ -74,6 +74,27 @@ public final class NamespacedKey {
 
         String string = toString();
         Preconditions.checkArgument(string.length() < 256, "NamespacedKey must be less than 256 characters (%s)", string);
+    }
+
+    /**
+     * Return a new random key in the {@link #BUKKIT} namespace.
+     *
+     * @return new key
+     * @deprecated should never be used by plugins, for internal use only!!
+     */
+
+    public static NamespacedKey randomKey() {
+        return new NamespacedKey(BUKKIT, UUID.randomUUID().toString());
+    }
+
+    /**
+     * Get a key in the Minecraft namespace.
+     *
+     * @param key the key to use
+     * @return new key in the Minecraft namespace
+     */
+    public static NamespacedKey minecraft(String key) {
+        return new NamespacedKey(MINECRAFT, key);
     }
 
     public String getNamespace() {
@@ -107,26 +128,5 @@ public final class NamespacedKey {
     @Override
     public String toString() {
         return this.namespace + ":" + this.key;
-    }
-
-    /**
-     * Return a new random key in the {@link #BUKKIT} namespace.
-     *
-     * @return new key
-     * @deprecated should never be used by plugins, for internal use only!!
-     */
-    
-    public static NamespacedKey randomKey() {
-        return new NamespacedKey(BUKKIT, UUID.randomUUID().toString());
-    }
-
-    /**
-     * Get a key in the Minecraft namespace.
-     *
-     * @param key the key to use
-     * @return new key in the Minecraft namespace
-     */
-    public static NamespacedKey minecraft(String key) {
-        return new NamespacedKey(MINECRAFT, key);
     }
 }

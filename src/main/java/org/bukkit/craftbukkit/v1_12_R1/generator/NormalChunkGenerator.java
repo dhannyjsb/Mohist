@@ -71,8 +71,7 @@ public class NormalChunkGenerator extends InternalChunkGenerator {
     }
 
     // Cauldron start - return vanilla compatible IChunkGenerator for forge
-    public IChunkGenerator getForgeChunkGenerator()
-    {
+    public IChunkGenerator getForgeChunkGenerator() {
         return this.generator;
     }
     // Cauldron end

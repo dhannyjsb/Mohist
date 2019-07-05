@@ -29,7 +29,7 @@ public class UTF8Control extends ResourceBundle.Control {
             try {
                 @SuppressWarnings("unchecked")
                 Class<? extends ResourceBundle> bundleClass
-                        = (Class<? extends ResourceBundle>)loader.loadClass(bundleName);
+                        = (Class<? extends ResourceBundle>) loader.loadClass(bundleName);
 
                 // If the class isn't a ResourceBundle subclass, throw a
                 // ClassCastException.
@@ -74,7 +74,7 @@ public class UTF8Control extends ResourceBundle.Control {
             }
             if (stream != null) {
                 try {
-                    bundle = new PropertyResourceBundle(new InputStreamReader(stream,"UTF-8"));
+                    bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
                 } finally {
                     stream.close();
                 }

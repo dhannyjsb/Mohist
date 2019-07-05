@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraft/util/datafix/fixes/ForceVBOOn.java
++++ ../src-work/minecraft/net/minecraft/util/datafix/fixes/ForceVBOOn.java
+@@ -3,15 +3,12 @@
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.util.datafix.IFixableData;
+ 
+-public class ForceVBOOn implements IFixableData
+-{
+-    public int getFixVersion()
+-    {
++public class ForceVBOOn implements IFixableData {
++    public int getFixVersion() {
+         return 505;
+     }
+ 
+-    public NBTTagCompound fixTagCompound(NBTTagCompound compound)
+-    {
++    public NBTTagCompound fixTagCompound(NBTTagCompound compound) {
+         compound.setString("useVbo", "true");
+         return compound;
+     }

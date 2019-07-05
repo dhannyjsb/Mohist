@@ -75,6 +75,7 @@ public interface PluginLoader {
     public void disablePlugin(Plugin plugin);
 
     // Paper start - close Classloader on disable
+
     /**
      * Disables the specified plugin
      * <p>
@@ -85,7 +86,7 @@ public interface PluginLoader {
      */
     // provide default to allow other PluginLoader implementations to work
     default public void disablePlugin(Plugin plugin, boolean closeClassloader) {
-            disablePlugin(plugin);
+        disablePlugin(plugin);
     }
-   // Paper end - close Classloader on disable
+    // Paper end - close Classloader on disable
 }

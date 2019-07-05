@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/entity/INpc.java
++++ ../src-work/minecraft/net/minecraft/entity/INpc.java
+@@ -2,6 +2,5 @@
+ 
+ import net.minecraft.entity.passive.IAnimals;
+ 
+-public interface INpc extends IAnimals
+-{
++public interface INpc extends IAnimals {
+ }

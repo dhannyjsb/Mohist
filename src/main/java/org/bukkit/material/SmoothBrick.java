@@ -11,6 +11,7 @@ import java.util.List;
 public class SmoothBrick extends TexturedMaterial {
 
     private static final List<Material> textures = new ArrayList<Material>();
+
     static {
         textures.add(Material.STONE);
         textures.add(Material.MOSSY_COBBLESTONE);
@@ -26,7 +27,7 @@ public class SmoothBrick extends TexturedMaterial {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public SmoothBrick(final int type) {
         super(type);
     }
@@ -43,7 +44,7 @@ public class SmoothBrick extends TexturedMaterial {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public SmoothBrick(final int type, final byte data) {
         super(type, data);
     }
@@ -53,7 +54,7 @@ public class SmoothBrick extends TexturedMaterial {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public SmoothBrick(final Material type, final byte data) {
         super(type, data);
     }

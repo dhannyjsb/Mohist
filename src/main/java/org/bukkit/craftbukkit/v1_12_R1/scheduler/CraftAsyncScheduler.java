@@ -30,16 +30,12 @@ import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class CraftAsyncScheduler extends CraftScheduler {
 
     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(
-            4, Integer.MAX_VALUE,30L, TimeUnit.SECONDS, new SynchronousQueue<>(),
+            4, Integer.MAX_VALUE, 30L, TimeUnit.SECONDS, new SynchronousQueue<>(),
             new ThreadFactoryBuilder().setNameFormat("Craft Scheduler Thread - %1$d").build());
     private final Executor management = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
             .setNameFormat("Craft Async Scheduler Management Thread").build());
@@ -49,6 +45,15 @@ public class CraftAsyncScheduler extends CraftScheduler {
         super(true);
         executor.allowCoreThreadTimeOut(true);
         executor.prestartAllCoreThreads();
+    }
+
+    /**
+     * Task is not cancelled
+     * @param runningTask
+     * @return
+     */
+    static boolean isValid(CraftTask runningTask) {
+        return runningTask.getPeriod() >= CraftTask.NO_REPEATING;
     }
 
     @Override
@@ -114,14 +119,5 @@ public class CraftAsyncScheduler extends CraftScheduler {
     @Override
     public synchronized void cancelAllTasks() {
         cancelTasks(null);
-    }
-
-    /**
-     * Task is not cancelled
-     * @param runningTask
-     * @return
-     */
-    static boolean isValid(CraftTask runningTask) {
-        return runningTask.getPeriod() >= CraftTask.NO_REPEATING;
     }
 }

@@ -6,12 +6,17 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class CraftTask implements BukkitTask, Runnable {
 
-    private volatile CraftTask next = null;
     public static final int ERROR = 0;
     public static final int NO_REPEATING = -1;
     public static final int CANCEL = -2;
     public static final int PROCESS_FOR_FUTURE = -3;
     public static final int DONE_FOR_FUTURE = -4;
+    private final Runnable task;
+    private final Plugin plugin;
+    private final int id;
+    // Spigot start
+    public String timingName = null;
+    private volatile CraftTask next = null;
     /**
      * -1 means no repeating <br>
      * -2 means cancel <br>
@@ -22,9 +27,6 @@ public class CraftTask implements BukkitTask, Runnable {
      */
     private volatile long period;
     private long nextRun;
-    private final Runnable task;
-    private final Plugin plugin;
-    private final int id;
 
     CraftTask() {
         this(null, null, CraftTask.NO_REPEATING, CraftTask.NO_REPEATING);
@@ -34,14 +36,14 @@ public class CraftTask implements BukkitTask, Runnable {
         this(null, task, CraftTask.NO_REPEATING, CraftTask.NO_REPEATING);
     }
 
-    // Spigot start
-    public String timingName = null;
     CraftTask(String timingName) {
         this(timingName, null, null, -1, -1);
     }
+
     CraftTask(String timingName, final Runnable task) {
         this(timingName, null, task, -1, -1);
     }
+
     CraftTask(String timingName, final Plugin plugin, final Runnable task, final int id, final long period) {
         this.plugin = plugin;
         this.task = task;

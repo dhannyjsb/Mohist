@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraftforge/common/ticket/AABBTicket.java
++++ ../src-work/minecraft/net/minecraftforge/common/ticket/AABBTicket.java
+@@ -24,19 +24,16 @@
+ 
+ import javax.annotation.Nonnull;
+ 
+-public class AABBTicket extends SimpleTicket<Vec3d>
+-{
++public class AABBTicket extends SimpleTicket<Vec3d> {
+     @Nonnull
+     public final AxisAlignedBB axisAlignedBB;
+ 
+-    public AABBTicket(@Nonnull AxisAlignedBB axisAlignedBB)
+-    {
++    public AABBTicket(@Nonnull AxisAlignedBB axisAlignedBB) {
+         this.axisAlignedBB = axisAlignedBB;
+     }
+ 
+     @Override
+-    public boolean matches(Vec3d toMatch)
+-    {
++    public boolean matches(Vec3d toMatch) {
+         return this.axisAlignedBB.contains(toMatch);
+     }
+ }

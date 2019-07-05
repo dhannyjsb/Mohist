@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/eventhandler/SubscribeEvent.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/eventhandler/SubscribeEvent.java
+@@ -22,13 +22,13 @@
+ import java.lang.annotation.Retention;
+ import java.lang.annotation.Target;
+ 
+-import static java.lang.annotation.RetentionPolicy.*;
+-import static java.lang.annotation.ElementType.*;
++import static java.lang.annotation.ElementType.METHOD;
++import static java.lang.annotation.RetentionPolicy.RUNTIME;
+ 
+ @Retention(value = RUNTIME)
+ @Target(value = METHOD)
+-public @interface SubscribeEvent
+-{
++public @interface SubscribeEvent {
+     EventPriority priority() default EventPriority.NORMAL;
++
+     boolean receiveCanceled() default false;
+ }

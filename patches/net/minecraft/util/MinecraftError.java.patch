@@ -1,0 +1,10 @@
+--- ../src-base/minecraft/net/minecraft/util/MinecraftError.java
++++ ../src-work/minecraft/net/minecraft/util/MinecraftError.java
+@@ -4,6 +4,5 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+-public class MinecraftError extends Error
+-{
++public class MinecraftError extends Error {
+ }

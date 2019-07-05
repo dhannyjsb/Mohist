@@ -1,0 +1,59 @@
+--- ../src-base/minecraft/net/minecraft/entity/monster/EntityGiantZombie.java
++++ ../src-work/minecraft/net/minecraft/entity/monster/EntityGiantZombie.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.entity.monster;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.EntityLiving;
+ import net.minecraft.entity.SharedMonsterAttributes;
+ import net.minecraft.util.ResourceLocation;
+@@ -9,40 +8,35 @@
+ import net.minecraft.world.World;
+ import net.minecraft.world.storage.loot.LootTableList;
+ 
+-public class EntityGiantZombie extends EntityMob
+-{
+-    public EntityGiantZombie(World worldIn)
+-    {
++import javax.annotation.Nullable;
++
++public class EntityGiantZombie extends EntityMob {
++    public EntityGiantZombie(World worldIn) {
+         super(worldIn);
+         this.setSize(this.width * 6.0F, this.height * 6.0F);
+     }
+ 
+-    public static void registerFixesGiantZombie(DataFixer fixer)
+-    {
++    public static void registerFixesGiantZombie(DataFixer fixer) {
+         EntityLiving.registerFixesMob(fixer, EntityGiantZombie.class);
+     }
+ 
+-    public float getEyeHeight()
+-    {
++    public float getEyeHeight() {
+         return 10.440001F;
+     }
+ 
+-    protected void applyEntityAttributes()
+-    {
++    protected void applyEntityAttributes() {
+         super.applyEntityAttributes();
+         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0D);
+         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(50.0D);
+     }
+ 
+-    public float getBlockPathWeight(BlockPos pos)
+-    {
++    public float getBlockPathWeight(BlockPos pos) {
+         return this.world.getLightBrightness(pos) - 0.5F;
+     }
+ 
+     @Nullable
+-    protected ResourceLocation getLootTable()
+-    {
++    protected ResourceLocation getLootTable() {
+         return LootTableList.ENTITIES_GIANT;
+     }
+ }

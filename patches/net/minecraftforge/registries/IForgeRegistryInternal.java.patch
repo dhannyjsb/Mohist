@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/registries/IForgeRegistryInternal.java
++++ ../src-work/minecraft/net/minecraftforge/registries/IForgeRegistryInternal.java
+@@ -21,7 +21,6 @@
+ 
+ import net.minecraft.util.ResourceLocation;
+ 
+-public interface IForgeRegistryInternal<V extends IForgeRegistryEntry<V>> extends IForgeRegistry<V>
+-{
++public interface IForgeRegistryInternal<V extends IForgeRegistryEntry<V>> extends IForgeRegistry<V> {
+     void setSlaveMap(ResourceLocation name, Object obj);
+ }

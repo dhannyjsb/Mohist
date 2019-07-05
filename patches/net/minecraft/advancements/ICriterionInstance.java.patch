@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/advancements/ICriterionInstance.java
++++ ../src-work/minecraft/net/minecraft/advancements/ICriterionInstance.java
+@@ -2,7 +2,6 @@
+ 
+ import net.minecraft.util.ResourceLocation;
+ 
+-public interface ICriterionInstance
+-{
++public interface ICriterionInstance {
+     ResourceLocation getId();
+ }

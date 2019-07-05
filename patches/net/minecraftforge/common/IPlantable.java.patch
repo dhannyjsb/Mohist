@@ -1,0 +1,13 @@
+--- ../src-base/minecraft/net/minecraftforge/common/IPlantable.java
++++ ../src-work/minecraft/net/minecraftforge/common/IPlantable.java
+@@ -23,8 +23,8 @@
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.world.IBlockAccess;
+ 
+-public interface IPlantable
+-{
++public interface IPlantable {
+     EnumPlantType getPlantType(IBlockAccess world, BlockPos pos);
++
+     IBlockState getPlant(IBlockAccess world, BlockPos pos);
+ }

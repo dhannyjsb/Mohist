@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/util/datafix/IFixableData.java
++++ ../src-work/minecraft/net/minecraft/util/datafix/IFixableData.java
+@@ -2,8 +2,7 @@
+ 
+ import net.minecraft.nbt.NBTTagCompound;
+ 
+-public interface IFixableData
+-{
++public interface IFixableData {
+     int getFixVersion();
+ 
+     NBTTagCompound fixTagCompound(NBTTagCompound compound);

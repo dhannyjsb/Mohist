@@ -1,11 +1,177 @@
 --- ../src-base/minecraft/net/minecraft/util/text/TextFormatting.java
 +++ ../src-work/minecraft/net/minecraft/util/text/TextFormatting.java
-@@ -37,7 +37,7 @@
+@@ -2,15 +2,15 @@
+ 
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Maps;
++
++import javax.annotation.Nullable;
+ import java.util.Collection;
+ import java.util.List;
+ import java.util.Locale;
+ import java.util.Map;
+ import java.util.regex.Pattern;
+-import javax.annotation.Nullable;
+ 
+-public enum TextFormatting
+-{
++public enum TextFormatting {
+     BLACK("BLACK", '0', 0),
+     DARK_BLUE("DARK_BLUE", '1', 1),
+     DARK_GREEN("DARK_GREEN", '2', 2),
+@@ -36,29 +36,28 @@
+ 
      private static final Map<String, TextFormatting> NAME_MAPPING = Maps.<String, TextFormatting>newHashMap();
      private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
++
++    static {
++        for (TextFormatting textformatting : values()) {
++            NAME_MAPPING.put(lowercaseAlpha(textformatting.name), textformatting);
++        }
++    }
++
++    public final char formattingCode;
      private final String name;
 -    private final char formattingCode;
-+    public final char formattingCode;
      private final boolean fancyStyling;
      private final String controlString;
      private final int colorIndex;
+ 
+-    private static String lowercaseAlpha(String p_175745_0_)
+-    {
+-        return p_175745_0_.toLowerCase(Locale.ROOT).replaceAll("[^a-z]", "");
+-    }
+-
+-    private TextFormatting(String formattingName, char formattingCodeIn, int colorIndex)
+-    {
++    private TextFormatting(String formattingName, char formattingCodeIn, int colorIndex) {
+         this(formattingName, formattingCodeIn, false, colorIndex);
+     }
+ 
+-    private TextFormatting(String formattingName, char formattingCodeIn, boolean fancyStylingIn)
+-    {
++    private TextFormatting(String formattingName, char formattingCodeIn, boolean fancyStylingIn) {
+         this(formattingName, formattingCodeIn, fancyStylingIn, -1);
+     }
+ 
+-    private TextFormatting(String formattingName, char formattingCodeIn, boolean fancyStylingIn, int colorIndex)
+-    {
++    private TextFormatting(String formattingName, char formattingCodeIn, boolean fancyStylingIn, int colorIndex) {
+         this.name = formattingName;
+         this.formattingCode = formattingCodeIn;
+         this.fancyStyling = fancyStylingIn;
+@@ -66,56 +65,27 @@
+         this.controlString = "\u00a7" + formattingCodeIn;
+     }
+ 
+-    public int getColorIndex()
+-    {
+-        return this.colorIndex;
++    private static String lowercaseAlpha(String p_175745_0_) {
++        return p_175745_0_.toLowerCase(Locale.ROOT).replaceAll("[^a-z]", "");
+     }
+ 
+-    public boolean isFancyStyling()
+-    {
+-        return this.fancyStyling;
+-    }
+-
+-    public boolean isColor()
+-    {
+-        return !this.fancyStyling && this != RESET;
+-    }
+-
+-    public String getFriendlyName()
+-    {
+-        return this.name().toLowerCase(Locale.ROOT);
+-    }
+-
+-    public String toString()
+-    {
+-        return this.controlString;
+-    }
+-
+     @Nullable
+-    public static String getTextWithoutFormattingCodes(@Nullable String text)
+-    {
++    public static String getTextWithoutFormattingCodes(@Nullable String text) {
+         return text == null ? null : FORMATTING_CODE_PATTERN.matcher(text).replaceAll("");
+     }
+ 
+     @Nullable
+-    public static TextFormatting getValueByName(@Nullable String friendlyName)
+-    {
+-        return friendlyName == null ? null : (TextFormatting)NAME_MAPPING.get(lowercaseAlpha(friendlyName));
++    public static TextFormatting getValueByName(@Nullable String friendlyName) {
++        return friendlyName == null ? null : (TextFormatting) NAME_MAPPING.get(lowercaseAlpha(friendlyName));
+     }
+ 
+     @Nullable
+-    public static TextFormatting fromColorIndex(int index)
+-    {
+-        if (index < 0)
+-        {
++    public static TextFormatting fromColorIndex(int index) {
++        if (index < 0) {
+             return RESET;
+-        }
+-        else
+-        {
+-            for (TextFormatting textformatting : values())
+-            {
+-                if (textformatting.getColorIndex() == index)
+-                {
++        } else {
++            for (TextFormatting textformatting : values()) {
++                if (textformatting.getColorIndex() == index) {
+                     return textformatting;
+                 }
+             }
+@@ -124,14 +94,11 @@
+         }
+     }
+ 
+-    public static Collection<String> getValidValues(boolean p_96296_0_, boolean p_96296_1_)
+-    {
++    public static Collection<String> getValidValues(boolean p_96296_0_, boolean p_96296_1_) {
+         List<String> list = Lists.<String>newArrayList();
+ 
+-        for (TextFormatting textformatting : values())
+-        {
+-            if ((!textformatting.isColor() || p_96296_0_) && (!textformatting.isFancyStyling() || p_96296_1_))
+-            {
++        for (TextFormatting textformatting : values()) {
++            if ((!textformatting.isColor() || p_96296_0_) && (!textformatting.isFancyStyling() || p_96296_1_)) {
+                 list.add(textformatting.getFriendlyName());
+             }
+         }
+@@ -139,11 +106,23 @@
+         return list;
+     }
+ 
+-    static
+-    {
+-        for (TextFormatting textformatting : values())
+-        {
+-            NAME_MAPPING.put(lowercaseAlpha(textformatting.name), textformatting);
+-        }
++    public int getColorIndex() {
++        return this.colorIndex;
+     }
++
++    public boolean isFancyStyling() {
++        return this.fancyStyling;
++    }
++
++    public boolean isColor() {
++        return !this.fancyStyling && this != RESET;
++    }
++
++    public String getFriendlyName() {
++        return this.name().toLowerCase(Locale.ROOT);
++    }
++
++    public String toString() {
++        return this.controlString;
++    }
+ }

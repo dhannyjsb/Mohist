@@ -19,9 +19,9 @@ import java.util.List;
  */
 public class HelpYamlReader {
 
-    private YamlConfiguration helpYaml;
     private final char ALT_COLOR_CODE = '&';
     private final Server server;
+    private YamlConfiguration helpYaml;
 
     public HelpYamlReader(Server server) {
         this.server = server;

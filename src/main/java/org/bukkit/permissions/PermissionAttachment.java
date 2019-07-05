@@ -10,10 +10,10 @@ import java.util.Map;
  * object
  */
 public class PermissionAttachment {
-    private PermissionRemovedExecutor removed;
     private final Map<String, Boolean> permissions = new LinkedHashMap<String, Boolean>();
     private final Permissible permissible;
     private final Plugin plugin;
+    private PermissionRemovedExecutor removed;
 
     public PermissionAttachment(Plugin plugin, Permissible Permissible) {
         if (plugin == null) {
@@ -36,16 +36,6 @@ public class PermissionAttachment {
     }
 
     /**
-     * Sets an object to be called for when this attachment is removed from a
-     * {@link Permissible}. May be null.
-     *
-     * @param ex Object to be called when this is removed
-     */
-    public void setRemovalCallback(PermissionRemovedExecutor ex) {
-        removed = ex;
-    }
-
-    /**
      * Gets the class that was previously set to be called when this
      * attachment was removed from a {@link Permissible}. May be null.
      *
@@ -53,6 +43,16 @@ public class PermissionAttachment {
      */
     public PermissionRemovedExecutor getRemovalCallback() {
         return removed;
+    }
+
+    /**
+     * Sets an object to be called for when this attachment is removed from a
+     * {@link Permissible}. May be null.
+     *
+     * @param ex Object to be called when this is removed
+     */
+    public void setRemovalCallback(PermissionRemovedExecutor ex) {
+        removed = ex;
     }
 
     /**

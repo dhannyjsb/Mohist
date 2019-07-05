@@ -52,19 +52,19 @@ public class MerchantRecipe implements Recipe {
         ingredients.remove(index);
     }
 
-    public void setIngredients(List<ItemStack> ingredients) {
-        this.ingredients = new ArrayList<ItemStack>();
-        for (ItemStack item : ingredients) {
-            this.ingredients.add(item.clone());
-        }
-    }
-
     public List<ItemStack> getIngredients() {
         List<ItemStack> copy = new ArrayList<ItemStack>();
         for (ItemStack item : ingredients) {
             copy.add(item.clone());
         }
         return copy;
+    }
+
+    public void setIngredients(List<ItemStack> ingredients) {
+        this.ingredients = new ArrayList<ItemStack>();
+        for (ItemStack item : ingredients) {
+            this.ingredients.add(item.clone());
+        }
     }
 
     /**

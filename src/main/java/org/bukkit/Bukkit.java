@@ -17,12 +17,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemFactory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Merchant;
-import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.map.MapView;
 import org.bukkit.permissions.Permissible;
@@ -39,13 +34,7 @@ import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -57,7 +46,8 @@ public final class Bukkit {
     /**
      * Static class cannot be initialized.
      */
-    private Bukkit() {}
+    private Bukkit() {
+    }
 
     /**
      * Gets the current {@link Server} singleton
@@ -129,7 +119,7 @@ public final class Bukkit {
      * affect the collection are fully supported. The effects following
      * (non-exhaustive) {@link Entity#teleport(Location) teleportation},
      * {@link Player#setHealth(double) death}, and {@link Player#kickPlayer(
-     * String) kicking} are undefined. Any use of this collection from
+     *String) kicking} are undefined. Any use of this collection from
      * asynchronous threads is unsafe.
      * <p>
      * For safe consequential iteration or mimicking the old array behavior,
@@ -373,7 +363,7 @@ public final class Bukkit {
      * @param name the name to look up
      * @return a player if one was found, null otherwise
      */
-    
+
     public static Player getPlayer(String name) {
         return server.getPlayer(name);
     }
@@ -386,7 +376,7 @@ public final class Bukkit {
      * @param name Exact name of the player to retrieve
      * @return a player object if one was found, null otherwise
      */
-    
+
     public static Player getPlayerExact(String name) {
         return server.getPlayerExact(name);
     }
@@ -403,7 +393,7 @@ public final class Bukkit {
      * @param name the (partial) name to match
      * @return list of all possible players
      */
-    
+
     public static List<Player> matchPlayer(String name) {
         return server.matchPlayer(name);
     }
@@ -422,6 +412,7 @@ public final class Bukkit {
     public static UUID getPlayerUniqueId(String playerName) {
         return server.getPlayerUniqueId(playerName);
     }
+
     /**
      * Gets the plugin manager for interfacing with plugins.
      *
@@ -521,7 +512,7 @@ public final class Bukkit {
      * @return a map view if it exists, or null otherwise
      * @deprecated Magic value
      */
-    
+
     public static MapView getMap(short id) {
         return server.getMap(id);
     }
@@ -726,7 +717,7 @@ public final class Bukkit {
      * @return an offline player
      * @see #getOfflinePlayer(java.util.UUID)
      */
-    
+
     public static OfflinePlayer getOfflinePlayer(String name) {
         return server.getOfflinePlayer(name);
     }
@@ -1086,6 +1077,15 @@ public final class Bukkit {
     }
 
     /**
+     * Gets the idle kick timeout.
+     *
+     * @return the idle timeout in minutes
+     */
+    public static int getIdleTimeout() {
+        return server.getIdleTimeout();
+    }
+
+    /**
      * Set the idle kick timeout. Any players idle for the specified amount of
      * time will be automatically kicked.
      * <p>
@@ -1098,22 +1098,13 @@ public final class Bukkit {
     }
 
     /**
-     * Gets the idle kick timeout.
-     *
-     * @return the idle timeout in minutes
-     */
-    public static int getIdleTimeout() {
-        return server.getIdleTimeout();
-    }
-
-    /**
      * Create a ChunkData for use in a generator.
-     * 
+     *
      * See {@link ChunkGenerator#generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)}
-     * 
+     *
      * @param world the world to create the ChunkData for
      * @return a new ChunkData for the world
-     * 
+     *
      */
     public static ChunkGenerator.ChunkData createChunkData(World world) {
         return server.createChunkData(world);
@@ -1144,15 +1135,16 @@ public final class Bukkit {
     }
 
     // Paper start
-	/**
+
+    /**
      * Gets the current server TPS
      * @return current server TPS (1m, 5m, 15m in Paper-Server)
      */
     public static double[] getTPS() {
         return server.getTPS();
     }
-	// Paper end
-    
+    // Paper end
+
     /**
      * Get the advancement specified by this key.
      *
@@ -1177,16 +1169,15 @@ public final class Bukkit {
      * @see UnsafeValues
      * @return the unsafe values instance
      */
-    
+
     public static UnsafeValues getUnsafe() {
         return server.getUnsafe();
     }
 
-    public static Server.Spigot spigot()
-    {
+    public static Server.Spigot spigot() {
         return server.spigot();
     }
-    
+
     /**
      * Checks if player names should be suggested when a command returns {@code null} as
      * their tab completion result.

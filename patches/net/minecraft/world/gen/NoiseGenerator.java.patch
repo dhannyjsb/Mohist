@@ -1,0 +1,9 @@
+--- ../src-base/minecraft/net/minecraft/world/gen/NoiseGenerator.java
++++ ../src-work/minecraft/net/minecraft/world/gen/NoiseGenerator.java
+@@ -1,5 +1,4 @@
+ package net.minecraft.world.gen;
+ 
+-public abstract class NoiseGenerator
+-{
++public abstract class NoiseGenerator {
+ }

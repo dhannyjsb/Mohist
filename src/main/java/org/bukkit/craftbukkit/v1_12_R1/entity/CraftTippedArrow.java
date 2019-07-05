@@ -107,6 +107,11 @@ public class CraftTippedArrow extends CraftArrow implements TippedArrow {
     }
 
     @Override
+    public PotionData getBasePotionData() {
+        return CraftPotionUtil.toBukkit(getHandle().getType());
+    }
+
+    @Override
     public void setBasePotionData(PotionData data) {
         Validate.notNull(data, "PotionData cannot be null");
         Validate.isTrue(data.getType() != PotionType.UNCRAFTABLE || !getHandle().customPotionEffects.isEmpty(), "Tipped Arrows must have at least 1 effect");
@@ -114,17 +119,12 @@ public class CraftTippedArrow extends CraftArrow implements TippedArrow {
     }
 
     @Override
-    public PotionData getBasePotionData() {
-        return CraftPotionUtil.toBukkit(getHandle().getType());
+    public Color getColor() {
+        return Color.fromRGB(getHandle().getColor());
     }
 
     @Override
     public void setColor(Color color) {
         getHandle().setFixedColor(color.asRGB());
-    }
-
-    @Override
-    public Color getColor() {
-        return Color.fromRGB(getHandle().getColor());
     }
 }

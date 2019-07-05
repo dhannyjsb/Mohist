@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/client/resource/package-info.java
++++ ../src-work/minecraft/net/minecraftforge/client/resource/package-info.java
+@@ -21,6 +21,6 @@
+ @MethodsReturnNonnullByDefault
+ package net.minecraftforge.client.resource;
+ 
+-import javax.annotation.ParametersAreNonnullByDefault;
+-
+ import mcp.MethodsReturnNonnullByDefault;
++
++import javax.annotation.ParametersAreNonnullByDefault;

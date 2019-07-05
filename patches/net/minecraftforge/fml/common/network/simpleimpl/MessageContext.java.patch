@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/network/simpleimpl/MessageContext.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/network/simpleimpl/MessageContext.java
+@@ -41,22 +41,20 @@
+      * The Side this message has been received on
+      */
+     public final Side side;
++
+     /**
+      * @param netHandler
+      */
+-    MessageContext(INetHandler netHandler, Side side)
+-    {
++    MessageContext(INetHandler netHandler, Side side) {
+         this.netHandler = netHandler;
+         this.side = side;
+     }
+ 
+-    public NetHandlerPlayServer getServerHandler()
+-    {
++    public NetHandlerPlayServer getServerHandler() {
+         return (NetHandlerPlayServer) netHandler;
+     }
+ 
+-    public NetHandlerPlayClient getClientHandler()
+-    {
++    public NetHandlerPlayClient getClientHandler() {
+         return (NetHandlerPlayClient) netHandler;
+     }
+ }

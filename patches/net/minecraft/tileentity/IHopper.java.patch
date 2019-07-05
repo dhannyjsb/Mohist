@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/tileentity/IHopper.java
++++ ../src-work/minecraft/net/minecraft/tileentity/IHopper.java
+@@ -3,8 +3,7 @@
+ import net.minecraft.inventory.IInventory;
+ import net.minecraft.world.World;
+ 
+-public interface IHopper extends IInventory
+-{
++public interface IHopper extends IInventory {
+     World getWorld();
+ 
+     double getXPos();

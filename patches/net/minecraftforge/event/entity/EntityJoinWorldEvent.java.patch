@@ -1,0 +1,39 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/EntityJoinWorldEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/EntityJoinWorldEvent.java
+@@ -19,11 +19,11 @@
+ 
+ package net.minecraftforge.event.entity;
+ 
++import net.minecraft.entity.Entity;
++import net.minecraft.world.World;
+ import net.minecraft.world.WorldServer;
+ import net.minecraftforge.common.MinecraftForge;
+ import net.minecraftforge.fml.common.eventhandler.Cancelable;
+-import net.minecraft.entity.Entity;
+-import net.minecraft.world.World;
+ 
+ import java.util.Collection;
+ 
+@@ -42,19 +42,16 @@
+  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.
+  **/
+ @Cancelable
+-public class EntityJoinWorldEvent extends EntityEvent
+-{
++public class EntityJoinWorldEvent extends EntityEvent {
+ 
+     private final World world;
+ 
+-    public EntityJoinWorldEvent(Entity entity, World world)
+-    {
++    public EntityJoinWorldEvent(Entity entity, World world) {
+         super(entity);
+         this.world = world;
+     }
+ 
+-    public World getWorld()
+-    {
++    public World getWorld() {
+         return world;
+     }
+ }

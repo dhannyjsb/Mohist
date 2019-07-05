@@ -48,7 +48,7 @@ public class Crops extends MaterialData {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public Crops(final int type) {
         super(type);
     }
@@ -67,7 +67,7 @@ public class Crops extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Crops(final int type, final byte data) {
         super(type, data);
     }
@@ -77,7 +77,7 @@ public class Crops extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Crops(final Material type, final byte data) {
         super(type, data);
     }

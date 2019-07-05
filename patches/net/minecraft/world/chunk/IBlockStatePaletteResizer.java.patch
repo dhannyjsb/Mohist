@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/world/chunk/IBlockStatePaletteResizer.java
++++ ../src-work/minecraft/net/minecraft/world/chunk/IBlockStatePaletteResizer.java
+@@ -2,7 +2,6 @@
+ 
+ import net.minecraft.block.state.IBlockState;
+ 
+-interface IBlockStatePaletteResizer
+-{
++interface IBlockStatePaletteResizer {
+     int onResize(int bits, IBlockState state);
+ }

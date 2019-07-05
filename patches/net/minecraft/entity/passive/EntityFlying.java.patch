@@ -1,0 +1,9 @@
+--- ../src-base/minecraft/net/minecraft/entity/passive/EntityFlying.java
++++ ../src-work/minecraft/net/minecraft/entity/passive/EntityFlying.java
+@@ -1,5 +1,4 @@
+ package net.minecraft.entity.passive;
+ 
+-public interface EntityFlying
+-{
++public interface EntityFlying {
+ }

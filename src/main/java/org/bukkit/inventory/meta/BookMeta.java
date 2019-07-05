@@ -12,28 +12,6 @@ import java.util.List;
 public interface BookMeta extends ItemMeta {
 
     /**
-     * Represents the generation (or level of copying) of a written book
-     */
-    enum Generation {
-        /**
-         * Book written into a book-and-quill. Can be copied. (Default value)
-         */
-        ORIGINAL,
-        /**
-         * Book that was copied from an original. Can be copied.
-         */
-        COPY_OF_ORIGINAL,
-        /**
-         * Book that was copied from a copy of an original. Can't be copied.
-         */
-        COPY_OF_COPY,
-        /**
-         * Unused; unobtainable by players. Can't be copied.
-         */
-        TATTERED;
-    }
-
-    /**
      * Checks for the existence of a title in the book.
      *
      * @return true if the book has a title
@@ -146,17 +124,17 @@ public interface BookMeta extends ItemMeta {
      * Clears the existing book pages, and sets the book to use the provided
      * pages. Maximum 50 pages with 256 characters per page.
      *
-     * @param pages A list of pages to set the book to use
+     * @param pages A list of strings, each being a page
      */
-    void setPages(List<String> pages);
+    void setPages(String... pages);
 
     /**
      * Clears the existing book pages, and sets the book to use the provided
      * pages. Maximum 50 pages with 256 characters per page.
      *
-     * @param pages A list of strings, each being a page
+     * @param pages A list of pages to set the book to use
      */
-    void setPages(String... pages);
+    void setPages(List<String> pages);
 
     /**
      * Adds new pages to the end of the book. Up to a maximum of 50 pages with
@@ -175,9 +153,33 @@ public interface BookMeta extends ItemMeta {
 
     BookMeta clone();
 
+    @Override
+    Spigot spigot();
+
+    /**
+     * Represents the generation (or level of copying) of a written book
+     */
+    enum Generation {
+        /**
+         * Book written into a book-and-quill. Can be copied. (Default value)
+         */
+        ORIGINAL,
+        /**
+         * Book that was copied from an original. Can be copied.
+         */
+        COPY_OF_ORIGINAL,
+        /**
+         * Book that was copied from a copy of an original. Can't be copied.
+         */
+        COPY_OF_COPY,
+        /**
+         * Unused; unobtainable by players. Can't be copied.
+         */
+        TATTERED;
+    }
+
     // Spigot start
-    public class Spigot extends ItemMeta.Spigot
-    {
+    public class Spigot extends ItemMeta.Spigot {
         /**
          * Gets the specified page in the book. The given page must exist.
          *
@@ -215,9 +217,9 @@ public interface BookMeta extends ItemMeta {
          * Clears the existing book pages, and sets the book to use the provided
          * pages. Maximum 50 pages with 256 characters per page.
          *
-         * @param pages A list of pages to set the book to use
+         * @param pages A list of component arrays, each being a page
          */
-        public void setPages(List<BaseComponent[]> pages) {
+        public void setPages(BaseComponent[]... pages) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
@@ -225,9 +227,9 @@ public interface BookMeta extends ItemMeta {
          * Clears the existing book pages, and sets the book to use the provided
          * pages. Maximum 50 pages with 256 characters per page.
          *
-         * @param pages A list of component arrays, each being a page
+         * @param pages A list of pages to set the book to use
          */
-        public void setPages(BaseComponent[]... pages) {
+        public void setPages(List<BaseComponent[]> pages) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
@@ -241,8 +243,5 @@ public interface BookMeta extends ItemMeta {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
-
-    @Override
-    Spigot spigot();
     // Spigot end
 }

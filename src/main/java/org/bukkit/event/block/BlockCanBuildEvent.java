@@ -38,6 +38,10 @@ public class BlockCanBuildEvent extends BlockEvent {
         material = id;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     /**
      * Gets whether or not the block can be built here.
      * <p>
@@ -81,10 +85,6 @@ public class BlockCanBuildEvent extends BlockEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/event/FMLServerStartingEvent.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/event/FMLServerStartingEvent.java
-@@ -19,10 +19,13 @@
+@@ -19,9 +19,11 @@
  
  package net.minecraftforge.fml.common.event;
  
@@ -10,16 +10,44 @@
  import net.minecraft.server.MinecraftServer;
 +import net.minecraftforge.fml.common.Loader;
  import net.minecraftforge.fml.common.LoaderState.ModState;
-+import org.bukkit.command.Command;
  
  /**
-  * Called after {@link FMLServerAboutToStartEvent} and before {@link FMLServerStartedEvent}.
-@@ -56,6 +59,8 @@
-     public void registerServerCommand(ICommand command)
-     {
+@@ -32,30 +34,28 @@
+  * @see net.minecraftforge.fml.common.Mod.EventHandler for how to subscribe to this event
+  * @author cpw
+  */
+-public class FMLServerStartingEvent extends FMLStateEvent
+-{
++public class FMLServerStartingEvent extends FMLStateEvent {
+ 
+     private MinecraftServer server;
+ 
+-    public FMLServerStartingEvent(Object... data)
+-    {
++    public FMLServerStartingEvent(Object... data) {
+         super(data);
+         this.server = (MinecraftServer) data[0];
+     }
++
+     @Override
+-    public ModState getModState()
+-    {
++    public ModState getModState() {
+         return ModState.AVAILABLE;
+     }
+ 
+-    public MinecraftServer getServer()
+-    {
++    public MinecraftServer getServer() {
+         return server;
+     }
+ 
+-    public void registerServerCommand(ICommand command)
+-    {
++    public void registerServerCommand(ICommand command) {
          CommandHandler ch = (CommandHandler) getServer().getCommandManager();
 +        if (command instanceof CommandBase)
-+        	((CommandBase)command).permissionNode = Loader.instance().activeModContainer().getModId() +".command." + command.getName();
++            ((CommandBase) command).permissionNode = Loader.instance().activeModContainer().getModId() + ".command." + command.getName();
          ch.registerCommand(command);
      }
  }

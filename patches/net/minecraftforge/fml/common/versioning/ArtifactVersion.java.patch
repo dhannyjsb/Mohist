@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/versioning/ArtifactVersion.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/versioning/ArtifactVersion.java
+@@ -24,8 +24,7 @@
+ //This entire package *should* be removed and updated to normal maven-artifact library in 1.13.
+ 
+ public interface ArtifactVersion
+-    extends Comparable<ArtifactVersion>
+-{
++        extends Comparable<ArtifactVersion> {
+     String getLabel();
+ 
+     String getVersionString();

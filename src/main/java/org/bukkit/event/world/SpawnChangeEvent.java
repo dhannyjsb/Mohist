@@ -17,6 +17,10 @@ public class SpawnChangeEvent extends WorldEvent {
         this.previousLocation = previousLocation;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     /**
      * Gets the previous spawn location
      *
@@ -28,10 +32,6 @@ public class SpawnChangeEvent extends WorldEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

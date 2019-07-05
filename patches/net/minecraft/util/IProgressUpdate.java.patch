@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/util/IProgressUpdate.java
++++ ../src-work/minecraft/net/minecraft/util/IProgressUpdate.java
+@@ -3,8 +3,7 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+-public interface IProgressUpdate
+-{
++public interface IProgressUpdate {
+     void displaySavingString(String message);
+ 
+     @SideOnly(Side.CLIENT)

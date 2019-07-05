@@ -32,25 +32,20 @@ public enum TreeSpecies {
     /**
      * Represents dark oak trees.
      */
-    DARK_OAK(0x5),
-    ;
+    DARK_OAK(0x5),;
+
+    private final static Map<Byte, TreeSpecies> BY_DATA = Maps.newHashMap();
+
+    static {
+        for (TreeSpecies species : values()) {
+            BY_DATA.put(species.data, species);
+        }
+    }
 
     private final byte data;
-    private final static Map<Byte, TreeSpecies> BY_DATA = Maps.newHashMap();
 
     private TreeSpecies(final int data) {
         this.data = (byte) data;
-    }
-
-    /**
-     * Gets the associated data value representing this species
-     *
-     * @return A byte containing the data value of this tree species
-     * @deprecated Magic value
-     */
-    
-    public byte getData() {
-        return data;
     }
 
     /**
@@ -61,14 +56,19 @@ public enum TreeSpecies {
      *     if it doesn't exist
      * @deprecated Magic value
      */
-    
+
     public static TreeSpecies getByData(final byte data) {
         return BY_DATA.get(data);
     }
 
-    static {
-        for (TreeSpecies species : values()) {
-            BY_DATA.put(species.data, species);
-        }
+    /**
+     * Gets the associated data value representing this species
+     *
+     * @return A byte containing the data value of this tree species
+     * @deprecated Magic value
+     */
+
+    public byte getData() {
+        return data;
     }
 }

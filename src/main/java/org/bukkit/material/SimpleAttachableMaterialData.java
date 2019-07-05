@@ -12,7 +12,7 @@ public abstract class SimpleAttachableMaterialData extends MaterialData implemen
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public SimpleAttachableMaterialData(int type) {
         super(type);
     }
@@ -36,7 +36,7 @@ public abstract class SimpleAttachableMaterialData extends MaterialData implemen
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public SimpleAttachableMaterialData(int type, byte data) {
         super(type, data);
     }
@@ -46,7 +46,7 @@ public abstract class SimpleAttachableMaterialData extends MaterialData implemen
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public SimpleAttachableMaterialData(Material type, byte data) {
         super(type, data);
     }

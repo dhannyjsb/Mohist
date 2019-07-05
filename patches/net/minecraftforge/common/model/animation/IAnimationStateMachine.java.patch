@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraftforge/common/model/animation/IAnimationStateMachine.java
++++ ../src-work/minecraft/net/minecraftforge/common/model/animation/IAnimationStateMachine.java
+@@ -21,14 +21,12 @@
+ 
+ import net.minecraftforge.common.animation.Event;
+ import net.minecraftforge.common.model.IModelState;
+-
+ import org.apache.commons.lang3.tuple.Pair;
+ 
+ /**
+  * State machine representing the model animation.
+  */
+-public interface IAnimationStateMachine
+-{
++public interface IAnimationStateMachine {
+     /**
+      * Sample the state and events at the current time.
+      * Event iterable will contain all events that happened from the last invocation of this method, from most to least recent.

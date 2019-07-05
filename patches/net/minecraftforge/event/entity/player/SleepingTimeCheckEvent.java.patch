@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/player/SleepingTimeCheckEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/player/SleepingTimeCheckEvent.java
+@@ -34,12 +34,10 @@
+  * setResult(DEFAULT) causes game to check !{@link World#isDaytime()} instead.
+  */
+ @HasResult
+-public class SleepingTimeCheckEvent extends PlayerEvent
+-{
++public class SleepingTimeCheckEvent extends PlayerEvent {
+     private final BlockPos sleepingLocation;
+ 
+-    public SleepingTimeCheckEvent(EntityPlayer player, BlockPos sleepingLocation)
+-    {
++    public SleepingTimeCheckEvent(EntityPlayer player, BlockPos sleepingLocation) {
+         super(player);
+         this.sleepingLocation = sleepingLocation;
+     }
+@@ -48,8 +46,7 @@
+      * Note that the sleeping location may be an approximated one.
+      * @return The player's sleeping location.
+      */
+-    public BlockPos getSleepingLocation()
+-    {
++    public BlockPos getSleepingLocation() {
+         return sleepingLocation;
+     }
+ }

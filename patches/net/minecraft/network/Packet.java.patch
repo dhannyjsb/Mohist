@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/network/Packet.java
++++ ../src-work/minecraft/net/minecraft/network/Packet.java
+@@ -2,8 +2,7 @@
+ 
+ import java.io.IOException;
+ 
+-public interface Packet<T extends INetHandler>
+-{
++public interface Packet<T extends INetHandler> {
+     void readPacketData(PacketBuffer buf) throws IOException;
+ 
+     void writePacketData(PacketBuffer buf) throws IOException;

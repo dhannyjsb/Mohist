@@ -1,0 +1,48 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/item/ItemExpireEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/item/ItemExpireEvent.java
+@@ -19,8 +19,8 @@
+ 
+ package net.minecraftforge.event.entity.item;
+ 
+-import net.minecraftforge.fml.common.eventhandler.Cancelable;
+ import net.minecraft.entity.item.EntityItem;
++import net.minecraftforge.fml.common.eventhandler.Cancelable;
+ 
+ /**
+  * Event that is fired when an EntityItem's age has reached its maximum
+@@ -29,30 +29,26 @@
+  * it will add more time to the entities life equal to extraLife.
+  */
+ @Cancelable
+-public class ItemExpireEvent extends ItemEvent
+-{
++public class ItemExpireEvent extends ItemEvent {
+ 
+     private int extraLife;
+ 
+     /**
+      * Creates a new event for an expiring EntityItem.
+-     * 
++     *
+      * @param entityItem The EntityItem being deleted.
+      * @param extraLife The amount of time to be added to this entities lifespan if the event is canceled.
+      */
+-    public ItemExpireEvent(EntityItem entityItem, int extraLife)
+-    {
++    public ItemExpireEvent(EntityItem entityItem, int extraLife) {
+         super(entityItem);
+         this.setExtraLife(extraLife);
+     }
+ 
+-    public int getExtraLife()
+-    {
++    public int getExtraLife() {
+         return extraLife;
+     }
+ 
+-    public void setExtraLife(int extraLife)
+-    {
++    public void setExtraLife(int extraLife) {
+         this.extraLife = extraLife;
+     }
+ }

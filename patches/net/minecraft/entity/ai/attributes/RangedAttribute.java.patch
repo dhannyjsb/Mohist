@@ -1,27 +1,65 @@
 --- ../src-base/minecraft/net/minecraft/entity/ai/attributes/RangedAttribute.java
 +++ ../src-work/minecraft/net/minecraft/entity/ai/attributes/RangedAttribute.java
-@@ -1,12 +1,13 @@
+@@ -1,47 +1,40 @@
  package net.minecraft.entity.ai.attributes;
  
 -import javax.annotation.Nullable;
  import net.minecraft.util.math.MathHelper;
  
+-public class RangedAttribute extends BaseAttribute
+-{
 +import javax.annotation.Nullable;
 +
- public class RangedAttribute extends BaseAttribute
- {
++public class RangedAttribute extends BaseAttribute {
      private final double minimumValue;
 -    private final double maximumValue;
 +    public double maximumValue;  // Spigot
      private String description;
  
-     public RangedAttribute(@Nullable IAttribute parentIn, String unlocalizedNameIn, double defaultValue, double minimumValueIn, double maximumValueIn)
-@@ -42,6 +43,8 @@
+-    public RangedAttribute(@Nullable IAttribute parentIn, String unlocalizedNameIn, double defaultValue, double minimumValueIn, double maximumValueIn)
+-    {
++    public RangedAttribute(@Nullable IAttribute parentIn, String unlocalizedNameIn, double defaultValue, double minimumValueIn, double maximumValueIn) {
+         super(parentIn, unlocalizedNameIn, defaultValue);
+         this.minimumValue = minimumValueIn;
+         this.maximumValue = maximumValueIn;
  
-     public double clampValue(double value)
-     {
-+        if (value != value) return getDefaultValue(); // CraftBukkit
+-        if (minimumValueIn > maximumValueIn)
+-        {
++        if (minimumValueIn > maximumValueIn) {
+             throw new IllegalArgumentException("Minimum value cannot be bigger than maximum value!");
+-        }
+-        else if (defaultValue < minimumValueIn)
+-        {
++        } else if (defaultValue < minimumValueIn) {
+             throw new IllegalArgumentException("Default value cannot be lower than minimum value!");
+-        }
+-        else if (defaultValue > maximumValueIn)
+-        {
++        } else if (defaultValue > maximumValueIn) {
+             throw new IllegalArgumentException("Default value cannot be bigger than maximum value!");
+         }
+     }
+ 
+-    public RangedAttribute setDescription(String descriptionIn)
+-    {
++    public String getDescription() {
++        return this.description;
++    }
 +
++    public RangedAttribute setDescription(String descriptionIn) {
+         this.description = descriptionIn;
+         return this;
+     }
+ 
+-    public String getDescription()
+-    {
+-        return this.description;
+-    }
++    public double clampValue(double value) {
++        if (value != value) return getDefaultValue(); // CraftBukkit
+ 
+-    public double clampValue(double value)
+-    {
          value = MathHelper.clamp(value, this.minimumValue, this.maximumValue);
          return value;
      }

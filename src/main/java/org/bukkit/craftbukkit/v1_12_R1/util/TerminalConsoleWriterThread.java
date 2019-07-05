@@ -16,8 +16,6 @@ import java.util.logging.Logger;
 
 public class TerminalConsoleWriterThread implements Runnable {
     private static final byte[] RESET_LINE = String.valueOf('\r').getBytes();
-    final private ConsoleReader reader;
-    final private OutputStream output;
     private static final Map<String, BlockingQueue<String>> QUEUES;
     private static final ReadWriteLock QUEUE_LOCK;
 
@@ -35,12 +33,14 @@ public class TerminalConsoleWriterThread implements Runnable {
         }
     }
 
+    final private ConsoleReader reader;
+    final private OutputStream output;
+    private BlockingQueue<String> queue = null;
+
     public TerminalConsoleWriterThread(OutputStream output, ConsoleReader reader) {
         this.output = output;
         this.reader = reader;
     }
-
-    private BlockingQueue<String> queue = null;
 
     @Override
     public void run() {

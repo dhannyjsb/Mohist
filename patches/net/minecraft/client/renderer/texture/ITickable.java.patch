@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/texture/ITickable.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/texture/ITickable.java
+@@ -4,7 +4,6 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+-public interface ITickable
+-{
++public interface ITickable {
+     void tick();
+ }

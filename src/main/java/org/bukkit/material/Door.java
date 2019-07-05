@@ -27,7 +27,7 @@ public class Door extends MaterialData implements Directional, Openable {
     /**
      * @deprecated Artifact of old API, equivalent to new <code>Door(Material.WOODEN_DOOR);</code>
      */
-    
+
     public Door() {
         super(Material.WOODEN_DOOR);
     }
@@ -36,7 +36,7 @@ public class Door extends MaterialData implements Directional, Openable {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public Door(final int type) {
         super(type);
     }
@@ -170,7 +170,7 @@ public class Door extends MaterialData implements Directional, Openable {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Door(final int type, final byte data) {
         super(type, data);
     }
@@ -180,7 +180,7 @@ public class Door extends MaterialData implements Directional, Openable {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Door(final Material type, final byte data) {
         super(type, data);
     }
@@ -250,7 +250,7 @@ public class Door extends MaterialData implements Directional, Openable {
      * @return BlockFace.SELF
      * @deprecated This method should not be used; use hinge and facing accessors instead.
      */
-    
+
     public BlockFace getHingeCorner() {
         return BlockFace.SELF;
     }

@@ -26,7 +26,7 @@ public class Chest extends DirectionalContainer {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public Chest(final int type) {
         super(type);
     }
@@ -40,7 +40,7 @@ public class Chest extends DirectionalContainer {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Chest(final int type, final byte data) {
         super(type, data);
     }
@@ -50,7 +50,7 @@ public class Chest extends DirectionalContainer {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Chest(final Material type, final byte data) {
         super(type, data);
     }

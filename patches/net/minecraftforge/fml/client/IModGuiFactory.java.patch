@@ -1,0 +1,41 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/client/IModGuiFactory.java
++++ ../src-work/minecraft/net/minecraftforge/fml/client/IModGuiFactory.java
+@@ -19,10 +19,11 @@
+ 
+ package net.minecraftforge.fml.client;
+ 
+-import java.util.Set;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.gui.GuiScreen;
+ 
++import java.util.Set;
++
+ /**
+  * This is the interface you need to implement if you want to provide a customized config screen.
+  * {@link DefaultGuiFactory} provides a default implementation of this interface and will be used
+@@ -35,13 +36,13 @@
+      * @param minecraftInstance the instance
+      */
+     void initialize(Minecraft minecraftInstance);
+-    
++
+     /**
+      * If this method returns false, the config button in the mod list will be disabled
+      * @return true if this object provides a config gui screen, false otherwise
+      */
+     boolean hasConfigGui();
+-    
++
+     /**
+      * Return an initialized {@link GuiScreen}. This screen will be displayed
+      * when the "config" button is pressed in the mod list. It will
+@@ -96,8 +97,7 @@
+         public final String parent;
+         public final String child;
+ 
+-        public RuntimeOptionCategoryElement(String parent, String child)
+-        {
++        public RuntimeOptionCategoryElement(String parent, String child) {
+             this.parent = parent;
+             this.child = child;
+         }

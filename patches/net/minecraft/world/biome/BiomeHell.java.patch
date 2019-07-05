@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/world/biome/BiomeHell.java
++++ ../src-work/minecraft/net/minecraft/world/biome/BiomeHell.java
+@@ -5,10 +5,8 @@
+ import net.minecraft.entity.monster.EntityMagmaCube;
+ import net.minecraft.entity.monster.EntityPigZombie;
+ 
+-public class BiomeHell extends Biome
+-{
+-    public BiomeHell(Biome.BiomeProperties properties)
+-    {
++public class BiomeHell extends Biome {
++    public BiomeHell(Biome.BiomeProperties properties) {
+         super(properties);
+         this.spawnableMonsterList.clear();
+         this.spawnableCreatureList.clear();

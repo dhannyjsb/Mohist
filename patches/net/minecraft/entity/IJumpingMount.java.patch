@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/entity/IJumpingMount.java
++++ ../src-work/minecraft/net/minecraft/entity/IJumpingMount.java
+@@ -3,8 +3,7 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+-public interface IJumpingMount
+-{
++public interface IJumpingMount {
+     @SideOnly(Side.CLIENT)
+     void setJumpPower(int jumpPowerIn);
+ 

@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/item/ItemSpectralArrow.java
++++ ../src-work/minecraft/net/minecraft/item/ItemSpectralArrow.java
+@@ -5,10 +5,8 @@
+ import net.minecraft.entity.projectile.EntitySpectralArrow;
+ import net.minecraft.world.World;
+ 
+-public class ItemSpectralArrow extends ItemArrow
+-{
+-    public EntityArrow createArrow(World worldIn, ItemStack stack, EntityLivingBase shooter)
+-    {
++public class ItemSpectralArrow extends ItemArrow {
++    public EntityArrow createArrow(World worldIn, ItemStack stack, EntityLivingBase shooter) {
+         return new EntitySpectralArrow(worldIn, shooter);
+     }
+ }

@@ -10,53 +10,6 @@ import java.util.List;
 public interface MapView {
 
     /**
-     * An enum representing all possible scales a map can be set to.
-     */
-    public static enum Scale {
-        CLOSEST(0),
-        CLOSE(1),
-        NORMAL(2),
-        FAR(3),
-        FARTHEST(4);
-
-        private byte value;
-
-        private Scale(int value) {
-            this.value = (byte) value;
-        }
-
-        /**
-         * Get the scale given the raw value.
-         *
-         * @param value The raw scale
-         * @return The enum scale, or null for an invalid input
-         * @deprecated Magic value
-         */
-        @Deprecated
-        public static Scale valueOf(byte value) {
-            switch (value) {
-            case 0: return CLOSEST;
-            case 1: return CLOSE;
-            case 2: return NORMAL;
-            case 3: return FAR;
-            case 4: return FARTHEST;
-            default: return null;
-            }
-        }
-
-        /**
-         * Get the raw value of this scale level.
-         *
-         * @return The scale value
-         * @deprecated Magic value
-         */
-        @Deprecated
-        public byte getValue() {
-            return value;
-        }
-    }
-
-    /**
      * Get the ID of this map item. Corresponds to the damage value of a map
      * in an inventory.
      *
@@ -96,18 +49,18 @@ public interface MapView {
     public int getCenterX();
 
     /**
-     * Get the center Z position of this map.
-     *
-     * @return The center Z position.
-     */
-    public int getCenterZ();
-
-    /**
      * Set the center X position of this map.
      *
      * @param x The center X position.
      */
     public void setCenterX(int x);
+
+    /**
+     * Get the center Z position of this map.
+     *
+     * @return The center Z position.
+     */
+    public int getCenterZ();
 
     /**
      * Set the center Z position of this map.
@@ -170,4 +123,57 @@ public interface MapView {
      * @param unlimited tracking state
      */
     void setUnlimitedTracking(boolean unlimited);
+
+    /**
+     * An enum representing all possible scales a map can be set to.
+     */
+    public static enum Scale {
+        CLOSEST(0),
+        CLOSE(1),
+        NORMAL(2),
+        FAR(3),
+        FARTHEST(4);
+
+        private byte value;
+
+        private Scale(int value) {
+            this.value = (byte) value;
+        }
+
+        /**
+         * Get the scale given the raw value.
+         *
+         * @param value The raw scale
+         * @return The enum scale, or null for an invalid input
+         * @deprecated Magic value
+         */
+        @Deprecated
+        public static Scale valueOf(byte value) {
+            switch (value) {
+                case 0:
+                    return CLOSEST;
+                case 1:
+                    return CLOSE;
+                case 2:
+                    return NORMAL;
+                case 3:
+                    return FAR;
+                case 4:
+                    return FARTHEST;
+                default:
+                    return null;
+            }
+        }
+
+        /**
+         * Get the raw value of this scale level.
+         *
+         * @return The scale value
+         * @deprecated Magic value
+         */
+        @Deprecated
+        public byte getValue() {
+            return value;
+        }
+    }
 }

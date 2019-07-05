@@ -11,6 +11,11 @@ import java.util.List;
  */
 public class OreDictionaryEntry {
     private static List<OreDictionaryEntry> oreDictionaryEntries = new ArrayList<OreDictionaryEntry>();
+    private int id;
+
+    private OreDictionaryEntry(int id) {
+        this.id = id;
+    }
 
     /**
      * Get an OreDictionaryEntry instance, using an instance cache to preserve
@@ -28,11 +33,6 @@ public class OreDictionaryEntry {
             oreDictionaryEntries.add(new OreDictionaryEntry(oreDictionaryEntries.size()));
         }
         return oreDictionaryEntries.get(id);
-    }
-
-    private int id;
-    private OreDictionaryEntry(int id) {
-        this.id = id;
     }
 
     /**

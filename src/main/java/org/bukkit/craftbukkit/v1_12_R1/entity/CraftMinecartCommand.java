@@ -38,15 +38,10 @@ public class CraftMinecartCommand extends CraftMinecart implements CommandMineca
     }
 
     @Override
-    public void setName(String name) {
-        getHandle().getCommandBlockLogic().setName(name != null ? name : "@");
-    }
-
-    @Override
     public String toString() {
         return "CraftMinecartCommand";
     }
-	
+
     @Override
     public EntityType getType() {
         return EntityType.MINECART_COMMAND;
@@ -63,6 +58,11 @@ public class CraftMinecartCommand extends CraftMinecart implements CommandMineca
     @Override
     public String getName() {
         return getHandle().getCommandBlockLogic().getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        getHandle().getCommandBlockLogic().setName(name != null ? name : "@");
     }
 
     @Override

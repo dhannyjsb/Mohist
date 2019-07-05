@@ -1,0 +1,26 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/network/simpleimpl/SimpleIndexedCodec.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/network/simpleimpl/SimpleIndexedCodec.java
+@@ -19,20 +19,18 @@
+ 
+ package net.minecraftforge.fml.common.network.simpleimpl;
+ 
+-import net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec;
+ import io.netty.buffer.ByteBuf;
+ import io.netty.channel.ChannelHandlerContext;
++import net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec;
+ 
+ public class SimpleIndexedCodec extends FMLIndexedMessageToMessageCodec<IMessage> {
+     @Override
+-    public void encodeInto(ChannelHandlerContext ctx, IMessage msg, ByteBuf target) throws Exception
+-    {
++    public void encodeInto(ChannelHandlerContext ctx, IMessage msg, ByteBuf target) throws Exception {
+         msg.toBytes(target);
+     }
+ 
+     @Override
+-    public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, IMessage msg)
+-    {
++    public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, IMessage msg) {
+         msg.fromBytes(source);
+     }
+ 

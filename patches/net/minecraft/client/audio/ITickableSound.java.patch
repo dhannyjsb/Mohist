@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/audio/ITickableSound.java
++++ ../src-work/minecraft/net/minecraft/client/audio/ITickableSound.java
+@@ -5,7 +5,6 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+-public interface ITickableSound extends ISound, ITickable
+-{
++public interface ITickableSound extends ISound, ITickable {
+     boolean isDonePlaying();
+ }

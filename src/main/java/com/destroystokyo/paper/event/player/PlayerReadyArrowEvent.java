@@ -33,13 +33,19 @@ import org.bukkit.inventory.ItemStack;
  * Called when a player is firing a bow and the server is choosing an arrow to use.
  */
 public class PlayerReadyArrowEvent extends PlayerEvent implements Cancellable {
+    private static final HandlerList handlers = new HandlerList();
     private final ItemStack bow;
     private final ItemStack arrow;
+    private boolean cancelled = false;
 
     public PlayerReadyArrowEvent(Player player, ItemStack bow, ItemStack arrow) {
         super(player);
         this.bow = bow;
         this.arrow = arrow;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -56,17 +62,9 @@ public class PlayerReadyArrowEvent extends PlayerEvent implements Cancellable {
         return arrow;
     }
 
-    private static final HandlerList handlers = new HandlerList();
-
     public HandlerList getHandlers() {
         return handlers;
     }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    private boolean cancelled = false;
 
     /**
      * Whether or not use of this arrow is cancelled. On cancel, the server will try the next arrow available and fire another event.

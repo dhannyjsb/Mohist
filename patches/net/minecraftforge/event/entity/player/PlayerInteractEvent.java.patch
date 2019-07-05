@@ -1,0 +1,420 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/player/PlayerInteractEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/player/PlayerInteractEvent.java
+@@ -44,16 +44,14 @@
+  * All subclasses are fired on {@link MinecraftForge#EVENT_BUS}.
+  * See the individual documentation on each subevent for more details.
+  **/
+-public class PlayerInteractEvent extends PlayerEvent
+-{
++public class PlayerInteractEvent extends PlayerEvent {
+     private final EnumHand hand;
+     private final BlockPos pos;
+     @Nullable
+     private final EnumFacing face;
+     private EnumActionResult cancellationResult = EnumActionResult.PASS;
+ 
+-    private PlayerInteractEvent(EntityPlayer player, EnumHand hand, BlockPos pos, @Nullable EnumFacing face)
+-    {
++    private PlayerInteractEvent(EntityPlayer player, EnumHand hand, BlockPos pos, @Nullable EnumFacing face) {
+         super(Preconditions.checkNotNull(player, "Null player in PlayerInteractEvent!"));
+         this.hand = Preconditions.checkNotNull(hand, "Null hand in PlayerInteractEvent!");
+         this.pos = Preconditions.checkNotNull(pos, "Null position in PlayerInteractEvent!");
+@@ -61,6 +59,74 @@
+     }
+ 
+     /**
++     * @return The hand involved in this interaction. Will never be null.
++     */
++    @Nonnull
++    public EnumHand getHand() {
++        return hand;
++    }
++
++    /**
++     * @return The itemstack involved in this interaction, {@code ItemStack.EMPTY} if the hand was empty.
++     */
++    @Nonnull
++    public ItemStack getItemStack() {
++        return getEntityPlayer().getHeldItem(hand);
++    }
++
++    /**
++     * If the interaction was on an entity, will be a BlockPos centered on the entity.
++     * If the interaction was on a block, will be the position of that block.
++     * Otherwise, will be a BlockPos centered on the player.
++     * Will never be null.
++     * @return The position involved in this interaction.
++     */
++    @Nonnull
++    public BlockPos getPos() {
++        return pos;
++    }
++
++    /**
++     * @return The face involved in this interaction. For all non-block interactions, this will return null.
++     */
++    @Nullable
++    public EnumFacing getFace() {
++        return face;
++    }
++
++    /**
++     * @return Convenience method to get the world of this interaction.
++     */
++    public World getWorld() {
++        return getEntityPlayer().getEntityWorld();
++    }
++
++    /**
++     * @return The effective, i.e. logical, side of this interaction. This will be {@link Side#CLIENT} on the client thread, and {@link Side#SERVER} on the server thread.
++     */
++    public Side getSide() {
++        return getWorld().isRemote ? Side.CLIENT : Side.SERVER;
++    }
++
++    /**
++     * @return The EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant
++     * method of the event. By default, this is {@link EnumActionResult#PASS}, meaning cancelled events will cause
++     * the client to keep trying more interactions until something works.
++     */
++    public EnumActionResult getCancellationResult() {
++        return cancellationResult;
++    }
++
++    /**
++     * Set the EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant
++     * method of the event.
++     * Note that this only has an effect on {@link RightClickBlock}, {@link RightClickItem}, {@link EntityInteract}, and {@link EntityInteractSpecific}.
++     */
++    public void setCancellationResult(EnumActionResult result) {
++        this.cancellationResult = result;
++    }
++
++    /**
+      * This event is fired on both sides whenever a player right clicks an entity.
+      *
+      * "Interact at" is an interact where the local vector (which part of the entity you clicked) is known.
+@@ -70,13 +136,11 @@
+      * If we are on the client and result is not {@link EnumActionResult#SUCCESS}, the client will then try {@link EntityInteract}.
+      */
+     @Cancelable
+-    public static class EntityInteractSpecific extends PlayerInteractEvent
+-    {
++    public static class EntityInteractSpecific extends PlayerInteractEvent {
+         private final Vec3d localPos;
+         private final Entity target;
+ 
+-        public EntityInteractSpecific(EntityPlayer player, EnumHand hand, Entity target, Vec3d localPos)
+-        {
++        public EntityInteractSpecific(EntityPlayer player, EnumHand hand, Entity target, Vec3d localPos) {
+             super(player, hand, new BlockPos(target), null);
+             this.localPos = localPos;
+             this.target = target;
+@@ -88,13 +152,11 @@
+          * [-width / 2, width / 2] while Y values will be in the range [0, height]
+          * @return The local position
+          */
+-        public Vec3d getLocalPos()
+-        {
++        public Vec3d getLocalPos() {
+             return localPos;
+         }
+ 
+-        public Entity getTarget()
+-        {
++        public Entity getTarget() {
+             return target;
+         }
+     }
+@@ -111,18 +173,15 @@
+      * If we are on the client and result is not {@link EnumActionResult#SUCCESS}, the client will then try {@link RightClickItem}.
+      */
+     @Cancelable
+-    public static class EntityInteract extends PlayerInteractEvent
+-    {
++    public static class EntityInteract extends PlayerInteractEvent {
+         private final Entity target;
+ 
+-        public EntityInteract(EntityPlayer player, EnumHand hand, Entity target)
+-        {
++        public EntityInteract(EntityPlayer player, EnumHand hand, Entity target) {
+             super(player, hand, new BlockPos(target), null);
+             this.target = target;
+         }
+ 
+-        public Entity getTarget()
+-        {
++        public Entity getTarget() {
+             return target;
+         }
+     }
+@@ -140,11 +199,10 @@
+      * Note that handling things differently on the client vs server may cause desynchronizations!
+      */
+     @Cancelable
+-    public static class RightClickBlock extends PlayerInteractEvent
+-    {
++    public static class RightClickBlock extends PlayerInteractEvent {
++        private final Vec3d hitVec;
+         private Result useBlock = DEFAULT;
+         private Result useItem = DEFAULT;
+-        private final Vec3d hitVec;
+ 
+         public RightClickBlock(EntityPlayer player, EnumHand hand, BlockPos pos, EnumFacing face, Vec3d hitVec) {
+             super(player, hand, pos, face);
+@@ -154,53 +212,46 @@
+         /**
+          * @return The hit vector of this click
+          */
+-        public Vec3d getHitVec()
+-        {
++        public Vec3d getHitVec() {
+             return hitVec;
+         }
+ 
+         /**
+          * @return If {@link net.minecraft.block.Block#onBlockActivated} should be called
+          */
+-        public Result getUseBlock()
+-        {
++        public Result getUseBlock() {
+             return useBlock;
+         }
+ 
+         /**
+-         * @return If {@link net.minecraft.item.Item#onItemUseFirst} and {@link net.minecraft.item.Item#onItemUse} should be called
+-         */
+-        public Result getUseItem()
+-        {
+-            return useItem;
+-        }
+-
+-        /**
+          * DENY: Block will never be used.
+          * DEFAULT: Default behaviour (sneak will not use block, unless all items return true in {@link net.minecraft.item.Item#doesSneakBypassUse}).
+          * ALLOW: Block will always be used, regardless of sneaking and doesSneakBypassUse.
+          */
+-        public void setUseBlock(Result triggerBlock)
+-        {
++        public void setUseBlock(Result triggerBlock) {
+             this.useBlock = triggerBlock;
+         }
+ 
+         /**
++         * @return If {@link net.minecraft.item.Item#onItemUseFirst} and {@link net.minecraft.item.Item#onItemUse} should be called
++         */
++        public Result getUseItem() {
++            return useItem;
++        }
++
++        /**
+          * DENY: The item will never be used.
+          * DEFAULT: The item will be used if the block fails.
+          * ALLOW: The item will always be used.
+          */
+-        public void setUseItem(Result triggerItem)
+-        {
++        public void setUseItem(Result triggerItem) {
+             this.useItem = triggerItem;
+         }
+ 
+         @Override
+-        public void setCanceled(boolean canceled)
+-        {
++        public void setCanceled(boolean canceled) {
+             super.setCanceled(canceled);
+-            if (canceled)
+-            {
++            if (canceled) {
+                 useBlock = DENY;
+                 useItem = DENY;
+             }
+@@ -215,10 +266,8 @@
+      * If we are on the client and result is not {@link EnumActionResult#SUCCESS}, the client will then continue to other hands.
+      */
+     @Cancelable
+-    public static class RightClickItem extends PlayerInteractEvent
+-    {
+-        public RightClickItem(EntityPlayer player, EnumHand hand)
+-        {
++    public static class RightClickItem extends PlayerInteractEvent {
++        public RightClickItem(EntityPlayer player, EnumHand hand) {
+             super(player, hand, new BlockPos(player), null);
+         }
+     }
+@@ -228,10 +277,8 @@
+      * The server is not aware of when the client right clicks empty space with an empty hand, you will need to tell the server yourself.
+      * This event cannot be canceled.
+      */
+-    public static class RightClickEmpty extends PlayerInteractEvent
+-    {
+-        public RightClickEmpty(EntityPlayer player, EnumHand hand)
+-        {
++    public static class RightClickEmpty extends PlayerInteractEvent {
++        public RightClickEmpty(EntityPlayer player, EnumHand hand) {
+             super(player, hand, new BlockPos(player), null);
+         }
+     }
+@@ -249,14 +296,12 @@
+      * Therefore, in creative mode, {@link #setUseBlock} and {@link #setUseItem} have no effect.
+      */
+     @Cancelable
+-    public static class LeftClickBlock extends PlayerInteractEvent
+-    {
++    public static class LeftClickBlock extends PlayerInteractEvent {
++        private final Vec3d hitVec;
+         private Result useBlock = DEFAULT;
+         private Result useItem = DEFAULT;
+-        private final Vec3d hitVec;
+ 
+-        public LeftClickBlock(EntityPlayer player, BlockPos pos, EnumFacing face, Vec3d hitVec)
+-        {
++        public LeftClickBlock(EntityPlayer player, BlockPos pos, EnumFacing face, Vec3d hitVec) {
+             super(player, EnumHand.MAIN_HAND, pos, face);
+             this.hitVec = hitVec;
+         }
+@@ -264,43 +309,36 @@
+         /**
+          * @return The local hit vector of this click
+          */
+-        public Vec3d getHitVec()
+-        {
++        public Vec3d getHitVec() {
+             return hitVec;
+         }
+ 
+         /**
+          * @return If {@link net.minecraft.block.Block#onBlockClicked} should be called. Changing this has no effect in creative mode
+          */
+-        public Result getUseBlock()
+-        {
++        public Result getUseBlock() {
+             return useBlock;
+         }
+ 
++        public void setUseBlock(Result triggerBlock) {
++            this.useBlock = triggerBlock;
++        }
++
+         /**
+          * @return If the block should be attempted to be mined with the current item. Changing this has no effect in creative mode
+          */
+-        public Result getUseItem()
+-        {
++        public Result getUseItem() {
+             return useItem;
+         }
+ 
+-        public void setUseBlock(Result triggerBlock)
+-        {
+-            this.useBlock = triggerBlock;
+-        }
+-
+-        public void setUseItem(Result triggerItem)
+-        {
++        public void setUseItem(Result triggerItem) {
+             this.useItem = triggerItem;
+         }
+ 
+         @Override
+-        public void setCanceled(boolean canceled)
+-        {
++        public void setCanceled(boolean canceled) {
+             super.setCanceled(canceled);
+-            if (canceled)
+-            {
++            if (canceled) {
+                 useBlock = DENY;
+                 useItem = DENY;
+             }
+@@ -312,88 +350,10 @@
+      * The server is not aware of when the client left clicks empty space, you will need to tell the server yourself.
+      * This event cannot be canceled.
+      */
+-    public static class LeftClickEmpty extends PlayerInteractEvent
+-    {
+-        public LeftClickEmpty(EntityPlayer player)
+-        {
++    public static class LeftClickEmpty extends PlayerInteractEvent {
++        public LeftClickEmpty(EntityPlayer player) {
+             super(player, EnumHand.MAIN_HAND, new BlockPos(player), null);
+         }
+     }
+ 
+-    /**
+-     * @return The hand involved in this interaction. Will never be null.
+-     */
+-    @Nonnull
+-    public EnumHand getHand()
+-    {
+-        return hand;
+-    }
+-
+-    /**
+-     * @return The itemstack involved in this interaction, {@code ItemStack.EMPTY} if the hand was empty.
+-     */
+-    @Nonnull
+-    public ItemStack getItemStack()
+-    {
+-        return getEntityPlayer().getHeldItem(hand);
+-    }
+-
+-    /**
+-     * If the interaction was on an entity, will be a BlockPos centered on the entity.
+-     * If the interaction was on a block, will be the position of that block.
+-     * Otherwise, will be a BlockPos centered on the player.
+-     * Will never be null.
+-     * @return The position involved in this interaction.
+-     */
+-    @Nonnull
+-    public BlockPos getPos()
+-    {
+-        return pos;
+-    }
+-
+-    /**
+-     * @return The face involved in this interaction. For all non-block interactions, this will return null.
+-     */
+-    @Nullable
+-    public EnumFacing getFace()
+-    {
+-        return face;
+-    }
+-
+-    /**
+-     * @return Convenience method to get the world of this interaction.
+-     */
+-    public World getWorld()
+-    {
+-        return getEntityPlayer().getEntityWorld();
+-    }
+-
+-    /**
+-     * @return The effective, i.e. logical, side of this interaction. This will be {@link Side#CLIENT} on the client thread, and {@link Side#SERVER} on the server thread.
+-     */
+-    public Side getSide()
+-    {
+-        return getWorld().isRemote ? Side.CLIENT : Side.SERVER;
+-    }
+-
+-    /**
+-     * @return The EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant
+-     * method of the event. By default, this is {@link EnumActionResult#PASS}, meaning cancelled events will cause
+-     * the client to keep trying more interactions until something works.
+-     */
+-    public EnumActionResult getCancellationResult()
+-    {
+-        return cancellationResult;
+-    }
+-
+-    /**
+-     * Set the EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant
+-     * method of the event.
+-     * Note that this only has an effect on {@link RightClickBlock}, {@link RightClickItem}, {@link EntityInteract}, and {@link EntityInteractSpecific}.
+-     */
+-    public void setCancellationResult(EnumActionResult result)
+-    {
+-        this.cancellationResult = result;
+-    }
+-
+ }

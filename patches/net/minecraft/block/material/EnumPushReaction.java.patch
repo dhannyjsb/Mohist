@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/block/material/EnumPushReaction.java
++++ ../src-work/minecraft/net/minecraft/block/material/EnumPushReaction.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.block.material;
+ 
+-public enum EnumPushReaction
+-{
++public enum EnumPushReaction {
+     NORMAL,
+     DESTROY,
+     BLOCK,

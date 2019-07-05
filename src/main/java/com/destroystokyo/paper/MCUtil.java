@@ -25,7 +25,8 @@ import java.util.function.Supplier;
 public final class MCUtil {
     private static final Executor asyncExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Paper Async Task Handler Thread - %1$d").build());
 
-    private MCUtil() {}
+    private MCUtil() {
+    }
 
     /**
      * Quickly generate a stack trace for current location
@@ -55,7 +56,7 @@ public final class MCUtil {
      */
     public static <T> T ensureMain(String reason, Supplier<T> run) {
         if (AsyncCatcher.enabled && Thread.currentThread() != MinecraftServer.getServerInst().primaryThread) {
-            new IllegalStateException( "Asynchronous " + reason + "! Blocking thread until it returns ").printStackTrace();
+            new IllegalStateException("Asynchronous " + reason + "! Blocking thread until it returns ").printStackTrace();
             Waitable<T> wait = new Waitable<T>() {
                 @Override
                 protected T evaluate() {
@@ -115,7 +116,7 @@ public final class MCUtil {
      * @return
      */
     public static double distanceSq(Entity e1, Entity e2) {
-        return distanceSq(e1.posX,e1.posY,e1.posZ, e2.posX,e2.posY,e2.posZ);
+        return distanceSq(e1.posX, e1.posY, e1.posZ, e2.posX, e2.posY, e2.posZ);
     }
 
     /**

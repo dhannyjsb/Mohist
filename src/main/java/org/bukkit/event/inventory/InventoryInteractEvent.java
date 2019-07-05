@@ -25,17 +25,6 @@ public abstract class InventoryInteractEvent extends InventoryEvent implements C
     }
 
     /**
-     * Sets the result of this event. This will change whether or not this
-     * event is considered cancelled.
-     *
-     * @see #isCancelled()
-     * @param newResult the new {@link Result} for this event
-     */
-    public void setResult(Result newResult) {
-        result = newResult;
-    }
-
-    /**
      * Gets the {@link Result} of this event. The Result describes the
      * behavior that will be applied to the inventory in relation to this
      * event.
@@ -44,6 +33,17 @@ public abstract class InventoryInteractEvent extends InventoryEvent implements C
      */
     public Result getResult() {
         return result;
+    }
+
+    /**
+     * Sets the result of this event. This will change whether or not this
+     * event is considered cancelled.
+     *
+     * @see #isCancelled()
+     * @param newResult the new {@link Result} for this event
+     */
+    public void setResult(Result newResult) {
+        result = newResult;
     }
 
     /**

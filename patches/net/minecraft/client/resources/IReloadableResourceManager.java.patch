@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/client/resources/IReloadableResourceManager.java
++++ ../src-work/minecraft/net/minecraft/client/resources/IReloadableResourceManager.java
+@@ -1,12 +1,12 @@
+ package net.minecraft.client.resources;
+ 
+-import java.util.List;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
++import java.util.List;
++
+ @SideOnly(Side.CLIENT)
+-public interface IReloadableResourceManager extends IResourceManager
+-{
++public interface IReloadableResourceManager extends IResourceManager {
+     void reloadResources(List<IResourcePack> resourcesPacksList);
+ 
+     void registerReloadListener(IResourceManagerReloadListener reloadListener);

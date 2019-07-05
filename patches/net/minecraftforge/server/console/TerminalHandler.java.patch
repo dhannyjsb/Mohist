@@ -1,37 +1,38 @@
 --- ../src-base/minecraft/net/minecraftforge/server/console/TerminalHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/server/console/TerminalHandler.java
-@@ -19,73 +19,53 @@
+@@ -19,73 +19,47 @@
  
  package net.minecraftforge.server.console;
  
 +import jline.console.ConsoleReader;
-+import jline.console.completer.Completer;
++import net.minecraft.server.dedicated.DedicatedServer;
 +import net.minecraft.util.text.TextFormatting;
  import net.minecraftforge.server.terminalconsole.TerminalConsoleAppender;
++import org.apache.logging.log4j.LogManager;
++import org.apache.logging.log4j.Logger;
++import red.mohist.util.ConsoleFormatter;
  
- import net.minecraft.server.dedicated.DedicatedServer;
+-import net.minecraft.server.dedicated.DedicatedServer;
 -import org.jline.reader.EndOfFileException;
 -import org.jline.reader.LineReader;
 -import org.jline.reader.LineReaderBuilder;
 -import org.jline.reader.UserInterruptException;
 -import org.jline.terminal.Terminal;
-+import org.apache.logging.log4j.LogManager;
-+import org.apache.logging.log4j.Logger;
-+import red.mohist.util.ConsoleFormatter;
- 
 +import java.io.IOException;
-+
- public final class TerminalHandler
- {
  
+-public final class TerminalHandler
+-{
++public final class TerminalHandler {
+ 
+-    private TerminalHandler()
+-    {
 +    private static final Logger logger = LogManager.getLogger();
 +
-     private TerminalHandler()
-     {
++    private TerminalHandler() {
      }
  
-     public static boolean handleCommands(DedicatedServer server)
-     {
+-    public static boolean handleCommands(DedicatedServer server)
+-    {
 -        final Terminal terminal = TerminalConsoleAppender.getTerminal();
 -        if (terminal == null)
 -            return false;
@@ -67,6 +68,7 @@
 -                line = line.trim();
 -                if (!line.isEmpty())
 -                {
++    public static boolean handleCommands(DedicatedServer server) {
 +        final ConsoleReader reader = TerminalConsoleAppender.getReader();
 +        if (reader != null) {
 +            TerminalConsoleAppender.setFormatter(new ConsoleFormatter());
@@ -82,10 +84,9 @@
 +                        continue;
 +                    }
                      server.addPendingCommand(line, server);
++                } catch (IOException e) {
++                    TerminalHandler.logger.error("Exception handling console input", (Throwable) e);
                  }
-+                catch (IOException e) {
-+                    TerminalHandler.logger.error("Exception handling console input", (Throwable)e);
-+                }
              }
 +            return true;
          }

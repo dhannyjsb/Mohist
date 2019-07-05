@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/relauncher/IFMLCallHook.java
++++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/IFMLCallHook.java
+@@ -30,12 +30,11 @@
+  * @author cpw
+  *
+  */
+-public interface IFMLCallHook extends Callable<Void>
+-{
++public interface IFMLCallHook extends Callable<Void> {
+     /**
+      * Injected with data from the FML environment:
+      * "classLoader" : The FML Class Loader
+      * @param data
+      */
+-    void injectData(Map<String,Object> data);
++    void injectData(Map<String, Object> data);
+ }

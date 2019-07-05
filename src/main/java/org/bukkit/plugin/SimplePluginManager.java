@@ -20,17 +20,7 @@ import red.mohist.i18n.Message;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,12 +33,12 @@ public final class SimplePluginManager implements PluginManager {
     private final Map<Pattern, PluginLoader> fileAssociations = new HashMap<Pattern, PluginLoader>();
     private final List<Plugin> plugins = new ArrayList<Plugin>();
     private final Map<String, Plugin> lookupNames = new HashMap<String, Plugin>();
-    private File updateDirectory;
     private final SimpleCommandMap commandMap;
     private final Map<String, Permission> permissions = new HashMap<String, Permission>();
     private final Map<Boolean, Set<Permission>> defaultPerms = new LinkedHashMap<Boolean, Set<Permission>>();
     private final Map<String, Map<Permissible, Boolean>> permSubs = new HashMap<String, Map<Permissible, Boolean>>();
     private final Map<Boolean, Map<Permissible, Boolean>> defSubs = new HashMap<Boolean, Map<Permissible, Boolean>>();
+    private File updateDirectory;
     private boolean useTimings = false;
 
     public SimplePluginManager(Server instance, SimpleCommandMap commandMap) {
@@ -135,26 +125,26 @@ public final class SimplePluginManager implements PluginManager {
             try {
                 description = loader.getPluginDescription(file);
                 String name = description.getName();
-                if (name.equalsIgnoreCase("bukkit") || name.equalsIgnoreCase("minecraft") || name.equalsIgnoreCase("mojang")  || name.equalsIgnoreCase("spigot") || name.equalsIgnoreCase("forge") || name.equalsIgnoreCase("paper") || name.equalsIgnoreCase("mohist")) {
-                    Mohist.LOGGER.error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': Restricted Name");
+                if (name.equalsIgnoreCase("bukkit") || name.equalsIgnoreCase("minecraft") || name.equalsIgnoreCase("mojang") || name.equalsIgnoreCase("spigot") || name.equalsIgnoreCase("forge") || name.equalsIgnoreCase("paper") || name.equalsIgnoreCase("mohist")) {
+                    Mohist.LOGGER.error("Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': Restricted Name");
                     continue;
                 } else if (description.rawName.indexOf(' ') != -1) {
-                    Mohist.LOGGER.error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': uses the space-character (0x20) in its name");
+                    Mohist.LOGGER.error("Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': uses the space-character (0x20) in its name");
                     continue;
                 }
             } catch (InvalidDescriptionException ex) {
-                Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Description,new Object[]{file.getPath(),directory.getPath()}), ex);//by: lliiooll
+                Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Description, new Object[]{file.getPath(), directory.getPath()}), ex);//by: lliiooll
                 continue;
             }
 
             File replacedFile = plugins.put(description.getName(), file);
             if (replacedFile != null) {
                 server.getLogger().severe(String.format(
-                    "Ambiguous plugin name `%s' for files `%s' and `%s' in `%s'",
-                    description.getName(),
-                    file.getPath(),
-                    replacedFile.getPath(),
-                    directory.getPath()
+                        "Ambiguous plugin name `%s' for files `%s' and `%s' in `%s'",
+                        description.getName(),
+                        file.getPath(),
+                        replacedFile.getPath(),
+                        directory.getPath()
                 ));
             }
 
@@ -208,7 +198,7 @@ public final class SimplePluginManager implements PluginManager {
                         if (loadedPlugins.contains(dependency)) {
                             dependencyIterator.remove();
 
-                        // We have a dependency not found
+                            // We have a dependency not found
                         } else if (!plugins.containsKey(dependency)) {
                             missingDependency = false;
                             pluginIterator.remove();
@@ -216,9 +206,9 @@ public final class SimplePluginManager implements PluginManager {
                             dependencies.remove(plugin);
 
                             server.getLogger().log(
-                                Level.SEVERE,
-                                    Message.getFormatString(Message.Exception_Could_not_load_plugin,new Object[]{entry.getValue().getPath(),directory.getPath()}),// by: lliioollcn
-                                new UnknownDependencyException(Message.getFormatString(Message.Exception_plugin_not_hav_depend,new Object[]{dependency})));
+                                    Level.SEVERE,
+                                    Message.getFormatString(Message.Exception_Could_not_load_plugin, new Object[]{entry.getValue().getPath(), directory.getPath()}),// by: lliioollcn
+                                    new UnknownDependencyException(Message.getFormatString(Message.Exception_plugin_not_hav_depend, new Object[]{dependency})));
                             break;
                         }
                     }
@@ -254,7 +244,7 @@ public final class SimplePluginManager implements PluginManager {
                         loadedPlugins.add(plugin);
                         continue;
                     } catch (InvalidPluginException ex) {
-                        Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Plugin,new Object[]{file.getPath(),directory.getPath()}), ex);//by: lliiooll
+                        Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Plugin, new Object[]{file.getPath(), directory.getPath()}), ex);//by: lliiooll
                     }
                 }
             }
@@ -279,7 +269,7 @@ public final class SimplePluginManager implements PluginManager {
                             loadedPlugins.add(plugin);
                             break;
                         } catch (InvalidPluginException ex) {
-                            Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Plugin,new Object[]{file.getPath(),directory.getPath()}),ex);//by: lliiooll
+                            Mohist.LOGGER.error(Message.getFormatString(Message.Exception_Invalid_Plugin, new Object[]{file.getPath(), directory.getPath()}), ex);//by: lliiooll
                         }
                     }
                 }
@@ -292,7 +282,7 @@ public final class SimplePluginManager implements PluginManager {
                     while (failedPluginIterator.hasNext()) {
                         File file = failedPluginIterator.next();
                         failedPluginIterator.remove();
-                        Mohist.LOGGER.error( "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': circular dependency detected");
+                        Mohist.LOGGER.error("Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': circular dependency detected");
                     }
                 }
             }
@@ -479,7 +469,9 @@ public final class SimplePluginManager implements PluginManager {
         }
     }
 
-    private void fireEvent(Event event) { callEvent(event); } // Paper - support old method incase plugin uses reflection
+    private void fireEvent(Event event) {
+        callEvent(event);
+    } // Paper - support old method incase plugin uses reflection
 
     /**
      * Calls an event with the given details.
@@ -506,12 +498,12 @@ public final class SimplePluginManager implements PluginManager {
                 if (plugin.isNaggable()) {
                     plugin.setNaggable(false);
 
-                    Mohist.LOGGER.error( String.format(
+                    Mohist.LOGGER.error(String.format(
                             "Nag author(s): '%s' of '%s' about the following: %s",
                             plugin.getDescription().getAuthors(),
                             plugin.getDescription().getFullName(),
                             ex.getMessage()
-                            ));
+                    ));
                 }
             } catch (Throwable ex) {
                 server.getLogger().log(Level.SEVERE, "Could not pass event " + event.getEventName() + " to " + registration.getPlugin().getDescription().getFullName(), ex);

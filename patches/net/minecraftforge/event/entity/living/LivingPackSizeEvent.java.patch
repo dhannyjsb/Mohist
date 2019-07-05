@@ -1,0 +1,39 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/living/LivingPackSizeEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/living/LivingPackSizeEvent.java
+@@ -19,16 +19,14 @@
+ 
+ package net.minecraftforge.event.entity.living;
+ 
+-import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
+ import net.minecraft.entity.EntityLiving;
++import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
+ 
+ @HasResult
+-public class LivingPackSizeEvent extends LivingEvent
+-{
++public class LivingPackSizeEvent extends LivingEvent {
+     private int maxPackSize;
+-    
+-    public LivingPackSizeEvent(EntityLiving entity)
+-    {
++
++    public LivingPackSizeEvent(EntityLiving entity) {
+         super(entity);
+     }
+ 
+@@ -40,13 +38,11 @@
+      * If you set the result to 'ALLOW', it means that you want to return
+      * the value of maxPackSize as the maximum pack size for current entity.
+      */
+-    public int getMaxPackSize()
+-    {
++    public int getMaxPackSize() {
+         return maxPackSize;
+     }
+ 
+-    public void setMaxPackSize(int maxPackSize)
+-    {
++    public void setMaxPackSize(int maxPackSize) {
+         this.maxPackSize = maxPackSize;
+     }
+ }

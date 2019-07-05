@@ -11,6 +11,13 @@ package org.bukkit;
 public interface TravelAgent {
 
     /**
+     * Gets the search radius value for finding an available portal.
+     *
+     * @return the currently set search radius
+     */
+    public int getSearchRadius();
+
+    /**
      * Set the Block radius to search in for available portals.
      *
      * @param radius the radius in which to search for a portal from the
@@ -20,11 +27,11 @@ public interface TravelAgent {
     public TravelAgent setSearchRadius(int radius);
 
     /**
-     * Gets the search radius value for finding an available portal.
+     * Gets the maximum radius from the given location to create a portal.
      *
-     * @return the currently set search radius
+     * @return the currently set creation radius
      */
-    public int getSearchRadius();
+    public int getCreationRadius();
 
     /**
      * Sets the maximum radius from the given location to create a portal.
@@ -33,13 +40,6 @@ public interface TravelAgent {
      * @return this travel agent
      */
     public TravelAgent setCreationRadius(int radius);
-
-    /**
-     * Gets the maximum radius from the given location to create a portal.
-     *
-     * @return the currently set creation radius
-     */
-    public int getCreationRadius();
 
     /**
      * Returns whether the TravelAgent will attempt to create a destination

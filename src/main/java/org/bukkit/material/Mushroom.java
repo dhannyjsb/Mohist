@@ -76,7 +76,7 @@ public class Mushroom extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Mushroom(Material shroom, byte data) {
         super(shroom, data);
         Validate.isTrue(shroom == Material.HUGE_MUSHROOM_1 || shroom == Material.HUGE_MUSHROOM_2, "Not a mushroom!");
@@ -87,7 +87,7 @@ public class Mushroom extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Mushroom(int type, byte data) {
         super(type, data);
         Validate.isTrue(type == Material.HUGE_MUSHROOM_1.getId() || type == Material.HUGE_MUSHROOM_2.getId(), "Not a mushroom!");
@@ -111,7 +111,7 @@ public class Mushroom extends MaterialData {
      * with {@link MushroomBlockTexture#STEM_SIDES } or
      * {@link MushroomBlockTexture#ALL_STEM}
      */
-    
+
     public void setStem() {
         setData((byte) MushroomBlockTexture.STEM_SIDES.getData());
     }
@@ -178,7 +178,7 @@ public class Mushroom extends MaterialData {
      *
      * @deprecated Use MushroomBlockType cap options
      */
-    
+
     public void setFacePainted(BlockFace face, boolean painted) {
         if (painted == isFacePainted(face)) {
             return;

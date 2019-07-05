@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/server/permission/DefaultPermissionLevel.java
++++ ../src-work/minecraft/net/minecraftforge/server/permission/DefaultPermissionLevel.java
+@@ -27,8 +27,7 @@
+  * <tr><td>NONE</td><td>false</td><td>false</td></tr>
+  * </tbody></table>
+  */
+-public enum DefaultPermissionLevel
+-{
++public enum DefaultPermissionLevel {
+     ALL,
+     OP,
+     NONE

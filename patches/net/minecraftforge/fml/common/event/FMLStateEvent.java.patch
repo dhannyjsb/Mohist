@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/event/FMLStateEvent.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/event/FMLStateEvent.java
+@@ -26,10 +26,8 @@
+ /**
+  * The parent of all mod-state changing events
+  */
+-public abstract class FMLStateEvent extends FMLEvent
+-{
+-    public FMLStateEvent(Object... data)
+-    {
++public abstract class FMLStateEvent extends FMLEvent {
++    public FMLStateEvent(Object... data) {
+ 
+     }
+ 
+@@ -44,8 +42,7 @@
+      * we're loading in the dedicated server.
+      * @return Return which side we're loading on.
+      */
+-    public Side getSide()
+-    {
++    public Side getSide() {
+         return FMLCommonHandler.instance().getSide();
+     }
+ }

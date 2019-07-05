@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/block/ITileEntityProvider.java
++++ ../src-work/minecraft/net/minecraft/block/ITileEntityProvider.java
+@@ -1,11 +1,11 @@
+ package net.minecraft.block;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.tileentity.TileEntity;
+ import net.minecraft.world.World;
+ 
+-public interface ITileEntityProvider
+-{
++import javax.annotation.Nullable;
++
++public interface ITileEntityProvider {
+     @Nullable
+     TileEntity createNewTileEntity(World worldIn, int meta);
+ }

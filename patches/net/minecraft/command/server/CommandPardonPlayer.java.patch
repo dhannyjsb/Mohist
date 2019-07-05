@@ -1,23 +1,87 @@
 --- ../src-base/minecraft/net/minecraft/command/server/CommandPardonPlayer.java
 +++ ../src-work/minecraft/net/minecraft/command/server/CommandPardonPlayer.java
-@@ -1,6 +1,8 @@
+@@ -1,9 +1,6 @@
  package net.minecraft.command.server;
  
  import com.mojang.authlib.GameProfile;
-+
-+import java.util.Arrays;
- import java.util.Collections;
- import java.util.List;
- import javax.annotation.Nullable;
-@@ -13,6 +15,11 @@
+-import java.util.Collections;
+-import java.util.List;
+-import javax.annotation.Nullable;
+ import net.minecraft.command.CommandBase;
+ import net.minecraft.command.CommandException;
+ import net.minecraft.command.ICommandSender;
+@@ -11,52 +8,48 @@
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.util.math.BlockPos;
  
- public class CommandPardonPlayer extends CommandBase
- {
-+    public List<String> getAliases()
-+    {
+-public class CommandPardonPlayer extends CommandBase
+-{
+-    public String getName()
+-    {
++import javax.annotation.Nullable;
++import java.util.Arrays;
++import java.util.Collections;
++import java.util.List;
++
++public class CommandPardonPlayer extends CommandBase {
++    public List<String> getAliases() {
 +        return Arrays.<String>asList("unban");
 +    }
 +
-     public String getName()
-     {
++    public String getName() {
          return "pardon";
+     }
+ 
+-    public int getRequiredPermissionLevel()
+-    {
++    public int getRequiredPermissionLevel() {
+         return 3;
+     }
+ 
+-    public String getUsage(ICommandSender sender)
+-    {
++    public String getUsage(ICommandSender sender) {
+         return "commands.unban.usage";
+     }
+ 
+-    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+-    {
++    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+         return server.getPlayerList().getBannedPlayers().isLanServer() && super.checkPermission(server, sender);
+     }
+ 
+-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+-    {
+-        if (args.length == 1 && args[0].length() > 0)
+-        {
++    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
++        if (args.length == 1 && args[0].length() > 0) {
+             GameProfile gameprofile = server.getPlayerList().getBannedPlayers().getBannedProfile(args[0]);
+ 
+-            if (gameprofile == null)
+-            {
+-                throw new CommandException("commands.unban.failed", new Object[] {args[0]});
+-            }
+-            else
+-            {
++            if (gameprofile == null) {
++                throw new CommandException("commands.unban.failed", new Object[]{args[0]});
++            } else {
+                 server.getPlayerList().getBannedPlayers().removeEntry(gameprofile);
+-                notifyCommandListener(sender, this, "commands.unban.success", new Object[] {args[0]});
++                notifyCommandListener(sender, this, "commands.unban.success", new Object[]{args[0]});
+             }
+-        }
+-        else
+-        {
++        } else {
+             throw new WrongUsageException("commands.unban.usage", new Object[0]);
+         }
+     }
+ 
+-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
+-    {
++    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+         return args.length == 1 ? getListOfStringsMatchingLastWord(args, server.getPlayerList().getBannedPlayers().getKeys()) : Collections.emptyList();
+     }
+ }

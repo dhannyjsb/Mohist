@@ -25,7 +25,7 @@ public class Vine extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Vine(int type, byte data) {
         super(type, data);
     }
@@ -34,7 +34,7 @@ public class Vine extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Vine(byte data) {
         super(Material.VINE, data);
     }
