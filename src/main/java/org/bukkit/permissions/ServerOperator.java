@@ -13,12 +13,12 @@ public interface ServerOperator {
      *
      * @return true if this is an operator, otherwise false
      */
-    boolean isOp();
+    public boolean isOp();
 
     /**
      * Sets the operator status of this object
      *
      * @param value New operator value
      */
-    void setOp(boolean value);
+    public void setOp(boolean value);
 }

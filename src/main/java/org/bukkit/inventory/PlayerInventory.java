@@ -12,7 +12,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @return All the ItemStacks from the armor slots
      */
-    ItemStack[] getArmorContents();
+    public ItemStack[] getArmorContents();
 
     /**
      * Get all additional ItemStacks stored in this inventory.
@@ -23,35 +23,35 @@ public interface PlayerInventory extends Inventory {
      *
      * @return All additional ItemStacks
      */
-    ItemStack[] getExtraContents();
+    public ItemStack[] getExtraContents();
 
     /**
      * Return the ItemStack from the helmet slot
      *
      * @return The ItemStack in the helmet slot
      */
-    ItemStack getHelmet();
+    public ItemStack getHelmet();
 
     /**
      * Return the ItemStack from the chestplate slot
      *
      * @return The ItemStack in the chestplate slot
      */
-    ItemStack getChestplate();
+    public ItemStack getChestplate();
 
     /**
      * Return the ItemStack from the leg slot
      *
      * @return The ItemStack in the leg slot
      */
-    ItemStack getLeggings();
+    public ItemStack getLeggings();
 
     /**
      * Return the ItemStack from the boots slot
      *
      * @return The ItemStack in the boots slot
      */
-    ItemStack getBoots();
+    public ItemStack getBoots();
 
     /**
      * Stores the ItemStack at the given index of the inventory.
@@ -75,14 +75,14 @@ public interface PlayerInventory extends Inventory {
      * @see #setLeggings(ItemStack)
      */
     @Override
-    void setItem(int index, ItemStack item);
+    public void setItem(int index, ItemStack item);
 
     /**
      * Put the given ItemStacks into the armor slots
      *
      * @param items The ItemStacks to use as armour
      */
-    void setArmorContents(ItemStack[] items);
+    public void setArmorContents(ItemStack[] items);
 
     /**
      * Put the given ItemStacks into the extra slots
@@ -91,7 +91,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param items The ItemStacks to use as extra
      */
-    void setExtraContents(ItemStack[] items);
+    public void setExtraContents(ItemStack[] items);
 
     /**
      * Put the given ItemStack into the helmet slot. This does not check if
@@ -99,7 +99,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param helmet The ItemStack to use as helmet
      */
-    void setHelmet(ItemStack helmet);
+    public void setHelmet(ItemStack helmet);
 
     /**
      * Put the given ItemStack into the chestplate slot. This does not check
@@ -107,7 +107,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param chestplate The ItemStack to use as chestplate
      */
-    void setChestplate(ItemStack chestplate);
+    public void setChestplate(ItemStack chestplate);
 
     /**
      * Put the given ItemStack into the leg slot. This does not check if the
@@ -115,7 +115,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param leggings The ItemStack to use as leggings
      */
-    void setLeggings(ItemStack leggings);
+    public void setLeggings(ItemStack leggings);
 
     /**
      * Put the given ItemStack into the boots slot. This does not check if the
@@ -123,7 +123,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param boots The ItemStack to use as boots
      */
-    void setBoots(ItemStack boots);
+    public void setBoots(ItemStack boots);
 
     /**
      * Gets a copy of the item the player is currently holding
@@ -165,7 +165,7 @@ public interface PlayerInventory extends Inventory {
      * @return the currently held item
      */
     @Deprecated
-    ItemStack getItemInHand();
+    public ItemStack getItemInHand();
 
     /**
      * Sets the item the player is holding
@@ -177,14 +177,14 @@ public interface PlayerInventory extends Inventory {
      * @param stack The item to put into the player's hand
      */
     @Deprecated
-    void setItemInHand(ItemStack stack);
+    public void setItemInHand(ItemStack stack);
 
     /**
      * Get the slot number of the currently held item
      *
      * @return Held item slot number
      */
-    int getHeldItemSlot();
+    public int getHeldItemSlot();
 
     /**
      * Set the slot number of the currently held item.
@@ -195,7 +195,7 @@ public interface PlayerInventory extends Inventory {
      * @throws IllegalArgumentException Thrown if slot is not between 0 and 8
      *     inclusive
      */
-    void setHeldItemSlot(int slot);
+    public void setHeldItemSlot(int slot);
 
     /**
      * Clears all matching items from the inventory. Setting either value to
@@ -208,8 +208,8 @@ public interface PlayerInventory extends Inventory {
      * @deprecated Magic value
      */
     @Deprecated
-    int clear(int id, int data);
+    public int clear(int id, int data);
 
     @Override
-    HumanEntity getHolder();
+    public HumanEntity getHolder();
 }

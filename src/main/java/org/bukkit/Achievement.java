@@ -44,11 +44,11 @@ public enum Achievement {
 
     private final Achievement parent;
 
-    Achievement() {
+    private Achievement() {
         parent = null;
     }
 
-    Achievement(Achievement parent) {
+    private Achievement(Achievement parent) {
         this.parent = parent;
     }
 

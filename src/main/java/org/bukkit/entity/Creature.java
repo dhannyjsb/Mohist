@@ -15,12 +15,12 @@ public interface Creature extends LivingEntity {
      *
      * @param target New LivingEntity to target, or null to clear the target
      */
-    void setTarget(LivingEntity target);
+    public void setTarget(LivingEntity target);
 
     /**
      * Gets the current target of this Creature
      *
      * @return Current target of this creature, or null if none exists
      */
-    LivingEntity getTarget();
+    public LivingEntity getTarget();
 }

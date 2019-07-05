@@ -25,7 +25,7 @@ public interface PluginLoader {
      * @throws UnknownDependencyException If a required dependency could not
      *     be found
      */
-    Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException;
+    public Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException;
 
     /**
      * Loads a PluginDescriptionFile from the specified file
@@ -36,14 +36,14 @@ public interface PluginLoader {
      * @throws InvalidDescriptionException If the plugin description file
      *     could not be created
      */
-    PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException;
+    public PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException;
 
     /**
      * Returns a list of all filename filters expected by this PluginLoader
      *
      * @return The filters
      */
-    Pattern[] getPluginFileFilters();
+    public Pattern[] getPluginFileFilters();
 
     /**
      * Creates and returns registered listeners for the event classes used in
@@ -53,7 +53,7 @@ public interface PluginLoader {
      * @param plugin The plugin to use when creating registered listeners
      * @return The registered listeners.
      */
-    Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, Plugin plugin);
+    public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, Plugin plugin);
 
     /**
      * Enables the specified plugin
@@ -63,7 +63,7 @@ public interface PluginLoader {
      *
      * @param plugin Plugin to enable
      */
-    void enablePlugin(Plugin plugin);
+    public void enablePlugin(Plugin plugin);
 
     /**
      * Disables the specified plugin
@@ -72,7 +72,7 @@ public interface PluginLoader {
      *
      * @param plugin Plugin to disable
      */
-    void disablePlugin(Plugin plugin);
+    public void disablePlugin(Plugin plugin);
 
     // Paper start - close Classloader on disable
     /**
@@ -84,7 +84,7 @@ public interface PluginLoader {
      * @param closeClassloader if the classloader for the Plugin should be closed
      */
     // provide default to allow other PluginLoader implementations to work
-    default void disablePlugin(Plugin plugin, boolean closeClassloader) {
+    default public void disablePlugin(Plugin plugin, boolean closeClassloader) {
             disablePlugin(plugin);
     }
    // Paper end - close Classloader on disable

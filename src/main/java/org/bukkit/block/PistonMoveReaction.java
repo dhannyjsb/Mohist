@@ -41,7 +41,7 @@ public enum PistonMoveReaction {
         }
     }
 
-    PistonMoveReaction(int id) {
+    private PistonMoveReaction(int id) {
         this.id = id;
     }
 

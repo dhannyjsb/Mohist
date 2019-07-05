@@ -339,7 +339,7 @@ public class CraftWorld implements World {
     public boolean setSpawnLocation(Location location) {
         Preconditions.checkArgument(location != null, "location");
 
-        return equals(location.getWorld()) && setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        return equals(location.getWorld()) ? setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ()) : false;
     }
 
     @Override
@@ -728,7 +728,7 @@ public class CraftWorld implements World {
                 net.minecraft.block.state.IBlockState oldBlock = world.getBlockState(position);
                 int typeId = net.minecraft.block.Block.getIdFromBlock(blocksnapshot.getReplacedBlock().getBlock());
                 int data = blocksnapshot.getMeta();
-                int flag = blocksnapshot.getFlag();
+                int flag = blocksnapshot.getFlag();;
                 delegate.setTypeIdAndData(x, y, z, typeId, data);
                 net.minecraft.block.state.IBlockState newBlock = world.getBlockState(position);
                 world.markAndNotifyBlock(position, null, oldBlock, newBlock, flag);
@@ -1469,7 +1469,7 @@ public class CraftWorld implements World {
                 if (nmsBlock.getDefaultState().getMaterial().isSolid() || BlockRedstoneDiode.isDiode(nmsBlock.getDefaultState())) {
                     boolean taken = false;
                     AxisAlignedBB bb = EntityHanging.calculateBoundingBox(null, pos, CraftBlock.blockFaceToNotch(dir).getOpposite(), width, height);
-                    List<net.minecraft.entity.Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, bb);
+                    List<net.minecraft.entity.Entity> list = (List<net.minecraft.entity.Entity>) world.getEntitiesWithinAABBExcludingEntity(null, bb);
                     for (Iterator<net.minecraft.entity.Entity> it = list.iterator(); !taken && it.hasNext();) {
                         net.minecraft.entity.Entity e = it.next();
                         if (e instanceof EntityHanging) {

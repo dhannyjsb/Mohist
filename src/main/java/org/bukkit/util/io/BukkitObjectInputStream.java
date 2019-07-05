@@ -55,7 +55,8 @@ public class BukkitObjectInputStream extends ObjectInputStream {
     }
 
     private static IOException newIOException(String string, Throwable cause) {
-        IOException exception = new IOException(string, cause);
+        IOException exception = new IOException(string);
+        exception.initCause(cause);
         return exception;
     }
 }

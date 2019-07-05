@@ -9,14 +9,14 @@ public interface Ageable extends Creature {
      *
      * @return Age
      */
-    int getAge();
+    public int getAge();
 
     /**
      * Sets the age of this animal.
      *
      * @param age New age
      */
-    void setAge(int age);
+    public void setAge(int age);
 
     /**
      * Lock the age of the animal, setting this will prevent the animal from
@@ -24,38 +24,38 @@ public interface Ageable extends Creature {
      *
      * @param lock new lock
      */
-    void setAgeLock(boolean lock);
+    public void setAgeLock(boolean lock);
 
     /**
      * Gets the current agelock.
      *
      * @return the current agelock
      */
-    boolean getAgeLock();
+    public boolean getAgeLock();
 
     /**
      * Sets the age of the animal to a baby
      */
-    void setBaby();
+    public void setBaby();
 
     /**
      * Sets the age of the animal to an adult
      */
-    void setAdult();
+    public void setAdult();
 
     /**
      * Returns true if the animal is an adult.
      *
      * @return return true if the animal is an adult
      */
-    boolean isAdult();
+    public boolean isAdult();
     
     /**
      * Return the ability to breed of the animal.
      *
      * @return the ability to breed of the animal
      */
-    boolean canBreed();
+    public boolean canBreed();
 
     /**
      * Set breedability of the animal, if the animal is a baby and set to
@@ -63,5 +63,5 @@ public interface Ageable extends Creature {
      *
      * @param breed breedability of the animal
      */
-    void setBreed(boolean breed);
+    public void setBreed(boolean breed);
 }

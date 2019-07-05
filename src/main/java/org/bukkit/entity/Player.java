@@ -40,7 +40,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return the friendly name
      */
-    String getDisplayName();
+    public String getDisplayName();
 
     /**
      * Sets the "friendly" name to display of this player. This may include
@@ -51,14 +51,14 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param name The new display name.
      */
-    void setDisplayName(String name);
+    public void setDisplayName(String name);
 
     /**
      * Gets the name that is shown on the player list.
      *
      * @return the player list name
      */
-    String getPlayerListName();
+    public String getPlayerListName();
 
     /**
      * Sets the name that is shown on the in-game player list.
@@ -81,28 +81,28 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *     else
      * @throws IllegalArgumentException if the length of the name is too long
      */
-    void setPlayerListName(String name);
+    public void setPlayerListName(String name);
 
     /**
      * Set the target of the player's compass.
      *
      * @param loc Location to point to
      */
-    void setCompassTarget(Location loc);
+    public void setCompassTarget(Location loc);
 
     /**
      * Get the previously set compass target.
      *
      * @return location of the target
      */
-    Location getCompassTarget();
+    public Location getCompassTarget();
 
     /**
      * Gets the socket address of this player
      *
      * @return the player's address
      */
-    InetSocketAddress getAddress();
+    public InetSocketAddress getAddress();
 
     /**
      * Sends this sender a message raw
@@ -110,21 +110,21 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param message Message to be displayed
      */
     @Override
-    void sendRawMessage(String message);
+    public void sendRawMessage(String message);
 
     /**
      * Kicks player with custom kick message.
      *
      * @param message kick message
      */
-    void kickPlayer(String message);
+    public void kickPlayer(String message);
 
     /**
      * Says a message (or runs a command).
      *
      * @param msg message to print
      */
-    void chat(String msg);
+    public void chat(String msg);
 
     /**
      * Makes the player perform the given command
@@ -132,42 +132,42 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param command Command to perform
      * @return true if the command was successful, otherwise false
      */
-    boolean performCommand(String command);
+    public boolean performCommand(String command);
 
     /**
      * Returns if the player is in sneak mode
      *
      * @return true if player is in sneak mode
      */
-    boolean isSneaking();
+    public boolean isSneaking();
 
     /**
      * Sets the sneak mode the player
      *
      * @param sneak true if player should appear sneaking
      */
-    void setSneaking(boolean sneak);
+    public void setSneaking(boolean sneak);
 
     /**
      * Gets whether the player is sprinting or not.
      *
      * @return true if player is sprinting.
      */
-    boolean isSprinting();
+    public boolean isSprinting();
 
     /**
      * Sets whether the player is sprinting or not.
      *
      * @param sprinting true if the player should be sprinting
      */
-    void setSprinting(boolean sprinting);
+    public void setSprinting(boolean sprinting);
 
     /**
      * Saves the players current location, health, inventory, motion, and
      * other information into the username.dat file, in the world/player
      * folder
      */
-    void saveData();
+    public void saveData();
 
     /**
      * Loads the players current location, health, inventory, motion, and
@@ -177,7 +177,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * Note: This will overwrite the players current inventory, health,
      * motion, etc, with the state from the saved dat file.
      */
-    void loadData();
+    public void loadData();
 
     /**
      * Sets whether the player is ignored as not sleeping. If everyone is
@@ -187,14 +187,14 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param isSleeping Whether to ignore.
      */
-    void setSleepingIgnored(boolean isSleeping);
+    public void setSleepingIgnored(boolean isSleeping);
 
     /**
      * Returns whether the player is sleeping ignored.
      *
      * @return Whether player is ignoring sleep.
      */
-    boolean isSleepingIgnored();
+    public boolean isSleepingIgnored();
 
     /**
      * Play a note for a player at a location. This requires a note block
@@ -207,7 +207,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated Magic value
      */
     @Deprecated
-    void playNote(Location loc, byte instrument, byte note);
+    public void playNote(Location loc, byte instrument, byte note);
 
     /**
      * Play a note for a player at a location. This requires a note block
@@ -218,7 +218,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param instrument The instrument
      * @param note The note
      */
-    void playNote(Location loc, Instrument instrument, Note note);
+    public void playNote(Location loc, Instrument instrument, Note note);
 
 
     /**
@@ -231,7 +231,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param volume The volume of the sound
      * @param pitch The pitch of the sound
      */
-    void playSound(Location location, Sound sound, float volume, float pitch);
+    public void playSound(Location location, Sound sound, float volume, float pitch);
 
     /**
      * Play a sound for a player at the location.
@@ -245,7 +245,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param volume the volume of the sound
      * @param pitch the pitch of the sound
      */
-    void playSound(Location location, String sound, float volume, float pitch);
+    public void playSound(Location location, String sound, float volume, float pitch);
 
     /**
      * Play a sound for a player at the location.
@@ -258,7 +258,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param volume The volume of the sound
      * @param pitch The pitch of the sound
      */
-    void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch);
+    public void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch);
 
     /**
      * Play a sound for a player at the location.
@@ -273,29 +273,21 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param volume the volume of the sound
      * @param pitch the pitch of the sound
      */
-    void playSound(Location location, String sound, SoundCategory category, float volume, float pitch);
+    public void playSound(Location location, String sound, SoundCategory category, float volume, float pitch);
 
     /**
      * Stop the specified sound from playing.
      *
      * @param sound the sound to stop
      */
-    void stopSound(Sound sound);
+    public void stopSound(Sound sound);
 
     /**
      * Stop the specified sound from playing.
      *
      * @param sound the sound to stop
      */
-    void stopSound(String sound);
-
-    /**
-     * Stop the specified sound from playing.
-     *
-     * @param sound the sound to stop
-     * @param category the category of the sound
-     */
-    void stopSound(Sound sound, SoundCategory category);
+    public void stopSound(String sound);
 
     /**
      * Stop the specified sound from playing.
@@ -303,7 +295,15 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param sound the sound to stop
      * @param category the category of the sound
      */
-    void stopSound(String sound, SoundCategory category);
+    public void stopSound(Sound sound, SoundCategory category);
+
+    /**
+     * Stop the specified sound from playing.
+     *
+     * @param sound the sound to stop
+     * @param category the category of the sound
+     */
+    public void stopSound(String sound, SoundCategory category);
 
     /**
      * Plays an effect to just this player.
@@ -314,7 +314,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated Magic value
      */
     @Deprecated
-    void playEffect(Location loc, Effect effect, int data);
+    public void playEffect(Location loc, Effect effect, int data);
 
     /**
      * Plays an effect to just this player.
@@ -324,7 +324,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param effect the {@link Effect}
      * @param data a data bit needed for some effects
      */
-    <T> void playEffect(Location loc, Effect effect, T data);
+    public <T> void playEffect(Location loc, Effect effect, T data);
 
     /**
      * Send a block change. This fakes a block change packet for a user at a
@@ -336,7 +336,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated Magic value
      */
     @Deprecated
-    void sendBlockChange(Location loc, Material material, byte data);
+    public void sendBlockChange(Location loc, Material material, byte data);
 
     /**
      * Send a chunk change. This fakes a chunk change packet for a user at a
@@ -356,7 +356,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated Magic value
      */
     @Deprecated
-    boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data);
+    public boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data);
 
     /**
      * Send a block change. This fakes a block change packet for a user at a
@@ -368,7 +368,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated Magic value
      */
     @Deprecated
-    void sendBlockChange(Location loc, int material, byte data);
+    public void sendBlockChange(Location loc, int material, byte data);
 
     /**
      * Send a sign change. This fakes a sign change packet for a user at
@@ -385,7 +385,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if location is null
      * @throws IllegalArgumentException if lines is non-null and has a length less than 4
      */
-    void sendSignChange(Location loc, String[] lines) throws IllegalArgumentException;
+    public void sendSignChange(Location loc, String[] lines) throws IllegalArgumentException;
 
     /**
      * Render a map and send it to the player in its entirety. This may be
@@ -393,9 +393,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param map The map to be sent
      */
-    void sendMap(MapView map);
+    public void sendMap(MapView map);
 
-    void updateInventory();
+    public void updateInventory();
 
     /**
      * Awards the given achievement and any parent achievements that the
@@ -406,7 +406,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated future versions of Minecraft do not have achievements
      */
     @Deprecated
-    void awardAchievement(Achievement achievement);
+    public void awardAchievement(Achievement achievement);
 
     /**
      * Removes the given achievement and any children achievements that the
@@ -417,7 +417,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated future versions of Minecraft do not have achievements
      */
     @Deprecated
-    void removeAchievement(Achievement achievement);
+    public void removeAchievement(Achievement achievement);
 
     /**
      * Gets whether this player has the given achievement.
@@ -428,7 +428,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated future versions of Minecraft do not have achievements
      */
     @Deprecated
-    boolean hasAchievement(Achievement achievement);
+    public boolean hasAchievement(Achievement achievement);
 
     /**
      * Increments the given statistic for this player.
@@ -441,7 +441,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the statistic requires an
      *     additional parameter
      */
-    void incrementStatistic(Statistic statistic) throws IllegalArgumentException;
+    public void incrementStatistic(Statistic statistic) throws IllegalArgumentException;
 
     /**
      * Decrements the given statistic for this player.
@@ -454,7 +454,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the statistic requires an
      *     additional parameter
      */
-    void decrementStatistic(Statistic statistic) throws IllegalArgumentException;
+    public void decrementStatistic(Statistic statistic) throws IllegalArgumentException;
 
     /**
      * Increments the given statistic for this player.
@@ -466,7 +466,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the statistic requires an
      *     additional parameter
      */
-    void incrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException;
+    public void incrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException;
 
     /**
      * Decrements the given statistic for this player.
@@ -478,7 +478,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the statistic requires an
      *     additional parameter
      */
-    void decrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException;
+    public void decrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException;
 
     /**
      * Sets the given statistic for this player.
@@ -490,7 +490,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the statistic requires an
      *     additional parameter
      */
-    void setStatistic(Statistic statistic, int newValue) throws IllegalArgumentException;
+    public void setStatistic(Statistic statistic, int newValue) throws IllegalArgumentException;
 
     /**
      * Gets the value of the given statistic for this player.
@@ -501,7 +501,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the statistic requires an
      *     additional parameter
      */
-    int getStatistic(Statistic statistic) throws IllegalArgumentException;
+    public int getStatistic(Statistic statistic) throws IllegalArgumentException;
 
     /**
      * Increments the given statistic for this player for the given material.
@@ -516,7 +516,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void incrementStatistic(Statistic statistic, Material material) throws IllegalArgumentException;
+    public void incrementStatistic(Statistic statistic, Material material) throws IllegalArgumentException;
 
     /**
      * Decrements the given statistic for this player for the given material.
@@ -531,7 +531,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void decrementStatistic(Statistic statistic, Material material) throws IllegalArgumentException;
+    public void decrementStatistic(Statistic statistic, Material material) throws IllegalArgumentException;
 
     /**
      * Gets the value of the given statistic for this player.
@@ -544,7 +544,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    int getStatistic(Statistic statistic, Material material) throws IllegalArgumentException;
+    public int getStatistic(Statistic statistic, Material material) throws IllegalArgumentException;
 
     /**
      * Increments the given statistic for this player for the given material.
@@ -558,7 +558,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void incrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException;
+    public void incrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException;
 
     /**
      * Decrements the given statistic for this player for the given material.
@@ -572,7 +572,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void decrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException;
+    public void decrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException;
 
     /**
      * Sets the given statistic for this player for the given material.
@@ -586,7 +586,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void setStatistic(Statistic statistic, Material material, int newValue) throws IllegalArgumentException;
+    public void setStatistic(Statistic statistic, Material material, int newValue) throws IllegalArgumentException;
 
     /**
      * Increments the given statistic for this player for the given entity.
@@ -601,7 +601,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void incrementStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException;
+    public void incrementStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException;
 
     /**
      * Decrements the given statistic for this player for the given entity.
@@ -616,7 +616,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void decrementStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException;
+    public void decrementStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException;
 
     /**
      * Gets the value of the given statistic for this player.
@@ -629,7 +629,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    int getStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException;
+    public int getStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException;
 
     /**
      * Increments the given statistic for this player for the given entity.
@@ -643,7 +643,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void incrementStatistic(Statistic statistic, EntityType entityType, int amount) throws IllegalArgumentException;
+    public void incrementStatistic(Statistic statistic, EntityType entityType, int amount) throws IllegalArgumentException;
 
     /**
      * Decrements the given statistic for this player for the given entity.
@@ -657,7 +657,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void decrementStatistic(Statistic statistic, EntityType entityType, int amount);
+    public void decrementStatistic(Statistic statistic, EntityType entityType, int amount);
 
     /**
      * Sets the given statistic for this player for the given entity.
@@ -671,7 +671,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if the given parameter is not valid
      *     for the statistic
      */
-    void setStatistic(Statistic statistic, EntityType entityType, int newValue);
+    public void setStatistic(Statistic statistic, EntityType entityType, int newValue);
 
     /**
      * Sets the current time on the player's client. When relative is true the
@@ -688,14 +688,14 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param relative When true the player time is kept relative to its world
      *     time.
      */
-    void setPlayerTime(long time, boolean relative);
+    public void setPlayerTime(long time, boolean relative);
 
     /**
      * Returns the player's current timestamp.
      *
      * @return The player's time
      */
-    long getPlayerTime();
+    public long getPlayerTime();
 
     /**
      * Returns the player's current time offset relative to server time, or
@@ -703,7 +703,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return The player's time
      */
-    long getPlayerTimeOffset();
+    public long getPlayerTimeOffset();
 
     /**
      * Returns true if the player's time is relative to the server time,
@@ -712,7 +712,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return true if the player's time is relative to the server time.
      */
-    boolean isPlayerTimeRelative();
+    public boolean isPlayerTimeRelative();
 
     /**
      * Restores the normal condition where the player's time is synchronized
@@ -720,7 +720,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * <p>
      * Equivalent to calling setPlayerTime(0, true).
      */
-    void resetPlayerTime();
+    public void resetPlayerTime();
 
     /**
      * Sets the type of weather the player will see.  When used, the weather
@@ -729,7 +729,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param type The WeatherType enum type the player should experience
      */
-    void setPlayerWeather(WeatherType type);
+    public void setPlayerWeather(WeatherType type);
 
     /**
      * Returns the type of weather the player is currently experiencing.
@@ -737,20 +737,20 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @return The WeatherType that the player is currently experiencing or
      *     null if player is seeing server weather.
      */
-    WeatherType getPlayerWeather();
+    public WeatherType getPlayerWeather();
 
     /**
      * Restores the normal condition where the player's weather is controlled
      * by server conditions.
      */
-    void resetPlayerWeather();
+    public void resetPlayerWeather();
 
     /**
      * Gives the player the amount of experience specified.
      *
      * @param amount Exp amount to give
      */
-    void giveExp(int amount);
+	public void giveExp(int amount);
 
     /**
      * Gives the player the amount of experience levels specified. Levels can
@@ -758,7 +758,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param amount amount of experience levels to give or take
      */
-    void giveExpLevels(int amount);
+    public void giveExpLevels(int amount);
 
     /**
      * Gets the players current experience points towards the next level.
@@ -767,7 +767,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return Current experience points
      */
-    float getExp();
+    public float getExp();
 
     /**
      * Sets the players current experience points towards the next level
@@ -776,21 +776,21 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param exp New experience points
      */
-    void setExp(float exp);
+    public void setExp(float exp);
 
     /**
      * Gets the players current experience level
      *
      * @return Current experience level
      */
-    int getLevel();
+    public int getLevel();
 
     /**
      * Sets the players current experience level
      *
      * @param level New experience level
      */
-    void setLevel(int level);
+    public void setLevel(int level);
 
     /**
      * Gets the players total experience points.
@@ -800,7 +800,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return Current total experience points
      */
-    int getTotalExperience();
+    public int getTotalExperience();
 
     /**
      * Sets the players current experience points.
@@ -810,7 +810,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param exp New total experience points
      */
-    void setTotalExperience(int exp);
+    public void setTotalExperience(int exp);
 
     /**
      * Gets the players current exhaustion level.
@@ -821,14 +821,14 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return Exhaustion level
      */
-    float getExhaustion();
+    public float getExhaustion();
 
     /**
      * Sets the players current exhaustion level
      *
      * @param value Exhaustion level
      */
-    void setExhaustion(float value);
+    public void setExhaustion(float value);
 
     /**
      * Gets the players current saturation level.
@@ -838,28 +838,28 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return Saturation level
      */
-    float getSaturation();
+    public float getSaturation();
 
     /**
      * Sets the players current saturation level
      *
      * @param value Saturation level
      */
-    void setSaturation(float value);
+    public void setSaturation(float value);
 
     /**
      * Gets the players current food level
      *
      * @return Food level
      */
-    int getFoodLevel();
+    public int getFoodLevel();
 
     /**
      * Sets the players current food level
      *
      * @param value New food level
      */
-    void setFoodLevel(int value);
+    public void setFoodLevel(int value);
 
     /**
      * Gets the Location where the player will spawn at their bed, null if
@@ -868,14 +868,14 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @return Bed Spawn Location if bed exists, otherwise null.
      */
     @Override
-    Location getBedSpawnLocation();
+    public Location getBedSpawnLocation();
 
     /**
      * Sets the Location where the player will spawn at their bed.
      *
      * @param location where to set the respawn location
      */
-    void setBedSpawnLocation(Location location);
+    public void setBedSpawnLocation(Location location);
 
     /**
      * Sets the Location where the player will spawn at their bed.
@@ -884,7 +884,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param force whether to forcefully set the respawn location even if a
      *     valid bed is not present
      */
-    void setBedSpawnLocation(Location location, boolean force);
+    public void setBedSpawnLocation(Location location, boolean force);
 
     /**
      * Determines if the Player is allowed to fly via jump key double-tap like
@@ -892,7 +892,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return True if the player is allowed to fly.
      */
-    boolean getAllowFlight();
+    public boolean getAllowFlight();
 
     /**
      * Sets if the Player is allowed to fly via jump key double-tap like in
@@ -900,7 +900,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param flight If flight should be allowed.
      */
-    void setAllowFlight(boolean flight);
+    public void setAllowFlight(boolean flight);
 
     /**
      * Hides a player from this player
@@ -909,7 +909,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated see {@link #hidePlayer(Plugin, Player)}
      */
     @Deprecated
-    void hidePlayer(Player player);
+    public void hidePlayer(Player player);
 
     /**
      * Hides a player from this player
@@ -917,7 +917,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param plugin Plugin that wants to hide the player
      * @param player Player to hide
      */
-    void hidePlayer(Plugin plugin, Player player);
+    public void hidePlayer(Plugin plugin, Player player);
 
     /**
      * Allows this player to see a player that was previously hidden
@@ -926,7 +926,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated see {@link #showPlayer(Plugin, Player)}
      */
     @Deprecated
-    void showPlayer(Player player);
+    public void showPlayer(Player player);
 
     /**
      * Allows this player to see a player that was previously hidden. If
@@ -936,7 +936,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param plugin Plugin that wants to show the player
      * @param player Player to show
      */
-    void showPlayer(Plugin plugin, Player player);
+    public void showPlayer(Plugin plugin, Player player);
 
     /**
      * Checks to see if a player has been hidden from this player
@@ -945,21 +945,21 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @return True if the provided player is not being hidden from this
      *     player
      */
-    boolean canSee(Player player);
+    public boolean canSee(Player player);
 
     /**
      * Checks to see if this player is currently flying or not.
      *
      * @return True if the player is flying, else false.
      */
-    boolean isFlying();
+    public boolean isFlying();
 
     /**
      * Makes this player start or stop flying.
      *
      * @param value True to fly.
      */
-    void setFlying(boolean value);
+    public void setFlying(boolean value);
 
     /**
      * Sets the speed at which a client will fly. Negative values indicate
@@ -969,7 +969,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException If new speed is less than -1 or
      *     greater than 1
      */
-    void setFlySpeed(float value) throws IllegalArgumentException;
+    public void setFlySpeed(float value) throws IllegalArgumentException;
 
     /**
      * Sets the speed at which a client will walk. Negative values indicate
@@ -979,21 +979,21 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException If new speed is less than -1 or
      *     greater than 1
      */
-    void setWalkSpeed(float value) throws IllegalArgumentException;
+    public void setWalkSpeed(float value) throws IllegalArgumentException;
 
     /**
      * Gets the current allowed speed that a client can fly.
      *
      * @return The current allowed speed, from -1 to 1
      */
-    float getFlySpeed();
+    public float getFlySpeed();
 
     /**
      * Gets the current allowed speed that a client can walk.
      *
      * @return The current allowed speed, from -1 to 1
      */
-    float getWalkSpeed();
+    public float getWalkSpeed();
 
     /**
      * Request that the player's client download and switch texture packs.
@@ -1029,7 +1029,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *     should use {@link #setResourcePack(String)}.
      */
     @Deprecated
-    void setTexturePack(String url);
+    public void setTexturePack(String url);
 
     /**
      * Request that the player's client download and switch resource packs.
@@ -1063,7 +1063,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException Thrown if the URL is too long. The
      *     length restriction is an implementation specific arbitrary value.
      */
-    void setResourcePack(String url);
+    public void setResourcePack(String url);
 
     /**
      * Request that the player's client download and switch resource packs.
@@ -1100,14 +1100,14 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException Thrown if the hash is not 20 bytes
      *     long.
      */
-    void setResourcePack(String url, byte[] hash);
+    public void setResourcePack(String url, byte[] hash);
 
     /**
      * Gets the Scoreboard displayed to this player
      *
      * @return The current scoreboard seen by this player
      */
-    Scoreboard getScoreboard();
+    public Scoreboard getScoreboard();
 
     /**
      * Sets the player's visible Scoreboard.
@@ -1119,7 +1119,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalStateException if this is a player that is not logged
      *     yet or has logged out
      */
-    void setScoreboard(Scoreboard scoreboard) throws IllegalArgumentException, IllegalStateException;
+    public void setScoreboard(Scoreboard scoreboard) throws IllegalArgumentException, IllegalStateException;
 
     /**
      * Gets if the client is displayed a 'scaled' health, that is, health on a
@@ -1128,7 +1128,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @return if client health display is scaled
      * @see Player#setHealthScaled(boolean)
      */
-    boolean isHealthScaled();
+    public boolean isHealthScaled();
 
     /**
      * Sets if the client is displayed a 'scaled' health, that is, health on a
@@ -1139,7 +1139,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param scale if the client health display is scaled
      */
-    void setHealthScaled(boolean scale);
+    public void setHealthScaled(boolean scale);
 
     /**
      * Sets the number to scale health to for the client; this will also
@@ -1153,7 +1153,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if scale is {@link Double#NaN}
      * @throws IllegalArgumentException if scale is too high
      */
-    void setHealthScale(double scale) throws IllegalArgumentException;
+    public void setHealthScale(double scale) throws IllegalArgumentException;
 
     /**
      * Gets the number that health is scaled to for the client.
@@ -1163,7 +1163,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @see Player#setHealthScale(double)
      * @see Player#setHealthScaled(boolean)
      */
-    double getHealthScale();
+    public double getHealthScale();
 
     /**
      * Gets the entity which is followed by the camera when in
@@ -1172,7 +1172,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @return the followed entity, or null if not in spectator mode or not
      * following a specific entity.
      */
-    Entity getSpectatorTarget();
+    public Entity getSpectatorTarget();
 
     /**
      * Sets the entity which is followed by the camera when in
@@ -1182,7 +1182,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalStateException if the player is not in
      * {@link GameMode#SPECTATOR}
      */
-    void setSpectatorTarget(Entity entity);
+    public void setSpectatorTarget(Entity entity);
 
     /**
      * Sends a title and a subtitle message to the player. If either of these
@@ -1196,7 +1196,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @deprecated API behavior subject to change
      */
     @Deprecated
-    void sendTitle(String title, String subtitle);
+    public void sendTitle(String title, String subtitle);
 
     /**
      * Sends a title and a subtitle message to the player. If either of these
@@ -1213,13 +1213,13 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param stay time in ticks for titles to stay. Defaults to 70.
      * @param fadeOut time in ticks for titles to fade out. Defaults to 20.
      */
-    void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut);
+    public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut);
 
     /**
      * Resets the title displayed to the player. This will clear the displayed
      * title / subtitle and reset timings to their default values.
      */
-    void resetTitle();
+    public void resetTitle();
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1229,7 +1229,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param location the location to spawn at
      * @param count the number of particles
      */
-    void spawnParticle(Particle particle, Location location, int count);
+    public void spawnParticle(Particle particle, Location location, int count);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1241,7 +1241,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param z the position on the z axis to spawn at
      * @param count the number of particles
      */
-    void spawnParticle(Particle particle, double x, double y, double z, int count);
+    public void spawnParticle(Particle particle, double x, double y, double z, int count);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1253,7 +1253,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    <T> void spawnParticle(Particle particle, Location location, int count, T data);
+    public <T> void spawnParticle(Particle particle, Location location, int count, T data);
 
 
     /**
@@ -1268,7 +1268,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    <T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data);
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1283,41 +1283,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param offsetY the maximum random offset on the Y axis
      * @param offsetZ the maximum random offset on the Z axis
      */
-    void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ);
-
-    /**
-     * Spawns the particle (the number of times specified by count)
-     * at the target location. The position of each particle will be
-     * randomized positively and negatively by the offset parameters
-     * on each axis.
-     *
-     * @param particle the particle to spawn
-     * @param x the position on the x axis to spawn at
-     * @param y the position on the y axis to spawn at
-     * @param z the position on the z axis to spawn at
-     * @param count the number of particles
-     * @param offsetX the maximum random offset on the X axis
-     * @param offsetY the maximum random offset on the Y axis
-     * @param offsetZ the maximum random offset on the Z axis
-     */
-    void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ);
-
-    /**
-     * Spawns the particle (the number of times specified by count)
-     * at the target location. The position of each particle will be
-     * randomized positively and negatively by the offset parameters
-     * on each axis.
-     *
-     * @param particle the particle to spawn
-     * @param location the location to spawn at
-     * @param count the number of particles
-     * @param offsetX the maximum random offset on the X axis
-     * @param offsetY the maximum random offset on the Y axis
-     * @param offsetZ the maximum random offset on the Z axis
-     * @param data the data to use for the particle or null,
-     *             the type of this depends on {@link Particle#getDataType()}
-     */
-    <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, T data);
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1333,10 +1299,44 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param offsetX the maximum random offset on the X axis
      * @param offsetY the maximum random offset on the Y axis
      * @param offsetZ the maximum random offset on the Z axis
+     */
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ);
+
+    /**
+     * Spawns the particle (the number of times specified by count)
+     * at the target location. The position of each particle will be
+     * randomized positively and negatively by the offset parameters
+     * on each axis.
+     *
+     * @param particle the particle to spawn
+     * @param location the location to spawn at
+     * @param count the number of particles
+     * @param offsetX the maximum random offset on the X axis
+     * @param offsetY the maximum random offset on the Y axis
+     * @param offsetZ the maximum random offset on the Z axis
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, T data);
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, T data);
+
+    /**
+     * Spawns the particle (the number of times specified by count)
+     * at the target location. The position of each particle will be
+     * randomized positively and negatively by the offset parameters
+     * on each axis.
+     *
+     * @param particle the particle to spawn
+     * @param x the position on the x axis to spawn at
+     * @param y the position on the y axis to spawn at
+     * @param z the position on the z axis to spawn at
+     * @param count the number of particles
+     * @param offsetX the maximum random offset on the X axis
+     * @param offsetY the maximum random offset on the Y axis
+     * @param offsetZ the maximum random offset on the Z axis
+     * @param data the data to use for the particle or null,
+     *             the type of this depends on {@link Particle#getDataType()}
+     */
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, T data);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1353,45 +1353,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param extra the extra data for this particle, depends on the
      *              particle used (normally speed)
      */
-    void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra);
-
-    /**
-     * Spawns the particle (the number of times specified by count)
-     * at the target location. The position of each particle will be
-     * randomized positively and negatively by the offset parameters
-     * on each axis.
-     *
-     * @param particle the particle to spawn
-     * @param x the position on the x axis to spawn at
-     * @param y the position on the y axis to spawn at
-     * @param z the position on the z axis to spawn at
-     * @param count the number of particles
-     * @param offsetX the maximum random offset on the X axis
-     * @param offsetY the maximum random offset on the Y axis
-     * @param offsetZ the maximum random offset on the Z axis
-     * @param extra the extra data for this particle, depends on the
-     *              particle used (normally speed)
-     */
-    void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra);
-
-    /**
-     * Spawns the particle (the number of times specified by count)
-     * at the target location. The position of each particle will be
-     * randomized positively and negatively by the offset parameters
-     * on each axis.
-     *
-     * @param particle the particle to spawn
-     * @param location the location to spawn at
-     * @param count the number of particles
-     * @param offsetX the maximum random offset on the X axis
-     * @param offsetY the maximum random offset on the Y axis
-     * @param offsetZ the maximum random offset on the Z axis
-     * @param extra the extra data for this particle, depends on the
-     *              particle used (normally speed)
-     * @param data the data to use for the particle or null,
-     *             the type of this depends on {@link Particle#getDataType()}
-     */
-    <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1409,10 +1371,48 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param offsetZ the maximum random offset on the Z axis
      * @param extra the extra data for this particle, depends on the
      *              particle used (normally speed)
+     */
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra);
+
+    /**
+     * Spawns the particle (the number of times specified by count)
+     * at the target location. The position of each particle will be
+     * randomized positively and negatively by the offset parameters
+     * on each axis.
+     *
+     * @param particle the particle to spawn
+     * @param location the location to spawn at
+     * @param count the number of particles
+     * @param offsetX the maximum random offset on the X axis
+     * @param offsetY the maximum random offset on the Y axis
+     * @param offsetZ the maximum random offset on the Z axis
+     * @param extra the extra data for this particle, depends on the
+     *              particle used (normally speed)
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
+
+    /**
+     * Spawns the particle (the number of times specified by count)
+     * at the target location. The position of each particle will be
+     * randomized positively and negatively by the offset parameters
+     * on each axis.
+     *
+     * @param particle the particle to spawn
+     * @param x the position on the x axis to spawn at
+     * @param y the position on the y axis to spawn at
+     * @param z the position on the z axis to spawn at
+     * @param count the number of particles
+     * @param offsetX the maximum random offset on the X axis
+     * @param offsetY the maximum random offset on the Y axis
+     * @param offsetZ the maximum random offset on the Z axis
+     * @param extra the extra data for this particle, depends on the
+     *              particle used (normally speed)
+     * @param data the data to use for the particle or null,
+     *             the type of this depends on {@link Particle#getDataType()}
+     */
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
 
     /**
      * Return the player's progression on the specified advancement.
@@ -1420,7 +1420,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param advancement advancement
      * @return object detailing the player's progress
      */
-    AdvancementProgress getAdvancementProgress(Advancement advancement);
+    public AdvancementProgress getAdvancementProgress(Advancement advancement);
 
     /**
      * Gets the player's current locale.
@@ -1433,10 +1433,10 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return the player's locale
      */
-    String getLocale();
+    public String getLocale();
 
     // Spigot start
-    class Spigot extends Entity.Spigot
+    public class Spigot extends Entity.Spigot
     {
         /**
          *  Gets the connection address of this player, regardless of whether it
@@ -1549,11 +1549,11 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * Gets the view distance for this player
      * @return the player's view distance
      */
-    int getViewDistance();
+    public int getViewDistance();
 
     /**
      * Sets the view distance for this player
      * @param viewDistance the player's view distance
      */
-    void setViewDistance(int viewDistance);
+    public void setViewDistance(int viewDistance);
 }

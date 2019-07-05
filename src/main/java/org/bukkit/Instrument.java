@@ -55,7 +55,7 @@ public enum Instrument {
     private final byte type;
     private final static Map<Byte, Instrument> BY_DATA = Maps.newHashMap();
 
-    Instrument(final int type) {
+    private Instrument(final int type) {
         this.type = (byte) type;
     }
 

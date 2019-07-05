@@ -10,14 +10,14 @@ public interface Creeper extends Monster {
      *
      * @return true if this creeper is powered
      */
-    boolean isPowered();
+    public boolean isPowered();
 
     /**
      * Sets the Powered status of this Creeper
      *
      * @param value New Powered status
      */
-    void setPowered(boolean value);
+    public void setPowered(boolean value);
 
     /**
      * Set the maximum fuse ticks for this Creeper, where the maximum ticks 
@@ -26,7 +26,7 @@ public interface Creeper extends Monster {
      *
      * @param ticks the new maximum fuse ticks
      */
-    void setMaxFuseTicks(int ticks);
+    public void setMaxFuseTicks(int ticks);
 
     /**
      * Get the maximum fuse ticks for this Creeper, where the maximum ticks 
@@ -35,19 +35,19 @@ public interface Creeper extends Monster {
      *
      * @return the maximum fuse ticks
      */
-    int getMaxFuseTicks();
+    public int getMaxFuseTicks();
 
     /**
      * Set the explosion radius in which this Creeper's explosion will affect.
      *
      * @param radius the new explosion radius
      */
-    void setExplosionRadius(int radius);
+    public void setExplosionRadius(int radius);
 
     /**
      * Get the explosion radius in which this Creeper's explosion will affect.
      *
      * @return the explosion radius
      */
-    int getExplosionRadius();
+    public int getExplosionRadius();
 }

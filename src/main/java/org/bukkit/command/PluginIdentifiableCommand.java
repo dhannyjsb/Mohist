@@ -15,5 +15,5 @@ public interface PluginIdentifiableCommand {
      *
      * @return Plugin that owns this PluginIdentifiableCommand.
      */
-    Plugin getPlugin();
+    public Plugin getPlugin();
 }

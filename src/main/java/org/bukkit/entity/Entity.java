@@ -26,7 +26,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return a new copy of Location containing the position of this entity
      */
-    Location getLocation();
+    public Location getLocation();
 
     /**
      * Stores the entity's current position in the provided Location object.
@@ -37,35 +37,35 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param loc the location to copy into
      * @return The Location object provided or null
      */
-    Location getLocation(Location loc);
+    public Location getLocation(Location loc);
 
     /**
      * Sets this entity's velocity
      *
      * @param velocity New velocity to travel with
      */
-    void setVelocity(Vector velocity);
+    public void setVelocity(Vector velocity);
 
     /**
      * Gets this entity's current velocity
      *
      * @return Current traveling velocity of this entity
      */
-    Vector getVelocity();
+    public Vector getVelocity();
 
     /**
      * Gets the entity's height
      *
      * @return height of entity
      */
-    double getHeight();
+    public double getHeight();
 
     /**
      * Gets the entity's width
      *
      * @return width of entity
      */
-    double getWidth();
+    public double getWidth();
 
     /**
      * Returns true if the entity is supported by a block. This value is a
@@ -74,14 +74,14 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return True if entity is on ground.
      */
-    boolean isOnGround();
+    public boolean isOnGround();
 
     /**
      * Gets the current world this entity resides in
      *
      * @return World
      */
-    World getWorld();
+    public World getWorld();
 
     /**
      * Teleports this entity to the given location. If this entity is riding a
@@ -90,7 +90,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param location New location to teleport this entity to
      * @return <code>true</code> if the teleport was successful
      */
-    boolean teleport(Location location);
+    public boolean teleport(Location location);
 
     /**
      * Teleports this entity to the given location. If this entity is riding a
@@ -100,7 +100,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param cause The cause of this teleportation
      * @return <code>true</code> if the teleport was successful
      */
-    boolean teleport(Location location, TeleportCause cause);
+    public boolean teleport(Location location, TeleportCause cause);
 
     /**
      * Teleports this entity to the target Entity. If this entity is riding a
@@ -109,7 +109,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param destination Entity to teleport this entity to
      * @return <code>true</code> if the teleport was successful
      */
-    boolean teleport(Entity destination);
+    public boolean teleport(Entity destination);
 
     /**
      * Teleports this entity to the target Entity. If this entity is riding a
@@ -119,7 +119,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param cause The cause of this teleportation
      * @return <code>true</code> if the teleport was successful
      */
-    boolean teleport(Entity destination, TeleportCause cause);
+    public boolean teleport(Entity destination, TeleportCause cause);
 
     /**
      * Returns a list of entities within a bounding box centered around this
@@ -130,14 +130,14 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param z 1/2 the size of the box along z axis
      * @return {@code List<Entity>} List of entities nearby
      */
-    List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z);
+    public List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z);
 
     /**
      * Returns a unique id for this entity
      *
      * @return Entity id
      */
-    int getEntityId();
+    public int getEntityId();
 
     /**
      * Returns the entity's current fire ticks (ticks before the entity stops
@@ -145,14 +145,14 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return int fireTicks
      */
-    int getFireTicks();
+    public int getFireTicks();
 
     /**
      * Returns the entity's maximum fire ticks.
      *
      * @return int maxFireTicks
      */
-    int getMaxFireTicks();
+    public int getMaxFireTicks();
 
     /**
      * Sets the entity's current fire ticks (ticks before the entity stops
@@ -160,19 +160,19 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @param ticks Current ticks remaining
      */
-    void setFireTicks(int ticks);
+    public void setFireTicks(int ticks);
 
     /**
      * Mark the entity's removal.
      */
-    void remove();
+    public void remove();
 
     /**
      * Returns true if this entity has been marked for removal.
      *
      * @return True if it is dead.
      */
-    boolean isDead();
+    public boolean isDead();
 
     /**
      * Returns false if the entity has died or been despawned for some other
@@ -180,7 +180,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return True if valid.
      */
-    boolean isValid();
+    public boolean isValid();
 
     /**
      * Gets the {@link Server} that contains this Entity
@@ -188,7 +188,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @return Server instance running this Entity
      */
     @Override
-    Server getServer();
+    public Server getServer();
 
     /**
      * Gets the primary passenger of a vehicle. For vehicles that could have
@@ -199,7 +199,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * {@link #getPassengers()}
      */
     @Deprecated
-    Entity getPassenger();
+    public Entity getPassenger();
 
     /**
      * Set the passenger of a vehicle.
@@ -210,7 +210,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * {@link #getPassengers()}
      */
     @Deprecated
-    boolean setPassenger(Entity passenger);
+    public boolean setPassenger(Entity passenger);
 
     /**
      * Gets a list of passengers of this vehicle.
@@ -220,7 +220,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return list of entities corresponding to current passengers.
      */
-    List<Entity> getPassengers();
+    public List<Entity> getPassengers();
 
     /**
      * Add a passenger to the vehicle.
@@ -228,7 +228,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param passenger The passenger to add
      * @return false if it could not be done for whatever reason
      */
-    boolean addPassenger(Entity passenger);
+    public boolean addPassenger(Entity passenger);
 
     /**
      * Remove a passenger from the vehicle.
@@ -236,42 +236,42 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param passenger The passenger to remove
      * @return false if it could not be done for whatever reason
      */
-    boolean removePassenger(Entity passenger);
+    public boolean removePassenger(Entity passenger);
 
     /**
      * Check if a vehicle has passengers.
      *
      * @return True if the vehicle has no passengers.
      */
-    boolean isEmpty();
+    public boolean isEmpty();
 
     /**
      * Eject any passenger.
      *
      * @return True if there was a passenger.
      */
-    boolean eject();
+    public boolean eject();
 
     /**
      * Returns the distance this entity has fallen
      *
      * @return The distance.
      */
-    float getFallDistance();
+    public float getFallDistance();
 
     /**
      * Sets the fall distance for this entity
      *
      * @param distance The new distance.
      */
-    void setFallDistance(float distance);
+    public void setFallDistance(float distance);
 
     /**
      * Record the last {@link EntityDamageEvent} inflicted on this entity
      *
      * @param event a {@link EntityDamageEvent}
      */
-    void setLastDamageCause(EntityDamageEvent event);
+    public void setLastDamageCause(EntityDamageEvent event);
 
     /**
      * Retrieve the last {@link EntityDamageEvent} inflicted on this entity.
@@ -280,14 +280,14 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @return the last known {@link EntityDamageEvent} or null if hitherto
      *     unharmed
      */
-    EntityDamageEvent getLastDamageCause();
+    public EntityDamageEvent getLastDamageCause();
 
     /**
      * Returns a unique and persistent id for this entity
      *
      * @return unique id
      */
-    UUID getUniqueId();
+    public UUID getUniqueId();
 
     /**
      * Gets the amount of ticks this entity has lived for.
@@ -296,7 +296,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return Age of entity
      */
-    int getTicksLived();
+    public int getTicksLived();
 
     /**
      * Sets the amount of ticks this entity has lived for.
@@ -306,7 +306,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @param value Age of entity
      */
-    void setTicksLived(int value);
+    public void setTicksLived(int value);
 
     /**
      * Performs the specified {@link EntityEffect} for this entity.
@@ -317,21 +317,21 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @param type Effect to play.
      */
-    void playEffect(EntityEffect type);
+    public void playEffect(EntityEffect type);
 
     /**
      * Get the type of the entity.
      *
      * @return The entity type.
      */
-    EntityType getType();
+    public EntityType getType();
 
     /**
      * Returns whether this entity is inside a vehicle.
      *
      * @return True if the entity is in a vehicle.
      */
-    boolean isInsideVehicle();
+    public boolean isInsideVehicle();
 
     /**
      * Leave the current vehicle. If the entity is currently in a vehicle (and
@@ -340,7 +340,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return True if the entity was in a vehicle.
      */
-    boolean leaveVehicle();
+    public boolean leaveVehicle();
 
     /**
      * Get the vehicle that this player is inside. If there is no vehicle,
@@ -348,7 +348,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return The current vehicle.
      */
-    Entity getVehicle();
+    public Entity getVehicle();
 
     /**
      * Sets whether or not to display the mob's custom name client side. The
@@ -359,7 +359,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @param flag custom name or not
      */
-    void setCustomNameVisible(boolean flag);
+    public void setCustomNameVisible(boolean flag);
 
     /**
      * Gets whether or not the mob's custom name is displayed client side.
@@ -369,7 +369,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return if the custom name is displayed
      */
-    boolean isCustomNameVisible();
+    public boolean isCustomNameVisible();
 
     /**
      * Sets whether the entity has a team colored (default: white) glow.
@@ -393,21 +393,21 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @param flag if the entity is invulnerable
      */
-    void setInvulnerable(boolean flag);
+    public void setInvulnerable(boolean flag);
 
     /**
      * Gets whether the entity is invulnerable or not.
      *
      * @return whether the entity is
      */
-    boolean isInvulnerable();
+    public boolean isInvulnerable();
 
     /**
      * Gets whether the entity is silent or not.
      *
      * @return whether the entity is silent.
      */
-    boolean isSilent();
+    public boolean isSilent();
 
     /**
      * Sets whether the entity is silent or not.
@@ -416,7 +416,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @param flag if the entity is silent
      */
-    void setSilent(boolean flag);
+    public void setSilent(boolean flag);
 
     /**
      * Returns whether gravity applies to this entity.
@@ -481,7 +481,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
     PistonMoveReaction getPistonMoveReaction();
 
     // Spigot start
-    class Spigot extends CommandSender.Spigot
+    public class Spigot extends CommandSender.Spigot
     {
 
         /**

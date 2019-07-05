@@ -241,6 +241,7 @@ public class ConfigurationSerialization {
      */
     public static void unregisterClass(Class<? extends ConfigurationSerializable> clazz) {
         while (aliases.values().remove(clazz)) {
+            ;
         }
     }
 

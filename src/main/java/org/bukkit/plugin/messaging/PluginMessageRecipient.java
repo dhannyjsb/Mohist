@@ -27,7 +27,7 @@ public interface PluginMessageRecipient {
      * @throws ChannelNotRegisteredException Thrown if the channel is not
      *     registered for this plugin.
      */
-    void sendPluginMessage(Plugin source, String channel, byte[] message);
+    public void sendPluginMessage(Plugin source, String channel, byte[] message);
 
     /**
      * Gets a set containing all the Plugin Channels that this client is
@@ -35,5 +35,5 @@ public interface PluginMessageRecipient {
      *
      * @return Set containing all the channels that this client may accept.
      */
-    Set<String> getListeningPluginChannels();
+    public Set<String> getListeningPluginChannels();
 }

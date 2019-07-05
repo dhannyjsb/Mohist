@@ -13,7 +13,7 @@ public interface NoteBlock extends BlockState {
      *
      * @return The note.
      */
-    Note getNote();
+    public Note getNote();
 
     /**
      * Gets the note.
@@ -22,14 +22,14 @@ public interface NoteBlock extends BlockState {
      * @deprecated Magic value
      */
     @Deprecated
-    byte getRawNote();
+    public byte getRawNote();
 
     /**
      * Set the note.
      *
      * @param note The note.
      */
-    void setNote(Note note);
+    public void setNote(Note note);
 
     /**
      * Set the note.
@@ -38,7 +38,7 @@ public interface NoteBlock extends BlockState {
      * @deprecated Magic value
      */
     @Deprecated
-    void setRawNote(byte note);
+    public void setRawNote(byte note);
 
     /**
      * Attempts to play the note at the block.
@@ -49,7 +49,7 @@ public interface NoteBlock extends BlockState {
      * @return true if successful, otherwise false
      * @throws IllegalStateException if this block state is not placed
      */
-    boolean play();
+    public boolean play();
 
     /**
      * Plays an arbitrary note with an arbitrary instrument at the block.
@@ -64,7 +64,7 @@ public interface NoteBlock extends BlockState {
      * @deprecated Magic value
      */
     @Deprecated
-    boolean play(byte instrument, byte note);
+    public boolean play(byte instrument, byte note);
 
     /**
      * Plays an arbitrary note with an arbitrary instrument at the block.
@@ -78,5 +78,5 @@ public interface NoteBlock extends BlockState {
      * @throws IllegalStateException if this block state is not placed
      * @see Instrument Note
      */
-    boolean play(Instrument instrument, Note note);
+    public boolean play(Instrument instrument, Note note);
 }

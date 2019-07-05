@@ -13,7 +13,7 @@ public interface Painting extends Hanging {
      *
      * @return The art
      */
-    Art getArt();
+    public Art getArt();
 
     /**
      * Set the art on this painting
@@ -22,7 +22,7 @@ public interface Painting extends Hanging {
      * @return False if the new art won't fit at the painting's current
      *     location
      */
-    boolean setArt(Art art);
+    public boolean setArt(Art art);
 
     /**
      * Set the art on this painting
@@ -35,5 +35,5 @@ public interface Painting extends Hanging {
      * @return False if force was false and the new art won't fit at the
      *     painting's current location
      */
-    boolean setArt(Art art, boolean force);
+    public boolean setArt(Art art, boolean force);
 }

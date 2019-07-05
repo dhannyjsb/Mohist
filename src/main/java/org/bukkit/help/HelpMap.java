@@ -24,27 +24,27 @@ public interface HelpMap {
      * @return A {@link HelpTopic} object matching the topic name or null if
      *     none can be found.
      */
-    HelpTopic getHelpTopic(String topicName);
+    public HelpTopic getHelpTopic(String topicName);
 
     /**
      * Returns a collection of all the registered help topics.
      *
      * @return All the registered help topics.
      */
-    Collection<HelpTopic> getHelpTopics();
+    public Collection<HelpTopic> getHelpTopics();
     
     /**
      * Adds a topic to the server's help index.
      *
      * @param topic The new help topic to add.
      */
-    void addTopic(HelpTopic topic);
+    public void addTopic(HelpTopic topic);
 
     /**
      * Clears out the contents of the help index. Normally called during
      * server reload.
      */
-    void clear();
+    public void clear();
 
     /**
      * Associates a {@link HelpTopicFactory} object with given command base
@@ -63,7 +63,7 @@ public interface HelpMap {
      * @throws IllegalArgumentException Thrown if {@code commandClass} does
      *     not derive from a legal base class.
      */
-    void registerHelpTopicFactory(Class<?> commandClass, HelpTopicFactory<?> factory);
+    public void registerHelpTopicFactory(Class<?> commandClass, HelpTopicFactory<?> factory);
 
     /**
      * Gets the list of plugins the server administrator has chosen to exclude
@@ -75,5 +75,5 @@ public interface HelpMap {
      *
      * @return A list of plugins that should be excluded from the help index.
      */
-    List<String> getIgnoredPlugins();
+    public List<String> getIgnoredPlugins();
 }

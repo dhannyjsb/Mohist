@@ -21,7 +21,7 @@ public interface Configuration extends ConfigurationSection {
      * @throws IllegalArgumentException Thrown if path is null.
      */
     @Override
-    void addDefault(String path, Object value);
+    public void addDefault(String path, Object value);
 
     /**
      * Sets the default values of the given paths as provided.
@@ -33,7 +33,7 @@ public interface Configuration extends ConfigurationSection {
      * @param defaults A map of Path{@literal ->}Values to add to defaults.
      * @throws IllegalArgumentException Thrown if defaults is null.
      */
-    void addDefaults(Map<String, Object> defaults);
+    public void addDefaults(Map<String, Object> defaults);
 
     /**
      * Sets the default values of the given paths as provided.
@@ -50,7 +50,7 @@ public interface Configuration extends ConfigurationSection {
      * @param defaults A configuration holding a list of defaults to copy.
      * @throws IllegalArgumentException Thrown if defaults is null or this.
      */
-    void addDefaults(Configuration defaults);
+    public void addDefaults(Configuration defaults);
 
     /**
      * Sets the source of all default values for this {@link Configuration}.
@@ -61,7 +61,7 @@ public interface Configuration extends ConfigurationSection {
      * @param defaults New source of default values for this configuration.
      * @throws IllegalArgumentException Thrown if defaults is null or this.
      */
-    void setDefaults(Configuration defaults);
+    public void setDefaults(Configuration defaults);
 
     /**
      * Gets the source {@link Configuration} for this configuration.
@@ -72,7 +72,7 @@ public interface Configuration extends ConfigurationSection {
      *
      * @return Configuration source for default values, or null if none exist.
      */
-    Configuration getDefaults();
+    public Configuration getDefaults();
 
     /**
      * Gets the {@link ConfigurationOptions} for this {@link Configuration}.
@@ -81,5 +81,5 @@ public interface Configuration extends ConfigurationSection {
      *
      * @return Options for this configuration
      */
-    ConfigurationOptions options();
+    public ConfigurationOptions options();
 }

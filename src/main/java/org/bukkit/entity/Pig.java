@@ -10,12 +10,12 @@ public interface Pig extends Animals, Vehicle {
      *
      * @return if the pig has been saddled.
      */
-    boolean hasSaddle();
+    public boolean hasSaddle();
 
     /**
      * Sets if the pig has a saddle or not
      *
      * @param saddled set if the pig has a saddle or not.
      */
-    void setSaddle(boolean saddled);
+    public void setSaddle(boolean saddled);
 }

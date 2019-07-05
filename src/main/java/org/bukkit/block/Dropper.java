@@ -27,5 +27,5 @@ public interface Dropper extends Container, Nameable {
      * 
      * @throws IllegalStateException if this block state is not placed
      */
-    void drop();
+    public void drop();
 }

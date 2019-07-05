@@ -13,14 +13,14 @@ public interface Minecart extends Vehicle {
      *
      * @param damage over 40 to "kill" a minecart
      */
-    void setDamage(double damage);
+    public void setDamage(double damage);
 
     /**
      * Gets a minecart's damage.
      *
      * @return The damage
      */
-    double getDamage();
+    public double getDamage();
 
     /**
      * Gets the maximum speed of a minecart. The speed is unrelated to the
@@ -28,7 +28,7 @@ public interface Minecart extends Vehicle {
      *
      * @return The max speed
      */
-    double getMaxSpeed();
+    public double getMaxSpeed();
 
     /**
      * Sets the maximum speed of a minecart. Must be nonnegative. Default is
@@ -36,7 +36,7 @@ public interface Minecart extends Vehicle {
      *
      * @param speed The max speed
      */
-    void setMaxSpeed(double speed);
+    public void setMaxSpeed(double speed);
 
     /**
      * Returns whether this minecart will slow down faster without a passenger
@@ -44,7 +44,7 @@ public interface Minecart extends Vehicle {
      *
      * @return Whether it decelerates faster
      */
-    boolean isSlowWhenEmpty();
+    public boolean isSlowWhenEmpty();
 
     /**
      * Sets whether this minecart will slow down faster without a passenger
@@ -52,7 +52,7 @@ public interface Minecart extends Vehicle {
      *
      * @param slow Whether it will decelerate faster
      */
-    void setSlowWhenEmpty(boolean slow);
+    public void setSlowWhenEmpty(boolean slow);
 
     /**
      * Gets the flying velocity modifier. Used for minecarts that are in
@@ -61,7 +61,7 @@ public interface Minecart extends Vehicle {
      *
      * @return The vector factor
      */
-    Vector getFlyingVelocityMod();
+    public Vector getFlyingVelocityMod();
 
     /**
      * Sets the flying velocity modifier. Used for minecarts that are in
@@ -70,7 +70,7 @@ public interface Minecart extends Vehicle {
      *
      * @param flying velocity modifier vector
      */
-    void setFlyingVelocityMod(Vector flying);
+    public void setFlyingVelocityMod(Vector flying);
 
     /**
      * Gets the derailed velocity modifier. Used for minecarts that are on the
@@ -80,7 +80,7 @@ public interface Minecart extends Vehicle {
      *
      * @return derailed visible speed
      */
-    Vector getDerailedVelocityMod();
+    public Vector getDerailedVelocityMod();
 
     /**
      * Sets the derailed velocity modifier. Used for minecarts that are on the
@@ -89,7 +89,7 @@ public interface Minecart extends Vehicle {
      *
      * @param derailed visible speed
      */
-    void setDerailedVelocityMod(Vector derailed);
+    public void setDerailedVelocityMod(Vector derailed);
 
     /**
      * Sets the display block for this minecart.
@@ -97,7 +97,7 @@ public interface Minecart extends Vehicle {
      *
      * @param material the material to set as display block.
      */
-    void setDisplayBlock(MaterialData material);
+    public void setDisplayBlock(MaterialData material);
 
     /**
      * Gets the display block for this minecart.
@@ -105,19 +105,19 @@ public interface Minecart extends Vehicle {
      *
      * @return the block displayed by this minecart.
      */
-    MaterialData getDisplayBlock();
+    public MaterialData getDisplayBlock();
 
     /**
      * Sets the offset of the display block.
      *
      * @param offset the block offset to set for this minecart.
      */
-    void setDisplayBlockOffset(int offset);
+    public void setDisplayBlockOffset(int offset);
 
     /**
      * Gets the offset of the display block.
      * 
      * @return the current block offset for this minecart.
      */
-    int getDisplayBlockOffset();
+    public int getDisplayBlockOffset();
 }

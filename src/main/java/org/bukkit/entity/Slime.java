@@ -8,12 +8,12 @@ public interface Slime extends LivingEntity {
     /**
      * @return The size of the slime
      */
-    int getSize();
+    public int getSize();
 
     /**
      * @param sz The new size of the slime.
      */
-    void setSize(int sz);
+    public void setSize(int sz);
 
     /**
      * Set the {@link LivingEntity} target for this slime. Set to null to clear
@@ -21,12 +21,12 @@ public interface Slime extends LivingEntity {
      *
      * @param target the entity to target
      */
-    void setTarget(LivingEntity target);
+    public void setTarget(LivingEntity target);
 
     /**
      * Get the {@link LivingEntity} this slime is currently targeting.
      *
      * @return the current target, or null if no target exists.
      */
-    LivingEntity getTarget();
+    public LivingEntity getTarget();
 }

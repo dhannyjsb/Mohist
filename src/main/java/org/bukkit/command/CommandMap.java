@@ -21,7 +21,7 @@ public interface CommandMap {
      *     a ':' one or more times to make the command unique
      * @param commands a list of commands to register
      */
-    void registerAll(String fallbackPrefix, List<Command> commands);
+    public void registerAll(String fallbackPrefix, List<Command> commands);
 
     /**
      * Registers a command. Returns true on success; false if name is already
@@ -43,7 +43,7 @@ public interface CommandMap {
      *     otherwise, which indicates the fallbackPrefix was used one or more
      *     times
      */
-    boolean register(String label, String fallbackPrefix, Command command);
+    public boolean register(String label, String fallbackPrefix, Command command);
 
     /**
      * Registers a command. Returns true on success; false if name is already
@@ -65,7 +65,7 @@ public interface CommandMap {
      *     otherwise, which indicates the fallbackPrefix was used one or more
      *     times
      */
-    boolean register(String fallbackPrefix, Command command);
+    public boolean register(String fallbackPrefix, Command command);
 
     /**
      * Looks for the requested command and executes it if found.
@@ -76,12 +76,12 @@ public interface CommandMap {
      * @throws CommandException Thrown when the executor for the given command
      *     fails with an unhandled exception
      */
-    boolean dispatch(CommandSender sender, String cmdLine) throws CommandException;
+    public boolean dispatch(CommandSender sender, String cmdLine) throws CommandException;
 
     /**
      * Clears all registered commands.
      */
-    void clearCommands();
+    public void clearCommands();
 
     /**
      * Gets the command registered to the specified name
@@ -90,7 +90,7 @@ public interface CommandMap {
      * @return Command with the specified name or null if a command with that
      *     label doesn't exist
      */
-    Command getCommand(String name);
+    public Command getCommand(String name);
 
     /**
      * Looks for the requested command and executes an appropriate
@@ -106,7 +106,7 @@ public interface CommandMap {
      *     command fails with an unhandled exception
      * @throws IllegalArgumentException if either sender or cmdLine are null
      */
-    List<String> tabComplete(CommandSender sender, String cmdLine) throws IllegalArgumentException;
+    public List<String> tabComplete(CommandSender sender, String cmdLine) throws IllegalArgumentException;
 
     /**
      * Looks for the requested command and executes an appropriate
@@ -123,5 +123,5 @@ public interface CommandMap {
      *     command fails with an unhandled exception
      * @throws IllegalArgumentException if either sender or cmdLine are null
      */
-    List<String> tabComplete(CommandSender sender, String cmdLine, Location location) throws IllegalArgumentException;
+    public List<String> tabComplete(CommandSender sender, String cmdLine, Location location) throws IllegalArgumentException;
 }

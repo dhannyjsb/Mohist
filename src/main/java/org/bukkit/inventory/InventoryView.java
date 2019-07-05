@@ -98,7 +98,7 @@ public abstract class InventoryView {
         REPAIR_COST(0, InventoryType.ANVIL);
         int id;
         InventoryType style;
-        Property(int id, InventoryType appliesTo) {
+        private Property(int id, InventoryType appliesTo) {
             this.id = id;
             style = appliesTo;
         }

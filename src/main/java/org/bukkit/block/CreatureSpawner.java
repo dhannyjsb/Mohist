@@ -12,14 +12,14 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return The creature type.
      */
-    EntityType getSpawnedType();
+    public EntityType getSpawnedType();
 
     /**
      * Set the spawner's creature type.
      *
      * @param creatureType The creature type.
      */
-    void setSpawnedType(EntityType creatureType);
+    public void setSpawnedType(EntityType creatureType);
 
     /**
      * Set the spawner mob type.
@@ -29,7 +29,7 @@ public interface CreatureSpawner extends BlockState {
      * {@link #setSpawnedType(org.bukkit.entity.EntityType)}.
      */
     @Deprecated
-    void setCreatureTypeByName(String creatureType);
+    public void setCreatureTypeByName(String creatureType);
 
     /**
      * Get the spawner's creature type.
@@ -38,7 +38,7 @@ public interface CreatureSpawner extends BlockState {
      * @deprecated magic value, use {@link #getSpawnedType()}.
      */
     @Deprecated
-    String getCreatureTypeName();
+    public String getCreatureTypeName();
 
     /**
      * Get the spawner's delay.
@@ -47,7 +47,7 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return The delay.
      */
-    int getDelay();
+    public int getDelay();
 
     /**
      * Set the spawner's delay.
@@ -57,7 +57,7 @@ public interface CreatureSpawner extends BlockState {
      *
      * @param delay The delay.
      */
-    void setDelay(int delay);
+    public void setDelay(int delay);
 
     /**
      * The minimum spawn delay amount (in ticks).
@@ -70,7 +70,7 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return the minimum spawn delay amount
      */
-    int getMinSpawnDelay();
+    public int getMinSpawnDelay();
 
     /**
      * Set the minimum spawn delay amount (in ticks).
@@ -78,7 +78,7 @@ public interface CreatureSpawner extends BlockState {
      * @see #getMinSpawnDelay()
      * @param delay the minimum spawn delay amount
      */
-    void setMinSpawnDelay(int delay);
+    public void setMinSpawnDelay(int delay);
 
     /**
      * The maximum spawn delay amount (in ticks).
@@ -94,7 +94,7 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return the maximum spawn delay amount
      */
-    int getMaxSpawnDelay();
+    public int getMaxSpawnDelay();
 
     /**
      * Set the maximum spawn delay amount (in ticks).
@@ -105,7 +105,7 @@ public interface CreatureSpawner extends BlockState {
      * @see #getMaxSpawnDelay()
      * @param delay the new maximum spawn delay amount
      */
-    void setMaxSpawnDelay(int delay);
+    public void setMaxSpawnDelay(int delay);
 
     /**
      * Get how many mobs attempt to spawn.
@@ -114,14 +114,14 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return the current spawn count
      */
-    int getSpawnCount();
+    public int getSpawnCount();
 
     /**
      * Set how many mobs attempt to spawn.
      *
      * @param spawnCount the new spawn count
      */
-    void setSpawnCount(int spawnCount);
+    public void setSpawnCount(int spawnCount);
 
     /**
      * Set the new maximum amount of similar entities that are allowed to be
@@ -134,7 +134,7 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return the maximum number of nearby, similar, entities
      */
-    int getMaxNearbyEntities();
+    public int getMaxNearbyEntities();
 
     /**
      * Set the maximum number of similar entities that are allowed to be within
@@ -144,7 +144,7 @@ public interface CreatureSpawner extends BlockState {
      *
      * @param maxNearbyEntities the maximum number of nearby, similar, entities
      */
-    void setMaxNearbyEntities(int maxNearbyEntities);
+    public void setMaxNearbyEntities(int maxNearbyEntities);
 
     /**
      * Get the maximum distance(squared) a player can be in order for this
@@ -158,7 +158,7 @@ public interface CreatureSpawner extends BlockState {
      * @return the maximum distance(squared) a player can be in order for this
      * spawner to be active.
      */
-    int getRequiredPlayerRange();
+    public int getRequiredPlayerRange();
 
     /**
      * Set the maximum distance (squared) a player can be in order for this
@@ -170,7 +170,7 @@ public interface CreatureSpawner extends BlockState {
      * @param requiredPlayerRange the maximum distance (squared) a player can be
      * in order for this spawner to be active.
      */
-    void setRequiredPlayerRange(int requiredPlayerRange);
+    public void setRequiredPlayerRange(int requiredPlayerRange);
 
     /**
      * Get the radius around which the spawner will attempt to spawn mobs in.
@@ -186,7 +186,7 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return the spawn range
      */
-    int getSpawnRange();
+    public int getSpawnRange();
 
     /**
      * Set the new spawn range.
@@ -195,5 +195,5 @@ public interface CreatureSpawner extends BlockState {
      * @see #getSpawnRange()
      * @param spawnRange the new spawn range
      */
-    void setSpawnRange(int spawnRange);
+    public void setSpawnRange(int spawnRange);
 }

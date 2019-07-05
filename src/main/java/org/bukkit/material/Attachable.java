@@ -12,5 +12,5 @@ public interface Attachable extends Directional {
      *
      * @return BlockFace attached to
      */
-    BlockFace getAttachedFace();
+    public BlockFace getAttachedFace();
 }

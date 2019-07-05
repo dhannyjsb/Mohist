@@ -12,7 +12,7 @@ public interface Evoker extends Spellcaster {
      * entities.
      */
     @Deprecated
-    enum Spell {
+    public enum Spell {
 
         /**
          * No spell is being evoked.
@@ -37,7 +37,7 @@ public interface Evoker extends Spellcaster {
         /**
          * The spell that makes the target blind.
          */
-        BLINDNESS
+        BLINDNESS;
     }
 
     /**

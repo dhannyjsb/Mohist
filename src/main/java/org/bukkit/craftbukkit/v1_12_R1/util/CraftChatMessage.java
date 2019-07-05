@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 public final class CraftChatMessage {
 
-    private static final Pattern LINK_PATTERN = Pattern.compile("((?:(?:https?):\\/\\/)?(?:[-\\w_\\.]{2,}\\.[a-z]{2,4}.*?(?=[\\.\\?!,;:]?(?:[" + ChatColor.COLOR_CHAR + " \\n]|$))))");
+    private static final Pattern LINK_PATTERN = Pattern.compile("((?:(?:https?):\\/\\/)?(?:[-\\w_\\.]{2,}\\.[a-z]{2,4}.*?(?=[\\.\\?!,;:]?(?:[" + String.valueOf(ChatColor.COLOR_CHAR) + " \\n]|$))))");
     private static final Map<Character, TextFormatting> formatMap;
 
     static {
@@ -37,7 +37,7 @@ public final class CraftChatMessage {
     }
 
     private static class StringMessage {
-        private static final Pattern INCREMENTAL_PATTERN = Pattern.compile("(" + ChatColor.COLOR_CHAR + "[0-9a-fk-or])|(\\n)|((?:(?:https?):\\/\\/)?(?:[-\\w_\\.]{2,}\\.[a-z]{2,4}.*?(?=[\\.\\?!,;:]?(?:[" + ChatColor.COLOR_CHAR + " \\n]|$))))", Pattern.CASE_INSENSITIVE);
+        private static final Pattern INCREMENTAL_PATTERN = Pattern.compile("(" + String.valueOf(ChatColor.COLOR_CHAR) + "[0-9a-fk-or])|(\\n)|((?:(?:https?):\\/\\/)?(?:[-\\w_\\.]{2,}\\.[a-z]{2,4}.*?(?=[\\.\\?!,;:]?(?:[" + String.valueOf(ChatColor.COLOR_CHAR) + " \\n]|$))))", Pattern.CASE_INSENSITIVE);
 
         private final List<ITextComponent> list = new ArrayList<ITextComponent>();
         private ITextComponent currentChatComponent = new TextComponentString("");
@@ -153,7 +153,7 @@ public final class CraftChatMessage {
         }
         StringBuilder out = new StringBuilder();
         
-        for (ITextComponent c : component) {
+        for (ITextComponent c : (Iterable<ITextComponent>) component) {
             Style modi = c.getStyle();
             out.append(modi.getColor() == null ? defaultColor : modi.getColor());
             if (modi.getBold()) {

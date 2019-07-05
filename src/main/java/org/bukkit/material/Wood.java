@@ -89,7 +89,7 @@ public class Wood extends MaterialData {
         switch (getItemType()) {
             case WOOD:
             case WOOD_DOUBLE_STEP:
-                return TreeSpecies.getByData(getData());
+                return TreeSpecies.getByData((byte) getData());
             case LOG:
             case LEAVES:
                 return TreeSpecies.getByData((byte) (getData() & 0x3));

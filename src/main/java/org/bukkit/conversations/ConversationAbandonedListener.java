@@ -11,5 +11,5 @@ public interface ConversationAbandonedListener extends EventListener {
      * @param abandonedEvent Contains details about the abandoned
      *     conversation.
      */
-    void conversationAbandoned(ConversationAbandonedEvent abandonedEvent);
+    public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent);
 }

@@ -37,7 +37,7 @@ public enum EventPriority {
 
     private final int slot;
 
-    EventPriority(int slot) {
+    private EventPriority(int slot) {
         this.slot = slot;
     }
 

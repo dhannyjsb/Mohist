@@ -12,13 +12,13 @@ public interface Fireball extends Projectile, Explosive {
      *
      * @param direction the direction this fireball is flying toward
      */
-    void setDirection(Vector direction);
+    public void setDirection(Vector direction);
 
     /**
      * Retrieve the direction this fireball is heading toward
      *
      * @return the direction
      */
-    Vector getDirection();
+    public Vector getDirection();
 
 }

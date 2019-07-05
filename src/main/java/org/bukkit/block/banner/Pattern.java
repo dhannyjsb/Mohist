@@ -49,7 +49,7 @@ public class Pattern implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        return ImmutableMap.of(
+        return ImmutableMap.<String, Object>of(
             COLOR, color.toString(),
             PATTERN, pattern.getIdentifier()
         );

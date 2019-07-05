@@ -41,8 +41,8 @@ final class PluginClassLoader extends URLClassLoader {
 
     private boolean nmsRemap = false;
 
-    PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException {
-        super(new URL[]{file.toURI().toURL()}, parent);
+    PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException, MalformedURLException {
+        super(new URL[] {file.toURI().toURL()}, parent);
         Validate.notNull(loader, "Loader cannot be null");
         this.loader = loader;
         this.description = description;

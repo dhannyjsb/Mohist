@@ -12,7 +12,7 @@ public interface Conversable {
      *
      * @return True if a conversation is in progress
      */
-    boolean isConversing();
+    public boolean isConversing();
 
     /**
      * Accepts input into the active conversation. If no conversation is in
@@ -20,7 +20,7 @@ public interface Conversable {
      *
      * @param input The input message into the conversation
      */
-    void acceptConversationInput(String input);
+    public void acceptConversationInput(String input);
 
     /**
      * Enters into a dialog with a Conversation object.
@@ -29,14 +29,14 @@ public interface Conversable {
      * @return True if the conversation should proceed, false if it has been
      *     enqueued
      */
-    boolean beginConversation(Conversation conversation);
+    public boolean beginConversation(Conversation conversation);
 
     /**
      * Abandons an active conversation.
      *
      * @param conversation The conversation to abandon
      */
-    void abandonConversation(Conversation conversation);
+    public void abandonConversation(Conversation conversation);
 
     /**
      * Abandons an active conversation.
@@ -44,12 +44,12 @@ public interface Conversable {
      * @param conversation The conversation to abandon
      * @param details Details about why the conversation was abandoned
      */
-    void abandonConversation(Conversation conversation, ConversationAbandonedEvent details);
+    public void abandonConversation(Conversation conversation, ConversationAbandonedEvent details);
 
     /**
      * Sends this sender a message raw
      *
      * @param message Message to be displayed
      */
-    void sendRawMessage(String message);
+    public void sendRawMessage(String message);
 }

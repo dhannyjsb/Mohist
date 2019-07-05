@@ -14,5 +14,5 @@ public interface ShulkerBox extends Container, Nameable
      *
      * @return the {@link DyeColor} of this ShulkerBox
      */
-    DyeColor getColor();
+    public DyeColor getColor();
 }

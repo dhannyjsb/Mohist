@@ -5,17 +5,17 @@ public interface Rabbit extends Animals {
     /**
      * @return The type of rabbit.
      */
-    Type getRabbitType();
+    public Type getRabbitType();
 
     /**
      * @param type Sets the type of rabbit for this entity.
      */
-    void setRabbitType(Type type);
+    public void setRabbitType(Type type);
 
     /**
      * Represents the various types a Rabbit might be.
      */
-    enum Type {
+    public enum Type {
 
         /**
          * Chocolate colored rabbit.

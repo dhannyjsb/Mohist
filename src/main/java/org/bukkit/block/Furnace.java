@@ -13,32 +13,32 @@ public interface Furnace extends Container, Nameable {
      *
      * @return Burn time
      */
-    short getBurnTime();
+    public short getBurnTime();
 
     /**
      * Set burn time.
      *
      * @param burnTime Burn time
      */
-    void setBurnTime(short burnTime);
+    public void setBurnTime(short burnTime);
 
     /**
      * Get cook time.
      *
      * @return Cook time
      */
-    short getCookTime();
+    public short getCookTime();
 
     /**
      * Set cook time.
      *
      * @param cookTime Cook time
      */
-    void setCookTime(short cookTime);
+    public void setCookTime(short cookTime);
 
     @Override
-    FurnaceInventory getInventory();
+    public FurnaceInventory getInventory();
 
     @Override
-    FurnaceInventory getSnapshotInventory();
+    public FurnaceInventory getSnapshotInventory();
 }

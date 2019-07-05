@@ -181,7 +181,7 @@ public final class MapCursor {
 
         private byte value;
 
-        Type(int value) {
+        private Type(int value) {
             this.value = (byte) value;
         }
 

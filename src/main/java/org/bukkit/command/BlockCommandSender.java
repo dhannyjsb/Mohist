@@ -9,5 +9,5 @@ public interface BlockCommandSender extends CommandSender {
      *
      * @return Block for the command sender
      */
-    Block getBlock();
+    public Block getBlock();
 }

@@ -216,7 +216,10 @@ public class SimpleHelpMap implements HelpMap {
         if ((command instanceof BukkitCommand) && ignoredPlugins.contains("Bukkit")) {
             return true;
         }
-        return command instanceof PluginIdentifiableCommand && ignoredPlugins.contains(((PluginIdentifiableCommand) command).getPlugin().getName());
+        if (command instanceof PluginIdentifiableCommand && ignoredPlugins.contains(((PluginIdentifiableCommand)command).getPlugin().getName())) {
+            return true;
+        }
+        return false;
     }
 
     @Override

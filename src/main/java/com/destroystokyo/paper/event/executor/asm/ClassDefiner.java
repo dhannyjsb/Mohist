@@ -7,7 +7,7 @@ public interface ClassDefiner {
      *
      * @return if classes bypass access checks
      */
-    default boolean isBypassAccessChecks() {
+    public default boolean isBypassAccessChecks() {
         return false;
     }
 
@@ -21,9 +21,9 @@ public interface ClassDefiner {
      * @throws ClassFormatError     if the class data is invalid
      * @throws NullPointerException if any of the arguments are null
      */
-    Class<?> defineClass(ClassLoader parentLoader, String name, byte[] data);
+    public Class<?> defineClass(ClassLoader parentLoader, String name, byte[] data);
 
-    static ClassDefiner getInstance() {
+    public static ClassDefiner getInstance() {
         return SafeClassDefiner.INSTANCE;
     }
 

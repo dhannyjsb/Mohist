@@ -30,7 +30,7 @@ public interface BookMeta extends ItemMeta {
         /**
          * Unused; unobtainable by players. Can't be copied.
          */
-        TATTERED
+        TATTERED;
     }
 
     /**
@@ -177,7 +177,7 @@ public interface BookMeta extends ItemMeta {
     BookMeta clone();
 
     // Spigot start
-    class Spigot extends ItemMeta.Spigot
+    public class Spigot extends ItemMeta.Spigot
     {
         /**
          * Gets the specified page in the book. The given page must exist.

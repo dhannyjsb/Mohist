@@ -28,7 +28,7 @@ public interface ConfigurationSection {
      *     list.
      * @return Set of keys contained within this ConfigurationSection.
      */
-    Set<String> getKeys(boolean deep);
+    public Set<String> getKeys(boolean deep);
 
     /**
      * Gets a Map containing all keys and their values for this section.
@@ -44,7 +44,7 @@ public interface ConfigurationSection {
      *     list.
      * @return Map of keys and values of this section.
      */
-    Map<String, Object> getValues(boolean deep);
+    public Map<String, Object> getValues(boolean deep);
 
     /**
      * Checks if this {@link ConfigurationSection} contains the given path.
@@ -57,7 +57,7 @@ public interface ConfigurationSection {
      *     default or being set.
      * @throws IllegalArgumentException Thrown when path is null.
      */
-    boolean contains(String path);
+    public boolean contains(String path);
 
     /**
      * Checks if this {@link ConfigurationSection} contains the given path.
@@ -76,7 +76,7 @@ public interface ConfigurationSection {
      * value exist and the boolean parameter for this method is true.
      * @throws IllegalArgumentException Thrown when path is null.
      */
-    boolean contains(String path, boolean ignoreDefault);
+    public boolean contains(String path, boolean ignoreDefault);
 
     /**
      * Checks if this {@link ConfigurationSection} has a value set for the
@@ -90,7 +90,7 @@ public interface ConfigurationSection {
      *     having a default.
      * @throws IllegalArgumentException Thrown when path is null.
      */
-    boolean isSet(String path);
+    public boolean isSet(String path);
 
     /**
      * Gets the path of this {@link ConfigurationSection} from its root {@link
@@ -107,7 +107,7 @@ public interface ConfigurationSection {
      *
      * @return Path of this section relative to its root
      */
-    String getCurrentPath();
+    public String getCurrentPath();
 
     /**
      * Gets the name of this individual {@link ConfigurationSection}, in the
@@ -118,7 +118,7 @@ public interface ConfigurationSection {
      *
      * @return Name of this section
      */
-    String getName();
+    public String getName();
 
     /**
      * Gets the root {@link Configuration} that contains this {@link
@@ -132,7 +132,7 @@ public interface ConfigurationSection {
      *
      * @return Root configuration containing this section.
      */
-    Configuration getRoot();
+    public Configuration getRoot();
 
     /**
      * Gets the parent {@link ConfigurationSection} that directly contains
@@ -145,7 +145,7 @@ public interface ConfigurationSection {
      *
      * @return Parent section containing this section.
      */
-    ConfigurationSection getParent();
+    public ConfigurationSection getParent();
 
     /**
      * Gets the requested Object by path.
@@ -157,7 +157,7 @@ public interface ConfigurationSection {
      * @param path Path of the Object to get.
      * @return Requested Object.
      */
-    Object get(String path);
+    public Object get(String path);
 
     /**
      * Gets the requested Object by path, returning a default value if not
@@ -171,7 +171,7 @@ public interface ConfigurationSection {
      * @param def The default value to return if the path is not found.
      * @return Requested Object.
      */
-    Object get(String path, Object def);
+    public Object get(String path, Object def);
 
     /**
      * Sets the specified path to the given value.
@@ -187,7 +187,7 @@ public interface ConfigurationSection {
      * @param path Path of the object to set.
      * @param value New value to set the path to.
      */
-    void set(String path, Object value);
+    public void set(String path, Object value);
 
     /**
      * Creates an empty {@link ConfigurationSection} at the specified path.
@@ -199,7 +199,7 @@ public interface ConfigurationSection {
      * @param path Path to create the section at.
      * @return Newly created section
      */
-    ConfigurationSection createSection(String path);
+    public ConfigurationSection createSection(String path);
 
     /**
      * Creates a {@link ConfigurationSection} at the specified path, with
@@ -213,7 +213,7 @@ public interface ConfigurationSection {
      * @param map The values to used.
      * @return Newly created section
      */
-    ConfigurationSection createSection(String path, Map<?, ?> map);
+    public ConfigurationSection createSection(String path, Map<?, ?> map);
 
     // Primitives
     /**
@@ -226,7 +226,7 @@ public interface ConfigurationSection {
      * @param path Path of the String to get.
      * @return Requested String.
      */
-    String getString(String path);
+    public String getString(String path);
 
     /**
      * Gets the requested String by path, returning a default value if not
@@ -241,7 +241,7 @@ public interface ConfigurationSection {
      *     not a String.
      * @return Requested String.
      */
-    String getString(String path, String def);
+    public String getString(String path, String def);
 
     /**
      * Checks if the specified path is a String.
@@ -254,7 +254,7 @@ public interface ConfigurationSection {
      * @param path Path of the String to check.
      * @return Whether or not the specified path is a String.
      */
-    boolean isString(String path);
+    public boolean isString(String path);
 
     /**
      * Gets the requested int by path.
@@ -266,7 +266,7 @@ public interface ConfigurationSection {
      * @param path Path of the int to get.
      * @return Requested int.
      */
-    int getInt(String path);
+    public int getInt(String path);
 
     /**
      * Gets the requested int by path, returning a default value if not found.
@@ -280,7 +280,7 @@ public interface ConfigurationSection {
      *     not an int.
      * @return Requested int.
      */
-    int getInt(String path, int def);
+    public int getInt(String path, int def);
 
     /**
      * Checks if the specified path is an int.
@@ -293,7 +293,7 @@ public interface ConfigurationSection {
      * @param path Path of the int to check.
      * @return Whether or not the specified path is an int.
      */
-    boolean isInt(String path);
+    public boolean isInt(String path);
 
     /**
      * Gets the requested boolean by path.
@@ -305,7 +305,7 @@ public interface ConfigurationSection {
      * @param path Path of the boolean to get.
      * @return Requested boolean.
      */
-    boolean getBoolean(String path);
+    public boolean getBoolean(String path);
 
     /**
      * Gets the requested boolean by path, returning a default value if not
@@ -320,7 +320,7 @@ public interface ConfigurationSection {
      *     not a boolean.
      * @return Requested boolean.
      */
-    boolean getBoolean(String path, boolean def);
+    public boolean getBoolean(String path, boolean def);
 
     /**
      * Checks if the specified path is a boolean.
@@ -333,7 +333,7 @@ public interface ConfigurationSection {
      * @param path Path of the boolean to check.
      * @return Whether or not the specified path is a boolean.
      */
-    boolean isBoolean(String path);
+    public boolean isBoolean(String path);
 
     /**
      * Gets the requested double by path.
@@ -345,7 +345,7 @@ public interface ConfigurationSection {
      * @param path Path of the double to get.
      * @return Requested double.
      */
-    double getDouble(String path);
+    public double getDouble(String path);
 
     /**
      * Gets the requested double by path, returning a default value if not
@@ -360,7 +360,7 @@ public interface ConfigurationSection {
      *     not a double.
      * @return Requested double.
      */
-    double getDouble(String path, double def);
+    public double getDouble(String path, double def);
 
     /**
      * Checks if the specified path is a double.
@@ -373,7 +373,7 @@ public interface ConfigurationSection {
      * @param path Path of the double to check.
      * @return Whether or not the specified path is a double.
      */
-    boolean isDouble(String path);
+    public boolean isDouble(String path);
 
     /**
      * Gets the requested long by path.
@@ -385,7 +385,7 @@ public interface ConfigurationSection {
      * @param path Path of the long to get.
      * @return Requested long.
      */
-    long getLong(String path);
+    public long getLong(String path);
 
     /**
      * Gets the requested long by path, returning a default value if not
@@ -400,7 +400,7 @@ public interface ConfigurationSection {
      *     not a long.
      * @return Requested long.
      */
-    long getLong(String path, long def);
+    public long getLong(String path, long def);
 
     /**
      * Checks if the specified path is a long.
@@ -413,7 +413,7 @@ public interface ConfigurationSection {
      * @param path Path of the long to check.
      * @return Whether or not the specified path is a long.
      */
-    boolean isLong(String path);
+    public boolean isLong(String path);
 
     // Java
     /**
@@ -426,7 +426,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List.
      */
-    List<?> getList(String path);
+    public List<?> getList(String path);
 
     /**
      * Gets the requested List by path, returning a default value if not
@@ -441,7 +441,7 @@ public interface ConfigurationSection {
      *     not a List.
      * @return Requested List.
      */
-    List<?> getList(String path, List<?> def);
+    public List<?> getList(String path, List<?> def);
 
     /**
      * Checks if the specified path is a List.
@@ -454,7 +454,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to check.
      * @return Whether or not the specified path is a List.
      */
-    boolean isList(String path);
+    public boolean isList(String path);
 
     /**
      * Gets the requested List of String by path.
@@ -469,7 +469,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of String.
      */
-    List<String> getStringList(String path);
+    public List<String> getStringList(String path);
 
     /**
      * Gets the requested List of Integer by path.
@@ -484,7 +484,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Integer.
      */
-    List<Integer> getIntegerList(String path);
+    public List<Integer> getIntegerList(String path);
 
     /**
      * Gets the requested List of Boolean by path.
@@ -499,7 +499,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Boolean.
      */
-    List<Boolean> getBooleanList(String path);
+    public List<Boolean> getBooleanList(String path);
 
     /**
      * Gets the requested List of Double by path.
@@ -514,7 +514,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Double.
      */
-    List<Double> getDoubleList(String path);
+    public List<Double> getDoubleList(String path);
 
     /**
      * Gets the requested List of Float by path.
@@ -529,7 +529,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Float.
      */
-    List<Float> getFloatList(String path);
+    public List<Float> getFloatList(String path);
 
     /**
      * Gets the requested List of Long by path.
@@ -544,7 +544,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Long.
      */
-    List<Long> getLongList(String path);
+    public List<Long> getLongList(String path);
 
     /**
      * Gets the requested List of Byte by path.
@@ -559,7 +559,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Byte.
      */
-    List<Byte> getByteList(String path);
+    public List<Byte> getByteList(String path);
 
     /**
      * Gets the requested List of Character by path.
@@ -574,7 +574,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Character.
      */
-    List<Character> getCharacterList(String path);
+    public List<Character> getCharacterList(String path);
 
     /**
      * Gets the requested List of Short by path.
@@ -589,7 +589,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Short.
      */
-    List<Short> getShortList(String path);
+    public List<Short> getShortList(String path);
 
     /**
      * Gets the requested List of Maps by path.
@@ -604,7 +604,7 @@ public interface ConfigurationSection {
      * @param path Path of the List to get.
      * @return Requested List of Maps.
      */
-    List<Map<?, ?>> getMapList(String path);
+    public List<Map<?, ?>> getMapList(String path);
 
     // Bukkit
     /**
@@ -620,7 +620,7 @@ public interface ConfigurationSection {
      * @param clazz the type of {@link ConfigurationSerializable}
      * @return Requested {@link ConfigurationSerializable} object
      */
-    <T extends ConfigurationSerializable> T getSerializable(String path, Class<T> clazz);
+    public <T extends ConfigurationSerializable> T getSerializable(String path, Class<T> clazz);
 
     /**
      * Gets the requested {@link ConfigurationSerializable} object at the given
@@ -637,7 +637,7 @@ public interface ConfigurationSection {
      * the path
      * @return Requested {@link ConfigurationSerializable} object
      */
-    <T extends ConfigurationSerializable> T getSerializable(String path, Class<T> clazz, T def);
+    public <T extends ConfigurationSerializable> T getSerializable(String path, Class<T> clazz, T def);
 
     /**
      * Gets the requested Vector by path.
@@ -649,7 +649,7 @@ public interface ConfigurationSection {
      * @param path Path of the Vector to get.
      * @return Requested Vector.
      */
-    Vector getVector(String path);
+    public Vector getVector(String path);
 
     /**
      * Gets the requested {@link Vector} by path, returning a default value if
@@ -664,7 +664,7 @@ public interface ConfigurationSection {
      *     not a Vector.
      * @return Requested Vector.
      */
-    Vector getVector(String path, Vector def);
+    public Vector getVector(String path, Vector def);
 
     /**
      * Checks if the specified path is a Vector.
@@ -677,7 +677,7 @@ public interface ConfigurationSection {
      * @param path Path of the Vector to check.
      * @return Whether or not the specified path is a Vector.
      */
-    boolean isVector(String path);
+    public boolean isVector(String path);
 
     /**
      * Gets the requested OfflinePlayer by path.
@@ -690,7 +690,7 @@ public interface ConfigurationSection {
      * @param path Path of the OfflinePlayer to get.
      * @return Requested OfflinePlayer.
      */
-    OfflinePlayer getOfflinePlayer(String path);
+    public OfflinePlayer getOfflinePlayer(String path);
 
     /**
      * Gets the requested {@link OfflinePlayer} by path, returning a default
@@ -705,7 +705,7 @@ public interface ConfigurationSection {
      *     not an OfflinePlayer.
      * @return Requested OfflinePlayer.
      */
-    OfflinePlayer getOfflinePlayer(String path, OfflinePlayer def);
+    public OfflinePlayer getOfflinePlayer(String path, OfflinePlayer def);
 
     /**
      * Checks if the specified path is an OfflinePlayer.
@@ -718,7 +718,7 @@ public interface ConfigurationSection {
      * @param path Path of the OfflinePlayer to check.
      * @return Whether or not the specified path is an OfflinePlayer.
      */
-    boolean isOfflinePlayer(String path);
+    public boolean isOfflinePlayer(String path);
 
     /**
      * Gets the requested ItemStack by path.
@@ -730,7 +730,7 @@ public interface ConfigurationSection {
      * @param path Path of the ItemStack to get.
      * @return Requested ItemStack.
      */
-    ItemStack getItemStack(String path);
+    public ItemStack getItemStack(String path);
 
     /**
      * Gets the requested {@link ItemStack} by path, returning a default value
@@ -745,7 +745,7 @@ public interface ConfigurationSection {
      *     not an ItemStack.
      * @return Requested ItemStack.
      */
-    ItemStack getItemStack(String path, ItemStack def);
+    public ItemStack getItemStack(String path, ItemStack def);
 
     /**
      * Checks if the specified path is an ItemStack.
@@ -758,7 +758,7 @@ public interface ConfigurationSection {
      * @param path Path of the ItemStack to check.
      * @return Whether or not the specified path is an ItemStack.
      */
-    boolean isItemStack(String path);
+    public boolean isItemStack(String path);
 
     /**
      * Gets the requested Color by path.
@@ -770,7 +770,7 @@ public interface ConfigurationSection {
      * @param path Path of the Color to get.
      * @return Requested Color.
      */
-    Color getColor(String path);
+    public Color getColor(String path);
 
     /**
      * Gets the requested {@link Color} by path, returning a default value if
@@ -785,7 +785,7 @@ public interface ConfigurationSection {
      *     not a Color.
      * @return Requested Color.
      */
-    Color getColor(String path, Color def);
+    public Color getColor(String path, Color def);
 
     /**
      * Checks if the specified path is a Color.
@@ -798,7 +798,7 @@ public interface ConfigurationSection {
      * @param path Path of the Color to check.
      * @return Whether or not the specified path is a Color.
      */
-    boolean isColor(String path);
+    public boolean isColor(String path);
 
     /**
      * Gets the requested ConfigurationSection by path.
@@ -811,7 +811,7 @@ public interface ConfigurationSection {
      * @param path Path of the ConfigurationSection to get.
      * @return Requested ConfigurationSection.
      */
-    ConfigurationSection getConfigurationSection(String path);
+    public ConfigurationSection getConfigurationSection(String path);
 
     /**
      * Checks if the specified path is a ConfigurationSection.
@@ -825,7 +825,7 @@ public interface ConfigurationSection {
      * @param path Path of the ConfigurationSection to check.
      * @return Whether or not the specified path is a ConfigurationSection.
      */
-    boolean isConfigurationSection(String path);
+    public boolean isConfigurationSection(String path);
 
     /**
      * Gets the equivalent {@link ConfigurationSection} from the default
@@ -837,7 +837,7 @@ public interface ConfigurationSection {
      *
      * @return Equivalent section in root configuration
      */
-    ConfigurationSection getDefaultSection();
+    public ConfigurationSection getDefaultSection();
 
     /**
      * Sets the default value in the root at the given path as provided.
@@ -857,5 +857,5 @@ public interface ConfigurationSection {
      * @param value Value to set the default to.
      * @throws IllegalArgumentException Thrown if path is null.
      */
-    void addDefault(String path, Object value);
+    public void addDefault(String path, Object value);
 }

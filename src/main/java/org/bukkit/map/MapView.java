@@ -12,7 +12,7 @@ public interface MapView {
     /**
      * An enum representing all possible scales a map can be set to.
      */
-    enum Scale {
+    public static enum Scale {
         CLOSEST(0),
         CLOSE(1),
         NORMAL(2),
@@ -21,7 +21,7 @@ public interface MapView {
 
         private byte value;
 
-        Scale(int value) {
+        private Scale(int value) {
             this.value = (byte) value;
         }
 
@@ -64,7 +64,7 @@ public interface MapView {
      * @deprecated Magic value
      */
     @Deprecated
-    short getId();
+    public short getId();
 
     /**
      * Check whether this map is virtual. A map is virtual if its lowermost
@@ -72,49 +72,49 @@ public interface MapView {
      *
      * @return Whether the map is virtual.
      */
-    boolean isVirtual();
+    public boolean isVirtual();
 
     /**
      * Get the scale of this map.
      *
      * @return The scale of the map.
      */
-    Scale getScale();
+    public Scale getScale();
 
     /**
      * Set the scale of this map.
      *
      * @param scale The scale to set.
      */
-    void setScale(Scale scale);
+    public void setScale(Scale scale);
 
     /**
      * Get the center X position of this map.
      *
      * @return The center X position.
      */
-    int getCenterX();
+    public int getCenterX();
 
     /**
      * Get the center Z position of this map.
      *
      * @return The center Z position.
      */
-    int getCenterZ();
+    public int getCenterZ();
 
     /**
      * Set the center X position of this map.
      *
      * @param x The center X position.
      */
-    void setCenterX(int x);
+    public void setCenterX(int x);
 
     /**
      * Set the center Z position of this map.
      *
      * @param z The center Z position.
      */
-    void setCenterZ(int z);
+    public void setCenterZ(int z);
 
     /**
      * Get the world that this map is associated with. Primarily used by the
@@ -123,7 +123,7 @@ public interface MapView {
      *
      * @return The World this map is associated with.
      */
-    World getWorld();
+    public World getWorld();
 
     /**
      * Set the world that this map is associated with. The world is used by
@@ -131,21 +131,21 @@ public interface MapView {
      *
      * @param world The World to associate this map with.
      */
-    void setWorld(World world);
+    public void setWorld(World world);
 
     /**
      * Get a list of MapRenderers currently in effect.
      *
      * @return A {@code List<MapRenderer>} containing each map renderer.
      */
-    List<MapRenderer> getRenderers();
+    public List<MapRenderer> getRenderers();
 
     /**
      * Add a renderer to this map.
      *
      * @param renderer The MapRenderer to add.
      */
-    void addRenderer(MapRenderer renderer);
+    public void addRenderer(MapRenderer renderer);
 
     /**
      * Remove a renderer from this map.
@@ -153,7 +153,7 @@ public interface MapView {
      * @param renderer The MapRenderer to remove.
      * @return True if the renderer was successfully removed.
      */
-    boolean removeRenderer(MapRenderer renderer);
+    public boolean removeRenderer(MapRenderer renderer);
 
     /**
      * Whether the map will show a smaller position cursor (true), or no

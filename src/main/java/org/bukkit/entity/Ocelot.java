@@ -11,19 +11,19 @@ public interface Ocelot extends Animals, Tameable, Sittable {
      *
      * @return Type of the cat.
      */
-    Type getCatType();
+    public Type getCatType();
 
     /**
      * Sets the current type of this cat.
      *
      * @param type New type of this cat.
      */
-    void setCatType(Type type);
+    public void setCatType(Type type);
 
     /**
      * Represents the various different cat types there are.
      */
-    enum Type {
+    public enum Type {
         WILD_OCELOT(0),
         BLACK_CAT(1),
         RED_CAT(2),
@@ -38,7 +38,7 @@ public interface Ocelot extends Animals, Tameable, Sittable {
             }
         }
 
-        Type(int id) {
+        private Type(int id) {
             this.id = id;
         }
 

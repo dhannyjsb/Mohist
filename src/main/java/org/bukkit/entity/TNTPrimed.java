@@ -10,7 +10,7 @@ public interface TNTPrimed extends Explosive {
      *
      * @param fuseTicks The fuse ticks
      */
-    void setFuseTicks(int fuseTicks);
+    public void setFuseTicks(int fuseTicks);
 
     /**
      * Retrieve the number of ticks until the explosion of this TNTPrimed
@@ -18,7 +18,7 @@ public interface TNTPrimed extends Explosive {
      *
      * @return the number of ticks until this TNTPrimed explodes
      */
-    int getFuseTicks();
+    public int getFuseTicks();
 
     /**
      * Gets the source of this primed TNT. The source is the entity
@@ -34,5 +34,5 @@ public interface TNTPrimed extends Explosive {
      *
      * @return the source of this primed TNT
      */
-    Entity getSource();
+    public Entity getSource();
 }

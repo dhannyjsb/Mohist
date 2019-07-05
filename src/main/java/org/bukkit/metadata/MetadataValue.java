@@ -9,63 +9,63 @@ public interface MetadataValue {
      *
      * @return the metadata value.
      */
-    Object value();
+    public Object value();
 
     /**
      * Attempts to convert the value of this metadata item into an int.
      *
      * @return the value as an int.
      */
-    int asInt();
+    public int asInt();
 
     /**
      * Attempts to convert the value of this metadata item into a float.
      *
      * @return the value as a float.
      */
-    float asFloat();
+    public float asFloat();
 
     /**
      * Attempts to convert the value of this metadata item into a double.
      *
      * @return the value as a double.
      */
-    double asDouble();
+    public double asDouble();
 
     /**
      * Attempts to convert the value of this metadata item into a long.
      *
      * @return the value as a long.
      */
-    long asLong();
+    public long asLong();
 
     /**
      * Attempts to convert the value of this metadata item into a short.
      *
      * @return the value as a short.
      */
-    short asShort();
+    public short asShort();
 
     /**
      * Attempts to convert the value of this metadata item into a byte.
      *
      * @return the value as a byte.
      */
-    byte asByte();
+    public byte asByte();
 
     /**
      * Attempts to convert the value of this metadata item into a boolean.
      *
      * @return the value as a boolean.
      */
-    boolean asBoolean();
+    public boolean asBoolean();
 
     /**
      * Attempts to convert the value of this metadata item into a string.
      *
      * @return the value as a string.
      */
-    String asString();
+    public String asString();
 
     /**
      * Returns the {@link Plugin} that created this metadata item.
@@ -73,11 +73,11 @@ public interface MetadataValue {
      * @return the plugin that owns this metadata value. This should never be
      *     null.
      */
-    Plugin getOwningPlugin();
+    public Plugin getOwningPlugin();
 
     /**
      * Invalidates this metadata item, forcing it to recompute when next
      * accessed.
      */
-    void invalidate();
+    public void invalidate();
 }

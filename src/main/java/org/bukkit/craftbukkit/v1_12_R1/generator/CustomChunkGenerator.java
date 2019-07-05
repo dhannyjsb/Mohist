@@ -228,7 +228,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
 
     @Override
     public boolean isInsideStructure(World world, String type, BlockPos position) {
-        return ("Stronghold".equals(type) && this.strongholdGen != null) && this.strongholdGen.isInsideStructure(position);
+        return "Stronghold".equals(type) && this.strongholdGen != null ? this.strongholdGen.isInsideStructure(position) : false;
     }
 
     @Override

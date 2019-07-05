@@ -310,7 +310,7 @@ public final class Color implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        return ImmutableMap.of(
+        return ImmutableMap.<String, Object>of(
             "RED", getRed(),
             "BLUE", getBlue(),
             "GREEN", getGreen()

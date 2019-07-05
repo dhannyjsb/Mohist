@@ -29,7 +29,7 @@ public interface Boat extends Vehicle {
      * @deprecated boats are complex and many of these methods do not work correctly across multiple versions.
      */
     @Deprecated
-    double getMaxSpeed();
+    public double getMaxSpeed();
 
     /**
      * Sets the maximum speed of a boat. Must be nonnegative. Default is 0.4D.
@@ -38,7 +38,7 @@ public interface Boat extends Vehicle {
      * @deprecated boats are complex and many of these methods do not work correctly across multiple versions.
      */
     @Deprecated
-    void setMaxSpeed(double speed);
+    public void setMaxSpeed(double speed);
 
     /**
      * Gets the deceleration rate (newSpeed = curSpeed * rate) of occupied
@@ -48,7 +48,7 @@ public interface Boat extends Vehicle {
      * @deprecated boats are complex and many of these methods do not work correctly across multiple versions.
      */
     @Deprecated
-    double getOccupiedDeceleration();
+    public double getOccupiedDeceleration();
 
     /**
      * Sets the deceleration rate (newSpeed = curSpeed * rate) of occupied
@@ -59,7 +59,7 @@ public interface Boat extends Vehicle {
      * @deprecated boats are complex and many of these methods do not work correctly across multiple versions.
      */
     @Deprecated
-    void setOccupiedDeceleration(double rate);
+    public void setOccupiedDeceleration(double rate);
 
     /**
      * Gets the deceleration rate (newSpeed = curSpeed * rate) of unoccupied
@@ -70,7 +70,7 @@ public interface Boat extends Vehicle {
      * @deprecated boats are complex and many of these methods do not work correctly across multiple versions.
      */
     @Deprecated
-    double getUnoccupiedDeceleration();
+    public double getUnoccupiedDeceleration();
 
     /**
      * Sets the deceleration rate (newSpeed = curSpeed * rate) of unoccupied
@@ -82,7 +82,7 @@ public interface Boat extends Vehicle {
      * @deprecated boats are complex and many of these methods do not work correctly across multiple versions.
      */
     @Deprecated
-    void setUnoccupiedDeceleration(double rate);
+    public void setUnoccupiedDeceleration(double rate);
 
     /**
      * Get whether boats can work on land.
@@ -91,7 +91,7 @@ public interface Boat extends Vehicle {
      * @deprecated boats are complex and many of these methods do not work correctly across multiple versions.
      */
     @Deprecated
-    boolean getWorkOnLand();
+    public boolean getWorkOnLand();
 
     /**
      * Set whether boats can work on land.
@@ -100,5 +100,5 @@ public interface Boat extends Vehicle {
      * @deprecated boats are complex and many of these methods do not work correctly across multiple versions.
      */
     @Deprecated
-    void setWorkOnLand(boolean workOnLand);
+    public void setWorkOnLand(boolean workOnLand);
 }

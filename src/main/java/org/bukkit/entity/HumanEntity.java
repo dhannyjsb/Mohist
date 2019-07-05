@@ -23,7 +23,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @return Player name
      */
     @Override
-    String getName();
+    public String getName();
 
     /**
      * Get the player's inventory.
@@ -32,21 +32,21 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      *     slots.
      */
     @Override
-    PlayerInventory getInventory();
+    public PlayerInventory getInventory();
 
     /**
      * Get the player's EnderChest inventory
      *
      * @return The EnderChest of the player
      */
-    Inventory getEnderChest();
+    public Inventory getEnderChest();
 
     /**
      * Gets the player's selected main hand
      *
      * @return the players main hand
      */
-    MainHand getMainHand();
+    public MainHand getMainHand();
 
     /**
      * If the player currently has an inventory window open, this method will
@@ -56,7 +56,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @param value The value to set the property to.
      * @return True if the property was successfully set.
      */
-    boolean setWindowProperty(InventoryView.Property prop, int value);
+    public boolean setWindowProperty(InventoryView.Property prop, int value);
 
     /**
      * Gets the inventory view the player is currently viewing. If they do not
@@ -64,7 +64,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      *
      * @return The inventory view.
      */
-    InventoryView getOpenInventory();
+    public InventoryView getOpenInventory();
 
     /**
      * Opens an inventory window with the specified inventory on the top and
@@ -73,7 +73,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @param inventory The inventory to open
      * @return The newly opened inventory view
      */
-    InventoryView openInventory(Inventory inventory);
+    public InventoryView openInventory(Inventory inventory);
 
     /**
      * Opens an empty workbench inventory window with the player's inventory
@@ -86,7 +86,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @return The newly opened inventory view, or null if it could not be
      *     opened.
      */
-    InventoryView openWorkbench(Location location, boolean force);
+    public InventoryView openWorkbench(Location location, boolean force);
 
     /**
      * Opens an empty enchanting inventory window with the player's inventory
@@ -99,14 +99,14 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @return The newly opened inventory view, or null if it could not be
      *     opened.
      */
-    InventoryView openEnchanting(Location location, boolean force);
+    public InventoryView openEnchanting(Location location, boolean force);
 
     /**
      * Opens an inventory window to the specified inventory view.
      *
      * @param inventory The view to open
      */
-    void openInventory(InventoryView inventory);
+    public void openInventory(InventoryView inventory);
 
     /**
      * Starts a trade between the player and the villager.
@@ -119,7 +119,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @return The newly opened inventory view, or null if it could not be
      * opened.
      */
-    InventoryView openMerchant(Villager trader, boolean force);
+    public InventoryView openMerchant(Villager trader, boolean force);
 
     /**
      * Starts a trade between the player and the merchant.
@@ -132,12 +132,12 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @return The newly opened inventory view, or null if it could not be
      * opened.
      */
-    InventoryView openMerchant(Merchant merchant, boolean force);
+    public InventoryView openMerchant(Merchant merchant, boolean force);
 
     /**
      * Force-closes the currently open inventory view for this player, if any.
      */
-    void closeInventory();
+    public void closeInventory();
 
     /**
      * Returns the ItemStack currently in your hand, can be empty.
@@ -147,7 +147,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * methods in {@link PlayerInventory}.
      */
     @Deprecated
-    ItemStack getItemInHand();
+    public ItemStack getItemInHand();
 
     /**
      * Sets the item to the given ItemStack, this will replace whatever the
@@ -158,7 +158,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * methods in {@link PlayerInventory}.
      */
     @Deprecated
-    void setItemInHand(ItemStack item);
+    public void setItemInHand(ItemStack item);
 
     /**
      * Returns the ItemStack currently on your cursor, can be empty. Will
@@ -166,7 +166,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      *
      * @return The ItemStack of the item you are currently moving around.
      */
-    ItemStack getItemOnCursor();
+    public ItemStack getItemOnCursor();
 
     /**
      * Sets the item to the given ItemStack, this will replace whatever the
@@ -175,7 +175,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      *
      * @param item The ItemStack which will end up in the hand
      */
-    void setItemOnCursor(ItemStack item);
+    public void setItemOnCursor(ItemStack item);
 
     /**
      * Check whether a cooldown is active on the specified material.
@@ -183,7 +183,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @param material the material to check
      * @return if a cooldown is active on the material
      */
-    boolean hasCooldown(Material material);
+    public boolean hasCooldown(Material material);
 
     /**
      * Get the cooldown time in ticks remaining for the specified material.
@@ -191,7 +191,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @param material the material to check
      * @return the remaining cooldown time in ticks
      */
-    int getCooldown(Material material);
+    public int getCooldown(Material material);
 
     /**
      * Set a cooldown on the specified material for a certain amount of ticks.
@@ -206,42 +206,42 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * @param material the material to set the cooldown for
      * @param ticks the amount of ticks to set or 0 to remove
      */
-    void setCooldown(Material material, int ticks);
+    public void setCooldown(Material material, int ticks);
 
     /**
      * Returns whether this player is slumbering.
      *
      * @return slumber state
      */
-    boolean isSleeping();
+    public boolean isSleeping();
 
     /**
      * Get the sleep ticks of the player. This value may be capped.
      *
      * @return slumber ticks
      */
-    int getSleepTicks();
+    public int getSleepTicks();
 
     /**
      * Gets this human's current {@link GameMode}
      *
      * @return Current game mode
      */
-    GameMode getGameMode();
+    public GameMode getGameMode();
 
     /**
      * Sets this human's current {@link GameMode}
      *
      * @param mode New game mode
      */
-    void setGameMode(GameMode mode);
+    public void setGameMode(GameMode mode);
 
     /**
      * Check if the player is currently blocking (ie with a shield).
      *
      * @return Whether they are blocking.
      */
-    boolean isBlocking();
+    public boolean isBlocking();
 
     /**
      * Check if the player currently has their hand raised (ie about to begin
@@ -249,14 +249,14 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      *
      * @return Whether their hand is raised
      */
-    boolean isHandRaised();
+    public boolean isHandRaised();
 
     /**
      * Get the total amount of experience required for the player to level
      *
      * @return Experience required to level up
      */
-    int getExpToLevel();
+    public int getExpToLevel();
     
     /**
      * Gets the entity currently perched on the left shoulder or null if no
@@ -270,7 +270,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * serialized entities in Bukkit. Use with care.
      */
     @Deprecated
-    Entity getShoulderEntityLeft();
+    public Entity getShoulderEntityLeft();
 
     /**
      * Sets the entity currently perched on the left shoulder, or null to
@@ -287,7 +287,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * serialized entities in Bukkit. Use with care.
      */
     @Deprecated
-    void setShoulderEntityLeft(Entity entity);
+    public void setShoulderEntityLeft(Entity entity);
 
     /**
      * Gets the entity currently perched on the right shoulder or null if no
@@ -301,7 +301,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * serialized entities in Bukkit. Use with care.
      */
     @Deprecated
-    Entity getShoulderEntityRight();
+    public Entity getShoulderEntityRight();
 
     /**
      * Sets the entity currently perched on the right shoulder, or null to
@@ -318,5 +318,5 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      * serialized entities in Bukkit. Use with care.
      */
     @Deprecated
-    void setShoulderEntityRight(Entity entity);
+    public void setShoulderEntityRight(Entity entity);
 }

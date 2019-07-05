@@ -15,20 +15,20 @@ public interface BukkitWorker {
      *
      * @return Task id number
      */
-    int getTaskId();
+    public int getTaskId();
 
     /**
      * Returns the Plugin that owns this task.
      *
      * @return The Plugin that owns the task
      */
-    Plugin getOwner();
+    public Plugin getOwner();
 
     /**
      * Returns the thread for the worker.
      *
      * @return The Thread object for the worker
      */
-    Thread getThread();
+    public Thread getThread();
 
 }

@@ -23,7 +23,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *
      * @return height of the living entity's eyes above its location
      */
-    double getEyeHeight();
+    public double getEyeHeight();
 
     /**
      * Gets the height of the living entity's eyes above its Location.
@@ -32,14 +32,14 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *     sneaking and gliding will be ignored
      * @return height of the living entity's eyes above its location
      */
-    double getEyeHeight(boolean ignorePose);
+    public double getEyeHeight(boolean ignorePose);
 
     /**
      * Get a Location detailing the current eye position of the living entity.
      *
      * @return a location at the eyes of the living entity
      */
-    Location getEyeLocation();
+    public Location getEyeLocation();
 
     /**
      * Gets all blocks along the living entity's line of sight.
@@ -54,7 +54,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @return list containing all blocks along the living entity's line of
      *     sight
      */
-    List<Block> getLineOfSight(Set<Material> transparent, int maxDistance);
+    public List<Block> getLineOfSight(Set<Material> transparent, int maxDistance);
 
     /**
      * Gets the block that the living entity has targeted.
@@ -65,7 +65,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *     by server by at least 100 blocks, no less)
      * @return block that the living entity has targeted
      */
-    Block getTargetBlock(Set<Material> transparent, int maxDistance);
+    public Block getTargetBlock(Set<Material> transparent, int maxDistance);
 
     /**
      * Gets the last two blocks along the living entity's line of sight.
@@ -79,7 +79,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @return list containing the last 2 blocks along the living entity's
      *     line of sight
      */
-    List<Block> getLastTwoTargetBlocks(Set<Material> transparent, int maxDistance);
+    public List<Block> getLastTwoTargetBlocks(Set<Material> transparent, int maxDistance);
 
     /**
      * Returns the amount of air that the living entity has remaining, in
@@ -87,28 +87,28 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *
      * @return amount of air remaining
      */
-    int getRemainingAir();
+    public int getRemainingAir();
 
     /**
      * Sets the amount of air that the living entity has remaining, in ticks.
      *
      * @param ticks amount of air remaining
      */
-    void setRemainingAir(int ticks);
+    public void setRemainingAir(int ticks);
 
     /**
      * Returns the maximum amount of air the living entity can have, in ticks.
      *
      * @return maximum amount of air
      */
-    int getMaximumAir();
+    public int getMaximumAir();
 
     /**
      * Sets the maximum amount of air the living entity can have, in ticks.
      *
      * @param ticks maximum amount of air
      */
-    void setMaximumAir(int ticks);
+    public void setMaximumAir(int ticks);
 
     /**
      * Returns the living entity's current maximum no damage ticks.
@@ -118,14 +118,14 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *
      * @return maximum no damage ticks
      */
-    int getMaximumNoDamageTicks();
+    public int getMaximumNoDamageTicks();
 
     /**
      * Sets the living entity's current maximum no damage ticks.
      *
      * @param ticks maximum amount of no damage ticks
      */
-    void setMaximumNoDamageTicks(int ticks);
+    public void setMaximumNoDamageTicks(int ticks);
 
     /**
      * Returns the living entity's last damage taken in the current no damage
@@ -136,28 +136,28 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *
      * @return damage taken since the last no damage ticks time period
      */
-    double getLastDamage();
+    public double getLastDamage();
 
     /**
      * Sets the damage dealt within the current no damage ticks time period.
      *
      * @param damage amount of damage
      */
-    void setLastDamage(double damage);
+    public void setLastDamage(double damage);
 
     /**
      * Returns the living entity's current no damage ticks.
      *
      * @return amount of no damage ticks
      */
-    int getNoDamageTicks();
+    public int getNoDamageTicks();
 
     /**
      * Sets the living entity's current no damage ticks.
      *
      * @param ticks amount of no damage ticks
      */
-    void setNoDamageTicks(int ticks);
+    public void setNoDamageTicks(int ticks);
 
     /**
      * Gets the player identified as the killer of the living entity.
@@ -166,7 +166,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *
      * @return killer player, or null if none found
      */
-    Player getKiller();
+    public Player getKiller();
 
     /**
      * Adds the given {@link PotionEffect} to the living entity.
@@ -177,7 +177,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param effect PotionEffect to be added
      * @return whether the effect could be added
      */
-    boolean addPotionEffect(PotionEffect effect);
+    public boolean addPotionEffect(PotionEffect effect);
 
     /**
      * Adds the given {@link PotionEffect} to the living entity.
@@ -189,7 +189,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param force whether conflicting effects should be removed
      * @return whether the effect could be added
      */
-    boolean addPotionEffect(PotionEffect effect, boolean force);
+    public boolean addPotionEffect(PotionEffect effect, boolean force);
 
     /**
      * Attempts to add all of the given {@link PotionEffect} to the living
@@ -198,7 +198,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param effects the effects to add
      * @return whether all of the effects could be added
      */
-    boolean addPotionEffects(Collection<PotionEffect> effects);
+    public boolean addPotionEffects(Collection<PotionEffect> effects);
 
     /**
      * Returns whether the living entity already has an existing effect of
@@ -207,7 +207,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param type the potion type to check
      * @return whether the living entity has this potion effect active on them
      */
-    boolean hasPotionEffect(PotionEffectType type);
+    public boolean hasPotionEffect(PotionEffectType type);
 
     /**
      * Returns the active {@link PotionEffect} of the specified type.
@@ -217,14 +217,14 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param type the potion type to check
      * @return the effect active on this entity, or null if not active.
      */
-    PotionEffect getPotionEffect(PotionEffectType type);
+    public PotionEffect getPotionEffect(PotionEffectType type);
 
     /**
      * Removes any effects present of the given {@link PotionEffectType}.
      *
      * @param type the potion type to remove
      */
-    void removePotionEffect(PotionEffectType type);
+    public void removePotionEffect(PotionEffectType type);
 
     /**
      * Returns all currently active {@link PotionEffect}s on the living
@@ -232,7 +232,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *
      * @return a collection of {@link PotionEffect}s
      */
-    Collection<PotionEffect> getActivePotionEffects();
+    public Collection<PotionEffect> getActivePotionEffects();
 
     /**
      * Checks whether the living entity has block line of sight to another.
@@ -243,7 +243,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param other the entity to determine line of sight to
      * @return true if there is a line of sight, false if not
      */
-    boolean hasLineOfSight(Entity other);
+    public boolean hasLineOfSight(Entity other);
 
     /**
      * Returns if the living entity despawns when away from players or not.
@@ -252,7 +252,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *
      * @return true if the living entity is removed when away from players
      */
-    boolean getRemoveWhenFarAway();
+    public boolean getRemoveWhenFarAway();
 
     /**
      * Sets whether or not the living entity despawns when away from players
@@ -260,35 +260,35 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      *
      * @param remove the removal status
      */
-    void setRemoveWhenFarAway(boolean remove);
+    public void setRemoveWhenFarAway(boolean remove);
 
     /**
      * Gets the inventory with the equipment worn by the living entity.
      *
      * @return the living entity's inventory
      */
-    EntityEquipment getEquipment();
+    public EntityEquipment getEquipment();
 
     /**
      * Sets whether or not the living entity can pick up items.
      *
      * @param pickup whether or not the living entity can pick up items
      */
-    void setCanPickupItems(boolean pickup);
+    public void setCanPickupItems(boolean pickup);
 
     /**
      * Gets if the living entity can pick up items.
      *
      * @return whether or not the living entity can pick up items
      */
-    boolean getCanPickupItems();
+    public boolean getCanPickupItems();
 
     /**
      * Returns whether the entity is currently leashed.
      *
      * @return whether the entity is leashed
      */
-    boolean isLeashed();
+    public boolean isLeashed();
 
     /**
      * Gets the entity that is currently leading this entity.
@@ -296,7 +296,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @return the entity holding the leash
      * @throws IllegalStateException if not currently leashed
      */
-    Entity getLeashHolder() throws IllegalStateException;
+    public Entity getLeashHolder() throws IllegalStateException;
 
     /**
      * Sets the leash on this entity to be held by the supplied entity.
@@ -308,13 +308,13 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param holder the entity to leash this entity to
      * @return whether the operation was successful
      */
-    boolean setLeashHolder(Entity holder);
+    public boolean setLeashHolder(Entity holder);
 
     /**
      * Checks to see if an entity is gliding, such as using an Elytra.
      * @return True if this entity is gliding.
      */
-    boolean isGliding();
+    public boolean isGliding();
 
     /**
      * Makes entity start or stop gliding. This will work even if an Elytra
@@ -322,7 +322,7 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * unless an event-cancelling mechanism is put in place.
      * @param gliding True if the entity is gliding.
      */
-    void setGliding(boolean gliding);
+    public void setGliding(boolean gliding);
 
     /**
      * Sets whether an entity will have AI.

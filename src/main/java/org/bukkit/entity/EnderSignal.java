@@ -12,7 +12,7 @@ public interface EnderSignal extends Entity {
      *
      * @return the {@link Location} this EnderSignal is moving towards.
      */
-    Location getTargetLocation();
+    public Location getTargetLocation();
 
     /**
      * Set the {@link Location} this EnderSignal is moving towards.
@@ -22,7 +22,7 @@ public interface EnderSignal extends Entity {
      *
      * @param location the new target location
      */
-    void setTargetLocation(Location location);
+    public void setTargetLocation(Location location);
 
     /**
      * Gets if the EnderSignal should drop an item on death.<br>
@@ -31,7 +31,7 @@ public interface EnderSignal extends Entity {
      * @return true if the EnderSignal will drop an item on death, or false if
      * it will shatter
      */
-    boolean getDropItem();
+    public boolean getDropItem();
 
     /**
      * Sets if the EnderSignal should drop an item on death; or if it should
@@ -40,7 +40,7 @@ public interface EnderSignal extends Entity {
      * @param drop true if the EnderSignal should drop an item on death, or
      * false if it should shatter.
      */
-    void setDropItem(boolean drop);
+    public void setDropItem(boolean drop);
 
     /**
      * Gets the amount of time this entity has been alive (in ticks).
@@ -49,7 +49,7 @@ public interface EnderSignal extends Entity {
      *
      * @return the number of ticks this EnderSignal has been alive.
      */
-    int getDespawnTimer();
+    public int getDespawnTimer();
 
     /**
      * Set how long this entity has been alive (in ticks).
@@ -58,5 +58,5 @@ public interface EnderSignal extends Entity {
      *
      * @param timer how long (in ticks) this EnderSignal has been alive.
      */
-    void setDespawnTimer(int timer);
+    public void setDespawnTimer(int timer);
 }

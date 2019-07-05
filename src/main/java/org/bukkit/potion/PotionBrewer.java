@@ -16,7 +16,7 @@ public interface PotionBrewer {
      * @param amplifier The amplifier of the effect
      * @return The resulting potion effect
      */
-    PotionEffect createEffect(PotionEffectType potion, int duration, int amplifier);
+    public PotionEffect createEffect(PotionEffectType potion, int duration, int amplifier);
 
     /**
      * Returns a collection of {@link PotionEffect} that would be applied from
@@ -27,7 +27,7 @@ public interface PotionBrewer {
      * @deprecated Non-Functional
      */
     @Deprecated
-    Collection<PotionEffect> getEffectsFromDamage(int damage);
+    public Collection<PotionEffect> getEffectsFromDamage(int damage);
 
     /**
      * Returns a collection of {@link PotionEffect} that would be applied from
@@ -36,5 +36,5 @@ public interface PotionBrewer {
      * @param type The type of the potion
      * @return The list of effects
      */
-    Collection<PotionEffect> getEffects(PotionType type, boolean upgraded, boolean extended);
+    public Collection<PotionEffect> getEffects(PotionType type, boolean upgraded, boolean extended);
 }

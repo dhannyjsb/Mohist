@@ -10,12 +10,12 @@ public interface ExperienceOrb extends Entity {
      *
      * @return Amount of experience
      */
-    int getExperience();
+    public int getExperience();
 
     /**
      * Sets how much experience is contained within this orb
      *
      * @param value Amount of experience
      */
-    void setExperience(int value);
+    public void setExperience(int value);
 }

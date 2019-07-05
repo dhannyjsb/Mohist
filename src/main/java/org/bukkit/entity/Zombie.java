@@ -10,14 +10,14 @@ public interface Zombie extends Monster {
      *
      * @return Whether the zombie is a baby
      */
-    boolean isBaby();
+    public boolean isBaby();
 
     /**
      * Sets whether the zombie is a baby
      *
      * @param flag Whether the zombie is a baby
      */
-    void setBaby(boolean flag);
+    public void setBaby(boolean flag);
 
     /**
      * Gets whether the zombie is a villager
@@ -26,26 +26,26 @@ public interface Zombie extends Monster {
      * @deprecated check if instanceof {@link ZombieVillager}.
      */
     @Deprecated
-    boolean isVillager();
+    public boolean isVillager();
 
     /**
      * @param flag
      * @deprecated must spawn {@link ZombieVillager}.
      */
     @Deprecated
-    void setVillager(boolean flag);
+    public void setVillager(boolean flag);
 
     /**
      * @param profession
      * @see ZombieVillager#getVillagerProfession()
      */
     @Deprecated
-    void setVillagerProfession(Villager.Profession profession);
+    public void setVillagerProfession(Villager.Profession profession);
 
     /**
      * @return profession
      * @see ZombieVillager#getVillagerProfession()
      */
     @Deprecated
-    Villager.Profession getVillagerProfession();
+    public Villager.Profession getVillagerProfession();
 }

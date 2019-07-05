@@ -12,19 +12,19 @@ public interface Skeleton extends Monster {
      * @deprecated should check what class instance this is
      */
     @Deprecated
-    SkeletonType getSkeletonType();
+    public SkeletonType getSkeletonType();
 
     /**
      * @deprecated Must spawn a new subtype variant
      */
     @Deprecated
-    void setSkeletonType(SkeletonType type);
+    public void setSkeletonType(SkeletonType type);
 
     /*
      * @deprecated classes are different types
      */
     @Deprecated
-    enum SkeletonType {
+    public enum SkeletonType {
 
         /**
          * Standard skeleton type.
@@ -37,6 +37,6 @@ public interface Skeleton extends Monster {
         /**
          * Stray skeleton. Generally found in ice biomes. Shoots tipped arrows.
          */
-        STRAY
+        STRAY;
     }
 }

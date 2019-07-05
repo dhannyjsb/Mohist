@@ -258,21 +258,21 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
                 break;
             case DISPENSER:
                 if (iinventory instanceof TileEntityDispenser) {
-                    getHandle().displayGUIChest(iinventory);
+                    getHandle().displayGUIChest((TileEntityDispenser) iinventory);
                 } else {
                     openCustomInventory(inventory, player, "minecraft:dispenser");
                 }
                 break;
             case DROPPER:
                 if (iinventory instanceof TileEntityDropper) {
-                    getHandle().displayGUIChest(iinventory);
+                    getHandle().displayGUIChest((TileEntityDropper) iinventory);
                 } else {
                     openCustomInventory(inventory, player, "minecraft:dropper");
                 }
                 break;
             case FURNACE:
                 if (iinventory instanceof TileEntityFurnace) {
-                    getHandle().displayGUIChest(iinventory);
+                    getHandle().displayGUIChest((TileEntityFurnace) iinventory);
                 } else {
                     openCustomInventory(inventory, player, "minecraft:furnace");
                 }
@@ -282,7 +282,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
                 break;
             case BREWING:
                 if (iinventory instanceof TileEntityBrewingStand) {
-                    getHandle().displayGUIChest(iinventory);
+                    getHandle().displayGUIChest((TileEntityBrewingStand) iinventory);
                 } else {
                     openCustomInventory(inventory, player, "minecraft:brewing_stand");
                 }
@@ -292,16 +292,16 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
                 break;
             case HOPPER:
                 if (iinventory instanceof TileEntityHopper) {
-                    getHandle().displayGUIChest(iinventory);
+                    getHandle().displayGUIChest((TileEntityHopper) iinventory);
                 } else if (iinventory instanceof EntityMinecartHopper) {
-                    getHandle().displayGUIChest(iinventory);
+                    getHandle().displayGUIChest((EntityMinecartHopper) iinventory);
                 } else {
                     openCustomInventory(inventory, player, "minecraft:hopper");
                 }
                 break;
             case BEACON:
                 if (iinventory instanceof TileEntityBeacon) {
-                    getHandle().displayGUIChest(iinventory);
+                    getHandle().displayGUIChest((TileEntityBeacon) iinventory);
                 } else {
                     openCustomInventory(inventory, player, "minecraft:beacon");
                 }
@@ -315,7 +315,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
                 break;
             case SHULKER_BOX:
                 if (iinventory instanceof TileEntityShulkerBox) {
-                    getHandle().displayGUIChest(iinventory);
+                    getHandle().displayGUIChest((TileEntityShulkerBox) iinventory);
                 } else {
                     openCustomInventory(inventory, player, "minecraft:shulker_box");
                 }

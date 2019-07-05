@@ -40,7 +40,7 @@ public enum Art {
     private static final HashMap<String, Art> BY_NAME = Maps.newHashMap();
     private static final HashMap<Integer, Art> BY_ID = Maps.newHashMap();
 
-    Art(int id, int width, int height) {
+    private Art(int id, int width, int height) {
         this.id = id;
         this.width = width;
         this.height = height;

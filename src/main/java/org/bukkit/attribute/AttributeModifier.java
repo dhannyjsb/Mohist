@@ -99,6 +99,6 @@ public class AttributeModifier implements ConfigurationSerializable {
         /**
          * Multiply amount by this value, after adding 1 to it.
          */
-        MULTIPLY_SCALAR_1
+        MULTIPLY_SCALAR_1;
     }
 }

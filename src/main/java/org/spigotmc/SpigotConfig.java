@@ -135,7 +135,7 @@ public class SpigotConfig
     private static <T> List getList(String path, T def)
     {
         config.addDefault( path, def );
-        return config.getList( path, config.getList( path ) );
+        return (List<T>) config.getList( path, config.getList( path ) );
     }
 
     private static String getString(String path, String def)
@@ -267,7 +267,10 @@ public class SpigotConfig
     public static List<String> spamExclusions;
     private static void spamExclusions()
     {
-        spamExclusions = getList( "commands.spam-exclusions", Arrays.asList("/skill") );
+        spamExclusions = getList( "commands.spam-exclusions", Arrays.asList( new String[]
+        {
+                "/skill"
+        } ) );
     }
 
     public static boolean silentCommandBlocks;
@@ -346,6 +349,6 @@ public class SpigotConfig
     public static List<String> disabledAdvancements;
     private static void disabledAdvancements() {
         disableAdvancementSaving = getBoolean("advancements.disable-saving", false);
-        disabledAdvancements = getList("advancements.disabled", Arrays.asList("minecraft:story/disabled"));
+        disabledAdvancements = getList("advancements.disabled", Arrays.asList(new String[]{"minecraft:story/disabled"}));
     }
 }

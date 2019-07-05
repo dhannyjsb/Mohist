@@ -14,7 +14,7 @@ public interface FishHook extends Projectile {
      * @deprecated has no effect in newer Minecraft versions
      */
     @Deprecated
-    double getBiteChance();
+    public double getBiteChance();
 
     /**
      * Sets the chance of a fish biting.
@@ -28,5 +28,5 @@ public interface FishHook extends Projectile {
      * @deprecated has no effect in newer Minecraft versions
      */
     @Deprecated
-    void setBiteChance(double chance) throws IllegalArgumentException;
+    public void setBiteChance(double chance) throws IllegalArgumentException;
 }

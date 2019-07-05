@@ -9,12 +9,12 @@ public interface Guardian extends Monster {
      * @deprecated should check if instance of {@link ElderGuardian}.
      */
     @Deprecated
-    boolean isElder();
+    public boolean isElder();
 
     /**
      * @param shouldBeElder
      * @deprecated Must spawn a new {@link ElderGuardian}.
      */
     @Deprecated
-    void setElder(boolean shouldBeElder);
+    public void setElder(boolean shouldBeElder);
 }

@@ -41,7 +41,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @see #getBlockTypeIdAt(int, int, int) Returns the current type ID of
      *     the block
      */
-    Block getBlockAt(int x, int y, int z);
+    public Block getBlockAt(int x, int y, int z);
 
     /**
      * Gets the {@link Block} at the given {@link Location}
@@ -51,7 +51,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @see #getBlockTypeIdAt(org.bukkit.Location) Returns the current type ID
      *     of the block
      */
-    Block getBlockAt(Location location);
+    public Block getBlockAt(Location location);
 
     /**
      * Gets the block type ID at the given coordinates
@@ -64,8 +64,8 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *     given location
      * @deprecated Magic value
      */
-
-    int getBlockTypeIdAt(int x, int y, int z);
+    
+    public int getBlockTypeIdAt(int x, int y, int z);
 
     /**
      * Gets the block type ID at the given {@link Location}
@@ -76,8 +76,8 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *     the given location
      * @deprecated Magic value
      */
-
-    int getBlockTypeIdAt(Location location);
+    
+    public int getBlockTypeIdAt(Location location);
 
     /**
      * Gets the y coordinate of the lowest block at this position such that the
@@ -87,7 +87,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z-coordinate of the blocks
      * @return Y-coordinate of the described block
      */
-    int getHighestBlockYAt(int x, int z);
+    public int getHighestBlockYAt(int x, int z);
 
     /**
      * Gets the y coordinate of the lowest block at the given {@link Location}
@@ -97,7 +97,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param location Location of the blocks
      * @return Y-coordinate of the highest non-air block
      */
-    int getHighestBlockYAt(Location location);
+    public int getHighestBlockYAt(Location location);
 
     /**
      * Gets the lowest block at the given coordinates such that the block and
@@ -107,7 +107,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z-coordinate of the block
      * @return Highest non-empty block
      */
-    Block getHighestBlockAt(int x, int z);
+    public Block getHighestBlockAt(int x, int z);
 
     /**
      * Gets the lowest block at the given {@link Location} such that the block
@@ -116,7 +116,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param location Coordinates to get the highest block
      * @return Highest non-empty block
      */
-    Block getHighestBlockAt(Location location);
+    public Block getHighestBlockAt(Location location);
 
     /**
      * Gets the {@link Chunk} at the given coordinates
@@ -125,7 +125,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z-coordinate of the chunk
      * @return Chunk at the given coordinates
      */
-    Chunk getChunkAt(int x, int z);
+    public Chunk getChunkAt(int x, int z);
 
     /**
      * Gets the {@link Chunk} at the given {@link Location}
@@ -133,7 +133,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param location Location of the chunk
      * @return Chunk at the given location
      */
-    Chunk getChunkAt(Location location);
+    public Chunk getChunkAt(Location location);
 
     /**
      * Gets the {@link Chunk} that contains the given {@link Block}
@@ -141,7 +141,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param block Block to get the containing chunk from
      * @return The chunk that contains the given block
      */
-    Chunk getChunkAt(Block block);
+    public Chunk getChunkAt(Block block);
 
     /**
      * Checks if the specified {@link Chunk} is loaded
@@ -149,21 +149,21 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param chunk The chunk to check
      * @return true if the chunk is loaded, otherwise false
      */
-    boolean isChunkLoaded(Chunk chunk);
+    public boolean isChunkLoaded(Chunk chunk);
 
     /**
      * Gets an array of all loaded {@link Chunk}s
      *
      * @return Chunk[] containing all loaded chunks
      */
-    Chunk[] getLoadedChunks();
+    public Chunk[] getLoadedChunks();
 
     /**
      * Loads the specified {@link Chunk}
      *
      * @param chunk The chunk to load
      */
-    void loadChunk(Chunk chunk);
+    public void loadChunk(Chunk chunk);
 
     /**
      * Checks if the {@link Chunk} at the specified coordinates is loaded
@@ -172,7 +172,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z-coordinate of the chunk
      * @return true if the chunk is loaded, otherwise false
      */
-    boolean isChunkLoaded(int x, int z);
+    public boolean isChunkLoaded(int x, int z);
 
     /**
      * Checks if the {@link Chunk} at the specified coordinates is loaded and
@@ -183,7 +183,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @return true if the chunk is loaded and in use by one or more players,
      *     otherwise false
      */
-    boolean isChunkInUse(int x, int z);
+    public boolean isChunkInUse(int x, int z);
 
     /**
      * Loads the {@link Chunk} at the specified coordinates
@@ -196,7 +196,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param x X-coordinate of the chunk
      * @param z Z-coordinate of the chunk
      */
-    void loadChunk(int x, int z);
+    public void loadChunk(int x, int z);
 
     /**
      * Loads the {@link Chunk} at the specified coordinates
@@ -207,7 +207,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *     already exist
      * @return true if the chunk has loaded successfully, otherwise false
      */
-    boolean loadChunk(int x, int z, boolean generate);
+    public boolean loadChunk(int x, int z, boolean generate);
 
     /**
      * Safely unloads and saves the {@link Chunk} at the specified coordinates
@@ -218,7 +218,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param chunk the chunk to unload
      * @return true if the chunk has unloaded successfully, otherwise false
      */
-    boolean unloadChunk(Chunk chunk);
+    public boolean unloadChunk(Chunk chunk);
 
     /**
      * Safely unloads and saves the {@link Chunk} at the specified coordinates
@@ -230,7 +230,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z-coordinate of the chunk
      * @return true if the chunk has unloaded successfully, otherwise false
      */
-    boolean unloadChunk(int x, int z);
+    public boolean unloadChunk(int x, int z);
 
     /**
      * Safely unloads and optionally saves the {@link Chunk} at the specified
@@ -244,7 +244,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param save Whether or not to save the chunk
      * @return true if the chunk has unloaded successfully, otherwise false
      */
-    boolean unloadChunk(int x, int z, boolean save);
+    public boolean unloadChunk(int x, int z, boolean save);
 
     /**
      * Unloads and optionally saves the {@link Chunk} at the specified
@@ -258,8 +258,8 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @return true if the chunk has unloaded successfully, otherwise false
      * @deprecated it is never safe to remove a chunk in use
      */
-
-    boolean unloadChunk(int x, int z, boolean save, boolean safe);
+    
+    public boolean unloadChunk(int x, int z, boolean save, boolean safe);
 
     /**
      * Safely queues the {@link Chunk} at the specified coordinates for
@@ -272,7 +272,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z-coordinate of the chunk
      * @return true is the queue attempt was successful, otherwise false
      */
-    boolean unloadChunkRequest(int x, int z);
+    public boolean unloadChunkRequest(int x, int z);
 
     /**
      * Queues the {@link Chunk} at the specified coordinates for unloading
@@ -282,7 +282,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param safe Controls whether to queue the chunk when players are nearby
      * @return Whether the chunk was actually queued
      */
-    boolean unloadChunkRequest(int x, int z, boolean safe);
+    public boolean unloadChunkRequest(int x, int z, boolean safe);
 
     /**
      * Regenerates the {@link Chunk} at the specified coordinates
@@ -291,7 +291,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z-coordinate of the chunk
      * @return Whether the chunk was actually regenerated
      */
-    boolean regenerateChunk(int x, int z);
+    public boolean regenerateChunk(int x, int z);
 
     /**
      * Resends the {@link Chunk} to all clients
@@ -302,8 +302,8 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * 
      * @deprecated This method is not guaranteed to work suitably across all client implementations.
      */
-
-    boolean refreshChunk(int x, int z);
+    
+    public boolean refreshChunk(int x, int z);
 
     /**
      * Drops an item at the specified {@link Location}
@@ -312,7 +312,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param item ItemStack to drop
      * @return ItemDrop entity created as a result of this method
      */
-    Item dropItem(Location location, ItemStack item);
+    public Item dropItem(Location location, ItemStack item);
 
     /**
      * Drops an item at the specified {@link Location} with a random offset
@@ -321,7 +321,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param item ItemStack to drop
      * @return ItemDrop entity created as a result of this method
      */
-    Item dropItemNaturally(Location location, ItemStack item);
+    public Item dropItemNaturally(Location location, ItemStack item);
 
     /**
      * Creates an {@link Arrow} entity at the given {@link Location}
@@ -332,7 +332,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param spread Spread of the arrow. A recommend spread is 12
      * @return Arrow entity spawned as a result of this method
      */
-    Arrow spawnArrow(Location location, Vector direction, float speed, float spread);
+    public Arrow spawnArrow(Location location, Vector direction, float speed, float spread);
 
     /**
      * Creates an arrow entity of the given class at the given {@link Location}
@@ -346,7 +346,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * {@link org.bukkit.entity.SpectralArrow},{@link org.bukkit.entity.Arrow},{@link org.bukkit.entity.TippedArrow}
      * @return Arrow entity spawned as a result of this method
      */
-    <T extends Arrow> T spawnArrow(Location location, Vector direction, float speed, float spread, Class<T> clazz);
+    public <T extends Arrow> T spawnArrow(Location location, Vector direction, float speed, float spread, Class<T> clazz);
 
     /**
      * Creates a tree at the given {@link Location}
@@ -355,7 +355,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param type Type of the tree to create
      * @return true if the tree was created successfully, otherwise false
      */
-    boolean generateTree(Location location, TreeType type);
+    public boolean generateTree(Location location, TreeType type);
 
     /**
      * Creates a tree at the given {@link Location}
@@ -367,8 +367,8 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @return true if the tree was created successfully, otherwise false
      * @deprecated rarely used API that was largely for implementation purposes
      */
-
-    boolean generateTree(Location loc, TreeType type, BlockChangeDelegate delegate);
+    
+    public boolean generateTree(Location loc, TreeType type, BlockChangeDelegate delegate);
 
     /**
      * Creates a entity at the given {@link Location}
@@ -377,7 +377,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param type The entity to spawn
      * @return Resulting Entity of this method, or null if it was unsuccessful
      */
-    Entity spawnEntity(Location loc, EntityType type);
+    public Entity spawnEntity(Location loc, EntityType type);
 
     /**
      * Strikes lightning at the given {@link Location}
@@ -385,7 +385,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param loc The location to strike lightning
      * @return The lightning entity.
      */
-    LightningStrike strikeLightning(Location loc);
+    public LightningStrike strikeLightning(Location loc);
 
     /**
      * Strikes lightning at the given {@link Location} without doing damage
@@ -393,21 +393,21 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param loc The location to strike lightning
      * @return The lightning entity.
      */
-    LightningStrike strikeLightningEffect(Location loc);
+    public LightningStrike strikeLightningEffect(Location loc);
 
     /**
      * Get a list of all entities in this World
      *
      * @return A List of all Entities currently residing in this world
      */
-    List<Entity> getEntities();
+    public List<Entity> getEntities();
 
     /**
      * Get a list of all living entities in this World
      *
      * @return A List of all LivingEntities currently residing in this world
      */
-    List<LivingEntity> getLivingEntities();
+    public List<LivingEntity> getLivingEntities();
 
     /**
      * Get a collection of all entities in this World matching the given
@@ -418,8 +418,8 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @return A List of all Entities currently residing in this world that
      *     match the given class/interface
      */
-
-    <T extends Entity> Collection<T> getEntitiesByClass(Class<T>... classes);
+    
+    public <T extends Entity> Collection<T> getEntitiesByClass(Class<T>... classes);
 
     /**
      * Get a collection of all entities in this World matching the given
@@ -430,7 +430,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @return A List of all Entities currently residing in this world that
      *     match the given class/interface
      */
-    <T extends Entity> Collection<T> getEntitiesByClass(Class<T> cls);
+    public <T extends Entity> Collection<T> getEntitiesByClass(Class<T> cls);
 
     /**
      * Get a collection of all entities in this World matching any of the
@@ -440,14 +440,14 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @return A List of all Entities currently residing in this world that
      *     match one or more of the given classes/interfaces
      */
-    Collection<Entity> getEntitiesByClasses(Class<?>... classes);
+    public Collection<Entity> getEntitiesByClasses(Class<?>... classes);
 
     /**
      * Get a list of all players in this World
      *
      * @return A list of all Players currently residing in this world
      */
-    List<Player> getPlayers();
+    public List<Player> getPlayers();
 
     /**
      * Returns a list of entities within a bounding box centered around a Location.
@@ -460,28 +460,28 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z 1/2 the size of the box along z axis
      * @return the collection of entities near location. This will always be a non-null collection.
      */
-    Collection<Entity> getNearbyEntities(Location location, double x, double y, double z);
+    public Collection<Entity> getNearbyEntities(Location location, double x, double y, double z);
 
     /**
      * Gets the unique name of this world
      *
      * @return Name of this world
      */
-    String getName();
+    public String getName();
 
     /**
      * Gets the Unique ID of this world
      *
      * @return Unique ID of this world.
      */
-    UUID getUID();
+    public UUID getUID();
 
     /**
      * Gets the default spawn {@link Location} of this world
      *
      * @return The spawn location of this world
      */
-    Location getSpawnLocation();
+    public Location getSpawnLocation();
 
     /**
      * Sets the spawn location of the world.
@@ -491,7 +491,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param location The {@link Location} to set the spawn for this world at.
      * @return True if it was successfully set.
      */
-    boolean setSpawnLocation(Location location);
+    public boolean setSpawnLocation(Location location);
 
     /**
      * Sets the spawn location of the world
@@ -501,7 +501,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z coordinate
      * @return True if it was successfully set.
      */
-    boolean setSpawnLocation(int x, int y, int z);
+    public boolean setSpawnLocation(int x, int y, int z);
 
     /**
      * Gets the relative in-game time of this world.
@@ -511,7 +511,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @return The current relative time
      * @see #getFullTime() Returns an absolute time of this world
      */
-    long getTime();
+    public long getTime();
 
     /**
      * Sets the relative in-game time on the server.
@@ -526,7 +526,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *     hours*1000)
      * @see #setFullTime(long) Sets the absolute time of this world
      */
-    void setTime(long time);
+    public void setTime(long time);
 
     /**
      * Gets the full in-game time on this world
@@ -534,7 +534,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @return The current absolute time
      * @see #getTime() Returns a relative time of this world
      */
-    long getFullTime();
+    public long getFullTime();
 
     /**
      * Sets the in-game time on the server
@@ -545,14 +545,14 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param time The new absolute time to set this world to
      * @see #setTime(long) Sets the relative time of this world
      */
-    void setFullTime(long time);
+    public void setFullTime(long time);
 
     /**
      * Returns whether the world has an ongoing storm.
      *
      * @return Whether there is an ongoing storm
      */
-    boolean hasStorm();
+    public boolean hasStorm();
 
     /**
      * Set whether there is a storm. A duration will be set for the new
@@ -560,49 +560,49 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @param hasStorm Whether there is rain and snow
      */
-    void setStorm(boolean hasStorm);
+    public void setStorm(boolean hasStorm);
 
     /**
      * Get the remaining time in ticks of the current conditions.
      *
      * @return Time in ticks
      */
-    int getWeatherDuration();
+    public int getWeatherDuration();
 
     /**
      * Set the remaining time in ticks of the current conditions.
      *
      * @param duration Time in ticks
      */
-    void setWeatherDuration(int duration);
+    public void setWeatherDuration(int duration);
 
     /**
      * Returns whether there is thunder.
      *
      * @return Whether there is thunder
      */
-    boolean isThundering();
+    public boolean isThundering();
 
     /**
      * Set whether it is thundering.
      *
      * @param thundering Whether it is thundering
      */
-    void setThundering(boolean thundering);
+    public void setThundering(boolean thundering);
 
     /**
      * Get the thundering duration.
      *
      * @return Duration in ticks
      */
-    int getThunderDuration();
+    public int getThunderDuration();
 
     /**
      * Set the thundering duration.
      *
      * @param duration Duration in ticks
      */
-    void setThunderDuration(int duration);
+    public void setThunderDuration(int duration);
 
     /**
      * Creates explosion at given coordinates with given power
@@ -613,7 +613,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param power The power of explosion, where 4F is TNT
      * @return false if explosion was canceled, otherwise true
      */
-    boolean createExplosion(double x, double y, double z, float power);
+    public boolean createExplosion(double x, double y, double z, float power);
 
     /**
      * Creates explosion at given coordinates with given power and optionally
@@ -626,7 +626,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param setFire Whether or not to set blocks on fire
      * @return false if explosion was canceled, otherwise true
      */
-    boolean createExplosion(double x, double y, double z, float power, boolean setFire);
+    public boolean createExplosion(double x, double y, double z, float power, boolean setFire);
 
     /**
      * Creates explosion at given coordinates with given power and optionally
@@ -640,7 +640,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param breakBlocks Whether or not to have blocks be destroyed
      * @return false if explosion was canceled, otherwise true
      */
-    boolean createExplosion(double x, double y, double z, float power, boolean setFire, boolean breakBlocks);
+    public boolean createExplosion(double x, double y, double z, float power, boolean setFire, boolean breakBlocks);
 
     /**
      * Creates explosion at given coordinates with given power
@@ -649,7 +649,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param power The power of explosion, where 4F is TNT
      * @return false if explosion was canceled, otherwise true
      */
-    boolean createExplosion(Location loc, float power);
+    public boolean createExplosion(Location loc, float power);
 
     /**
      * Creates explosion at given coordinates with given power and optionally
@@ -660,7 +660,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param setFire Whether or not to set blocks on fire
      * @return false if explosion was canceled, otherwise true
      */
-    boolean createExplosion(Location loc, float power, boolean setFire);
+    public boolean createExplosion(Location loc, float power, boolean setFire);
 
     // Paper start
     /**
@@ -674,7 +674,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
    * @param breakBlocks Whether or not to have blocks be destroyed
    * @return false if explosion was canceled, otherwise true
    */
-    boolean createExplosion(Entity source, Location loc, float power, boolean setFire, boolean breakBlocks);
+    public boolean createExplosion(Entity source, Location loc, float power, boolean setFire, boolean breakBlocks);
 
     /**
    * Creates explosion at given location with given power and optionally
@@ -688,7 +688,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
    * @param setFire Whether or not to set blocks on fire
    * @return false if explosion was canceled, otherwise true
    */
-    default boolean createExplosion(Entity source, Location loc, float power, boolean setFire) {
+    public default boolean createExplosion(Entity source, Location loc, float power, boolean setFire) {
         return createExplosion(source, loc, power, setFire, true);
     }
     /**
@@ -700,7 +700,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
    * @param power The power of explosion, where 4F is TNT
    * @return false if explosion was canceled, otherwise true
    */
-    default boolean createExplosion(Entity source, Location loc, float power) {
+    public default boolean createExplosion(Entity source, Location loc, float power) {
         return createExplosion(source, loc, power, true, true);
     }
     /**
@@ -713,7 +713,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
    * @param breakBlocks Whether or not to have blocks be destroyed
    * @return false if explosion was canceled, otherwise true
    */
-    default boolean createExplosion(Entity source, float power, boolean setFire, boolean breakBlocks) {
+    public default boolean createExplosion(Entity source, float power, boolean setFire, boolean breakBlocks) {
         return createExplosion(source, source.getLocation(), power, setFire, breakBlocks);
     }
     /**
@@ -727,7 +727,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
    * @param setFire Whether or not to set blocks on fire
    * @return false if explosion was canceled, otherwise true
    */
-    default boolean createExplosion(Entity source, float power, boolean setFire) {
+    public default boolean createExplosion(Entity source, float power, boolean setFire) {
         return createExplosion(source, source.getLocation(), power, setFire, true);
     }
 
@@ -739,7 +739,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
    * @param power The power of explosion, where 4F is TNT
    * @return false if explosion was canceled, otherwise true
    */
-    default boolean createExplosion(Entity source, float power) {
+    public default boolean createExplosion(Entity source, float power) {
         return createExplosion(source, source.getLocation(), power, true, true);
     }
 
@@ -753,7 +753,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
    * @param breakBlocks Whether or not to have blocks be destroyed
    * @return false if explosion was canceled, otherwise true
    */
-    default boolean createExplosion(Location loc, float power, boolean setFire, boolean breakBlocks) {
+    public default boolean createExplosion(Location loc, float power, boolean setFire, boolean breakBlocks) {
         return createExplosion(loc.getX(), loc.getY(), loc.getZ(), power, setFire, breakBlocks);
     }
     // Paper end
@@ -763,47 +763,47 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return This worlds Environment type
      */
-    Environment getEnvironment();
+    public Environment getEnvironment();
 
     /**
      * Gets the Seed for this world.
      *
      * @return This worlds Seed
      */
-    long getSeed();
+    public long getSeed();
 
     /**
      * Gets the current PVP setting for this world.
      *
      * @return True if PVP is enabled
      */
-    boolean getPVP();
+    public boolean getPVP();
 
     /**
      * Sets the PVP setting for this world.
      *
      * @param pvp True/False whether PVP should be Enabled.
      */
-    void setPVP(boolean pvp);
+    public void setPVP(boolean pvp);
 
     /**
      * Gets the chunk generator for this world
      *
      * @return ChunkGenerator associated with this world
      */
-    ChunkGenerator getGenerator();
+    public ChunkGenerator getGenerator();
 
     /**
      * Saves world to disk
      */
-    void save();
+    public void save();
 
     /**
      * Gets a list of all applied {@link BlockPopulator}s for this World
      *
      * @return List containing any or none BlockPopulators
      */
-    List<BlockPopulator> getPopulators();
+    public List<BlockPopulator> getPopulators();
 
     /**
      * Spawn an entity of a specific class at the given {@link Location}
@@ -815,7 +815,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @throws IllegalArgumentException if either parameter is null or the
      *     {@link Entity} requested cannot be spawned
      */
-    <T extends Entity> T spawn(Location location, Class<T> clazz) throws IllegalArgumentException;
+    public <T extends Entity> T spawn(Location location, Class<T> clazz) throws IllegalArgumentException;
 
     /**
      * Spawn an entity of a specific class at the given {@link Location}, with
@@ -833,7 +833,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @throws IllegalArgumentException if either parameter is null or the
      *     {@link Entity} requested cannot be spawned
      */
-    <T extends Entity> T spawn(Location location, Class<T> clazz, Consumer<T> function) throws IllegalArgumentException;
+    public <T extends Entity> T spawn(Location location, Class<T> clazz, Consumer<T> function) throws IllegalArgumentException;
 
     /**
      * Spawn a {@link FallingBlock} entity at the given {@link Location} of
@@ -849,7 +849,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @throws IllegalArgumentException if {@link Location} or {@link
      *     MaterialData} are null or {@link Material} of the {@link MaterialData} is not a block
      */
-    FallingBlock spawnFallingBlock(Location location, MaterialData data) throws IllegalArgumentException;
+    public FallingBlock spawnFallingBlock(Location location, MaterialData data) throws IllegalArgumentException;
 
     /**
      * Spawn a {@link FallingBlock} entity at the given {@link Location} of
@@ -867,8 +867,8 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *     Material} are null or {@link Material} is not a block
      * @deprecated Magic value
      */
-
-    FallingBlock spawnFallingBlock(Location location, Material material, byte data) throws IllegalArgumentException;
+    
+    public FallingBlock spawnFallingBlock(Location location, Material material, byte data) throws IllegalArgumentException;
 
     /**
      * Spawn a {@link FallingBlock} entity at the given {@link Location} of
@@ -883,8 +883,8 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @see #spawnFallingBlock(org.bukkit.Location, org.bukkit.Material, byte)
      * @deprecated Magic value
      */
-
-    FallingBlock spawnFallingBlock(Location location, int blockId, byte blockData) throws IllegalArgumentException;
+    
+    public FallingBlock spawnFallingBlock(Location location, int blockId, byte blockData) throws IllegalArgumentException;
 
     /**
      * Plays an effect to all players within a default radius around a given
@@ -895,7 +895,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param effect the {@link Effect}
      * @param data a data bit needed for some effects
      */
-    void playEffect(Location location, Effect effect, int data);
+    public void playEffect(Location location, Effect effect, int data);
 
     /**
      * Plays an effect to all players within a given radius around a location.
@@ -906,7 +906,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param data a data bit needed for some effects
      * @param radius the radius around the location
      */
-    void playEffect(Location location, Effect effect, int data, int radius);
+    public void playEffect(Location location, Effect effect, int data, int radius);
 
     /**
      * Plays an effect to all players within a default radius around a given
@@ -918,7 +918,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param effect the {@link Effect}
      * @param data a data bit needed for some effects
      */
-    <T> void playEffect(Location location, Effect effect, T data);
+    public <T> void playEffect(Location location, Effect effect, T data);
 
     /**
      * Plays an effect to all players within a given radius around a location.
@@ -930,7 +930,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param data a data bit needed for some effects
      * @param radius the radius around the location
      */
-    <T> void playEffect(Location location, Effect effect, T data, int radius);
+    public <T> void playEffect(Location location, Effect effect, T data, int radius);
 
     /**
      * Get empty chunk snapshot (equivalent to all air blocks), optionally
@@ -945,7 +945,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *     raw biome temperature and rainfall
      * @return The empty snapshot.
      */
-    ChunkSnapshot getEmptyChunkSnapshot(int x, int z, boolean includeBiome, boolean includeBiomeTempRain);
+    public ChunkSnapshot getEmptyChunkSnapshot(int x, int z, boolean includeBiome, boolean includeBiomeTempRain);
 
     /**
      * Sets the spawn flags for this.
@@ -955,21 +955,21 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param allowAnimals - if true, animals are allowed to spawn in this
      *     world.
      */
-    void setSpawnFlags(boolean allowMonsters, boolean allowAnimals);
+    public void setSpawnFlags(boolean allowMonsters, boolean allowAnimals);
 
     /**
      * Gets whether animals can spawn in this world.
      *
      * @return whether animals can spawn in this world.
      */
-    boolean getAllowAnimals();
+    public boolean getAllowAnimals();
 
     /**
      * Gets whether monsters can spawn in this world.
      *
      * @return whether monsters can spawn in this world.
      */
-    boolean getAllowMonsters();
+    public boolean getAllowMonsters();
 
     /**
      * Gets the biome for the given block coordinates.
@@ -999,7 +999,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z coordinate of the block
      * @return Temperature of the requested block
      */
-    double getTemperature(int x, int z);
+    public double getTemperature(int x, int z);
 
     /**
      * Gets the humidity for the given block coordinates.
@@ -1011,7 +1011,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z Z coordinate of the block
      * @return Humidity of the requested block
      */
-    double getHumidity(int x, int z);
+    public double getHumidity(int x, int z);
 
     /**
      * Gets the maximum height of this world.
@@ -1020,7 +1020,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return Maximum height of the world
      */
-    int getMaxHeight();
+    public int getMaxHeight();
 
     /**
      * Gets the sea level for this world.
@@ -1029,7 +1029,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return Sea level
      */
-    int getSeaLevel();
+    public int getSeaLevel();
 
     /**
      * Gets whether the world's spawn area should be kept loaded into memory
@@ -1037,7 +1037,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return true if the world's spawn area will be kept loaded into memory.
      */
-    boolean getKeepSpawnInMemory();
+    public boolean getKeepSpawnInMemory();
 
     /**
      * Sets whether the world's spawn area should be kept loaded into memory
@@ -1046,14 +1046,14 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param keepLoaded if true then the world's spawn area will be kept
      *     loaded into memory.
      */
-    void setKeepSpawnInMemory(boolean keepLoaded);
+    public void setKeepSpawnInMemory(boolean keepLoaded);
 
     /**
      * Gets whether or not the world will automatically save
      *
      * @return true if the world will automatically save, otherwise false
      */
-    boolean isAutoSave();
+    public boolean isAutoSave();
 
     /**
      * Sets whether or not the world will automatically save
@@ -1061,42 +1061,42 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param value true if the world should automatically save, otherwise
      *     false
      */
-    void setAutoSave(boolean value);
+    public void setAutoSave(boolean value);
 
     /**
      * Sets the Difficulty of the world.
      *
      * @param difficulty the new difficulty you want to set the world to
      */
-    void setDifficulty(Difficulty difficulty);
+    public void setDifficulty(Difficulty difficulty);
 
     /**
      * Gets the Difficulty of the world.
      *
      * @return The difficulty of the world.
      */
-    Difficulty getDifficulty();
+    public Difficulty getDifficulty();
 
     /**
      * Gets the folder of this world on disk.
      *
      * @return The folder of this world.
      */
-    File getWorldFolder();
+    public File getWorldFolder();
 
     /**
      * Gets the type of this world.
      *
      * @return Type of this world.
      */
-    WorldType getWorldType();
+    public WorldType getWorldType();
 
     /**
      * Gets whether or not structures are being generated.
      *
      * @return True if structures are being generated.
      */
-    boolean canGenerateStructures();
+    public boolean canGenerateStructures();
 
     /**
      * Gets the world's ticks per animal spawns value
@@ -1122,7 +1122,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return The world's ticks per animal spawns value
      */
-    long getTicksPerAnimalSpawns();
+    public long getTicksPerAnimalSpawns();
 
     /**
      * Sets the world's ticks per animal spawns value
@@ -1149,7 +1149,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param ticksPerAnimalSpawns the ticks per animal spawns value you want
      *     to set the world to
      */
-    void setTicksPerAnimalSpawns(int ticksPerAnimalSpawns);
+    public void setTicksPerAnimalSpawns(int ticksPerAnimalSpawns);
 
     /**
      * Gets the world's ticks per monster spawns value
@@ -1175,7 +1175,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return The world's ticks per monster spawns value
      */
-    long getTicksPerMonsterSpawns();
+    public long getTicksPerMonsterSpawns();
 
     /**
      * Sets the world's ticks per monster spawns value
@@ -1202,7 +1202,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param ticksPerMonsterSpawns the ticks per monster spawns value you
      *     want to set the world to
      */
-    void setTicksPerMonsterSpawns(int ticksPerMonsterSpawns);
+    public void setTicksPerMonsterSpawns(int ticksPerMonsterSpawns);
 
     /**
      * Gets limit for number of monsters that can spawn in a chunk in this
@@ -1339,7 +1339,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return An array of rules
      */
-    String[] getGameRules();
+    public String[] getGameRules();
 
     /**
      * Gets the current state of the specified rule
@@ -1349,7 +1349,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param rule Rule to look up value of
      * @return String value of rule
      */
-    String getGameRuleValue(String rule);
+    public String getGameRuleValue(String rule);
 
     /**
      * Set the specified gamerule to specified value.
@@ -1363,7 +1363,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param value Value to set rule to
      * @return True if rule was set
      */
-    boolean setGameRuleValue(String rule, String value);
+    public boolean setGameRuleValue(String rule, String value);
 
     /**
      * Checks if string is a valid game rule
@@ -1371,14 +1371,14 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param rule Rule to check
      * @return True if rule exists
      */
-    boolean isGameRule(String rule);
+    public boolean isGameRule(String rule);
 
     /**
      * Gets the world border for this world.
      *
      * @return The world border for this world.
      */
-    WorldBorder getWorldBorder();
+    public WorldBorder getWorldBorder();
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1388,7 +1388,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param location the location to spawn at
      * @param count the number of particles
      */
-    void spawnParticle(Particle particle, Location location, int count);
+    public void spawnParticle(Particle particle, Location location, int count);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1400,7 +1400,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param z the position on the z axis to spawn at
      * @param count the number of particles
      */
-    void spawnParticle(Particle particle, double x, double y, double z, int count);
+    public void spawnParticle(Particle particle, double x, double y, double z, int count);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1412,7 +1412,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    <T> void spawnParticle(Particle particle, Location location, int count, T data);
+    public <T> void spawnParticle(Particle particle, Location location, int count, T data);
 
 
     /**
@@ -1427,7 +1427,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    <T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data);
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1442,41 +1442,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param offsetY the maximum random offset on the Y axis
      * @param offsetZ the maximum random offset on the Z axis
      */
-    void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ);
-
-    /**
-     * Spawns the particle (the number of times specified by count)
-     * at the target location. The position of each particle will be
-     * randomized positively and negatively by the offset parameters
-     * on each axis.
-     *
-     * @param particle the particle to spawn
-     * @param x the position on the x axis to spawn at
-     * @param y the position on the y axis to spawn at
-     * @param z the position on the z axis to spawn at
-     * @param count the number of particles
-     * @param offsetX the maximum random offset on the X axis
-     * @param offsetY the maximum random offset on the Y axis
-     * @param offsetZ the maximum random offset on the Z axis
-     */
-    void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ);
-
-    /**
-     * Spawns the particle (the number of times specified by count)
-     * at the target location. The position of each particle will be
-     * randomized positively and negatively by the offset parameters
-     * on each axis.
-     *
-     * @param particle the particle to spawn
-     * @param location the location to spawn at
-     * @param count the number of particles
-     * @param offsetX the maximum random offset on the X axis
-     * @param offsetY the maximum random offset on the Y axis
-     * @param offsetZ the maximum random offset on the Z axis
-     * @param data the data to use for the particle or null,
-     *             the type of this depends on {@link Particle#getDataType()}
-     */
-    <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, T data);
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1492,10 +1458,44 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param offsetX the maximum random offset on the X axis
      * @param offsetY the maximum random offset on the Y axis
      * @param offsetZ the maximum random offset on the Z axis
+     */
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ);
+
+    /**
+     * Spawns the particle (the number of times specified by count)
+     * at the target location. The position of each particle will be
+     * randomized positively and negatively by the offset parameters
+     * on each axis.
+     *
+     * @param particle the particle to spawn
+     * @param location the location to spawn at
+     * @param count the number of particles
+     * @param offsetX the maximum random offset on the X axis
+     * @param offsetY the maximum random offset on the Y axis
+     * @param offsetZ the maximum random offset on the Z axis
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, T data);
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, T data);
+
+    /**
+     * Spawns the particle (the number of times specified by count)
+     * at the target location. The position of each particle will be
+     * randomized positively and negatively by the offset parameters
+     * on each axis.
+     *
+     * @param particle the particle to spawn
+     * @param x the position on the x axis to spawn at
+     * @param y the position on the y axis to spawn at
+     * @param z the position on the z axis to spawn at
+     * @param count the number of particles
+     * @param offsetX the maximum random offset on the X axis
+     * @param offsetY the maximum random offset on the Y axis
+     * @param offsetZ the maximum random offset on the Z axis
+     * @param data the data to use for the particle or null,
+     *             the type of this depends on {@link Particle#getDataType()}
+     */
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, T data);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1512,45 +1512,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param extra the extra data for this particle, depends on the
      *              particle used (normally speed)
      */
-    void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra);
-
-    /**
-     * Spawns the particle (the number of times specified by count)
-     * at the target location. The position of each particle will be
-     * randomized positively and negatively by the offset parameters
-     * on each axis.
-     *
-     * @param particle the particle to spawn
-     * @param x the position on the x axis to spawn at
-     * @param y the position on the y axis to spawn at
-     * @param z the position on the z axis to spawn at
-     * @param count the number of particles
-     * @param offsetX the maximum random offset on the X axis
-     * @param offsetY the maximum random offset on the Y axis
-     * @param offsetZ the maximum random offset on the Z axis
-     * @param extra the extra data for this particle, depends on the
-     *              particle used (normally speed)
-     */
-    void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra);
-
-    /**
-     * Spawns the particle (the number of times specified by count)
-     * at the target location. The position of each particle will be
-     * randomized positively and negatively by the offset parameters
-     * on each axis.
-     *
-     * @param particle the particle to spawn
-     * @param location the location to spawn at
-     * @param count the number of particles
-     * @param offsetX the maximum random offset on the X axis
-     * @param offsetY the maximum random offset on the Y axis
-     * @param offsetZ the maximum random offset on the Z axis
-     * @param extra the extra data for this particle, depends on the
-     *              particle used (normally speed)
-     * @param data the data to use for the particle or null,
-     *             the type of this depends on {@link Particle#getDataType()}
-     */
-    <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra);
 
     /**
      * Spawns the particle (the number of times specified by count)
@@ -1568,13 +1530,51 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * @param offsetZ the maximum random offset on the Z axis
      * @param extra the extra data for this particle, depends on the
      *              particle used (normally speed)
+     */
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra);
+
+    /**
+     * Spawns the particle (the number of times specified by count)
+     * at the target location. The position of each particle will be
+     * randomized positively and negatively by the offset parameters
+     * on each axis.
+     *
+     * @param particle the particle to spawn
+     * @param location the location to spawn at
+     * @param count the number of particles
+     * @param offsetX the maximum random offset on the X axis
+     * @param offsetY the maximum random offset on the Y axis
+     * @param offsetZ the maximum random offset on the Z axis
+     * @param extra the extra data for this particle, depends on the
+     *              particle used (normally speed)
      * @param data the data to use for the particle or null,
      *             the type of this depends on {@link Particle#getDataType()}
      */
-    <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
+
+    /**
+     * Spawns the particle (the number of times specified by count)
+     * at the target location. The position of each particle will be
+     * randomized positively and negatively by the offset parameters
+     * on each axis.
+     *
+     * @param particle the particle to spawn
+     * @param x the position on the x axis to spawn at
+     * @param y the position on the y axis to spawn at
+     * @param z the position on the z axis to spawn at
+     * @param count the number of particles
+     * @param offsetX the maximum random offset on the X axis
+     * @param offsetY the maximum random offset on the Y axis
+     * @param offsetZ the maximum random offset on the Z axis
+     * @param extra the extra data for this particle, depends on the
+     *              particle used (normally speed)
+     * @param data the data to use for the particle or null,
+     *             the type of this depends on {@link Particle#getDataType()}
+     */
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
 
     // Spigot start
-    class Spigot
+    public class Spigot
     {
 
         /**
@@ -1640,7 +1640,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
     /**
      * Represents various map environment types that a world may be
      */
-    enum Environment {
+    public enum Environment {
 
         /**
          * Represents the "normal"/"surface world" map
@@ -1658,7 +1658,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
         private final int id;
         private static final Map<Integer, Environment> lookup = new HashMap<Integer, Environment>();
 
-        Environment(int id) {
+        private Environment(int id) {
             this.id = id;
         }
 

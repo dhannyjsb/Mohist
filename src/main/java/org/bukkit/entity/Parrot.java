@@ -10,19 +10,19 @@ public interface Parrot extends Animals, Tameable, Sittable {
      *
      * @return parrot variant
      */
-    Variant getVariant();
+    public Variant getVariant();
 
     /**
      * Set the variant of this parrot.
      *
      * @param variant parrot variant
      */
-    void setVariant(Variant variant);
+    public void setVariant(Variant variant);
 
     /**
      * Represents the variant of a parrot - ie its color.
      */
-    enum Variant {
+    public enum Variant {
         /**
          * Classic parrot - red with colored wingtips.
          */
@@ -42,6 +42,6 @@ public interface Parrot extends Animals, Tameable, Sittable {
         /**
          * Gray colored parrot.
          */
-        GRAY
+        GRAY;
     }
 }

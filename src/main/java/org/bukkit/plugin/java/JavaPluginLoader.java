@@ -114,7 +114,7 @@ public class JavaPluginLoader implements PluginLoader {
 
         List<String> depend = description.getDepend();
         if (depend == null) {
-            depend = ImmutableList.of();
+            depend = ImmutableList.<String>of();
         }
         for (String pluginName : depend) {
             Plugin current = server.getPluginManager().getPlugin(pluginName);

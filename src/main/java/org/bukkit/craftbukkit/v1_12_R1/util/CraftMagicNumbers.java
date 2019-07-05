@@ -98,7 +98,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     @Override
     public Material getMaterialFromInternalName(String name) {
-        return getMaterial(Item.REGISTRY.getObject(new ResourceLocation(name)));
+        return getMaterial((Item) Item.REGISTRY.getObject(new ResourceLocation(name)));
     }
 
     @Override
@@ -115,7 +115,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
         net.minecraft.item.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 
         try {
-            nmsStack.setTagCompound(JsonToNBT.getTagFromJson(arguments));
+            nmsStack.setTagCompound((NBTTagCompound) JsonToNBT.getTagFromJson(arguments));
         } catch (NBTException ex) {
             Logger.getLogger(CraftMagicNumbers.class.getName()).log(Level.SEVERE, null, ex);
         }

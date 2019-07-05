@@ -24,6 +24,7 @@ public enum PotionType {
     STRENGTH(PotionEffectType.INCREASE_DAMAGE, true, true),
     WEAKNESS(PotionEffectType.WEAKNESS, false, true),
     LUCK(PotionEffectType.LUCK, false, false);
+    ;
 
     private final PotionEffectType effect;
     private final boolean upgradeable;
