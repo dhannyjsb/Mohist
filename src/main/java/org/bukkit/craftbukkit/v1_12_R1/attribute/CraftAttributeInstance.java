@@ -19,6 +19,14 @@ public class CraftAttributeInstance implements AttributeInstance {
         this.attribute = attribute;
     }
 
+    private static net.minecraft.entity.ai.attributes.AttributeModifier convert(AttributeModifier bukkit) {
+        return new net.minecraft.entity.ai.attributes.AttributeModifier(bukkit.getUniqueId(), bukkit.getName(), bukkit.getAmount(), bukkit.getOperation().ordinal());
+    }
+
+    private static AttributeModifier convert(net.minecraft.entity.ai.attributes.AttributeModifier nms) {
+        return new AttributeModifier(nms.getID(), nms.getName(), nms.getAmount(), AttributeModifier.Operation.values()[nms.getOperation()]);
+    }
+
     @Override
     public Attribute getAttribute() {
         return attribute;
@@ -63,14 +71,6 @@ public class CraftAttributeInstance implements AttributeInstance {
 
     @Override
     public double getDefaultValue() {
-       return handle.getAttribute().getDefaultValue();
-    }
-
-    private static net.minecraft.entity.ai.attributes.AttributeModifier convert(AttributeModifier bukkit) {
-        return new net.minecraft.entity.ai.attributes.AttributeModifier(bukkit.getUniqueId(), bukkit.getName(), bukkit.getAmount(), bukkit.getOperation().ordinal());
-    }
-
-    private static AttributeModifier convert(net.minecraft.entity.ai.attributes.AttributeModifier nms) {
-        return new AttributeModifier(nms.getID(), nms.getName(), nms.getAmount(), AttributeModifier.Operation.values()[nms.getOperation()]);
+        return handle.getAttribute().getDefaultValue();
     }
 }

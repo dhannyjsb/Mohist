@@ -14,7 +14,7 @@ public class RedstoneWire extends MaterialData implements Redstone {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public RedstoneWire(final int type) {
         super(type);
     }
@@ -28,7 +28,7 @@ public class RedstoneWire extends MaterialData implements Redstone {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public RedstoneWire(final int type, final byte data) {
         super(type, data);
     }
@@ -38,7 +38,7 @@ public class RedstoneWire extends MaterialData implements Redstone {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public RedstoneWire(final Material type, final byte data) {
         super(type, data);
     }

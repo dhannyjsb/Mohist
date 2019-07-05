@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Step extends TexturedMaterial {
     private static final List<Material> textures = new ArrayList<Material>();
+
     static {
         textures.add(Material.STONE);
         textures.add(Material.SANDSTONE);
@@ -29,7 +30,7 @@ public class Step extends TexturedMaterial {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public Step(final int type) {
         super(type);
     }
@@ -46,7 +47,7 @@ public class Step extends TexturedMaterial {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Step(final int type, final byte data) {
         super(type, data);
     }
@@ -56,7 +57,7 @@ public class Step extends TexturedMaterial {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Step(final Material type, final byte data) {
         super(type, data);
     }
@@ -93,7 +94,7 @@ public class Step extends TexturedMaterial {
      *
      * @deprecated Magic value
      */
-    
+
     @Override
     protected int getTextureIndex() {
         return getData() & 0x7;
@@ -103,7 +104,7 @@ public class Step extends TexturedMaterial {
      *
      * @deprecated Magic value
      */
-    
+
     @Override
     protected void setTextureIndex(int idx) {
         setData((byte) ((getData() & 0x8) | idx));

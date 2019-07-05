@@ -15,12 +15,12 @@ import java.util.List;
  */
 public class StructureGrowEvent extends WorldEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private boolean cancelled = false;
     private final Location location;
     private final TreeType species;
     private final boolean bonemeal;
     private final Player player;
     private final List<BlockState> blocks;
+    private boolean cancelled = false;
 
     public StructureGrowEvent(final Location location, final TreeType species, final boolean bonemeal, final Player player, final List<BlockState> blocks) {
         super(location.getWorld());
@@ -29,6 +29,10 @@ public class StructureGrowEvent extends WorldEvent implements Cancellable {
         this.bonemeal = bonemeal;
         this.player = player;
         this.blocks = blocks;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -88,10 +92,6 @@ public class StructureGrowEvent extends WorldEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

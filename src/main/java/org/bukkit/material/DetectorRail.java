@@ -14,7 +14,7 @@ public class DetectorRail extends ExtendedRails implements PressureSensor {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public DetectorRail(final int type) {
         super(type);
     }
@@ -28,7 +28,7 @@ public class DetectorRail extends ExtendedRails implements PressureSensor {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public DetectorRail(final int type, final byte data) {
         super(type, data);
     }
@@ -38,7 +38,7 @@ public class DetectorRail extends ExtendedRails implements PressureSensor {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public DetectorRail(final Material type, final byte data) {
         super(type, data);
     }

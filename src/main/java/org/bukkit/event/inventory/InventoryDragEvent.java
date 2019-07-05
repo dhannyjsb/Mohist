@@ -78,6 +78,10 @@ public class InventoryDragEvent extends InventoryInteractEvent {
         this.containerSlots = b.build();
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     /**
      * Gets all items to be added to the inventory in this drag.
      *
@@ -154,10 +158,6 @@ public class InventoryDragEvent extends InventoryInteractEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

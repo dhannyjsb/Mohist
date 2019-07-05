@@ -72,6 +72,24 @@ public class BlockVector extends Vector {
         this.z = z;
     }
 
+    public static BlockVector deserialize(Map<String, Object> args) {
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        if (args.containsKey("x")) {
+            x = (Double) args.get("x");
+        }
+        if (args.containsKey("y")) {
+            y = (Double) args.get("y");
+        }
+        if (args.containsKey("z")) {
+            z = (Double) args.get("z");
+        }
+
+        return new BlockVector(x, y, z);
+    }
+
     /**
      * Checks if another object is equivalent.
      *
@@ -107,23 +125,5 @@ public class BlockVector extends Vector {
     @Override
     public BlockVector clone() {
         return (BlockVector) super.clone();
-    }
-
-    public static BlockVector deserialize(Map<String, Object> args) {
-        double x = 0;
-        double y = 0;
-        double z = 0;
-
-        if (args.containsKey("x")) {
-            x = (Double) args.get("x");
-        }
-        if (args.containsKey("y")) {
-            y = (Double) args.get("y");
-        }
-        if (args.containsKey("z")) {
-            z = (Double) args.get("z");
-        }
-
-        return new BlockVector(x, y, z);
     }
 }

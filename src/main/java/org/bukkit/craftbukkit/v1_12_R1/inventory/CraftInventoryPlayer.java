@@ -27,6 +27,11 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
     }
 
     @Override
+    public void setStorageContents(ItemStack[] items) throws IllegalArgumentException {
+        setSlots(items, 0, getInventory().mainInventory.size());
+    }
+
+    @Override
     public ItemStack getItemInMainHand() {
         return CraftItemStack.asCraftMirror(getInventory().getCurrentItem());
     }
@@ -92,28 +97,28 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
         return getItem(getSize() - 2);
     }
 
-    public ItemStack getChestplate() {
-        return getItem(getSize() - 3);
-    }
-
-    public ItemStack getLeggings() {
-        return getItem(getSize() - 4);
-    }
-
-    public ItemStack getBoots() {
-        return getItem(getSize() - 5);
-    }
-
     public void setHelmet(ItemStack helmet) {
         setItem(getSize() - 2, helmet);
+    }
+
+    public ItemStack getChestplate() {
+        return getItem(getSize() - 3);
     }
 
     public void setChestplate(ItemStack chestplate) {
         setItem(getSize() - 3, chestplate);
     }
 
+    public ItemStack getLeggings() {
+        return getItem(getSize() - 4);
+    }
+
     public void setLeggings(ItemStack leggings) {
         setItem(getSize() - 4, leggings);
+    }
+
+    public ItemStack getBoots() {
+        return getItem(getSize() - 5);
     }
 
     public void setBoots(ItemStack boots) {
@@ -122,6 +127,11 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
 
     public ItemStack[] getArmorContents() {
         return asCraftMirror(getInventory().armorInventory);
+    }
+
+    @Override
+    public void setArmorContents(ItemStack[] items) {
+        setSlots(items, getInventory().mainInventory.size(), getInventory().armorInventory.size());
     }
 
     private void setSlots(ItemStack[] items, int baseSlot, int length) {
@@ -137,16 +147,6 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
                 setItem(baseSlot + i, items[i]);
             }
         }
-    }
-
-    @Override
-    public void setStorageContents(ItemStack[] items) throws IllegalArgumentException {
-        setSlots(items, 0, getInventory().mainInventory.size());
-    }
-
-    @Override
-    public void setArmorContents(ItemStack[] items) {
-        setSlots(items, getInventory().mainInventory.size(), getInventory().armorInventory.size());
     }
 
     @Override

@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 public class Main {
     public static boolean useJline = true;
     public static boolean useConsole = true;
+
     public static OptionSet main(String[] args) {
         Mohist.LOGGER = LogManager.getLogger("Mohist");
         // Todo: Installation script
@@ -171,8 +172,8 @@ public class Main {
             }
             try {
                 // This trick bypasses Maven Shade's clever rewriting of our getProperty call when using String literals
-                String jline_UnsupportedTerminal = new String(new char[] {'j','l','i','n','e','.','U','n','s','u','p','p','o','r','t','e','d','T','e','r','m','i','n','a','l'});
-                String jline_terminal = new String(new char[] {'j','l','i','n','e','.','t','e','r','m','i','n','a','l'});
+                String jline_UnsupportedTerminal = new String(new char[]{'j', 'l', 'i', 'n', 'e', '.', 'U', 'n', 's', 'u', 'p', 'p', 'o', 'r', 't', 'e', 'd', 'T', 'e', 'r', 'm', 'i', 'n', 'a', 'l'});
+                String jline_terminal = new String(new char[]{'j', 'l', 'i', 'n', 'e', '.', 't', 'e', 'r', 'm', 'i', 'n', 'a', 'l'});
 
                 useJline = !(jline_UnsupportedTerminal).equals(System.getProperty(jline_terminal));
 
@@ -182,8 +183,7 @@ public class Main {
                 }
                 if (Main.useJline) {
                     AnsiConsole.systemInstall();
-                }
-                else {
+                } else {
                     System.setProperty("jline.terminal", UnsupportedTerminal.class.getName());
                 }
 

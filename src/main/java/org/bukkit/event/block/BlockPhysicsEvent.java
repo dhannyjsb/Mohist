@@ -24,6 +24,10 @@ public class BlockPhysicsEvent extends BlockEvent implements Cancellable {
         this.changed = changed;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     /**
      * Gets the type of block that changed, causing this event
      *
@@ -53,10 +57,6 @@ public class BlockPhysicsEvent extends BlockEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -24,6 +24,10 @@ public class EntityCreatePortalEvent extends EntityEvent implements Cancellable 
         this.type = type;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     @Override
     public LivingEntity getEntity() {
         return (LivingEntity) entity;
@@ -57,10 +61,6 @@ public class EntityCreatePortalEvent extends EntityEvent implements Cancellable 
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

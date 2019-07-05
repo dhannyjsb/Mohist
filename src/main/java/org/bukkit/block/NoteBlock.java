@@ -16,6 +16,13 @@ public interface NoteBlock extends BlockState {
     public Note getNote();
 
     /**
+     * Set the note.
+     *
+     * @param note The note.
+     */
+    public void setNote(Note note);
+
+    /**
      * Gets the note.
      *
      * @return The note ID.
@@ -23,13 +30,6 @@ public interface NoteBlock extends BlockState {
      */
     @Deprecated
     public byte getRawNote();
-
-    /**
-     * Set the note.
-     *
-     * @param note The note.
-     */
-    public void setNote(Note note);
 
     /**
      * Set the note.

@@ -8,10 +8,10 @@ import java.util.function.Supplier;
  * @date 2019/7/5 11:17 PM
  */
 public class LazyField<T> {
-    private T value;
-    private volatile boolean init = false;
     private final Supplier<T> supplier;
     private final Object lock = new Object();
+    private T value;
+    private volatile boolean init = false;
 
     private LazyField(Supplier<T> supplier) {
         this.supplier = supplier;

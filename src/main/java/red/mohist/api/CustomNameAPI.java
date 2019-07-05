@@ -10,7 +10,7 @@ public class CustomNameAPI {
      *  Get form minecraft i18n name (zh_cn and en_us)
      * @param itemStackcb org.bukkit.inventory.ItemStack
      */
-    public static String getItemName(ItemStack itemStackcb){
+    public static String getItemName(ItemStack itemStackcb) {
         net.minecraft.item.ItemStack itemStack = CraftItemStack.asNMSCopy(itemStackcb);
         Object textc = itemStack.getTextComponent();
         String name = String.valueOf(textc);
@@ -23,7 +23,7 @@ public class CustomNameAPI {
      *  Get form minecraft i18n name (zh_cn and en_us)
      * @param materialcb org.bukkit.Material
      */
-    public static String getItemName(Material materialcb){
+    public static String getItemName(Material materialcb) {
         ItemStack itemStackcb = new ItemStack(materialcb);
         net.minecraft.item.ItemStack itemStack = CraftItemStack.asNMSCopy(itemStackcb);
         Object textc = itemStack.getTextComponent();

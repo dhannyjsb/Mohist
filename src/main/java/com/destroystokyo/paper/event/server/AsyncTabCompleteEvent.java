@@ -40,6 +40,7 @@ import java.util.List;
  * Only 1 process will be allowed to provide completions, the Async Event, or the standard process.
  */
 public class AsyncTabCompleteEvent extends Event implements Cancellable {
+    private static final HandlerList handlers = new HandlerList();
     private final CommandSender sender;
     private final String buffer;
     private final boolean isCommand;
@@ -56,6 +57,10 @@ public class AsyncTabCompleteEvent extends Event implements Cancellable {
         this.buffer = buffer;
         this.isCommand = isCommand;
         this.loc = loc;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -140,9 +145,6 @@ public class AsyncTabCompleteEvent extends Event implements Cancellable {
         this.handled = handled;
     }
 
-    private static final HandlerList handlers = new HandlerList();
-
-
     @Override
     public boolean isCancelled() {
         return cancelled;
@@ -158,10 +160,6 @@ public class AsyncTabCompleteEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

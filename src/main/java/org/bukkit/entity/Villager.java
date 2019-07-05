@@ -229,10 +229,29 @@ public interface Villager extends Ageable, NPC, InventoryHolder, Merchant {
         NITWIT(Profession.NITWIT);
 
         private static final Multimap<Profession, Career> careerMap = LinkedListMultimap.create();
+
+        static {
+            for (Career career : Career.values()) {
+                careerMap.put(career.profession, career);
+            }
+        }
+
         private final Profession profession;
 
         private Career(Profession profession) {
             this.profession = profession;
+        }
+
+        /**
+         * Get an immutable list of {@link Career}s that can be used with a
+         * given {@link Profession}
+         *
+         * @param profession the profession to get careers for
+         * @return an immutable list of Careers that can be used by a
+         * profession, or an empty map if the profession was not found
+         */
+        public static List<Career> getCareers(Profession profession) {
+            return careerMap.containsKey(profession) ? ImmutableList.copyOf(careerMap.get(profession)) : ImmutableList.<Career>of();
         }
 
         /**
@@ -242,24 +261,6 @@ public interface Villager extends Ageable, NPC, InventoryHolder, Merchant {
          */
         public Profession getProfession() {
             return profession;
-        }
-
-        /**
-         * Get an immutable list of {@link Career}s that can be used with a
-         * given {@link Profession}
-         * 
-         * @param profession the profession to get careers for
-         * @return an immutable list of Careers that can be used by a
-         * profession, or an empty map if the profession was not found
-         */
-        public static List<Career> getCareers(Profession profession) {
-            return careerMap.containsKey(profession) ? ImmutableList.copyOf(careerMap.get(profession)) : ImmutableList.<Career>of();
-        }
-
-        static {
-            for (Career career : Career.values()) {
-                careerMap.put(career.profession, career);
-            }
         }
     }
 }

@@ -106,7 +106,7 @@ public interface Chunk {
      * @return true if the chunk has unloaded successfully, otherwise false
      * @deprecated it is never safe to remove a chunk in use
      */
-    
+
     boolean unload(boolean save, boolean safe);
 
     /**

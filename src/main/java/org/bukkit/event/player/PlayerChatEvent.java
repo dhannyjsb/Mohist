@@ -19,13 +19,13 @@ import java.util.Set;
  *     causes delays for chat. {@link AsyncPlayerChatEvent} is the encouraged
  *     alternative for thread safe implementations.
  */
-@Warning(reason="Listening to this event forces chat to wait for the main thread, delaying chat messages.")
+@Warning(reason = "Listening to this event forces chat to wait for the main thread, delaying chat messages.")
 public class PlayerChatEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
+    private final Set<Player> recipients;
     private boolean cancel = false;
     private String message;
     private String format;
-    private final Set<Player> recipients;
 
     public PlayerChatEvent(final Player player, final String message) {
         super(player);
@@ -39,6 +39,10 @@ public class PlayerChatEvent extends PlayerEvent implements Cancellable {
         this.message = message;
         this.format = format;
         this.recipients = recipients;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public boolean isCancelled() {
@@ -115,10 +119,6 @@ public class PlayerChatEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

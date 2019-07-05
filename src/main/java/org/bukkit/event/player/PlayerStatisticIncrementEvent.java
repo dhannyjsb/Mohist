@@ -19,9 +19,9 @@ public class PlayerStatisticIncrementEvent extends PlayerEvent implements Cancel
     protected final Statistic statistic;
     private final int initialValue;
     private final int newValue;
-    private boolean isCancelled = false;
     private final EntityType entityType;
     private final Material material;
+    private boolean isCancelled = false;
 
     public PlayerStatisticIncrementEvent(Player player, Statistic statistic, int initialValue, int newValue) {
         super(player);
@@ -48,6 +48,10 @@ public class PlayerStatisticIncrementEvent extends PlayerEvent implements Cancel
         this.newValue = newValue;
         this.entityType = null;
         this.material = material;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -107,10 +111,6 @@ public class PlayerStatisticIncrementEvent extends PlayerEvent implements Cancel
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

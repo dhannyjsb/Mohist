@@ -11,13 +11,19 @@ import org.bukkit.inventory.ItemStack;
  * Fired when a witch throws a potion at a player
  */
 public class WitchThrowPotionEvent extends EntityEvent implements Cancellable {
+    private static final HandlerList handlers = new HandlerList();
     private final LivingEntity target;
     private ItemStack potion;
+    private boolean cancelled = false;
 
     public WitchThrowPotionEvent(Witch witch, LivingEntity target, ItemStack potion) {
         super(witch);
         this.target = target;
         this.potion = potion;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     @Override
@@ -47,17 +53,9 @@ public class WitchThrowPotionEvent extends EntityEvent implements Cancellable {
         this.potion = potion != null ? potion.clone() : null;
     }
 
-    private static final HandlerList handlers = new HandlerList();
-
     public HandlerList getHandlers() {
         return handlers;
     }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    private boolean cancelled = false;
 
     /**
      * @return Event was cancelled or potion was null

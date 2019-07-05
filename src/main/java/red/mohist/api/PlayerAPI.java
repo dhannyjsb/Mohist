@@ -9,15 +9,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerAPI {
 
-    public static Map<EntityPlayerMP,Integer> mods = new ConcurrentHashMap<>();
-    public static Map<EntityPlayerMP,String> modlist= new ConcurrentHashMap<>();
+    public static Map<EntityPlayerMP, Integer> mods = new ConcurrentHashMap<>();
+    public static Map<EntityPlayerMP, String> modlist = new ConcurrentHashMap<>();
 
     /**
      *  Get Player ping
      *
      * @param player org.bukkit.entity.player
      */
-    public static String getPing(Player player){
+    public static String getPing(Player player) {
         int ping = getNMSPlayer(player).ping;
         return String.valueOf(ping);
     }

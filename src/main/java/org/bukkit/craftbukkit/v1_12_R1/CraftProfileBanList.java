@@ -17,7 +17,7 @@ import java.util.Set;
 public class CraftProfileBanList implements org.bukkit.BanList {
     private final UserListBans list;
 
-    public CraftProfileBanList(UserListBans list){
+    public CraftProfileBanList(UserListBans list) {
         this.list = list;
     }
 
@@ -65,7 +65,7 @@ public class CraftProfileBanList implements org.bukkit.BanList {
     @Override
     public Set<org.bukkit.BanEntry> getBanEntries() {
         ImmutableSet.Builder<org.bukkit.BanEntry> builder = ImmutableSet.builder();
-        
+
         for (UserListEntry entry : list.getValuesCB()) {
             GameProfile profile = (GameProfile) entry.getValue();
             builder.add(new CraftProfileBanEntry(profile, (UserListBansEntry) entry, list));

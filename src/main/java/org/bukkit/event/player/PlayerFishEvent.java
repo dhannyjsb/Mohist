@@ -12,16 +12,20 @@ import org.bukkit.event.HandlerList;
 public class PlayerFishEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Entity entity;
-    private boolean cancel = false;
-    private int exp;
     private final State state;
     private final Fish hookEntity;
+    private boolean cancel = false;
+    private int exp;
 
     public PlayerFishEvent(final Player player, final Entity entity, final Fish hookEntity, final State state) {
         super(player);
         this.entity = entity;
         this.hookEntity = hookEntity;
         this.state = state;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -89,10 +93,6 @@ public class PlayerFishEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 

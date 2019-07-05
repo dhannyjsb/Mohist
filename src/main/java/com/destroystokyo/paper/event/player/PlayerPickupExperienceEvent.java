@@ -33,11 +33,17 @@ import org.bukkit.event.player.PlayerEvent;
  * Fired when a player is attempting to pick up an experience orb
  */
 public class PlayerPickupExperienceEvent extends PlayerEvent implements Cancellable {
+    private static final HandlerList handlers = new HandlerList();
     private final ExperienceOrb experienceOrb;
+    private boolean cancelled = false;
 
     public PlayerPickupExperienceEvent(Player player, ExperienceOrb experienceOrb) {
         super(player);
         this.experienceOrb = experienceOrb;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -47,17 +53,9 @@ public class PlayerPickupExperienceEvent extends PlayerEvent implements Cancella
         return experienceOrb;
     }
 
-    private static final HandlerList handlers = new HandlerList();
-
     public HandlerList getHandlers() {
         return handlers;
     }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    private boolean cancelled = false;
 
     @Override
     public boolean isCancelled() {
