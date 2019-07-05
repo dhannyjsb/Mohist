@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/fluids/IFluidTank.java
++++ ../src-work/minecraft/net/minecraftforge/fluids/IFluidTank.java
+@@ -26,8 +26,7 @@
+  *
+  * A reference implementation can be found at {@link FluidTank}.
+  */
+-public interface IFluidTank
+-{
++public interface IFluidTank {
+     /**
+      * @return FluidStack representing the fluid in the tank, null if the tank is empty.
+      */

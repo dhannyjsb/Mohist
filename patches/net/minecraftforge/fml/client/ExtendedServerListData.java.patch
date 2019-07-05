@@ -1,0 +1,16 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/client/ExtendedServerListData.java
++++ ../src-work/minecraft/net/minecraftforge/fml/client/ExtendedServerListData.java
+@@ -24,11 +24,10 @@
+ public class ExtendedServerListData {
+     public final String type;
+     public final boolean isCompatible;
+-    public final Map<String,String> modData;
++    public final Map<String, String> modData;
+     public final boolean isBlocked;
+ 
+-    public ExtendedServerListData(String type, boolean isCompatible, Map<String,String> modData, boolean isBlocked)
+-    {
++    public ExtendedServerListData(String type, boolean isCompatible, Map<String, String> modData, boolean isBlocked) {
+         this.type = type;
+         this.isCompatible = isCompatible;
+         this.modData = modData;

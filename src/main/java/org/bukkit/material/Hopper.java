@@ -53,7 +53,7 @@ public class Hopper extends MaterialData implements Directional, Redstone {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public Hopper(int type) {
         super(type);
     }
@@ -67,7 +67,7 @@ public class Hopper extends MaterialData implements Directional, Redstone {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Hopper(int type, byte data) {
         super(type, data);
     }
@@ -77,9 +77,18 @@ public class Hopper extends MaterialData implements Directional, Redstone {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Hopper(Material type, byte data) {
         super(type, data);
+    }
+
+    /**
+     * Checks whether the hopper is active or not.
+     *
+     * @return True if the hopper is active, false if deactivated
+     */
+    public boolean isActive() {
+        return (getData() & 0x8) == 0;
     }
 
     /**
@@ -90,15 +99,6 @@ public class Hopper extends MaterialData implements Directional, Redstone {
      */
     public void setActive(boolean isActive) {
         setData((byte) (getData() & 0x7 | (isActive ? 0x0 : 0x8)));
-    }
-
-    /**
-     * Checks whether the hopper is active or not.
-     *
-     * @return True if the hopper is active, false if deactivated
-     */
-    public boolean isActive() {
-        return (getData() & 0x8) == 0;
     }
 
     /**

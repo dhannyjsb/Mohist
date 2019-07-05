@@ -74,7 +74,7 @@ public class Diode extends MaterialData implements Directional, Redstone {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public Diode(int type) {
         super(type);
     }
@@ -88,7 +88,7 @@ public class Diode extends MaterialData implements Directional, Redstone {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Diode(int type, byte data) {
         super(type, data);
     }
@@ -98,9 +98,18 @@ public class Diode extends MaterialData implements Directional, Redstone {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public Diode(Material type, byte data) {
         super(type, data);
+    }
+
+    /**
+     * Gets the delay of the repeater in ticks.
+     *
+     * @return The delay (1-4)
+     */
+    public int getDelay() {
+        return (getData() >> 2) + 1;
     }
 
     /**
@@ -118,15 +127,6 @@ public class Diode extends MaterialData implements Directional, Redstone {
         byte newData = (byte) (getData() & 0x3);
 
         setData((byte) (newData | ((delay - 1) << 2)));
-    }
-
-    /**
-     * Gets the delay of the repeater in ticks.
-     *
-     * @return The delay (1-4)
-     */
-    public int getDelay() {
-        return (getData() >> 2) + 1;
     }
 
     /**

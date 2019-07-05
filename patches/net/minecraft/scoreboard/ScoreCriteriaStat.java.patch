@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/scoreboard/ScoreCriteriaStat.java
++++ ../src-work/minecraft/net/minecraft/scoreboard/ScoreCriteriaStat.java
+@@ -2,12 +2,10 @@
+ 
+ import net.minecraft.stats.StatBase;
+ 
+-public class ScoreCriteriaStat extends ScoreCriteria
+-{
++public class ScoreCriteriaStat extends ScoreCriteria {
+     private final StatBase stat;
+ 
+-    public ScoreCriteriaStat(StatBase statIn)
+-    {
++    public ScoreCriteriaStat(StatBase statIn) {
+         super(statIn.statId);
+         this.stat = statIn;
+     }

@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/toasts/package-info.java
++++ ../src-work/minecraft/net/minecraft/client/gui/toasts/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.client.gui.toasts;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

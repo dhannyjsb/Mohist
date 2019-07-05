@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/resources/IResourceManagerReloadListener.java
++++ ../src-work/minecraft/net/minecraft/client/resources/IResourceManagerReloadListener.java
+@@ -9,7 +9,6 @@
+  */
+ @Deprecated
+ @SideOnly(Side.CLIENT)
+-public interface IResourceManagerReloadListener
+-{
++public interface IResourceManagerReloadListener {
+     void onResourceManagerReload(IResourceManager resourceManager);
+ }

@@ -15,13 +15,17 @@ import java.util.Map;
  */
 public class PotionSplashEvent extends ProjectileHitEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private boolean cancelled;
     private final Map<LivingEntity, Double> affectedEntities;
+    private boolean cancelled;
 
     public PotionSplashEvent(final ThrownPotion potion, final Map<LivingEntity, Double> affectedEntities) {
         super(potion);
 
         this.affectedEntities = affectedEntities;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     @Override
@@ -85,10 +89,6 @@ public class PotionSplashEvent extends ProjectileHitEvent implements Cancellable
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

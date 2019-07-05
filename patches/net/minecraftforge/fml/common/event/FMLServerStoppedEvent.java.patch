@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/event/FMLServerStoppedEvent.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/event/FMLServerStoppedEvent.java
+@@ -31,13 +31,12 @@
+  */
+ public class FMLServerStoppedEvent extends FMLStateEvent {
+ 
+-    public FMLServerStoppedEvent(Object... data)
+-    {
++    public FMLServerStoppedEvent(Object... data) {
+         super(data);
+     }
++
+     @Override
+-    public ModState getModState()
+-    {
++    public ModState getModState() {
+         return ModState.AVAILABLE;
+     }
+ 

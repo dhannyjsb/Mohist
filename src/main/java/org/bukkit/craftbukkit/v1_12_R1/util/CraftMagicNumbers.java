@@ -15,12 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import org.bukkit.Achievement;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Statistic;
-import org.bukkit.UnsafeValues;
+import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.craftbukkit.v1_12_R1.CraftStatistic;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
@@ -40,7 +35,8 @@ import java.util.logging.Logger;
 public final class CraftMagicNumbers implements UnsafeValues {
     public static final UnsafeValues INSTANCE = new CraftMagicNumbers();
 
-    private CraftMagicNumbers() {}
+    private CraftMagicNumbers() {
+    }
 
     public static Block getBlock(org.bukkit.block.Block block) {
         return getBlock(block.getType());
@@ -85,7 +81,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     public static Block getBlock(Material material) {
         // MCPC+ - BOP sometimes ends up with a null material here
-		material = material == null ? Material.AIR : material;
+        material = material == null ? Material.AIR : material;
 
         // TODO: Don't use ID
         Block block = Block.getBlockById(material.getId());
@@ -167,7 +163,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
                 try {
                     Files.write(advancement, file, Charsets.UTF_8);
                 } catch (IOException ex) {
-                    Mohist.LOGGER.error( "Error saving advancement " + key, ex);
+                    Mohist.LOGGER.error("Error saving advancement " + key, ex);
                 }
 
                 MinecraftServer.getServerInst().getPlayerList().reloadResources();

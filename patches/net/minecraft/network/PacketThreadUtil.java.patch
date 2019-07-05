@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraft/network/PacketThreadUtil.java
++++ ../src-work/minecraft/net/minecraft/network/PacketThreadUtil.java
+@@ -2,16 +2,11 @@
+ 
+ import net.minecraft.util.IThreadListener;
+ 
+-public class PacketThreadUtil
+-{
+-    public static <T extends INetHandler> void checkThreadAndEnqueue(final Packet<T> packetIn, final T processor, IThreadListener scheduler) throws ThreadQuickExitException
+-    {
+-        if (!scheduler.isCallingFromMinecraftThread())
+-        {
+-            scheduler.addScheduledTask(new Runnable()
+-            {
+-                public void run()
+-                {
++public class PacketThreadUtil {
++    public static <T extends INetHandler> void checkThreadAndEnqueue(final Packet<T> packetIn, final T processor, IThreadListener scheduler) throws ThreadQuickExitException {
++        if (!scheduler.isCallingFromMinecraftThread()) {
++            scheduler.addScheduledTask(new Runnable() {
++                public void run() {
+                     packetIn.processPacket(processor);
+                 }
+             });

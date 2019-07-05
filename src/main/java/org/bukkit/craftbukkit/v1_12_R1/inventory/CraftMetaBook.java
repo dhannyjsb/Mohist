@@ -32,9 +32,75 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
     static final int MAX_PAGES = 50;
     static final int MAX_PAGE_LENGTH = 320; // 256 limit + 64 characters to allow for psuedo colour codes
     static final int MAX_TITLE_LENGTH = 32;
+    public List<ITextComponent> pages = new ArrayList<ITextComponent>();
+    // Spigot start
+    private final BookMeta.Spigot spigot = new BookMeta.Spigot() {
+
+        @Override
+        public BaseComponent[] getPage(final int page) {
+            Validate.isTrue(isValidPage(page), "Invalid page number");
+            return ComponentSerializer.parse(ITextComponent.Serializer.componentToJson(pages.get(page - 1)));
+        }
+
+        @Override
+        public void setPage(final int page, final BaseComponent... text) {
+            if (!isValidPage(page)) {
+                throw new IllegalArgumentException("Invalid page number " + page + "/" + pages.size());
+            }
+
+            BaseComponent[] newText = text == null ? new BaseComponent[0] : text;
+            CraftMetaBook.this.pages.set(page - 1, ITextComponent.Serializer.jsonToComponent(ComponentSerializer.toString(newText)));
+        }
+
+        @Override
+        public void setPages(final BaseComponent[]... pages) {
+            CraftMetaBook.this.pages.clear();
+
+            addPage(pages);
+        }
+
+        @Override
+        public void addPage(final BaseComponent[]... pages) {
+            for (BaseComponent[] page : pages) {
+                if (CraftMetaBook.this.pages.size() >= MAX_PAGES) {
+                    return;
+                }
+
+                if (page == null) {
+                    page = new BaseComponent[0];
+                }
+
+                CraftMetaBook.this.pages.add(ITextComponent.Serializer.jsonToComponent(ComponentSerializer.toString(page)));
+            }
+        }
+
+        @Override
+        public List<BaseComponent[]> getPages() {
+            final List<ITextComponent> copy = ImmutableList.copyOf(CraftMetaBook.this.pages);
+            return new AbstractList<BaseComponent[]>() {
+
+                @Override
+                public BaseComponent[] get(int index) {
+                    return ComponentSerializer.parse(ITextComponent.Serializer.componentToJson(copy.get(index)));
+                }
+
+                @Override
+                public int size() {
+                    return copy.size();
+                }
+            };
+        }
+
+        @Override
+        public void setPages(List<BaseComponent[]> pages) {
+            CraftMetaBook.this.pages.clear();
+            for (BaseComponent[] page : pages) {
+                addPage(page);
+            }
+        }
+    };
     protected String title;
     protected String author;
-    public List<ITextComponent> pages = new ArrayList<ITextComponent>();
     protected Integer generation;
 
     CraftMetaBook(CraftMetaItem meta) {
@@ -99,7 +165,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
         setTitle(SerializableMeta.getString(map, BOOK_TITLE.BUKKIT, true));
 
         Iterable<?> pages = SerializableMeta.getObject(Iterable.class, map, BOOK_PAGES.BUKKIT, true);
-        if(pages != null) {
+        if (pages != null) {
             for (Object page : pages) {
                 if (page instanceof String) {
                     addPage((String) page);
@@ -155,11 +221,11 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
     @Override
     boolean applicableTo(Material type) {
         switch (type) {
-        case WRITTEN_BOOK:
-        case BOOK_AND_QUILL:
-            return true;
-        default:
-            return false;
+            case WRITTEN_BOOK:
+            case BOOK_AND_QUILL:
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -353,73 +419,6 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
 
         return builder;
     }
-
-    // Spigot start
-    private final BookMeta.Spigot spigot = new BookMeta.Spigot() {
-
-        @Override
-        public BaseComponent[] getPage(final int page) {
-            Validate.isTrue(isValidPage(page), "Invalid page number");
-            return ComponentSerializer.parse(ITextComponent.Serializer.componentToJson(pages.get(page - 1)));
-        }
-
-        @Override
-        public void setPage(final int page, final BaseComponent... text) {
-            if (!isValidPage(page)) {
-                throw new IllegalArgumentException("Invalid page number " + page + "/" + pages.size());
-            }
-
-            BaseComponent[] newText = text == null ? new BaseComponent[0] : text;
-            CraftMetaBook.this.pages.set(page - 1, ITextComponent.Serializer.jsonToComponent(ComponentSerializer.toString(newText)));
-        }
-
-        @Override
-        public void setPages(final BaseComponent[]... pages) {
-            CraftMetaBook.this.pages.clear();
-
-            addPage(pages);
-        }
-
-        @Override
-        public void addPage(final BaseComponent[]... pages) {
-            for (BaseComponent[] page : pages) {
-                if (CraftMetaBook.this.pages.size() >= MAX_PAGES) {
-                    return;
-                }
-
-                if (page == null) {
-                    page = new BaseComponent[0];
-                }
-
-                CraftMetaBook.this.pages.add(ITextComponent.Serializer.jsonToComponent(ComponentSerializer.toString(page)));
-            }
-        }
-
-        @Override
-        public List<BaseComponent[]> getPages() {
-            final List<ITextComponent> copy = ImmutableList.copyOf(CraftMetaBook.this.pages);
-            return new AbstractList<BaseComponent[]>() {
-
-                @Override
-                public BaseComponent[] get(int index) {
-                    return ComponentSerializer.parse(ITextComponent.Serializer.componentToJson(copy.get(index)));
-                }
-
-                @Override
-                public int size() {
-                    return copy.size();
-                }
-            };
-        }
-
-        @Override
-        public void setPages(List<BaseComponent[]> pages) {
-            CraftMetaBook.this.pages.clear();
-            for (BaseComponent[] page : pages) {
-                addPage(page);
-            }
-        }
-    };
 
     @Override
     public BookMeta.Spigot spigot() {

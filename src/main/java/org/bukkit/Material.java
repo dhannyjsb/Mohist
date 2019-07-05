@@ -1,72 +1,14 @@
 package org.bukkit;
 
 import com.google.common.collect.Maps;
-import net.minecraftforge.cauldron.api.inventory.BukkitOreDictionary;
-import net.minecraftforge.cauldron.api.inventory.OreDictionaryEntry;
 import net.minecraftforge.common.util.EnumHelper;
 import org.apache.commons.lang.Validate;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
-import org.bukkit.material.Banner;
-import org.bukkit.material.Bed;
-import org.bukkit.material.Button;
-import org.bukkit.material.Cake;
-import org.bukkit.material.Cauldron;
-import org.bukkit.material.Chest;
-import org.bukkit.material.Coal;
-import org.bukkit.material.CocoaPlant;
-import org.bukkit.material.Command;
-import org.bukkit.material.Comparator;
-import org.bukkit.material.Crops;
-import org.bukkit.material.DetectorRail;
-import org.bukkit.material.Diode;
-import org.bukkit.material.Dispenser;
-import org.bukkit.material.Door;
-import org.bukkit.material.Dye;
-import org.bukkit.material.EnderChest;
-import org.bukkit.material.FlowerPot;
-import org.bukkit.material.Furnace;
-import org.bukkit.material.Gate;
-import org.bukkit.material.Hopper;
-import org.bukkit.material.Ladder;
-import org.bukkit.material.Leaves;
-import org.bukkit.material.Lever;
-import org.bukkit.material.LongGrass;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.MonsterEggs;
-import org.bukkit.material.Mushroom;
-import org.bukkit.material.NetherWarts;
-import org.bukkit.material.Observer;
-import org.bukkit.material.PistonBaseMaterial;
-import org.bukkit.material.PistonExtensionMaterial;
-import org.bukkit.material.PoweredRail;
-import org.bukkit.material.PressurePlate;
-import org.bukkit.material.Pumpkin;
-import org.bukkit.material.Rails;
-import org.bukkit.material.RedstoneTorch;
-import org.bukkit.material.RedstoneWire;
-import org.bukkit.material.Sandstone;
-import org.bukkit.material.Sapling;
-import org.bukkit.material.Sign;
-import org.bukkit.material.Skull;
-import org.bukkit.material.SmoothBrick;
-import org.bukkit.material.SpawnEgg;
-import org.bukkit.material.Stairs;
-import org.bukkit.material.Step;
-import org.bukkit.material.Torch;
-import org.bukkit.material.TrapDoor;
-import org.bukkit.material.Tree;
-import org.bukkit.material.Tripwire;
-import org.bukkit.material.TripwireHook;
-import org.bukkit.material.Vine;
-import org.bukkit.material.Wood;
-import org.bukkit.material.WoodenStep;
-import org.bukkit.material.Wool;
+import org.bukkit.material.*;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -539,27 +481,39 @@ public enum Material {
     RECORD_9(2264, 1),
     RECORD_10(2265, 1),
     RECORD_11(2266, 1),
-    RECORD_12(2267, 1),
-    ;
+    RECORD_12(2267, 1),;
+
+    private static Material[] byId = new Material[32676];
+    private static Map<String, Material> BY_NAME = Maps.newHashMap(); // Cauldron - remove final
+
+    static {
+        for (Material material : values()) {
+            if (byId.length > material.id) {
+                byId[material.id] = material;
+            } else {
+                byId = Arrays.copyOfRange(byId, 0, material.id + 2);
+                byId[material.id] = material;
+            }
+            BY_NAME.put(material.name(), material);
+        }
+    }
 
     private final int id;
     private final Constructor<? extends MaterialData> ctor;
-    private static Material[] byId = new Material[32676];
-    private static Map<String, Material> BY_NAME = Maps.newHashMap(); // Cauldron - remove final
     private final int maxStack;
     private final short durability;
-    private  boolean isForgeBlock =  false ;
+    private boolean isForgeBlock = false;
 
     Material(final int id) {
         this(id, 64);
     }
+    // Cauldron end
 
     // Cauldron start - constructor used to set if the Material is a block or not
     private Material(final int id, boolean flag) {
         this(id, 64);
         this.isForgeBlock = flag;
     }
-    // Cauldron end
 
     Material(final int id, final int stack) {
         this(id, stack, MaterialData.class);
@@ -592,12 +546,136 @@ public enum Material {
     }
 
     /**
+     * Attempts to get the Material with the given ID
+     *
+     * @param id ID of the material to get
+     * @return Material if found, or null
+     * @deprecated Magic value
+     */
+
+    public static Material getMaterial(final int id) {
+        if (byId.length > id && id >= 0) {
+            return byId[id];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Attempts to get the Material with the given name.
+     * <p>
+     * This is a normal lookup, names must be the precise name they are given
+     * in the enum.
+     *
+     * @param name Name of the material to get
+     * @return Material if found, or null
+     */
+    public static Material getMaterial(final String name) {
+        return BY_NAME.get(name);
+    }
+
+    /**
+     * Attempts to match the Material with the given name.
+     * <p>
+     * This is a match lookup; names will be converted to uppercase, then
+     * stripped of special characters in an attempt to format it like the
+     * enum.
+     * <p>
+     * Using this for match by ID is deprecated.
+     *
+     * @param name Name of the material to get
+     * @return Material if found, or null
+     */
+    public static Material matchMaterial(final String name) {
+        Validate.notNull(name, "Name cannot be null");
+
+        Material result = null;
+
+        try {
+            result = getMaterial(Integer.parseInt(name));
+        } catch (NumberFormatException ex) {
+        }
+
+        if (result == null) {
+            // Cauldron start - extract to normalizeName()
+            String filtered = normalizeName(name);
+            result = BY_NAME.get(filtered);
+            // Cauldron end
+        }
+
+        /*/ Cauldron start - Try the ore dictionary
+        if (result == null) {
+            BukkitOreDictionary dict = net.minecraftforge.cauldron.api.Cauldron.getOreDictionary();
+            OreDictionaryEntry entry = dict.getOreEntry(name);
+            if (entry != null) {
+                List<ItemStack> items = dict.getDefinitions(entry);
+                if (items.size() > 0) {
+                    // TODO check sanity on multiple item results
+                    ItemStack item = items.get(0);
+                    if (item.getDurability() == 0 || item.getDurability() == Short.MAX_VALUE) {
+                        result = item.getType();
+                    } else {
+                        // bad! we have an item with data!
+                    }
+                }
+            }
+        }
+        // Cauldron end
+         */
+
+        return result;
+    }
+
+    // use a normalize() function to ensure it is accessible after a round-trip
+    public static String normalizeName(String name) {
+        return name.toUpperCase(java.util.Locale.ENGLISH).replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
+    }
+
+    public static Material addMaterial(int id, boolean isBlock) {
+        return addMaterial(id, "X" + String.valueOf(id), isBlock);
+    }
+
+    @Nullable
+    public static Material addMaterial(int id, String name, boolean isBlock) {
+        if (byId[id] == null) {
+            String materialName = normalizeName(name);
+            Material material = (Material) EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Boolean.TYPE}, new Object[]{Integer.valueOf(id), isBlock});
+            byId[id] = material;
+            BY_NAME.put(materialName, material);
+            BY_NAME.put("X" + material.id, material);
+            return material;
+        }
+        return null;
+    }
+
+    public static void setMaterialName(int id, String name, boolean flag) {
+        String materialName = normalizeName(name);
+
+        if (byId[id] == null) {
+            addMaterial(id, materialName, flag);
+        } else // replace existing enum
+        {
+          /* TODO: find out how to do this with Forge's EnumHelper (addEnum?) - used for enabling descriptive (vs numeric) Material names
+          Material material = getMaterial(id);
+          BY_NAME.remove(material);
+          Material newMaterial = EnumHelper.replaceEnum(Material.class, material_name, material.ordinal(), new Class[] { Integer.TYPE }, new Object[] { Integer.valueOf(id) });
+          if (newMaterial == null)
+              System.out.println("Error replacing Material " + name + " with id " + id);
+          else {
+              byId[id] = newMaterial;
+              BY_NAME.put(material_name, newMaterial);
+          }
+          */
+        }
+    }
+
+    /**
      * Gets the item ID or block ID of this Material
      *
      * @return ID of this material
      * @deprecated Magic value
      */
-    
+
     public int getId() {
         return id;
     }
@@ -620,6 +698,8 @@ public enum Material {
         return durability;
     }
 
+    /* ===============================  Cauldron START ============================= */
+
     /**
      * Gets the MaterialData class associated with this Material
      *
@@ -637,7 +717,7 @@ public enum Material {
      * @return New MaterialData with the given data
      * @deprecated Magic value
      */
-    
+
     public MaterialData getNewData(final byte raw) {
         try {
             return ctor.newInstance(id, raw);
@@ -669,8 +749,7 @@ public enum Material {
      *
      * @return true if this material is a forge block
      */
-    public boolean isForgeBlock()
-    {
+    public boolean isForgeBlock() {
         return isForgeBlock;
     }
 
@@ -714,146 +793,6 @@ public enum Material {
                 return true;
             default:
                 return false;
-        }
-    }
-
-    /**
-     * Attempts to get the Material with the given ID
-     *
-     * @param id ID of the material to get
-     * @return Material if found, or null
-     * @deprecated Magic value
-     */
-    
-    public static Material getMaterial(final int id) {
-        if (byId.length > id && id >= 0) {
-            return byId[id];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Attempts to get the Material with the given name.
-     * <p>
-     * This is a normal lookup, names must be the precise name they are given
-     * in the enum.
-     *
-     * @param name Name of the material to get
-     * @return Material if found, or null
-     */
-    public static Material getMaterial(final String name) {
-        return BY_NAME.get(name);
-    }
-
-    /**
-     * Attempts to match the Material with the given name.
-     * <p>
-     * This is a match lookup; names will be converted to uppercase, then
-     * stripped of special characters in an attempt to format it like the
-     * enum.
-     * <p>
-     * Using this for match by ID is deprecated.
-     *
-     * @param name Name of the material to get
-     * @return Material if found, or null
-     */
-    public static Material matchMaterial(final String name) {
-        Validate.notNull(name, "Name cannot be null");
-
-        Material result = null;
-
-        try {
-            result = getMaterial(Integer.parseInt(name));
-        } catch (NumberFormatException ex) {}
-
-        if (result == null) {
-            // Cauldron start - extract to normalizeName()
-            String filtered = normalizeName(name);
-            result = BY_NAME.get(filtered);
-            // Cauldron end
-        }
-
-        /*/ Cauldron start - Try the ore dictionary
-        if (result == null) {
-            BukkitOreDictionary dict = net.minecraftforge.cauldron.api.Cauldron.getOreDictionary();
-            OreDictionaryEntry entry = dict.getOreEntry(name);
-            if (entry != null) {
-                List<ItemStack> items = dict.getDefinitions(entry);
-                if (items.size() > 0) {
-                    // TODO check sanity on multiple item results
-                    ItemStack item = items.get(0);
-                    if (item.getDurability() == 0 || item.getDurability() == Short.MAX_VALUE) {
-                        result = item.getType();
-                    } else {
-                        // bad! we have an item with data!
-                    }
-                }
-            }
-        }
-        // Cauldron end
-         */
-
-        return result;
-    }
-
-    /* ===============================  Cauldron START ============================= */
-
-    // use a normalize() function to ensure it is accessible after a round-trip
-    public static String normalizeName(String name) {
-        return name.toUpperCase(java.util.Locale.ENGLISH).replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
-    }
-
-    public static Material addMaterial(int id, boolean isBlock)
-    {
-        return addMaterial(id, "X" + String.valueOf(id), isBlock);
-    }
-
-    @Nullable
-    public static Material addMaterial(int id, String name, boolean isBlock) {
-        if (byId[id] == null) {
-            String materialName = normalizeName(name);
-            Material material = (Material) EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Boolean.TYPE}, new Object[]{Integer.valueOf(id), isBlock});
-            byId[id] = material;
-            BY_NAME.put(materialName, material);
-            BY_NAME.put("X" + material.id, material);
-            return material;
-        }
-        return null;
-    }
-
-    public static void setMaterialName(int id, String name, boolean flag) {
-        String materialName = normalizeName(name);
-
-        if (byId[id] == null)
-        {
-            addMaterial(id, materialName, flag);
-        }
-        else // replace existing enum
-        {
-          /* TODO: find out how to do this with Forge's EnumHelper (addEnum?) - used for enabling descriptive (vs numeric) Material names
-          Material material = getMaterial(id);
-          BY_NAME.remove(material);
-          Material newMaterial = EnumHelper.replaceEnum(Material.class, material_name, material.ordinal(), new Class[] { Integer.TYPE }, new Object[] { Integer.valueOf(id) });
-          if (newMaterial == null)
-              System.out.println("Error replacing Material " + name + " with id " + id);
-          else {
-              byId[id] = newMaterial;
-              BY_NAME.put(material_name, newMaterial);
-          }
-          */
-        }
-    }
-
-    static {
-        for (Material material : values()) {
-            if (byId.length > material.id) {
-                byId[material.id] = material;
-            } else {
-                byId = Arrays.copyOfRange(byId, 0, material.id + 2);
-                byId[material.id] = material;
-            }
-            BY_NAME.put(material.name(), material);
         }
     }
 

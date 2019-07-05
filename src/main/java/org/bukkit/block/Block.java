@@ -27,6 +27,15 @@ public interface Block extends Metadatable {
     byte getData();
 
     /**
+     * Sets the metadata for this block
+     *
+     * @param data New block specific metadata
+     * @deprecated Magic value
+     */
+    @Deprecated
+    void setData(byte data);
+
+    /**
      * Gets the block at the given offsets
      *
      * @param modX X-coordinate offset
@@ -71,6 +80,13 @@ public interface Block extends Metadatable {
      * @return block type
      */
     Material getType();
+
+    /**
+     * Sets the type of this block
+     *
+     * @param type Material to change this block to
+     */
+    void setType(Material type);
 
     /**
      * Gets the type-id of this block
@@ -164,27 +180,11 @@ public interface Block extends Metadatable {
      * Sets the metadata for this block
      *
      * @param data New block specific metadata
-     * @deprecated Magic value
-     */
-    @Deprecated
-    void setData(byte data);
-
-    /**
-     * Sets the metadata for this block
-     *
-     * @param data New block specific metadata
      * @param applyPhysics False to cancel physics from the changed block.
      * @deprecated Magic value
      */
     @Deprecated
     void setData(byte data, boolean applyPhysics);
-
-    /**
-     * Sets the type of this block
-     *
-     * @param type Material to change this block to
-     */
-    void setType(Material type);
 
     /**
      * Sets the type of this block

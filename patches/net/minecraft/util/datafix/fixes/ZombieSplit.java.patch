@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/util/datafix/fixes/ZombieSplit.java
++++ ../src-work/minecraft/net/minecraft/util/datafix/fixes/ZombieSplit.java
+@@ -3,21 +3,16 @@
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.util.datafix.IFixableData;
+ 
+-public class ZombieSplit implements IFixableData
+-{
+-    public int getFixVersion()
+-    {
++public class ZombieSplit implements IFixableData {
++    public int getFixVersion() {
+         return 702;
+     }
+ 
+-    public NBTTagCompound fixTagCompound(NBTTagCompound compound)
+-    {
+-        if ("Zombie".equals(compound.getString("id")))
+-        {
++    public NBTTagCompound fixTagCompound(NBTTagCompound compound) {
++        if ("Zombie".equals(compound.getString("id"))) {
+             int i = compound.getInteger("ZombieType");
+ 
+-            switch (i)
+-            {
++            switch (i) {
+                 case 0:
+                 default:
+                     break;

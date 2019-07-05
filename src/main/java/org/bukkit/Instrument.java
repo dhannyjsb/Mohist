@@ -52,20 +52,18 @@ public enum Instrument {
      */
     XYLOPHONE(0x9);
 
-    private final byte type;
     private final static Map<Byte, Instrument> BY_DATA = Maps.newHashMap();
+
+    static {
+        for (Instrument instrument : Instrument.values()) {
+            BY_DATA.put(instrument.getType(), instrument);
+        }
+    }
+
+    private final byte type;
 
     private Instrument(final int type) {
         this.type = (byte) type;
-    }
-
-    /**
-     * @return The type ID of this instrument.
-     * @deprecated Magic value
-     */
-    
-    public byte getType() {
-        return this.type;
     }
 
     /**
@@ -75,14 +73,17 @@ public enum Instrument {
      * @return The instrument
      * @deprecated Magic value
      */
-    
+
     public static Instrument getByType(final byte type) {
         return BY_DATA.get(type);
     }
 
-    static {
-        for (Instrument instrument : Instrument.values()) {
-            BY_DATA.put(instrument.getType(), instrument);
-        }
+    /**
+     * @return The type ID of this instrument.
+     * @deprecated Magic value
+     */
+
+    public byte getType() {
+        return this.type;
     }
 }

@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/SidedProxy.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/SidedProxy.java
+@@ -54,8 +54,7 @@
+  */
+ @Retention(RetentionPolicy.RUNTIME)
+ @Target(ElementType.FIELD)
+-public @interface SidedProxy
+-{
++public @interface SidedProxy {
+     /**
+      * The full name of the client side class to load and populate.
+      * Defaults to the nested class named "ClientProxy" in the current class.

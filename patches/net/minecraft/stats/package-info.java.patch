@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/stats/package-info.java
++++ ../src-work/minecraft/net/minecraft/stats/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.stats;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

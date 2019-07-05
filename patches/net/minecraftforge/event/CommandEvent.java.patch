@@ -1,0 +1,68 @@
+--- ../src-base/minecraft/net/minecraftforge/event/CommandEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/CommandEvent.java
+@@ -20,12 +20,12 @@
+ package net.minecraftforge.event;
+ 
+ import net.minecraft.command.CommandHandler;
++import net.minecraft.command.ICommand;
++import net.minecraft.command.ICommandSender;
+ import net.minecraftforge.client.ClientCommandHandler;
+ import net.minecraftforge.common.MinecraftForge;
+ import net.minecraftforge.fml.common.eventhandler.Cancelable;
+ import net.minecraftforge.fml.common.eventhandler.Event;
+-import net.minecraft.command.ICommand;
+-import net.minecraft.command.ICommandSender;
+ 
+ /**
+  * CommandEvent is fired whenever a command is scheduled to be executed. 
+@@ -45,25 +45,40 @@
+  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.<br>
+  **/
+ @Cancelable
+-public class CommandEvent extends Event
+-{
++public class CommandEvent extends Event {
+ 
+     private final ICommand command;
+     private final ICommandSender sender;
+     private String[] parameters;
+     private Throwable exception;
+ 
+-    public CommandEvent(ICommand command, ICommandSender sender, String[] parameters)
+-    {
++    public CommandEvent(ICommand command, ICommandSender sender, String[] parameters) {
+         this.command = command;
+         this.sender = sender;
+         this.setParameters(parameters);
+     }
+ 
+-    public ICommand getCommand() { return command; }
+-    public ICommandSender getSender() { return sender; }
+-    public String[] getParameters() { return parameters; }
+-    public void setParameters(String[] parameters) { this.parameters = parameters; }
+-    public Throwable getException() { return exception; }
+-    public void setException(Throwable exception) { this.exception = exception; }
++    public ICommand getCommand() {
++        return command;
++    }
++
++    public ICommandSender getSender() {
++        return sender;
++    }
++
++    public String[] getParameters() {
++        return parameters;
++    }
++
++    public void setParameters(String[] parameters) {
++        this.parameters = parameters;
++    }
++
++    public Throwable getException() {
++        return exception;
++    }
++
++    public void setException(Throwable exception) {
++        this.exception = exception;
++    }
+ }

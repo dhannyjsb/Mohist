@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/IPlayerFileData.java
++++ ../src-work/minecraft/net/minecraft/world/storage/IPlayerFileData.java
+@@ -1,11 +1,11 @@
+ package net.minecraft.world.storage;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.nbt.NBTTagCompound;
+ 
+-public interface IPlayerFileData
+-{
++import javax.annotation.Nullable;
++
++public interface IPlayerFileData {
+     void writePlayerData(EntityPlayer player);
+ 
+     @Nullable

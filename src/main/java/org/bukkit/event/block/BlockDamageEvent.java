@@ -14,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 public class BlockDamageEvent extends BlockEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
+    private final ItemStack itemstack;
     private boolean instaBreak;
     private boolean cancel;
-    private final ItemStack itemstack;
 
     public BlockDamageEvent(final Player player, final Block block, final ItemStack itemInHand, final boolean instaBreak) {
         super(block);
@@ -24,6 +24,10 @@ public class BlockDamageEvent extends BlockEvent implements Cancellable {
         this.player = player;
         this.itemstack = itemInHand;
         this.cancel = false;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -74,10 +78,6 @@ public class BlockDamageEvent extends BlockEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/eventhandler/IEventExceptionHandler.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/eventhandler/IEventExceptionHandler.java
+@@ -19,8 +19,7 @@
+ 
+ package net.minecraftforge.fml.common.eventhandler;
+ 
+-public interface IEventExceptionHandler
+-{
++public interface IEventExceptionHandler {
+     /**
+      * Fired when a EventListener throws an exception for the specified event on the event bus.
+      * After this function returns, the original Throwable will be propagated upwards.

@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraftforge/registries/IForgeRegistryModifiable.java
++++ ../src-work/minecraft/net/minecraftforge/registries/IForgeRegistryModifiable.java
+@@ -21,9 +21,10 @@
+ 
+ import net.minecraft.util.ResourceLocation;
+ 
+-public interface IForgeRegistryModifiable<V extends IForgeRegistryEntry<V>> extends IForgeRegistry<V>
+-{
++public interface IForgeRegistryModifiable<V extends IForgeRegistryEntry<V>> extends IForgeRegistry<V> {
+     void clear();
++
+     V remove(ResourceLocation key);
++
+     boolean isLocked();
+ }

@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/player/AdvancementEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/player/AdvancementEvent.java
+@@ -33,18 +33,15 @@
+  * <br>
+  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.
+  */
+-public class AdvancementEvent extends PlayerEvent
+-{
++public class AdvancementEvent extends PlayerEvent {
+     private final Advancement advancement;
+ 
+-    public AdvancementEvent(EntityPlayer player, Advancement advancement)
+-    {
++    public AdvancementEvent(EntityPlayer player, Advancement advancement) {
+         super(player);
+         this.advancement = advancement;
+     }
+ 
+-    public Advancement getAdvancement()
+-    {
++    public Advancement getAdvancement() {
+         return advancement;
+     }
+ }

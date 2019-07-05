@@ -1,0 +1,345 @@
+--- ../src-base/minecraft/net/minecraftforge/client/gui/ForgeGuiFactory.java
++++ ../src-work/minecraft/net/minecraftforge/client/gui/ForgeGuiFactory.java
+@@ -19,15 +19,6 @@
+ 
+ package net.minecraftforge.client.gui;
+ 
+-import java.util.ArrayList;
+-import java.util.Collections;
+-import java.util.Comparator;
+-import java.util.HashMap;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Set;
+-import java.util.TreeMap;
+-
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.gui.GuiScreen;
+ import net.minecraft.client.resources.I18n;
+@@ -39,18 +30,17 @@
+ import net.minecraftforge.common.config.Configuration;
+ import net.minecraftforge.common.config.Property;
+ import net.minecraftforge.fml.client.IModGuiFactory;
+-import net.minecraftforge.fml.client.config.ConfigGuiType;
+-import net.minecraftforge.fml.client.config.DummyConfigElement;
++import net.minecraftforge.fml.client.config.*;
+ import net.minecraftforge.fml.client.config.DummyConfigElement.DummyCategoryElement;
+-import net.minecraftforge.fml.client.config.GuiConfig;
+-import net.minecraftforge.fml.client.config.GuiConfigEntries;
++import net.minecraftforge.fml.client.config.GuiConfigEntries.BooleanEntry;
+ import net.minecraftforge.fml.client.config.GuiConfigEntries.CategoryEntry;
+ import net.minecraftforge.fml.client.config.GuiConfigEntries.IConfigEntry;
+ import net.minecraftforge.fml.client.config.GuiConfigEntries.SelectValueEntry;
+-import net.minecraftforge.fml.client.config.GuiConfigEntries.BooleanEntry;
+-import net.minecraftforge.fml.client.config.IConfigElement;
+ import net.minecraftforge.fml.common.Loader;
+ import net.minecraftforge.fml.common.ModContainer;
++
++import java.util.*;
++
+ import static net.minecraftforge.common.ForgeModContainer.VERSION_CHECK_CAT;
+ 
+ /**
+@@ -93,30 +83,33 @@
+  *      ForgeChunkManager.syncConfigDefaults()
+  *      ForgeChunkManager.loadConfiguration()
+  */
+-public class ForgeGuiFactory implements IModGuiFactory
+-{
++public class ForgeGuiFactory implements IModGuiFactory {
+     @Override
+-    public void initialize(Minecraft minecraftInstance) {}
+-    
++    public void initialize(Minecraft minecraftInstance) {
++    }
+ 
++
+     @Override
+-    public boolean hasConfigGui() { return true; }
++    public boolean hasConfigGui() {
++        return true;
++    }
+ 
+     @Override
+-    public GuiScreen createConfigGui(GuiScreen parent) { return new ForgeConfigGui(parent); }
++    public GuiScreen createConfigGui(GuiScreen parent) {
++        return new ForgeConfigGui(parent);
++    }
+ 
+     @Override
+-    public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() { return null; }
++    public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
++        return null;
++    }
+ 
+-    public static class ForgeConfigGui extends GuiConfig
+-    {
+-        public ForgeConfigGui(GuiScreen parentScreen)
+-        {
++    public static class ForgeConfigGui extends GuiConfig {
++        public ForgeConfigGui(GuiScreen parentScreen) {
+             super(parentScreen, getConfigElements(), ForgeVersion.MOD_ID, false, false, I18n.format("forge.configgui.forgeConfigTitle"));
+         }
+ 
+-        private static List<IConfigElement> getConfigElements()
+-        {
++        private static List<IConfigElement> getConfigElements() {
+             List<IConfigElement> list = new ArrayList<IConfigElement>();
+             list.add(new DummyCategoryElement("forgeCfg", "forge.configgui.ctgy.forgeGeneralConfig", GeneralEntry.class));
+             list.add(new DummyCategoryElement("forgeClientCfg", "forge.configgui.ctgy.forgeClientConfig", ClientEntry.class));
+@@ -129,16 +122,13 @@
+          * This custom list entry provides the General Settings entry on the Minecraft Forge Configuration screen.
+          * It extends the base Category entry class and defines the IConfigElement objects that will be used to build the child screen.
+          */
+-        public static class GeneralEntry extends CategoryEntry
+-        {
+-            public GeneralEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)
+-            {
++        public static class GeneralEntry extends CategoryEntry {
++            public GeneralEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+                 super(owningScreen, owningEntryList, prop);
+             }
+ 
+             @Override
+-            protected GuiScreen buildChildScreen()
+-            {
++            protected GuiScreen buildChildScreen() {
+                 // This GuiConfig object specifies the configID of the object and as such will force-save when it is closed. The parent
+                 // GuiConfig object's entryList will also be refreshed to reflect the changes.
+                 return new GuiConfig(this.owningScreen,
+@@ -153,23 +143,20 @@
+          * This custom list entry provides the Client only Settings entry on the Minecraft Forge Configuration screen.
+          * It extends the base Category entry class and defines the IConfigElement objects that will be used to build the child screen.
+          */
+-        public static class ClientEntry extends CategoryEntry
+-        {
+-            public ClientEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)
+-            {
++        public static class ClientEntry extends CategoryEntry {
++            public ClientEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+                 super(owningScreen, owningEntryList, prop);
+             }
+ 
+             @Override
+-            protected GuiScreen buildChildScreen()
+-            {
++            protected GuiScreen buildChildScreen() {
+                 // This GuiConfig object specifies the configID of the object and as such will force-save when it is closed. The parent
+                 // GuiConfig object's entryList will also be refreshed to reflect the changes.
+                 return new GuiConfig(this.owningScreen,
+-                                     (new ConfigElement(ForgeModContainer.getConfig().getCategory(Configuration.CATEGORY_CLIENT))).getChildElements(),
+-                                     this.owningScreen.modID, Configuration.CATEGORY_CLIENT, this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
+-                                     this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart,
+-                                     GuiConfig.getAbridgedConfigPath(ForgeModContainer.getConfig().toString()));
++                        (new ConfigElement(ForgeModContainer.getConfig().getCategory(Configuration.CATEGORY_CLIENT))).getChildElements(),
++                        this.owningScreen.modID, Configuration.CATEGORY_CLIENT, this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
++                        this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart,
++                        GuiConfig.getAbridgedConfigPath(ForgeModContainer.getConfig().toString()));
+             }
+         }
+ 
+@@ -177,16 +164,13 @@
+          * This custom list entry provides the Forge Chunk Manager Config entry on the Minecraft Forge Configuration screen.
+          * It extends the base Category entry class and defines the IConfigElement objects that will be used to build the child screen.
+          */
+-        public static class ChunkLoaderEntry extends CategoryEntry
+-        {
+-            public ChunkLoaderEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)
+-            {
++        public static class ChunkLoaderEntry extends CategoryEntry {
++            public ChunkLoaderEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+                 super(owningScreen, owningEntryList, prop);
+             }
+ 
+             @Override
+-            protected GuiScreen buildChildScreen()
+-            {
++            protected GuiScreen buildChildScreen() {
+                 List<IConfigElement> list = new ArrayList<IConfigElement>();
+ 
+                 list.add(new DummyCategoryElement("forgeChunkLoadingModCfg", "forge.configgui.ctgy.forgeChunkLoadingModConfig",
+@@ -207,16 +191,13 @@
+          * This custom list entry provides the Forge Version Checking Config entry on the Minecraft Forge Configuration screen.
+          * It extends the base Category entry class and defines the IConfigElement objects that will be used to build the child screen.
+          */
+-        public static class VersionCheckEntry extends CategoryEntry
+-        {
+-            public VersionCheckEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)
+-            {
++        public static class VersionCheckEntry extends CategoryEntry {
++            public VersionCheckEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+                 super(owningScreen, owningEntryList, prop);
+             }
+ 
+             @Override
+-            protected GuiScreen buildChildScreen()
+-            {
++            protected GuiScreen buildChildScreen() {
+                 ConfigCategory cfg = ForgeModContainer.getConfig().getCategory(VERSION_CHECK_CAT);
+                 Map<String, Property> values = new HashMap<String, Property>(cfg.getValues());
+                 values.remove("Global");
+@@ -225,8 +206,7 @@
+ 
+                 List<Property> props = new ArrayList<Property>();
+ 
+-                for (ModContainer mod : ForgeVersion.gatherMods().keySet())
+-                {
++                for (ModContainer mod : ForgeVersion.gatherMods().keySet()) {
+                     values.remove(mod.getModId());
+                     props.add(ForgeModContainer.getConfig().get(VERSION_CHECK_CAT, mod.getModId(), true)); //Get or make the value in the config
+                 }
+@@ -235,8 +215,7 @@
+ 
+                 List<IConfigElement> list = new ArrayList<IConfigElement>();
+                 list.add(new ConfigElement(global));
+-                for (Property prop : props)
+-                {
++                for (Property prop : props) {
+                     list.add(new ConfigElement(prop));
+                 }
+ 
+@@ -254,10 +233,8 @@
+          * It extends the base Category entry class and defines the IConfigElement objects that will be used to build the child screen.
+          * In this case it adds the custom entry for adding a new mod override and lists the existing mod overrides.
+          */
+-        public static class ModOverridesEntry extends CategoryEntry
+-        {
+-            public ModOverridesEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)
+-            {
++        public static class ModOverridesEntry extends CategoryEntry {
++            public ModOverridesEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+                 super(owningScreen, owningEntryList, prop);
+             }
+ 
+@@ -265,8 +242,7 @@
+              * This method is called in the constructor and is used to set the childScreen field.
+              */
+             @Override
+-            protected GuiScreen buildChildScreen()
+-            {
++            protected GuiScreen buildChildScreen() {
+                 List<IConfigElement> list = new ArrayList<IConfigElement>();
+ 
+                 list.add(new DummyCategoryElement("addForgeChunkLoadingModCfg", "forge.configgui.ctgy.forgeChunkLoadingAddModConfig",
+@@ -285,12 +261,9 @@
+              * the other entry.
+              */
+             @Override
+-            public boolean enabled()
+-            {
+-                for (IConfigEntry entry : this.owningEntryList.listEntries)
+-                {
+-                    if (entry.getName().equals("enabled") && entry instanceof BooleanEntry)
+-                    {
++            public boolean enabled() {
++                for (IConfigEntry entry : this.owningEntryList.listEntries) {
++                    if (entry.getName().equals("enabled") && entry instanceof BooleanEntry) {
+                         return Boolean.valueOf(entry.getCurrentValue().toString());
+                     }
+                 }
+@@ -302,10 +275,8 @@
+              * Check to see if the child screen's entry list has changed.
+              */
+             @Override
+-            public boolean isChanged()
+-            {
+-                if (childScreen instanceof GuiConfig)
+-                {
++            public boolean isChanged() {
++                if (childScreen instanceof GuiConfig) {
+                     GuiConfig child = (GuiConfig) childScreen;
+                     return child.entryList.listEntries.size() != child.initEntries.size() || child.entryList.hasChangedEntry(true);
+                 }
+@@ -317,10 +288,8 @@
+              * screen listEntries to the saved list.
+              */
+             @Override
+-            public void undoChanges()
+-            {
+-                if (childScreen instanceof GuiConfig)
+-                {
++            public void undoChanges() {
++                if (childScreen instanceof GuiConfig) {
+                     GuiConfig child = (GuiConfig) childScreen;
+                     for (IConfigEntry ice : child.entryList.listEntries)
+                         if (!child.initEntries.contains(ice) && ForgeChunkManager.getConfig().hasCategory(ice.getName()))
+@@ -334,16 +303,13 @@
+         /**
+          * This custom list entry provides a button that will open to a screen that will allow a user to define a new mod override.
+          */
+-        public static class AddModOverrideEntry extends CategoryEntry
+-        {
+-            public AddModOverrideEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)
+-            {
++        public static class AddModOverrideEntry extends CategoryEntry {
++            public AddModOverrideEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+                 super(owningScreen, owningEntryList, prop);
+             }
+ 
+             @Override
+-            protected GuiScreen buildChildScreen()
+-            {
++            protected GuiScreen buildChildScreen() {
+                 List<IConfigElement> list = new ArrayList<IConfigElement>();
+ 
+                 list.add(new DummyConfigElement("modID", "", ConfigGuiType.STRING, "forge.configgui.modID").setCustomListEntryClass(ModIDEntry.class));
+@@ -357,8 +323,7 @@
+             }
+ 
+             @Override
+-            public boolean isChanged()
+-            {
++            public boolean isChanged() {
+                 return false;
+             }
+         }
+@@ -367,17 +332,14 @@
+          * This custom list entry provides a Mod ID selector. The control is a button that opens a list of values to select from.
+          * This entry also overrides onGuiClosed() to run code to save the data to a new ConfigCategory when the user is done.
+          */
+-        public static class ModIDEntry extends SelectValueEntry
+-        {
+-            public ModIDEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)
+-            {
++        public static class ModIDEntry extends SelectValueEntry {
++            public ModIDEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+                 super(owningScreen, owningEntryList, prop, getSelectableValues());
+                 if (this.selectableValues.size() == 0)
+                     this.btnValue.enabled = false;
+             }
+ 
+-            private static Map<Object, String> getSelectableValues()
+-            {
++            private static Map<Object, String> getSelectableValues() {
+                 Map<Object, String> selectableValues = new TreeMap<Object, String>();
+ 
+                 for (ModContainer mod : Loader.instance().getActiveModList())
+@@ -393,15 +355,13 @@
+              * a new ConfigCategory object to the Configuration object.
+              */
+             @Override
+-            public void onGuiClosed()
+-            {
++            public void onGuiClosed() {
+                 Object modObject = Loader.instance().getModObjectList().get(Loader.instance().getIndexedModList().get(currentValue));
+                 int maxTickets = 200;
+                 int maxChunks = 25;
+-                if (modObject != null)
+-                {
++                if (modObject != null) {
+                     this.owningEntryList.saveConfigElements();
+-                    for(IConfigElement ice : this.owningScreen.configElements)
++                    for (IConfigElement ice : this.owningScreen.configElements)
+                         if ("maximumTicketCount".equals(ice.getName()))
+                             maxTickets = Integer.valueOf(ice.get().toString());
+                         else if ("maximumChunksPerTicket".equals(ice.getName()))
+@@ -410,8 +370,7 @@
+                     ForgeChunkManager.addConfigProperty(modObject, "maximumTicketCount", String.valueOf(maxTickets), Property.Type.INTEGER);
+                     ForgeChunkManager.addConfigProperty(modObject, "maximumChunksPerTicket", String.valueOf(maxChunks), Property.Type.INTEGER);
+ 
+-                    if (this.owningScreen.parentScreen instanceof GuiConfig)
+-                    {
++                    if (this.owningScreen.parentScreen instanceof GuiConfig) {
+                         GuiConfig superParent = (GuiConfig) this.owningScreen.parentScreen;
+                         ConfigCategory modCtgy = ForgeChunkManager.getConfigFor(modObject);
+                         modCtgy.setPropertyOrder(ForgeChunkManager.MOD_PROP_ORDER);

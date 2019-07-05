@@ -12,9 +12,9 @@ public class PlayerLoginEvent extends PlayerEvent {
     private static final HandlerList handlers = new HandlerList();
     private final InetAddress address;
     private final String hostname;
+    private final InetAddress realAddress; // Spigot
     private Result result = Result.ALLOWED;
     private String message = "";
-    private final InetAddress realAddress; // Spigot
 
     /**
      * This constructor defaults message to an empty string, and result to
@@ -55,6 +55,12 @@ public class PlayerLoginEvent extends PlayerEvent {
     }
 
     // Spigot start
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+    // Spigot end
+
     /**
      * Gets the connection address of this player, regardless of whether it has been spoofed or not.
      *
@@ -63,8 +69,7 @@ public class PlayerLoginEvent extends PlayerEvent {
     public InetAddress getRealAddress() {
         return realAddress;
     }
-    // Spigot end
-    
+
     /**
      * Gets the current result of the login, as an enum
      *
@@ -145,10 +150,6 @@ public class PlayerLoginEvent extends PlayerEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 

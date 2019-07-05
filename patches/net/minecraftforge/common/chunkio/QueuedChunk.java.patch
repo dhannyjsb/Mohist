@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/common/chunkio/QueuedChunk.java
++++ ../src-work/minecraft/net/minecraftforge/common/chunkio/QueuedChunk.java
+@@ -48,8 +48,7 @@
+     }
+ 
+     @Override
+-    public String toString()
+-    {
++    public String toString() {
+         StringBuilder result = new StringBuilder();
+         String NEW_LINE = System.getProperty("line.separator");
+ 

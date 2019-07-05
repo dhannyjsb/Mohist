@@ -270,18 +270,18 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
     public EntityEquipment getEquipment();
 
     /**
-     * Sets whether or not the living entity can pick up items.
-     *
-     * @param pickup whether or not the living entity can pick up items
-     */
-    public void setCanPickupItems(boolean pickup);
-
-    /**
      * Gets if the living entity can pick up items.
      *
      * @return whether or not the living entity can pick up items
      */
     public boolean getCanPickupItems();
+
+    /**
+     * Sets whether or not the living entity can pick up items.
+     *
+     * @param pickup whether or not the living entity can pick up items
+     */
+    public void setCanPickupItems(boolean pickup);
 
     /**
      * Returns whether the entity is currently leashed.
@@ -339,17 +339,6 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
     boolean hasAI();
 
     /**
-     * Set if this entity will be subject to collisions other entities.
-     * <p>
-     * Note that collisions are bidirectional, so this method would need to be
-     * set to false on both the collidee and the collidant to ensure no
-     * collisions take place.
-     *
-     * @param collidable collision status
-     */
-    void setCollidable(boolean collidable);
-
-    /**
      * Gets if this entity is subject to collisions with other entities.
      * <p>
      * Please note that this method returns only the custom collidable state,
@@ -359,4 +348,15 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @return collision status
      */
     boolean isCollidable();
+
+    /**
+     * Set if this entity will be subject to collisions other entities.
+     * <p>
+     * Note that collisions are bidirectional, so this method would need to be
+     * set to false on both the collidee and the collidant to ensure no
+     * collisions take place.
+     *
+     * @param collidable collision status
+     */
+    void setCollidable(boolean collidable);
 }

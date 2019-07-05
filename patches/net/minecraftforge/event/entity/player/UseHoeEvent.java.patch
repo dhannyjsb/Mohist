@@ -1,0 +1,42 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/player/UseHoeEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/player/UseHoeEvent.java
+@@ -39,15 +39,13 @@
+  */
+ @Cancelable
+ @Event.HasResult
+-public class UseHoeEvent extends PlayerEvent
+-{
++public class UseHoeEvent extends PlayerEvent {
+ 
+     private final ItemStack current;
+     private final World world;
+     private final BlockPos pos;
+ 
+-    public UseHoeEvent(EntityPlayer player, @Nonnull ItemStack current, World world, BlockPos pos)
+-    {
++    public UseHoeEvent(EntityPlayer player, @Nonnull ItemStack current, World world, BlockPos pos) {
+         super(player);
+         this.current = current;
+         this.world = world;
+@@ -55,18 +53,15 @@
+     }
+ 
+     @Nonnull
+-    public ItemStack getCurrent()
+-    {
++    public ItemStack getCurrent() {
+         return current;
+     }
+ 
+-    public World getWorld()
+-    {
++    public World getWorld() {
+         return world;
+     }
+ 
+-    public BlockPos getPos()
+-    {
++    public BlockPos getPos() {
+         return pos;
+     }
+ }

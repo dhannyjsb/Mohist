@@ -1,0 +1,43 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/client/CustomModLoadingErrorDisplayException.java
++++ ../src-work/minecraft/net/minecraftforge/fml/client/CustomModLoadingErrorDisplayException.java
+@@ -38,18 +38,16 @@
+  *
+  */
+ @SideOnly(Side.CLIENT)
+-public abstract class CustomModLoadingErrorDisplayException extends EnhancedRuntimeException implements IFMLHandledException, IDisplayableError
+-{
++public abstract class CustomModLoadingErrorDisplayException extends EnhancedRuntimeException implements IFMLHandledException, IDisplayableError {
++    private static final long serialVersionUID = 1L;
++
+     public CustomModLoadingErrorDisplayException() {
+     }
+ 
+-    public CustomModLoadingErrorDisplayException(String message, Throwable cause)
+-    {
++    public CustomModLoadingErrorDisplayException(String message, Throwable cause) {
+         super(message, cause);
+     }
+ 
+-    private static final long serialVersionUID = 1L;
+-
+     /**
+      * Called after the GUI is initialized by the parent code. You can do extra stuff here, maybe?
+      *
+@@ -72,11 +70,14 @@
+      */
+     public abstract void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime);
+ 
+-    @Override public void printStackTrace(EnhancedRuntimeException.WrappedPrintStream s){}; // Do Nothing unless the modder wants to.
++    @Override
++    public void printStackTrace(EnhancedRuntimeException.WrappedPrintStream s) {
++    }
+ 
++    ; // Do Nothing unless the modder wants to.
++
+     @Override
+-    public final GuiScreen createGui()
+-    {
++    public final GuiScreen createGui() {
+         return new GuiCustomModLoadingErrorScreen(this);
+     }
+ }

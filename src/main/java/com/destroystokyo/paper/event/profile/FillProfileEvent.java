@@ -35,11 +35,16 @@ import java.util.Set;
  * Fired once a profiles additional properties (such as textures) has been filled
  */
 public class FillProfileEvent extends Event {
+    private static final HandlerList handlers = new HandlerList();
     private final PlayerProfile profile;
 
     public FillProfileEvent(@Nonnull PlayerProfile profile) {
         super(!org.bukkit.Bukkit.isPrimaryThread());
         this.profile = profile;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -60,13 +65,7 @@ public class FillProfileEvent extends Event {
         return profile.getProperties();
     }
 
-    private static final HandlerList handlers = new HandlerList();
-
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

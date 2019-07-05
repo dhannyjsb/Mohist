@@ -39,8 +39,8 @@ public class ProfileWhitelistVerifyEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final PlayerProfile profile;
     private final boolean whitelistEnabled;
-    private boolean whitelisted;
     private final boolean isOp;
+    private boolean whitelisted;
     private String kickMessage;
 
     public ProfileWhitelistVerifyEvent(final PlayerProfile profile, boolean whitelistEnabled, boolean whitelisted, boolean isOp, String kickMessage) {
@@ -49,6 +49,10 @@ public class ProfileWhitelistVerifyEvent extends Event {
         this.whitelisted = whitelisted;
         this.isOp = isOp;
         this.kickMessage = kickMessage;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -112,10 +116,6 @@ public class ProfileWhitelistVerifyEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

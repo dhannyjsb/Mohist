@@ -1,0 +1,31 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/VboRenderList.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/VboRenderList.java
+@@ -7,14 +7,10 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+-public class VboRenderList extends ChunkRenderContainer
+-{
+-    public void renderChunkLayer(BlockRenderLayer layer)
+-    {
+-        if (this.initialized)
+-        {
+-            for (RenderChunk renderchunk : this.renderChunks)
+-            {
++public class VboRenderList extends ChunkRenderContainer {
++    public void renderChunkLayer(BlockRenderLayer layer) {
++        if (this.initialized) {
++            for (RenderChunk renderchunk : this.renderChunks) {
+                 VertexBuffer vertexbuffer = renderchunk.getVertexBufferByLayer(layer.ordinal());
+                 GlStateManager.pushMatrix();
+                 this.preRenderChunk(renderchunk);
+@@ -31,8 +27,7 @@
+         }
+     }
+ 
+-    private void setupArrayPointers()
+-    {
++    private void setupArrayPointers() {
+         GlStateManager.glVertexPointer(3, 5126, 28, 0);
+         GlStateManager.glColorPointer(4, 5121, 28, 12);
+         GlStateManager.glTexCoordPointer(2, 5126, 28, 16);

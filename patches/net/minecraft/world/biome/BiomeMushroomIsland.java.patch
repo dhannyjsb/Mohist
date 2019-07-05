@@ -1,0 +1,15 @@
+--- ../src-base/minecraft/net/minecraft/world/biome/BiomeMushroomIsland.java
++++ ../src-work/minecraft/net/minecraft/world/biome/BiomeMushroomIsland.java
+@@ -3,10 +3,8 @@
+ import net.minecraft.entity.passive.EntityMooshroom;
+ import net.minecraft.init.Blocks;
+ 
+-public class BiomeMushroomIsland extends Biome
+-{
+-    public BiomeMushroomIsland(Biome.BiomeProperties properties)
+-    {
++public class BiomeMushroomIsland extends Biome {
++    public BiomeMushroomIsland(Biome.BiomeProperties properties) {
+         super(properties);
+         this.decorator.treesPerChunk = -100;
+         this.decorator.flowersPerChunk = -100;

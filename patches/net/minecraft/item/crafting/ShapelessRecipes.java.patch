@@ -1,6 +1,11 @@
 --- ../src-base/minecraft/net/minecraft/item/crafting/ShapelessRecipes.java
 +++ ../src-work/minecraft/net/minecraft/item/crafting/ShapelessRecipes.java
-@@ -9,7 +9,11 @@
+@@ -4,22 +4,27 @@
+ import com.google.gson.JsonArray;
+ import com.google.gson.JsonObject;
+ import com.google.gson.JsonParseException;
+-import java.util.List;
+ import net.minecraft.inventory.InventoryCrafting;
  import net.minecraft.item.ItemStack;
  import net.minecraft.util.JsonUtils;
  import net.minecraft.util.NonNullList;
@@ -10,38 +15,175 @@
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapelessRecipe;
 +import org.bukkit.inventory.Recipe;
  
- public class ShapelessRecipes extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
- {
-@@ -18,6 +22,8 @@
+-public class ShapelessRecipes extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
+-{
+-    private final ItemStack recipeOutput;
++import java.util.List;
++
++public class ShapelessRecipes extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+     public final NonNullList<Ingredient> recipeItems;
++    private final ItemStack recipeOutput;
      private final String group;
      private final boolean isSimple;
  
+-    public ShapelessRecipes(String group, ItemStack output, NonNullList<Ingredient> ingredients)
+-    {
 +    public ResourceLocation key;
 +
-     public ShapelessRecipes(String group, ItemStack output, NonNullList<Ingredient> ingredients)
-     {
++    public ShapelessRecipes(String group, ItemStack output, NonNullList<Ingredient> ingredients) {
          this.group = group;
-@@ -136,4 +142,23 @@
-     {
-         return width * height >= this.recipeItems.size();
+         this.recipeOutput = output;
+         this.recipeItems = ingredients;
+@@ -29,27 +34,50 @@
+         this.isSimple = simple;
      }
+ 
+-    public String getGroup()
+-    {
++    public static ShapelessRecipes deserialize(JsonObject json) {
++        String s = JsonUtils.getString(json, "group", "");
++        NonNullList<Ingredient> nonnulllist = deserializeIngredients(JsonUtils.getJsonArray(json, "ingredients"));
 +
++        if (nonnulllist.isEmpty()) {
++            throw new JsonParseException("No ingredients for shapeless recipe");
++        } else if (nonnulllist.size() > 9) {
++            throw new JsonParseException("Too many ingredients for shapeless recipe");
++        } else {
++            ItemStack itemstack = ShapedRecipes.deserializeItem(JsonUtils.getJsonObject(json, "result"), true);
++            return new ShapelessRecipes(s, itemstack, nonnulllist);
++        }
++    }
++
++    private static NonNullList<Ingredient> deserializeIngredients(JsonArray array) {
++        NonNullList<Ingredient> nonnulllist = NonNullList.<Ingredient>create();
++
++        for (int i = 0; i < array.size(); ++i) {
++            Ingredient ingredient = ShapedRecipes.deserializeIngredient(array.get(i));
++
++            if (ingredient != Ingredient.EMPTY) {
++                nonnulllist.add(ingredient);
++            }
++        }
++
++        return nonnulllist;
++    }
++
++    public String getGroup() {
+         return this.group;
+     }
+ 
+-    public ItemStack getRecipeOutput()
+-    {
++    public ItemStack getRecipeOutput() {
+         return this.recipeOutput;
+     }
+ 
+-    public NonNullList<Ingredient> getIngredients()
+-    {
++    public NonNullList<Ingredient> getIngredients() {
+         return this.recipeItems;
+     }
+ 
+-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
+-    {
++    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+         NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+ 
+-        for (int i = 0; i < nonnulllist.size(); ++i)
+-        {
++        for (int i = 0; i < nonnulllist.size(); ++i) {
+             ItemStack itemstack = inv.getStackInSlot(i);
+ 
+             nonnulllist.set(i, net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
+@@ -58,20 +86,16 @@
+         return nonnulllist;
+     }
+ 
+-    public boolean matches(InventoryCrafting inv, World worldIn)
+-    {
++    public boolean matches(InventoryCrafting inv, World worldIn) {
+         int ingredientCount = 0;
+         net.minecraft.client.util.RecipeItemHelper recipeItemHelper = new net.minecraft.client.util.RecipeItemHelper();
+         List<ItemStack> inputs = Lists.newArrayList();
+ 
+-        for (int i = 0; i < inv.getHeight(); ++i)
+-        {
+-            for (int j = 0; j < inv.getWidth(); ++j)
+-            {
++        for (int i = 0; i < inv.getHeight(); ++i) {
++            for (int j = 0; j < inv.getWidth(); ++j) {
+                 ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
+ 
+-                if (!itemstack.isEmpty())
+-                {
++                if (!itemstack.isEmpty()) {
+                     ++ingredientCount;
+                     if (this.isSimple)
+                         recipeItemHelper.accountStack(itemstack, 1);
+@@ -90,50 +114,30 @@
+         return net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, this.recipeItems) != null;
+     }
+ 
+-    public ItemStack getCraftingResult(InventoryCrafting inv)
+-    {
++    public ItemStack getCraftingResult(InventoryCrafting inv) {
+         return this.recipeOutput.copy();
+     }
+ 
+-    public static ShapelessRecipes deserialize(JsonObject json)
+-    {
+-        String s = JsonUtils.getString(json, "group", "");
+-        NonNullList<Ingredient> nonnulllist = deserializeIngredients(JsonUtils.getJsonArray(json, "ingredients"));
+-
+-        if (nonnulllist.isEmpty())
+-        {
+-            throw new JsonParseException("No ingredients for shapeless recipe");
+-        }
+-        else if (nonnulllist.size() > 9)
+-        {
+-            throw new JsonParseException("Too many ingredients for shapeless recipe");
+-        }
+-        else
+-        {
+-            ItemStack itemstack = ShapedRecipes.deserializeItem(JsonUtils.getJsonObject(json, "result"), true);
+-            return new ShapelessRecipes(s, itemstack, nonnulllist);
+-        }
++    public boolean canFit(int width, int height) {
++        return width * height >= this.recipeItems.size();
+     }
+ 
+-    private static NonNullList<Ingredient> deserializeIngredients(JsonArray array)
+-    {
+-        NonNullList<Ingredient> nonnulllist = NonNullList.<Ingredient>create();
+-
+-        for (int i = 0; i < array.size(); ++i)
+-        {
+-            Ingredient ingredient = ShapedRecipes.deserializeIngredient(array.get(i));
+-
+-            if (ingredient != Ingredient.EMPTY)
+-            {
+-                nonnulllist.add(ingredient);
 +    @Override
 +    public Recipe toBukkitRecipe() {
 +        CraftItemStack result = CraftItemStack.asCraftMirror(this.recipeOutput);
 +        CraftShapelessRecipe recipe = new CraftShapelessRecipe(result, this);
 +        for (Ingredient list : this.recipeItems) {
 +            if (list != null) {
-+            	ItemStack[] matchingStacks = list.getMatchingStacks();
++                ItemStack[] matchingStacks = list.getMatchingStacks();
 +                ItemStack stack = matchingStacks[0];
 +                recipe.addIngredient(org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getMaterial(stack.getItem()), (matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
-+            }
-+        }
+             }
+         }
+-
+-        return nonnulllist;
 +        return recipe;
-+    }
-+
+     }
+ 
+-    public boolean canFit(int width, int height)
+-    {
+-        return width * height >= this.recipeItems.size();
 +    @Override
 +    public void setKey(ResourceLocation key) {
 +        this.key = key;
-+    }
+     }
  }

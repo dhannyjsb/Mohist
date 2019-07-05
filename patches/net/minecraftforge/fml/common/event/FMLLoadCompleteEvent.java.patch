@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/event/FMLLoadCompleteEvent.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/event/FMLLoadCompleteEvent.java
+@@ -27,17 +27,14 @@
+  *
+  * @author cpw
+  */
+-public class FMLLoadCompleteEvent extends FMLStateEvent
+-{
++public class FMLLoadCompleteEvent extends FMLStateEvent {
+ 
+-    public FMLLoadCompleteEvent(Object... data)
+-    {
++    public FMLLoadCompleteEvent(Object... data) {
+         super(data);
+     }
+-    
++
+     @Override
+-    public ModState getModState()
+-    {
++    public ModState getModState() {
+         return ModState.AVAILABLE;
+     }
+ 

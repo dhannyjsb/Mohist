@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,10 @@ import java.util.regex.Pattern;
 
 public class MohistConfig {
 
+    private static final String HEADER = "This is the main configuration file for Mohist.\n"
+            + "You can change \"update: \n  version: Stable or Debug to get universal version or debug version\"\n";
+    private static final Pattern SPACE = Pattern.compile(" ");
+    private static final Pattern NOT_NUMERIC = Pattern.compile("[^-\\d.]");
     public static String unknownCommandMessage = Message.getString(Message.Use_Unkonw_Comamnd);
     public static String outdatedClientMessage = Message.getString(Message.outdated_Client);
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
@@ -49,14 +52,12 @@ public class MohistConfig {
      */
     public static int maxEntityCollisionsPerTick = 8;
     public static boolean dumpThreadCpuTime = false;
-    private static File CONFIG_FILE;
-    private static final String HEADER = "This is the main configuration file for Mohist.\n"
-            + "You can change \"update: \n  version: Stable or Debug to get universal version or debug version\"\n";
     /*========================================================================*/
     public static YamlConfiguration config;
     static int version;
-    static Map<String, Command> commands;
     /*========================================================================*/
+    static Map<String, Command> commands;
+    private static File CONFIG_FILE;
 
     public static void init(File configFile) {
         CONFIG_FILE = configFile;
@@ -131,9 +132,6 @@ public class MohistConfig {
             Mohist.LOGGER.error("Could not save " + CONFIG_FILE, ex);
         }
     }
-
-    private static final Pattern SPACE = Pattern.compile(" ");
-    private static final Pattern NOT_NUMERIC = Pattern.compile("[^-\\d.]");
 
     public static int getSeconds(String str) {
         str = SPACE.matcher(str).replaceAll("");

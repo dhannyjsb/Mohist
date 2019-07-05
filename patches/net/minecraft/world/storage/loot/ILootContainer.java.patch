@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/loot/ILootContainer.java
++++ ../src-work/minecraft/net/minecraft/world/storage/loot/ILootContainer.java
+@@ -2,7 +2,6 @@
+ 
+ import net.minecraft.util.ResourceLocation;
+ 
+-public interface ILootContainer
+-{
++public interface ILootContainer {
+     ResourceLocation getLootTable();
+ }

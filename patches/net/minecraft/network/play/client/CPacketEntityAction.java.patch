@@ -1,0 +1,84 @@
+--- ../src-base/minecraft/net/minecraft/network/play/client/CPacketEntityAction.java
++++ ../src-work/minecraft/net/minecraft/network/play/client/CPacketEntityAction.java
+@@ -1,6 +1,5 @@
+ package net.minecraft.network.play.client;
+ 
+-import java.io.IOException;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+@@ -8,61 +7,53 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+-public class CPacketEntityAction implements Packet<INetHandlerPlayServer>
+-{
++import java.io.IOException;
++
++public class CPacketEntityAction implements Packet<INetHandlerPlayServer> {
+     private int entityID;
+     private CPacketEntityAction.Action action;
+     private int auxData;
+ 
+-    public CPacketEntityAction()
+-    {
++    public CPacketEntityAction() {
+     }
+ 
+     @SideOnly(Side.CLIENT)
+-    public CPacketEntityAction(Entity entityIn, CPacketEntityAction.Action actionIn)
+-    {
++    public CPacketEntityAction(Entity entityIn, CPacketEntityAction.Action actionIn) {
+         this(entityIn, actionIn, 0);
+     }
+ 
+     @SideOnly(Side.CLIENT)
+-    public CPacketEntityAction(Entity entityIn, CPacketEntityAction.Action actionIn, int auxDataIn)
+-    {
++    public CPacketEntityAction(Entity entityIn, CPacketEntityAction.Action actionIn, int auxDataIn) {
+         this.entityID = entityIn.getEntityId();
+         this.action = actionIn;
+         this.auxData = auxDataIn;
+     }
+ 
+-    public void readPacketData(PacketBuffer buf) throws IOException
+-    {
++    public void readPacketData(PacketBuffer buf) throws IOException {
+         this.entityID = buf.readVarInt();
+-        this.action = (CPacketEntityAction.Action)buf.readEnumValue(CPacketEntityAction.Action.class);
++        this.action = (CPacketEntityAction.Action) buf.readEnumValue(CPacketEntityAction.Action.class);
+         this.auxData = buf.readVarInt();
+     }
+ 
+-    public void writePacketData(PacketBuffer buf) throws IOException
+-    {
++    public void writePacketData(PacketBuffer buf) throws IOException {
+         buf.writeVarInt(this.entityID);
+         buf.writeEnumValue(this.action);
+         buf.writeVarInt(this.auxData);
+     }
+ 
+-    public void processPacket(INetHandlerPlayServer handler)
+-    {
++    public void processPacket(INetHandlerPlayServer handler) {
+         handler.processEntityAction(this);
+     }
+ 
+-    public CPacketEntityAction.Action getAction()
+-    {
++    public CPacketEntityAction.Action getAction() {
+         return this.action;
+     }
+ 
+-    public int getAuxData()
+-    {
++    public int getAuxData() {
+         return this.auxData;
+     }
+ 
+-    public static enum Action
+-    {
++    public static enum Action {
+         START_SNEAKING,
+         STOP_SNEAKING,
+         STOP_SLEEPING,

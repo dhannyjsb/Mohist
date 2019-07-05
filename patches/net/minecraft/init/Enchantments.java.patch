@@ -1,0 +1,53 @@
+--- ../src-base/minecraft/net/minecraft/init/Enchantments.java
++++ ../src-work/minecraft/net/minecraft/init/Enchantments.java
+@@ -1,11 +1,11 @@
+ package net.minecraft.init;
+ 
+-import javax.annotation.Nullable;
+ import net.minecraft.enchantment.Enchantment;
+ import net.minecraft.util.ResourceLocation;
+ 
+-public class Enchantments
+-{
++import javax.annotation.Nullable;
++
++public class Enchantments {
+     public static final Enchantment PROTECTION = getRegisteredEnchantment("protection");
+     public static final Enchantment FIRE_PROTECTION = getRegisteredEnchantment("fire_protection");
+     public static final Enchantment FEATHER_FALLING = getRegisteredEnchantment("feather_falling");
+@@ -37,26 +37,20 @@
+     public static final Enchantment MENDING = getRegisteredEnchantment("mending");
+     public static final Enchantment VANISHING_CURSE = getRegisteredEnchantment("vanishing_curse");
+ 
++    static {
++        if (!Bootstrap.isRegistered()) {
++            throw new RuntimeException("Accessed Enchantments before Bootstrap!");
++        }
++    }
++
+     @Nullable
+-    private static Enchantment getRegisteredEnchantment(String id)
+-    {
++    private static Enchantment getRegisteredEnchantment(String id) {
+         Enchantment enchantment = Enchantment.REGISTRY.getObject(new ResourceLocation(id));
+ 
+-        if (enchantment == null)
+-        {
++        if (enchantment == null) {
+             throw new IllegalStateException("Invalid Enchantment requested: " + id);
+-        }
+-        else
+-        {
++        } else {
+             return enchantment;
+         }
+     }
+-
+-    static
+-    {
+-        if (!Bootstrap.isRegistered())
+-        {
+-            throw new RuntimeException("Accessed Enchantments before Bootstrap!");
+-        }
+-    }
+ }

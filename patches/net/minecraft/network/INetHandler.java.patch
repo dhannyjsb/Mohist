@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/network/INetHandler.java
++++ ../src-work/minecraft/net/minecraft/network/INetHandler.java
+@@ -2,7 +2,6 @@
+ 
+ import net.minecraft.util.text.ITextComponent;
+ 
+-public interface INetHandler
+-{
++public interface INetHandler {
+     void onDisconnect(ITextComponent reason);
+ }

@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/Vector3d.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/Vector3d.java
+@@ -4,8 +4,7 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+-public class Vector3d
+-{
++public class Vector3d {
+     public double x;
+     public double y;
+     public double z;

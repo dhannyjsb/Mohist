@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/tileentity/TileEntitySkull.java
 +++ ../src-work/minecraft/net/minecraft/tileentity/TileEntitySkull.java
-@@ -1,34 +1,94 @@
+@@ -1,52 +1,158 @@
  package net.minecraft.tileentity;
  
 +import com.google.common.base.Predicate;
@@ -33,20 +33,13 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
+-public class TileEntitySkull extends TileEntity implements ITickable
+-{
 +import javax.annotation.Nullable;
 +import java.util.UUID;
 +import java.util.concurrent.*;
 +
- public class TileEntitySkull extends TileEntity implements ITickable
- {
-     private int skullType;
--    private int skullRotation;
-+    public int skullRotation;
-     private GameProfile playerProfile;
-     private int dragonAnimatedTicks;
-     private boolean dragonAnimated;
-     private static PlayerProfileCache profileCache;
-     private static MinecraftSessionService sessionService;
++public class TileEntitySkull extends TileEntity implements ITickable {
 +    // Spigot start
 +    public static final ExecutorService executor = Executors.newFixedThreadPool(3,
 +            new ThreadFactoryBuilder()
@@ -54,16 +47,14 @@
 +                    .build()
 +    );
 +    public static final LoadingCache<String, GameProfile> skinCache = CacheBuilder.newBuilder()
-+            .maximumSize( 5000 )
-+            .expireAfterAccess( 60, TimeUnit.MINUTES )
-+            .build( new CacheLoader<String, GameProfile>()
-+            {
++            .maximumSize(5000)
++            .expireAfterAccess(60, TimeUnit.MINUTES)
++            .build(new CacheLoader<String, GameProfile>() {
 +                @Override
-+                public GameProfile load(String key) throws Exception
-+                {
++                public GameProfile load(String key) throws Exception {
 +                    final GameProfile[] profiles = new GameProfile[1];
 +                    ProfileLookupCallback gameProfileLookup = new ProfileLookupCallback() {
- 
++
 +                        @Override
 +                        public void onProfileLookupSucceeded(GameProfile gp) {
 +                            profiles[0] = gp;
@@ -75,73 +66,57 @@
 +                        }
 +                    };
 +
-+                    MinecraftServer.getServerInst().getGameProfileRepository().findProfilesByNames(new String[] { key }, Agent.MINECRAFT, gameProfileLookup);
++                    MinecraftServer.getServerInst().getGameProfileRepository().findProfilesByNames(new String[]{key}, Agent.MINECRAFT, gameProfileLookup);
 +
-+                    GameProfile profile = profiles[ 0 ];
++                    GameProfile profile = profiles[0];
 +                    if (profile == null) {
 +                        UUID uuid = EntityPlayer.getUUID(new GameProfile(null, key));
 +                        profile = new GameProfile(uuid, key);
 +
 +                        gameProfileLookup.onProfileLookupSucceeded(profile);
-+                    } else
-+                    {
++                    } else {
 +
-+                        Property property = Iterables.getFirst( profile.getProperties().get( "textures" ), null );
++                        Property property = Iterables.getFirst(profile.getProperties().get("textures"), null);
 +
-+                        if ( property == null )
-+                        {
-+                            profile = MinecraftServer.getServerInst().getMinecraftSessionService().fillProfileProperties( profile, true );
++                        if (property == null) {
++                            profile = MinecraftServer.getServerInst().getMinecraftSessionService().fillProfileProperties(profile, true);
 +                        }
 +                    }
 +
 +
 +                    return profile;
 +                }
-+            } );
++            });
++    private static PlayerProfileCache profileCache;
++    private static MinecraftSessionService sessionService;
++    public int skullRotation;
+     private int skullType;
+-    private int skullRotation;
+     private GameProfile playerProfile;
+     private int dragonAnimatedTicks;
+     private boolean dragonAnimated;
+-    private static PlayerProfileCache profileCache;
+-    private static MinecraftSessionService sessionService;
 +    // Spigot end
-+
-     public static void setProfileCache(PlayerProfileCache profileCacheIn)
-     {
-         profileCache = profileCacheIn;
-@@ -134,49 +194,90 @@
  
-     private void updatePlayerProfile()
-     {
--        this.playerProfile = updateGameprofile(this.playerProfile);
--        this.markDirty();
-+        // Spigot start
-+        GameProfile profile = this.playerProfile;
-+        setType( 0 ); // Work around client bug
-+        updateGameprofile(profile, new Predicate<GameProfile>() {
-+
-+            @Override
-+            public boolean apply(GameProfile input) {
-+                setType(3); // Work around client bug
-+                playerProfile = input;
-+                markDirty();
-+                if (world != null) {
-+                    world.notifyLightSet(pos); // PAIL: notify
-+                }
-+                return false;
-+            }
-+        }, false);
-+        // Spigot end
-+
+-    public static void setProfileCache(PlayerProfileCache profileCacheIn)
+-    {
++    public static void setProfileCache(PlayerProfileCache profileCacheIn) {
+         profileCache = profileCacheIn;
      }
  
--    public static GameProfile updateGameprofile(GameProfile input)
+-    public static void setSessionService(MinecraftSessionService sessionServiceIn)
+-    {
++    public static void setSessionService(MinecraftSessionService sessionServiceIn) {
+         sessionService = sessionServiceIn;
+     }
+ 
+-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+-    {
 +    // Spigot start - Support async lookups
-+    public static Future<GameProfile> updateGameprofile(final GameProfile input, final Predicate<GameProfile> callback, boolean sync)
-     {
-         if (input != null && !StringUtils.isNullOrEmpty(input.getName()))
-         {
-             if (input.isComplete() && input.getProperties().containsKey("textures"))
-             {
--                return input;
--            }
--            else if (profileCache != null && sessionService != null)
--            {
--                GameProfile gameprofile = profileCache.getGameProfileForUsername(input.getName());
++    public static Future<GameProfile> updateGameprofile(final GameProfile input, final Predicate<GameProfile> callback, boolean sync) {
++        if (input != null && !StringUtils.isNullOrEmpty(input.getName())) {
++            if (input.isComplete() && input.getProperties().containsKey("textures")) {
 +                callback.apply(input);
 +            } else if (MinecraftServer.getServerInst() == null) {
 +                callback.apply(input);
@@ -149,19 +124,9 @@
 +                GameProfile profile = skinCache.getIfPresent(input.getName().toLowerCase(java.util.Locale.ROOT));
 +                if (profile != null && Iterables.getFirst(profile.getProperties().get("textures"), (Object) null) != null) {
 +                    callback.apply(profile);
- 
--                if (gameprofile == null)
--                {
--                    return input;
++
 +                    return Futures.immediateFuture(profile);
-                 }
-                 else
-                 {
--                    Property property = (Property)Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
--
--                    if (property == null)
--                    {
--                        gameprofile = sessionService.fillProfileProperties(gameprofile, true);
++                } else {
 +                    Callable<GameProfile> callable = new Callable<GameProfile>() {
 +                        @Override
 +                        public GameProfile call() {
@@ -188,31 +153,234 @@
 +                        }
 +                    } else {
 +                        return executor.submit(callable);
-                     }
++                    }
++
++                }
++            }
++        } else {
++            callback.apply(input);
++        }
++
++        return Futures.immediateFuture(input);
++    }
++
++    public static GameProfile updateGameprofile(GameProfile input) {
++        return com.google.common.util.concurrent.Futures.getUnchecked(updateGameprofile(input, com.google.common.base.Predicates.alwaysTrue(), true)); // Mohist
++    }
++
++    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+         super.writeToNBT(compound);
+-        compound.setByte("SkullType", (byte)(this.skullType & 255));
+-        compound.setByte("Rot", (byte)(this.skullRotation & 255));
++        compound.setByte("SkullType", (byte) (this.skullType & 255));
++        compound.setByte("Rot", (byte) (this.skullRotation & 255));
  
--                    return gameprofile;
+-        if (this.playerProfile != null)
+-        {
++        if (this.playerProfile != null) {
+             NBTTagCompound nbttagcompound = new NBTTagCompound();
+             NBTUtil.writeGameProfile(nbttagcompound, this.playerProfile);
+             compound.setTag("Owner", nbttagcompound);
+@@ -55,156 +161,109 @@
+         return compound;
+     }
+ 
+-    public void readFromNBT(NBTTagCompound compound)
+-    {
++    public void readFromNBT(NBTTagCompound compound) {
+         super.readFromNBT(compound);
+         this.skullType = compound.getByte("SkullType");
+         this.skullRotation = compound.getByte("Rot");
+ 
+-        if (this.skullType == 3)
+-        {
+-            if (compound.hasKey("Owner", 10))
+-            {
++        if (this.skullType == 3) {
++            if (compound.hasKey("Owner", 10)) {
+                 this.playerProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag("Owner"));
+-            }
+-            else if (compound.hasKey("ExtraType", 8))
+-            {
++            } else if (compound.hasKey("ExtraType", 8)) {
+                 String s = compound.getString("ExtraType");
+ 
+-                if (!StringUtils.isNullOrEmpty(s))
+-                {
+-                    this.playerProfile = new GameProfile((UUID)null, s);
++                if (!StringUtils.isNullOrEmpty(s)) {
++                    this.playerProfile = new GameProfile((UUID) null, s);
+                     this.updatePlayerProfile();
                  }
+             }
+         }
+     }
+ 
+-    public void update()
+-    {
+-        if (this.skullType == 5)
+-        {
+-            if (this.world.isBlockPowered(this.pos))
+-            {
++    public void update() {
++        if (this.skullType == 5) {
++            if (this.world.isBlockPowered(this.pos)) {
+                 this.dragonAnimated = true;
+                 ++this.dragonAnimatedTicks;
+-            }
+-            else
+-            {
++            } else {
+                 this.dragonAnimated = false;
+             }
+         }
+     }
+ 
+     @SideOnly(Side.CLIENT)
+-    public float getAnimationProgress(float p_184295_1_)
+-    {
+-        return this.dragonAnimated ? (float)this.dragonAnimatedTicks + p_184295_1_ : (float)this.dragonAnimatedTicks;
++    public float getAnimationProgress(float p_184295_1_) {
++        return this.dragonAnimated ? (float) this.dragonAnimatedTicks + p_184295_1_ : (float) this.dragonAnimatedTicks;
+     }
+ 
+     @Nullable
+-    public GameProfile getPlayerProfile()
+-    {
++    public GameProfile getPlayerProfile() {
+         return this.playerProfile;
+     }
+ 
++    public void setPlayerProfile(@Nullable GameProfile playerProfile) {
++        this.skullType = 3;
++        this.playerProfile = playerProfile;
++        this.updatePlayerProfile();
++    }
++
+     @Nullable
+-    public SPacketUpdateTileEntity getUpdatePacket()
+-    {
++    public SPacketUpdateTileEntity getUpdatePacket() {
+         return new SPacketUpdateTileEntity(this.pos, 4, this.getUpdateTag());
+     }
+ 
+-    public NBTTagCompound getUpdateTag()
+-    {
++    public NBTTagCompound getUpdateTag() {
+         return this.writeToNBT(new NBTTagCompound());
+     }
+ 
+-    public void setType(int type)
+-    {
++    public void setType(int type) {
+         this.skullType = type;
+         this.playerProfile = null;
+     }
++    // Spigot end
+ 
+-    public void setPlayerProfile(@Nullable GameProfile playerProfile)
+-    {
+-        this.skullType = 3;
+-        this.playerProfile = playerProfile;
+-        this.updatePlayerProfile();
+-    }
++    private void updatePlayerProfile() {
++        // Spigot start
++        GameProfile profile = this.playerProfile;
++        setType(0); // Work around client bug
++        updateGameprofile(profile, new Predicate<GameProfile>() {
+ 
+-    private void updatePlayerProfile()
+-    {
+-        this.playerProfile = updateGameprofile(this.playerProfile);
+-        this.markDirty();
+-    }
+-
+-    public static GameProfile updateGameprofile(GameProfile input)
+-    {
+-        if (input != null && !StringUtils.isNullOrEmpty(input.getName()))
+-        {
+-            if (input.isComplete() && input.getProperties().containsKey("textures"))
+-            {
+-                return input;
+-            }
+-            else if (profileCache != null && sessionService != null)
+-            {
+-                GameProfile gameprofile = profileCache.getGameProfileForUsername(input.getName());
+-
+-                if (gameprofile == null)
+-                {
+-                    return input;
++            @Override
++            public boolean apply(GameProfile input) {
++                setType(3); // Work around client bug
++                playerProfile = input;
++                markDirty();
++                if (world != null) {
++                    world.notifyLightSet(pos); // PAIL: notify
+                 }
+-                else
+-                {
+-                    Property property = (Property)Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
+-
+-                    if (property == null)
+-                    {
+-                        gameprofile = sessionService.fillProfileProperties(gameprofile, true);
+-                    }
+-
+-                    return gameprofile;
+-                }
++                return false;
              }
 -            else
 -            {
 -                return input;
 -            }
-         }
-         else
-         {
+-        }
+-        else
+-        {
 -            return input;
-+            callback.apply(input);
-         }
+-        }
++        }, false);
++        // Spigot end
 +
-+        return Futures.immediateFuture(input);
      }
-+    // Spigot end
  
-+    public static GameProfile updateGameprofile(GameProfile input)
-+    {
-+        return com.google.common.util.concurrent.Futures.getUnchecked(updateGameprofile(input, com.google.common.base.Predicates.alwaysTrue(), true)); // Mohist
-+    }
-+
-     public int getSkullType()
-     {
+-    public int getSkullType()
+-    {
++    public int getSkullType() {
          return this.skullType;
+     }
+ 
+     @SideOnly(Side.CLIENT)
+-    public int getSkullRotation()
+-    {
++    public int getSkullRotation() {
+         return this.skullRotation;
+     }
+ 
+-    public void setSkullRotation(int rotation)
+-    {
++    public void setSkullRotation(int rotation) {
+         this.skullRotation = rotation;
+     }
+ 
+-    public void mirror(Mirror mirrorIn)
+-    {
+-        if (this.world != null && this.world.getBlockState(this.getPos()).getValue(BlockSkull.FACING) == EnumFacing.UP)
+-        {
++    public void mirror(Mirror mirrorIn) {
++        if (this.world != null && this.world.getBlockState(this.getPos()).getValue(BlockSkull.FACING) == EnumFacing.UP) {
+             this.skullRotation = mirrorIn.mirrorRotation(this.skullRotation, 16);
+         }
+     }
+ 
+-    public void rotate(Rotation rotationIn)
+-    {
+-        if (this.world != null && this.world.getBlockState(this.getPos()).getValue(BlockSkull.FACING) == EnumFacing.UP)
+-        {
++    public void rotate(Rotation rotationIn) {
++        if (this.world != null && this.world.getBlockState(this.getPos()).getValue(BlockSkull.FACING) == EnumFacing.UP) {
+             this.skullRotation = rotationIn.rotate(this.skullRotation, 16);
+         }
+     }

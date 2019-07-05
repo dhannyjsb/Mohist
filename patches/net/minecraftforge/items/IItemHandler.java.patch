@@ -1,0 +1,30 @@
+--- ../src-base/minecraft/net/minecraftforge/items/IItemHandler.java
++++ ../src-work/minecraft/net/minecraftforge/items/IItemHandler.java
+@@ -26,8 +26,7 @@
+ 
+ import javax.annotation.Nonnull;
+ 
+-public interface IItemHandler
+-{
++public interface IItemHandler {
+     /**
+      * Returns the number of slots available
+      *
+@@ -94,7 +93,7 @@
+      * Retrieves the maximum stack size allowed to exist in the given slot.
+      *
+      * @param slot Slot to query.
+-     * @return     The maximum stack size allowed in the slot.
++     * @return The maximum stack size allowed in the slot.
+      */
+     int getSlotLimit(int slot);
+ 
+@@ -118,5 +117,7 @@
+      *         false if the slot can never insert the ItemStack in any situation.
+      */
+     //todo Make non-default and/or replace in 1.13
+-    default boolean isItemValid(int slot, @Nonnull ItemStack stack) { return true; }
++    default boolean isItemValid(int slot, @Nonnull ItemStack stack) {
++        return true;
++    }
+ }

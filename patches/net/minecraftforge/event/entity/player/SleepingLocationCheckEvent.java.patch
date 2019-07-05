@@ -1,0 +1,25 @@
+--- ../src-base/minecraft/net/minecraftforge/event/entity/player/SleepingLocationCheckEvent.java
++++ ../src-work/minecraft/net/minecraftforge/event/entity/player/SleepingLocationCheckEvent.java
+@@ -37,19 +37,16 @@
+  * setResult(DEFAULT) causes game to check {@link Block#isBed(IBlockState, IBlockAccess, BlockPos, Entity)} instead
+  */
+ @HasResult
+-public class SleepingLocationCheckEvent extends PlayerEvent
+-{
++public class SleepingLocationCheckEvent extends PlayerEvent {
+ 
+     private final BlockPos sleepingLocation;
+ 
+-    public SleepingLocationCheckEvent(EntityPlayer player, BlockPos sleepingLocation)
+-    {
++    public SleepingLocationCheckEvent(EntityPlayer player, BlockPos sleepingLocation) {
+         super(player);
+         this.sleepingLocation = sleepingLocation;
+     }
+ 
+-    public BlockPos getSleepingLocation()
+-    {
++    public BlockPos getSleepingLocation() {
+         return sleepingLocation;
+     }
+ }

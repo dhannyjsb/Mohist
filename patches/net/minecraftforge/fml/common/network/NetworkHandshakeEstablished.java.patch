@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/network/NetworkHandshakeEstablished.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/network/NetworkHandshakeEstablished.java
+@@ -38,8 +38,7 @@
+     public final Side side;
+     public final INetHandler netHandler;
+ 
+-    public NetworkHandshakeEstablished(NetworkDispatcher dispatcher, INetHandler netHandler, Side origin)
+-    {
++    public NetworkHandshakeEstablished(NetworkDispatcher dispatcher, INetHandler netHandler, Side origin) {
+         this.netHandler = netHandler;
+         this.dispatcher = dispatcher;
+         this.side = origin;

@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/ICrashCallable.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/ICrashCallable.java
+@@ -21,7 +21,6 @@
+ 
+ import net.minecraft.crash.ICrashReportDetail;
+ 
+-public interface ICrashCallable extends ICrashReportDetail<String>
+-{
++public interface ICrashCallable extends ICrashReportDetail<String> {
+     String getLabel();
+ }

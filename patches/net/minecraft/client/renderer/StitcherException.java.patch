@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/StitcherException.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/StitcherException.java
+@@ -5,12 +5,10 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+-public class StitcherException extends RuntimeException
+-{
++public class StitcherException extends RuntimeException {
+     private final Stitcher.Holder holder;
+ 
+-    public StitcherException(Stitcher.Holder holderIn, String message)
+-    {
++    public StitcherException(Stitcher.Holder holderIn, String message) {
+         super(message);
+         this.holder = holderIn;
+     }

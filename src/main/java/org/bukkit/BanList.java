@@ -9,21 +9,6 @@ import java.util.Set;
 public interface BanList {
 
     /**
-     * Represents a ban-type that a {@link BanList} may track.
-     */
-    public enum Type {
-        /**
-         * Banned player names
-         */
-        NAME,
-        /**
-         * Banned player IP addresses
-         */
-        IP,
-        ;
-    }
-
-    /**
      * Gets a {@link BanEntry} by target.
      *
      * @param target entry parameter to search for
@@ -69,4 +54,18 @@ public interface BanList {
      * @param target the target to remove from this list
      */
     public void pardon(String target);
+
+    /**
+     * Represents a ban-type that a {@link BanList} may track.
+     */
+    public enum Type {
+        /**
+         * Banned player names
+         */
+        NAME,
+        /**
+         * Banned player IP addresses
+         */
+        IP,;
+    }
 }

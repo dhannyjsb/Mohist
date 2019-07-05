@@ -13,18 +13,18 @@ public interface CraftingInventory extends Inventory {
     ItemStack getResult();
 
     /**
-     * Get the contents of the crafting matrix.
-     *
-     * @return The contents.
-     */
-    ItemStack[] getMatrix();
-
-    /**
      * Set the item in the result slot of the crafting inventory.
      *
      * @param newResult The new result item.
      */
     void setResult(ItemStack newResult);
+
+    /**
+     * Get the contents of the crafting matrix.
+     *
+     * @return The contents.
+     */
+    ItemStack[] getMatrix();
 
     /**
      * Replace the contents of the crafting matrix

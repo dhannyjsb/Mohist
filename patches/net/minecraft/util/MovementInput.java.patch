@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraft/util/MovementInput.java
++++ ../src-work/minecraft/net/minecraft/util/MovementInput.java
+@@ -5,8 +5,7 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+ @SideOnly(Side.CLIENT)
+-public class MovementInput
+-{
++public class MovementInput {
+     public float moveStrafe;
+     public float moveForward;
+     public boolean forwardKeyDown;
+@@ -16,12 +15,10 @@
+     public boolean jump;
+     public boolean sneak;
+ 
+-    public void updatePlayerMoveState()
+-    {
++    public void updatePlayerMoveState() {
+     }
+ 
+-    public Vec2f getMoveVector()
+-    {
++    public Vec2f getMoveVector() {
+         return new Vec2f(this.moveStrafe, this.moveForward);
+     }
+ }

@@ -1,0 +1,40 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/loot/LootEntryEmpty.java
++++ ../src-work/minecraft/net/minecraft/world/storage/loot/LootEntryEmpty.java
+@@ -3,28 +3,24 @@
+ import com.google.gson.JsonDeserializationContext;
+ import com.google.gson.JsonObject;
+ import com.google.gson.JsonSerializationContext;
+-import java.util.Collection;
+-import java.util.Random;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.world.storage.loot.conditions.LootCondition;
+ 
+-public class LootEntryEmpty extends LootEntry
+-{
+-    public LootEntryEmpty(int weightIn, int qualityIn, LootCondition[] conditionsIn, String entryName)
+-    {
++import java.util.Collection;
++import java.util.Random;
++
++public class LootEntryEmpty extends LootEntry {
++    public LootEntryEmpty(int weightIn, int qualityIn, LootCondition[] conditionsIn, String entryName) {
+         super(weightIn, qualityIn, conditionsIn, entryName);
+     }
+ 
+-    public void addLoot(Collection<ItemStack> stacks, Random rand, LootContext context)
+-    {
++    public static LootEntryEmpty deserialize(JsonObject object, JsonDeserializationContext deserializationContext, int weightIn, int qualityIn, LootCondition[] conditionsIn) {
++        return new LootEntryEmpty(weightIn, qualityIn, conditionsIn, net.minecraftforge.common.ForgeHooks.readLootEntryName(object, "empty"));
+     }
+ 
+-    protected void serialize(JsonObject json, JsonSerializationContext context)
+-    {
++    public void addLoot(Collection<ItemStack> stacks, Random rand, LootContext context) {
+     }
+ 
+-    public static LootEntryEmpty deserialize(JsonObject object, JsonDeserializationContext deserializationContext, int weightIn, int qualityIn, LootCondition[] conditionsIn)
+-    {
+-        return new LootEntryEmpty(weightIn, qualityIn, conditionsIn, net.minecraftforge.common.ForgeHooks.readLootEntryName(object, "empty"));
++    protected void serialize(JsonObject json, JsonSerializationContext context) {
+     }
+ }

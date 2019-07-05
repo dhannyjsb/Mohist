@@ -1,0 +1,24 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/eventhandler/GenericEvent.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/eventhandler/GenericEvent.java
+@@ -21,17 +21,15 @@
+ 
+ import java.lang.reflect.Type;
+ 
+-public class GenericEvent<T> extends Event implements IGenericEvent<T>
+-{
++public class GenericEvent<T> extends Event implements IGenericEvent<T> {
+     private Class<T> type;
+-    protected GenericEvent(Class<T> type)
+-    {
++
++    protected GenericEvent(Class<T> type) {
+         this.type = type;
+     }
+ 
+     @Override
+-    public Type getGenericType()
+-    {
++    public Type getGenericType() {
+         return type;
+     }
+ }

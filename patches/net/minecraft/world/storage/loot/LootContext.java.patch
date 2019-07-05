@@ -1,0 +1,238 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/loot/LootContext.java
++++ ../src-work/minecraft/net/minecraft/world/storage/loot/LootContext.java
+@@ -4,16 +4,16 @@
+ import com.google.gson.TypeAdapter;
+ import com.google.gson.stream.JsonReader;
+ import com.google.gson.stream.JsonWriter;
+-import java.io.IOException;
+-import java.util.Set;
+-import javax.annotation.Nullable;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.util.DamageSource;
+ import net.minecraft.world.WorldServer;
+ 
+-public class LootContext
+-{
++import javax.annotation.Nullable;
++import java.io.IOException;
++import java.util.Set;
++
++public class LootContext {
+     private final float luck;
+     private final WorldServer world;
+     private final LootTableManager lootTableManager;
+@@ -25,8 +25,7 @@
+     private final DamageSource damageSource;
+     private final Set<LootTable> lootTables = Sets.<LootTable>newLinkedHashSet();
+ 
+-    public LootContext(float luckIn, WorldServer worldIn, LootTableManager lootTableManagerIn, @Nullable Entity lootedEntityIn, @Nullable EntityPlayer playerIn, @Nullable DamageSource damageSourceIn)
+-    {
++    public LootContext(float luckIn, WorldServer worldIn, LootTableManager lootTableManagerIn, @Nullable Entity lootedEntityIn, @Nullable EntityPlayer playerIn, @Nullable DamageSource damageSourceIn) {
+         this.luck = luckIn;
+         this.world = worldIn;
+         this.lootTableManager = lootTableManagerIn;
+@@ -36,48 +35,39 @@
+     }
+ 
+     @Nullable
+-    public Entity getLootedEntity()
+-    {
++    public Entity getLootedEntity() {
+         return this.lootedEntity;
+     }
+ 
+     @Nullable
+-    public Entity getKillerPlayer()
+-    {
++    public Entity getKillerPlayer() {
+         return this.player;
+     }
+ 
+     @Nullable
+-    public Entity getKiller()
+-    {
++    public Entity getKiller() {
+         return this.damageSource == null ? null : this.damageSource.getTrueSource();
+     }
+ 
+-    public boolean addLootTable(LootTable lootTableIn)
+-    {
++    public boolean addLootTable(LootTable lootTableIn) {
+         return this.lootTables.add(lootTableIn);
+     }
+ 
+-    public void removeLootTable(LootTable lootTableIn)
+-    {
++    public void removeLootTable(LootTable lootTableIn) {
+         this.lootTables.remove(lootTableIn);
+     }
+ 
+-    public LootTableManager getLootTableManager()
+-    {
++    public LootTableManager getLootTableManager() {
+         return this.lootTableManager;
+     }
+ 
+-    public float getLuck()
+-    {
++    public float getLuck() {
+         return this.luck;
+     }
+ 
+     @Nullable
+-    public Entity getEntity(LootContext.EntityTarget target)
+-    {
+-        switch (target)
+-        {
++    public Entity getEntity(LootContext.EntityTarget target) {
++        switch (target) {
+             case THIS:
+                 return this.getLootedEntity();
+             case KILLER:
+@@ -89,96 +79,79 @@
+         }
+     }
+ 
+-    public WorldServer getWorld()
+-    {
++    public WorldServer getWorld() {
+         return world;
+     }
+ 
+-    public int getLootingModifier()
+-    {
++    public int getLootingModifier() {
+         return net.minecraftforge.common.ForgeHooks.getLootingLevel(getLootedEntity(), getKiller(), damageSource);
+     }
+ 
+-    public static class Builder
+-        {
+-            private final WorldServer world;
+-            private float luck;
+-            private Entity lootedEntity;
+-            private EntityPlayer player;
+-            private DamageSource damageSource;
++    public static enum EntityTarget {
++        THIS("this"),
++        KILLER("killer"),
++        KILLER_PLAYER("killer_player");
+ 
+-            public Builder(WorldServer worldIn)
+-            {
+-                this.world = worldIn;
+-            }
++        private final String targetType;
+ 
+-            public LootContext.Builder withLuck(float luckIn)
+-            {
+-                this.luck = luckIn;
+-                return this;
+-            }
++        private EntityTarget(String type) {
++            this.targetType = type;
++        }
+ 
+-            public LootContext.Builder withLootedEntity(Entity entityIn)
+-            {
+-                this.lootedEntity = entityIn;
+-                return this;
++        public static LootContext.EntityTarget fromString(String type) {
++            for (LootContext.EntityTarget lootcontext$entitytarget : values()) {
++                if (lootcontext$entitytarget.targetType.equals(type)) {
++                    return lootcontext$entitytarget;
++                }
+             }
+ 
+-            public LootContext.Builder withPlayer(EntityPlayer playerIn)
+-            {
+-                this.player = playerIn;
+-                return this;
+-            }
++            throw new IllegalArgumentException("Invalid entity target " + type);
++        }
+ 
+-            public LootContext.Builder withDamageSource(DamageSource dmgSource)
+-            {
+-                this.damageSource = dmgSource;
+-                return this;
++        public static class Serializer extends TypeAdapter<LootContext.EntityTarget> {
++            public void write(JsonWriter p_write_1_, LootContext.EntityTarget p_write_2_) throws IOException {
++                p_write_1_.value(p_write_2_.targetType);
+             }
+ 
+-            public LootContext build()
+-            {
+-                return new LootContext(this.luck, this.world, this.world.getLootTableManager(), this.lootedEntity, this.player, this.damageSource);
++            public LootContext.EntityTarget read(JsonReader p_read_1_) throws IOException {
++                return LootContext.EntityTarget.fromString(p_read_1_.nextString());
+             }
+         }
++    }
+ 
+-    public static enum EntityTarget
+-    {
+-        THIS("this"),
+-        KILLER("killer"),
+-        KILLER_PLAYER("killer_player");
++    public static class Builder {
++        private final WorldServer world;
++        private float luck;
++        private Entity lootedEntity;
++        private EntityPlayer player;
++        private DamageSource damageSource;
+ 
+-        private final String targetType;
++        public Builder(WorldServer worldIn) {
++            this.world = worldIn;
++        }
+ 
+-        private EntityTarget(String type)
+-        {
+-            this.targetType = type;
++        public LootContext.Builder withLuck(float luckIn) {
++            this.luck = luckIn;
++            return this;
+         }
+ 
+-        public static LootContext.EntityTarget fromString(String type)
+-        {
+-            for (LootContext.EntityTarget lootcontext$entitytarget : values())
+-            {
+-                if (lootcontext$entitytarget.targetType.equals(type))
+-                {
+-                    return lootcontext$entitytarget;
+-                }
+-            }
++        public LootContext.Builder withLootedEntity(Entity entityIn) {
++            this.lootedEntity = entityIn;
++            return this;
++        }
+ 
+-            throw new IllegalArgumentException("Invalid entity target " + type);
++        public LootContext.Builder withPlayer(EntityPlayer playerIn) {
++            this.player = playerIn;
++            return this;
+         }
+ 
+-        public static class Serializer extends TypeAdapter<LootContext.EntityTarget>
+-            {
+-                public void write(JsonWriter p_write_1_, LootContext.EntityTarget p_write_2_) throws IOException
+-                {
+-                    p_write_1_.value(p_write_2_.targetType);
+-                }
++        public LootContext.Builder withDamageSource(DamageSource dmgSource) {
++            this.damageSource = dmgSource;
++            return this;
++        }
+ 
+-                public LootContext.EntityTarget read(JsonReader p_read_1_) throws IOException
+-                {
+-                    return LootContext.EntityTarget.fromString(p_read_1_.nextString());
+-                }
+-            }
++        public LootContext build() {
++            return new LootContext(this.luck, this.world, this.world.getLootTableManager(), this.lootedEntity, this.player, this.damageSource);
++        }
+     }
+ }

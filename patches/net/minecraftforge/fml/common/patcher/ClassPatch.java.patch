@@ -1,0 +1,23 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/patcher/ClassPatch.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/patcher/ClassPatch.java
+@@ -26,8 +26,8 @@
+     public final boolean existsAtTarget;
+     public final byte[] patch;
+     public final int inputChecksum;
+-    public ClassPatch(String name, String sourceClassName, String targetClassName, boolean existsAtTarget, int inputChecksum, byte[] patch)
+-    {
++
++    public ClassPatch(String name, String sourceClassName, String targetClassName, boolean existsAtTarget, int inputChecksum, byte[] patch) {
+         this.name = name;
+         this.sourceClassName = sourceClassName;
+         this.targetClassName = targetClassName;
+@@ -37,8 +37,7 @@
+     }
+ 
+     @Override
+-    public String toString()
+-    {
++    public String toString() {
+         return String.format("%s : %s => %s (%b) size %d", name, sourceClassName, targetClassName, existsAtTarget, patch.length);
+     }
+ }

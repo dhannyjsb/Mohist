@@ -17,13 +17,18 @@ import java.lang.ref.WeakReference;
 import java.util.Arrays;
 
 public class CraftChunk implements Chunk {
-    private WeakReference<net.minecraft.world.chunk.Chunk> weakChunk;
-    private final net.minecraft.world.World worldServer;
-    private final int x;
-    private final int z;
     private static final byte[] emptyData = new byte[2048];
     private static final short[] emptyBlockIDs = new short[4096];
     private static final byte[] emptySkyLight = new byte[2048];
+
+    static {
+        Arrays.fill(emptySkyLight, (byte) 0xFF);
+    }
+
+    private final net.minecraft.world.World worldServer;
+    private final int x;
+    private final int z;
+    private WeakReference<net.minecraft.world.chunk.Chunk> weakChunk;
 
     public CraftChunk(net.minecraft.world.chunk.Chunk chunk) {
         this.weakChunk = new WeakReference<net.minecraft.world.chunk.Chunk>(chunk);
@@ -31,6 +36,76 @@ public class CraftChunk implements Chunk {
         worldServer = getHandle().getWorld() instanceof net.minecraft.world.World ? (net.minecraft.world.World) getHandle().getWorld() : null; // Thermos - use world instead of worldserver for NatureOverhaul
         x = getHandle().x;
         z = getHandle().z;
+    }
+
+    public static ChunkSnapshot getEmptyChunkSnapshot(int x, int z, CraftWorld world, boolean includeBiome, boolean includeBiomeTempRain) {
+        Biome[] biome = null;
+        double[] biomeTemp = null;
+        double[] biomeRain = null;
+
+        if (includeBiome || includeBiomeTempRain) {
+            BiomeProvider wcm = world.getHandle().getBiomeProvider();
+
+            if (includeBiome) {
+                biome = new Biome[256];
+                for (int i = 0; i < 256; i++) {
+                    biome[i] = world.getHandle().getBiome(new BlockPos((x << 4) + (i & 0xF), 0, (z << 4) + (i >> 4)));
+                }
+            }
+
+            if (includeBiomeTempRain) {
+                biomeTemp = new double[256];
+                biomeRain = new double[256];
+                float[] dat = getTemperatures(wcm, x << 4, z << 4);
+
+                for (int i = 0; i < 256; i++) {
+                    biomeTemp[i] = dat[i];
+                }
+
+                /* Removed 15w46a
+                dat = wcm.getWetness(null, x << 4, z << 4, 16, 16);
+
+                for (int i = 0; i < 256; i++) {
+                    biomeRain[i] = dat[i];
+                }
+                */
+            }
+        }
+
+        /* Fill with empty data */
+        int hSection = world.getMaxHeight() >> 4;
+        short[][] blockIDs = new short[hSection][];
+        byte[][] skyLight = new byte[hSection][];
+        byte[][] emitLight = new byte[hSection][];
+        byte[][] blockData = new byte[hSection][];
+        boolean[] empty = new boolean[hSection];
+
+        for (int i = 0; i < hSection; i++) {
+            blockIDs[i] = emptyBlockIDs;
+            skyLight[i] = emptySkyLight;
+            emitLight[i] = emptyData;
+            blockData[i] = emptyData;
+            empty[i] = true;
+        }
+
+        return new CraftChunkSnapshot(x, z, world.getName(), world.getFullTime(), blockIDs, blockData, skyLight, emitLight, empty, new int[256], biome, biomeTemp, biomeRain);
+    }
+
+    private static float[] getTemperatures(BiomeProvider chunkmanager, int chunkX, int chunkZ) {
+        Biome[] biomes = chunkmanager.getBiomes(null, chunkX, chunkZ, 16, 16);
+        float[] temps = new float[biomes.length];
+
+        for (int i = 0; i < biomes.length; i++) {
+            float temp = biomes[i].getDefaultTemperature(); // Vanilla of olde: ((int) biomes[i].temperature * 65536.0F) / 65536.0F
+
+            if (temp > 1F) {
+                temp = 1F;
+            }
+
+            temps[i] = temp;
+        }
+
+        return temps;
     }
 
     public World getWorld() {
@@ -236,79 +311,5 @@ public class CraftChunk implements Chunk {
 
         World world = getWorld();
         return new CraftChunkSnapshot(getX(), getZ(), world.getName(), world.getFullTime(), sectionBlockIDs, sectionBlockData, sectionSkyLights, sectionEmitLights, sectionEmpty, hmap, biome, biomeTemp, biomeRain);
-    }
-
-    public static ChunkSnapshot getEmptyChunkSnapshot(int x, int z, CraftWorld world, boolean includeBiome, boolean includeBiomeTempRain) {
-        Biome[] biome = null;
-        double[] biomeTemp = null;
-        double[] biomeRain = null;
-
-        if (includeBiome || includeBiomeTempRain) {
-            BiomeProvider wcm = world.getHandle().getBiomeProvider();
-
-            if (includeBiome) {
-                biome = new Biome[256];
-                for (int i = 0; i < 256; i++) {
-                    biome[i] = world.getHandle().getBiome(new BlockPos((x << 4) + (i & 0xF), 0, (z << 4) + (i >> 4)));
-                }
-            }
-
-            if (includeBiomeTempRain) {
-                biomeTemp = new double[256];
-                biomeRain = new double[256];
-                float[] dat = getTemperatures(wcm, x << 4, z << 4);
-
-                for (int i = 0; i < 256; i++) {
-                    biomeTemp[i] = dat[i];
-                }
-
-                /* Removed 15w46a
-                dat = wcm.getWetness(null, x << 4, z << 4, 16, 16);
-
-                for (int i = 0; i < 256; i++) {
-                    biomeRain[i] = dat[i];
-                }
-                */
-            }
-        }
-
-        /* Fill with empty data */
-        int hSection = world.getMaxHeight() >> 4;
-        short[][] blockIDs = new short[hSection][];
-        byte[][] skyLight = new byte[hSection][];
-        byte[][] emitLight = new byte[hSection][];
-        byte[][] blockData = new byte[hSection][];
-        boolean[] empty = new boolean[hSection];
-
-        for (int i = 0; i < hSection; i++) {
-            blockIDs[i] = emptyBlockIDs;
-            skyLight[i] = emptySkyLight;
-            emitLight[i] = emptyData;
-            blockData[i] = emptyData;
-            empty[i] = true;
-        }
-
-        return new CraftChunkSnapshot(x, z, world.getName(), world.getFullTime(), blockIDs, blockData, skyLight, emitLight, empty, new int[256], biome, biomeTemp, biomeRain);
-    }
-
-    private static float[] getTemperatures(BiomeProvider chunkmanager, int chunkX, int chunkZ) {
-        Biome[] biomes = chunkmanager.getBiomes(null, chunkX, chunkZ, 16, 16);
-        float[] temps = new float[biomes.length];
-
-        for (int i = 0; i < biomes.length; i++) {
-            float temp = biomes[i].getDefaultTemperature(); // Vanilla of olde: ((int) biomes[i].temperature * 65536.0F) / 65536.0F
-
-            if (temp > 1F) {
-                temp = 1F;
-            }
-
-            temps[i] = temp;
-        }
-
-        return temps;
-    }
-
-    static {
-        Arrays.fill(emptySkyLight, (byte) 0xFF);
     }
 }

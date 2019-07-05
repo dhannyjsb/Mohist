@@ -1,0 +1,19 @@
+--- ../src-base/minecraft/net/minecraft/util/registry/IRegistry.java
++++ ../src-work/minecraft/net/minecraft/util/registry/IRegistry.java
+@@ -1,12 +1,12 @@
+ package net.minecraft.util.registry;
+ 
+-import java.util.Set;
+-import javax.annotation.Nullable;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ 
+-public interface IRegistry<K, V> extends Iterable<V>
+-{
++import javax.annotation.Nullable;
++import java.util.Set;
++
++public interface IRegistry<K, V> extends Iterable<V> {
+     @Nullable
+     @SideOnly(Side.CLIENT)
+     V getObject(K name);

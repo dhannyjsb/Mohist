@@ -1,0 +1,8 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/block/model/multipart/package-info.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/block/model/multipart/package-info.java
+@@ -4,4 +4,5 @@
+ package net.minecraft.client.renderer.block.model.multipart;
+ 
+ import mcp.MethodsReturnNonnullByDefault;
++
+ import javax.annotation.ParametersAreNonnullByDefault;

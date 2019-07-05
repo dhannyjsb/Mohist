@@ -14,7 +14,7 @@ public class PressurePlate extends MaterialData implements PressureSensor {
      * @param type the raw type id
      * @deprecated Magic value
      */
-    
+
     public PressurePlate(int type) {
         super(type);
     }
@@ -28,7 +28,7 @@ public class PressurePlate extends MaterialData implements PressureSensor {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public PressurePlate(int type, byte data) {
         super(type, data);
     }
@@ -38,7 +38,7 @@ public class PressurePlate extends MaterialData implements PressureSensor {
      * @param data the raw data value
      * @deprecated Magic value
      */
-    
+
     public PressurePlate(Material type, byte data) {
         super(type, data);
     }

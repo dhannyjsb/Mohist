@@ -35,7 +35,7 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
     public String toString() {
         return "CraftAreaEffectCloud";
     }
-	
+
     @Override
     public EntityType getType() {
         return EntityType.AREA_EFFECT_CLOUD;
@@ -199,14 +199,14 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
     }
 
     @Override
-    public void setBasePotionData(PotionData data) {
-        Validate.notNull(data, "PotionData cannot be null");
-        getHandle().setType(CraftPotionUtil.fromBukkit(data));
+    public PotionData getBasePotionData() {
+        return CraftPotionUtil.toBukkit(getHandle().getType());
     }
 
     @Override
-    public PotionData getBasePotionData() {
-        return CraftPotionUtil.toBukkit(getHandle().getType());
+    public void setBasePotionData(PotionData data) {
+        Validate.notNull(data, "PotionData cannot be null");
+        getHandle().setType(CraftPotionUtil.fromBukkit(data));
     }
 
     public ProjectileSource getSource() {

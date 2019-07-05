@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockSnowBlock.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockSnowBlock.java
-@@ -1,21 +1,20 @@
+@@ -1,40 +1,29 @@
  package net.minecraft.block;
  
 -import java.util.Random;
@@ -13,26 +13,38 @@
 -import net.minecraft.world.EnumSkyBlock;
  import net.minecraft.world.World;
  
+-public class BlockSnowBlock extends Block
+-{
+-    protected BlockSnowBlock()
+-    {
 +import java.util.Random;
 +
- public class BlockSnowBlock extends Block
- {
-     protected BlockSnowBlock()
-     {
++public class BlockSnowBlock extends Block {
++    protected BlockSnowBlock() {
          super(Material.CRAFTED_SNOW);
 -        this.setTickRandomly(true);
          this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
      }
  
-@@ -31,10 +30,5 @@
+-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+-    {
++    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+         return Items.SNOWBALL;
+     }
  
-     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-     {
+-    public int quantityDropped(Random random)
+-    {
++    public int quantityDropped(Random random) {
+         return 4;
+     }
+ 
+-    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+-    {
 -        if (worldIn.getLightFor(EnumSkyBlock.BLOCK, pos) > 11)
 -        {
 -            this.dropBlockAsItem(worldIn, pos, worldIn.getBlockState(pos), 0);
 -            worldIn.setBlockToAir(pos);
 -        }
--    }
-+	}
++    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+     }
  }

@@ -17,6 +17,14 @@ public class CraftEnderDragon extends CraftComplexLivingEntity implements EnderD
         super(server, entity);
     }
 
+    public static Phase getBukkitPhase(PhaseList phase) {
+        return Phase.values()[phase.getId()];
+    }
+
+    public static PhaseList getMinecraftPhase(Phase phase) {
+        return PhaseList.getById(phase.ordinal());
+    }
+
     public Set<ComplexEntityPart> getParts() {
         Builder<ComplexEntityPart> builder = ImmutableSet.builder();
 
@@ -49,13 +57,5 @@ public class CraftEnderDragon extends CraftComplexLivingEntity implements EnderD
     @Override
     public void setPhase(Phase phase) {
         getHandle().getPhaseManager().setPhase(getMinecraftPhase(phase));
-    }
-    
-    public static Phase getBukkitPhase(PhaseList phase) {
-        return Phase.values()[phase.getId()];
-    }
-    
-    public static PhaseList getMinecraftPhase(Phase phase) {
-        return PhaseList.getById(phase.ordinal());
     }
 }

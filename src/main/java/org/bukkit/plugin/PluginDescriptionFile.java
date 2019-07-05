@@ -18,11 +18,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -254,6 +250,25 @@ public final class PluginDescriptionFile {
         name = name.replace(' ', '_');
         version = pluginVersion;
         main = mainClass;
+    }
+
+    private static List<String> makePluginNameList(final Map<?, ?> map, final String key) throws InvalidDescriptionException {
+        final Object value = map.get(key);
+        if (value == null) {
+            return ImmutableList.of();
+        }
+
+        final ImmutableList.Builder<String> builder = ImmutableList.<String>builder();
+        try {
+            for (final Object entry : (Iterable<?>) value) {
+                builder.add(entry.toString().replace(' ', '_'));
+            }
+        } catch (ClassCastException ex) {
+            throw new InvalidDescriptionException(ex, key + " is of wrong type");
+        } catch (NullPointerException ex) {
+            throw new InvalidDescriptionException(ex, "invalid " + key + " format");
+        }
+        return builder.build();
     }
 
     /**
@@ -605,7 +620,7 @@ public final class PluginDescriptionFile {
      *     <td>String</td>
      *     <td>This message is displayed to a player when the {@link
      *         PluginCommand#setExecutor(CommandExecutor)} {@linkplain
-     *         CommandExecutor#onCommand(CommandSender,Command,String,String[])
+     *         CommandExecutor#onCommand(CommandSender, Command, String, String[])
      *         returns false}. &lt;command&gt; is a macro that is replaced
      *         the command issued.</td>
      *     <td><blockquote><pre>usage: Syntax error! Perhaps you meant /&lt;command&gt; PlayerName?</pre></blockquote>
@@ -759,7 +774,7 @@ public final class PluginDescriptionFile {
      *</pre></blockquote>
      * Another example, with nested definitions, can be found <a
      * href="doc-files/permissions-example_plugin.yml">here</a>.
-     * 
+     *
      * @return the permissions this plugin will register
      */
     public List<Permission> getPermissions() {
@@ -802,7 +817,7 @@ public final class PluginDescriptionFile {
      * not included in the API. Any unrecognized
      * awareness (one unsupported or in a future version) will cause a dummy
      * object to be created instead of failing.
-     * 
+     *
      * <ul>
      * <li>Currently only supports the enumerated values in {@link
      *     PluginAwareness.Flags}.
@@ -1002,25 +1017,6 @@ public final class PluginDescriptionFile {
         if (map.get("prefix") != null) {
             prefix = map.get("prefix").toString();
         }
-    }
-
-    private static List<String> makePluginNameList(final Map<?, ?> map, final String key) throws InvalidDescriptionException {
-        final Object value = map.get(key);
-        if (value == null) {
-            return ImmutableList.of();
-        }
-
-        final ImmutableList.Builder<String> builder = ImmutableList.<String>builder();
-        try {
-            for (final Object entry : (Iterable<?>) value) {
-                builder.add(entry.toString().replace(' ', '_'));
-            }
-        } catch (ClassCastException ex) {
-            throw new InvalidDescriptionException(ex, key + " is of wrong type");
-        } catch (NullPointerException ex) {
-            throw new InvalidDescriptionException(ex, "invalid " + key + " format");
-        }
-        return builder.build();
     }
 
     private Map<String, Object> saveMap() {

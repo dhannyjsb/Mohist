@@ -26,13 +26,13 @@ public class CraftNoteBlock extends CraftBlockEntityState<TileEntityNote> implem
     }
 
     @Override
-    public byte getRawNote() {
-        return this.getSnapshot().note;
+    public void setNote(Note note) {
+        this.getSnapshot().note = note.getId();
     }
 
     @Override
-    public void setNote(Note note) {
-        this.getSnapshot().note = note.getId();
+    public byte getRawNote() {
+        return this.getSnapshot().note;
     }
 
     @Override

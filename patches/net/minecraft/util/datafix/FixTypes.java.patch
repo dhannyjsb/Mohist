@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/util/datafix/FixTypes.java
++++ ../src-work/minecraft/net/minecraft/util/datafix/FixTypes.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.util.datafix;
+ 
+-public enum FixTypes implements IFixType
+-{
++public enum FixTypes implements IFixType {
+     LEVEL,
+     PLAYER,
+     CHUNK,

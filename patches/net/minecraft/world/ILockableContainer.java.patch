@@ -1,0 +1,17 @@
+--- ../src-base/minecraft/net/minecraft/world/ILockableContainer.java
++++ ../src-work/minecraft/net/minecraft/world/ILockableContainer.java
+@@ -2,11 +2,10 @@
+ 
+ import net.minecraft.inventory.IInventory;
+ 
+-public interface ILockableContainer extends IInventory, IInteractionObject
+-{
++public interface ILockableContainer extends IInventory, IInteractionObject {
+     boolean isLocked();
+ 
+-    void setLockCode(LockCode code);
+-
+     LockCode getLockCode();
++
++    void setLockCode(LockCode code);
+ }

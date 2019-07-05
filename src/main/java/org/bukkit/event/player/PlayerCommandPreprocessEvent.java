@@ -47,9 +47,9 @@ import java.util.Set;
  */
 public class PlayerCommandPreprocessEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
+    private final Set<Player> recipients;
     private boolean cancel = false;
     private String message;
-    private final Set<Player> recipients;
 
     public PlayerCommandPreprocessEvent(final Player player, final String message) {
         super(player);
@@ -61,6 +61,10 @@ public class PlayerCommandPreprocessEvent extends PlayerEvent implements Cancell
         super(player);
         this.recipients = recipients;
         this.message = message;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public boolean isCancelled() {
@@ -130,10 +134,6 @@ public class PlayerCommandPreprocessEvent extends PlayerEvent implements Cancell
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

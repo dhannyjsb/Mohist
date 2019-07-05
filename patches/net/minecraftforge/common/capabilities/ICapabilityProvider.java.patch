@@ -1,0 +1,21 @@
+--- ../src-base/minecraft/net/minecraftforge/common/capabilities/ICapabilityProvider.java
++++ ../src-work/minecraft/net/minecraftforge/common/capabilities/ICapabilityProvider.java
+@@ -19,15 +19,13 @@
+ 
+ package net.minecraftforge.common.capabilities;
+ 
+-import java.util.Map;
++import net.minecraft.util.EnumFacing;
+ 
+ import javax.annotation.Nonnull;
+ import javax.annotation.Nullable;
++import java.util.Map;
+ 
+-import net.minecraft.util.EnumFacing;
+-
+-public interface ICapabilityProvider
+-{
++public interface ICapabilityProvider {
+     /**
+      * Determines if this object has support for the capability in question on the specific side.
+      * The return value of this MIGHT change during runtime if this object gains or loses support

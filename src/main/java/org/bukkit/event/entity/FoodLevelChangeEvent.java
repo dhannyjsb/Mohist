@@ -17,6 +17,10 @@ public class FoodLevelChangeEvent extends EntityEvent implements Cancellable {
         this.level = level;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     @Override
     public HumanEntity getEntity() {
         return (HumanEntity) entity;
@@ -59,10 +63,6 @@ public class FoodLevelChangeEvent extends EntityEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

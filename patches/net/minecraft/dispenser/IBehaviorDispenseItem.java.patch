@@ -1,0 +1,18 @@
+--- ../src-base/minecraft/net/minecraft/dispenser/IBehaviorDispenseItem.java
++++ ../src-work/minecraft/net/minecraft/dispenser/IBehaviorDispenseItem.java
+@@ -2,12 +2,9 @@
+ 
+ import net.minecraft.item.ItemStack;
+ 
+-public interface IBehaviorDispenseItem
+-{
+-    IBehaviorDispenseItem DEFAULT_BEHAVIOR = new IBehaviorDispenseItem()
+-    {
+-        public ItemStack dispense(IBlockSource source, ItemStack stack)
+-        {
++public interface IBehaviorDispenseItem {
++    IBehaviorDispenseItem DEFAULT_BEHAVIOR = new IBehaviorDispenseItem() {
++        public ItemStack dispense(IBlockSource source, ItemStack stack) {
+             return stack;
+         }
+     };

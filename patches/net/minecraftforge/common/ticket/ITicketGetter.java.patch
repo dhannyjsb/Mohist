@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraftforge/common/ticket/ITicketGetter.java
++++ ../src-work/minecraft/net/minecraftforge/common/ticket/ITicketGetter.java
+@@ -21,7 +21,6 @@
+ 
+ import java.util.Collection;
+ 
+-public interface ITicketGetter<T> extends ITicketManager<T>
+-{
++public interface ITicketGetter<T> extends ITicketManager<T> {
+     Collection<SimpleTicket<T>> getTickets();
+ }

@@ -1,0 +1,59 @@
+--- ../src-base/minecraft/net/minecraftforge/client/event/ScreenshotEvent.java
++++ ../src-work/minecraft/net/minecraftforge/client/event/ScreenshotEvent.java
+@@ -37,8 +37,7 @@
+  * {@link #resultMessage} contains the {@link ITextComponent} to be returned. If {@code null}, the default vanilla message will be used instead
+  */
+ @Cancelable
+-public class ScreenshotEvent extends Event
+-{
++public class ScreenshotEvent extends Event {
+ 
+     public static final ITextComponent DEFAULT_CANCEL_REASON = new TextComponentString("Screenshot canceled");
+ 
+@@ -47,39 +46,32 @@
+ 
+     private ITextComponent resultMessage = null;
+ 
+-    public ScreenshotEvent(BufferedImage image, File screenshotFile)
+-    {
++    public ScreenshotEvent(BufferedImage image, File screenshotFile) {
+         this.image = image;
+         this.screenshotFile = screenshotFile;
+     }
+ 
+-    public BufferedImage getImage()
+-    {
++    public BufferedImage getImage() {
+         return image;
+     }
+ 
+-    public File getScreenshotFile()
+-    {
++    public File getScreenshotFile() {
+         return screenshotFile;
+     }
+ 
+-    public void setScreenshotFile(File screenshotFile)
+-    {
++    public void setScreenshotFile(File screenshotFile) {
+         this.screenshotFile = screenshotFile;
+     }
+ 
+-    public ITextComponent getResultMessage()
+-    {
++    public ITextComponent getResultMessage() {
+         return resultMessage;
+     }
+ 
+-    public void setResultMessage(ITextComponent resultMessage)
+-    {
++    public void setResultMessage(ITextComponent resultMessage) {
+         this.resultMessage = resultMessage;
+     }
+ 
+-    public ITextComponent getCancelMessage()
+-    {
++    public ITextComponent getCancelMessage() {
+         return getResultMessage() != null ? getResultMessage() : DEFAULT_CANCEL_REASON;
+     }
+ 

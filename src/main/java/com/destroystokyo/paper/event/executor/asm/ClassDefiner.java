@@ -2,6 +2,10 @@ package com.destroystokyo.paper.event.executor.asm;
 
 public interface ClassDefiner {
 
+    public static ClassDefiner getInstance() {
+        return SafeClassDefiner.INSTANCE;
+    }
+
     /**
      * Returns if the defined classes can bypass access checks
      *
@@ -22,9 +26,5 @@ public interface ClassDefiner {
      * @throws NullPointerException if any of the arguments are null
      */
     public Class<?> defineClass(ClassLoader parentLoader, String name, byte[] data);
-
-    public static ClassDefiner getInstance() {
-        return SafeClassDefiner.INSTANCE;
-    }
 
 }

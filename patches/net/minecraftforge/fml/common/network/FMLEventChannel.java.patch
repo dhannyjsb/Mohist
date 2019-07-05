@@ -1,0 +1,229 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/network/FMLEventChannel.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/network/FMLEventChannel.java
+@@ -21,9 +21,6 @@
+ 
+ import io.netty.channel.ChannelFutureListener;
+ import io.netty.channel.ChannelHandlerContext;
+-
+-import java.util.EnumMap;
+-
+ import net.minecraft.client.network.NetHandlerPlayClient;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.player.EntityPlayerMP;
+@@ -35,6 +32,7 @@
+ import net.minecraftforge.fml.relauncher.Side;
+ 
+ import javax.annotation.Nullable;
++import java.util.EnumMap;
+ 
+ /**
+  * An event driven network channel, using {@link FMLNetworkEvent.CustomPacketEvent} and {@link FMLNetworkEvent.CustomNetworkEvent}
+@@ -49,56 +47,11 @@
+  *
+  */
+ public class FMLEventChannel {
++    private static EventFactory factory = FMLCommonHandler.instance().getSide() == Side.CLIENT ? EventFactory.CLIENT : EventFactory.SERVER;
+     private EnumMap<Side, FMLEmbeddedChannel> channels;
+     private EventBus eventBus;
+ 
+-    /*
+-     * This is done this way so that the CLIENT specific code in the factory only loads on the client
+-     */
+-    private enum EventFactory
+-    {
+-        SERVER()
+-        {
+-            @Override
+-            @Nullable
+-            FMLNetworkEvent.CustomPacketEvent<?> make(FMLProxyPacket msg)
+-            {
+-                FMLNetworkEvent.CustomPacketEvent<?> event = null;
+-                if (msg.handler() instanceof NetHandlerPlayServer)
+-                {
+-                    NetHandlerPlayServer server = (NetHandlerPlayServer) msg.handler();
+-                    event = new FMLNetworkEvent.ServerCustomPacketEvent(server.getNetworkManager(), msg);
+-                }
+-                return event;
+-            }
+-        },
+-        CLIENT()
+-        {
+-            @Override
+-            @Nullable
+-            FMLNetworkEvent.CustomPacketEvent<?> make(FMLProxyPacket msg)
+-            {
+-                FMLNetworkEvent.CustomPacketEvent<?> event = null;
+-                if (msg.handler() instanceof NetHandlerPlayClient)
+-                {
+-                    NetHandlerPlayClient client = (NetHandlerPlayClient) msg.handler();
+-                    event = new FMLNetworkEvent.ClientCustomPacketEvent(client.getNetworkManager(), msg);
+-                }
+-                else if (msg.handler() instanceof NetHandlerPlayServer)
+-                {
+-                    NetHandlerPlayServer server = (NetHandlerPlayServer) msg.handler();
+-                    event = new FMLNetworkEvent.ServerCustomPacketEvent(server.getNetworkManager(), msg);
+-                }
+-                return event;
+-            }
+-        };
+-        @Nullable
+-        abstract FMLNetworkEvent.CustomPacketEvent<?> make(FMLProxyPacket msg);
+-    }
+-
+-    private static EventFactory factory = FMLCommonHandler.instance().getSide() == Side.CLIENT ? EventFactory.CLIENT : EventFactory.SERVER;
+-    FMLEventChannel(String name)
+-    {
++    FMLEventChannel(String name) {
+         this.channels = NetworkRegistry.INSTANCE.newChannel(name, new NetworkEventFiringHandler(this));
+         this.eventBus = new EventBus();
+     }
+@@ -108,8 +61,7 @@
+      *
+      * @param object
+      */
+-    public void register(Object object)
+-    {
++    public void register(Object object) {
+         this.eventBus.register(object);
+     }
+ 
+@@ -117,27 +69,22 @@
+      * Unregister an event listener from the bus.
+      * @param object
+      */
+-    public void unregister(Object object)
+-    {
++    public void unregister(Object object) {
+         this.eventBus.unregister(object);
+     }
+ 
+-    void fireRead(FMLProxyPacket msg, ChannelHandlerContext ctx)
+-    {
++    void fireRead(FMLProxyPacket msg, ChannelHandlerContext ctx) {
+         FMLNetworkEvent.CustomPacketEvent<?> event = factory.make(msg);
+-        if (event != null)
+-        {
++        if (event != null) {
+             this.eventBus.post(event);
+-            if (event.getReply() != null)
+-            {
++            if (event.getReply() != null) {
+                 ctx.channel().attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.REPLY);
+                 ctx.writeAndFlush(event.getReply()).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+             }
+         }
+     }
+ 
+-    public void fireUserEvent(Object evt, ChannelHandlerContext ctx)
+-    {
++    public void fireUserEvent(Object evt, ChannelHandlerContext ctx) {
+         FMLNetworkEvent.CustomNetworkEvent event = new FMLNetworkEvent.CustomNetworkEvent(evt);
+         this.eventBus.post(event);
+     }
+@@ -147,8 +94,7 @@
+      *
+      * @param pkt
+      */
+-    public void sendToAll(FMLProxyPacket pkt)
+-    {
++    public void sendToAll(FMLProxyPacket pkt) {
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+         channels.get(Side.SERVER).writeAndFlush(pkt).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+     }
+@@ -159,8 +105,7 @@
+      * @param pkt
+      * @param player
+      */
+-    public void sendTo(FMLProxyPacket pkt, EntityPlayerMP player)
+-    {
++    public void sendTo(FMLProxyPacket pkt, EntityPlayerMP player) {
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+         channels.get(Side.SERVER).writeAndFlush(pkt).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+@@ -171,8 +116,7 @@
+      * @param pkt
+      * @param point
+      */
+-    public void sendToAllAround(FMLProxyPacket pkt, NetworkRegistry.TargetPoint point)
+-    {
++    public void sendToAllAround(FMLProxyPacket pkt, NetworkRegistry.TargetPoint point) {
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
+         channels.get(Side.SERVER).writeAndFlush(pkt).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+@@ -184,8 +128,7 @@
+      * @param pkt
+      * @param point
+      */
+-    public void sendToAllTracking(FMLProxyPacket pkt, NetworkRegistry.TargetPoint point)
+-    {
++    public void sendToAllTracking(FMLProxyPacket pkt, NetworkRegistry.TargetPoint point) {
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TRACKING_POINT);
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
+         channels.get(Side.SERVER).writeAndFlush(pkt).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+@@ -198,8 +141,7 @@
+      * @param pkt
+      * @param entity
+      */
+-    public void sendToAllTracking(FMLProxyPacket pkt, Entity entity)
+-    {
++    public void sendToAllTracking(FMLProxyPacket pkt, Entity entity) {
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TRACKING_ENTITY);
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(entity);
+         channels.get(Side.SERVER).writeAndFlush(pkt).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+@@ -210,8 +152,7 @@
+      * @param pkt
+      * @param dimensionId
+      */
+-    public void sendToDimension(FMLProxyPacket pkt, int dimensionId)
+-    {
++    public void sendToDimension(FMLProxyPacket pkt, int dimensionId) {
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
+         channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId);
+         channels.get(Side.SERVER).writeAndFlush(pkt).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+@@ -221,9 +162,44 @@
+      * Send to the server
+      * @param pkt
+      */
+-    public void sendToServer(FMLProxyPacket pkt)
+-    {
++    public void sendToServer(FMLProxyPacket pkt) {
+         channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+         channels.get(Side.CLIENT).writeAndFlush(pkt).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+     }
++
++    /*
++     * This is done this way so that the CLIENT specific code in the factory only loads on the client
++     */
++    private enum EventFactory {
++        SERVER() {
++            @Override
++            @Nullable
++            FMLNetworkEvent.CustomPacketEvent<?> make(FMLProxyPacket msg) {
++                FMLNetworkEvent.CustomPacketEvent<?> event = null;
++                if (msg.handler() instanceof NetHandlerPlayServer) {
++                    NetHandlerPlayServer server = (NetHandlerPlayServer) msg.handler();
++                    event = new FMLNetworkEvent.ServerCustomPacketEvent(server.getNetworkManager(), msg);
++                }
++                return event;
++            }
++        },
++        CLIENT() {
++            @Override
++            @Nullable
++            FMLNetworkEvent.CustomPacketEvent<?> make(FMLProxyPacket msg) {
++                FMLNetworkEvent.CustomPacketEvent<?> event = null;
++                if (msg.handler() instanceof NetHandlerPlayClient) {
++                    NetHandlerPlayClient client = (NetHandlerPlayClient) msg.handler();
++                    event = new FMLNetworkEvent.ClientCustomPacketEvent(client.getNetworkManager(), msg);
++                } else if (msg.handler() instanceof NetHandlerPlayServer) {
++                    NetHandlerPlayServer server = (NetHandlerPlayServer) msg.handler();
++                    event = new FMLNetworkEvent.ServerCustomPacketEvent(server.getNetworkManager(), msg);
++                }
++                return event;
++            }
++        };
++
++        @Nullable
++        abstract FMLNetworkEvent.CustomPacketEvent<?> make(FMLProxyPacket msg);
++    }
+ }

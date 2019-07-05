@@ -1,18 +1,57 @@
 --- ../src-base/minecraft/net/minecraft/nbt/NBTBase.java
 +++ ../src-work/minecraft/net/minecraft/nbt/NBTBase.java
-@@ -8,7 +8,7 @@
- {
-     public static final String[] NBT_TYPES = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]", "LONG[]"};
+@@ -4,22 +4,11 @@
+ import java.io.DataOutput;
+ import java.io.IOException;
+ 
+-public abstract class NBTBase
+-{
+-    public static final String[] NBT_TYPES = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]", "LONG[]"};
++public abstract class NBTBase {
++    public static final String[] NBT_TYPES = new String[]{"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]", "LONG[]"};
  
 -    abstract void write(DataOutput output) throws IOException;
-+    public abstract void write(DataOutput output) throws IOException;
- 
-     abstract void read(DataInput input, int depth, NBTSizeTracker sizeTracker) throws IOException;
- 
-@@ -88,6 +88,52 @@
+-
+-    abstract void read(DataInput input, int depth, NBTSizeTracker sizeTracker) throws IOException;
+-
+-    public abstract String toString();
+-
+-    public abstract byte getId();
+-
+-    protected static NBTBase createNewByType(byte id)
+-    {
+-        switch (id)
+-        {
++    protected static NBTBase createNewByType(byte id) {
++        switch (id) {
+             case 0:
+                 return new NBTTagEnd();
+             case 1:
+@@ -51,10 +40,8 @@
          }
      }
  
+-    public static String getTagTypeName(int p_193581_0_)
+-    {
+-        switch (p_193581_0_)
+-        {
++    public static String getTagTypeName(int p_193581_0_) {
++        switch (p_193581_0_) {
+             case 0:
+                 return "TAG_End";
+             case 1:
+@@ -88,25 +75,87 @@
+         }
+     }
+ 
++    public abstract void write(DataOutput output) throws IOException;
++
++    abstract void read(DataInput input, int depth, NBTSizeTracker sizeTracker) throws IOException;
++
++    public abstract String toString();
++
++    public abstract byte getId();
++
 +    public boolean isEnd() {
 +        return getId() == 0;
 +    }
@@ -24,36 +63,47 @@
 +    public boolean isShort() {
 +        return getId() == 2;
 +    }
++
 +    public boolean isInt() {
 +        return getId() == 3;
 +    }
++
 +    public boolean isLong() {
 +        return getId() == 4;
 +    }
++
 +    public boolean isFloat() {
 +        return getId() == 5;
 +    }
++
 +    public boolean isDouble() {
 +        return getId() == 6;
 +    }
++
 +    public boolean isByteArray() {
 +        return getId() == 7;
 +    }
++
 +    public boolean isString() {
 +        return getId() == 8;
 +    }
++
 +    public boolean isList() {
 +        return getId() == 9;
 +    }
++
 +    public boolean isCompound() {
 +        return getId() == 10;
 +    }
++
 +    public boolean isIntArr() {
 +        return getId() == 11;
 +    }
++
 +    public boolean isLongArr() {
 +        return getId() == 12;
 +    }
++
 +    public boolean isNumber() {
 +        int id = getId();
 +        return id >= 1 && id <= 6;
@@ -61,9 +111,28 @@
 +
      public abstract NBTBase copy();
  
-     public boolean hasNoTags()
-@@ -109,4 +155,5 @@
-     {
+-    public boolean hasNoTags()
+-    {
++    public boolean hasNoTags() {
+         return false;
+     }
+ 
+-    public boolean equals(Object p_equals_1_)
+-    {
+-        return p_equals_1_ instanceof NBTBase && this.getId() == ((NBTBase)p_equals_1_).getId();
++    public boolean equals(Object p_equals_1_) {
++        return p_equals_1_ instanceof NBTBase && this.getId() == ((NBTBase) p_equals_1_).getId();
+     }
+ 
+-    public int hashCode()
+-    {
++    public int hashCode() {
+         return this.getId();
+     }
+ 
+-    protected String getString()
+-    {
++    protected String getString() {
          return this.toString();
      }
 +

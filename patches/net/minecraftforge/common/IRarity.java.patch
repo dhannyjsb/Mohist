@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/common/IRarity.java
++++ ../src-work/minecraft/net/minecraftforge/common/IRarity.java
+@@ -24,8 +24,7 @@
+ /**
+  * Interface generalisation of {@link net.minecraft.item.EnumRarity}.
+  */
+-public interface IRarity
+-{
++public interface IRarity {
+     TextFormatting getColor();
+ 
+     String getName();

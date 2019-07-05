@@ -1,0 +1,12 @@
+--- ../src-base/minecraft/net/minecraftforge/fml/common/registry/IThrowableEntity.java
++++ ../src-work/minecraft/net/minecraftforge/fml/common/registry/IThrowableEntity.java
+@@ -25,8 +25,7 @@
+  * This interface should be implemented by an Entity that can be 'thrown', like snowballs.
+  * This was created to mimic ModLoaderMP's 'owner' functionality.
+  */
+-public interface IThrowableEntity
+-{
++public interface IThrowableEntity {
+     /**
+      * Gets the entity that threw/created this entity.
+      * @return The owner instance, Null if none.
