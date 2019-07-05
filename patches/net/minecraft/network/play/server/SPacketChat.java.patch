@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/network/play/server/SPacketChat.java
 +++ ../src-work/minecraft/net/minecraft/network/play/server/SPacketChat.java
-@@ -13,6 +13,7 @@
+@@ -13,11 +13,18 @@
  {
      private ITextComponent chatComponent;
      private ChatType type;
@@ -8,7 +8,18 @@
  
      public SPacketChat()
      {
-@@ -37,7 +38,13 @@
+     }
+ 
++    public SPacketChat(ITextComponent message, byte type)
++    {
++        this.chatComponent = message;
++        this.type = ChatType.byId(type);
++    }
++
+     public SPacketChat(ITextComponent componentIn)
+     {
+         this(componentIn, ChatType.SYSTEM);
+@@ -37,7 +44,13 @@
  
      public void writePacketData(PacketBuffer buf) throws IOException
      {
