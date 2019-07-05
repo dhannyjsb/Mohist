@@ -11,29 +11,26 @@ public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState
 
     private final Class<T> tileEntityClass;
     private final T tileEntity;
-    private final T snapshot;
+    private T snapshot;
 
     public CraftBlockEntityState(Block block, Class<T> tileEntityClass) {
         super(block);
-
         this.tileEntityClass = tileEntityClass;
-
         // get tile entity from block:
         CraftWorld world = (CraftWorld) this.getWorld();
         this.tileEntity = tileEntityClass.cast(world.getTileEntityAt(this.getX(), this.getY(), this.getZ()));
-
-        this.snapshot = this.createSnapshot(tileEntity);
-        this.load(snapshot);
     }
-	
+
     public CraftBlockEntityState(Material material, T tileEntity) {
         super(material);
-
         this.tileEntityClass = (Class<T>) tileEntity.getClass();
         this.tileEntity = tileEntity;
-        // copy tile entity data:
-        this.snapshot = this.createSnapshot(tileEntity);
-        this.load(snapshot);
+    }
+
+    public CraftBlockEntityState(Block block, T tileEntity) {
+        super(block, tileEntity);
+        this.tileEntityClass = (Class<T>) tileEntity.getClass();
+        this.tileEntity = tileEntity;
     }
 
     private T createSnapshot(T tileEntity) {
@@ -64,6 +61,11 @@ public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState
 
     // gets the cloned TileEntity which is used to store the captured data
     protected T getSnapshot() {
+        if (snapshot == null) {
+            // copy tile entity data:
+            this.snapshot = this.createSnapshot(tileEntity);
+            this.load(snapshot);
+        }
         return snapshot;
     }
 
@@ -77,22 +79,22 @@ public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState
     // gets the NBT data of the TileEntity represented by this block state
     public NBTTagCompound getSnapshotNBT() {
         // update snapshot
-        applyTo(snapshot);
+        applyTo(getSnapshot());
 
-        return snapshot.writeToNBT(new NBTTagCompound());
+        return getSnapshot().writeToNBT(new NBTTagCompound());
     }
 
     // copies the data of the given tile entity to this block state
     protected void load(T tileEntity) {
-        if (tileEntity != null && tileEntity != snapshot) {
-            copyData(tileEntity, snapshot);
+        if (tileEntity != null && tileEntity != getSnapshot()) {
+            copyData(tileEntity, getSnapshot());
         }
     }
 
     // applies the TileEntity data of this block state to the given TileEntity
     protected void applyTo(T tileEntity) {
-        if (tileEntity != null && tileEntity != snapshot) {
-            copyData(snapshot, tileEntity);
+        if (tileEntity != null && tileEntity != getSnapshot()) {
+            copyData(getSnapshot(), tileEntity);
         }
     }
 

@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -306,7 +307,8 @@ public class CraftBlock implements Block {
         case END_GATEWAY:
             return new CraftEndGateway(this);
         case HOPPER:
-            return new CraftHopper(this);
+            TileEntityHopper tileEntityHopper = (TileEntityHopper) chunk.getCraftWorld().getTileEntityAt(x, y, z);
+            return new CraftHopper(this, tileEntityHopper);
         case MOB_SPAWNER:
             return new CraftCreatureSpawner(this);
         case NOTE_BLOCK:

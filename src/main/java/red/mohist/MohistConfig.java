@@ -29,6 +29,10 @@ public class MohistConfig {
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
     public static boolean useChunksMapForPendingBlocks = false; //Goodvise code add
     /**
+     * 开启时,控制台会不停地输入所有线程的耗时
+     */
+    public static boolean printThreadTimeCost = false;
+    /**
      * 是否导出经过remap的插件类
      */
     public static boolean dumpRemapPluginClass = false;
@@ -90,6 +94,7 @@ public class MohistConfig {
         maxEntityCollisionsPerTick = getInt("perfomance.maxEntityCollisionsPerTick", maxEntityCollisionsPerTick);
         dumpRemapPluginClass = getBoolean("remap.dumpRemapPluginClass", dumpRemapPluginClass);
         printRemapPluginClass = getBoolean("remap.printRemapPluginClass", printRemapPluginClass);
+        printThreadTimeCost = getBoolean("debug.printThreadTimeCost", printThreadTimeCost);
         readConfig(MohistConfig.class, null);
     }
 
