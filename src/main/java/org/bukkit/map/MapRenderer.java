@@ -42,8 +42,7 @@ public abstract class MapRenderer {
      *
      * @param map The MapView being initialized.
      */
-    public void initialize(MapView map) {
-    }
+    public void initialize(MapView map) {}
 
     /**
      * Render to the given map.

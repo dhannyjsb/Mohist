@@ -28,25 +28,13 @@ public class WatchMohist implements Runnable {
         threadMXBean.setThreadCpuTimeEnabled(true);
     }
 
-    public static void update() {
-        WatchMohist.Time = System.currentTimeMillis();
-    }
-
-    public static void start() {
-        timer.scheduleAtFixedRate(new WatchMohist(), 48000L, 600L, TimeUnit.MILLISECONDS);
-    }
-
-    public static void stop() {
-        timer.shutdown();
-    }
-
     private void dumpThreadCpuTime() {
         List<ThreadCpuTime> list = new ArrayList<>();
         long[] ids = threadMXBean.getAllThreadIds();
         for (long id : ids) {
             ThreadCpuTime item = new ThreadCpuTime();
             item.cpuTime = threadMXBean.getThreadCpuTime(id) / 1000000;
-            item.userTime = threadMXBean.getThreadUserTime(id) / 1000000;
+            item.userTime = threadMXBean.getThreadUserTime(id)/ 1000000;
             item.name = threadMXBean.getThreadInfo(id).getThreadName();
             item.id = id;
             list.add(item);
@@ -81,6 +69,18 @@ public class WatchMohist implements Runnable {
             }
             Mohist.LOGGER.debug(Message.getString(Message.WatchMohist_1));
         }
+    }
+
+    public static void update() {
+        WatchMohist.Time = System.currentTimeMillis();
+    }
+
+    public static void start() {
+        timer.scheduleAtFixedRate(new WatchMohist(), 48000L, 600L, TimeUnit.MILLISECONDS);
+    }
+
+    public static void stop() {
+        timer.shutdown();
     }
 
     public static class ThreadCpuTime {

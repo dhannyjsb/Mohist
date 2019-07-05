@@ -19,10 +19,6 @@ public class VehicleMoveEvent extends VehicleEvent {
         this.to = to;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Get the previous position.
      *
@@ -41,8 +37,13 @@ public class VehicleMoveEvent extends VehicleEvent {
         return to;
     }
 
+
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

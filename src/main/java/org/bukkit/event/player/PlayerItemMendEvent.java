@@ -28,10 +28,6 @@ public class PlayerItemMendEvent extends PlayerEvent implements Cancellable {
         this.repairAmount = repairAmount;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Get the {@link ItemStack} to be repaired.
      *
@@ -87,6 +83,10 @@ public class PlayerItemMendEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -1,6 +1,19 @@
 package org.bukkit.entity;
 
-import org.bukkit.*;
+import org.bukkit.Achievement;
+import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.GameMode;
+import org.bukkit.Instrument;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Note;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.Statistic;
+import org.bukkit.WeatherType;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.command.CommandSender;
@@ -71,18 +84,18 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void setPlayerListName(String name);
 
     /**
-     * Get the previously set compass target.
-     *
-     * @return location of the target
-     */
-    public Location getCompassTarget();
-
-    /**
      * Set the target of the player's compass.
      *
      * @param loc Location to point to
      */
     public void setCompassTarget(Location loc);
+
+    /**
+     * Get the previously set compass target.
+     *
+     * @return location of the target
+     */
+    public Location getCompassTarget();
 
     /**
      * Gets the socket address of this player
@@ -166,13 +179,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void loadData();
 
     /**
-     * Returns whether the player is sleeping ignored.
-     *
-     * @return Whether player is ignoring sleep.
-     */
-    public boolean isSleepingIgnored();
-
-    /**
      * Sets whether the player is ignored as not sleeping. If everyone is
      * either sleeping or has this flag set, then time will advance to the
      * next day. If everyone has this flag set but no one is actually in bed,
@@ -181,6 +187,13 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param isSleeping Whether to ignore.
      */
     public void setSleepingIgnored(boolean isSleeping);
+
+    /**
+     * Returns whether the player is sleeping ignored.
+     *
+     * @return Whether player is ignoring sleep.
+     */
+    public boolean isSleepingIgnored();
 
     /**
      * Play a note for a player at a location. This requires a note block
@@ -709,14 +722,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void resetPlayerTime();
 
     /**
-     * Returns the type of weather the player is currently experiencing.
-     *
-     * @return The WeatherType that the player is currently experiencing or
-     *     null if player is seeing server weather.
-     */
-    public WeatherType getPlayerWeather();
-
-    /**
      * Sets the type of weather the player will see.  When used, the weather
      * status of the player is locked until {@link #resetPlayerWeather()} is
      * used.
@@ -724,6 +729,14 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param type The WeatherType enum type the player should experience
      */
     public void setPlayerWeather(WeatherType type);
+
+    /**
+     * Returns the type of weather the player is currently experiencing.
+     *
+     * @return The WeatherType that the player is currently experiencing or
+     *     null if player is seeing server weather.
+     */
+    public WeatherType getPlayerWeather();
 
     /**
      * Restores the normal condition where the player's weather is controlled
@@ -736,7 +749,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param amount Exp amount to give
      */
-    public void giveExp(int amount);
+	public void giveExp(int amount);
 
     /**
      * Gives the player the amount of experience levels specified. Levels can
@@ -947,13 +960,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void setFlying(boolean value);
 
     /**
-     * Gets the current allowed speed that a client can fly.
-     *
-     * @return The current allowed speed, from -1 to 1
-     */
-    public float getFlySpeed();
-
-    /**
      * Sets the speed at which a client will fly. Negative values indicate
      * reverse directions.
      *
@@ -964,13 +970,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void setFlySpeed(float value) throws IllegalArgumentException;
 
     /**
-     * Gets the current allowed speed that a client can walk.
-     *
-     * @return The current allowed speed, from -1 to 1
-     */
-    public float getWalkSpeed();
-
-    /**
      * Sets the speed at which a client will walk. Negative values indicate
      * reverse directions.
      *
@@ -979,6 +978,20 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *     greater than 1
      */
     public void setWalkSpeed(float value) throws IllegalArgumentException;
+
+    /**
+     * Gets the current allowed speed that a client can fly.
+     *
+     * @return The current allowed speed, from -1 to 1
+     */
+    public float getFlySpeed();
+
+    /**
+     * Gets the current allowed speed that a client can walk.
+     *
+     * @return The current allowed speed, from -1 to 1
+     */
+    public float getWalkSpeed();
 
     /**
      * Request that the player's client download and switch texture packs.
@@ -1127,16 +1140,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void setHealthScaled(boolean scale);
 
     /**
-     * Gets the number that health is scaled to for the client.
-     *
-     * @return the number that health would be scaled to for the client if
-     *     HealthScaling is set to true
-     * @see Player#setHealthScale(double)
-     * @see Player#setHealthScaled(boolean)
-     */
-    public double getHealthScale();
-
-    /**
      * Sets the number to scale health to for the client; this will also
      * {@link #setHealthScaled(boolean) setHealthScaled(true)}.
      * <p>
@@ -1149,6 +1152,16 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @throws IllegalArgumentException if scale is too high
      */
     public void setHealthScale(double scale) throws IllegalArgumentException;
+
+    /**
+     * Gets the number that health is scaled to for the client.
+     *
+     * @return the number that health would be scaled to for the client if
+     *     HealthScaling is set to true
+     * @see Player#setHealthScale(double)
+     * @see Player#setHealthScaled(boolean)
+     */
+    public double getHealthScale();
 
     /**
      * Gets the entity which is followed by the camera when in
@@ -1420,49 +1433,35 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      */
     public String getLocale();
 
-    @Override
-    Spigot spigot();
-
-    /**
-     * Gets the view distance for this player
-     * @return the player's view distance
-     */
-    public int getViewDistance();
-    // Spigot end
-
-    // Paper start
-
-    /**
-     * Sets the view distance for this player
-     * @param viewDistance the player's view distance
-     */
-    public void setViewDistance(int viewDistance);
-
     // Spigot start
-    public class Spigot extends Entity.Spigot {
+    public class Spigot extends Entity.Spigot
+    {
         /**
          *  Gets the connection address of this player, regardless of whether it
          *  has been spoofed or not.
          * @return the player's connection address
          */
-        public InetSocketAddress getRawAddress() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public InetSocketAddress getRawAddress()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
 
         @Deprecated
-        public void playEffect(Location location, Effect effect, int id, int data, float offsetX, float offsetY, float offsetZ, float speed, int particleCount, int radius) {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public void playEffect(Location location, Effect effect, int id, int data, float offsetX, float offsetY, float offsetZ, float speed, int particleCount, int radius)
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
 
         /**
-         * Gets whether the player collides with entities
-         *
-         * @return the player's collision toggle state
-         * @deprecated see {@link LivingEntity#isCollidable()}
-         */
+          * Gets whether the player collides with entities
+          *
+          * @return the player's collision toggle state
+          * @deprecated see {@link LivingEntity#isCollidable()}
+          */
         @Deprecated
-        public boolean getCollidesWithEntities() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public boolean getCollidesWithEntities()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
 
         /**
@@ -1473,15 +1472,17 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
          * @deprecated {@link LivingEntity#setCollidable(boolean)}
          */
         @Deprecated
-        public void setCollidesWithEntities(boolean collides) {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public void setCollidesWithEntities(boolean collides)
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
-
+        
         /**
          * Respawns the player if dead.
          */
-        public void respawn() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public void respawn()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
 
         /**
@@ -1491,8 +1492,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
          * @deprecated Use {@link Player#getLocale()}
          */
         @Deprecated
-        public String getLocale() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public String getLocale()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
 
         /**
@@ -1500,38 +1502,56 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
          *
          * @return a Set with all hidden players
          */
-        public java.util.Set<Player> getHiddenPlayers() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public java.util.Set<Player> getHiddenPlayers()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
 
         @Override
         public void sendMessage(net.md_5.bungee.api.chat.BaseComponent component) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
 
-        @Override
+         @Override
         public void sendMessage(net.md_5.bungee.api.chat.BaseComponent... components) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
 
-        /**
+         /**
          * Sends the component to the specified screen position of this player
          *
          * @param position the screen position
          * @param component the components to send
          */
-        public void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent component) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+         public void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent component) {
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
 
-        /**
+         /**
          * Sends an array of components as a single message to the specified screen position of this player
          *
          * @param position the screen position
          * @param components the components to send
          */
-        public void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent... components) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+         public void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent... components) {
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
     }
+
+    @Override
+    Spigot spigot();
+    // Spigot end
+    
+    // Paper start
+    /**
+     * Gets the view distance for this player
+     * @return the player's view distance
+     */
+    public int getViewDistance();
+
+    /**
+     * Sets the view distance for this player
+     * @param viewDistance the player's view distance
+     */
+    public void setViewDistance(int viewDistance);
 }

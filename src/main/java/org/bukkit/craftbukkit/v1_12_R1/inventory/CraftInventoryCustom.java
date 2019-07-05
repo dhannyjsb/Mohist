@@ -37,14 +37,13 @@ public class CraftInventoryCustom extends CraftInventory {
     public CraftInventoryCustom(InventoryHolder owner, NonNullList<ItemStack> items) {
         super(new MinecraftInventory(owner, items));
     }
-
     static class MinecraftInventory implements IInventory {
         private final NonNullList<ItemStack> items;
+        private int maxStack = MAX_STACK;
         private final List<HumanEntity> viewers;
         private final String title;
-        private final InventoryHolder owner;
-        private int maxStack = MAX_STACK;
         private InventoryType type;
+        private final InventoryHolder owner;
 
         public MinecraftInventory(InventoryHolder owner, InventoryType type) {
             this(owner, type.getDefaultSize(), type.getDefaultTitle());
@@ -140,8 +139,7 @@ public class CraftInventoryCustom extends CraftInventory {
         }
 
         @Override
-        public void markDirty() {
-        }
+        public void markDirty() {}
 
         @Override
         public boolean isUsableByPlayer(EntityPlayer entityhuman) {

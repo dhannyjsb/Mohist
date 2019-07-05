@@ -216,7 +216,6 @@ public interface ConfigurationSection {
     public ConfigurationSection createSection(String path, Map<?, ?> map);
 
     // Primitives
-
     /**
      * Gets the requested String by path.
      * <p>
@@ -417,7 +416,6 @@ public interface ConfigurationSection {
     public boolean isLong(String path);
 
     // Java
-
     /**
      * Gets the requested List by path.
      * <p>
@@ -609,7 +607,6 @@ public interface ConfigurationSection {
     public List<Map<?, ?>> getMapList(String path);
 
     // Bukkit
-
     /**
      * Gets the requested {@link ConfigurationSerializable} object at the given
      * path.

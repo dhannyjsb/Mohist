@@ -6,13 +6,6 @@ package org.bukkit.inventory;
 public interface EnchantingInventory extends Inventory {
 
     /**
-     * Get the item being enchanted.
-     *
-     * @return The current item.
-     */
-    ItemStack getItem();
-
-    /**
      * Set the item being enchanted.
      *
      * @param item The new item
@@ -20,11 +13,11 @@ public interface EnchantingInventory extends Inventory {
     void setItem(ItemStack item);
 
     /**
-     * Get the secondary item being used for the enchant.
+     * Get the item being enchanted.
      *
-     * @return The second item
+     * @return The current item.
      */
-    ItemStack getSecondary();
+    ItemStack getItem();
 
     /**
      * Set the secondary item being used for the enchant.
@@ -32,4 +25,11 @@ public interface EnchantingInventory extends Inventory {
      * @param item The new item
      */
     void setSecondary(ItemStack item);
+
+    /**
+     * Get the secondary item being used for the enchant.
+     *
+     * @return The second item
+     */
+    ItemStack getSecondary();
 }

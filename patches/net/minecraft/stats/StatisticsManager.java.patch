@@ -1,23 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/stats/StatisticsManager.java
 +++ ../src-work/minecraft/net/minecraft/stats/StatisticsManager.java
-@@ -1,25 +1,26 @@
- package net.minecraft.stats;
+@@ -11,6 +11,10 @@
  
- import com.google.common.collect.Maps;
--import java.util.Map;
- import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.util.TupleIntJsonSerializable;
- 
--public class StatisticsManager
--{
-+import java.util.Map;
-+
-+public class StatisticsManager {
-     protected final Map<StatBase, TupleIntJsonSerializable> statsData = Maps.<StatBase, TupleIntJsonSerializable>newConcurrentMap();
- 
--    public void increaseStat(EntityPlayer player, StatBase stat, int amount)
--    {
-+    public void increaseStat(EntityPlayer player, StatBase stat, int amount) {
+     public void increaseStat(EntityPlayer player, StatBase stat, int amount)
+     {
 +        org.bukkit.event.Cancellable cancellable = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.handleStatisticsIncrease(player, stat, this.readStat(stat), amount);
 +        if (cancellable != null && cancellable.isCancelled()) {
 +            return;
@@ -25,24 +11,3 @@
          this.unlockAchievement(player, stat, this.readStat(stat) + amount);
      }
  
--    public void unlockAchievement(EntityPlayer playerIn, StatBase statIn, int p_150873_3_)
--    {
-+    public void unlockAchievement(EntityPlayer playerIn, StatBase statIn, int p_150873_3_) {
-         TupleIntJsonSerializable tupleintjsonserializable = this.statsData.get(statIn);
- 
--        if (tupleintjsonserializable == null)
--        {
-+        if (tupleintjsonserializable == null) {
-             tupleintjsonserializable = new TupleIntJsonSerializable();
-             this.statsData.put(statIn, tupleintjsonserializable);
-         }
-@@ -27,8 +28,7 @@
-         tupleintjsonserializable.setIntegerValue(p_150873_3_);
-     }
- 
--    public int readStat(StatBase stat)
--    {
-+    public int readStat(StatBase stat) {
-         TupleIntJsonSerializable tupleintjsonserializable = this.statsData.get(stat);
-         return tupleintjsonserializable == null ? 0 : tupleintjsonserializable.getIntegerValue();
-     }

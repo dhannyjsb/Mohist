@@ -17,12 +17,12 @@ public class ChunkPopulateEvent extends ChunkEvent {
         super(chunk);
     }
 
-    public static HandlerList getHandlerList() {
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

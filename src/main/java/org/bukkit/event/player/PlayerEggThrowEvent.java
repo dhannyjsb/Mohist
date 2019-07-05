@@ -23,10 +23,6 @@ public class PlayerEggThrowEvent extends PlayerEvent {
         this.hatchType = hatchingType;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the egg involved in this event.
      *
@@ -71,7 +67,7 @@ public class PlayerEggThrowEvent extends PlayerEvent {
      * @param hatchType The type of the mob being hatched by the egg
      */
     public void setHatchingType(EntityType hatchType) {
-        if (!hatchType.isSpawnable()) {
+        if(!hatchType.isSpawnable()) {
             throw new IllegalArgumentException("Can't spawn that entity type from an egg!");
         }
         this.hatchType = hatchType;
@@ -106,6 +102,10 @@ public class PlayerEggThrowEvent extends PlayerEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -19,10 +19,6 @@ public class PlayerItemBreakEvent extends PlayerEvent {
         this.brokenItem = brokenItem;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the item that broke
      *
@@ -34,6 +30,10 @@ public class PlayerItemBreakEvent extends PlayerEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

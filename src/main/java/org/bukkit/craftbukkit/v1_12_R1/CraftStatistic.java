@@ -30,8 +30,7 @@ public class CraftStatistic {
         statistics = statisticBuilder.build();
     }
 
-    private CraftStatistic() {
-    }
+    private CraftStatistic() {}
 
     public static Statistic getBukkitStatistic(StatBase statistic) {
         return getBukkitStatisticByName(statistic.statId);

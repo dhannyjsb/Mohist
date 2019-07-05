@@ -32,12 +32,12 @@ public class CraftJukebox extends CraftBlockEntityState<TileEntityJukebox> imple
             Material record = this.getPlaying();
             if (record == Material.AIR) {
                 world.getHandle().setBlockState(new BlockPos(this.getX(), this.getY(), this.getZ()),
-                        Blocks.JUKEBOX.getDefaultState()
-                                .withProperty(BlockJukebox.HAS_RECORD, false), 3);
+                    Blocks.JUKEBOX.getDefaultState()
+                        .withProperty(BlockJukebox.HAS_RECORD, false), 3);
             } else {
                 world.getHandle().setBlockState(new BlockPos(this.getX(), this.getY(), this.getZ()),
-                        Blocks.JUKEBOX.getDefaultState()
-                                .withProperty(BlockJukebox.HAS_RECORD, true), 3);
+                    Blocks.JUKEBOX.getDefaultState()
+                        .withProperty(BlockJukebox.HAS_RECORD, true), 3);
             }
             world.playEffect(this.getLocation(), Effect.RECORD_PLAY, record.getId());
         }
@@ -55,11 +55,6 @@ public class CraftJukebox extends CraftBlockEntityState<TileEntityJukebox> imple
     }
 
     @Override
-    public boolean isPlaying() {
-        return getRawData() == 1;
-    }
-
-    @Override
     public void setPlaying(Material record) {
         if (record == null || CraftMagicNumbers.getItem(record) == null) {
             record = Material.AIR;
@@ -71,6 +66,11 @@ public class CraftJukebox extends CraftBlockEntityState<TileEntityJukebox> imple
         } else {
             setRawData((byte) 1);
         }
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return getRawData() == 1;
     }
 
     @Override

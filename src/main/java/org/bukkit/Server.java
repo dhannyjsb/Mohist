@@ -7,14 +7,23 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.command.*;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFactory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Merchant;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.map.MapView;
 import org.bukkit.permissions.Permissible;
@@ -31,7 +40,13 @@ import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -96,7 +111,7 @@ public interface Server extends PluginMessageRecipient {
      * affect the collection are fully supported. The effects following
      * (non-exhaustive) {@link Entity#teleport(Location) teleportation},
      * {@link Player#setHealth(double) death}, and {@link Player#kickPlayer(
-     *String) kicking} are undefined. Any use of this collection from
+     * String) kicking} are undefined. Any use of this collection from
      * asynchronous threads is unsafe.
      * <p>
      * For safe consequential iteration or mimicking the old array behavior,
@@ -216,7 +231,7 @@ public interface Server extends PluginMessageRecipient {
      * @return the number of players
      */
     public int broadcastMessage(String message);
-
+    
     /**
      * Gets the name of the update folder. The update folder is used to safely
      * update plugins at the right moment on a plugin load.
@@ -294,7 +309,7 @@ public interface Server extends PluginMessageRecipient {
      * @param name the name to look up
      * @return a player if one was found, null otherwise
      */
-
+    
     public Player getPlayer(String name);
 
     /**
@@ -305,7 +320,7 @@ public interface Server extends PluginMessageRecipient {
      * @param name Exact name of the player to retrieve
      * @return a player object if one was found, null otherwise
      */
-
+    
     public Player getPlayerExact(String name);
 
     /**
@@ -320,7 +335,7 @@ public interface Server extends PluginMessageRecipient {
      * @param name the (partial) name to match
      * @return list of all possible players
      */
-
+    
     public List<Player> matchPlayer(String name);
 
     /**
@@ -415,7 +430,7 @@ public interface Server extends PluginMessageRecipient {
      * @return a map view if it exists, or null otherwise
      * @deprecated Magic value
      */
-
+    
     public MapView getMap(short id);
 
     /**
@@ -578,7 +593,7 @@ public interface Server extends PluginMessageRecipient {
      * @return an offline player
      * @see #getOfflinePlayer(java.util.UUID)
      */
-
+    
     public OfflinePlayer getOfflinePlayer(String name);
 
     /**
@@ -872,13 +887,6 @@ public interface Server extends PluginMessageRecipient {
     CachedServerIcon loadServerIcon(BufferedImage image) throws IllegalArgumentException, Exception;
 
     /**
-     * Gets the idle kick timeout.
-     *
-     * @return the idle timeout in minutes
-     */
-    public int getIdleTimeout();
-
-    /**
      * Set the idle kick timeout. Any players idle for the specified amount of
      * time will be automatically kicked.
      * <p>
@@ -889,13 +897,20 @@ public interface Server extends PluginMessageRecipient {
     public void setIdleTimeout(int threshold);
 
     /**
+     * Gets the idle kick timeout.
+     *
+     * @return the idle timeout in minutes
+     */
+    public int getIdleTimeout();
+
+    /**
      * Create a ChunkData for use in a generator.
-     *
+     * 
      * See {@link ChunkGenerator#generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)}
-     *
+     * 
      * @param world the world to create the ChunkData for
      * @return a new ChunkData for the world
-     *
+     * 
      */
     public ChunkGenerator.ChunkData createChunkData(World world);
 
@@ -920,12 +935,11 @@ public interface Server extends PluginMessageRecipient {
     Entity getEntity(UUID uuid);
 
     // Paper start
-
     /**
-     * Gets the current server TPS
-     *
-     * @return current server TPS (1m, 5m, 15m in Paper-Server)
-     */
+      * Gets the current server TPS
+      *
+      * @return current server TPS (1m, 5m, 15m in Paper-Server)
+      */
     public double[] getTPS();
 
     /**
@@ -935,7 +949,7 @@ public interface Server extends PluginMessageRecipient {
      */
     CommandMap getCommandMap();
     // Paper end
-
+    
     /**
      * Get the advancement specified by this key.
      *
@@ -956,54 +970,18 @@ public interface Server extends PluginMessageRecipient {
      * @see UnsafeValues
      * @return the unsafe values instance
      */
-
+    
     UnsafeValues getUnsafe();
 
-    Spigot spigot();
-
-    /**
-     * Checks if player names should be suggested when a command returns {@code null} as
-     * their tab completion result.
-     *
-     * @return true if player names should be suggested
-     */
-    boolean suggestPlayerNamesWhenNullTabCompletions();
-    // Spigot end
-
-    // Paper start - allow preventing player name suggestions by default
-
-    /**
-     * Creates a PlayerProfile for the specified uuid, with name as null
-     * @param uuid UUID to create profile for
-     * @return A PlayerProfile object
-     */
-    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid);
-
-    /**
-     * Creates a PlayerProfile for the specified name, with UUID as null
-     * @param name Name to create profile for
-     * @return A PlayerProfile object
-     */
-    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name);
-
-    /**
-     * Creates a PlayerProfile for the specified name/uuid
-     *
-     * Both UUID and Name can not be null at same time. One must be supplied.
-     *
-     * @param uuid UUID to create profile for
-     * @param name Name to create profile for
-     * @return A PlayerProfile object
-     */
-    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
-
     // Spigot start
-    public class Spigot {
-
-        public org.bukkit.configuration.file.YamlConfiguration getConfig() {
-            throw new UnsupportedOperationException("Not supported yet.");
+    public class Spigot
+    {
+	
+        public org.bukkit.configuration.file.YamlConfiguration getConfig()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
-
+		
         /**
          * Sends the component to the player
          *
@@ -1029,5 +1007,42 @@ public interface Server extends PluginMessageRecipient {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
+
+    Spigot spigot();
+    // Spigot end
+
+    // Paper start - allow preventing player name suggestions by default
+    /**
+     * Checks if player names should be suggested when a command returns {@code null} as
+     * their tab completion result.
+     *
+     * @return true if player names should be suggested
+     */
+    boolean suggestPlayerNamesWhenNullTabCompletions();
+
+    /**
+     * Creates a PlayerProfile for the specified uuid, with name as null
+     * @param uuid UUID to create profile for
+     * @return A PlayerProfile object
+     */
+    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid);
+
+    /**
+     * Creates a PlayerProfile for the specified name, with UUID as null
+     * @param name Name to create profile for
+     * @return A PlayerProfile object
+     */
+    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name);
+
+    /**
+     * Creates a PlayerProfile for the specified name/uuid
+     *
+     * Both UUID and Name can not be null at same time. One must be supplied.
+     *
+     * @param uuid UUID to create profile for
+     * @param name Name to create profile for
+     * @return A PlayerProfile object
+     */
+    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
     // Paper end
 }

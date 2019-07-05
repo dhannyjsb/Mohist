@@ -20,17 +20,13 @@ import org.bukkit.event.HandlerList;
  */
 public class BlockFadeEvent extends BlockEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final BlockState newState;
     private boolean cancelled;
+    private final BlockState newState;
 
     public BlockFadeEvent(final Block block, final BlockState newState) {
         super(block);
         this.newState = newState;
         this.cancelled = false;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -54,6 +50,10 @@ public class BlockFadeEvent extends BlockEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

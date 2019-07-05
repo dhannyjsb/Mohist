@@ -15,12 +15,11 @@ import java.util.UUID;
  */
 public class AsyncPlayerPreLoginEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
+    private Result result;
+    private String message;
     private final String name;
     private final InetAddress ipAddress;
     private final UUID uniqueId;
-    private Result result;
-    private String message;
-    private PlayerProfile profile;
 
     @Deprecated
     public AsyncPlayerPreLoginEvent(final String name, final InetAddress ipAddress) {
@@ -31,21 +30,7 @@ public class AsyncPlayerPreLoginEvent extends Event {
         // Paper start
         this(name, ipAddress, uniqueId, Bukkit.createProfile(uniqueId, name));
     }
-
-    public AsyncPlayerPreLoginEvent(final String name, final InetAddress ipAddress, final UUID uniqueId, PlayerProfile profile) {
-        super(true);
-        this.profile = profile;
-        // Paper end
-        this.result = Result.ALLOWED;
-        this.message = "";
-        this.name = name;
-        this.ipAddress = ipAddress;
-        this.uniqueId = uniqueId;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+    private PlayerProfile profile;
 
     /**
      * Gets the PlayerProfile of the player logging in
@@ -63,6 +48,17 @@ public class AsyncPlayerPreLoginEvent extends Event {
         this.profile = profile;
     }
 
+    public AsyncPlayerPreLoginEvent(final String name, final InetAddress ipAddress, final UUID uniqueId, PlayerProfile profile) {
+        super(true);
+        this.profile = profile;
+        // Paper end
+        this.result = Result.ALLOWED;
+        this.message = "";
+        this.name = name;
+        this.ipAddress = ipAddress;
+        this.uniqueId = uniqueId;
+    }
+
     /**
      * Gets the current result of the login, as an enum
      *
@@ -70,15 +66,6 @@ public class AsyncPlayerPreLoginEvent extends Event {
      */
     public Result getLoginResult() {
         return result;
-    }
-
-    /**
-     * Sets the new result of the login, as an enum
-     *
-     * @param result New result to set
-     */
-    public void setLoginResult(final Result result) {
-        this.result = result;
     }
 
     /**
@@ -92,6 +79,15 @@ public class AsyncPlayerPreLoginEvent extends Event {
     @Deprecated
     public PlayerPreLoginEvent.Result getResult() {
         return result == null ? null : result.old();
+    }
+
+    /**
+     * Sets the new result of the login, as an enum
+     *
+     * @param result New result to set
+     */
+    public void setLoginResult(final Result result) {
+        this.result = result;
     }
 
     /**
@@ -189,6 +185,10 @@ public class AsyncPlayerPreLoginEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

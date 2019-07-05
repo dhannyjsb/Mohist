@@ -1,8 +1,0 @@
---- ../src-base/minecraft/net/minecraftforge/client/model/obj/package-info.java
-+++ ../src-work/minecraft/net/minecraftforge/client/model/obj/package-info.java
-@@ -22,4 +22,5 @@
- package net.minecraftforge.client.model.obj;
- 
- import mcp.MethodsReturnNonnullByDefault;
-+
- import javax.annotation.ParametersAreNonnullByDefault;

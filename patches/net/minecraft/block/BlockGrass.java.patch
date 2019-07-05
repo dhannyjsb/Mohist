@@ -7,7 +7,7 @@
  import net.minecraft.block.material.Material;
  import net.minecraft.block.properties.IProperty;
  import net.minecraft.block.properties.PropertyBool;
-@@ -15,53 +14,77 @@
+@@ -15,7 +14,14 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,75 +17,52 @@
 +import org.bukkit.event.block.BlockFadeEvent;
 +import org.bukkit.event.block.BlockSpreadEvent;
  
--public class BlockGrass extends Block implements IGrowable
--{
 +import java.util.Random;
 +
-+public class BlockGrass extends Block implements IGrowable {
+ public class BlockGrass extends Block implements IGrowable
+ {
      public static final PropertyBool SNOWY = PropertyBool.create("snowy");
- 
--    protected BlockGrass()
--    {
-+    protected BlockGrass() {
-         super(Material.GRASS);
-         this.setDefaultState(this.blockState.getBaseState().withProperty(SNOWY, Boolean.valueOf(false)));
-         this.setTickRandomly(true);
-         this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
-     }
- 
--    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
--    {
-+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-         Block block = worldIn.getBlockState(pos.up()).getBlock();
-         return state.withProperty(SNOWY, Boolean.valueOf(block == Blocks.SNOW || block == Blocks.SNOW_LAYER));
-     }
- 
--    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
--    {
--        if (!worldIn.isRemote)
--        {
--            if (!worldIn.isAreaLoaded(pos, 3)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
--            if (worldIn.getLightFromNeighbors(pos.up()) < 4 && worldIn.getBlockState(pos.up()).getLightOpacity(worldIn, pos.up()) > 2)
--            {
--                worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
--            }
--            else
--            {
--                if (worldIn.getLightFromNeighbors(pos.up()) >= 9)
--                {
--                    for (int i = 0; i < 4; ++i)
--                    {
-+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
-+        if (!worldIn.isRemote) {
+@@ -38,30 +44,58 @@
+     {
+         if (!worldIn.isRemote)
+         {
 +            int lightLevel = -1; // Paper
-+            if (!worldIn.isAreaLoaded(pos, 3))
-+                return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
-+            if (worldIn.getBlockState(pos.up()).getLightOpacity(worldIn, pos.up()) > 2 && (lightLevel = worldIn.getLightFromNeighbors(pos.up())) < 4) {
-+                org.bukkit.World bworld = worldIn.getWorld();
-+                BlockState blockState = bworld.getBlockAt(pos.getX(), pos.getY(), pos.getZ()).getState();
-+                blockState.setType(CraftMagicNumbers.getMaterial(Blocks.DIRT));
+             if (!worldIn.isAreaLoaded(pos, 3)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
+-            if (worldIn.getLightFromNeighbors(pos.up()) < 4 && worldIn.getBlockState(pos.up()).getLightOpacity(worldIn, pos.up()) > 2)
++            if (worldIn.getBlockState(pos.up()).getLightOpacity(worldIn, pos.up()) > 2 && (lightLevel = worldIn.getLightFromNeighbors(pos.up())) < 4 )
+             {
+-                worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
++                    org.bukkit.World bworld = worldIn.getWorld();
++                    BlockState blockState = bworld.getBlockAt(pos.getX(), pos.getY(), pos.getZ()).getState();
++                    blockState.setType(CraftMagicNumbers.getMaterial(Blocks.DIRT));
 +
-+                BlockFadeEvent event = new BlockFadeEvent(blockState.getBlock(), blockState);
-+                worldIn.getServer().getPluginManager().callEvent(event);
++                    BlockFadeEvent event = new BlockFadeEvent(blockState.getBlock(), blockState);
++                    worldIn.getServer().getPluginManager().callEvent(event);
 +
 +                if (!event.isCancelled()) {
 +                    blockState.update(true);
 +                }
-+            } else {
+             }
+             else
+             {
+-                if (worldIn.getLightFromNeighbors(pos.up()) >= 9)
 +                // Paper start
 +                // If light was calculated above, reuse it, else grab it
 +                if (lightLevel == -1) {
 +                    lightLevel = worldIn.getLightFromNeighbors(pos.up());
 +                }
-+                if (lightLevel >= 9) {
++                if (lightLevel >= 9)
+                 {
 +                    // Paper end
-+                    for (int i = 0; i < 4; ++i) {
+                     for (int i = 0; i < 4; ++i)
+                     {
                          BlockPos blockpos = pos.add(rand.nextInt(3) - 1, rand.nextInt(5) - 3, rand.nextInt(3) - 1);
  
 -                        if (blockpos.getY() >= 0 && blockpos.getY() < 256 && !worldIn.isBlockLoaded(blockpos))
 -                        {
 +                        IBlockState iblockstate2 = worldIn.getBlockState(blockpos); // Paper - moved up
-+                        if (iblockstate2 == null) {
++                        if (iblockstate2 == null)
++						{
                              return;
                          }
  
@@ -97,7 +74,8 @@
 -                        {
 -                            worldIn.setBlockState(blockpos, Blocks.GRASS.getDefaultState());
 +                        // Paper - move last check before isLightLevel to avoid unneeded light checks
-+                        if (iblockstate2.getBlock() == Blocks.DIRT && iblockstate2.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2 && worldIn.isLightLevel(blockpos.up(), 4)) {
++                        if (iblockstate2.getBlock() == Blocks.DIRT && iblockstate2.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && iblockstate.getLightOpacity(worldIn, pos.up()) <= 2 && worldIn.isLightLevel(blockpos.up(), 4))
++						{
 +                            //worldIn.setBlockState(blockpos, Blocks.GRASS.getDefaultState());
 +                            org.bukkit.World bworld = worldIn.getWorld();
 +                            BlockState blockState = bworld.getBlockAt(blockpos.getX(), blockpos.getY(), blockpos.getZ()).getState();
@@ -112,97 +90,13 @@
                          }
                      }
                  }
-@@ -69,47 +92,36 @@
-         }
-     }
+@@ -109,7 +143,8 @@
  
--    public Item getItemDropped(IBlockState state, Random rand, int fortune)
--    {
-+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-         return Blocks.DIRT.getItemDropped(Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT), rand, fortune);
-     }
- 
--    public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
--    {
-+    public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient) {
-         return true;
-     }
- 
--    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state)
--    {
-+    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-         return true;
-     }
- 
--    public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state)
--    {
-+    public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-         BlockPos blockpos = pos.up();
- 
--        for (int i = 0; i < 128; ++i)
--        {
-+        for (int i = 0; i < 128; ++i) {
-             BlockPos blockpos1 = blockpos;
-             int j = 0;
- 
--            while (true)
--            {
--                if (j >= i / 16)
--                {
--                    if (worldIn.isAirBlock(blockpos1))
--                    {
--                        if (rand.nextInt(8) == 0)
--                        {
-+            while (true) {
-+                if (j >= i / 16) {
-+                    if (worldIn.isAirBlock(blockpos1)) {
-+                        if (rand.nextInt(8) == 0) {
-                             worldIn.getBiome(blockpos1).plantFlower(worldIn, rand, blockpos1);
--                        }
--                        else
--                        {
-+                        } else {
-                             IBlockState iblockstate1 = Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS);
- 
--                            if (Blocks.TALLGRASS.canBlockStay(worldIn, blockpos1, iblockstate1))
--                            {
+                             if (Blocks.TALLGRASS.canBlockStay(worldIn, blockpos1, iblockstate1))
+                             {
 -                                worldIn.setBlockState(blockpos1, iblockstate1, 3);
-+                            if (Blocks.TALLGRASS.canBlockStay(worldIn, blockpos1, iblockstate1)) {
 +//                                worldIn.setBlockState(blockpos1, iblockstate1, 3);
 +                                CraftEventFactory.handleBlockGrowEvent(worldIn, blockpos1.getX(), blockpos1.getY(), blockpos1.getZ(), iblockstate1.getBlock(), iblockstate1.getBlock().getMetaFromState(iblockstate1));
                              }
                          }
                      }
-@@ -119,8 +131,7 @@
- 
-                 blockpos1 = blockpos1.add(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
- 
--                if (worldIn.getBlockState(blockpos1.down()).getBlock() != Blocks.GRASS || worldIn.getBlockState(blockpos1).isNormalCube())
--                {
-+                if (worldIn.getBlockState(blockpos1.down()).getBlock() != Blocks.GRASS || worldIn.getBlockState(blockpos1).isNormalCube()) {
-                     break;
-                 }
- 
-@@ -130,18 +141,15 @@
-     }
- 
-     @SideOnly(Side.CLIENT)
--    public BlockRenderLayer getBlockLayer()
--    {
-+    public BlockRenderLayer getBlockLayer() {
-         return BlockRenderLayer.CUTOUT_MIPPED;
-     }
- 
--    public int getMetaFromState(IBlockState state)
--    {
-+    public int getMetaFromState(IBlockState state) {
-         return 0;
-     }
- 
--    protected BlockStateContainer createBlockState()
--    {
--        return new BlockStateContainer(this, new IProperty[] {SNOWY});
-+    protected BlockStateContainer createBlockState() {
-+        return new BlockStateContainer(this, new IProperty[]{SNOWY});
-     }
- }

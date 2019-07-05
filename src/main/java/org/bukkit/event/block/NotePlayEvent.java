@@ -23,10 +23,6 @@ public class NotePlayEvent extends BlockEvent implements Cancellable {
         this.note = note;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public boolean isCancelled() {
         return cancelled;
     }
@@ -45,6 +41,15 @@ public class NotePlayEvent extends BlockEvent implements Cancellable {
     }
 
     /**
+     * Gets the {@link Note} to be played.
+     *
+     * @return the Note.
+     */
+    public Note getNote() {
+        return note;
+    }
+
+    /**
      * Overrides the {@link Instrument} to be used.
      *
      * @param instrument the Instrument. Has no effect if null.
@@ -54,15 +59,6 @@ public class NotePlayEvent extends BlockEvent implements Cancellable {
             this.instrument = instrument;
         }
 
-    }
-
-    /**
-     * Gets the {@link Note} to be played.
-     *
-     * @return the Note.
-     */
-    public Note getNote() {
-        return note;
     }
 
     /**
@@ -78,6 +74,10 @@ public class NotePlayEvent extends BlockEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

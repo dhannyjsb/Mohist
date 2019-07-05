@@ -16,12 +16,12 @@ public class ServiceUnregisterEvent extends ServiceEvent {
         super(serviceProvider);
     }
 
-    public static HandlerList getHandlerList() {
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

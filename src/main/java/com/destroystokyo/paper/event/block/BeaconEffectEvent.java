@@ -24,10 +24,6 @@ public class BeaconEffectEvent extends BlockEvent implements Cancellable {
         this.primary = primary;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
     public boolean isCancelled() {
         return cancelled;
@@ -76,6 +72,10 @@ public class BeaconEffectEvent extends BlockEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

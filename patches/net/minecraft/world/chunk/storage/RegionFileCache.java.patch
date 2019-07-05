@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/storage/RegionFileCache.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/storage/RegionFileCache.java
-@@ -1,36 +1,44 @@
+@@ -1,15 +1,22 @@
  package net.minecraft.world.chunk.storage;
  
 -import com.google.common.collect.Maps;
@@ -18,55 +18,28 @@
 +import java.util.LinkedHashMap;
  import java.util.Map;
  
--public class RegionFileCache
--{
+ public class RegionFileCache
+ {
 -    private static final Map<File, RegionFile> REGIONS_BY_FILE = Maps.<File, RegionFile>newHashMap();
-+public class RegionFileCache {
 +    public static final Map<File, RegionFile> REGIONS_BY_FILE = new LinkedHashMap(256, 0.75f, true); // Spigot - private -> public, Paper - HashMap -> LinkedHashMap
-+    private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
-+    private static final int OVERZEALOUS_TOTAL_THRESHOLD = 1024 * 64;
-+    private static final int OVERZEALOUS_THRESHOLD = 1024;
-+    private static int SIZE_THRESHOLD = DEFAULT_SIZE_THRESHOLD;
  
--    public static synchronized RegionFile createOrLoadRegionFile(File worldDir, int chunkX, int chunkZ)
--    {
-+    static {
-+        resetFilterThresholds();
-+    }
-+
-+    public static synchronized RegionFile createOrLoadRegionFile(File worldDir, int chunkX, int chunkZ) {
-         File file1 = new File(worldDir, "region");
-         File file2 = new File(file1, "r." + (chunkX >> 5) + "." + (chunkZ >> 5) + ".mca");
-         RegionFile regionfile = REGIONS_BY_FILE.get(file2);
- 
--        if (regionfile != null)
--        {
-+        if (regionfile != null) {
-             return regionfile;
--        }
--        else
--        {
--            if (!file1.exists())
--            {
-+        } else {
-+            if (!file1.exists()) {
-                 file1.mkdirs();
+     public static synchronized RegionFile createOrLoadRegionFile(File worldDir, int chunkX, int chunkZ)
+     {
+@@ -29,8 +36,8 @@
              }
  
--            if (REGIONS_BY_FILE.size() >= 256)
+             if (REGIONS_BY_FILE.size() >= 256)
 -            {
 -                clearRegionFileReferences();
-+            if (REGIONS_BY_FILE.size() >= 256) {
-+                trimCache(); // Paper
++			{
++			 	trimCache(); // Paper
              }
  
              RegionFile regionfile1 = new RegionFile(file2);
-@@ -39,46 +47,174 @@
+@@ -38,7 +45,154 @@
+             return regionfile1;
          }
      }
- 
--    public static synchronized RegionFile getRegionFileIfExists(File worldDir, int chunkX, int chunkZ)
--    {
 +    // Paper Start
 +    private static synchronized void trimCache() {
 +        Iterator<Map.Entry<File, RegionFile>> itr = RegionFileCache.REGIONS_BY_FILE.entrySet().iterator();
@@ -80,13 +53,20 @@
 +            itr.remove();
 +        }
 +    }
-+
+ 
 +    private static void printOversizedLog(String msg, File file, int x, int z) {
-+        org.apache.logging.log4j.LogManager.getLogger().fatal(msg + " (" + file.toString().replaceAll(".+[\\\\/]", "") + " - " + x + "," + z + ") Go clean it up to remove this message. /minecraft:tp " + (x << 4) + " 128 " + (z << 4) + " - DO NOT REPORT THIS TO PAPER - You may ask for help on Discord, but do not file an issue. These error messages can not be removed.");
++        org.apache.logging.log4j.LogManager.getLogger().fatal(msg + " (" + file.toString().replaceAll(".+[\\\\/]", "") + " - " + x + "," + z + ") Go clean it up to remove this message. /minecraft:tp " + (x<<4)+" 128 "+(z<<4) + " - DO NOT REPORT THIS TO PAPER - You may ask for help on Discord, but do not file an issue. These error messages can not be removed.");
 +    }
 +
++    private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
++    private static final int OVERZEALOUS_TOTAL_THRESHOLD = 1024 * 64;
++    private static final int OVERZEALOUS_THRESHOLD = 1024;
++    private static int SIZE_THRESHOLD = DEFAULT_SIZE_THRESHOLD;
 +    private static void resetFilterThresholds() {
 +        SIZE_THRESHOLD = Math.max(1024 * 4, Integer.getInteger("Paper.FilterThreshhold", DEFAULT_SIZE_THRESHOLD));
++    }
++    static {
++        resetFilterThresholds();
 +    }
 +
 +    static boolean isOverzealous() {
@@ -153,7 +133,7 @@
 +            if (nbtSize > SIZE_THRESHOLD || (SIZE_THRESHOLD == OVERZEALOUS_THRESHOLD && totalSize > OVERZEALOUS_TOTAL_THRESHOLD)) {
 +                newList.appendTag(object);
 +                iterator.remove();
-+            } else {
++            } else  {
 +                totalSize += nbtSize;
 +            }
 +        }
@@ -208,73 +188,17 @@
 +    }
 +    // Paper End
 +
-+    public static synchronized RegionFile getRegionFileIfExists(File worldDir, int chunkX, int chunkZ) {
+     public static synchronized RegionFile getRegionFileIfExists(File worldDir, int chunkX, int chunkZ)
+     {
          File file1 = new File(worldDir, "region");
-         File file2 = new File(file1, "r." + (chunkX >> 5) + "." + (chunkZ >> 5) + ".mca");
-         RegionFile regionfile = REGIONS_BY_FILE.get(file2);
- 
--        if (regionfile != null)
--        {
-+        if (regionfile != null) {
-             return regionfile;
--        }
--        else if (file1.exists() && file2.exists())
--        {
--            if (REGIONS_BY_FILE.size() >= 256)
--            {
-+        } else if (file1.exists() && file2.exists()) {
-+            if (REGIONS_BY_FILE.size() >= 256) {
-                 clearRegionFileReferences();
-             }
- 
-             RegionFile regionfile1 = new RegionFile(file2);
-             REGIONS_BY_FILE.put(file2, regionfile1);
-             return regionfile1;
--        }
--        else
--        {
-+        } else {
-             return null;
-         }
-     }
- 
--    public static synchronized void clearRegionFileReferences()
--    {
--        for (RegionFile regionfile : REGIONS_BY_FILE.values())
--        {
--            try
--            {
--                if (regionfile != null)
--                {
-+    public static synchronized void clearRegionFileReferences() {
-+        for (RegionFile regionfile : REGIONS_BY_FILE.values()) {
-+            try {
-+                if (regionfile != null) {
-                     regionfile.close();
-                 }
--            }
--            catch (IOException ioexception)
--            {
-+            } catch (IOException ioexception) {
-                 ioexception.printStackTrace();
-             }
-         }
-@@ -86,20 +222,39 @@
-         REGIONS_BY_FILE.clear();
-     }
- 
--    public static DataInputStream getChunkInputStream(File worldDir, int chunkX, int chunkZ)
--    {
-+    public static DataInputStream getChunkInputStream(File worldDir, int chunkX, int chunkZ) {
-         RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
+@@ -92,14 +246,38 @@
          return regionfile.getChunkDataInputStream(chunkX & 31, chunkZ & 31);
      }
  
--    public static DataOutputStream getChunkOutputStream(File worldDir, int chunkX, int chunkZ)
--    {
 +    @Nullable
-+    public static NBTTagCompound getChunkInputStreamCB(File worldDir, int chunkX, int chunkZ) throws IOException {  // Paper - remove synchronization
-         RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
++    public static NBTTagCompound getChunkInputStreamCB(File worldDir, int chunkX, int chunkZ) throws IOException
++    {  // Paper - remove synchronization
++        RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
 +        // Paper start
 +        if (regionfile.isOversized(chunkX, chunkZ)) {
 +            printOversizedLog("Loading Oversized Chunk!", worldDir, chunkX, chunkZ);
@@ -290,18 +214,20 @@
 +        return CompressedStreamTools.read(datainputstream);
 +    }
 +
-+    public static DataOutputStream getChunkOutputStream(File worldDir, int chunkX, int chunkZ) {
-+        RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
+     public static DataOutputStream getChunkOutputStream(File worldDir, int chunkX, int chunkZ)
+     {
+         RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
          return regionfile.getChunkDataOutputStream(chunkX & 31, chunkZ & 31);
      }
  
--    public static boolean chunkExists(File worldDir, int chunkX, int chunkZ)
--    {
-+    public static void getChunkOutputStream(File worldDir, int chunkX, int chunkZ, NBTTagCompound nbttagcompound) throws IOException {   // Paper - remove synchronization
++    public static void getChunkOutputStream(File worldDir, int chunkX, int chunkZ, NBTTagCompound nbttagcompound) throws IOException
++    {   // Paper - remove synchronization
 +        writeRegion(worldDir, chunkX, chunkZ, nbttagcompound); // Paper - moved to own method
 +    }
 +
-+    public static boolean chunkExists(File worldDir, int chunkX, int chunkZ) {   // Paper - remove synchronization
+     public static boolean chunkExists(File worldDir, int chunkX, int chunkZ)
+-    {
++    {   // Paper - remove synchronization
          RegionFile regionfile = getRegionFileIfExists(worldDir, chunkX, chunkZ);
          return regionfile != null ? regionfile.isChunkSaved(chunkX & 31, chunkZ & 31) : false;
      }

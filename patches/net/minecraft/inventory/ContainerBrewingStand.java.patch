@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/inventory/ContainerBrewingStand.java
 +++ ../src-work/minecraft/net/minecraft/inventory/ContainerBrewingStand.java
-@@ -5,65 +5,59 @@
+@@ -5,13 +5,13 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.entity.player.InventoryPlayer;
  import net.minecraft.init.Items;
@@ -14,20 +14,17 @@
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryBrewer;
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
  
--public class ContainerBrewingStand extends Container
--{
-+public class ContainerBrewingStand extends Container {
-     private final IInventory tileBrewingStand;
-     private final Slot slot;
+ public class ContainerBrewingStand extends Container
+ {
+@@ -20,14 +20,18 @@
      private int prevBrewTime;
      private int prevFuel;
  
--    public ContainerBrewingStand(InventoryPlayer playerInventory, IInventory tileBrewingStandIn)
--    {
 +    private CraftInventoryView bukkitEntity = null;
 +    private InventoryPlayer player;
 +
-+    public ContainerBrewingStand(InventoryPlayer playerInventory, IInventory tileBrewingStandIn) {
+     public ContainerBrewingStand(InventoryPlayer playerInventory, IInventory tileBrewingStandIn)
+     {
 +        this.player = playerInventory;
          this.tileBrewingStand = tileBrewingStandIn;
 -        this.addSlotToContainer(new ContainerBrewingStand.Potion(tileBrewingStandIn, 0, 56, 51));
@@ -41,298 +38,46 @@
 +        this.slot = this.addSlotToContainer(new Ingredient(tileBrewingStandIn, 3, 79, 17));
 +        this.addSlotToContainer(new Fuel(tileBrewingStandIn, 4, 17, 17));
  
--        for (int i = 0; i < 3; ++i)
--        {
--            for (int j = 0; j < 9; ++j)
--            {
-+        for (int i = 0; i < 3; ++i) {
-+            for (int j = 0; j < 9; ++j) {
-                 this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-             }
-         }
+         for (int i = 0; i < 3; ++i)
+         {
+@@ -80,6 +84,7 @@
  
--        for (int k = 0; k < 9; ++k)
--        {
-+        for (int k = 0; k < 9; ++k) {
-             this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
-         }
-     }
- 
--    public void addListener(IContainerListener listener)
--    {
-+    public void addListener(IContainerListener listener) {
-         super.addListener(listener);
-         listener.sendAllWindowProperties(this, this.tileBrewingStand);
-     }
- 
--    public void detectAndSendChanges()
--    {
-+    public void detectAndSendChanges() {
-         super.detectAndSendChanges();
- 
--        for (int i = 0; i < this.listeners.size(); ++i)
--        {
-+        for (int i = 0; i < this.listeners.size(); ++i) {
-             IContainerListener icontainerlistener = this.listeners.get(i);
- 
--            if (this.prevBrewTime != this.tileBrewingStand.getField(0))
--            {
-+            if (this.prevBrewTime != this.tileBrewingStand.getField(0)) {
-                 icontainerlistener.sendWindowProperty(this, 0, this.tileBrewingStand.getField(0));
-             }
- 
--            if (this.prevFuel != this.tileBrewingStand.getField(1))
--            {
-+            if (this.prevFuel != this.tileBrewingStand.getField(1)) {
-                 icontainerlistener.sendWindowProperty(this, 1, this.tileBrewingStand.getField(1));
-             }
-         }
-@@ -73,89 +67,62 @@
-     }
- 
-     @SideOnly(Side.CLIENT)
--    public void updateProgressBar(int id, int data)
--    {
-+    public void updateProgressBar(int id, int data) {
-         this.tileBrewingStand.setField(id, data);
-     }
- 
--    public boolean canInteractWith(EntityPlayer playerIn)
--    {
-+    public boolean canInteractWith(EntityPlayer playerIn) {
+     public boolean canInteractWith(EntityPlayer playerIn)
+     {
 +        if (!this.checkReachable) return true;
          return this.tileBrewingStand.isUsableByPlayer(playerIn);
      }
  
--    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
--    {
-+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-         ItemStack itemstack = ItemStack.EMPTY;
-         Slot slot = this.inventorySlots.get(index);
- 
--        if (slot != null && slot.getHasStack())
--        {
-+        if (slot != null && slot.getHasStack()) {
-             ItemStack itemstack1 = slot.getStack();
-             itemstack = itemstack1.copy();
- 
--            if ((index < 0 || index > 2) && index != 3 && index != 4)
--            {
--                if (this.slot.isItemValid(itemstack1))
--                {
--                    if (!this.mergeItemStack(itemstack1, 3, 4, false))
--                    {
-+            if ((index < 0 || index > 2) && index != 3 && index != 4) {
-+                if (this.slot.isItemValid(itemstack1)) {
-+                    if (!this.mergeItemStack(itemstack1, 3, 4, false)) {
+@@ -102,14 +107,14 @@
                          return ItemStack.EMPTY;
                      }
--                }
+                 }
 -                else if (ContainerBrewingStand.Potion.canHoldPotion(itemstack) && itemstack.getCount() == 1)
--                {
--                    if (!this.mergeItemStack(itemstack1, 0, 3, false))
--                    {
-+                } else if (Potion.canHoldPotion(itemstack) && itemstack.getCount() == 1) {
-+                    if (!this.mergeItemStack(itemstack1, 0, 3, false)) {
++                else if (Potion.canHoldPotion(itemstack) && itemstack.getCount() == 1)
+                 {
+                     if (!this.mergeItemStack(itemstack1, 0, 3, false))
+                     {
                          return ItemStack.EMPTY;
                      }
--                }
+                 }
 -                else if (ContainerBrewingStand.Fuel.isValidBrewingFuel(itemstack))
--                {
--                    if (!this.mergeItemStack(itemstack1, 4, 5, false))
--                    {
-+                } else if (Fuel.isValidBrewingFuel(itemstack)) {
-+                    if (!this.mergeItemStack(itemstack1, 4, 5, false)) {
-                         return ItemStack.EMPTY;
-                     }
--                }
--                else if (index >= 5 && index < 32)
--                {
--                    if (!this.mergeItemStack(itemstack1, 32, 41, false))
--                    {
-+                } else if (index >= 5 && index < 32) {
-+                    if (!this.mergeItemStack(itemstack1, 32, 41, false)) {
-                         return ItemStack.EMPTY;
-                     }
--                }
--                else if (index >= 32 && index < 41)
--                {
--                    if (!this.mergeItemStack(itemstack1, 5, 32, false))
--                    {
-+                } else if (index >= 32 && index < 41) {
-+                    if (!this.mergeItemStack(itemstack1, 5, 32, false)) {
-                         return ItemStack.EMPTY;
-                     }
--                }
--                else if (!this.mergeItemStack(itemstack1, 5, 41, false))
--                {
-+                } else if (!this.mergeItemStack(itemstack1, 5, 41, false)) {
-                     return ItemStack.EMPTY;
-                 }
--            }
--            else
--            {
--                if (!this.mergeItemStack(itemstack1, 5, 41, true))
--                {
-+            } else {
-+                if (!this.mergeItemStack(itemstack1, 5, 41, true)) {
-                     return ItemStack.EMPTY;
-                 }
- 
-                 slot.onSlotChange(itemstack1, itemstack);
++                else if (Fuel.isValidBrewingFuel(itemstack))
+                 {
+                     if (!this.mergeItemStack(itemstack1, 4, 5, false))
+                     {
+@@ -242,4 +247,15 @@
+                 return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack);
              }
- 
--            if (itemstack1.isEmpty())
--            {
-+            if (itemstack1.isEmpty()) {
-                 slot.putStack(ItemStack.EMPTY);
--            }
--            else
--            {
-+            } else {
-                 slot.onSlotChanged();
-             }
- 
--            if (itemstack1.getCount() == itemstack.getCount())
--            {
-+            if (itemstack1.getCount() == itemstack.getCount()) {
-                 return ItemStack.EMPTY;
-             }
- 
-@@ -165,81 +132,76 @@
-         return itemstack;
-     }
- 
--    static class Fuel extends Slot
--        {
--            public Fuel(IInventory iInventoryIn, int index, int xPosition, int yPosition)
--            {
--                super(iInventoryIn, index, xPosition, yPosition);
--            }
+         }
++
 +    @Override
 +    public CraftInventoryView getBukkitView() {
 +        if (bukkitEntity != null) {
 +            return bukkitEntity;
 +        }
- 
--            public boolean isItemValid(ItemStack stack)
--            {
--                return isValidBrewingFuel(stack);
--            }
++
 +        CraftInventoryBrewer inventory = new CraftInventoryBrewer(this.tileBrewingStand);
 +        bukkitEntity = new CraftInventoryView(this.player.player.getBukkitEntity(), inventory, this);
 +        return bukkitEntity;
-+    }
- 
--            public static boolean isValidBrewingFuel(ItemStack itemStackIn)
--            {
--                return itemStackIn.getItem() == Items.BLAZE_POWDER;
--            }
-+    static class Fuel extends Slot {
-+        public Fuel(IInventory iInventoryIn, int index, int xPosition, int yPosition) {
-+            super(iInventoryIn, index, xPosition, yPosition);
-+        }
- 
--            public int getSlotStackLimit()
--            {
--                return 64;
--            }
-+        public static boolean isValidBrewingFuel(ItemStack itemStackIn) {
-+            return itemStackIn.getItem() == Items.BLAZE_POWDER;
-         }
- 
--    static class Ingredient extends Slot
--        {
--            public Ingredient(IInventory iInventoryIn, int index, int xPosition, int yPosition)
--            {
--                super(iInventoryIn, index, xPosition, yPosition);
--            }
-+        public boolean isItemValid(ItemStack stack) {
-+            return isValidBrewingFuel(stack);
-+        }
- 
--            public boolean isItemValid(ItemStack stack)
--            {
--                return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidIngredient(stack);
--            }
-+        public int getSlotStackLimit() {
-+            return 64;
-+        }
-+    }
- 
--            public int getSlotStackLimit()
--            {
--                return 64;
--            }
-+    static class Ingredient extends Slot {
-+        public Ingredient(IInventory iInventoryIn, int index, int xPosition, int yPosition) {
-+            super(iInventoryIn, index, xPosition, yPosition);
-         }
- 
--    static class Potion extends Slot
--        {
--            public Potion(IInventory p_i47598_1_, int p_i47598_2_, int p_i47598_3_, int p_i47598_4_)
--            {
--                super(p_i47598_1_, p_i47598_2_, p_i47598_3_, p_i47598_4_);
--            }
-+        public boolean isItemValid(ItemStack stack) {
-+            return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidIngredient(stack);
-+        }
- 
--            public boolean isItemValid(ItemStack stack)
--            {
--                return canHoldPotion(stack);
--            }
-+        public int getSlotStackLimit() {
-+            return 64;
-+        }
-+    }
- 
--            public int getSlotStackLimit()
--            {
--                return 1;
--            }
-+    static class Potion extends Slot {
-+        public Potion(IInventory p_i47598_1_, int p_i47598_2_, int p_i47598_3_, int p_i47598_4_) {
-+            super(p_i47598_1_, p_i47598_2_, p_i47598_3_, p_i47598_4_);
-+        }
- 
--            public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack)
--            {
--                PotionType potiontype = PotionUtils.getPotionFromItem(stack);
-+        public static boolean canHoldPotion(ItemStack stack) {
-+            return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack);
-+        }
- 
--                if (thePlayer instanceof EntityPlayerMP)
--                {
--                    net.minecraftforge.event.ForgeEventFactory.onPlayerBrewedPotion(thePlayer, stack);
--                    CriteriaTriggers.BREWED_POTION.trigger((EntityPlayerMP)thePlayer, potiontype);
--                }
-+        public boolean isItemValid(ItemStack stack) {
-+            return canHoldPotion(stack);
-+        }
- 
--                super.onTake(thePlayer, stack);
--                return stack;
--            }
-+        public int getSlotStackLimit() {
-+            return 1;
-+        }
- 
--            public static boolean canHoldPotion(ItemStack stack)
--            {
--                return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack);
-+        public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack) {
-+            PotionType potiontype = PotionUtils.getPotionFromItem(stack);
-+
-+            if (thePlayer instanceof EntityPlayerMP) {
-+                net.minecraftforge.event.ForgeEventFactory.onPlayerBrewedPotion(thePlayer, stack);
-+                CriteriaTriggers.BREWED_POTION.trigger((EntityPlayerMP) thePlayer, potiontype);
-             }
-+
-+            super.onTake(thePlayer, stack);
-+            return stack;
-         }
 +    }
  }

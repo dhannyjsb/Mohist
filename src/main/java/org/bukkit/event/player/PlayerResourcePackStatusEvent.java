@@ -16,11 +16,7 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
         super(who);
         this.status = resourcePackStatus;
     }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
+    
     /**
      * Gets the status of this pack.
      *
@@ -32,6 +28,10 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

@@ -3,7 +3,13 @@ package org.bukkit.entity;
 import net.minecraftforge.cauldron.entity.CraftCustomEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.minecart.*;
+import org.bukkit.entity.minecart.CommandMinecart;
+import org.bukkit.entity.minecart.ExplosiveMinecart;
+import org.bukkit.entity.minecart.HopperMinecart;
+import org.bukkit.entity.minecart.PoweredMinecart;
+import org.bukkit.entity.minecart.RideableMinecart;
+import org.bukkit.entity.minecart.SpawnerMinecart;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -263,6 +269,11 @@ public enum EntityType {
     UNKNOWN(null, null, -1, false),
     FORGE_MOD("forge_mod", CraftCustomEntity.class, -1, false);
 
+    private String name;
+    private Class<? extends Entity> clazz;
+    private short typeId;
+    private boolean independent, living;
+
     private static final Map<String, EntityType> NAME_MAP = new HashMap<String, EntityType>();
     private static final Map<Short, EntityType> ID_MAP = new HashMap<Short, EntityType>();
 
@@ -277,11 +288,6 @@ public enum EntityType {
         }
     }
 
-    private String name;
-    private Class<? extends Entity> clazz;
-    private short typeId;
-    private boolean independent, living;
-
     private EntityType(String name, Class<? extends Entity> clazz, int typeId) {
         this(name, clazz, typeId, true);
     }
@@ -294,6 +300,28 @@ public enum EntityType {
         if (clazz != null) {
             this.living = LivingEntity.class.isAssignableFrom(clazz);
         }
+    }
+
+    /**
+     *
+     * @return the entity type's name
+     * @deprecated Magic value
+     */
+    public String getName() {
+        return name;
+    }
+
+    public Class<? extends Entity> getEntityClass() {
+        return clazz;
+    }
+
+    /**
+     *
+     * @return the raw type id 
+     * @deprecated Magic value
+     */
+    public short getTypeId() {
+        return typeId;
     }
 
     /**
@@ -320,28 +348,6 @@ public enum EntityType {
             return null;
         }
         return ID_MAP.get((short) id);
-    }
-
-    /**
-     *
-     * @return the entity type's name
-     * @deprecated Magic value
-     */
-    public String getName() {
-        return name;
-    }
-
-    public Class<? extends Entity> getEntityClass() {
-        return clazz;
-    }
-
-    /**
-     *
-     * @return the raw type id
-     * @deprecated Magic value
-     */
-    public short getTypeId() {
-        return typeId;
     }
 
     /**

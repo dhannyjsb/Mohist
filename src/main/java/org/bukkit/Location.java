@@ -57,31 +57,12 @@ public class Location implements Cloneable, ConfigurationSerializable {
     }
 
     /**
-     * Safely converts a double (location coordinate) to an int (block
-     * coordinate)
+     * Sets the world that this location resides in
      *
-     * @param loc Precise coordinate
-     * @return Block coordinate
+     * @param world New world that this location resides in
      */
-    public static int locToBlock(double loc) {
-        return NumberConversions.floor(loc);
-    }
-
-    /**
-     * Required method for deserialization
-     *
-     * @param args map to deserialize
-     * @return deserialized location
-     * @throws IllegalArgumentException if the world don't exists
-     * @see ConfigurationSerializable
-     */
-    public static Location deserialize(Map<String, Object> args) {
-        World world = Bukkit.getWorld((String) args.get("world"));
-        if (world == null) {
-            throw new IllegalArgumentException("unknown world");
-        }
-
-        return new Location(world, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
+    public void setWorld(World world) {
+        this.world = world;
     }
 
     /**
@@ -91,15 +72,6 @@ public class Location implements Cloneable, ConfigurationSerializable {
      */
     public World getWorld() {
         return world;
-    }
-
-    /**
-     * Sets the world that this location resides in
-     *
-     * @param world New world that this location resides in
-     */
-    public void setWorld(World world) {
-        this.world = world;
     }
 
     /**
@@ -121,21 +93,21 @@ public class Location implements Cloneable, ConfigurationSerializable {
     }
 
     /**
-     * Gets the x-coordinate of this location
-     *
-     * @return x-coordinate
-     */
-    public double getX() {
-        return x;
-    }
-
-    /**
      * Sets the x-coordinate of this location
      *
      * @param x X-coordinate
      */
     public void setX(double x) {
         this.x = x;
+    }
+
+    /**
+     * Gets the x-coordinate of this location
+     *
+     * @return x-coordinate
+     */
+    public double getX() {
+        return x;
     }
 
     /**
@@ -149,21 +121,21 @@ public class Location implements Cloneable, ConfigurationSerializable {
     }
 
     /**
-     * Gets the y-coordinate of this location
-     *
-     * @return y-coordinate
-     */
-    public double getY() {
-        return y;
-    }
-
-    /**
      * Sets the y-coordinate of this location
      *
      * @param y y-coordinate
      */
     public void setY(double y) {
         this.y = y;
+    }
+
+    /**
+     * Gets the y-coordinate of this location
+     *
+     * @return y-coordinate
+     */
+    public double getY() {
+        return y;
     }
 
     /**
@@ -177,21 +149,21 @@ public class Location implements Cloneable, ConfigurationSerializable {
     }
 
     /**
-     * Gets the z-coordinate of this location
-     *
-     * @return z-coordinate
-     */
-    public double getZ() {
-        return z;
-    }
-
-    /**
      * Sets the z-coordinate of this location
      *
      * @param z z-coordinate
      */
     public void setZ(double z) {
         this.z = z;
+    }
+
+    /**
+     * Gets the z-coordinate of this location
+     *
+     * @return z-coordinate
+     */
+    public double getZ() {
+        return z;
     }
 
     /**
@@ -202,24 +174,6 @@ public class Location implements Cloneable, ConfigurationSerializable {
      */
     public int getBlockZ() {
         return locToBlock(z);
-    }
-
-    /**
-     * Gets the yaw of this location, measured in degrees.
-     * <ul>
-     * <li>A yaw of 0 or 360 represents the positive z direction.
-     * <li>A yaw of 180 represents the negative z direction.
-     * <li>A yaw of 90 represents the negative x direction.
-     * <li>A yaw of 270 represents the positive x direction.
-     * </ul>
-     * Increasing yaw values are the equivalent of turning to your
-     * right-facing, increasing the scale of the next respective axis, and
-     * decreasing the scale of the previous axis.
-     *
-     * @return the rotation's yaw
-     */
-    public float getYaw() {
-        return yaw;
     }
 
     /**
@@ -241,19 +195,21 @@ public class Location implements Cloneable, ConfigurationSerializable {
     }
 
     /**
-     * Gets the pitch of this location, measured in degrees.
+     * Gets the yaw of this location, measured in degrees.
      * <ul>
-     * <li>A pitch of 0 represents level forward facing.
-     * <li>A pitch of 90 represents downward facing, or negative y
-     *     direction.
-     * <li>A pitch of -90 represents upward facing, or positive y direction.
+     * <li>A yaw of 0 or 360 represents the positive z direction.
+     * <li>A yaw of 180 represents the negative z direction.
+     * <li>A yaw of 90 represents the negative x direction.
+     * <li>A yaw of 270 represents the positive x direction.
      * </ul>
-     * Increasing pitch values the equivalent of looking down.
+     * Increasing yaw values are the equivalent of turning to your
+     * right-facing, increasing the scale of the next respective axis, and
+     * decreasing the scale of the previous axis.
      *
-     * @return the incline's pitch
+     * @return the rotation's yaw
      */
-    public float getPitch() {
-        return pitch;
+    public float getYaw() {
+        return yaw;
     }
 
     /**
@@ -270,6 +226,22 @@ public class Location implements Cloneable, ConfigurationSerializable {
      */
     public void setPitch(float pitch) {
         this.pitch = pitch;
+    }
+
+    /**
+     * Gets the pitch of this location, measured in degrees.
+     * <ul>
+     * <li>A pitch of 0 represents level forward facing.
+     * <li>A pitch of 90 represents downward facing, or negative y
+     *     direction.
+     * <li>A pitch of -90 represents upward facing, or positive y direction.
+     * </ul>
+     * Increasing pitch values the equivalent of looking down.
+     *
+     * @return the incline's pitch
+     */
+    public float getPitch() {
+        return pitch;
     }
 
     /**
@@ -298,7 +270,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
     /**
      * Sets the {@link #getYaw() yaw} and {@link #getPitch() pitch} to point
      * in the direction of the vector.
-     *
+     * 
      * @param vector the direction vector
      * @return the same location
      */
@@ -519,8 +491,8 @@ public class Location implements Cloneable, ConfigurationSerializable {
         z = 0;
         return this;
     }
-
-    /**
+	
+	/**
      * Creates explosion at this location with given power
      *
      * Will break blocks and ignite blocks on fire.
@@ -682,6 +654,17 @@ public class Location implements Cloneable, ConfigurationSerializable {
         NumberConversions.checkFinite(yaw, "yaw not finite");
     }
 
+    /**
+     * Safely converts a double (location coordinate) to an int (block
+     * coordinate)
+     *
+     * @param loc Precise coordinate
+     * @return Block coordinate
+     */
+    public static int locToBlock(double loc) {
+        return NumberConversions.floor(loc);
+    }
+
     @Utility
     public Map<String, Object> serialize() {
         Map<String, Object> data = new HashMap<String, Object>();
@@ -695,5 +678,22 @@ public class Location implements Cloneable, ConfigurationSerializable {
         data.put("pitch", this.pitch);
 
         return data;
+    }
+
+    /**
+     * Required method for deserialization
+     *
+     * @param args map to deserialize
+     * @return deserialized location
+     * @throws IllegalArgumentException if the world don't exists
+     * @see ConfigurationSerializable
+     */
+    public static Location deserialize(Map<String, Object> args) {
+        World world = Bukkit.getWorld((String) args.get("world"));
+        if (world == null) {
+            throw new IllegalArgumentException("unknown world");
+        }
+
+        return new Location(world, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
     }
 }

@@ -1,11 +1,9 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/IThreadedFileIO.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/IThreadedFileIO.java
-@@ -1,6 +1,10 @@
- package net.minecraft.world.storage;
+@@ -2,5 +2,10 @@
  
--public interface IThreadedFileIO
--{
-+public interface IThreadedFileIO {
+ public interface IThreadedFileIO
+ {
 +    /**
 +     * true: 这个task会在下次循环再次执行
 +     * false: 执行结束后移除task

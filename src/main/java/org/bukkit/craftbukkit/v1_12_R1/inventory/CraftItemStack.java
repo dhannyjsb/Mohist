@@ -16,35 +16,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 
-import static org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem.*;
+import static org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem.ENCHANTMENTS;
+import static org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem.ENCHANTMENTS_ID;
+import static org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem.ENCHANTMENTS_LVL;
 
 @DelegateDeserialization(ItemStack.class)
 public final class CraftItemStack extends ItemStack {
-
-    net.minecraft.item.ItemStack handle;
-
-    /**
-     * Mirror
-     */
-    private CraftItemStack(net.minecraft.item.ItemStack item) {
-        this.handle = item;
-    }
-
-    private CraftItemStack(ItemStack item) {
-        this(item.getTypeId(), item.getAmount(), item.getDurability(), item.hasItemMeta() ? item.getItemMeta() : null);
-    }
-
-    private CraftItemStack(Material type, int amount, short durability, ItemMeta itemMeta) {
-        setType(type);
-        setAmount(amount);
-        setDurability(durability);
-        setItemMeta(itemMeta);
-    }
-
-    private CraftItemStack(int typeId, int amount, short durability, ItemMeta itemMeta) {
-        this(Material.getMaterial(typeId), amount, durability, itemMeta);
-
-    }
 
     public static net.minecraft.item.ItemStack asNMSCopy(ItemStack original) {
         if (original instanceof CraftItemStack) {
@@ -104,153 +81,29 @@ public final class CraftItemStack extends ItemStack {
         return new CraftItemStack(CraftMagicNumbers.getMaterial(item), amount, (short) 0, null);
     }
 
-    static boolean makeTag(net.minecraft.item.ItemStack item) {
-        if (item == null) {
-            return false;
-        }
+    net.minecraft.item.ItemStack handle;
 
-        if (item.getTagCompound() == null) {
-            item.setTagCompound(new NBTTagCompound());
-        }
-
-        return true;
+    /**
+     * Mirror
+     */
+    private CraftItemStack(net.minecraft.item.ItemStack item) {
+        this.handle = item;
     }
 
-    static Map<Enchantment, Integer> getEnchantments(net.minecraft.item.ItemStack item) {
-        NBTTagList list = (item != null && item.isItemEnchanted()) ? item.getEnchantmentTagList() : null;
-
-        if (list == null || list.tagCount() == 0) {
-            return ImmutableMap.of();
-        }
-
-        ImmutableMap.Builder<Enchantment, Integer> result = ImmutableMap.builder();
-
-        for (int i = 0; i < list.tagCount(); i++) {
-            int id = 0xffff & ((NBTTagCompound) list.get(i)).getShort(ENCHANTMENTS_ID.NBT);
-            int level = 0xffff & ((NBTTagCompound) list.get(i)).getShort(ENCHANTMENTS_LVL.NBT);
-
-            result.put(Enchantment.getById(id), level);
-        }
-
-        return result.build();
+    private CraftItemStack(ItemStack item) {
+        this(item.getTypeId(), item.getAmount(), item.getDurability(), item.hasItemMeta() ? item.getItemMeta() : null);
     }
 
-    static NBTTagList getEnchantmentList(net.minecraft.item.ItemStack item) {
-        return (item != null && item.isItemEnchanted()) ? item.getEnchantmentTagList() : null;
+    private CraftItemStack(Material type, int amount, short durability, ItemMeta itemMeta) {
+        setType(type);
+        setAmount(amount);
+        setDurability(durability);
+        setItemMeta(itemMeta);
     }
 
-    public static ItemMeta getItemMeta(net.minecraft.item.ItemStack item) {
-        if (!hasItemMeta(item)) {
-            return CraftItemFactory.instance().getItemMeta(getType(item));
-        }
-        switch (getType(item)) {
-            case WRITTEN_BOOK:
-                return new CraftMetaBookSigned(item.getTagCompound());
-            case BOOK_AND_QUILL:
-                return new CraftMetaBook(item.getTagCompound());
-            case SKULL_ITEM:
-                return new CraftMetaSkull(item.getTagCompound());
-            case LEATHER_HELMET:
-            case LEATHER_CHESTPLATE:
-            case LEATHER_LEGGINGS:
-            case LEATHER_BOOTS:
-                return new CraftMetaLeatherArmor(item.getTagCompound());
-            case POTION:
-            case SPLASH_POTION:
-            case LINGERING_POTION:
-            case TIPPED_ARROW:
-                return new CraftMetaPotion(item.getTagCompound());
-            case MAP:
-                return new CraftMetaMap(item.getTagCompound());
-            case FIREWORK:
-                return new CraftMetaFirework(item.getTagCompound());
-            case FIREWORK_CHARGE:
-                return new CraftMetaCharge(item.getTagCompound());
-            case ENCHANTED_BOOK:
-                return new CraftMetaEnchantedBook(item.getTagCompound());
-            case BANNER:
-                return new CraftMetaBanner(item.getTagCompound());
-            case MONSTER_EGG:
-                return new CraftMetaSpawnEgg(item.getTagCompound());
-            case KNOWLEDGE_BOOK:
-                return new CraftMetaKnowledgeBook(item.getTagCompound());
-            case FURNACE:
-            case CHEST:
-            case TRAPPED_CHEST:
-            case JUKEBOX:
-            case DISPENSER:
-            case DROPPER:
-            case SIGN:
-            case MOB_SPAWNER:
-            case NOTE_BLOCK:
-            case BREWING_STAND_ITEM:
-            case ENCHANTMENT_TABLE:
-            case COMMAND:
-            case COMMAND_REPEATING:
-            case COMMAND_CHAIN:
-            case BEACON:
-            case DAYLIGHT_DETECTOR:
-            case DAYLIGHT_DETECTOR_INVERTED:
-            case HOPPER:
-            case REDSTONE_COMPARATOR:
-            case FLOWER_POT_ITEM:
-            case SHIELD:
-            case STRUCTURE_BLOCK:
-            case WHITE_SHULKER_BOX:
-            case ORANGE_SHULKER_BOX:
-            case MAGENTA_SHULKER_BOX:
-            case LIGHT_BLUE_SHULKER_BOX:
-            case YELLOW_SHULKER_BOX:
-            case LIME_SHULKER_BOX:
-            case PINK_SHULKER_BOX:
-            case GRAY_SHULKER_BOX:
-            case SILVER_SHULKER_BOX:
-            case CYAN_SHULKER_BOX:
-            case PURPLE_SHULKER_BOX:
-            case BLUE_SHULKER_BOX:
-            case BROWN_SHULKER_BOX:
-            case GREEN_SHULKER_BOX:
-            case RED_SHULKER_BOX:
-            case BLACK_SHULKER_BOX:
-            case ENDER_CHEST:
-                return new CraftMetaBlockState(item.getTagCompound(), CraftMagicNumbers.getMaterial(item.getItem()));
-            default:
-                return new CraftMetaItem(item.getTagCompound());
-        }
-    }
+    private CraftItemStack(int typeId, int amount, short durability, ItemMeta itemMeta) {
+        this(Material.getMaterial(typeId), amount, durability, itemMeta);
 
-    static Material getType(net.minecraft.item.ItemStack item) {
-        Material material = Material.getMaterial(item == null ? 0 : CraftMagicNumbers.getId(item.getItem()));
-        return material == null ? Material.AIR : material;
-    }
-
-    public static boolean setItemMeta(net.minecraft.item.ItemStack item, ItemMeta itemMeta) {
-        if (item == null) {
-            return false;
-        }
-        if (CraftItemFactory.instance().equals(itemMeta, null)) {
-            item.setTagCompound(null);
-            return true;
-        }
-        if (!CraftItemFactory.instance().isApplicable(itemMeta, getType(item))) {
-            return false;
-        }
-
-        itemMeta = CraftItemFactory.instance().asMetaFor(itemMeta, getType(item));
-        if (itemMeta == null) {
-            return true;
-        }
-
-        NBTTagCompound tag = new NBTTagCompound();
-        item.setTagCompound(tag);
-
-        ((CraftMetaItem) itemMeta).applyToItem(tag);
-
-        return true;
-    }
-
-    static boolean hasItemMeta(net.minecraft.item.ItemStack item) {
-        return !(item == null || item.getTagCompound() == null || item.getTagCompound().hasNoTags());
     }
 
     @Override
@@ -296,15 +149,6 @@ public final class CraftItemStack extends ItemStack {
     }
 
     @Override
-    public short getDurability() {
-        if (handle != null) {
-            return (short) handle.getMetadata();
-        } else {
-            return -1;
-        }
-    }
-
-    @Override
     public void setDurability(final short durability) {
         // Ignore damage if item is null
         if (handle != null) {
@@ -313,6 +157,15 @@ public final class CraftItemStack extends ItemStack {
     }
 
     @Override
+    public short getDurability() {
+        if (handle != null) {
+            return (short) handle.getMetadata();
+        } else {
+            return -1;
+        }
+    }
+
+	@Override
     public int getMaxStackSize() {
         return (handle == null) ? Material.AIR.getMaxStackSize() : handle.getItem().getItemStackLimit(this.handle);
     }
@@ -345,7 +198,19 @@ public final class CraftItemStack extends ItemStack {
         list.appendTag(tag);
     }
 
-    @Override
+    static boolean makeTag(net.minecraft.item.ItemStack item) {
+        if (item == null) {
+            return false;
+        }
+
+        if (item.getTagCompound() == null) {
+            item.setTagCompound(new NBTTagCompound());
+        }
+
+        return true;
+    }
+
+	@Override
     public boolean containsEnchantment(Enchantment ench) {
         return getEnchantmentLevel(ench) > 0;
     }
@@ -409,6 +274,29 @@ public final class CraftItemStack extends ItemStack {
         return getEnchantments(handle);
     }
 
+    static Map<Enchantment, Integer> getEnchantments(net.minecraft.item.ItemStack item) {
+        NBTTagList list = (item != null && item.isItemEnchanted()) ? item.getEnchantmentTagList() : null;
+
+        if (list == null || list.tagCount() == 0) {
+            return ImmutableMap.of();
+        }
+
+        ImmutableMap.Builder<Enchantment, Integer> result = ImmutableMap.builder();
+
+        for (int i = 0; i < list.tagCount(); i++) {
+            int id = 0xffff & ((NBTTagCompound) list.get(i)).getShort(ENCHANTMENTS_ID.NBT);
+            int level = 0xffff & ((NBTTagCompound) list.get(i)).getShort(ENCHANTMENTS_LVL.NBT);
+
+            result.put(Enchantment.getById(id), level);
+        }
+
+        return result.build();
+    }
+
+    static NBTTagList getEnchantmentList(net.minecraft.item.ItemStack item) {
+        return (item != null && item.isItemEnchanted()) ? item.getEnchantmentTagList() : null;
+    }
+
     @Override
     public CraftItemStack clone() {
         CraftItemStack itemStack = (CraftItemStack) super.clone();
@@ -423,9 +311,119 @@ public final class CraftItemStack extends ItemStack {
         return getItemMeta(handle);
     }
 
+    public static ItemMeta getItemMeta(net.minecraft.item.ItemStack item) {
+        if (!hasItemMeta(item)) {
+            return CraftItemFactory.instance().getItemMeta(getType(item));
+        }
+        switch (getType(item)) {
+            case WRITTEN_BOOK:
+                return new CraftMetaBookSigned(item.getTagCompound());
+            case BOOK_AND_QUILL:
+                return new CraftMetaBook(item.getTagCompound());
+            case SKULL_ITEM:
+                return new CraftMetaSkull(item.getTagCompound());
+            case LEATHER_HELMET:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_LEGGINGS:
+            case LEATHER_BOOTS:
+                return new CraftMetaLeatherArmor(item.getTagCompound());
+            case POTION:
+            case SPLASH_POTION:
+            case LINGERING_POTION:
+            case TIPPED_ARROW:
+                return new CraftMetaPotion(item.getTagCompound());
+            case MAP:
+                return new CraftMetaMap(item.getTagCompound());
+            case FIREWORK:
+                return new CraftMetaFirework(item.getTagCompound());
+            case FIREWORK_CHARGE:
+                return new CraftMetaCharge(item.getTagCompound());
+            case ENCHANTED_BOOK:
+                return new CraftMetaEnchantedBook(item.getTagCompound());
+            case BANNER:
+                return new CraftMetaBanner(item.getTagCompound());
+            case MONSTER_EGG:
+                return new CraftMetaSpawnEgg(item.getTagCompound());
+            case KNOWLEDGE_BOOK:
+                return new CraftMetaKnowledgeBook(item.getTagCompound());
+         case FURNACE:
+            case CHEST:
+            case TRAPPED_CHEST:
+            case JUKEBOX:
+            case DISPENSER:
+            case DROPPER:
+            case SIGN:
+            case MOB_SPAWNER:
+            case NOTE_BLOCK:
+            case BREWING_STAND_ITEM:
+            case ENCHANTMENT_TABLE:
+            case COMMAND:
+            case COMMAND_REPEATING:
+            case COMMAND_CHAIN:
+            case BEACON:
+            case DAYLIGHT_DETECTOR:
+            case DAYLIGHT_DETECTOR_INVERTED:
+            case HOPPER:
+            case REDSTONE_COMPARATOR:
+            case FLOWER_POT_ITEM:
+            case SHIELD:
+            case STRUCTURE_BLOCK:
+            case WHITE_SHULKER_BOX:
+            case ORANGE_SHULKER_BOX:
+            case MAGENTA_SHULKER_BOX:
+            case LIGHT_BLUE_SHULKER_BOX:
+            case YELLOW_SHULKER_BOX:
+            case LIME_SHULKER_BOX:
+            case PINK_SHULKER_BOX:
+            case GRAY_SHULKER_BOX:
+            case SILVER_SHULKER_BOX:
+            case CYAN_SHULKER_BOX:
+            case PURPLE_SHULKER_BOX:
+            case BLUE_SHULKER_BOX:
+            case BROWN_SHULKER_BOX:
+            case GREEN_SHULKER_BOX:
+            case RED_SHULKER_BOX:
+            case BLACK_SHULKER_BOX:
+            case ENDER_CHEST:
+                return new CraftMetaBlockState(item.getTagCompound(), CraftMagicNumbers.getMaterial(item.getItem()));
+            default:
+                return new CraftMetaItem(item.getTagCompound());
+        }
+    }
+
+    static Material getType(net.minecraft.item.ItemStack item) {
+        Material material = Material.getMaterial(item == null ? 0 : CraftMagicNumbers.getId(item.getItem()));
+        return material == null ? Material.AIR : material;
+    }
+
     @Override
     public boolean setItemMeta(ItemMeta itemMeta) {
         return setItemMeta(handle, itemMeta);
+    }
+
+    public static boolean setItemMeta(net.minecraft.item.ItemStack item, ItemMeta itemMeta) {
+        if (item == null) {
+            return false;
+        }
+        if (CraftItemFactory.instance().equals(itemMeta, null)) {
+            item.setTagCompound(null);
+            return true;
+        }
+        if (!CraftItemFactory.instance().isApplicable(itemMeta, getType(item))) {
+            return false;
+        }
+
+        itemMeta = CraftItemFactory.instance().asMetaFor(itemMeta, getType(item));
+        if (itemMeta == null) {
+            return true;
+        }
+
+        NBTTagCompound tag = new NBTTagCompound();
+        item.setTagCompound(tag);
+
+        ((CraftMetaItem) itemMeta).applyToItem(tag);
+
+        return true;
     }
 
     @Override
@@ -456,5 +454,9 @@ public final class CraftItemStack extends ItemStack {
     @Override
     public boolean hasItemMeta() {
         return hasItemMeta(handle);
+    }
+
+    static boolean hasItemMeta(net.minecraft.item.ItemStack item) {
+        return !(item == null || item.getTagCompound() == null || item.getTagCompound().hasNoTags());
     }
 }

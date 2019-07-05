@@ -31,7 +31,7 @@ public class RecipeIterator implements Iterator<Recipe> {
             IRecipe recipe = recipes.next();
             try {
                 return recipe.toBukkitRecipe();
-            } catch (AbstractMethodError ex) {
+         	} catch (AbstractMethodError ex) {
                 // No Bukkit wrapper provided
                 return new CustomModRecipe(recipe, recipe.getRegistryName());
             }

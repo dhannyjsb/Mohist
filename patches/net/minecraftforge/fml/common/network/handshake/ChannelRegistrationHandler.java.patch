@@ -1,47 +1,17 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/network/handshake/ChannelRegistrationHandler.java
-@@ -19,28 +19,25 @@
- 
- package net.minecraftforge.fml.common.network.handshake;
- 
-+import com.google.common.collect.ImmutableSet;
- import io.netty.channel.ChannelHandlerContext;
- import io.netty.channel.SimpleChannelInboundHandler;
--
--import java.nio.charset.StandardCharsets;
--import java.util.Set;
--
- import net.minecraft.network.NetworkManager;
- import net.minecraftforge.fml.common.FMLCommonHandler;
- import net.minecraftforge.fml.common.FMLLog;
- import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
+@@ -32,6 +32,7 @@
  import net.minecraftforge.fml.relauncher.Side;
-+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
  
--import com.google.common.collect.ImmutableSet;
-+import java.nio.charset.StandardCharsets;
-+import java.util.Set;
+ import com.google.common.collect.ImmutableSet;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
  
  public class ChannelRegistrationHandler extends SimpleChannelInboundHandler<FMLProxyPacket> {
      @Override
--    protected void channelRead0(ChannelHandlerContext ctx, FMLProxyPacket msg) throws Exception
--    {
-+    protected void channelRead0(ChannelHandlerContext ctx, FMLProxyPacket msg) throws Exception {
-         Side side = msg.getTarget();
-         NetworkManager manager = msg.getOrigin();
--        if (msg.channel().equals("REGISTER") || msg.channel().equals("UNREGISTER"))
--        {
-+        if (msg.channel().equals("REGISTER") || msg.channel().equals("UNREGISTER")) {
-             byte[] data = new byte[msg.payload().readableBytes()];
-             msg.payload().readBytes(data);
-             String channels = new String(data, StandardCharsets.UTF_8);
-@@ -48,16 +45,26 @@
+@@ -48,6 +49,19 @@
              Set<String> channelSet = ImmutableSet.copyOf(split);
              FMLCommonHandler.instance().fireNetRegistrationEvent(manager, channelSet, msg.channel(), side);
              msg.payload().release();
--        }
--        else
--        {
 +            // Cauldron start - register bukkit channels for players
 +            NetworkDispatcher dispatcher = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get();
 +            CraftPlayer player = dispatcher.getPlayer().getBukkitEntity();
@@ -55,15 +25,6 @@
 +                }
 +            }
 +            // Cauldron end
-+        } else {
-             ctx.fireChannelRead(msg);
          }
-     }
- 
-     @Override
--    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
--    {
-+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-         FMLLog.log.error("ChannelRegistrationHandler exception", cause);
-         super.exceptionCaught(ctx, cause);
-     }
+         else
+         {

@@ -1,8 +1,0 @@
---- ../src-base/minecraft/net/minecraft/network/handshake/client/package-info.java
-+++ ../src-work/minecraft/net/minecraft/network/handshake/client/package-info.java
-@@ -4,4 +4,5 @@
- package net.minecraft.network.handshake.client;
- 
- import mcp.MethodsReturnNonnullByDefault;
-+
- import javax.annotation.ParametersAreNonnullByDefault;

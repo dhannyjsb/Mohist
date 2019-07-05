@@ -10,18 +10,18 @@ import java.util.List;
 public interface TippedArrow extends Arrow {
 
     /**
-     * Returns the potion data about the base potion
-     *
-     * @return a PotionData object
-     */
-    PotionData getBasePotionData();
-
-    /**
      * Sets the underlying potion data
      *
      * @param data PotionData to set the base potion state to
      */
     void setBasePotionData(PotionData data);
+
+    /**
+     * Returns the potion data about the base potion
+     *
+     * @return a PotionData object
+     */
+    PotionData getBasePotionData();
 
     /**
      * Gets the color of this arrow.

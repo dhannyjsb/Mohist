@@ -170,70 +170,6 @@ public abstract class Enchantment {
     }
 
     /**
-     * Registers an enchantment with the given ID and object.
-     * <p>
-     * Generally not to be used from within a plugin.
-     *
-     * @param enchantment Enchantment to register
-     */
-    public static void registerEnchantment(Enchantment enchantment) {
-        if (byId.containsKey(enchantment.id) || byName.containsKey(enchantment.getName())) {
-            throw new IllegalArgumentException("Cannot set already-set enchantment");
-        } else if (!isAcceptingRegistrations()) {
-            throw new IllegalStateException("No longer accepting new enchantments (can only be done by the server implementation)");
-        }
-
-        byId.put(enchantment.id, enchantment);
-        byName.put(enchantment.getName(), enchantment);
-    }
-
-    /**
-     * Checks if this is accepting Enchantment registrations.
-     *
-     * @return True if the server Implementation may add enchantments
-     */
-    public static boolean isAcceptingRegistrations() {
-        return acceptingNew;
-    }
-
-    /**
-     * Stops accepting any enchantment registrations
-     */
-    public static void stopAcceptingRegistrations() {
-        acceptingNew = false;
-    }
-
-    /**
-     * Gets the Enchantment at the specified ID
-     *
-     * @param id ID to fetch
-     * @return Resulting Enchantment, or null if not found
-     * @deprecated Magic value
-     */
-    public static Enchantment getById(int id) {
-        return byId.get(id);
-    }
-
-    /**
-     * Gets the Enchantment at the specified name
-     *
-     * @param name Name to fetch
-     * @return Resulting Enchantment, or null if not found
-     */
-    public static Enchantment getByName(String name) {
-        return byName.get(name);
-    }
-
-    /**
-     * Gets an array of all the registered {@link Enchantment}s
-     *
-     * @return Array of enchantments
-     */
-    public static Enchantment[] values() {
-        return byId.values().toArray(new Enchantment[byId.size()]);
-    }
-
-    /**
      * Gets the unique ID of this enchantment
      *
      * @return Unique ID
@@ -333,5 +269,69 @@ public abstract class Enchantment {
     @Override
     public String toString() {
         return "Enchantment[" + id + ", " + getName() + "]";
+    }
+
+    /**
+     * Registers an enchantment with the given ID and object.
+     * <p>
+     * Generally not to be used from within a plugin.
+     *
+     * @param enchantment Enchantment to register
+     */
+    public static void registerEnchantment(Enchantment enchantment) {
+        if (byId.containsKey(enchantment.id) || byName.containsKey(enchantment.getName())) {
+            throw new IllegalArgumentException("Cannot set already-set enchantment");
+        } else if (!isAcceptingRegistrations()) {
+            throw new IllegalStateException("No longer accepting new enchantments (can only be done by the server implementation)");
+        }
+
+        byId.put(enchantment.id, enchantment);
+        byName.put(enchantment.getName(), enchantment);
+    }
+
+    /**
+     * Checks if this is accepting Enchantment registrations.
+     *
+     * @return True if the server Implementation may add enchantments
+     */
+    public static boolean isAcceptingRegistrations() {
+        return acceptingNew;
+    }
+
+    /**
+     * Stops accepting any enchantment registrations
+     */
+    public static void stopAcceptingRegistrations() {
+        acceptingNew = false;
+    }
+
+    /**
+     * Gets the Enchantment at the specified ID
+     *
+     * @param id ID to fetch
+     * @return Resulting Enchantment, or null if not found
+     * @deprecated Magic value
+     */
+    public static Enchantment getById(int id) {
+        return byId.get(id);
+    }
+
+    /**
+     * Gets the Enchantment at the specified name
+     *
+     * @param name Name to fetch
+     * @return Resulting Enchantment, or null if not found
+     */
+    public static Enchantment getByName(String name) {
+        return byName.get(name);
+    }
+
+    /**
+     * Gets an array of all the registered {@link Enchantment}s
+     *
+     * @return Array of enchantments
+     */
+    public static Enchantment[] values() {
+        return byId.values().toArray(new Enchantment[byId.size()]);
     }
 }

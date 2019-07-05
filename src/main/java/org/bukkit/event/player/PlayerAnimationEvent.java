@@ -24,10 +24,6 @@ public class PlayerAnimationEvent extends PlayerEvent implements Cancellable {
         animationType = PlayerAnimationType.ARM_SWING;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Get the type of this animation event
      *
@@ -47,6 +43,10 @@ public class PlayerAnimationEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

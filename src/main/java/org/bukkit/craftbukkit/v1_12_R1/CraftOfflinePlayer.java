@@ -3,7 +3,11 @@ package org.bukkit.craftbukkit.v1_12_R1;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.storage.SaveHandler;
-import org.bukkit.*;
+import org.bukkit.BanList;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
@@ -27,15 +31,6 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
         this.profile = profile;
         this.storage = (SaveHandler) (server.console.worlds[0].getSaveHandler());
 
-    }
-
-    public static OfflinePlayer deserialize(Map<String, Object> args) {
-        // Backwards comparability
-        if (args.get("name") != null) {
-            return Bukkit.getServer().getOfflinePlayer((String) args.get("name"));
-        }
-
-        return Bukkit.getServer().getOfflinePlayer(UUID.fromString((String) args.get("UUID")));
     }
 
     public GameProfile getProfile() {
@@ -130,6 +125,15 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
         result.put("UUID", profile.getId().toString());
 
         return result;
+    }
+
+    public static OfflinePlayer deserialize(Map<String, Object> args) {
+        // Backwards comparability
+        if (args.get("name") != null) {
+            return Bukkit.getServer().getOfflinePlayer((String) args.get("name"));
+        }
+
+        return Bukkit.getServer().getOfflinePlayer(UUID.fromString((String) args.get("UUID")));
     }
 
     @Override

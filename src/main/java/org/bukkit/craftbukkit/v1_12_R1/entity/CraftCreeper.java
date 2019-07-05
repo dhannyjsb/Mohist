@@ -39,11 +39,6 @@ public class CraftCreeper extends CraftMonster implements Creeper {
     }
 
     @Override
-    public int getMaxFuseTicks() {
-        return getHandle().fuseTime;
-    }
-
-    @Override
     public void setMaxFuseTicks(int ticks) {
         Preconditions.checkArgument(ticks >= 0, "ticks < 0");
 
@@ -51,8 +46,8 @@ public class CraftCreeper extends CraftMonster implements Creeper {
     }
 
     @Override
-    public int getExplosionRadius() {
-        return getHandle().explosionRadius;
+    public int getMaxFuseTicks() {
+        return getHandle().fuseTime;
     }
 
     @Override
@@ -60,6 +55,11 @@ public class CraftCreeper extends CraftMonster implements Creeper {
         Preconditions.checkArgument(radius >= 0, "radius < 0");
 
         getHandle().explosionRadius = radius;
+    }
+
+    @Override
+    public int getExplosionRadius() {
+        return getHandle().explosionRadius;
     }
 
     @Override

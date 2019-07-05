@@ -20,10 +20,10 @@ public class EnchantItemEvent extends InventoryEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Block table;
     private final ItemStack item;
-    private final Map<Enchantment, Integer> enchants;
-    private final Player enchanter;
     private int level;
     private boolean cancelled;
+    private final Map<Enchantment,Integer> enchants;
+    private final Player enchanter;
     private int button;
 
     public EnchantItemEvent(final Player enchanter, final InventoryView view, final Block table, final ItemStack item, final int level, final Map<Enchantment, Integer> enchants, final int i) {
@@ -35,10 +35,6 @@ public class EnchantItemEvent extends InventoryEvent implements Cancellable {
         this.enchants = new HashMap<Enchantment, Integer>(enchants);
         this.cancelled = false;
         this.button = i;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -116,6 +112,10 @@ public class EnchantItemEvent extends InventoryEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

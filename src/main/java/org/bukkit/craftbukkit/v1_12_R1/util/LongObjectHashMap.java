@@ -4,19 +4,28 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.ConcurrentModificationException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 public class LongObjectHashMap<V> implements Cloneable, Serializable {
     static final long serialVersionUID = 2841537710170573815L;
 
     private static final long EMPTY_KEY = Long.MIN_VALUE;
-    private static final int BUCKET_SIZE = 4096;
+    private static final int  BUCKET_SIZE = 4096;
 
     private transient long[][] keys;
-    private transient V[][] values;
-    private transient int modCount;
-    private transient int size;
+    private transient V[][]    values;
+    private transient int      modCount;
+    private transient int      size;
 
     public LongObjectHashMap() {
         initialize();
@@ -253,13 +262,14 @@ public class LongObjectHashMap<V> implements Cloneable, Serializable {
 
 
     private class ValueIterator implements Iterator<V> {
-        long prevKey = EMPTY_KEY;
-        V prevValue;
         private int count;
         private int index;
         private int innerIndex;
         private int expectedModCount;
         private long lastReturned = EMPTY_KEY;
+
+        long prevKey = EMPTY_KEY;
+        V prevValue;
 
         ValueIterator() {
             expectedModCount = LongObjectHashMap.this.modCount;

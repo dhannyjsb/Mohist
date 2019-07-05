@@ -26,13 +26,9 @@ public class ProjectileHitEvent extends EntityEvent {
     }
 
     public ProjectileHitEvent(final Projectile projectile, Entity hitEntity, Block hitBlock) {
-        super(projectile);
+		super(projectile);
         this.hitEntity = hitEntity;
         this.hitBlock = hitBlock;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     @Override
@@ -60,6 +56,10 @@ public class ProjectileHitEvent extends EntityEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

@@ -1,8 +1,0 @@
---- ../src-base/minecraft/net/minecraft/world/chunk/package-info.java
-+++ ../src-work/minecraft/net/minecraft/world/chunk/package-info.java
-@@ -4,4 +4,5 @@
- package net.minecraft.world.chunk;
- 
- import mcp.MethodsReturnNonnullByDefault;
-+
- import javax.annotation.ParametersAreNonnullByDefault;

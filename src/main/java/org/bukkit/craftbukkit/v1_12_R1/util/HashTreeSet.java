@@ -1,11 +1,15 @@
 package org.bukkit.craftbukkit.v1_12_R1.util;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class HashTreeSet<V> implements Set<V> {
 
     private HashSet<V> hash = new HashSet<V>();
-    private TreeSet<V> tree = new TreeSet<V>();
+	private TreeSet<V> tree = new TreeSet<V>();
 
     public HashTreeSet() {
 

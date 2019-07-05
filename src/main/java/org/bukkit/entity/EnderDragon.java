@@ -6,20 +6,6 @@ package org.bukkit.entity;
 public interface EnderDragon extends ComplexLivingEntity {
 
     /**
-     * Gets the current phase that the dragon is performing.
-     *
-     * @return the current phase
-     */
-    Phase getPhase();
-
-    /**
-     * Sets the next phase for the dragon to perform.
-     *
-     * @param phase the next phase
-     */
-    void setPhase(Phase phase);
-
-    /**
      * Represents a phase or action that an Ender Dragon can perform.
      */
     enum Phase {
@@ -53,8 +39,8 @@ public interface EnderDragon extends ComplexLivingEntity {
         BREATH_ATTACK,
         /**
          * The dragon will search for a player to attack with dragon breath.
-         * If no player is close enough to the dragon for 5 seconds, the
-         * dragon will charge at a player within 150 blocks or will take off
+         * If no player is close enough to the dragon for 5 seconds, the 
+         * dragon will charge at a player within 150 blocks or will take off 
          * and begin circling if no player is found.
          */
         SEARCH_FOR_BREATH_ATTACK_TARGET,
@@ -75,4 +61,18 @@ public interface EnderDragon extends ComplexLivingEntity {
          */
         HOVER
     }
+
+    /**
+     * Gets the current phase that the dragon is performing.
+     *
+     * @return the current phase
+     */
+    Phase getPhase();
+
+    /**
+     * Sets the next phase for the dragon to perform.
+     *
+     * @param phase the next phase
+     */
+    void setPhase(Phase phase);
 }

@@ -16,10 +16,6 @@ public class ServerExceptionEvent extends Event {
         this.exception = Preconditions.checkNotNull(exception, "exception");
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the wrapped exception that was thrown.
      *
@@ -31,6 +27,10 @@ public class ServerExceptionEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

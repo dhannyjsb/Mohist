@@ -18,10 +18,6 @@ public class EntityInteractEvent extends EntityEvent implements Cancellable {
         this.block = block;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public boolean isCancelled() {
         return cancelled;
     }
@@ -41,6 +37,10 @@ public class EntityInteractEvent extends EntityEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

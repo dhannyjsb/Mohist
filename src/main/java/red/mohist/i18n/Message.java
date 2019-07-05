@@ -132,90 +132,90 @@ public enum Message {
     outdated_Server("outdate.server"),
 
     Server_Start_Done("server.start.done"),
-
-    Mohist_update_program("mohist.update.program"),
-    Mohist_update_program_check_hasupdate("mohist.update.program.check.hasupdate"),
-    Mohist_update_program_check_noupdate("mohist.update.program.check.noupdate"),
-    Mohist_update_program_tips_stopautoget("mohist.update.program.tips.stopautoget"),
-    Mohist_update_message("mohist.update.message"),
-    Mohist_update_date("mohist.update.date"),
-    Mohist_update_program_tips_done("mohist.update.program.tips.done"),
-    Mohist_update_program_tips_false("mohist.update.program.tips.false"),
-
-    Watchdog_1("watchdog.1"),
-    Watchdog_2("watchdog.2"),
-    Watchdog_3("watchdog.3"),
-    Watchdog_4("watchdog.4"),
-    Watchdog_5("watchdog.5"),
-    Watchdog_6("watchdog.6"),
-    Watchdog_7("watchdog.7"),
-    Watchdog_8("watchdog.8"),
-    Watchdog_9("watchdog.9"),
-    Watchdog_10("watchdog.10"),
-    Watchdog_11("watchdog.11"),
-    Watchdog_12("watchdog.12"),
-    Watchdog_13("watchdog.13"),
-    Watchdog_14("watchdog.14"),
-    Watchdog_15("watchdog.15"),
-    Watchdog_16("watchdog.16"),
-
-    forge_loader_1("forge.loader.1"),
-    forge_loader_2("forge.loader.2"),
-    forge_loader_3("forge.loader.3"),
-    forge_loader_4("forge.loader.4"),
-    forge_loader_5("forge.loader.5"),
-    forge_loader_6("forge.loader.6"),
-    forge_loader_7("forge.loader.7"),
-    forge_loader_8("forge.loader.8"),
-    forge_loader_9("forge.loader.9"),
-    forge_loader_10("forge.loader.10"),
-    forge_loader_11("forge.loader.11"),
-    forge_loader_12("forge.loader.12"),
-    forge_loader_13("forge.loader.13"),
-    forge_loader_14("forge.loader.14"),
-    forge_loader_15("forge.loader.15"),
-    forge_loader_16("forge.loader.16"),
-    forge_loader_17("forge.loader.17"),
-    forge_loader_18("forge.loader.18"),
-    forge_loader_19("forge.loader.19"),
-    forge_loader_20("forge.loader.20"),
-    forge_loader_21("forge.loader.21"),
-    forge_loader_22("forge.loader.22"),
-    forge_loader_23("forge.loader.23"),
-    forge_loader_24("forge.loader.24"),
-    forge_loader_25("forge.loader.25"),
-    forge_loader_26("forge.loader.26"),
-    forge_loader_27("forge.loader.27"),
-    forge_loader_28("forge.loader.28"),
-    forge_loader_29("forge.loader.29"),
-    forge_loader_30("forge.loader.30"),
-    forge_loader_31("forge.loader.31"),
-    forge_loader_32("forge.loader.32"),
-    forge_loader_33("forge.loader.33"),
-    forge_loader_34("forge.loader.34"),
-    forge_loader_35("forge.loader.35"),
-    forge_loader_36("forge.loader.36"),
-    forge_loader_37("forge.loader.37"),
-    forge_loader_38("forge.loader.38"),
-    forge_loader_39("forge.loader.39"),
-    forge_loader_40("forge.loader.40"),
-    forge_loader_41("forge.loader.41"),
-    forge_loader_42("forge.loader.42"),
-    forge_loader_43("forge.loader.43"),
-    forge_loader_44("forge.loader.44"),
-    forge_loader_45("forge.loader.45"),
-    forge_loader_46("forge.loader.46"),
-    forge_loader_47("forge.loader.47"),
-    forge_loader_48("forge.loader.48"),
-    forge_loader_49("forge.loader.49"),
-    forge_loader_50("forge.loader.50"),
-    forge_loader_51("forge.loader.51"),
-    forge_loader_52("forge.loader.52"),
-    forge_loader_53("forge.loader.53"),
-    forge_loader_54("forge.loader.54"),
-    forge_loader_55("forge.loader.55"),
-    forge_loader_56("forge.loader.56"),
-    forge_loader_57("forge.loader.57"),
+	
+	Mohist_update_program("mohist.update.program"),
+	Mohist_update_program_check_hasupdate("mohist.update.program.check.hasupdate"),
+	Mohist_update_program_check_noupdate("mohist.update.program.check.noupdate"),
+	Mohist_update_program_tips_stopautoget("mohist.update.program.tips.stopautoget"),
+	Mohist_update_message("mohist.update.message"),
+	Mohist_update_date("mohist.update.date"),
+	Mohist_update_program_tips_done("mohist.update.program.tips.done"),
+	Mohist_update_program_tips_false("mohist.update.program.tips.false"),
+	
+	Watchdog_1("watchdog.1"),
+	Watchdog_2("watchdog.2"),
+	Watchdog_3("watchdog.3"),
+	Watchdog_4("watchdog.4"),
+	Watchdog_5("watchdog.5"),
+	Watchdog_6("watchdog.6"),
+	Watchdog_7("watchdog.7"),
+	Watchdog_8("watchdog.8"),
+	Watchdog_9("watchdog.9"),
+	Watchdog_10("watchdog.10"),
+	Watchdog_11("watchdog.11"),
+	Watchdog_12("watchdog.12"),
+	Watchdog_13("watchdog.13"),
+	Watchdog_14("watchdog.14"),
+	Watchdog_15("watchdog.15"),
+	Watchdog_16("watchdog.16"),
+	
+	forge_loader_1("forge.loader.1"),
+	forge_loader_2("forge.loader.2"),
+	forge_loader_3("forge.loader.3"),
+	forge_loader_4("forge.loader.4"),
+	forge_loader_5("forge.loader.5"),
+	forge_loader_6("forge.loader.6"),
+	forge_loader_7("forge.loader.7"),
+	forge_loader_8("forge.loader.8"),
+	forge_loader_9("forge.loader.9"),
+	forge_loader_10("forge.loader.10"),
+	forge_loader_11("forge.loader.11"),
+	forge_loader_12("forge.loader.12"),
+	forge_loader_13("forge.loader.13"),
+	forge_loader_14("forge.loader.14"),
+	forge_loader_15("forge.loader.15"),
+	forge_loader_16("forge.loader.16"),
+	forge_loader_17("forge.loader.17"),
+	forge_loader_18("forge.loader.18"),
+	forge_loader_19("forge.loader.19"),
+	forge_loader_20("forge.loader.20"),
+	forge_loader_21("forge.loader.21"),
+	forge_loader_22("forge.loader.22"),
+	forge_loader_23("forge.loader.23"),
+	forge_loader_24("forge.loader.24"),
+	forge_loader_25("forge.loader.25"),
+	forge_loader_26("forge.loader.26"),
+	forge_loader_27("forge.loader.27"),
+	forge_loader_28("forge.loader.28"),
+	forge_loader_29("forge.loader.29"),
+	forge_loader_30("forge.loader.30"),
+	forge_loader_31("forge.loader.31"),
+	forge_loader_32("forge.loader.32"),
+	forge_loader_33("forge.loader.33"),
+	forge_loader_34("forge.loader.34"),
+	forge_loader_35("forge.loader.35"),
+	forge_loader_36("forge.loader.36"),
+	forge_loader_37("forge.loader.37"),
+	forge_loader_38("forge.loader.38"),
+	forge_loader_39("forge.loader.39"),
+	forge_loader_40("forge.loader.40"),
+	forge_loader_41("forge.loader.41"),
+	forge_loader_42("forge.loader.42"),
+	forge_loader_43("forge.loader.43"),
+	forge_loader_44("forge.loader.44"),
+	forge_loader_45("forge.loader.45"),
+	forge_loader_46("forge.loader.46"),
+	forge_loader_47("forge.loader.47"),
+	forge_loader_48("forge.loader.48"),
+	forge_loader_49("forge.loader.49"),
+	forge_loader_50("forge.loader.50"),
+	forge_loader_51("forge.loader.51"),
+	forge_loader_52("forge.loader.52"),
+	forge_loader_53("forge.loader.53"),
+	forge_loader_54("forge.loader.54"),
+	forge_loader_55("forge.loader.55"),
+	forge_loader_56("forge.loader.56"),
+	forge_loader_57("forge.loader.57"),
 
     WatchMohist_1("watchmohist.1"),
     WatchMohist_2("watchmohist.2"),
@@ -233,20 +233,16 @@ public enum Message {
 
     forge_ServerLanunchWrapper_1("forge.ServerLanunchWrapper.1");
 
-    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
     private final String value;
+    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
     //public static ResourceBundle rb = Mohist.rb;
 
 
-    Message(String value) {
-        this.value = value;
-    }
-
-    public static String getString(Message key) {
+    public static String getString(Message key){
         return rb.getString(key.toString());
     }
 
-    public static String getFormatString(Message key, Object[] f) {
+    public static String getFormatString(Message key, Object[] f){
         return new MessageFormat(getString(key)).format(f);
     }
 
@@ -257,6 +253,10 @@ public enum Message {
     @Override
     public String toString() {
         return value;
+    }
+
+    Message(String value) {
+        this.value = value;
     }
 
 }

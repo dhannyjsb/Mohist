@@ -12,7 +12,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.plugin.*;
+import org.bukkit.plugin.AuthorNagException;
+import org.bukkit.plugin.EventExecutor;
+import org.bukkit.plugin.EventExecutor1;
+import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginLoader;
+import org.bukkit.plugin.RegisteredListener;
+import org.bukkit.plugin.UnknownDependencyException;
 import org.yaml.snakeyaml.error.YAMLException;
 import red.mohist.Mohist;
 import red.mohist.i18n.Message;
@@ -22,7 +31,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -33,13 +47,13 @@ import java.util.regex.Pattern;
  */
 public class JavaPluginLoader implements PluginLoader {
     Server server;
-    private Pattern[] fileFilters = new Pattern[]{Pattern.compile("\\.jar$"),};
+    private Pattern[] fileFilters = new Pattern[] { Pattern.compile("\\.jar$"), };
     private Map<String, Class<?>> classes = new java.util.concurrent.ConcurrentHashMap<String, Class<?>>(); // Spigot
     private List<PluginClassLoader> loaders = new CopyOnWriteArrayList<PluginClassLoader>();
 
     /**
      * This class was not meant to be constructed explicitly
-     *
+     * 
      * @param instance the server instance
      */
     public JavaPluginLoader(Server instance) {
@@ -69,31 +83,31 @@ public class JavaPluginLoader implements PluginLoader {
             // They are equal -- nothing needs to be done!
         } else if (dataFolder.isDirectory() && oldDataFolder.isDirectory()) {
             Mohist.LOGGER.info(String.format(
-                    "While loading %s (%s) found old-data folder: `%s' next to the new one `%s'",
-                    description.getName(),
-                    file,
-                    oldDataFolder,
-                    dataFolder
+                "While loading %s (%s) found old-data folder: `%s' next to the new one `%s'",
+                description.getName(),
+                file,
+                oldDataFolder,
+                dataFolder
             ));
         } else if (oldDataFolder.isDirectory() && !dataFolder.exists()) {
             if (!oldDataFolder.renameTo(dataFolder)) {
                 throw new InvalidPluginException("Unable to rename old data folder: '" + oldDataFolder + "' to: '" + dataFolder + "'");
             }
-            Mohist.LOGGER.info(String.format(
-                    "While loading %s (%s) renamed data folder: '%s' to '%s'",
-                    description.getName(),
-                    file,
-                    oldDataFolder,
-                    dataFolder
+             Mohist.LOGGER.info( String.format(
+                "While loading %s (%s) renamed data folder: '%s' to '%s'",
+                description.getName(),
+                file,
+                oldDataFolder,
+                dataFolder
             ));
         }
 
         if (dataFolder.exists() && !dataFolder.isDirectory()) {
             throw new InvalidPluginException(String.format(
-                    "Projected datafolder: '%s' for %s (%s) exists and is not a directory",
-                    dataFolder,
-                    description.getName(),
-                    file
+                "Projected datafolder: '%s' for %s (%s) exists and is not a directory",
+                dataFolder,
+                description.getName(),
+                file
             ));
         }
 
@@ -190,8 +204,7 @@ public class JavaPluginLoader implements PluginLoader {
             for (PluginClassLoader loader : loaders) {
                 try {
                     cachedClass = loader.findClass(name, false);
-                } catch (ClassNotFoundException cnfe) {
-                }
+                } catch (ClassNotFoundException cnfe) {}
                 if (cachedClass != null) {
                     return cachedClass;
                 }
@@ -278,13 +291,13 @@ public class JavaPluginLoader implements PluginLoader {
                         break;
                     }
                     Mohist.LOGGER.warn(String.format(
-                            "\"%s\" has registered a listener for %s on method \"%s\", but the event is Deprecated." +
+                                    "\"%s\" has registered a listener for %s on method \"%s\", but the event is Deprecated." +
                                     " \"%s\"; please notify the authors %s.",
-                            plugin.getDescription().getFullName(),
-                            clazz.getName(),
-                            method.toGenericString(),
-                            (warning != null && warning.reason().length() != 0) ? warning.reason() : "Server performance will be affected",
-                            Arrays.toString(plugin.getDescription().getAuthors().toArray())),
+                                    plugin.getDescription().getFullName(),
+                                    clazz.getName(),
+                                    method.toGenericString(),
+                                    (warning != null && warning.reason().length() != 0) ? warning.reason() : "Server performance will be affected",
+                                    Arrays.toString(plugin.getDescription().getAuthors().toArray())),
                             warningState == WarningState.ON ? new AuthorNagException(null) : null);
                     break;
                 }
@@ -293,7 +306,8 @@ public class JavaPluginLoader implements PluginLoader {
             EventExecutor executor;
             try {
                 executor = EventExecutor.create(method, eventClass);
-            } catch (Exception e2) {
+            }
+            catch (Exception e2) {
                 executor = new EventExecutor1(method, eventClass);
             }
             // Spigot // Paper - Use factory method `EventExecutor.create()`
@@ -344,7 +358,7 @@ public class JavaPluginLoader implements PluginLoader {
         Validate.isTrue(plugin instanceof JavaPlugin, "Plugin is not associated with this PluginLoader");
 
         if (plugin.isEnabled()) {
-            Mohist.LOGGER.info(Message.getFormatString(Message.bukkit_plugin_disabling, new Object[]{plugin.getDescription().getFullName()}));
+            Mohist.LOGGER.info(Message.getFormatString(Message.bukkit_plugin_disabling, new Object[] {plugin.getDescription().getFullName()}));
 
             server.getPluginManager().callEvent(new PluginDisableEvent(plugin));
 
@@ -354,7 +368,7 @@ public class JavaPluginLoader implements PluginLoader {
             try {
                 jPlugin.setEnabled(false);
             } catch (Throwable ex) {
-                Mohist.LOGGER.error(Message.getFormatString(Message.bukkit_plugin_disablingerror, new Object[]{plugin.getDescription().getFullName()}), ex);
+                Mohist.LOGGER.error( Message.getFormatString(Message.bukkit_plugin_disablingerror, new Object[] {plugin.getDescription().getFullName()}), ex);
             }
 
             if (cloader instanceof PluginClassLoader) {

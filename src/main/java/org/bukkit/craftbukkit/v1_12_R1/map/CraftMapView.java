@@ -9,14 +9,18 @@ import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import red.mohist.Mohist;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class CraftMapView implements MapView {
 
-    protected final MapData worldMap;
     private final Map<CraftPlayer, RenderData> renderCache = new HashMap<CraftPlayer, RenderData>();
     private final List<MapRenderer> renderers = new ArrayList<MapRenderer>();
     private final Map<MapRenderer, Map<CraftPlayer, CraftMapCanvas>> canvases = new HashMap<MapRenderer, Map<CraftPlayer, CraftMapCanvas>>();
+    protected final MapData worldMap;
 
     public CraftMapView(MapData worldMap) {
         this.worldMap = worldMap;
@@ -28,7 +32,8 @@ public final class CraftMapView implements MapView {
         if (text.startsWith("map_")) {
             try {
                 return Short.parseShort(text.substring("map_".length()));
-            } catch (NumberFormatException ex) {
+            }
+            catch (NumberFormatException ex) {
                 throw new IllegalStateException("Map has non-numeric ID");
             }
         } else {
@@ -66,12 +71,12 @@ public final class CraftMapView implements MapView {
         return worldMap.xCenter;
     }
 
-    public void setCenterX(int x) {
-        worldMap.xCenter = x;
-    }
-
     public int getCenterZ() {
         return worldMap.zCenter;
+    }
+
+    public void setCenterX(int x) {
+        worldMap.xCenter = x;
     }
 
     public void setCenterZ(int z) {

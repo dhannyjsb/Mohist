@@ -11,7 +11,6 @@ import java.util.List;
 public class MonsterEggs extends TexturedMaterial {
 
     private static final List<Material> textures = new ArrayList<Material>();
-
     static {
         textures.add(Material.STONE);
         textures.add(Material.COBBLESTONE);
@@ -26,7 +25,7 @@ public class MonsterEggs extends TexturedMaterial {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public MonsterEggs(final int type) {
         super(type);
     }
@@ -43,7 +42,7 @@ public class MonsterEggs extends TexturedMaterial {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public MonsterEggs(final int type, final byte data) {
         super(type, data);
     }
@@ -53,7 +52,7 @@ public class MonsterEggs extends TexturedMaterial {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public MonsterEggs(final Material type, final byte data) {
         super(type, data);
     }

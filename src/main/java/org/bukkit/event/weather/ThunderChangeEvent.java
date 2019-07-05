@@ -9,16 +9,12 @@ import org.bukkit.event.HandlerList;
  */
 public class ThunderChangeEvent extends WeatherEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final boolean to;
     private boolean canceled;
+    private final boolean to;
 
     public ThunderChangeEvent(final World world, final boolean to) {
         super(world);
         this.to = to;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public boolean isCancelled() {
@@ -40,6 +36,10 @@ public class ThunderChangeEvent extends WeatherEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -20,10 +20,6 @@ public class VehicleEntityCollisionEvent extends VehicleCollisionEvent implement
         this.entity = entity;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public Entity getEntity() {
         return entity;
     }
@@ -54,6 +50,10 @@ public class VehicleEntityCollisionEvent extends VehicleCollisionEvent implement
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -24,7 +24,7 @@ public interface Dropper extends Container, Nameable {
      * <p>
      * If the block represented by this state is no longer a dropper, this will
      * do nothing.
-     *
+     * 
      * @throws IllegalStateException if this block state is not placed
      */
     public void drop();

@@ -4,6 +4,11 @@ import java.util.concurrent.ExecutionException;
 
 
 public abstract class Waitable<T> implements Runnable {
+    private enum Status {
+        WAITING,
+        RUNNING,
+        FINISHED,
+    }
     Throwable t = null;
     T value = null;
     Status status = Status.WAITING;
@@ -37,11 +42,5 @@ public abstract class Waitable<T> implements Runnable {
             throw new ExecutionException(t);
         }
         return value;
-    }
-
-    private enum Status {
-        WAITING,
-        RUNNING,
-        FINISHED,
     }
 }

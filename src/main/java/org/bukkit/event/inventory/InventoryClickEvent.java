@@ -40,7 +40,7 @@ import org.bukkit.scheduler.BukkitScheduler;
  * InventoryClickEvent can be overwritten. To change these slots, this event
  * should be cancelled and all desired changes to the inventory applied.
  * Alternatively, scheduling a task using {@link BukkitScheduler#runTask(
- *Plugin, Runnable)}, which would execute the task on the next tick, would
+ * Plugin, Runnable)}, which would execute the task on the next tick, would
  * work as well.
  */
 public class InventoryClickEvent extends InventoryInteractEvent {
@@ -59,7 +59,7 @@ public class InventoryClickEvent extends InventoryInteractEvent {
         this.slot_type = type;
         this.rawSlot = slot;
         if (slot < 0) {
-            this.clickedInventory = null;
+                this.clickedInventory = null;
         } else if (view.getTopInventory() != null && slot < view.getTopInventory().getSize()) {
             this.clickedInventory = view.getTopInventory();
         } else {
@@ -73,10 +73,6 @@ public class InventoryClickEvent extends InventoryInteractEvent {
     public InventoryClickEvent(InventoryView view, SlotType type, int slot, ClickType click, InventoryAction action, int key) {
         this(view, type, slot, click, action);
         this.hotbarKey = key;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -106,19 +102,6 @@ public class InventoryClickEvent extends InventoryInteractEvent {
     }
 
     /**
-     * Sets the item on the cursor.
-     *
-     * @param stack the new cursor item
-     * @deprecated This changes the ItemStack in their hand before any
-     *     calculations are applied to the Inventory, which has a tendency to
-     *     create inconsistencies between the Player and the server, and to
-     *     make unexpected changes in the behavior of the clicked Inventory.
-     */
-    public void setCursor(ItemStack stack) {
-        getView().setCursor(stack);
-    }
-
-    /**
      * Gets the ItemStack currently in the clicked slot.
      *
      * @return the item in the clicked
@@ -128,19 +111,6 @@ public class InventoryClickEvent extends InventoryInteractEvent {
             return current;
         }
         return getView().getItem(rawSlot);
-    }
-
-    /**
-     * Sets the ItemStack currently in the clicked slot.
-     *
-     * @param stack the item to be placed in the current slot
-     */
-    public void setCurrentItem(ItemStack stack) {
-        if (slot_type == SlotType.OUTSIDE) {
-            current = stack;
-        } else {
-            getView().setItem(rawSlot, stack);
-        }
     }
 
     /**
@@ -174,6 +144,32 @@ public class InventoryClickEvent extends InventoryInteractEvent {
      */
     public boolean isShiftClick() {
         return click.isShiftClick();
+    }
+
+    /**
+     * Sets the item on the cursor.
+     *
+     * @param stack the new cursor item
+     * @deprecated This changes the ItemStack in their hand before any
+     *     calculations are applied to the Inventory, which has a tendency to
+     *     create inconsistencies between the Player and the server, and to
+     *     make unexpected changes in the behavior of the clicked Inventory.
+     */
+    public void setCursor(ItemStack stack) {
+        getView().setCursor(stack);
+    }
+
+    /**
+     * Sets the ItemStack currently in the clicked slot.
+     *
+     * @param stack the item to be placed in the current slot
+     */
+    public void setCurrentItem(ItemStack stack) {
+        if (slot_type == SlotType.OUTSIDE) {
+            current = stack;
+        } else {
+            getView().setItem(rawSlot, stack);
+        }
     }
 
     /**
@@ -234,6 +230,10 @@ public class InventoryClickEvent extends InventoryInteractEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -13,18 +13,18 @@ import java.util.List;
 public interface PotionMeta extends ItemMeta {
 
     /**
-     * Returns the potion data about the base potion
-     *
-     * @return a PotionData object
-     */
-    PotionData getBasePotionData();
-
-    /**
      * Sets the underlying potion data
      *
      * @param data PotionData to set the base potion state to
      */
     void setBasePotionData(PotionData data);
+
+    /**
+     * Returns the potion data about the base potion
+     *
+     * @return a PotionData object
+     */
+    PotionData getBasePotionData();
 
     /**
      * Checks for the presence of custom potion effects.

@@ -22,10 +22,6 @@ public class UnknownCommandEvent extends Event {
         this.message = message;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the CommandSender or ConsoleCommandSender
      * <p>
@@ -57,6 +53,7 @@ public class UnknownCommandEvent extends Event {
         return message;
     }
 
+
     /**
      * Sets message that will be returned
      * <p>
@@ -70,6 +67,10 @@ public class UnknownCommandEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

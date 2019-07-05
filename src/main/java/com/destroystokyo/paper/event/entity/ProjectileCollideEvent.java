@@ -12,18 +12,7 @@ import org.bukkit.event.entity.EntityEvent;
  * This event is called <b>before</b> {@link org.bukkit.event.entity.EntityDamageByEntityEvent}, and cancelling it will allow the projectile to continue flying
  */
 public class ProjectileCollideEvent extends EntityEvent implements Cancellable {
-    private static final HandlerList handlerList = new HandlerList();
     private final Entity collidedWith;
-    private boolean cancelled = false;
-
-    public ProjectileCollideEvent(Projectile what, Entity collidedWith) {
-        super(what);
-        this.collidedWith = collidedWith;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
 
     /**
      * Get the entity the projectile collided with
@@ -32,6 +21,11 @@ public class ProjectileCollideEvent extends EntityEvent implements Cancellable {
      */
     public Entity getCollidedWith() {
         return collidedWith;
+    }
+
+    public ProjectileCollideEvent(Projectile what, Entity collidedWith) {
+        super(what);
+        this.collidedWith = collidedWith;
     }
 
     /**
@@ -43,10 +37,18 @@ public class ProjectileCollideEvent extends EntityEvent implements Cancellable {
         return (Projectile) super.getEntity();
     }
 
+    private static final HandlerList handlerList = new HandlerList();
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
+    }
+
     @Override
     public HandlerList getHandlers() {
         return handlerList;
     }
+
+    private boolean cancelled = false;
 
     @Override
     public boolean isCancelled() {

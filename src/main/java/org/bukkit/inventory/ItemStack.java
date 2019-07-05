@@ -24,8 +24,7 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
     private ItemMeta meta;
 
     @Utility
-    protected ItemStack() {
-    }
+    protected ItemStack() {}
 
     /**
      * Defaults stack size to 1, with no extra data
@@ -140,57 +139,6 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
         }
     }
 
-    private static Material getType0(int id) {
-        Material material = Material.getMaterial(id);
-        return material == null ? Material.AIR : material;
-    }
-
-    /**
-     * Required method for configuration serialization
-     *
-     * @param args map to deserialize
-     * @return deserialized item stack
-     * @see ConfigurationSerializable
-     */
-    public static ItemStack deserialize(Map<String, Object> args) {
-        Material type = Material.getMaterial((String) args.get("type"));
-        short damage = 0;
-        int amount = 1;
-
-        if (args.containsKey("damage")) {
-            damage = ((Number) args.get("damage")).shortValue();
-        }
-
-        if (args.containsKey("amount")) {
-            amount = ((Number) args.get("amount")).intValue();
-        }
-
-        ItemStack result = new ItemStack(type, amount, damage);
-
-        if (args.containsKey("enchantments")) { // Backward compatiblity, @deprecated
-            Object raw = args.get("enchantments");
-
-            if (raw instanceof Map) {
-                Map<?, ?> map = (Map<?, ?>) raw;
-
-                for (Map.Entry<?, ?> entry : map.entrySet()) {
-                    Enchantment enchantment = Enchantment.getByName(entry.getKey().toString());
-
-                    if ((enchantment != null) && (entry.getValue() instanceof Integer)) {
-                        result.addUnsafeEnchantment(enchantment, (Integer) entry.getValue());
-                    }
-                }
-            }
-        } else if (args.containsKey("meta")) { // We cannot and will not have meta when enchantments (pre-ItemMeta) exist
-            Object raw = args.get("meta");
-            if (raw instanceof ItemMeta) {
-                result.setItemMeta((ItemMeta) raw);
-            }
-        }
-
-        return result;
-    }
-
     /**
      * Gets the type of this item
      *
@@ -199,6 +147,15 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
     @Utility
     public Material getType() {
         return getType0(getTypeId());
+    }
+
+    private Material getType0() {
+        return getType0(this.type);
+    }
+
+    private static Material getType0(int id) {
+        Material material = Material.getMaterial(id);
+        return material == null ? Material.AIR : material;
     }
 
     /**
@@ -212,10 +169,6 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
     public void setType(Material type) {
         Validate.notNull(type, "Material cannot be null");
         setTypeId(type.getId());
-    }
-
-    private Material getType0() {
-        return getType0(this.type);
     }
 
     /**
@@ -298,21 +251,21 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
     }
 
     /**
-     * Gets the durability of this item
-     *
-     * @return Durability of this item
-     */
-    public short getDurability() {
-        return durability;
-    }
-
-    /**
      * Sets the durability of this item
      *
      * @param durability Durability of this item
      */
     public void setDurability(final short durability) {
         this.durability = durability;
+    }
+
+    /**
+     * Gets the durability of this item
+     *
+     * @return Durability of this item
+     */
+    public short getDurability() {
+        return durability;
     }
 
     /**
@@ -552,6 +505,52 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
         ItemMeta meta = getItemMeta();
         if (!Bukkit.getItemFactory().equals(meta, null)) {
             result.put("meta", meta);
+        }
+
+        return result;
+    }
+
+    /**
+     * Required method for configuration serialization
+     *
+     * @param args map to deserialize
+     * @return deserialized item stack
+     * @see ConfigurationSerializable
+     */
+    public static ItemStack deserialize(Map<String, Object> args) {
+        Material type = Material.getMaterial((String) args.get("type"));
+        short damage = 0;
+        int amount = 1;
+
+        if (args.containsKey("damage")) {
+            damage = ((Number) args.get("damage")).shortValue();
+        }
+
+        if (args.containsKey("amount")) {
+            amount = ((Number) args.get("amount")).intValue();
+        }
+
+        ItemStack result = new ItemStack(type, amount, damage);
+
+        if (args.containsKey("enchantments")) { // Backward compatiblity, @deprecated
+            Object raw = args.get("enchantments");
+
+            if (raw instanceof Map) {
+                Map<?, ?> map = (Map<?, ?>) raw;
+
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    Enchantment enchantment = Enchantment.getByName(entry.getKey().toString());
+
+                    if ((enchantment != null) && (entry.getValue() instanceof Integer)) {
+                        result.addUnsafeEnchantment(enchantment, (Integer) entry.getValue());
+                    }
+                }
+            }
+        } else if (args.containsKey("meta")) { // We cannot and will not have meta when enchantments (pre-ItemMeta) exist
+            Object raw = args.get("meta");
+            if (raw instanceof ItemMeta) {
+                result.setItemMeta((ItemMeta) raw);
+            }
         }
 
         return result;

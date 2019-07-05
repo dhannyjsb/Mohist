@@ -21,7 +21,7 @@ public class CraftInventoryBrewer extends CraftInventory implements BrewerInvent
 
     @Override
     public BrewingStand getHolder() {
-        InventoryHolder owner = inventory.getOwner();
+    	InventoryHolder owner = inventory.getOwner();
         return owner instanceof BrewingStand ? (BrewingStand) owner : null;
     }
 

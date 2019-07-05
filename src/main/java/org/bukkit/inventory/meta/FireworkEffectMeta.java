@@ -10,6 +10,13 @@ import org.bukkit.Material;
 public interface FireworkEffectMeta extends ItemMeta {
 
     /**
+     * Sets the firework effect for this meta.
+     *
+     * @param effect the effect to set, or null to indicate none.
+     */
+    void setEffect(FireworkEffect effect);
+
+    /**
      * Checks if this meta has an effect.
      *
      * @return true if this meta has an effect, false otherwise
@@ -22,13 +29,6 @@ public interface FireworkEffectMeta extends ItemMeta {
      * @return the current effect, or null if none
      */
     FireworkEffect getEffect();
-
-    /**
-     * Sets the firework effect for this meta.
-     *
-     * @param effect the effect to set, or null to indicate none.
-     */
-    void setEffect(FireworkEffect effect);
 
     FireworkEffectMeta clone();
 }

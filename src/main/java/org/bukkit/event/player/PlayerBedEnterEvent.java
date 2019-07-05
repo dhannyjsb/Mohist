@@ -10,16 +10,12 @@ import org.bukkit.event.HandlerList;
  */
 public class PlayerBedEnterEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final Block bed;
     private boolean cancel = false;
+    private final Block bed;
 
     public PlayerBedEnterEvent(final Player who, final Block bed) {
         super(who);
         this.bed = bed;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public boolean isCancelled() {
@@ -41,6 +37,10 @@ public class PlayerBedEnterEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -20,6 +20,33 @@ import java.util.Random;
 public abstract class ChunkGenerator {
 
     /**
+     * Interface to biome section for chunk to be generated: initialized with
+     * default values for world type and seed.
+     * <p>
+     * Custom generator is free to access and tailor values during
+     * generateBlockSections() or generateExtBlockSections().
+     */
+    public interface BiomeGrid {
+
+        /**
+         * Get biome at x, z within chunk being generated
+         *
+         * @param x - 0-15
+         * @param z - 0-15
+         * @return Biome value
+         */
+        Biome getBiome(int x, int z);
+
+        /**
+         * Set biome at x, z within chunk being generated
+         *
+         * @param x - 0-15
+         * @param z - 0-15
+         * @param bio - Biome value
+         */
+        void setBiome(int x, int z, Biome bio);
+    }
+    /**
      * Shapes the chunk for the given coordinates.
      * <p>
      * This method should return a byte[32768] in the following format:
@@ -194,7 +221,7 @@ public abstract class ChunkGenerator {
 
     /**
      * Shapes the chunk for the given coordinates.
-     *
+     * 
      * This method must return a ChunkData.
      * <p>
      * Notes:
@@ -206,7 +233,7 @@ public abstract class ChunkGenerator {
      * been returned.
      * <p>
      * This method <b>must</b> return a ChunkData returned by {@link ChunkGenerator#createChunkData(org.bukkit.World)}
-     *
+     * 
      * @param world The world this chunk will be used for
      * @param random The random generator to use
      * @param x The X-coordinate of the chunk
@@ -241,13 +268,13 @@ public abstract class ChunkGenerator {
         Block highest = world.getBlockAt(x, world.getHighestBlockYAt(x, z), z);
 
         switch (world.getEnvironment()) {
-            case NETHER:
-                return true;
-            case THE_END:
-                return highest.getType() != Material.AIR && highest.getType() != Material.WATER && highest.getType() != Material.LAVA;
-            case NORMAL:
-            default:
-                return highest.getType() == Material.SAND || highest.getType() == Material.GRAVEL;
+        case NETHER:
+            return true;
+        case THE_END:
+            return highest.getType() != Material.AIR && highest.getType() != Material.WATER && highest.getType() != Material.LAVA;
+        case NORMAL:
+        default:
+            return highest.getType() == Material.SAND || highest.getType() == Material.GRAVEL;
         }
     }
 
@@ -277,42 +304,14 @@ public abstract class ChunkGenerator {
     }
 
     /**
-     * Interface to biome section for chunk to be generated: initialized with
-     * default values for world type and seed.
-     * <p>
-     * Custom generator is free to access and tailor values during
-     * generateBlockSections() or generateExtBlockSections().
-     */
-    public interface BiomeGrid {
-
-        /**
-         * Get biome at x, z within chunk being generated
-         *
-         * @param x - 0-15
-         * @param z - 0-15
-         * @return Biome value
-         */
-        Biome getBiome(int x, int z);
-
-        /**
-         * Set biome at x, z within chunk being generated
-         *
-         * @param x - 0-15
-         * @param z - 0-15
-         * @param bio - Biome value
-         */
-        void setBiome(int x, int z, Biome bio);
-    }
-
-    /**
      * Data for a Chunk.
      */
     public static interface ChunkData {
         /**
          * Get the maximum height for the chunk.
-         *
+         * 
          * Setting blocks at or above this height will do nothing.
-         *
+         * 
          * @return the maximum height
          */
         public int getMaxHeight();
@@ -340,7 +339,7 @@ public abstract class ChunkGenerator {
          * @param material the type to set the block to
          */
         public void setBlock(int x, int y, int z, MaterialData material);
-
+        
         /**
          * Set a region of this chunk from xMin, yMin, zMin (inclusive)
          * to xMax, yMax, zMax (exclusive) to material.
@@ -356,7 +355,7 @@ public abstract class ChunkGenerator {
          * @param material the type to set the blocks to
          */
         public void setRegion(int xMin, int yMin, int zMin, int xMax, int yMax, int zMax, Material material);
-
+        
         /**
          * Set a region of this chunk from xMin, yMin, zMin (inclusive)
          * to xMax, yMax, zMax (exclusive) to material.
@@ -372,7 +371,7 @@ public abstract class ChunkGenerator {
          * @param material the type to set the blocks to
          */
         public void setRegion(int xMin, int yMin, int zMin, int xMax, int yMax, int zMax, MaterialData material);
-
+        
         /**
          * Get the type of the block at x, y, z.
          *
@@ -384,7 +383,7 @@ public abstract class ChunkGenerator {
          * @return the type of the block or Material.AIR if x, y or z are outside the chunk's bounds
          */
         public Material getType(int x, int y, int z);
-
+        
         /**
          * Get the type and data of the block at x, y ,z.
          *
@@ -396,7 +395,7 @@ public abstract class ChunkGenerator {
          * @return the type and data of the block or the MaterialData for air if x, y or z are outside the chunk's bounds
          */
         public MaterialData getTypeAndData(int x, int y, int z);
-
+        
         /**
          * Set a region of this chunk from xMin, yMin, zMin (inclusive)
          * to xMax, yMax, zMax (exclusive) to block id.
@@ -413,7 +412,7 @@ public abstract class ChunkGenerator {
          * @deprecated Uses magic values.
          */
         public void setRegion(int xMin, int yMin, int zMin, int xMax, int yMax, int zMax, int blockId);
-
+        
         /**
          * Set a region of this chunk from xMin, yMin, zMin (inclusive)
          * to xMax, yMax, zMax (exclusive) to block id and data.
@@ -431,7 +430,7 @@ public abstract class ChunkGenerator {
          * @deprecated Uses magic values.
          */
         public void setRegion(int xMin, int yMin, int zMin, int xMax, int yMax, int zMax, int blockId, int data);
-
+        
         /**
          * Set the block at x,y,z in the chunk data to blockId.
          *
@@ -444,7 +443,7 @@ public abstract class ChunkGenerator {
          * @deprecated Uses magic values
          */
         public void setBlock(int x, int y, int z, int blockId);
-
+        
         /**
          * Set the block at x,y,z in the chunk data to blockId.
          *
@@ -458,7 +457,7 @@ public abstract class ChunkGenerator {
          * @deprecated Uses magic values
          */
         public void setBlock(int x, int y, int z, int blockId, byte data);
-
+        
         /**
          * Get the blockId at x,y,z in the chunk data.
          *
@@ -471,7 +470,7 @@ public abstract class ChunkGenerator {
          * @deprecated Uses magic values
          */
         public int getTypeId(int x, int y, int z);
-
+        
         /**
          * Get the block data at x,y,z in the chunk data.
          *

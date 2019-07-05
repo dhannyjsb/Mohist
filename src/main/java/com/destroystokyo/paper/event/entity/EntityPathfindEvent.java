@@ -13,19 +13,12 @@ import org.bukkit.event.entity.EntityEvent;
  * is choosing to start moving to a location.
  */
 public class EntityPathfindEvent extends EntityEvent implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
     private final Entity targetEntity;
     private final Location loc;
-    private boolean cancelled = false;
-
     public EntityPathfindEvent(Entity entity, Location loc, Entity targetEntity) {
         super(entity);
         this.targetEntity = targetEntity;
         this.loc = loc;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -57,9 +50,17 @@ public class EntityPathfindEvent extends EntityEvent implements Cancellable {
         return loc;
     }
 
+    private static final HandlerList handlers = new HandlerList();
+
     public HandlerList getHandlers() {
         return handlers;
     }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    private boolean cancelled = false;
 
     @Override
     public boolean isCancelled() {

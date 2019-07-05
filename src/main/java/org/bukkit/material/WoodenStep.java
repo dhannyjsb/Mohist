@@ -44,7 +44,7 @@ public class WoodenStep extends Wood {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public WoodenStep(final int type) {
         super(type);
     }
@@ -54,7 +54,7 @@ public class WoodenStep extends Wood {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public WoodenStep(final int type, final byte data) {
         super(type, data);
     }
@@ -64,7 +64,7 @@ public class WoodenStep extends Wood {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public WoodenStep(final Material type, final byte data) {
         super(type, data);
     }

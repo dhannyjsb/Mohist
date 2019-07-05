@@ -10,8 +10,8 @@ import java.util.HashMap;
 public class MapFont {
 
     private final HashMap<Character, CharacterSprite> chars = new HashMap<Character, CharacterSprite>();
-    protected boolean malleable = true;
     private int height = 0;
+    protected boolean malleable = true;
 
     /**
      * Set the sprite for a given character.

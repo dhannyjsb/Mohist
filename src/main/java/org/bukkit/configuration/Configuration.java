@@ -52,17 +52,6 @@ public interface Configuration extends ConfigurationSection {
     public void addDefaults(Configuration defaults);
 
     /**
-     * Gets the source {@link Configuration} for this configuration.
-     * <p>
-     * If no configuration source was set, but default values were added, then
-     * a {@link MemoryConfiguration} will be returned. If no source was set
-     * and no defaults were set, then this method will return null.
-     *
-     * @return Configuration source for default values, or null if none exist.
-     */
-    public Configuration getDefaults();
-
-    /**
      * Sets the source of all default values for this {@link Configuration}.
      * <p>
      * If a previous source was set, or previous default values were defined,
@@ -72,6 +61,17 @@ public interface Configuration extends ConfigurationSection {
      * @throws IllegalArgumentException Thrown if defaults is null or this.
      */
     public void setDefaults(Configuration defaults);
+
+    /**
+     * Gets the source {@link Configuration} for this configuration.
+     * <p>
+     * If no configuration source was set, but default values were added, then
+     * a {@link MemoryConfiguration} will be returned. If no source was set
+     * and no defaults were set, then this method will return null.
+     *
+     * @return Configuration source for default values, or null if none exist.
+     */
+    public Configuration getDefaults();
 
     /**
      * Gets the {@link ConfigurationOptions} for this {@link Configuration}.

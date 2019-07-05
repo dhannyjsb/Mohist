@@ -15,10 +15,6 @@ public class WorldUnloadEvent extends WorldEvent implements Cancellable {
         super(world);
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public boolean isCancelled() {
         return this.isCancelled;
     }
@@ -29,6 +25,10 @@ public class WorldUnloadEvent extends WorldEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

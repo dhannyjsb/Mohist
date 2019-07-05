@@ -18,10 +18,10 @@ import java.util.concurrent.Callable;
  * when asked.
  */
 public class LazyMetadataValue extends MetadataValueAdapter {
-    private static final Object ACTUALLY_NULL = new Object();
     private Callable<Object> lazyValue;
     private CacheStrategy cacheStrategy;
     private SoftReference<Object> internalValue;
+    private static final Object ACTUALLY_NULL = new Object();
 
     /**
      * Initialized a LazyMetadataValue object with the default
@@ -56,7 +56,7 @@ public class LazyMetadataValue extends MetadataValueAdapter {
     /**
      * Protected special constructor used by FixedMetadataValue to bypass
      * standard setup.
-     *
+     * 
      * @param owningPlugin the owning plugin
      */
     protected LazyMetadataValue(Plugin owningPlugin) {

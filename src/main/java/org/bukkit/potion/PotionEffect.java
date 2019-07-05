@@ -97,7 +97,7 @@ public class PotionEffect implements ConfigurationSerializable {
     public PotionEffect(Map<String, Object> map) {
         this(getEffectType(map), getInt(map, DURATION), getInt(map, AMPLIFIER), getBool(map, AMBIENT, false), getBool(map, PARTICLES, true));
     }
-
+    
     private static PotionEffectType getEffectType(Map<?, ?> map) {
         int type = getInt(map, TYPE);
         PotionEffectType effect = PotionEffectType.getById(type);
@@ -125,11 +125,11 @@ public class PotionEffect implements ConfigurationSerializable {
 
     public Map<String, Object> serialize() {
         return ImmutableMap.<String, Object>of(
-                TYPE, type.getId(),
-                DURATION, duration,
-                AMPLIFIER, amplifier,
-                AMBIENT, ambient,
-                PARTICLES, particles
+            TYPE, type.getId(),
+            DURATION, duration,
+            AMPLIFIER, amplifier,
+            AMBIENT, ambient,
+            PARTICLES, particles
         );
     }
 

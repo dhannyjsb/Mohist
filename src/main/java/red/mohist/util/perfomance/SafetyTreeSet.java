@@ -3,7 +3,13 @@ package red.mohist.util.perfomance;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NavigableSet;
+import java.util.SortedSet;
+import java.util.Spliterator;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
@@ -11,7 +17,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * TreeSet(Non-thread safe) ---> ConcurrentSkipListSet(thread safety)
  * @param <E>
  */
-public class SafetyTreeSet<E> extends TreeSet<E> {
+public class SafetyTreeSet<E> extends TreeSet<E>
+{
     private ConcurrentSkipListSet<E> css;
 
     SafetyTreeSet(ConcurrentSkipListSet<E> m) {

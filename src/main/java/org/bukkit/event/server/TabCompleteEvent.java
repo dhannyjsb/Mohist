@@ -31,10 +31,6 @@ public class TabCompleteEvent extends Event implements Cancellable {
         this.completions = completions;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Get the sender completing this command.
      *
@@ -85,6 +81,10 @@ public class TabCompleteEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -1,9 +1,0 @@
---- ../src-base/minecraft/net/minecraft/util/datafix/IFixType.java
-+++ ../src-work/minecraft/net/minecraft/util/datafix/IFixType.java
-@@ -1,5 +1,4 @@
- package net.minecraft.util.datafix;
- 
--public interface IFixType
--{
-+public interface IFixType {
- }

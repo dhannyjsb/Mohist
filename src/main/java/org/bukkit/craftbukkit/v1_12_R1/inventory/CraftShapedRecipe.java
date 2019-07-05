@@ -61,6 +61,6 @@ public class CraftShapedRecipe extends ShapedRecipe implements CraftRecipe {
         recipe.setRegistryName(recipe.key);
         ((ForgeRegistry<IRecipe>) ForgeRegistries.RECIPES).unfreeze();
         ForgeRegistries.RECIPES.register(recipe);
-        ((ForgeRegistry<IRecipe>) ForgeRegistries.RECIPES).freeze();
+        ((ForgeRegistry <IRecipe>) ForgeRegistries.RECIPES).freeze();
     }
 }

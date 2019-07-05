@@ -1,8 +1,0 @@
---- ../src-base/minecraft/net/minecraft/network/login/package-info.java
-+++ ../src-work/minecraft/net/minecraft/network/login/package-info.java
-@@ -4,4 +4,5 @@
- package net.minecraft.network.login;
- 
- import mcp.MethodsReturnNonnullByDefault;
-+
- import javax.annotation.ParametersAreNonnullByDefault;

@@ -44,6 +44,7 @@ public enum PatternType {
     FLOWER("flo"),
     MOJANG("moj");
 
+    private final String identifier;
     private static final Map<String, PatternType> byString = new HashMap<String, PatternType>();
 
     static {
@@ -52,10 +53,18 @@ public enum PatternType {
         }
     }
 
-    private final String identifier;
-
     private PatternType(String key) {
         this.identifier = key;
+    }
+
+    /**
+     * Returns the identifier used to represent
+     * this pattern type
+     *
+     * @return the pattern's identifier
+     */
+    public String getIdentifier() {
+        return identifier;
     }
 
     /**
@@ -67,15 +76,5 @@ public enum PatternType {
      */
     public static PatternType getByIdentifier(String identifier) {
         return byString.get(identifier);
-    }
-
-    /**
-     * Returns the identifier used to represent
-     * this pattern type
-     *
-     * @return the pattern's identifier
-     */
-    public String getIdentifier() {
-        return identifier;
     }
 }

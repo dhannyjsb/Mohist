@@ -11,18 +11,14 @@ import org.bukkit.inventory.Inventory;
  */
 public class InventoryPickupItemEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
+    private boolean cancelled;
     private final Inventory inventory;
     private final Item item;
-    private boolean cancelled;
 
     public InventoryPickupItemEvent(final Inventory inventory, final Item item) {
         super();
         this.inventory = inventory;
         this.item = item;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -53,6 +49,10 @@ public class InventoryPickupItemEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

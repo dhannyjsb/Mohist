@@ -5,7 +5,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.InventoryMerchant;
-import net.minecraft.tileentity.*;
+import net.minecraft.tileentity.IHopper;
+import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.tileentity.TileEntityDropper;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.TileEntityShulkerBox;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -36,7 +42,7 @@ public class CraftInventory implements Inventory {
     }
 
     public String getName() {
-        String name = getInventory().getName();
+    	String name = getInventory().getName();
         String modname = getInventory().getClass().getSimpleName();
         return name != null ? name : modname;
     }
@@ -69,7 +75,7 @@ public class CraftInventory implements Inventory {
     }
 
     public ItemStack[] getContents() {
-        List<net.minecraft.item.ItemStack> mcItems = null;
+    	List<net.minecraft.item.ItemStack> mcItems = null;
         try {
             mcItems = getInventory().getContents();
         } catch (AbstractMethodError e) {
@@ -438,7 +444,7 @@ public class CraftInventory implements Inventory {
     }
 
     public List<HumanEntity> getViewers() {
-        try {
+    	try {
             return this.inventory.getViewers();
         } catch (AbstractMethodError e) {
             return new java.util.ArrayList<HumanEntity>();
@@ -464,7 +470,7 @@ public class CraftInventory implements Inventory {
         } else if (inventory instanceof TileEntityFurnace) {
             return InventoryType.FURNACE;
         } else if (this instanceof CraftInventoryEnchanting) {
-            return InventoryType.ENCHANTING;
+           return InventoryType.ENCHANTING;
         } else if (inventory instanceof TileEntityBrewingStand) {
             return InventoryType.BREWING;
         } else if (inventory instanceof CraftInventoryCustom.MinecraftInventory) {
@@ -476,7 +482,7 @@ public class CraftInventory implements Inventory {
         } else if (inventory instanceof TileEntityBeacon) {
             return InventoryType.BEACON;
         } else if (this instanceof CraftInventoryAnvil) {
-            return InventoryType.ANVIL;
+           return InventoryType.ANVIL;
         } else if (inventory instanceof IHopper) {
             return InventoryType.HOPPER;
         } else if (inventory instanceof TileEntityShulkerBox) {
@@ -491,8 +497,8 @@ public class CraftInventory implements Inventory {
             return inventory.getOwner();
         } catch (AbstractMethodError e) {
             if (inventory instanceof net.minecraft.tileentity.TileEntity) {
-                return CauldronUtils.getOwner((net.minecraft.tileentity.TileEntity) inventory);
-            } else {
+                return CauldronUtils.getOwner((net.minecraft.tileentity.TileEntity)inventory);
+            }else{
                 return null;
             }
         }

@@ -4,10 +4,6 @@ import net.minecraft.util.DamageSource;
 
 // Util class to create custom DamageSources.
 public final class CraftDamageSource extends DamageSource {
-    private CraftDamageSource(String identifier) {
-        super(identifier);
-    }
-
     public static DamageSource copyOf(final DamageSource original) {
         CraftDamageSource newSource = new CraftDamageSource(original.damageType);
 
@@ -27,5 +23,9 @@ public final class CraftDamageSource extends DamageSource {
         }
 
         return newSource;
+    }
+
+    private CraftDamageSource(String identifier) {
+        super(identifier);
     }
 }

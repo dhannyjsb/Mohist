@@ -18,10 +18,6 @@ public class PrepareAnvilEvent extends InventoryEvent {
         this.result = result;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
     public AnvilInventory getInventory() {
         return (AnvilInventory) super.getInventory();
@@ -42,6 +38,10 @@ public class PrepareAnvilEvent extends InventoryEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

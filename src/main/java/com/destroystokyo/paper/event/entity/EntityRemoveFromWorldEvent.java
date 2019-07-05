@@ -9,17 +9,17 @@ import org.bukkit.event.entity.EntityEvent;
  */
 public class EntityRemoveFromWorldEvent extends EntityEvent {
 
-    private static final HandlerList handlers = new HandlerList();
-
     public EntityRemoveFromWorldEvent(Entity entity) {
         super(entity);
     }
 
-    public static HandlerList getHandlerList() {
+    private static final HandlerList handlers = new HandlerList();
+
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

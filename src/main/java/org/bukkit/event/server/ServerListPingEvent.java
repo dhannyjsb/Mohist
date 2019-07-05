@@ -16,8 +16,8 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
     private static final int MAGIC_PLAYER_COUNT = Integer.MIN_VALUE;
     private static final HandlerList handlers = new HandlerList();
     private final InetAddress address;
-    private final int numPlayers;
     private String motd;
+    private final int numPlayers;
     private int maxPlayers;
 
     public ServerListPingEvent(final InetAddress address, final String motd, final int numPlayers, final int maxPlayers) {
@@ -32,7 +32,7 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
      * This constructor is intended for implementations that provide the
      * {@link #iterator()} method, thus provided the {@link #getNumPlayers()}
      * count.
-     *
+     * 
      * @param address the address of the pinger
      * @param motd the message of the day
      * @param maxPlayers the max number of players
@@ -42,10 +42,6 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
         this.address = address;
         this.motd = motd;
         this.maxPlayers = maxPlayers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -125,6 +121,10 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
