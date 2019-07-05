@@ -346,7 +346,6 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         throw new AssertionError("Unknown entity " + (entity == null ? " is null" : entity.getClass() + ": " + entity));
     }
 
-<<<<<<< HEAD
     // Cauldron start - copy of getEntity() but operates on classes instead of instances, for EntityRegistry registerBukkitType
     public static Class<? extends org.bukkit.entity.Entity> getEntityClass(Class<? extends net.minecraft.entity.Entity> nmsClass) {
         /**
@@ -509,9 +508,6 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         }
     }
 
-    @Override
-=======
->>>>>>> parent of 180526f8... Alibaba Java Code Guidelines (@Override)
     public Location getLocation() {
         return new Location(getWorld(), entity.posX, entity.posY, entity.posZ, entity.getBukkitYaw(), entity.rotationPitch);
     }

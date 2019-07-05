@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.v1_12_R1;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -1188,7 +1189,6 @@ public final class CraftServer implements Server {
     }
 
     // Paper start
-    @Override
     @Nullable
     public UUID getPlayerUniqueId(String name) {
         Player player = Bukkit.getPlayerExact(name);
@@ -1688,7 +1688,6 @@ public final class CraftServer implements Server {
     private final Spigot spigot = new Spigot()
     {
 
-        @Override
         public YamlConfiguration getConfig()
         {
             return org.spigotmc.SpigotConfig.config;
@@ -1709,7 +1708,6 @@ public final class CraftServer implements Server {
         }
     };
 
-    @Override
     public Spigot spigot()
     {
         return spigot;
