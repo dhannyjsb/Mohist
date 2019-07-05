@@ -20,32 +20,6 @@ public class CraftSign extends CraftBlockEntityState<TileEntitySign> implements 
         super(material, te);
     }
 
-    public static ITextComponent[] sanitizeLines(String[] lines) {
-        ITextComponent[] components = new ITextComponent[4];
-
-        for (int i = 0; i < 4; i++) {
-            if (i < lines.length && lines[i] != null) {
-                components[i] = CraftChatMessage.fromString(lines[i])[0];
-            } else {
-                components[i] = new TextComponentString("");
-            }
-        }
-
-        return components;
-    }
-
-    public static String[] revertComponents(ITextComponent[] components) {
-        String[] lines = new String[components.length];
-        for (int i = 0; i < lines.length; i++) {
-            lines[i] = revertComponent(components[i]);
-        }
-        return lines;
-    }
-
-    private static String revertComponent(ITextComponent component) {
-        return CraftChatMessage.fromComponent(component);
-    }
-
     @Override
     public void load(TileEntitySign sign) {
         super.load(sign);
@@ -75,5 +49,31 @@ public class CraftSign extends CraftBlockEntityState<TileEntitySign> implements 
 
         ITextComponent[] newLines = sanitizeLines(lines);
         System.arraycopy(newLines, 0, sign.signText, 0, 4);
+    }
+
+    public static ITextComponent[] sanitizeLines(String[] lines) {
+        ITextComponent[] components = new ITextComponent[4];
+
+        for (int i = 0; i < 4; i++) {
+            if (i < lines.length && lines[i] != null) {
+                components[i] = CraftChatMessage.fromString(lines[i])[0];
+            } else {
+                components[i] = new TextComponentString("");
+            }
+        }
+
+        return components;
+    }
+
+    public static String[] revertComponents(ITextComponent[] components) {
+        String[] lines = new String[components.length];
+        for (int i = 0; i < lines.length; i++) {
+            lines[i] = revertComponent(components[i]);
+        }
+        return lines;
+    }
+
+    private static String revertComponent(ITextComponent component) {
+        return CraftChatMessage.fromComponent(component);
     }
 }

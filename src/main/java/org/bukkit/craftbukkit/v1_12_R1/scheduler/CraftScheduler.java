@@ -8,7 +8,11 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitWorker;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
@@ -36,15 +40,18 @@ import java.util.logging.Level;
  */
 public class CraftScheduler implements BukkitScheduler {
 
-    //private final Executor executor = Executors.newCachedThreadPool(new com.google.common.util.concurrent.ThreadFactoryBuilder().setNameFormat("Craft Scheduler Thread - %1$d").build()); // Spigot // Paper - moved to AsyncScheduler
-    //private CraftAsyncDebugger debugHead = new CraftAsyncDebugger(-1, null, null) {@Override StringBuilder debugTo(StringBuilder string) {return string;}}; // Paper
-    //private CraftAsyncDebugger debugTail = debugHead; // Paper
-    private static final int RECENT_TICKS;
-
-    static {
-        RECENT_TICKS = 30;
-    }
-
+    /**
+     * Counter for IDs. Order doesn't matter, only uniqueness.
+     */
+    private final AtomicInteger ids = new AtomicInteger(1);
+    /**
+     * Current head of linked-list. This reference is always stale, {@link CraftTask#next} is the live reference.
+     */
+    private volatile CraftTask head = new CraftTask();
+    /**
+     * Tail of a linked-list. AtomicReference only matters when adding to queue
+     */
+    private final AtomicReference<CraftTask> tail = new AtomicReference<CraftTask>(head);
     /**
      * Main thread logic only
      */
@@ -58,34 +65,30 @@ public class CraftScheduler implements BukkitScheduler {
                 }
             });
     /**
+     * Main thread logic only
+     */
+    private final List<CraftTask> temp = new ArrayList<CraftTask>();
+    /**
      * These are tasks that are currently active. It's provided for 'viewing' the current state.
      */
     final ConcurrentHashMap<Integer, CraftTask> runners = new ConcurrentHashMap<Integer, CraftTask>(); // Paper
     /**
-     * Counter for IDs. Order doesn't matter, only uniqueness.
-     */
-    private final AtomicInteger ids = new AtomicInteger(1);
-    /**
-     * Main thread logic only
-     */
-    private final List<CraftTask> temp = new ArrayList<CraftTask>();
-    // Paper start
-    private final CraftScheduler asyncScheduler;
-    private final boolean isAsyncScheduler;
-    volatile int currentTick = -1; // Paper
-    /**
-     * Current head of linked-list. This reference is always stale, {@link CraftTask#next} is the live reference.
-     */
-    private volatile CraftTask head = new CraftTask();
-    /**
-     * Tail of a linked-list. AtomicReference only matters when adding to queue
-     */
-    private final AtomicReference<CraftTask> tail = new AtomicReference<CraftTask>(head);
-    /**
      * The sync task that is currently running on the main thread.
      */
     private volatile CraftTask currentTask = null;
+    volatile int currentTick = -1; // Paper
+    //private final Executor executor = Executors.newCachedThreadPool(new com.google.common.util.concurrent.ThreadFactoryBuilder().setNameFormat("Craft Scheduler Thread - %1$d").build()); // Spigot // Paper - moved to AsyncScheduler
+    //private CraftAsyncDebugger debugHead = new CraftAsyncDebugger(-1, null, null) {@Override StringBuilder debugTo(StringBuilder string) {return string;}}; // Paper
+    //private CraftAsyncDebugger debugTail = debugHead; // Paper
+    private static final int RECENT_TICKS;
 
+    static {
+        RECENT_TICKS = 30;
+    }
+
+    // Paper start
+    private final CraftScheduler asyncScheduler;
+    private final boolean isAsyncScheduler;
     public CraftScheduler() {
         this(false);
     }
@@ -99,14 +102,6 @@ public class CraftScheduler implements BukkitScheduler {
         }
     }
     // Paper end
-
-    private static void validate(final Plugin plugin, final Object task) {
-        Validate.notNull(plugin, "Plugin cannot be null");
-        Validate.notNull(task, "Task cannot be null");
-        if (!plugin.isEnabled()) {
-            throw new IllegalPluginAccessException("Plugin attempted to register task while disabled");
-        }
-    }
 
     public int scheduleSyncDelayedTask(final Plugin plugin, final Runnable task) {
         return this.scheduleSyncDelayedTask(plugin, task, 0L);
@@ -204,7 +199,6 @@ public class CraftScheduler implements BukkitScheduler {
                             check(CraftScheduler.this.pending);
                         }
                     }
-
                     private boolean check(final Iterable<CraftTask> collection) {
                         final Iterator<CraftTask> tasks = collection.iterator();
                         while (tasks.hasNext()) {
@@ -219,8 +213,7 @@ public class CraftScheduler implements BukkitScheduler {
                             }
                         }
                         return false;
-                    }
-                }); // Paper
+                    }}); // Paper
         handle(task, 0L);
         for (CraftTask taskPending = head.getNext(); taskPending != null; taskPending = taskPending.getNext()) {
             if (taskPending == task) {
@@ -245,7 +238,6 @@ public class CraftScheduler implements BukkitScheduler {
                         check(CraftScheduler.this.pending);
                         check(CraftScheduler.this.temp);
                     }
-
                     void check(final Iterable<CraftTask> collection) {
                         final Iterator<CraftTask> tasks = collection.iterator();
                         while (tasks.hasNext()) {
@@ -478,6 +470,14 @@ public class CraftScheduler implements BukkitScheduler {
         task.setNextRun(currentTick + delay);
         addTask(task);
         return task;
+    }
+
+    private static void validate(final Plugin plugin, final Object task) {
+        Validate.notNull(plugin, "Plugin cannot be null");
+        Validate.notNull(task, "Task cannot be null");
+        if (!plugin.isEnabled()) {
+            throw new IllegalPluginAccessException("Plugin attempted to register task while disabled");
+        }
     }
 
     private int nextId() {

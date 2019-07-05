@@ -16,17 +16,19 @@ public enum WorldType {
     CUSTOMIZED("CUSTOMIZED");
 
     private final static Map<String, WorldType> BY_NAME = Maps.newHashMap();
-
-    static {
-        for (WorldType type : values()) {
-            BY_NAME.put(type.name, type);
-        }
-    }
-
     private final String name;
 
     private WorldType(String name) {
         this.name = name;
+    }
+
+    /**
+     * Gets the name of this WorldType
+     *
+     * @return Name of this type
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -39,12 +41,9 @@ public enum WorldType {
         return BY_NAME.get(name.toUpperCase(java.util.Locale.ENGLISH));
     }
 
-    /**
-     * Gets the name of this WorldType
-     *
-     * @return Name of this type
-     */
-    public String getName() {
-        return name;
+    static {
+        for (WorldType type : values()) {
+            BY_NAME.put(type.name, type);
+        }
     }
 }

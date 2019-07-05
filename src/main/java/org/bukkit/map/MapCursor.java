@@ -54,15 +54,6 @@ public final class MapCursor {
     }
 
     /**
-     * Set the X position of this cursor.
-     *
-     * @param x The X coordinate.
-     */
-    public void setX(byte x) {
-        this.x = x;
-    }
-
-    /**
      * Get the Y position of this cursor.
      *
      * @return The Y coordinate.
@@ -72,21 +63,58 @@ public final class MapCursor {
     }
 
     /**
-     * Set the Y position of this cursor.
-     *
-     * @param y The Y coordinate.
-     */
-    public void setY(byte y) {
-        this.y = y;
-    }
-
-    /**
      * Get the direction of this cursor.
      *
      * @return The facing of the cursor, from 0 to 15.
      */
     public byte getDirection() {
         return direction;
+    }
+
+    /**
+     * Get the type of this cursor.
+     *
+     * @return The type (color/style) of the map cursor.
+     */
+    public Type getType() {
+        return Type.byValue(type);
+    }
+
+    /**
+     * Get the type of this cursor.
+     *
+     * @return The type (color/style) of the map cursor.
+     * @deprecated Magic value
+     */
+    public byte getRawType() {
+        return type;
+    }
+
+    /**
+     * Get the visibility status of this cursor.
+     *
+     * @return True if visible, false otherwise.
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * Set the X position of this cursor.
+     *
+     * @param x The X coordinate.
+     */
+    public void setX(byte x) {
+        this.x = x;
+    }
+
+    /**
+     * Set the Y position of this cursor.
+     *
+     * @param y The Y coordinate.
+     */
+    public void setY(byte y) {
+        this.y = y;
     }
 
     /**
@@ -102,31 +130,12 @@ public final class MapCursor {
     }
 
     /**
-     * Get the type of this cursor.
-     *
-     * @return The type (color/style) of the map cursor.
-     */
-    public Type getType() {
-        return Type.byValue(type);
-    }
-
-    /**
      * Set the type of this cursor.
      *
      * @param type The type (color/style) of the map cursor.
      */
     public void setType(Type type) {
         setRawType(type.value);
-    }
-
-    /**
-     * Get the type of this cursor.
-     *
-     * @return The type (color/style) of the map cursor.
-     * @deprecated Magic value
-     */
-    public byte getRawType() {
-        return type;
     }
 
     /**
@@ -141,15 +150,6 @@ public final class MapCursor {
             throw new IllegalArgumentException("Type must be in the range 0-15");
         }
         this.type = type;
-    }
-
-    /**
-     * Get the visibility status of this cursor.
-     *
-     * @return True if visible, false otherwise.
-     */
-    public boolean isVisible() {
-        return visible;
     }
 
     /**
@@ -187,6 +187,16 @@ public final class MapCursor {
 
         /**
          *
+         * @return the value 
+         * @deprecated Magic value
+         */
+
+        public byte getValue() {
+            return value;
+        }
+
+        /**
+         *
          * @param value the value
          * @return the matching type
          * @deprecated Magic value
@@ -199,16 +209,6 @@ public final class MapCursor {
                 }
             }
             return null;
-        }
-
-        /**
-         *
-         * @return the value
-         * @deprecated Magic value
-         */
-
-        public byte getValue() {
-            return value;
         }
     }
 

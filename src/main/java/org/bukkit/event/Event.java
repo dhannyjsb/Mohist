@@ -9,11 +9,11 @@ import org.bukkit.plugin.PluginManager;
  * All events require a static method named getHandlerList() which returns the same {@link HandlerList} as {@link #getHandlers()}.
  *
  * @see PluginManager#callEvent(Event)
- * @see PluginManager#registerEvents(Listener, Plugin)
+ * @see PluginManager#registerEvents(Listener,Plugin)
  */
 public abstract class Event {
-    private final boolean async;
     private String name;
+    private final boolean async;
 
     /**
      * The default constructor is defined for cleaner code. This constructor
@@ -35,7 +35,6 @@ public abstract class Event {
     }
 
     // Paper start
-
     /**
      * Calls the event and tests if cancelled.
      *

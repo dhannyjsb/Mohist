@@ -4,7 +4,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.RandomAccess;
 
 // implementation of an ArrayList that offers a getter without range checks
 @SuppressWarnings("unchecked")
@@ -217,10 +223,10 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
     }
 
     public class Itr implements Iterator<E> {
-        public boolean valid = true;
         int index;
         int lastRet = -1;
         int expectedModCount = modCount;
+        public boolean valid = true;
 
         public void reset() {
             index = 0;

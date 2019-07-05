@@ -25,10 +25,10 @@ import java.util.Set;
  */
 public class AsyncPlayerChatEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final Set<Player> recipients;
     private boolean cancel = false;
     private String message;
     private String format = "<%1$s> %2$s";
+    private final Set<Player> recipients;
 
     /**
      *
@@ -42,10 +42,6 @@ public class AsyncPlayerChatEvent extends PlayerEvent implements Cancellable {
         super(who, async);
         this.message = message;
         recipients = players;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -135,6 +131,10 @@ public class AsyncPlayerChatEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -270,18 +270,18 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
     public EntityEquipment getEquipment();
 
     /**
-     * Gets if the living entity can pick up items.
-     *
-     * @return whether or not the living entity can pick up items
-     */
-    public boolean getCanPickupItems();
-
-    /**
      * Sets whether or not the living entity can pick up items.
      *
      * @param pickup whether or not the living entity can pick up items
      */
     public void setCanPickupItems(boolean pickup);
+
+    /**
+     * Gets if the living entity can pick up items.
+     *
+     * @return whether or not the living entity can pick up items
+     */
+    public boolean getCanPickupItems();
 
     /**
      * Returns whether the entity is currently leashed.
@@ -339,17 +339,6 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
     boolean hasAI();
 
     /**
-     * Gets if this entity is subject to collisions with other entities.
-     * <p>
-     * Please note that this method returns only the custom collidable state,
-     * not whether the entity is non-collidable for other reasons such as being
-     * dead.
-     *
-     * @return collision status
-     */
-    boolean isCollidable();
-
-    /**
      * Set if this entity will be subject to collisions other entities.
      * <p>
      * Note that collisions are bidirectional, so this method would need to be
@@ -359,4 +348,15 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * @param collidable collision status
      */
     void setCollidable(boolean collidable);
+
+    /**
+     * Gets if this entity is subject to collisions with other entities.
+     * <p>
+     * Please note that this method returns only the custom collidable state,
+     * not whether the entity is non-collidable for other reasons such as being
+     * dead.
+     *
+     * @return collision status
+     */
+    boolean isCollidable();
 }

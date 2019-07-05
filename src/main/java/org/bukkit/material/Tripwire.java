@@ -15,7 +15,7 @@ public class Tripwire extends MaterialData {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public Tripwire(final int type) {
         super(type);
     }
@@ -25,7 +25,7 @@ public class Tripwire extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Tripwire(final int type, final byte data) {
         super(type, data);
     }

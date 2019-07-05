@@ -18,10 +18,6 @@ public class PlayerDropItemEvent extends PlayerEvent implements Cancellable {
         this.drop = drop;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the ItemDrop created by the player
      *
@@ -41,6 +37,10 @@ public class PlayerDropItemEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

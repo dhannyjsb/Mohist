@@ -15,7 +15,7 @@ public class Torch extends SimpleAttachableMaterialData {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public Torch(final int type) {
         super(type);
     }
@@ -29,7 +29,7 @@ public class Torch extends SimpleAttachableMaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Torch(final int type, final byte data) {
         super(type, data);
     }
@@ -39,7 +39,7 @@ public class Torch extends SimpleAttachableMaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Torch(final Material type, final byte data) {
         super(type, data);
     }
@@ -53,21 +53,21 @@ public class Torch extends SimpleAttachableMaterialData {
         byte data = getData();
 
         switch (data) {
-            case 0x1:
-                return BlockFace.WEST;
+        case 0x1:
+            return BlockFace.WEST;
 
-            case 0x2:
-                return BlockFace.EAST;
+        case 0x2:
+            return BlockFace.EAST;
 
-            case 0x3:
-                return BlockFace.NORTH;
+        case 0x3:
+            return BlockFace.NORTH;
 
-            case 0x4:
-                return BlockFace.SOUTH;
+        case 0x4:
+            return BlockFace.SOUTH;
 
-            case 0x5:
-            default:
-                return BlockFace.DOWN;
+        case 0x5:
+        default:
+            return BlockFace.DOWN;
         }
     }
 
@@ -75,25 +75,25 @@ public class Torch extends SimpleAttachableMaterialData {
         byte data;
 
         switch (face) {
-            case EAST:
-                data = 0x1;
-                break;
+        case EAST:
+            data = 0x1;
+            break;
 
-            case WEST:
-                data = 0x2;
-                break;
+        case WEST:
+            data = 0x2;
+            break;
 
-            case SOUTH:
-                data = 0x3;
-                break;
+        case SOUTH:
+            data = 0x3;
+            break;
 
-            case NORTH:
-                data = 0x4;
-                break;
+        case NORTH:
+            data = 0x4;
+            break;
 
-            case UP:
-            default:
-                data = 0x5;
+        case UP:
+        default:
+            data = 0x5;
         }
 
         setData(data);

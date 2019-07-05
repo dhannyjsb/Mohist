@@ -32,19 +32,13 @@ import org.bukkit.event.entity.EntityEvent;
  * Fired anytime the server is about to merge 2 experience orbs into one
  */
 public class ExperienceOrbMergeEvent extends EntityEvent implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
     private final ExperienceOrb mergeTarget;
     private final ExperienceOrb mergeSource;
-    private boolean cancelled = false;
 
     public ExperienceOrbMergeEvent(ExperienceOrb mergeTarget, ExperienceOrb mergeSource) {
         super(mergeTarget);
         this.mergeTarget = mergeTarget;
         this.mergeSource = mergeSource;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -61,9 +55,17 @@ public class ExperienceOrbMergeEvent extends EntityEvent implements Cancellable 
         return mergeSource;
     }
 
+    private static final HandlerList handlers = new HandlerList();
+
     public HandlerList getHandlers() {
         return handlers;
     }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    private boolean cancelled = false;
 
     @Override
     public boolean isCancelled() {

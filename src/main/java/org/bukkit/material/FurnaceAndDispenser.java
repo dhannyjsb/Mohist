@@ -11,7 +11,7 @@ public class FurnaceAndDispenser extends DirectionalContainer {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public FurnaceAndDispenser(final int type) {
         super(type);
     }
@@ -25,7 +25,7 @@ public class FurnaceAndDispenser extends DirectionalContainer {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public FurnaceAndDispenser(final int type, final byte data) {
         super(type, data);
     }
@@ -35,7 +35,7 @@ public class FurnaceAndDispenser extends DirectionalContainer {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public FurnaceAndDispenser(final Material type, final byte data) {
         super(type, data);
     }

@@ -9,16 +9,12 @@ import org.bukkit.event.HandlerList;
  */
 public class HangingBreakEvent extends HangingEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final HangingBreakEvent.RemoveCause cause;
     private boolean cancelled;
+    private final HangingBreakEvent.RemoveCause cause;
 
     public HangingBreakEvent(final Hanging hanging, final HangingBreakEvent.RemoveCause cause) {
         super(hanging);
         this.cause = cause;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -36,11 +32,6 @@ public class HangingBreakEvent extends HangingEvent implements Cancellable {
 
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
     }
 
     /**
@@ -67,5 +58,14 @@ public class HangingBreakEvent extends HangingEvent implements Cancellable {
          * Removed by an uncategorised cause
          */
         DEFAULT,
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

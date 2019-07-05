@@ -69,14 +69,6 @@ public interface Objective {
     void unregister() throws IllegalStateException;
 
     /**
-     * Gets the display slot this objective is displayed at.
-     *
-     * @return the display slot for this objective, or null if not displayed
-     * @throws IllegalStateException if this objective has been unregistered
-     */
-    DisplaySlot getDisplaySlot() throws IllegalStateException;
-
-    /**
      * Sets this objective to display on the specified slot for the
      * scoreboard, removing it from any other display slot.
      *
@@ -84,6 +76,14 @@ public interface Objective {
      * @throws IllegalStateException if this objective has been unregistered
      */
     void setDisplaySlot(DisplaySlot slot) throws IllegalStateException;
+
+    /**
+     * Gets the display slot this objective is displayed at.
+     *
+     * @return the display slot for this objective, or null if not displayed
+     * @throws IllegalStateException if this objective has been unregistered
+     */
+    DisplaySlot getDisplaySlot() throws IllegalStateException;
 
     /**
      * Gets a player's Score for an Objective on this Scoreboard
@@ -95,7 +95,7 @@ public interface Objective {
      * @deprecated Scoreboards can contain entries that aren't players
      * @see #getScore(String)
      */
-
+    
     Score getScore(OfflinePlayer player) throws IllegalArgumentException, IllegalStateException;
 
     /**

@@ -20,7 +20,7 @@ public class NetherWarts extends MaterialData {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public NetherWarts(final int type) {
         super(type);
     }
@@ -34,7 +34,7 @@ public class NetherWarts extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public NetherWarts(final int type, final byte data) {
         super(type, data);
     }
@@ -44,7 +44,7 @@ public class NetherWarts extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public NetherWarts(final Material type, final byte data) {
         super(type, data);
     }

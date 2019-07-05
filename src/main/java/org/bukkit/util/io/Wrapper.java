@@ -12,11 +12,11 @@ class Wrapper<T extends Map<String, ?> & Serializable> implements Serializable {
 
     final T map;
 
-    private Wrapper(T map) {
-        this.map = map;
-    }
-
     static Wrapper<ImmutableMap<String, ?>> newWrapper(ConfigurationSerializable obj) {
         return new Wrapper<ImmutableMap<String, ?>>(ImmutableMap.<String, Object>builder().put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(obj.getClass())).putAll(obj.serialize()).build());
+    }
+
+    private Wrapper(T map) {
+        this.map = map;
     }
 }

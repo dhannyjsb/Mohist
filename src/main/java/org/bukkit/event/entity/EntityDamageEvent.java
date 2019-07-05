@@ -23,8 +23,8 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
     private final Map<DamageModifier, Double> modifiers;
     private final Map<DamageModifier, ? extends Function<? super Double, Double>> modifierFunctions;
     private final Map<DamageModifier, Double> originals;
-    private final DamageCause cause;
     private boolean cancelled;
+    private final DamageCause cause;
 
     public EntityDamageEvent(final Entity damagee, final DamageCause cause, final double damage) {
         this(damagee, cause, new EnumMap<DamageModifier, Double>(ImmutableMap.of(DamageModifier.BASE, damage)), new EnumMap<DamageModifier, Function<? super Double, Double>>(ImmutableMap.of(DamageModifier.BASE, ZERO)));
@@ -41,10 +41,6 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
         this.cause = cause;
         this.modifiers = modifiers;
         this.modifierFunctions = modifierFunctions;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public boolean isCancelled() {
@@ -133,6 +129,20 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
     }
 
     /**
+     * Gets the amount of damage caused by the event after all damage
+     * reduction is applied.
+     *
+     * @return the amount of damage caused by the event
+     */
+    public final double getFinalDamage() {
+        double damage = 0;
+        for (DamageModifier modifier : MODIFIERS) {
+            damage += getDamage(modifier);
+        }
+        return damage;
+    }
+
+    /**
      * Sets the raw amount of damage caused by the event.
      * <p>
      * For compatibility this also recalculates the modifiers and scales
@@ -170,20 +180,6 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
     }
 
     /**
-     * Gets the amount of damage caused by the event after all damage
-     * reduction is applied.
-     *
-     * @return the amount of damage caused by the event
-     */
-    public final double getFinalDamage() {
-        double damage = 0;
-        for (DamageModifier modifier : MODIFIERS) {
-            damage += getDamage(modifier);
-        }
-        return damage;
-    }
-
-    /**
      * Gets the cause of the damage.
      *
      * @return A DamageCause value detailing the cause of the damage.
@@ -194,6 +190,10 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
@@ -244,7 +244,8 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
          * This represents the damage reduction caused by the absorption potion
          * effect.
          */
-        ABSORPTION,;
+        ABSORPTION,
+        ;
     }
 
     /**

@@ -10,7 +10,6 @@ public class CraftPolarBear extends CraftAnimals implements PolarBear {
     public CraftPolarBear(CraftServer server, EntityPolarBear entity) {
         super(server, entity);
     }
-
     @Override
     public EntityPolarBear getHandle() {
         return (EntityPolarBear) entity;

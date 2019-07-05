@@ -39,17 +39,17 @@ public interface WorldBorder {
     /**
      * Sets the new border center.
      *
-     * @param location The new location of the border center. (Only x/z used)
-     */
-    public void setCenter(Location location);
-
-    /**
-     * Sets the new border center.
-     *
      * @param x The new center x-coordinate.
      * @param z The new center z-coordinate.
      */
     public void setCenter(double x, double z);
+
+    /**
+     * Sets the new border center.
+     *
+     * @param location The new location of the border center. (Only x/z used)
+     */
+    public void setCenter(Location location);
 
     /**
      * Gets the current border damage buffer.

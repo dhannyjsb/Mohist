@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/Side.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/Side.java
-@@ -1,17 +1,48 @@
+@@ -1,15 +1,48 @@
 +/*
 + * Minecraft Forge
 + * Copyright (c) 2016-2018.
@@ -37,22 +37,18 @@
 +     */
      SERVER;
  
--    public boolean isServer()
--    {
--        return !this.isClient();
 +    /**
 +     * @return If this is the server environment
 +     */
-+    public boolean isServer() {
+     public boolean isServer()
+     {
+-        return !this.isClient();
 +        return !isClient();
      }
  
--    public boolean isClient()
--    {
 +    /**
 +     * @return if this is the Client environment
 +     */
-+    public boolean isClient() {
+     public boolean isClient()
+     {
          return this == CLIENT;
-     }
- }

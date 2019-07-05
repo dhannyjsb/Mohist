@@ -34,11 +34,11 @@ class CraftMetaLeatherArmor extends CraftMetaItem implements LeatherArmorMeta {
         if (tag.hasKey(DISPLAY.NBT)) {
             NBTTagCompound display = tag.getCompoundTag(DISPLAY.NBT);
             if (display.hasKey(COLOR.NBT)) {
-                // Fix SPIGOT-4363
-                try {
-                    color = Color.fromRGB(display.getInteger(COLOR.NBT));
-                } catch (IllegalArgumentException ex) {
-                }
+				// Fix SPIGOT-4363
+				try {
+                	color = Color.fromRGB(display.getInteger(COLOR.NBT));
+ 				} catch (IllegalArgumentException ex) {
+				}
             }
         }
     }
@@ -68,7 +68,7 @@ class CraftMetaLeatherArmor extends CraftMetaItem implements LeatherArmorMeta {
 
     @Override
     boolean applicableTo(Material type) {
-        switch (type) {
+        switch(type) {
             case LEATHER_HELMET:
             case LEATHER_CHESTPLATE:
             case LEATHER_LEGGINGS:

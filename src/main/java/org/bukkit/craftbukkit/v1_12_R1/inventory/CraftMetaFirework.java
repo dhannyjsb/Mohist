@@ -95,18 +95,6 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         }
     }
 
-    CraftMetaFirework(Map<String, Object> map) {
-        super(map);
-
-        Integer power = SerializableMeta.getObject(Integer.class, map, FLIGHT.BUKKIT, true);
-        if (power != null) {
-            setPower(power);
-        }
-
-        Iterable<?> effects = SerializableMeta.getObject(Iterable.class, map, EXPLOSIONS.BUKKIT, true);
-        safelyAddEffects(effects);
-    }
-
     static FireworkEffect getEffect(NBTTagCompound explosion) {
         FireworkEffect.Builder effect = FireworkEffect.builder()
                 .flicker(explosion.getBoolean(EXPLOSION_FLICKER.NBT))
@@ -185,18 +173,16 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         }
     }
 
-    static void addColors(NBTTagCompound compound, ItemMetaKey key, List<Color> colors) {
-        if (colors.isEmpty()) {
-            return;
+    CraftMetaFirework(Map<String, Object> map) {
+        super(map);
+
+        Integer power = SerializableMeta.getObject(Integer.class, map, FLIGHT.BUKKIT, true);
+        if (power != null) {
+            setPower(power);
         }
 
-        final int[] colorArray = new int[colors.size()];
-        int i = 0;
-        for (Color color : colors) {
-            colorArray[i++] = color.asRGB();
-        }
-
-        compound.setIntArray(key.NBT, colorArray);
+        Iterable<?> effects = SerializableMeta.getObject(Iterable.class, map, EXPLOSIONS.BUKKIT, true);
+        safelyAddEffects(effects);
     }
 
     public boolean hasEffects() {
@@ -248,9 +234,23 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         }
     }
 
+    static void addColors(NBTTagCompound compound, ItemMetaKey key, List<Color> colors) {
+        if (colors.isEmpty()) {
+            return;
+        }
+
+        final int[] colorArray = new int[colors.size()];
+        int i = 0;
+        for (Color color : colors) {
+            colorArray[i++] = color.asRGB();
+        }
+
+        compound.setIntArray(key.NBT, colorArray);
+    }
+
     @Override
     boolean applicableTo(Material type) {
-        switch (type) {
+        switch(type) {
             case FIREWORK:
                 return true;
             default:
@@ -264,7 +264,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
     }
 
     boolean isFireworkEmpty() {
-        return !(hasEffects() || hasPower());
+        return  !(hasEffects() || hasPower());
     }
 
     boolean hasPower() {
@@ -339,7 +339,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         this.effects.add(effect);
     }
 
-    public void addEffects(FireworkEffect... effects) {
+    public void addEffects(FireworkEffect...effects) {
         Validate.notNull(effects, "Effects cannot be null");
         if (effects.length == 0) {
             return;

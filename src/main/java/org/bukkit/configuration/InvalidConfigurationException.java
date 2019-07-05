@@ -10,8 +10,7 @@ public class InvalidConfigurationException extends Exception {
      * Creates a new instance of InvalidConfigurationException without a
      * message or cause.
      */
-    public InvalidConfigurationException() {
-    }
+    public InvalidConfigurationException() {}
 
     /**
      * Constructs an instance of InvalidConfigurationException with the

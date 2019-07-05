@@ -14,11 +14,11 @@ public class TitleAPI {
     public static void sendPlayerAbar(Player p, String text) {
         ITextComponent icbc = ITextComponent.Serializer.fromJsonLenient("{\"text\": \"" + text + "\"}");
         SPacketChat ppoc = new SPacketChat(icbc, ChatType.GAME_INFO);
-        ((CraftPlayer) p).getHandle().connection.sendPacket(ppoc);
+        ((CraftPlayer)p).getHandle().connection.sendPacket(ppoc);
     }
 
     public static void sendPlayerTitle(Player player, int fadeIn, int stay, int fadeOut, String title) {
-        NetHandlerPlayServer connection = ((CraftPlayer) player).getHandle().connection;
+        NetHandlerPlayServer connection = ((CraftPlayer)player).getHandle().connection;
         SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, (ITextComponent) null, fadeIn, stay, fadeOut);
         connection.sendPacket(packetPlayOutTimes);
         ITextComponent titleMain = ITextComponent.Serializer.fromJsonLenient("{\"text\": \"" + title + "\"}");
@@ -27,7 +27,7 @@ public class TitleAPI {
     }
 
     public static void sendPlayerSubTitle(Player player, int fadeIn, int stay, int fadeOut, String subTitle) {
-        NetHandlerPlayServer connection = ((CraftPlayer) player).getHandle().connection;
+        NetHandlerPlayServer connection = ((CraftPlayer)player).getHandle().connection;
         SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, (ITextComponent) null, fadeIn, stay, fadeOut);
         connection.sendPacket(packetPlayOutTimes);
         ITextComponent titleSub = ITextComponent.Serializer.fromJsonLenient("{\"text\": \"" + subTitle + "\"}");
@@ -39,7 +39,7 @@ public class TitleAPI {
     }
 
     public static void sendFullTitle(Player player, int fadeIn, int stay, int fadeOut, String title, String subtitle) {
-        NetHandlerPlayServer connection = ((CraftPlayer) player).getHandle().connection;
+        NetHandlerPlayServer connection = ((CraftPlayer)player).getHandle().connection;
         SPacketTitle packetPlayOutTimes = new SPacketTitle(Type.TIMES, (ITextComponent) null, fadeIn, stay, fadeOut);
         connection.sendPacket(packetPlayOutTimes);
         ITextComponent titleSub = ITextComponent.Serializer.fromJsonLenient("{\"text\": \"" + subtitle + "\"}");

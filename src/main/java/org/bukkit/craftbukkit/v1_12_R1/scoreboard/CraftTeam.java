@@ -21,36 +21,6 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
         this.team = team;
     }
 
-    public static EnumVisible bukkitToNotch(NameTagVisibility visibility) {
-        switch (visibility) {
-            case ALWAYS:
-                return EnumVisible.ALWAYS;
-            case NEVER:
-                return EnumVisible.NEVER;
-            case HIDE_FOR_OTHER_TEAMS:
-                return EnumVisible.HIDE_FOR_OTHER_TEAMS;
-            case HIDE_FOR_OWN_TEAM:
-                return EnumVisible.HIDE_FOR_OWN_TEAM;
-            default:
-                throw new IllegalArgumentException("Unknown visibility level " + visibility);
-        }
-    }
-
-    public static NameTagVisibility notchToBukkit(EnumVisible visibility) {
-        switch (visibility) {
-            case ALWAYS:
-                return NameTagVisibility.ALWAYS;
-            case NEVER:
-                return NameTagVisibility.NEVER;
-            case HIDE_FOR_OTHER_TEAMS:
-                return NameTagVisibility.HIDE_FOR_OTHER_TEAMS;
-            case HIDE_FOR_OWN_TEAM:
-                return NameTagVisibility.HIDE_FOR_OWN_TEAM;
-            default:
-                throw new IllegalArgumentException("Unknown visibility level " + visibility);
-        }
-    }
-
     public String getName() throws IllegalStateException {
         CraftScoreboard scoreboard = checkState();
 
@@ -166,7 +136,7 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
         CraftScoreboard scoreboard = checkState();
 
         ImmutableSet.Builder<String> entries = ImmutableSet.builder();
-        for (String playerName : team.getMembershipCollection()) {
+        for (String playerName: team.getMembershipCollection()){
             entries.add(playerName);
         }
         return entries.build();
@@ -259,6 +229,36 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
                 break;
             default:
                 throw new IllegalArgumentException("Unrecognised option " + option);
+        }
+    }
+
+    public static EnumVisible bukkitToNotch(NameTagVisibility visibility) {
+        switch (visibility) {
+            case ALWAYS:
+                return EnumVisible.ALWAYS;
+            case NEVER:
+                return EnumVisible.NEVER;
+            case HIDE_FOR_OTHER_TEAMS:
+                return EnumVisible.HIDE_FOR_OTHER_TEAMS;
+            case HIDE_FOR_OWN_TEAM:
+                return EnumVisible.HIDE_FOR_OWN_TEAM;
+            default:
+                throw new IllegalArgumentException("Unknown visibility level " + visibility);
+        }
+    }
+
+    public static NameTagVisibility notchToBukkit(EnumVisible visibility) {
+        switch (visibility) {
+            case ALWAYS:
+                return NameTagVisibility.ALWAYS;
+            case NEVER:
+                return NameTagVisibility.NEVER;
+            case HIDE_FOR_OTHER_TEAMS:
+                return NameTagVisibility.HIDE_FOR_OTHER_TEAMS;
+            case HIDE_FOR_OWN_TEAM:
+                return NameTagVisibility.HIDE_FOR_OWN_TEAM;
+            default:
+                throw new IllegalArgumentException("Unknown visibility level " + visibility);
         }
     }
 

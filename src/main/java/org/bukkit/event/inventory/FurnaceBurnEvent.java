@@ -24,10 +24,6 @@ public class FurnaceBurnEvent extends BlockEvent implements Cancellable {
         this.burning = true;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the fuel ItemStack for this event
      *
@@ -83,6 +79,10 @@ public class FurnaceBurnEvent extends BlockEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

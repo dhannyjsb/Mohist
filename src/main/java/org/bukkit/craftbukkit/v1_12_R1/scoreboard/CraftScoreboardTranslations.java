@@ -11,8 +11,7 @@ class CraftScoreboardTranslations {
             DisplaySlot.PLAYER_LIST, "list",
             DisplaySlot.SIDEBAR, "sidebar");
 
-    private CraftScoreboardTranslations() {
-    }
+    private CraftScoreboardTranslations() {}
 
     static DisplaySlot toBukkitSlot(int i) {
         return SLOTS.inverse().get(Scoreboard.getObjectiveDisplaySlot(i));

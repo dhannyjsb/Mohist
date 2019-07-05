@@ -19,10 +19,6 @@ public class PlayerUseUnknownEntityEvent extends PlayerEvent {
         this.hand = hand;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public int getEntityId() {
         return this.entityId;
     }
@@ -37,6 +33,10 @@ public class PlayerUseUnknownEntityEvent extends PlayerEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -4,7 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.plugin.*;
+import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.UnknownDependencyException;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
@@ -22,187 +27,187 @@ import java.util.zip.ZipEntry;
 
 public class Control {
 
-    public static PluginDescriptionFile getDescription(File file) {
-        try {
-            JarFile jar = new JarFile(file);
-            ZipEntry zip = jar.getEntry("plugin.yml");
-            if (zip == null) {
-                jar.close();
-                return null;
-            }
-            PluginDescriptionFile pdf = new PluginDescriptionFile(jar.getInputStream(zip));
-            jar.close();
-            return pdf;
-        } catch (InvalidDescriptionException | IOException ioe) {
-            ioe.printStackTrace();
-        }
+	public static PluginDescriptionFile getDescription(File file) {
+		try {
+			JarFile jar = new JarFile(file);
+			ZipEntry zip = jar.getEntry("plugin.yml");
+			if (zip == null) {
+				jar.close();
+				return null;
+			}
+			PluginDescriptionFile pdf = new PluginDescriptionFile(jar.getInputStream(zip));
+			jar.close();
+			return pdf;
+		} catch (InvalidDescriptionException | IOException ioe) {
+			ioe.printStackTrace();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public static File getFile(JavaPlugin plugin) {
-        Field file;
+	public static File getFile(JavaPlugin plugin) {
+		Field file;
+		
+		try {
+			file = JavaPlugin.class.getDeclaredField("file");
+			file.setAccessible(true);
+			return (File) file.get(plugin);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 
-        try {
-            file = JavaPlugin.class.getDeclaredField("file");
-            file.setAccessible(true);
-            return (File) file.get(plugin);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	public static void enablePlugin(Plugin plugin) {
+		Bukkit.getPluginManager().enablePlugin(plugin);
+	}
 
-        return null;
-    }
+	public static void disablePlugin(Plugin plugin) {
+		Bukkit.getPluginManager().disablePlugin(plugin);
+	}
 
-    public static void enablePlugin(Plugin plugin) {
-        Bukkit.getPluginManager().enablePlugin(plugin);
-    }
+	public static Plugin loadPlugin(File plugin) {
+		Plugin p;
+		try {
+			p = Bukkit.getPluginManager().loadPlugin(plugin);
+			try {
+				p.onLoad();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return p;
+		} catch (InvalidPluginException | InvalidDescriptionException | UnknownDependencyException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    public static void disablePlugin(Plugin plugin) {
-        Bukkit.getPluginManager().disablePlugin(plugin);
-    }
+	public static boolean unloadPlugin(Plugin plugin, Boolean reloaddependents) {
+		SimpleCommandMap commandMap;
+		PluginManager pluginManager = Bukkit.getPluginManager();
 
-    public static Plugin loadPlugin(File plugin) {
-        Plugin p;
-        try {
-            p = Bukkit.getPluginManager().loadPlugin(plugin);
-            try {
-                p.onLoad();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return p;
-        } catch (InvalidPluginException | InvalidDescriptionException | UnknownDependencyException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+		String pName = plugin.getName();
+		List<Plugin> plugins;
+		Map<String, Plugin> names;
+		Map<String, Command> commands;
+		ArrayList<Plugin> reload = new ArrayList<>();
+		disablePlugin(plugin);
+		if (reloaddependents) {
+			for (Plugin p : pluginManager.getPlugins()) {
+				List<String> depend = p.getDescription().getDepend();
+				if (depend != null) {
+					for (String s : depend) {
+						if (s.equals(pName)) {
+							if (!reload.contains(p)) {
+								reload.add(p);
+								unloadPlugin(p, false);
+							}
+						}
+					}
+				}
 
-    public static boolean unloadPlugin(Plugin plugin, Boolean reloaddependents) {
-        SimpleCommandMap commandMap;
-        PluginManager pluginManager = Bukkit.getPluginManager();
+				List<String> softDepend = p.getDescription().getSoftDepend();
+				if (softDepend != null) {
+					for (String s : softDepend) {
+						if (s.equals(pName)) {
+							if (!reload.contains(p)) {
+								reload.add(p);
+								unloadPlugin(p, false);
+							}
+						}
+					}
+				}
+			}
+		}
+		for (Plugin p : reload) {
+			Bukkit.getServer().broadcastMessage(p.getName() + "\n");
+		}
+		try {
+			Field pluginsField, lookupNamesField, commandMapField, knownCommandsField;
 
-        String pName = plugin.getName();
-        List<Plugin> plugins;
-        Map<String, Plugin> names;
-        Map<String, Command> commands;
-        ArrayList<Plugin> reload = new ArrayList<>();
-        disablePlugin(plugin);
-        if (reloaddependents) {
-            for (Plugin p : pluginManager.getPlugins()) {
-                List<String> depend = p.getDescription().getDepend();
-                if (depend != null) {
-                    for (String s : depend) {
-                        if (s.equals(pName)) {
-                            if (!reload.contains(p)) {
-                                reload.add(p);
-                                unloadPlugin(p, false);
-                            }
-                        }
-                    }
-                }
+			pluginsField = pluginManager.getClass().getDeclaredField("plugins");
+			lookupNamesField = pluginManager.getClass().getDeclaredField("lookupNames");
+			commandMapField = pluginManager.getClass().getDeclaredField("commandMap");
+			knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
 
-                List<String> softDepend = p.getDescription().getSoftDepend();
-                if (softDepend != null) {
-                    for (String s : softDepend) {
-                        if (s.equals(pName)) {
-                            if (!reload.contains(p)) {
-                                reload.add(p);
-                                unloadPlugin(p, false);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        for (Plugin p : reload) {
-            Bukkit.getServer().broadcastMessage(p.getName() + "\n");
-        }
-        try {
-            Field pluginsField, lookupNamesField, commandMapField, knownCommandsField;
+			pluginsField.setAccessible(true);
+			lookupNamesField.setAccessible(true);
+			commandMapField.setAccessible(true);
+			knownCommandsField.setAccessible(true);
 
-            pluginsField = pluginManager.getClass().getDeclaredField("plugins");
-            lookupNamesField = pluginManager.getClass().getDeclaredField("lookupNames");
-            commandMapField = pluginManager.getClass().getDeclaredField("commandMap");
-            knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
+			plugins = (List<Plugin>) pluginsField.get(pluginManager);
+			names = (Map<String, Plugin>) lookupNamesField.get(pluginManager);
+			commandMap = (SimpleCommandMap) commandMapField.get(pluginManager);
+			commands = (Map<String, Command>) knownCommandsField.get(commandMap);
 
-            pluginsField.setAccessible(true);
-            lookupNamesField.setAccessible(true);
-            commandMapField.setAccessible(true);
-            knownCommandsField.setAccessible(true);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			e.printStackTrace();
+			return false;
+		}
 
-            plugins = (List<Plugin>) pluginsField.get(pluginManager);
-            names = (Map<String, Plugin>) lookupNamesField.get(pluginManager);
-            commandMap = (SimpleCommandMap) commandMapField.get(pluginManager);
-            commands = (Map<String, Command>) knownCommandsField.get(commandMap);
+		if (commandMap != null) {
+			synchronized (commandMap) {
+				Iterator<Map.Entry<String, Command>> it = commands.entrySet().iterator();
+				while (it.hasNext()) {
+					Map.Entry<String, Command> entry = it.next();
+					if (entry.getValue() instanceof PluginCommand) {
+						PluginCommand c = (PluginCommand) entry.getValue();
+						if (c.getPlugin() == plugin) {
+							c.unregister(commandMap);
+							it.remove();
+						}
+					}
+				}
+			}
+		}
+		
 
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            return false;
-        }
+		synchronized (pluginManager) {
+			if (plugins != null && plugins.contains(plugin)) {
+				plugins.remove(plugin);
+			}
 
-        if (commandMap != null) {
-            synchronized (commandMap) {
-                Iterator<Map.Entry<String, Command>> it = commands.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry<String, Command> entry = it.next();
-                    if (entry.getValue() instanceof PluginCommand) {
-                        PluginCommand c = (PluginCommand) entry.getValue();
-                        if (c.getPlugin() == plugin) {
-                            c.unregister(commandMap);
-                            it.remove();
-                        }
-                    }
-                }
-            }
-        }
+			if (names != null && names.containsKey(pName)) {
+				names.remove(pName);
+			}
+		}
 
+		JavaPluginLoader jpl = (JavaPluginLoader) plugin.getPluginLoader();
+		Field loaders = null;
 
-        synchronized (pluginManager) {
-            if (plugins != null && plugins.contains(plugin)) {
-                plugins.remove(plugin);
-            }
+		try {
+			loaders = jpl.getClass().getDeclaredField("loaders");
+			loaders.setAccessible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-            if (names != null && names.containsKey(pName)) {
-                names.remove(pName);
-            }
-        }
+		try {
+			CopyOnWriteArrayList<String> loaderMap = (CopyOnWriteArrayList<String>) loaders.get(jpl);
+			
+			loaderMap.remove(plugin.getDescription().getName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        JavaPluginLoader jpl = (JavaPluginLoader) plugin.getPluginLoader();
-        Field loaders = null;
+		ClassLoader cl = plugin.getClass().getClassLoader();
 
-        try {
-            loaders = jpl.getClass().getDeclaredField("loaders");
-            loaders.setAccessible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		try {
+			((URLClassLoader) cl).close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        try {
-            CopyOnWriteArrayList<String> loaderMap = (CopyOnWriteArrayList<String>) loaders.get(jpl);
+		System.gc();
 
-            loaderMap.remove(plugin.getDescription().getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		if (reloaddependents) {
+			for (int i = 0; i < reload.size(); i++) {
+				enablePlugin(loadPlugin(getFile((JavaPlugin) reload.get(i))));
+			}
+		}
 
-        ClassLoader cl = plugin.getClass().getClassLoader();
-
-        try {
-            ((URLClassLoader) cl).close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.gc();
-
-        if (reloaddependents) {
-            for (int i = 0; i < reload.size(); i++) {
-                enablePlugin(loadPlugin(getFile((JavaPlugin) reload.get(i))));
-            }
-        }
-
-        return true;
-    }
+		return true;
+	}
 
 }

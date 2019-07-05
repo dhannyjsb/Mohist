@@ -17,10 +17,6 @@ public class EntitySpawnEvent extends EntityEvent implements org.bukkit.event.Ca
         super(spawnee);
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public boolean isCancelled() {
         return canceled;
     }
@@ -40,6 +36,10 @@ public class EntitySpawnEvent extends EntityEvent implements org.bukkit.event.Ca
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

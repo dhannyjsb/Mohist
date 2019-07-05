@@ -29,10 +29,6 @@ public class BlockPistonExtendEvent extends BlockPistonEvent {
         this.blocks = blocks;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Get the amount of blocks which will be moved while extending.
      *
@@ -63,6 +59,10 @@ public class BlockPistonExtendEvent extends BlockPistonEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

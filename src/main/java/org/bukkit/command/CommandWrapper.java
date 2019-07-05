@@ -27,36 +27,6 @@ public class CommandWrapper implements ICommand {
         this.name = name;
     }
 
-    @Nullable
-    public static CommandWrapper toNMSCommand(ICommandSender sender, String name) {
-        Command command;
-        CommandSender bukkitSender;
-        if ((command = MinecraftServer.getServerInst().server.getCommandMap().getCommand(name)) != null && (bukkitSender = toBukkitSender(sender)) != null) {
-            return new CommandWrapper(bukkitSender, name, command);
-        }
-        return null;
-    }
-
-    @Nullable
-    public static CommandSender toBukkitSender(ICommandSender sender) {
-        if (sender instanceof MinecraftServer) {
-            return MinecraftServer.getServerInst().console;
-        }
-        if (sender instanceof RConConsoleSource) {
-            return new CraftRemoteConsoleCommandSender((RConConsoleSource) sender);
-        }
-        if (sender instanceof CommandBlockBaseLogic) {
-            return new CraftBlockCommandSender(sender);
-        }
-        if (sender instanceof FunctionManager.CustomFunctionListener) {
-            return new CraftFunctionCommandSender(sender);
-        }
-        if (sender instanceof Entity) {
-            return ((Entity) sender).getBukkitEntity();
-        }
-        return null;
-    }
-
     @Override
     public int compareTo(ICommand o) {
         return 0;
@@ -104,5 +74,35 @@ public class CommandWrapper implements ICommand {
     @Override
     public boolean isUsernameIndex(String[] args, int index) {
         return false;
+    }
+
+    @Nullable
+    public static CommandWrapper toNMSCommand(ICommandSender sender, String name) {
+        Command command;
+        CommandSender bukkitSender;
+        if ((command = MinecraftServer.getServerInst().server.getCommandMap().getCommand(name)) != null && (bukkitSender = toBukkitSender(sender)) != null) {
+            return new CommandWrapper(bukkitSender, name, command);
+        }
+        return null;
+    }
+
+    @Nullable
+    public static CommandSender toBukkitSender(ICommandSender sender) {
+        if (sender instanceof MinecraftServer) {
+            return MinecraftServer.getServerInst().console;
+        }
+        if (sender instanceof RConConsoleSource) {
+            return new CraftRemoteConsoleCommandSender((RConConsoleSource) sender);
+        }
+        if (sender instanceof CommandBlockBaseLogic) {
+            return new CraftBlockCommandSender(sender);
+        }
+        if (sender instanceof FunctionManager.CustomFunctionListener) {
+            return new CraftFunctionCommandSender(sender);
+        }
+        if (sender instanceof Entity) {
+            return ((Entity) sender).getBukkitEntity();
+        }
+        return null;
     }
 }

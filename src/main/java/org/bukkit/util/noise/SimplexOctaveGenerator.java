@@ -40,16 +40,6 @@ public class SimplexOctaveGenerator extends OctaveGenerator {
         super(createOctaves(rand, octaves));
     }
 
-    private static NoiseGenerator[] createOctaves(Random rand, int octaves) {
-        NoiseGenerator[] result = new NoiseGenerator[octaves];
-
-        for (int i = 0; i < octaves; i++) {
-            result[i] = new SimplexNoiseGenerator(rand);
-        }
-
-        return result;
-    }
-
     @Override
     public void setScale(double scale) {
         super.setScale(scale);
@@ -123,6 +113,16 @@ public class SimplexOctaveGenerator extends OctaveGenerator {
 
         if (normalized) {
             result /= max;
+        }
+
+        return result;
+    }
+
+    private static NoiseGenerator[] createOctaves(Random rand, int octaves) {
+        NoiseGenerator[] result = new NoiseGenerator[octaves];
+
+        for (int i = 0; i < octaves; i++) {
+            result[i] = new SimplexNoiseGenerator(rand);
         }
 
         return result;

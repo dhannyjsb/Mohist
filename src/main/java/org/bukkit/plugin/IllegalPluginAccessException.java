@@ -11,8 +11,7 @@ public class IllegalPluginAccessException extends RuntimeException {
      * Creates a new instance of <code>IllegalPluginAccessException</code>
      * without detail message.
      */
-    public IllegalPluginAccessException() {
-    }
+    public IllegalPluginAccessException() {}
 
     /**
      * Constructs an instance of <code>IllegalPluginAccessException</code>

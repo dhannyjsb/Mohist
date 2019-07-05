@@ -1,6 +1,10 @@
 package org.bukkit.entity;
 
-import org.bukkit.*;
+import org.bukkit.EntityEffect;
+import org.bukkit.Location;
+import org.bukkit.Nameable;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -36,18 +40,18 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
     public Location getLocation(Location loc);
 
     /**
-     * Gets this entity's current velocity
-     *
-     * @return Current traveling velocity of this entity
-     */
-    public Vector getVelocity();
-
-    /**
      * Sets this entity's velocity
      *
      * @param velocity New velocity to travel with
      */
     public void setVelocity(Vector velocity);
+
+    /**
+     * Gets this entity's current velocity
+     *
+     * @return Current traveling velocity of this entity
+     */
+    public Vector getVelocity();
 
     /**
      * Gets the entity's height
@@ -144,19 +148,19 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
     public int getFireTicks();
 
     /**
+     * Returns the entity's maximum fire ticks.
+     *
+     * @return int maxFireTicks
+     */
+    public int getMaxFireTicks();
+
+    /**
      * Sets the entity's current fire ticks (ticks before the entity stops
      * being on fire).
      *
      * @param ticks Current ticks remaining
      */
     public void setFireTicks(int ticks);
-
-    /**
-     * Returns the entity's maximum fire ticks.
-     *
-     * @return int maxFireTicks
-     */
-    public int getMaxFireTicks();
 
     /**
      * Mark the entity's removal.
@@ -262,6 +266,13 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
     public void setFallDistance(float distance);
 
     /**
+     * Record the last {@link EntityDamageEvent} inflicted on this entity
+     *
+     * @param event a {@link EntityDamageEvent}
+     */
+    public void setLastDamageCause(EntityDamageEvent event);
+
+    /**
      * Retrieve the last {@link EntityDamageEvent} inflicted on this entity.
      * This event may have been cancelled.
      *
@@ -269,13 +280,6 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *     unharmed
      */
     public EntityDamageEvent getLastDamageCause();
-
-    /**
-     * Record the last {@link EntityDamageEvent} inflicted on this entity
-     *
-     * @param event a {@link EntityDamageEvent}
-     */
-    public void setLastDamageCause(EntityDamageEvent event);
 
     /**
      * Returns a unique and persistent id for this entity
@@ -346,16 +350,6 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
     public Entity getVehicle();
 
     /**
-     * Gets whether or not the mob's custom name is displayed client side.
-     * <p>
-     * This value has no effect on players, they will always display their
-     * name.
-     *
-     * @return if the custom name is displayed
-     */
-    public boolean isCustomNameVisible();
-
-    /**
      * Sets whether or not to display the mob's custom name client side. The
      * name will be displayed above the mob similarly to a player.
      * <p>
@@ -367,11 +361,14 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
     public void setCustomNameVisible(boolean flag);
 
     /**
-     * Gets whether the entity is glowing or not.
+     * Gets whether or not the mob's custom name is displayed client side.
+     * <p>
+     * This value has no effect on players, they will always display their
+     * name.
      *
-     * @return whether the entity is glowing
+     * @return if the custom name is displayed
      */
-    boolean isGlowing();
+    public boolean isCustomNameVisible();
 
     /**
      * Sets whether the entity has a team colored (default: white) glow.
@@ -381,11 +378,11 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
     void setGlowing(boolean flag);
 
     /**
-     * Gets whether the entity is invulnerable or not.
+     * Gets whether the entity is glowing or not.
      *
-     * @return whether the entity is
+     * @return whether the entity is glowing
      */
-    public boolean isInvulnerable();
+    boolean isGlowing();
 
     /**
      * Sets whether the entity is invulnerable or not.
@@ -396,6 +393,13 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      * @param flag if the entity is invulnerable
      */
     public void setInvulnerable(boolean flag);
+
+    /**
+     * Gets whether the entity is invulnerable or not.
+     *
+     * @return whether the entity is
+     */
+    public boolean isInvulnerable();
 
     /**
      * Gets whether the entity is silent or not.
@@ -475,20 +479,22 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      */
     PistonMoveReaction getPistonMoveReaction();
 
-    @Override
-    Spigot spigot();
-
     // Spigot start
-    public class Spigot extends CommandSender.Spigot {
+    public class Spigot extends CommandSender.Spigot
+    {
 
         /**
          * Returns whether this entity is invulnerable.
          *
          * @return True if the entity is invulnerable.
          */
-        public boolean isInvulnerable() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public boolean isInvulnerable()
+        {
+            throw new UnsupportedOperationException( "Not supported yet." );
         }
     }
+
+    @Override
+    Spigot spigot();
     // Spigot end
 }

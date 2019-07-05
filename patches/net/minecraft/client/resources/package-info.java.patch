@@ -1,8 +1,0 @@
---- ../src-base/minecraft/net/minecraft/client/resources/package-info.java
-+++ ../src-work/minecraft/net/minecraft/client/resources/package-info.java
-@@ -4,4 +4,5 @@
- package net.minecraft.client.resources;
- 
- import mcp.MethodsReturnNonnullByDefault;
-+
- import javax.annotation.ParametersAreNonnullByDefault;

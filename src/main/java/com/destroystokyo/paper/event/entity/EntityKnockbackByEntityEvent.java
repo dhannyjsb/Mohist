@@ -27,11 +27,11 @@ public class EntityKnockbackByEntityEvent extends EntityEvent implements Cancell
         this.acceleration = acceleration;
     }
 
-    public static HandlerList getHandlerList() {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

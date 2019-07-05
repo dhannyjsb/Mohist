@@ -88,7 +88,6 @@ public interface PluginManager {
     public void disablePlugins();
 
     // Paper start - close Classloader on disable
-
     /**
      * Disables the specified plugin
      * <p>

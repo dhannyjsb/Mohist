@@ -63,12 +63,12 @@ public class ChatPaginator {
     public static String[] wordWrap(String rawString, int lineLength) {
         // A null string is a single line
         if (rawString == null) {
-            return new String[]{""};
+            return new String[] {""};
         }
 
         // A string shorter than the lineWidth is a single line
         if (rawString.length() <= lineLength && !rawString.contains("\n")) {
-            return new String[]{rawString};
+            return new String[] {rawString};
         }
 
         char[] rawChars = (rawString + ' ').toCharArray(); // add a trailing space to trigger pagination

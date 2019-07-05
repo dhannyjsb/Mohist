@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public class ForgeHookBukkitEvent extends Event {
     private final org.bukkit.event.Event event;
 
-    public ForgeHookBukkitEvent(org.bukkit.event.Event event) {
+    public ForgeHookBukkitEvent(org.bukkit.event.Event event){
         this.event = event;
     }
 

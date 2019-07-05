@@ -38,10 +38,6 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
         cancel = false;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public boolean isCancelled() {
         return cancel;
     }
@@ -131,6 +127,10 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

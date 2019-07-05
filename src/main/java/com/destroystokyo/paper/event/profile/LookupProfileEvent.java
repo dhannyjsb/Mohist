@@ -26,10 +26,6 @@ public class LookupProfileEvent extends Event {
         this.profile = profile;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * @return The profile that was recently looked up. This profile can be mutated
      * @deprecated will be removed with 1.13, use {@link #getPlayerProfile()}
@@ -50,6 +46,10 @@ public class LookupProfileEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

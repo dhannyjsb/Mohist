@@ -10,8 +10,7 @@ public final class DefaultPermissions {
     private static final String ROOT = "craftbukkit";
     private static final String LEGACY_PREFIX = "craft";
 
-    private DefaultPermissions() {
-    }
+    private DefaultPermissions() {}
 
     public static Permission registerPermission(Permission perm) {
         return registerPermission(perm, true);

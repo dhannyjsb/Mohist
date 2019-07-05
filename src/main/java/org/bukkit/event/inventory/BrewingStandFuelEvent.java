@@ -24,10 +24,6 @@ public class BrewingStandFuelEvent extends BlockEvent implements Cancellable {
         this.fuelPower = fuelPower;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the ItemStack of the fuel before the amount was subtracted.
      *
@@ -87,6 +83,10 @@ public class BrewingStandFuelEvent extends BlockEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

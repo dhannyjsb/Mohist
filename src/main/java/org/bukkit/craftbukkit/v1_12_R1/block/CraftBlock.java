@@ -21,7 +21,11 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.*;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
@@ -49,69 +53,12 @@ public class CraftBlock implements Block {
         this.chunk = chunk;
     }
 
-    private static net.minecraft.block.Block getNMSBlock(int type) {
-        return CraftMagicNumbers.getBlock(type);
-    }
-
-    public static BlockFace notchToBlockFace(EnumFacing notch) {
-        if (notch == null) {
-            return BlockFace.SELF;
-        }
-        switch (notch) {
-            case DOWN:
-                return BlockFace.DOWN;
-            case UP:
-                return BlockFace.UP;
-            case NORTH:
-                return BlockFace.NORTH;
-            case SOUTH:
-                return BlockFace.SOUTH;
-            case WEST:
-                return BlockFace.WEST;
-            case EAST:
-                return BlockFace.EAST;
-            default:
-                return BlockFace.SELF;
-        }
-    }
-
-    public static EnumFacing blockFaceToNotch(BlockFace face) {
-        switch (face) {
-            case DOWN:
-                return EnumFacing.DOWN;
-            case UP:
-                return EnumFacing.UP;
-            case NORTH:
-                return EnumFacing.NORTH;
-            case SOUTH:
-                return EnumFacing.SOUTH;
-            case WEST:
-                return EnumFacing.WEST;
-            case EAST:
-                return EnumFacing.EAST;
-            default:
-                return null;
-        }
-    }
-
-    public static Biome biomeBaseToBiome(net.minecraft.world.biome.Biome base) {
-        if (base == null) {
-            return null;
-        }
-
-        return Biome.valueOf(net.minecraft.world.biome.Biome.REGISTRY.getNameForObject(base).getResourcePath().toUpperCase(java.util.Locale.ENGLISH));
-    }
-
-    public static net.minecraft.world.biome.Biome biomeToBiomeBase(Biome bio) {
-        if (bio == null) {
-            return null;
-        }
-
-        return net.minecraft.world.biome.Biome.REGISTRY.getObject(new ResourceLocation(bio.name().toLowerCase(java.util.Locale.ENGLISH)));
-    }
-
     private net.minecraft.block.Block getNMSBlock() {
         return CraftMagicNumbers.getBlock(this); // TODO: UPDATE THIS
+    }
+
+    private static net.minecraft.block.Block getNMSBlock(int type) {
+        return CraftMagicNumbers.getBlock(type);
     }
 
     public World getWorld() {
@@ -155,6 +102,10 @@ public class CraftBlock implements Block {
         return chunk;
     }
 
+    public void setData(final byte data) {
+        setData(data, 3);
+    }
+
     public void setData(final byte data, boolean applyPhysics) {
         if (applyPhysics) {
             setData(data, 3);
@@ -179,8 +130,8 @@ public class CraftBlock implements Block {
         return (byte) blockData.getBlock().getMetaFromState(blockData);
     }
 
-    public void setData(final byte data) {
-        setData(data, 3);
+    public void setType(final Material type) {
+        setType(type, true);
     }
 
     @Override
@@ -227,10 +178,6 @@ public class CraftBlock implements Block {
         return Material.getMaterial(getTypeId());
     }
 
-    public void setType(final Material type) {
-        setType(type, true);
-    }
-
     @Deprecated
     @Override
     public int getTypeId() {
@@ -248,6 +195,7 @@ public class CraftBlock implements Block {
     public byte getLightFromBlocks() {
         return (byte) chunk.getHandle().getWorld().getLightFor(EnumSkyBlock.BLOCK, new BlockPos(this.x, this.y, this.z));
     }
+
 
     public Block getFace(final BlockFace face) {
         return getRelative(face, 1);
@@ -274,9 +222,9 @@ public class CraftBlock implements Block {
 
         for (BlockFace face : values) {
             if ((this.getX() + face.getModX() == block.getX()) &&
-                    (this.getY() + face.getModY() == block.getY()) &&
-                    (this.getZ() + face.getModZ() == block.getZ())
-                    ) {
+                (this.getY() + face.getModY() == block.getY()) &&
+                (this.getZ() + face.getModZ() == block.getZ())
+            ) {
                 return face;
             }
         }
@@ -287,6 +235,47 @@ public class CraftBlock implements Block {
     @Override
     public String toString() {
         return "CraftBlock{" + "chunk=" + chunk + ",x=" + x + ",y=" + y + ",z=" + z + ",type=" + getType() + ",data=" + getData() + '}';
+    }
+
+    public static BlockFace notchToBlockFace(EnumFacing notch) {
+        if (notch == null) {
+            return BlockFace.SELF;
+        }
+        switch (notch) {
+        case DOWN:
+            return BlockFace.DOWN;
+        case UP:
+            return BlockFace.UP;
+        case NORTH:
+            return BlockFace.NORTH;
+        case SOUTH:
+            return BlockFace.SOUTH;
+        case WEST:
+            return BlockFace.WEST;
+        case EAST:
+            return BlockFace.EAST;
+        default:
+            return BlockFace.SELF;
+        }
+    }
+
+    public static EnumFacing blockFaceToNotch(BlockFace face) {
+        switch (face) {
+        case DOWN:
+            return EnumFacing.DOWN;
+        case UP:
+            return EnumFacing.UP;
+        case NORTH:
+            return EnumFacing.NORTH;
+        case SOUTH:
+            return EnumFacing.SOUTH;
+        case WEST:
+            return EnumFacing.WEST;
+        case EAST:
+            return EnumFacing.EAST;
+        default:
+            return null;
+        }
     }
 
     public BlockState getState() {
@@ -301,88 +290,88 @@ public class CraftBlock implements Block {
             }
         }
         switch (material) {
-            case SIGN:
-            case SIGN_POST:
-            case WALL_SIGN:
-                return new CraftSign(this);
-            case CHEST:
-            case TRAPPED_CHEST:
-                return new CraftChest(this);
-            case BURNING_FURNACE:
-            case FURNACE:
-                return new CraftFurnace(this);
-            case DISPENSER:
-                return new CraftDispenser(this);
-            case DROPPER:
-                return new CraftDropper(this);
-            case END_GATEWAY:
-                return new CraftEndGateway(this);
-            case HOPPER:
-                TileEntityHopper tileEntityHopper = (TileEntityHopper) chunk.getCraftWorld().getTileEntityAt(x, y, z);
-                return new CraftHopper(this, tileEntityHopper);
-            case MOB_SPAWNER:
-                return new CraftCreatureSpawner(this);
-            case NOTE_BLOCK:
-                return new CraftNoteBlock(this);
-            case JUKEBOX:
-                return new CraftJukebox(this);
-            case BREWING_STAND:
-                return new CraftBrewingStand(this);
-            case SKULL:
-                return new CraftSkull(this);
-            case COMMAND:
-            case COMMAND_CHAIN:
-            case COMMAND_REPEATING:
-                return new CraftCommandBlock(this);
-            case BEACON:
-                return new CraftBeacon(this);
-            case BANNER:
-            case WALL_BANNER:
-            case STANDING_BANNER:
-                return new CraftBanner(this);
-            case FLOWER_POT:
-                return new CraftFlowerPot(this);
-            case STRUCTURE_BLOCK:
-                return new CraftStructureBlock(this);
-            case WHITE_SHULKER_BOX:
-            case ORANGE_SHULKER_BOX:
-            case MAGENTA_SHULKER_BOX:
-            case LIGHT_BLUE_SHULKER_BOX:
-            case YELLOW_SHULKER_BOX:
-            case LIME_SHULKER_BOX:
-            case PINK_SHULKER_BOX:
-            case GRAY_SHULKER_BOX:
-            case SILVER_SHULKER_BOX:
-            case CYAN_SHULKER_BOX:
-            case PURPLE_SHULKER_BOX:
-            case BLUE_SHULKER_BOX:
-            case BROWN_SHULKER_BOX:
-            case GREEN_SHULKER_BOX:
-            case RED_SHULKER_BOX:
-            case BLACK_SHULKER_BOX:
-                return new CraftShulkerBox(this);
-            case ENCHANTMENT_TABLE:
-                return new CraftEnchantingTable(this);
-            case ENDER_CHEST:
-                return new CraftEnderChest(this);
-            case DAYLIGHT_DETECTOR:
-            case DAYLIGHT_DETECTOR_INVERTED:
-                return new CraftDaylightDetector(this);
-            case REDSTONE_COMPARATOR_OFF:
-            case REDSTONE_COMPARATOR_ON:
-                return new CraftComparator(this);
-            case BED_BLOCK:
-                return new CraftBed(this);
-            default:
-                // Cauldron start
-                TileEntity tileEntity = chunk.getCraftWorld().getTileEntityAt(x, y, z);
-                if (tileEntity != null && tileEntity instanceof IInventory) {
-                    // block with unhandled TileEntity:
-                    return new CraftBlockEntityState<TileEntity>(this, (Class<TileEntity>) tileEntity.getClass());
-                } else {
-                    // Block without TileEntity:
-                    return new CraftBlockState(this);
-                }
+        case SIGN:
+        case SIGN_POST:
+        case WALL_SIGN:
+            return new CraftSign(this);
+        case CHEST:
+        case TRAPPED_CHEST:
+            return new CraftChest(this);
+        case BURNING_FURNACE:
+        case FURNACE:
+            return new CraftFurnace(this);
+        case DISPENSER:
+            return new CraftDispenser(this);
+        case DROPPER:
+            return new CraftDropper(this);
+        case END_GATEWAY:
+            return new CraftEndGateway(this);
+        case HOPPER:
+            TileEntityHopper tileEntityHopper = (TileEntityHopper) chunk.getCraftWorld().getTileEntityAt(x, y, z);
+            return new CraftHopper(this, tileEntityHopper);
+        case MOB_SPAWNER:
+            return new CraftCreatureSpawner(this);
+        case NOTE_BLOCK:
+            return new CraftNoteBlock(this);
+        case JUKEBOX:
+            return new CraftJukebox(this);
+        case BREWING_STAND:
+            return new CraftBrewingStand(this);
+        case SKULL:
+            return new CraftSkull(this);
+        case COMMAND:
+        case COMMAND_CHAIN:
+        case COMMAND_REPEATING:
+            return new CraftCommandBlock(this);
+        case BEACON:
+            return new CraftBeacon(this);
+        case BANNER:
+        case WALL_BANNER:
+        case STANDING_BANNER:
+            return new CraftBanner(this);
+        case FLOWER_POT:
+            return new CraftFlowerPot(this);
+        case STRUCTURE_BLOCK:
+            return new CraftStructureBlock(this);
+        case WHITE_SHULKER_BOX:
+        case ORANGE_SHULKER_BOX:
+        case MAGENTA_SHULKER_BOX:
+        case LIGHT_BLUE_SHULKER_BOX:
+        case YELLOW_SHULKER_BOX:
+        case LIME_SHULKER_BOX:
+        case PINK_SHULKER_BOX:
+        case GRAY_SHULKER_BOX:
+        case SILVER_SHULKER_BOX:
+        case CYAN_SHULKER_BOX:
+        case PURPLE_SHULKER_BOX:
+        case BLUE_SHULKER_BOX:
+        case BROWN_SHULKER_BOX:
+        case GREEN_SHULKER_BOX:
+        case RED_SHULKER_BOX:
+        case BLACK_SHULKER_BOX:
+            return new CraftShulkerBox(this);
+        case ENCHANTMENT_TABLE:
+            return new CraftEnchantingTable(this);
+        case ENDER_CHEST:
+            return new CraftEnderChest(this);
+        case DAYLIGHT_DETECTOR:
+        case DAYLIGHT_DETECTOR_INVERTED:
+            return new CraftDaylightDetector(this);
+        case REDSTONE_COMPARATOR_OFF:
+        case REDSTONE_COMPARATOR_ON:
+            return new CraftComparator(this);
+        case BED_BLOCK:
+            return new CraftBed(this);
+        default:
+            // Cauldron start
+            TileEntity tileEntity = chunk.getCraftWorld().getTileEntityAt(x, y, z);
+            if (tileEntity != null && tileEntity instanceof IInventory) {
+                // block with unhandled TileEntity:
+                return new CraftBlockEntityState<TileEntity>(this, (Class<TileEntity>) tileEntity.getClass());
+            } else {
+                // Block without TileEntity:
+                return new CraftBlockState(this);
+            }
         }
     }
 
@@ -392,6 +381,22 @@ public class CraftBlock implements Block {
 
     public void setBiome(Biome bio) {
         getWorld().setBiome(x, z, bio);
+    }
+
+    public static Biome biomeBaseToBiome(net.minecraft.world.biome.Biome base) {
+        if (base == null) {
+            return null;
+        }
+
+        return Biome.valueOf(net.minecraft.world.biome.Biome.REGISTRY.getNameForObject(base).getResourcePath().toUpperCase(java.util.Locale.ENGLISH));
+    }
+
+    public static net.minecraft.world.biome.Biome biomeToBiomeBase(Biome bio) {
+        if (bio == null) {
+            return null;
+        }
+
+        return net.minecraft.world.biome.Biome.REGISTRY.getObject(new ResourceLocation(bio.name().toLowerCase(java.util.Locale.ENGLISH)));
     }
 
     public double getTemperature() {

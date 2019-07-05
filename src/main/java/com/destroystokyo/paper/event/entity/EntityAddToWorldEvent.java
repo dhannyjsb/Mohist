@@ -12,17 +12,17 @@ import org.bukkit.event.entity.EntityEvent;
  */
 public class EntityAddToWorldEvent extends EntityEvent {
 
-    private static final HandlerList handlers = new HandlerList();
-
     public EntityAddToWorldEvent(Entity entity) {
         super(entity);
     }
 
-    public static HandlerList getHandlerList() {
+    private static final HandlerList handlers = new HandlerList();
+
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

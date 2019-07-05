@@ -45,12 +45,12 @@ public class CraftZombie extends CraftMonster implements Zombie {
     }
 
     @Override
-    public Villager.Profession getVillagerProfession() {
-        return null;
+    public void setVillagerProfession(Villager.Profession profession) {
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public void setVillagerProfession(Villager.Profession profession) {
-        throw new UnsupportedOperationException("Not supported.");
+    public Villager.Profession getVillagerProfession() {
+        return null;
     }
 }

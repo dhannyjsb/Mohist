@@ -19,7 +19,7 @@ public class Cauldron extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Cauldron(int type, byte data) {
         super(type, data);
     }
@@ -29,7 +29,7 @@ public class Cauldron extends MaterialData {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Cauldron(byte data) {
         super(Material.CAULDRON, data);
     }

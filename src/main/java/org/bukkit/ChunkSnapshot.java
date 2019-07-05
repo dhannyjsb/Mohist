@@ -50,7 +50,7 @@ public interface ChunkSnapshot {
      * @return 0-255
      * @deprecated Magic value
      */
-
+    
     int getBlockTypeId(int x, int y, int z);
 
     /**
@@ -62,7 +62,7 @@ public interface ChunkSnapshot {
      * @return 0-15
      * @deprecated Magic value
      */
-
+    
     int getBlockData(int x, int y, int z);
 
     /**
@@ -121,7 +121,7 @@ public interface ChunkSnapshot {
      * @return rainfall at given coordinate
      * @deprecated this is not a chunk property in current Minecraft versions
      */
-
+    
     double getRawBiomeRainfall(int x, int z);
 
     /**

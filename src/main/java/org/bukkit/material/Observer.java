@@ -21,7 +21,7 @@ public class Observer extends MaterialData implements Directional, Redstone {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public Observer(final int type) {
         super(type);
     }
@@ -35,7 +35,7 @@ public class Observer extends MaterialData implements Directional, Redstone {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Observer(final int type, final byte data) {
         super(type, data);
     }
@@ -45,7 +45,7 @@ public class Observer extends MaterialData implements Directional, Redstone {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Observer(final Material type, final byte data) {
         super(type, data);
     }

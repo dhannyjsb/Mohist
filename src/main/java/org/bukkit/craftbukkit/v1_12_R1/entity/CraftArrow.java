@@ -12,30 +12,17 @@ import org.bukkit.projectiles.ProjectileSource;
 
 public class CraftArrow extends AbstractProjectile implements Arrow {
 
-    // Spigot start
-    private final Arrow.Spigot spigot = new Arrow.Spigot() {
-        @Override
-        public double getDamage() {
-            return getHandle().getDamage();
-        }
-
-        @Override
-        public void setDamage(double damage) {
-            getHandle().setDamage(damage);
-        }
-    };
-
     public CraftArrow(CraftServer server, EntityArrow entity) {
         super(server, entity);
-    }
-
-    public int getKnockbackStrength() {
-        return getHandle().knockbackStrength;
     }
 
     public void setKnockbackStrength(int knockbackStrength) {
         Validate.isTrue(knockbackStrength >= 0, "Knockback cannot be negative");
         getHandle().setKnockbackStrength(knockbackStrength);
+    }
+
+    public int getKnockbackStrength() {
+        return getHandle().knockbackStrength;
     }
 
     public boolean isCritical() {
@@ -99,7 +86,24 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
         return EntityType.ARROW;
     }
 
-    public Arrow.Spigot spigot() {
+    // Spigot start
+    private final Arrow.Spigot spigot = new Arrow.Spigot()
+    {
+        @Override
+        public double getDamage()
+        {
+            return getHandle().getDamage();
+        }
+
+        @Override
+        public void setDamage(double damage)
+        {
+            getHandle().setDamage( damage );
+        }
+    };
+
+    public Arrow.Spigot spigot()
+    {
         return spigot;
     }
     // Spigot end

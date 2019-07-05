@@ -12,9 +12,6 @@ import java.util.Map;
 public class ColouredConsoleSender extends CraftConsoleCommandSender {
 
     private static final Map<ChatColor, String> replacements = new EnumMap<ChatColor, String>(ChatColor.class);
-    private static final ChatColor[] colors = ChatColor.values();
-    private static Terminal terminal = null;
-
     static {
         replacements.put(ChatColor.BLACK, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).boldOff().toString());
         replacements.put(ChatColor.DARK_BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).boldOff().toString());
@@ -40,7 +37,14 @@ public class ColouredConsoleSender extends CraftConsoleCommandSender {
         replacements.put(ChatColor.RESET, Ansi.ansi().a(Ansi.Attribute.RESET).toString());
     }
 
-    protected ColouredConsoleSender() {
+    private static final ChatColor[] colors = ChatColor.values();
+    private static Terminal terminal = null;
+
+    protected ColouredConsoleSender() {}
+
+    @Override
+    public void sendMessage(final String message) {
+        System.out.println(message);
     }
 
     public static void setTerminal(Terminal pTerminal) {
@@ -69,10 +73,5 @@ public class ColouredConsoleSender extends CraftConsoleCommandSender {
         } else {
             return new ColouredConsoleSender();
         }
-    }
-
-    @Override
-    public void sendMessage(final String message) {
-        System.out.println(message);
     }
 }

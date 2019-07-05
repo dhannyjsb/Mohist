@@ -85,6 +85,16 @@ public class FurnaceRecipe implements Recipe {
      * Sets the input of this furnace recipe.
      *
      * @param input The input material.
+     * @return The changed recipe, so you can chain calls.
+     */
+    public FurnaceRecipe setInput(Material input) {
+        return setInput(input, 0);
+    }
+
+    /**
+     * Sets the input of this furnace recipe.
+     *
+     * @param input The input material.
      * @param data The data value. (Note: This is currently ignored by the
      *     CraftBukkit server.)
      * @return The changed recipe, so you can chain calls.
@@ -105,16 +115,6 @@ public class FurnaceRecipe implements Recipe {
     }
 
     /**
-     * Sets the input of this furnace recipe.
-     *
-     * @param input The input material.
-     * @return The changed recipe, so you can chain calls.
-     */
-    public FurnaceRecipe setInput(Material input) {
-        return setInput(input, 0);
-    }
-
-    /**
      * Get the result of this recipe.
      *
      * @return The resulting stack.
@@ -124,20 +124,20 @@ public class FurnaceRecipe implements Recipe {
     }
 
     /**
-     * Get the experience given by this recipe.
-     *
-     * @return experience level
-     */
-    public float getExperience() {
-        return experience;
-    }
-
-    /**
      * Sets the experience given by this recipe.
      *
      * @param experience the experience level
      */
     public void setExperience(float experience) {
         this.experience = experience;
+    }
+
+    /**
+     * Get the experience given by this recipe.
+     *
+     * @return experience level
+     */
+    public float getExperience() {
+        return experience;
     }
 }

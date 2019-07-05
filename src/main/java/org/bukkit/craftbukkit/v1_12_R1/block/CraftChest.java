@@ -10,7 +10,8 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryDoubleChest;
 import org.bukkit.inventory.Inventory;
 
-public class CraftChest extends CraftLootable<TileEntityChest> implements Chest {
+public class CraftChest extends CraftLootable<TileEntityChest> implements Chest
+{
 
     public CraftChest(final Block block) {
         super(block, TileEntityChest.class);

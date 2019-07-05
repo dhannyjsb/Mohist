@@ -27,14 +27,6 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
         super(material, structure);
     }
 
-    private static boolean isBetween(int num, int min, int max) {
-        return num >= min && num <= max;
-    }
-
-    private static boolean isBetween(float num, float min, float max) {
-        return num >= min && num <= max;
-    }
-
     @Override
     public String getStructureName() {
         return getSnapshot().getName(); // PAIL: rename getStructureName
@@ -52,15 +44,15 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public void setAuthor(LivingEntity entity) {
-        Preconditions.checkArgument(entity != null, "Structure Block author entity cannot be null");
-        getSnapshot().createdBy(((CraftLivingEntity) entity).getHandle()); // PAIL: rename setAuthor
-    }
-
-    @Override
     public void setAuthor(String author) {
         Preconditions.checkArgument(author != null && !author.isEmpty(), "Author name cannot be null nor empty");
         getSnapshot().author = author; // PAIL: rename author
+    }
+
+    @Override
+    public void setAuthor(LivingEntity entity) {
+        Preconditions.checkArgument(entity != null, "Structure Block author entity cannot be null");
+        getSnapshot().createdBy(((CraftLivingEntity) entity).getHandle()); // PAIL: rename setAuthor
     }
 
     @Override
@@ -90,18 +82,13 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public Mirror getMirror() {
-        return Mirror.valueOf(getSnapshot().mirror.name()); // PAIL: rename mirror
-    }
-
-    @Override
     public void setMirror(Mirror mirror) {
         getSnapshot().mirror = net.minecraft.util.Mirror.valueOf(mirror.name()); // PAIL: rename mirror
     }
 
     @Override
-    public StructureRotation getRotation() {
-        return StructureRotation.valueOf(getSnapshot().rotation.name()); // PAIL: rename rotation
+    public Mirror getMirror() {
+        return Mirror.valueOf(getSnapshot().mirror.name()); // PAIL: rename mirror
     }
 
     @Override
@@ -110,8 +97,8 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public UsageMode getUsageMode() {
-        return UsageMode.valueOf(getSnapshot().getMode().name()); // PAIL rename getUsageMode
+    public StructureRotation getRotation() {
+        return StructureRotation.valueOf(getSnapshot().rotation.name()); // PAIL: rename rotation
     }
 
     @Override
@@ -120,8 +107,8 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public boolean isIgnoreEntities() {
-        return getSnapshot().ignoreEntities; // PAIL: rename ignoreEntities
+    public UsageMode getUsageMode() {
+        return UsageMode.valueOf(getSnapshot().getMode().name()); // PAIL rename getUsageMode
     }
 
     @Override
@@ -130,8 +117,8 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public boolean isShowAir() {
-        return getSnapshot().showAir; // PAIL: rename showAir
+    public boolean isIgnoreEntities() {
+        return getSnapshot().ignoreEntities; // PAIL: rename ignoreEntities
     }
 
     @Override
@@ -140,8 +127,8 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public boolean isBoundingBoxVisible() {
-        return getSnapshot().showBoundingBox; // PAIL: rename boundingBoxVisible
+    public boolean isShowAir() {
+        return getSnapshot().showAir; // PAIL: rename showAir
     }
 
     @Override
@@ -150,8 +137,8 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public float getIntegrity() {
-        return getSnapshot().integrity; // PAIL: rename integrity
+    public boolean isBoundingBoxVisible() {
+        return getSnapshot().showBoundingBox; // PAIL: rename boundingBoxVisible
     }
 
     @Override
@@ -161,8 +148,8 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public long getSeed() {
-        return getSnapshot().seed; // PAIL: rename seed
+    public float getIntegrity() {
+        return getSnapshot().integrity; // PAIL: rename integrity
     }
 
     @Override
@@ -171,8 +158,8 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
     }
 
     @Override
-    public String getMetadata() {
-        return getSnapshot().metadata; // PAIL: rename metadata
+    public long getSeed() {
+        return getSnapshot().seed; // PAIL: rename seed
     }
 
     @Override
@@ -181,5 +168,18 @@ public class CraftStructureBlock extends CraftBlockEntityState<TileEntityStructu
         if (getUsageMode() == UsageMode.DATA) {
             getSnapshot().metadata = metadata; // PAIL: rename metadata
         }
+    }
+
+    @Override
+    public String getMetadata() {
+        return getSnapshot().metadata; // PAIL: rename metadata
+    }
+
+    private static boolean isBetween(int num, int min, int max) {
+        return num >= min && num <= max;
+    }
+
+    private static boolean isBetween(float num, float min, float max) {
+        return num >= min && num <= max;
     }
 }

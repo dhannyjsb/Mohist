@@ -44,10 +44,6 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
         useClickedBlock = clickedBlock == null ? Result.DENY : Result.ALLOW;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Returns the action type
      *
@@ -204,6 +200,10 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

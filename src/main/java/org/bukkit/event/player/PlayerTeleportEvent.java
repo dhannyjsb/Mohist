@@ -21,10 +21,6 @@ public class PlayerTeleportEvent extends PlayerMoveEvent {
         this.cause = cause;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the cause of this teleportation event
      *
@@ -32,11 +28,6 @@ public class PlayerTeleportEvent extends PlayerMoveEvent {
      */
     public TeleportCause getCause() {
         return cause;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
     }
 
     public enum TeleportCause {
@@ -89,5 +80,14 @@ public class PlayerTeleportEvent extends PlayerMoveEvent {
          * this enum
          */
         UNKNOWN;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

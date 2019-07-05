@@ -20,7 +20,7 @@ public class Wool extends MaterialData implements Colorable {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public Wool(final int type) {
         super(type);
     }
@@ -34,7 +34,7 @@ public class Wool extends MaterialData implements Colorable {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Wool(final int type, final byte data) {
         super(type, data);
     }
@@ -44,7 +44,7 @@ public class Wool extends MaterialData implements Colorable {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public Wool(final Material type, final byte data) {
         super(type, data);
     }

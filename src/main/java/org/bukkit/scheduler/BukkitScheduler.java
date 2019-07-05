@@ -27,7 +27,7 @@ public interface BukkitScheduler {
      * @param delay Delay in server ticks before executing task
      * @return Task id number (-1 if scheduling failed)
      */
-
+    
     public int scheduleSyncDelayedTask(Plugin plugin, BukkitRunnable task, long delay);
 
     /**
@@ -47,7 +47,7 @@ public interface BukkitScheduler {
      * @param task Task to be executed
      * @return Task id number (-1 if scheduling failed)
      */
-
+    
     public int scheduleSyncDelayedTask(Plugin plugin, BukkitRunnable task);
 
     /**
@@ -71,7 +71,7 @@ public interface BukkitScheduler {
      * @param period Period in server ticks of the task
      * @return Task id number (-1 if scheduling failed)
      */
-
+    
     public int scheduleSyncRepeatingTask(Plugin plugin, BukkitRunnable task, long delay, long period);
 
     /**
@@ -88,7 +88,7 @@ public interface BukkitScheduler {
      * @deprecated This name is misleading, as it does not schedule "a sync"
      *     task, but rather, "an async" task
      */
-
+    
     public int scheduleAsyncDelayedTask(Plugin plugin, Runnable task, long delay);
 
     /**
@@ -104,7 +104,7 @@ public interface BukkitScheduler {
      * @deprecated This name is misleading, as it does not schedule "a sync"
      *     task, but rather, "an async" task
      */
-
+    
     public int scheduleAsyncDelayedTask(Plugin plugin, Runnable task);
 
     /**
@@ -122,7 +122,7 @@ public interface BukkitScheduler {
      * @deprecated This name is misleading, as it does not schedule "a sync"
      *     task, but rather, "an async" task
      */
-
+    
     public int scheduleAsyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period);
 
     /**
@@ -228,7 +228,7 @@ public interface BukkitScheduler {
      * @throws IllegalArgumentException if plugin is null
      * @throws IllegalArgumentException if task is null
      */
-
+    
     public BukkitTask runTask(Plugin plugin, BukkitRunnable task) throws IllegalArgumentException;
 
     /**
@@ -253,7 +253,7 @@ public interface BukkitScheduler {
      * @throws IllegalArgumentException if plugin is null
      * @throws IllegalArgumentException if task is null
      */
-
+    
     public BukkitTask runTaskAsynchronously(Plugin plugin, BukkitRunnable task) throws IllegalArgumentException;
 
     /**
@@ -278,7 +278,7 @@ public interface BukkitScheduler {
      * @throws IllegalArgumentException if plugin is null
      * @throws IllegalArgumentException if task is null
      */
-
+    
     public BukkitTask runTaskLater(Plugin plugin, BukkitRunnable task, long delay) throws IllegalArgumentException;
 
     /**
@@ -306,7 +306,7 @@ public interface BukkitScheduler {
      * @throws IllegalArgumentException if plugin is null
      * @throws IllegalArgumentException if task is null
      */
-
+    
     public BukkitTask runTaskLaterAsynchronously(Plugin plugin, BukkitRunnable task, long delay) throws IllegalArgumentException;
 
     /**
@@ -333,7 +333,7 @@ public interface BukkitScheduler {
      * @throws IllegalArgumentException if plugin is null
      * @throws IllegalArgumentException if task is null
      */
-
+    
     public BukkitTask runTaskTimer(Plugin plugin, BukkitRunnable task, long delay, long period) throws IllegalArgumentException;
 
     /**
@@ -365,6 +365,6 @@ public interface BukkitScheduler {
      * @throws IllegalArgumentException if plugin is null
      * @throws IllegalArgumentException if task is null
      */
-
+    
     public BukkitTask runTaskTimerAsynchronously(Plugin plugin, BukkitRunnable task, long delay, long period) throws IllegalArgumentException;
 }

@@ -31,10 +31,6 @@ public class PlayerItemConsumeEvent extends PlayerEvent implements Cancellable {
         this.item = item;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the item that is being consumed. Modifying the returned item will
      * have no effect, you must use {@link
@@ -69,6 +65,10 @@ public class PlayerItemConsumeEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

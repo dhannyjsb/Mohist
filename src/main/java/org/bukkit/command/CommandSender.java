@@ -33,10 +33,9 @@ public interface CommandSender extends Permissible {
      */
     public String getName();
 
-    Spigot spigot();
-
     // Spigot start
-    public class Spigot {
+    public class Spigot
+    {
 
         /**
          * Sends this sender a chat component.
@@ -56,5 +55,7 @@ public interface CommandSender extends Permissible {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
+
+    Spigot spigot();
     // Spigot end
 }

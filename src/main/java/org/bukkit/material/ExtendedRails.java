@@ -12,7 +12,7 @@ public class ExtendedRails extends Rails {
      * @param type the raw type id
      * @deprecated Magic value
      */
-
+    
     public ExtendedRails(final int type) {
         super(type);
     }
@@ -26,7 +26,7 @@ public class ExtendedRails extends Rails {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public ExtendedRails(final int type, final byte data) {
         super(type, data);
     }
@@ -36,7 +36,7 @@ public class ExtendedRails extends Rails {
      * @param data the raw data value
      * @deprecated Magic value
      */
-
+    
     public ExtendedRails(final Material type, final byte data) {
         super(type, data);
     }
@@ -50,7 +50,7 @@ public class ExtendedRails extends Rails {
      *
      * @deprecated Magic value
      */
-
+    
     @Override
     protected byte getConvertedData() {
         return (byte) (getData() & 0x7);

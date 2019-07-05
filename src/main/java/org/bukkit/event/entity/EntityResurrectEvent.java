@@ -19,10 +19,6 @@ public class EntityResurrectEvent extends EntityEvent implements Cancellable {
         super(what);
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
     public LivingEntity getEntity() {
         return (LivingEntity) entity;
@@ -40,6 +36,10 @@ public class EntityResurrectEvent extends EntityEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

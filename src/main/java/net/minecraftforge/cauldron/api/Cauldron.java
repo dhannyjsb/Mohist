@@ -7,6 +7,12 @@ import net.minecraftforge.cauldron.api.inventory.BukkitOreDictionary;
  */
 public class Cauldron {
     private static CauldronApi instance;
+    public static void setInterface(CauldronApi cauldron) {
+        if (instance != null) {
+            throw new IllegalStateException();
+        }
+        instance = cauldron;
+    }
 
     /**
      * Gets the current CauldronApi singleton
@@ -15,13 +21,6 @@ public class Cauldron {
      */
     public static CauldronApi getInterface() {
         return instance;
-    }
-
-    public static void setInterface(CauldronApi cauldron) {
-        if (instance != null) {
-            throw new IllegalStateException();
-        }
-        instance = cauldron;
     }
 
     public static BukkitOreDictionary getOreDictionary() {

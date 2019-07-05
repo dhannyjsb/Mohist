@@ -24,10 +24,6 @@ public class PlayerSwapHandItemsEvent extends PlayerEvent implements Cancellable
         this.offHandItem = offHandItem;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the item switched to the main hand.
      *
@@ -76,6 +72,10 @@ public class PlayerSwapHandItemsEvent extends PlayerEvent implements Cancellable
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

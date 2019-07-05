@@ -42,18 +42,22 @@ public enum CropState {
      */
     RIPE(0x7);
 
-    private final static Map<Byte, CropState> BY_DATA = Maps.newHashMap();
-
-    static {
-        for (CropState cropState : values()) {
-            BY_DATA.put(cropState.getData(), cropState);
-        }
-    }
-
     private final byte data;
+    private final static Map<Byte, CropState> BY_DATA = Maps.newHashMap();
 
     private CropState(final int data) {
         this.data = (byte) data;
+    }
+
+    /**
+     * Gets the associated data value representing this growth state
+     *
+     * @return A byte containing the data value of this growth state
+     * @deprecated Magic value
+     */
+    
+    public byte getData() {
+        return data;
     }
 
     /**
@@ -64,19 +68,14 @@ public enum CropState {
      *     it doesn't exist
      * @deprecated Magic value
      */
-
+    
     public static CropState getByData(final byte data) {
         return BY_DATA.get(data);
     }
 
-    /**
-     * Gets the associated data value representing this growth state
-     *
-     * @return A byte containing the data value of this growth state
-     * @deprecated Magic value
-     */
-
-    public byte getData() {
-        return data;
+    static {
+        for (CropState cropState : values()) {
+            BY_DATA.put(cropState.getData(), cropState);
+        }
     }
 }

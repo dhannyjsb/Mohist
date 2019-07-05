@@ -10,16 +10,12 @@ import org.bukkit.event.HandlerList;
  */
 public class LightningStrikeEvent extends WeatherEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final LightningStrike bolt;
     private boolean canceled;
+    private final LightningStrike bolt;
 
     public LightningStrikeEvent(final World world, final LightningStrike bolt) {
         super(world);
         this.bolt = bolt;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public boolean isCancelled() {
@@ -41,6 +37,10 @@ public class LightningStrikeEvent extends WeatherEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

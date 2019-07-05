@@ -3,7 +3,11 @@ package org.bukkit.event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map.Entry;
 
 /**
@@ -12,35 +16,22 @@ import java.util.Map.Entry;
 public class HandlerList {
 
     /**
-     * List of all HandlerLists which have been created, for use in bakeAll()
-     */
-    private static ArrayList<HandlerList> allLists = new ArrayList<HandlerList>();
-    /**
-     * Dynamic handler lists. These are changed using register() and
-     * unregister() and are automatically baked to the handlers array any time
-     * they have changed.
-     */
-    private final EnumMap<EventPriority, ArrayList<RegisteredListener>> handlerslots;
-    /**
      * Handler array. This field being an array is the key to this system's
      * speed.
      */
     private volatile RegisteredListener[] handlers = null;
 
     /**
-     * Create a new handler list and initialize using EventPriority.
-     * <p>
-     * The HandlerList is then added to meta-list for use in bakeAll()
+     * Dynamic handler lists. These are changed using register() and
+     * unregister() and are automatically baked to the handlers array any time
+     * they have changed.
      */
-    public HandlerList() {
-        handlerslots = new EnumMap<EventPriority, ArrayList<RegisteredListener>>(EventPriority.class);
-        for (EventPriority o : EventPriority.values()) {
-            handlerslots.put(o, new ArrayList<RegisteredListener>());
-        }
-        synchronized (allLists) {
-            allLists.add(this);
-        }
-    }
+    private final EnumMap<EventPriority, ArrayList<RegisteredListener>> handlerslots;
+
+    /**
+     * List of all HandlerLists which have been created, for use in bakeAll()
+     */
+    private static ArrayList<HandlerList> allLists = new ArrayList<HandlerList>();
 
     /**
      * Bake all handler lists. Best used just after all normal event
@@ -98,39 +89,17 @@ public class HandlerList {
     }
 
     /**
-     * Get a specific plugin's registered listeners associated with this
-     * handler list
-     *
-     * @param plugin the plugin to get the listeners of
-     * @return the list of registered listeners
+     * Create a new handler list and initialize using EventPriority.
+     * <p>
+     * The HandlerList is then added to meta-list for use in bakeAll()
      */
-    public static ArrayList<RegisteredListener> getRegisteredListeners(Plugin plugin) {
-        ArrayList<RegisteredListener> listeners = new ArrayList<RegisteredListener>();
-        synchronized (allLists) {
-            for (HandlerList h : allLists) {
-                synchronized (h) {
-                    for (List<RegisteredListener> list : h.handlerslots.values()) {
-                        for (RegisteredListener listener : list) {
-                            if (listener.getPlugin().equals(plugin)) {
-                                listeners.add(listener);
-                            }
-                        }
-                    }
-                }
-            }
+    public HandlerList() {
+        handlerslots = new EnumMap<EventPriority, ArrayList<RegisteredListener>>(EventPriority.class);
+        for (EventPriority o : EventPriority.values()) {
+            handlerslots.put(o, new ArrayList<RegisteredListener>());
         }
-        return listeners;
-    }
-
-    /**
-     * Get a list of all handler lists for every event type
-     *
-     * @return the list of all handler lists
-     */
-    @SuppressWarnings("unchecked")
-    public static ArrayList<HandlerList> getHandlerLists() {
         synchronized (allLists) {
-            return (ArrayList<HandlerList>) allLists.clone();
+            allLists.add(this);
         }
     }
 
@@ -177,7 +146,7 @@ public class HandlerList {
     public synchronized void unregister(Plugin plugin) {
         boolean changed = false;
         for (List<RegisteredListener> list : handlerslots.values()) {
-            for (ListIterator<RegisteredListener> i = list.listIterator(); i.hasNext(); ) {
+            for (ListIterator<RegisteredListener> i = list.listIterator(); i.hasNext();) {
                 if (i.next().getPlugin().equals(plugin)) {
                     i.remove();
                     changed = true;
@@ -197,7 +166,7 @@ public class HandlerList {
     public synchronized void unregister(Listener listener) {
         boolean changed = false;
         for (List<RegisteredListener> list : handlerslots.values()) {
-            for (ListIterator<RegisteredListener> i = list.listIterator(); i.hasNext(); ) {
+            for (ListIterator<RegisteredListener> i = list.listIterator(); i.hasNext();) {
                 if (i.next().getListener().equals(listener)) {
                     i.remove();
                     changed = true;
@@ -234,5 +203,42 @@ public class HandlerList {
             bake(); // This prevents fringe cases of returning null
         }
         return handlers;
+    }
+
+    /**
+     * Get a specific plugin's registered listeners associated with this
+     * handler list
+     *
+     * @param plugin the plugin to get the listeners of
+     * @return the list of registered listeners
+     */
+    public static ArrayList<RegisteredListener> getRegisteredListeners(Plugin plugin) {
+        ArrayList<RegisteredListener> listeners = new ArrayList<RegisteredListener>();
+        synchronized (allLists) {
+            for (HandlerList h : allLists) {
+                synchronized (h) {
+                    for (List<RegisteredListener> list : h.handlerslots.values()) {
+                        for (RegisteredListener listener : list) {
+                            if (listener.getPlugin().equals(plugin)) {
+                                listeners.add(listener);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return listeners;
+    }
+
+    /**
+     * Get a list of all handler lists for every event type
+     *
+     * @return the list of all handler lists
+     */
+    @SuppressWarnings("unchecked")
+    public static ArrayList<HandlerList> getHandlerLists() {
+        synchronized (allLists) {
+            return (ArrayList<HandlerList>) allLists.clone();
+        }
     }
 }

@@ -14,10 +14,6 @@ public class InventoryCloseEvent extends InventoryEvent {
         super(transaction);
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Returns the player involved in this event
      *
@@ -29,6 +25,10 @@ public class InventoryCloseEvent extends InventoryEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

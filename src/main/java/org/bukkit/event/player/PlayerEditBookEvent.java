@@ -36,10 +36,6 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
         this.cancel = false;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the book meta currently on the book.
      * <p>
@@ -66,18 +62,6 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
     }
 
     /**
-     * Sets the book meta that will actually be added to the book.
-     *
-     * @param newBookMeta new book meta
-     * @throws IllegalArgumentException if the new book meta is null
-     */
-    public void setNewBookMeta(BookMeta newBookMeta) throws IllegalArgumentException {
-        Validate.notNull(newBookMeta, "New book meta must not be null");
-        Bukkit.getItemFactory().equals(newBookMeta, null);
-        this.newBookMeta = newBookMeta.clone();
-    }
-
-    /**
      * Gets the inventory slot number for the book item that triggered this
      * event.
      * <p>
@@ -87,6 +71,18 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
      */
     public int getSlot() {
         return slot;
+    }
+
+    /**
+     * Sets the book meta that will actually be added to the book.
+     *
+     * @param newBookMeta new book meta
+     * @throws IllegalArgumentException if the new book meta is null
+     */
+    public void setNewBookMeta(BookMeta newBookMeta) throws IllegalArgumentException {
+        Validate.notNull(newBookMeta, "New book meta must not be null");
+        Bukkit.getItemFactory().equals(newBookMeta, null);
+        this.newBookMeta = newBookMeta.clone();
     }
 
     /**
@@ -111,6 +107,10 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

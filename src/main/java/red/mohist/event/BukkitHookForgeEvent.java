@@ -17,10 +17,6 @@ public class BukkitHookForgeEvent extends org.bukkit.event.Event {
         this.event = event;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * @return Forge and Mods Event
      */
@@ -35,6 +31,10 @@ public class BukkitHookForgeEvent extends org.bukkit.event.Event {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

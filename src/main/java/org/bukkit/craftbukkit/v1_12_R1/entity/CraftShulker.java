@@ -17,7 +17,7 @@ public class CraftShulker extends CraftGolem implements Shulker {
     public String toString() {
         return "CraftShulker";
     }
-
+	
     @Override
     public EntityType getType() {
         return EntityType.SHULKER;

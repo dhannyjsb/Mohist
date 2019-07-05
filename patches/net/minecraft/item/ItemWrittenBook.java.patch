@@ -16,7 +16,7 @@
  import net.minecraft.stats.StatList;
  import net.minecraft.util.ActionResult;
  import net.minecraft.util.EnumActionResult;
-@@ -21,47 +20,39 @@
+@@ -21,9 +20,13 @@
  import net.minecraft.util.text.TextFormatting;
  import net.minecraft.util.text.translation.I18n;
  import net.minecraft.world.World;
@@ -24,124 +24,16 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
--public class ItemWrittenBook extends Item
--{
--    public ItemWrittenBook()
--    {
 +import javax.annotation.Nullable;
 +import java.util.List;
 +
-+public class ItemWrittenBook extends Item {
-+    public ItemWrittenBook() {
-         this.setMaxStackSize(1);
-     }
- 
--    public static boolean validBookTagContents(NBTTagCompound nbt)
--    {
--        if (!ItemWritableBook.isNBTValid(nbt))
--        {
-+    public static boolean validBookTagContents(NBTTagCompound nbt) {
-+        if (!ItemWritableBook.isNBTValid(nbt)) {
-             return false;
--        }
--        else if (!nbt.hasKey("title", 8))
--        {
-+        } else if (!nbt.hasKey("title", 8)) {
-             return false;
--        }
--        else
--        {
-+        } else {
-             String s = nbt.getString("title");
-             return s != null && s.length() <= 32 ? nbt.hasKey("author", 8) : false;
-         }
-     }
- 
--    public static int getGeneration(ItemStack book)
--    {
-+    public static int getGeneration(ItemStack book) {
-         return book.getTagCompound().getInteger("generation");
-     }
- 
--    public String getItemStackDisplayName(ItemStack stack)
--    {
--        if (stack.hasTagCompound())
--        {
-+    public String getItemStackDisplayName(ItemStack stack) {
-+        if (stack.hasTagCompound()) {
-             NBTTagCompound nbttagcompound = stack.getTagCompound();
-             String s = nbttagcompound.getString("title");
- 
--            if (!StringUtils.isNullOrEmpty(s))
--            {
-+            if (!StringUtils.isNullOrEmpty(s)) {
-                 return s;
-             }
-         }
-@@ -70,15 +61,12 @@
-     }
- 
-     @SideOnly(Side.CLIENT)
--    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
--    {
--        if (stack.hasTagCompound())
--        {
-+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-+        if (stack.hasTagCompound()) {
-             NBTTagCompound nbttagcompound = stack.getTagCompound();
-             String s = nbttagcompound.getString("author");
- 
--            if (!StringUtils.isNullOrEmpty(s))
--            {
-+            if (!StringUtils.isNullOrEmpty(s)) {
-                 tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("book.byAuthor", s));
-             }
- 
-@@ -86,12 +74,10 @@
-         }
-     }
- 
--    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
--    {
-+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-         ItemStack itemstack = playerIn.getHeldItem(handIn);
- 
--        if (!worldIn.isRemote)
--        {
-+        if (!worldIn.isRemote) {
-             this.resolveContents(itemstack, playerIn);
-         }
- 
-@@ -100,33 +86,45 @@
-         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
-     }
- 
--    private void resolveContents(ItemStack stack, EntityPlayer player)
--    {
--        if (stack.getTagCompound() != null)
--        {
-+    private void resolveContents(ItemStack stack, EntityPlayer player) {
-+        if (stack.getTagCompound() != null) {
-             NBTTagCompound nbttagcompound = stack.getTagCompound();
- 
--            if (!nbttagcompound.getBoolean("resolved"))
--            {
-+            if (!nbttagcompound.getBoolean("resolved")) {
-                 nbttagcompound.setBoolean("resolved", true);
- 
--                if (validBookTagContents(nbttagcompound))
--                {
-+                if (validBookTagContents(nbttagcompound)) {
-                     NBTTagList nbttaglist = nbttagcompound.getTagList("pages", 8);
- 
--                    for (int i = 0; i < nbttaglist.tagCount(); ++i)
--                    {
-+                    for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+ public class ItemWrittenBook extends Item
+ {
+     public ItemWrittenBook()
+@@ -119,6 +122,24 @@
                          String s = nbttaglist.getStringTagAt(i);
                          ITextComponent itextcomponent;
  
--                        try
--                        {
 +                        // CraftBukkit start
 +                        // Some commands use the worldserver variable but we leave it full of null values,
 +                        // so we must temporarily populate it with the world of the commandsender
@@ -160,39 +52,16 @@
 +                        }
 +                        // CraftBukkit end
 +
-+                        try {
+                         try
+                         {
                              itextcomponent = ITextComponent.Serializer.fromJsonLenient(s);
-                             itextcomponent = TextComponentUtils.processComponent(player, itextcomponent, player);
--                        }
--                        catch (Exception var9)
--                        {
-+                        } catch (Exception var9) {
+@@ -128,6 +149,9 @@
+                         {
                              itextcomponent = new TextComponentString(s);
-+                        } finally {
-+                            MinecraftServer.getServerInst().worlds = prev;
                          }
++                        finally {
++                            MinecraftServer.getServerInst().worlds = prev;
++                        }
  
                          nbttaglist.set(i, new NBTTagString(ITextComponent.Serializer.componentToJson(itextcomponent)));
-@@ -134,10 +132,9 @@
- 
-                     nbttagcompound.setTag("pages", nbttaglist);
- 
--                    if (player instanceof EntityPlayerMP && player.getHeldItemMainhand() == stack)
--                    {
-+                    if (player instanceof EntityPlayerMP && player.getHeldItemMainhand() == stack) {
-                         Slot slot = player.openContainer.getSlotFromInventory(player.inventory, player.inventory.currentItem);
--                        ((EntityPlayerMP)player).connection.sendPacket(new SPacketSetSlot(0, slot.slotNumber, stack));
-+                        ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(0, slot.slotNumber, stack));
                      }
-                 }
-             }
-@@ -145,8 +142,7 @@
-     }
- 
-     @SideOnly(Side.CLIENT)
--    public boolean hasEffect(ItemStack stack)
--    {
-+    public boolean hasEffect(ItemStack stack) {
-         return true;
-     }
- }

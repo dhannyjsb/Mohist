@@ -25,10 +25,6 @@ public class PlayerInteractEntityEvent extends PlayerEvent implements Cancellabl
         this.hand = hand;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public boolean isCancelled() {
         return cancelled;
     }
@@ -57,6 +53,10 @@ public class PlayerInteractEntityEvent extends PlayerEvent implements Cancellabl
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

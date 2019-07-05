@@ -140,7 +140,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
 
     @Override
     boolean applicableTo(Material type) {
-        switch (type) {
+        switch(type) {
             case POTION:
             case SPLASH_POTION:
             case LINGERING_POTION:
@@ -162,14 +162,14 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
     }
 
     @Override
-    public PotionData getBasePotionData() {
-        return type;
-    }
-
-    @Override
     public void setBasePotionData(PotionData data) {
         Validate.notNull(data, "PotionData cannot be null");
         this.type = data;
+    }
+
+    @Override
+    public PotionData getBasePotionData() {
+        return type;
     }
 
     public boolean hasCustomEffects() {

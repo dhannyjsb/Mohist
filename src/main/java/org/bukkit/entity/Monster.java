@@ -3,5 +3,4 @@ package org.bukkit.entity;
 /**
  * Represents a Monster.
  */
-public interface Monster extends Creature {
-}
+public interface Monster extends Creature {}

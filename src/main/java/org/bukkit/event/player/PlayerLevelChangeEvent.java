@@ -17,10 +17,6 @@ public class PlayerLevelChangeEvent extends PlayerEvent {
         this.newLevel = newLevel;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the old level of the player
      *
@@ -41,6 +37,10 @@ public class PlayerLevelChangeEvent extends PlayerEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

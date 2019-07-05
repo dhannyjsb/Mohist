@@ -6,17 +6,11 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityEvent;
 
 public class EndermanEscapeEvent extends EntityEvent implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
     private final Reason reason;
-    private boolean cancelled = false;
 
     public EndermanEscapeEvent(Enderman entity, Reason reason) {
         super(entity);
         this.reason = reason;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     @Override
@@ -31,9 +25,17 @@ public class EndermanEscapeEvent extends EntityEvent implements Cancellable {
         return reason;
     }
 
+    private static final HandlerList handlers = new HandlerList();
+
     public HandlerList getHandlers() {
         return handlers;
     }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    private boolean cancelled = false;
 
     @Override
     public boolean isCancelled() {

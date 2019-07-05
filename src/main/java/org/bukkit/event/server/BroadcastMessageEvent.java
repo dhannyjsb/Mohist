@@ -13,17 +13,13 @@ import java.util.Set;
 public class BroadcastMessageEvent extends ServerEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
-    private final Set<CommandSender> recipients;
     private String message;
+    private final Set<CommandSender> recipients;
     private boolean cancelled = false;
 
     public BroadcastMessageEvent(String message, Set<CommandSender> recipients) {
         this.message = message;
         this.recipients = recipients;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -73,6 +69,10 @@ public class BroadcastMessageEvent extends ServerEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

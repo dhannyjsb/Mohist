@@ -66,19 +66,31 @@ public enum MushroomBlockTexture {
     private final static Map<Byte, MushroomBlockTexture> BY_DATA = Maps.newHashMap();
     private final static Map<BlockFace, MushroomBlockTexture> BY_BLOCKFACE = Maps.newHashMap();
 
-    static {
-        for (MushroomBlockTexture type : values()) {
-            BY_DATA.put(type.data, type);
-            BY_BLOCKFACE.put(type.capFace, type);
-        }
-    }
-
     private final Byte data;
     private final BlockFace capFace;
 
     private MushroomBlockTexture(final int data, final BlockFace capFace) {
         this.data = (byte) data;
         this.capFace = capFace;
+    }
+
+    /**
+     * Gets the associated data value representing this mushroom block face.
+     *
+     * @return A byte containing the data value of this mushroom block face
+     * @deprecated Magic value
+     */
+    public byte getData() {
+        return data;
+    }
+
+    /**
+     * Gets the face that has cap texture.
+     *
+     * @return The cap face
+     */
+    public BlockFace getCapFace() {
+        return capFace;
     }
 
     /**
@@ -106,22 +118,10 @@ public enum MushroomBlockTexture {
         return BY_BLOCKFACE.get(face);
     }
 
-    /**
-     * Gets the associated data value representing this mushroom block face.
-     *
-     * @return A byte containing the data value of this mushroom block face
-     * @deprecated Magic value
-     */
-    public byte getData() {
-        return data;
-    }
-
-    /**
-     * Gets the face that has cap texture.
-     *
-     * @return The cap face
-     */
-    public BlockFace getCapFace() {
-        return capFace;
+    static {
+        for (MushroomBlockTexture type : values()) {
+            BY_DATA.put(type.data, type);
+            BY_BLOCKFACE.put(type.capFace, type);
+        }
     }
 }

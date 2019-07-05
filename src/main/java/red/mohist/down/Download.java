@@ -11,9 +11,9 @@ import java.nio.channels.ReadableByteChannel;
 
 public class Download {
 
-    public Download(String url, String fileName) {
+    public Download(String url,String fileName){
         Object[] o1 = {fileName};
-        System.out.println(Message.getFormatString(Message.Dw_File, o1));
+        System.out.println(Message.getFormatString(Message.Dw_File,o1));
         System.out.println(Message.getString(Message.Dw_Start) + "......");
         File Jar = new File(fileName);
         try {

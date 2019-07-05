@@ -25,10 +25,6 @@ public class ExplosionPrimeEvent extends EntityEvent implements Cancellable {
         this(explosive, explosive.getYield(), explosive.isIncendiary());
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public boolean isCancelled() {
         return cancel;
     }
@@ -75,6 +71,10 @@ public class ExplosionPrimeEvent extends EntityEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

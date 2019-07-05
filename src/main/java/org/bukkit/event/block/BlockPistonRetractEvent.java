@@ -13,15 +13,11 @@ import java.util.List;
 public class BlockPistonRetractEvent extends BlockPistonEvent {
     private static final HandlerList handlers = new HandlerList();
     private List<Block> blocks;
-
+    
     public BlockPistonRetractEvent(final Block block, final List<Block> blocks, final BlockFace direction) {
         super(block, direction);
-
+        
         this.blocks = blocks;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -33,7 +29,7 @@ public class BlockPistonRetractEvent extends BlockPistonEvent {
     public Location getRetractLocation() {
         return getBlock().getRelative(getDirection(), 2).getLocation();
     }
-
+    
     /**
      * Get an immutable list of the blocks which will be moved by the
      * extending.
@@ -46,6 +42,10 @@ public class BlockPistonRetractEvent extends BlockPistonEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

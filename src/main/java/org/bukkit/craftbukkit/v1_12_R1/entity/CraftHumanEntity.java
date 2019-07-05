@@ -14,7 +14,16 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.network.play.server.SPacketOpenWindow;
-import net.minecraft.tileentity.*;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.tileentity.TileEntityDropper;
+import net.minecraft.tileentity.TileEntityEnchantmentTable;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.tileentity.TileEntityLockable;
+import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.CooldownTracker;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
@@ -25,12 +34,23 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.*;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftContainer;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMerchant;
 import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MainHand;
+import org.bukkit.inventory.Merchant;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -40,9 +60,9 @@ import org.bukkit.plugin.Plugin;
 import java.util.Set;
 
 public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
-    protected final PermissibleBase perm = new PermissibleBase(this);
     private CraftInventoryPlayer inventory;
     private CraftInventory enderChest;
+    protected final PermissibleBase perm = new PermissibleBase(this);
     private boolean op;
     private GameMode mode;
 
@@ -77,7 +97,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     public MainHand getMainHand() {
-        return getHandle().getPrimaryHand() == EnumHandSide.LEFT ? MainHand.LEFT : MainHand.RIGHT;
+        return getHandle().getPrimaryHand()== EnumHandSide.LEFT ? MainHand.LEFT : MainHand.RIGHT;
     }
 
     public ItemStack getItemInHand() {
@@ -110,11 +130,6 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     public boolean isOp() {
         return op;
-    }
-
-    public void setOp(boolean value) {
-        this.op = value;
-        perm.recalculatePermissions();
     }
 
     public boolean isPermissionSet(String name) {
@@ -157,6 +172,11 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         perm.recalculatePermissions();
     }
 
+    public void setOp(boolean value) {
+        this.op = value;
+        perm.recalculatePermissions();
+    }
+
     public Set<PermissionAttachmentInfo> getEffectivePermissions() {
         return perm.getEffectivePermissions();
     }
@@ -193,7 +213,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     public InventoryView openInventory(Inventory inventory) {
-        if (!(getHandle() instanceof EntityPlayerMP)) {
+        if(!(getHandle() instanceof EntityPlayerMP)) {
             return null;
         }
         EntityPlayerMP player = (EntityPlayerMP) getHandle();
@@ -290,7 +310,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         Container container = new CraftContainer(inventory, this.getHandle(), player.getNextWindowIdCB());
 
         container = CraftEventFactory.callInventoryOpenEvent(player, container);
-        if (container == null) {
+        if(container == null) {
             return;
         }
 
@@ -298,7 +318,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         int size = container.getBukkitView().getTopInventory().getSize();
 
         // Special cases
-        if (windowType.equals("minecraft:crafting_table")
+        if (windowType.equals("minecraft:crafting_table") 
                 || windowType.equals("minecraft:anvil")
                 || windowType.equals("minecraft:enchanting_table")
                 ) {
@@ -363,7 +383,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         }
         if (getHandle().openContainer != getHandle().openContainer) {
             // fire INVENTORY_CLOSE if one already open
-            ((EntityPlayerMP) getHandle()).connection.processCloseWindow(new CPacketCloseWindow(getHandle().openContainer.windowId));
+            ((EntityPlayerMP)getHandle()).connection.processCloseWindow(new CPacketCloseWindow(getHandle().openContainer.windowId));
         }
         EntityPlayerMP player = (EntityPlayerMP) getHandle();
         Container container;
@@ -423,7 +443,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     public void closeInventory() {
-        getHandle().closeScreen();
+		getHandle().closeScreen();
     }
 
     public boolean isBlocking() {

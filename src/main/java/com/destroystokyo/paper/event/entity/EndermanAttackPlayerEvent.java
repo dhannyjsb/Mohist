@@ -36,17 +36,11 @@ import org.bukkit.event.entity.EntityEvent;
  *
  */
 public class EndermanAttackPlayerEvent extends EntityEvent implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
     private final Player player;
-    private boolean cancelled = false;
 
     public EndermanAttackPlayerEvent(Enderman entity, Player player) {
         super(entity);
         this.player = player;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -68,9 +62,17 @@ public class EndermanAttackPlayerEvent extends EntityEvent implements Cancellabl
         return player;
     }
 
+    private static final HandlerList handlers = new HandlerList();
+
     public HandlerList getHandlers() {
         return handlers;
     }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    private boolean cancelled = false;
 
     /**
      *

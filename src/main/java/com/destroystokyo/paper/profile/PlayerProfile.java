@@ -16,8 +16,7 @@ public interface PlayerProfile {
     /**
      * @return The players name, if set
      */
-    @Nullable
-    String getName();
+    @Nullable String getName();
 
     /**
      * Sets this profiles Name
@@ -30,8 +29,7 @@ public interface PlayerProfile {
     /**
      * @return The players unique identifier, if set
      */
-    @Nullable
-    UUID getId();
+    @Nullable UUID getId();
 
     /**
      * Sets this profiles UUID
@@ -45,14 +43,7 @@ public interface PlayerProfile {
      * @return A Mutable set of this players properties, such as textures.
      * Values specified here are subject to implementation details.
      */
-    @Nonnull
-    Set<ProfileProperty> getProperties();
-
-    /**
-     * Sets multiple properties. If any of the set properties already exist, it will be replaced
-     * @param properties The properties to set
-     */
-    void setProperties(Collection<ProfileProperty> properties);
+    @Nonnull Set<ProfileProperty> getProperties();
 
     /**
      * Check if the Profile has the specified property
@@ -66,6 +57,12 @@ public interface PlayerProfile {
      * @param property Property to set.
      */
     void setProperty(ProfileProperty property);
+
+    /**
+     * Sets multiple properties. If any of the set properties already exist, it will be replaced
+     * @param properties The properties to set
+     */
+    void setProperties(Collection<ProfileProperty> properties);
 
     /**
      * Removes a specific property from this profile

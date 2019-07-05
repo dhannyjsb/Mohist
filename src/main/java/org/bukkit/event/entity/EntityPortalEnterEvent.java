@@ -16,10 +16,6 @@ public class EntityPortalEnterEvent extends EntityEvent {
         this.location = location;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the portal block the entity is touching
      *
@@ -31,6 +27,10 @@ public class EntityPortalEnterEvent extends EntityEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -29,10 +29,6 @@ public class PlayerChatTabCompleteEvent extends PlayerEvent {
         this.completions = completions;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the chat message being tab-completed.
      *
@@ -65,6 +61,10 @@ public class PlayerChatTabCompleteEvent extends PlayerEvent {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

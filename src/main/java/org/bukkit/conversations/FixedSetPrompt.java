@@ -10,7 +10,7 @@ import java.util.List;
  * response from the user.
  */
 public abstract class FixedSetPrompt extends ValidatingPrompt {
-
+    
     protected List<String> fixedSet;
 
     /**
@@ -26,8 +26,7 @@ public abstract class FixedSetPrompt extends ValidatingPrompt {
         this.fixedSet = Arrays.asList(fixedSet);
     }
 
-    private FixedSetPrompt() {
-    }
+    private FixedSetPrompt() {}
 
     @Override
     protected boolean isInputValid(ConversationContext context, String input) {

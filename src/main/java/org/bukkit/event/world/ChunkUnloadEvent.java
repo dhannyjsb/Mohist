@@ -21,10 +21,6 @@ public class ChunkUnloadEvent extends ChunkEvent implements Cancellable {
         this.saveChunk = save;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Return whether this chunk will be saved to disk.
      *
@@ -53,6 +49,10 @@ public class ChunkUnloadEvent extends ChunkEvent implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

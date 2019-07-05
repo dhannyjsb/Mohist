@@ -37,19 +37,19 @@ public interface Structure extends BlockState {
     String getAuthor();
 
     /**
+     * Set the name of whoever created this structure.
+     *
+     * @param author whoever created this structure
+     */
+    void setAuthor(String author);
+
+    /**
      * Set the name of whoever created this structure using a
      * {@link LivingEntity}.
      *
      * @param livingEntity the entity who created this structure
      */
     void setAuthor(LivingEntity livingEntity);
-
-    /**
-     * Set the name of whoever created this structure.
-     *
-     * @param author whoever created this structure
-     */
-    void setAuthor(String author);
 
     /**
      * The relative position of the structure outline based on the position of
@@ -91,13 +91,6 @@ public interface Structure extends BlockState {
     void setStructureSize(BlockVector vector);
 
     /**
-     * How this structure is mirrored.
-     *
-     * @return the current mirroring method
-     */
-    Mirror getMirror();
-
-    /**
      * Sets the mirroring of the structure.
      *
      * @param mirror the new mirroring method
@@ -105,11 +98,11 @@ public interface Structure extends BlockState {
     void setMirror(Mirror mirror);
 
     /**
-     * Get how this structure is rotated.
+     * How this structure is mirrored.
      *
-     * @return the new rotation
+     * @return the current mirroring method
      */
-    StructureRotation getRotation();
+    Mirror getMirror();
 
     /**
      * Set how this structure is rotated.
@@ -119,11 +112,11 @@ public interface Structure extends BlockState {
     void setRotation(StructureRotation rotation);
 
     /**
-     * Get the {@link UsageMode} of this structure block.
+     * Get how this structure is rotated.
      *
-     * @return the mode this block is currently in.
+     * @return the new rotation
      */
-    UsageMode getUsageMode();
+    StructureRotation getRotation();
 
     /**
      * Set the {@link UsageMode} of this structure block.
@@ -133,11 +126,11 @@ public interface Structure extends BlockState {
     void setUsageMode(UsageMode mode);
 
     /**
-     * Get if this structure block should ignore entities.
+     * Get the {@link UsageMode} of this structure block.
      *
-     * @return true if the appropriate {@link UsageMode} should ignore entities.
+     * @return the mode this block is currently in.
      */
-    boolean isIgnoreEntities();
+    UsageMode getUsageMode();
 
     /**
      * While in {@link UsageMode#SAVE} mode, this will ignore any entities when
@@ -151,11 +144,11 @@ public interface Structure extends BlockState {
     void setIgnoreEntities(boolean ignoreEntities);
 
     /**
-     * Check if this structure block is currently showing all air blocks
+     * Get if this structure block should ignore entities.
      *
-     * @return true if the structure block is showing all air blocks
+     * @return true if the appropriate {@link UsageMode} should ignore entities.
      */
-    boolean isShowAir();
+    boolean isIgnoreEntities();
 
     /**
      * Set if the structure outline should show air blocks.
@@ -165,11 +158,11 @@ public interface Structure extends BlockState {
     void setShowAir(boolean showAir);
 
     /**
-     * Get if this structure block is currently showing the bounding box.
+     * Check if this structure block is currently showing all air blocks
      *
-     * @return true if the bounding box is shown
+     * @return true if the structure block is showing all air blocks
      */
-    boolean isBoundingBoxVisible();
+    boolean isShowAir();
 
     /**
      * Set if this structure box should show the bounding box.
@@ -179,11 +172,11 @@ public interface Structure extends BlockState {
     void setBoundingBoxVisible(boolean showBoundingBox);
 
     /**
-     * Get the integrity of this structure.
+     * Get if this structure block is currently showing the bounding box.
      *
-     * @return the integrity of this structure
+     * @return true if the bounding box is shown
      */
-    float getIntegrity();
+    boolean isBoundingBoxVisible();
 
     /**
      * Set the integrity of the structure. Integrity must be between 0.0 and 1.0
@@ -196,12 +189,11 @@ public interface Structure extends BlockState {
     void setIntegrity(float integrity);
 
     /**
-     * The seed used to determine how many blocks are removed upon loading of
-     * this structure.
+     * Get the integrity of this structure.
      *
-     * @return the seed used
+     * @return the integrity of this structure
      */
-    long getSeed();
+    float getIntegrity();
 
     /**
      * The seed used to determine which blocks will be removed upon loading.
@@ -213,14 +205,12 @@ public interface Structure extends BlockState {
     void setSeed(long seed);
 
     /**
-     * Get the metadata function this structure block will perform when
-     * activated. Consult the
-     * <a href="https://minecraft.gamepedia.com/Structure_Block#Data">Minecraft
-     * Wiki</a> for more information.
+     * The seed used to determine how many blocks are removed upon loading of
+     * this structure.
      *
-     * @return the function that will be performed when this block is activated
+     * @return the seed used
      */
-    String getMetadata();
+    long getSeed();
 
     /**
      * Only applicable while in {@link UsageMode#DATA}. Metadata are specific
@@ -231,4 +221,14 @@ public interface Structure extends BlockState {
      * @param metadata the function to perform on the selected location
      */
     void setMetadata(String metadata);
+
+    /**
+     * Get the metadata function this structure block will perform when
+     * activated. Consult the
+     * <a href="https://minecraft.gamepedia.com/Structure_Block#Data">Minecraft
+     * Wiki</a> for more information.
+     *
+     * @return the function that will be performed when this block is activated
+     */
+    String getMetadata();
 }

@@ -19,10 +19,6 @@ public class PlayerAchievementAwardedEvent extends PlayerEvent implements Cancel
         this.achievement = achievement;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Gets the Achievement being awarded.
      *
@@ -42,6 +38,10 @@ public class PlayerAchievementAwardedEvent extends PlayerEvent implements Cancel
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

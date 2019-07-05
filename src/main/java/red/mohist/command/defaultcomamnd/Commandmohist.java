@@ -50,7 +50,7 @@ public class Commandmohist extends Command {
             return false;
         }
 
-        switch (args[0].toLowerCase(Locale.ENGLISH)) {
+        switch (args[0].toLowerCase(Locale.ENGLISH))  {
             case "potions":
                 // Not recommended for use in games, only test output
                 getPotions(sender);
@@ -81,15 +81,16 @@ public class Commandmohist extends Command {
                 break;
             case "playermods":
                 // Not recommended for use in games, only test output
-                if (args.length == 1) {
+                if(args.length == 1){
                     sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
                     return false;
                 }
                 Player player = Bukkit.getPlayer(args[1].toString());
                 if (player != null) {
                     sender.sendMessage(ChatColor.GREEN + "" + PlayerAPI.getModSize(player) + " " + PlayerAPI.getModlist(player));
-                } else {
-                    sender.sendMessage(ChatColor.RED + "The player [" + args[1] + "] is not online.");
+                }
+                else{
+                    sender.sendMessage(ChatColor.RED + "The player ["+ args[1] +"] is not online.");
                 }
                 break;
             case "reload":
@@ -105,38 +106,38 @@ public class Commandmohist extends Command {
     }
 
     private void getPotions(CommandSender sender) {
-        for (PotionEffectType pet : PotionEffectType.values()) {
-            if (pet != null) {
+        for(PotionEffectType pet : PotionEffectType.values()){
+            if(pet != null) {
                 sender.sendMessage(pet.toString());
             }
         }
     }
 
     private void getEnchant(CommandSender sender) {
-        for (Enchantment ench : Enchantment.values()) {
+        for(Enchantment ench : Enchantment.values()){
             sender.sendMessage(ench.toString());
         }
     }
 
     private void getMaterials(CommandSender sender) {
-        for (Material mat : Material.values()) {
+        for(Material mat : Material.values()){
             sender.sendMessage(mat.toString());
         }
     }
 
     private void getEntityTypes(CommandSender sender) {
-        for (EntityType ent : EntityType.values()) {
+        for(EntityType ent : EntityType.values()){
             sender.sendMessage(ent.toString());
         }
     }
 
-    private void getCommands(CommandSender sender) {
+    private void getCommands(CommandSender sender){
         for (Command per : MinecraftServer.getServerInst().server.getCommandMap().getCommands()) {
-            sender.sendMessage(per.getName() + ": " + per.getPermission());
+            sender.sendMessage(per.getName() + ": "+  per.getPermission());
         }
     }
 
-    private void getBiomes(CommandSender sender) {
+    private void getBiomes(CommandSender sender){
         for (Biome biome : Biome.values()) {
             sender.sendMessage(biome.name());
         }

@@ -22,7 +22,7 @@ public interface BlockChangeDelegate {
      * @return true if the block was set successfully
      * @deprecated Magic value
      */
-
+    
     public boolean setRawTypeId(int x, int y, int z, int typeId);
 
     /**
@@ -40,7 +40,7 @@ public interface BlockChangeDelegate {
      * @return true if the block was set successfully
      * @deprecated Magic value
      */
-
+    
     public boolean setRawTypeIdAndData(int x, int y, int z, int typeId, int data);
 
     /**
@@ -55,7 +55,7 @@ public interface BlockChangeDelegate {
      * @return true if the block was set successfully
      * @deprecated Magic value
      */
-
+    
     public boolean setTypeId(int x, int y, int z, int typeId);
 
     /**
@@ -71,7 +71,7 @@ public interface BlockChangeDelegate {
      * @return true if the block was set successfully
      * @deprecated Magic value
      */
-
+    
     public boolean setTypeIdAndData(int x, int y, int z, int typeId, int data);
 
     /**
@@ -83,7 +83,7 @@ public interface BlockChangeDelegate {
      * @return The block ID
      * @deprecated Magic value
      */
-
+    
     public int getTypeId(int x, int y, int z);
 
     /**

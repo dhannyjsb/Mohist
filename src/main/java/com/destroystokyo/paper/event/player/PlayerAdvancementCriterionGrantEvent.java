@@ -21,10 +21,6 @@ public class PlayerAdvancementCriterionGrantEvent extends PlayerEvent implements
         this.criterion = criterion;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     /**
      * Get the advancement which has been affected.
      *
@@ -53,6 +49,10 @@ public class PlayerAdvancementCriterionGrantEvent extends PlayerEvent implements
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }
