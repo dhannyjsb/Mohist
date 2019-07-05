@@ -16,7 +16,6 @@ import java.util.Map;
 public class CraftPotionBrewer implements PotionBrewer {
     private static final Map<PotionType, Collection<PotionEffect>> cache = Maps.newHashMap();
 
-    @Override
     public Collection<PotionEffect> getEffects(PotionType damage, boolean upgraded, boolean extended) {
         if (cache.containsKey(damage)) {
             return cache.get(damage);

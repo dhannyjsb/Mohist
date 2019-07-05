@@ -488,7 +488,6 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
         return level;
     }
 
-    @Override
     @Utility
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<String, Object>();

@@ -17,18 +17,15 @@ public class CraftPainting extends CraftHanging implements Painting {
         super(server, entity);
     }
 
-    @Override
     public Art getArt() {
         EnumArt art = getHandle().art;
         return CraftArt.NotchToBukkit(art);
     }
 
-    @Override
     public boolean setArt(Art art) {
         return setArt(art, false);
     }
 
-    @Override
     public boolean setArt(Art art, boolean force) {
         EntityPainting painting = this.getHandle();
         EnumArt oldArt = painting.art;
@@ -44,7 +41,6 @@ public class CraftPainting extends CraftHanging implements Painting {
         return true;
     }
 
-    @Override
     public boolean setFacingDirection(BlockFace face, boolean force) {
         if (super.setFacingDirection(face, force)) {
             update();
@@ -76,7 +72,6 @@ public class CraftPainting extends CraftHanging implements Painting {
         return "CraftPainting{art=" + getArt() + "}";
     }
 
-    @Override
     public EntityType getType() {
         return EntityType.PAINTING;
     }

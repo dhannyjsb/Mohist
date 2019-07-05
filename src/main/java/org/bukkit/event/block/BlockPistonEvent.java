@@ -17,12 +17,10 @@ public abstract class BlockPistonEvent extends BlockEvent implements Cancellable
         this.direction = direction;
     }
 
-    @Override
     public boolean isCancelled() {
         return this.cancelled;
     }
 
-    @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }

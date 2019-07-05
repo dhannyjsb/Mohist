@@ -54,7 +54,6 @@ public class Skull extends MaterialData implements Directional {
         super(type, data);
     }
 
-    @Override
     public void setFacingDirection(BlockFace face) {
         int data;
 
@@ -83,7 +82,6 @@ public class Skull extends MaterialData implements Directional {
         setData((byte) data);
     }
 
-    @Override
     public BlockFace getFacing() {
         int data = getData();
 

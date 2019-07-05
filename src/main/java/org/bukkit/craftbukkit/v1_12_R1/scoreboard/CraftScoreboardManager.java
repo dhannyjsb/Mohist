@@ -34,12 +34,10 @@ public final class CraftScoreboardManager implements ScoreboardManager {
         scoreboards.add(mainScoreboard);
     }
 
-    @Override
     public CraftScoreboard getMainScoreboard() {
         return mainScoreboard;
     }
 
-    @Override
     public CraftScoreboard getNewScoreboard() {
         CraftScoreboard scoreboard = new CraftScoreboard(new ServerScoreboard(server));
         scoreboards.add(scoreboard);

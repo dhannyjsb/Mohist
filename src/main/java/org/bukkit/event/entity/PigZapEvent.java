@@ -21,12 +21,10 @@ public class PigZapEvent extends EntityEvent implements Cancellable {
         this.pigzombie = pigzombie;
     }
 
-    @Override
     public boolean isCancelled() {
         return canceled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         canceled = cancel;
     }

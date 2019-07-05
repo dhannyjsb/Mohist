@@ -20,7 +20,6 @@ public class CraftBlaze extends CraftMonster implements Blaze {
         return "CraftBlaze";
     }
 
-    @Override
     public EntityType getType() {
         return EntityType.BLAZE;
     }

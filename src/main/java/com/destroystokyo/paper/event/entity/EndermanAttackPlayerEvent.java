@@ -64,7 +64,6 @@ public class EndermanAttackPlayerEvent extends EntityEvent implements Cancellabl
 
     private static final HandlerList handlers = new HandlerList();
 
-    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

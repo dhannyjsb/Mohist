@@ -55,22 +55,18 @@ public class CraftTask implements BukkitTask, Runnable {
         // Spigot end
     }
 
-    @Override
     public final int getTaskId() {
         return id;
     }
 
-    @Override
     public final Plugin getOwner() {
         return plugin;
     }
 
-    @Override
     public boolean isSync() {
         return true;
     }
 
-    @Override
     public void run() {
         task.run();
     }
@@ -108,7 +104,6 @@ public class CraftTask implements BukkitTask, Runnable {
         return (period == CraftTask.CANCEL);
     }
 
-    @Override
     public void cancel() {
         Bukkit.getScheduler().cancelTask(id);
     }

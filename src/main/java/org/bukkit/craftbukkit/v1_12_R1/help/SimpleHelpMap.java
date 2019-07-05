@@ -55,7 +55,6 @@ public class SimpleHelpMap implements HelpMap {
         registerHelpTopicFactory(MultipleCommandAlias.class, new MultipleCommandAliasHelpTopicFactory());
     }
 
-    @Override
     public synchronized HelpTopic getHelpTopic(String topicName) {
         if (topicName.equals("")) {
             return defaultTopic;
@@ -68,12 +67,10 @@ public class SimpleHelpMap implements HelpMap {
         return null;
     }
 
-    @Override
     public Collection<HelpTopic> getHelpTopics() {
         return helpTopics.values();
     }
 
-    @Override
     public synchronized void addTopic(HelpTopic topic) {
         // Existing topics take priority
         if (!helpTopics.containsKey(topic.getName())) {
@@ -81,12 +78,10 @@ public class SimpleHelpMap implements HelpMap {
         }
     }
 
-    @Override
     public synchronized void clear() {
         helpTopics.clear();
     }
 
-    @Override
     public List<String> getIgnoredPlugins() {
         return yaml.getIgnoredPlugins();
     }
@@ -222,7 +217,6 @@ public class SimpleHelpMap implements HelpMap {
         return false;
     }
 
-    @Override
     public void registerHelpTopicFactory(Class commandClass, HelpTopicFactory factory) {
         if (!Command.class.isAssignableFrom(commandClass) && !CommandExecutor.class.isAssignableFrom(commandClass)) {
             throw new IllegalArgumentException("commandClass must implement either Command or CommandExecutor!");
@@ -232,7 +226,6 @@ public class SimpleHelpMap implements HelpMap {
 
     private class IsCommandTopicPredicate implements Predicate<HelpTopic> {
 
-        @Override
         public boolean apply(HelpTopic topic) {
             return topic.getName().charAt(0) == '/';
         }

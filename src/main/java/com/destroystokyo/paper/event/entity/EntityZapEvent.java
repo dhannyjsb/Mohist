@@ -26,12 +26,10 @@ public class EntityZapEvent extends EntityEvent implements Cancellable {
         this.replacementEntity = replacementEntity;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
     }

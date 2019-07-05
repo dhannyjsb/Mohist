@@ -55,6 +55,5 @@ public interface SkullMeta extends ItemMeta {
      */
     boolean setOwningPlayer(OfflinePlayer owner);
 
-    @Override
     SkullMeta clone();
 }

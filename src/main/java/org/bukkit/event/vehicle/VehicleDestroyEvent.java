@@ -29,12 +29,10 @@ public class VehicleDestroyEvent extends VehicleEvent implements Cancellable {
         return attacker;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
     }

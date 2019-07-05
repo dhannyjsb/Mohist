@@ -36,17 +36,14 @@ public class CraftVillager extends CraftAgeable implements Villager, InventoryHo
         return "CraftVillager";
     }
 
-    @Override
     public EntityType getType() {
         return EntityType.VILLAGER;
     }
 
-    @Override
     public Profession getProfession() {
         return Profession.values()[getHandle().getProfession() + 1]; // Offset by 1 from the zombie types
     }
 
-    @Override
     public void setProfession(Profession profession) {
         Validate.notNull(profession);
         Validate.isTrue(!profession.isZombie(), "Profession is reserved for Zombies: ", profession);

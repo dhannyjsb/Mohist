@@ -33,7 +33,6 @@ public class ProjectileCollideEvent extends EntityEvent implements Cancellable {
      *
      * @return the projectile that collided
      */
-    @Override
     public Projectile getEntity() {
         return (Projectile) super.getEntity();
     }

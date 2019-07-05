@@ -30,7 +30,6 @@ public class PermissibleBase implements Permissible {
         recalculatePermissions();
     }
 
-    @Override
     public boolean isOp() {
         if (opable == null) {
             return false;
@@ -39,7 +38,6 @@ public class PermissibleBase implements Permissible {
         }
     }
 
-    @Override
     public void setOp(boolean value) {
         if (opable == null) {
             throw new UnsupportedOperationException("Cannot change op value as no ServerOperator is set");
@@ -48,7 +46,6 @@ public class PermissibleBase implements Permissible {
         }
     }
 
-    @Override
     public boolean isPermissionSet(String name) {
         if (name == null) {
             throw new IllegalArgumentException("Permission name cannot be null");
@@ -57,7 +54,6 @@ public class PermissibleBase implements Permissible {
         return permissions.containsKey(name.toLowerCase(java.util.Locale.ENGLISH));
     }
 
-    @Override
     public boolean isPermissionSet(Permission perm) {
         if (perm == null) {
             throw new IllegalArgumentException("Permission cannot be null");
@@ -66,7 +62,6 @@ public class PermissibleBase implements Permissible {
         return isPermissionSet(perm.getName());
     }
 
-    @Override
     public boolean hasPermission(String inName) {
         if (inName == null) {
             throw new IllegalArgumentException("Permission name cannot be null");
@@ -90,7 +85,6 @@ public class PermissibleBase implements Permissible {
         }
     }
 
-    @Override
     public boolean hasPermission(Permission perm) {
         if (perm == null) {
             throw new IllegalArgumentException("Permission cannot be null");
@@ -107,7 +101,6 @@ public class PermissibleBase implements Permissible {
         return perm.getDefault().getValue(isOp());
     }
 
-    @Override
     public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
         if (name == null) {
             throw new IllegalArgumentException("Permission name cannot be null");
@@ -125,7 +118,6 @@ public class PermissibleBase implements Permissible {
         return result;
     }
 
-    @Override
     public PermissionAttachment addAttachment(Plugin plugin) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
@@ -141,7 +133,6 @@ public class PermissibleBase implements Permissible {
         return result;
     }
 
-    @Override
     public void removeAttachment(PermissionAttachment attachment) {
         if (attachment == null) {
             throw new IllegalArgumentException("Attachment cannot be null");
@@ -161,7 +152,6 @@ public class PermissibleBase implements Permissible {
         }
     }
 
-    @Override
     public void recalculatePermissions() {
         clearPermissions();
         Set<Permission> defaults = Bukkit.getServer().getPluginManager().getDefaultPermissions(isOp());
@@ -209,7 +199,6 @@ public class PermissibleBase implements Permissible {
         }
     }
 
-    @Override
     public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
         if (name == null) {
             throw new IllegalArgumentException("Permission name cannot be null");
@@ -228,7 +217,6 @@ public class PermissibleBase implements Permissible {
         return result;
     }
 
-    @Override
     public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
@@ -247,7 +235,6 @@ public class PermissibleBase implements Permissible {
         }
     }
 
-    @Override
     public Set<PermissionAttachmentInfo> getEffectivePermissions() {
         return new HashSet<PermissionAttachmentInfo>(permissions.values());
     }
@@ -259,7 +246,6 @@ public class PermissibleBase implements Permissible {
             this.attachment = attachment;
         }
 
-        @Override
         public void run() {
             attachment.remove();
         }

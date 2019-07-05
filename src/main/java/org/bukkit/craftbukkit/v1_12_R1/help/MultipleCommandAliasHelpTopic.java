@@ -34,7 +34,6 @@ public class MultipleCommandAliasHelpTopic extends HelpTopic {
         fullText = ChatColor.GOLD + "Alias for: " + ChatColor.WHITE + getShortText();
     }
 
-    @Override
     public boolean canSee(CommandSender sender) {
         if (amendedPermission == null) {
             if (sender instanceof ConsoleCommandSender) {

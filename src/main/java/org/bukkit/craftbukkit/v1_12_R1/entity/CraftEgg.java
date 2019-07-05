@@ -20,7 +20,6 @@ public class CraftEgg extends CraftProjectile implements Egg {
         return "CraftEgg";
     }
 
-    @Override
     public EntityType getType() {
         return EntityType.EGG;
     }

@@ -32,7 +32,6 @@ public class PlayerNaturallySpawnCreaturesEvent extends PlayerEvent implements C
 
     private static final HandlerList handlers = new HandlerList();
 
-    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

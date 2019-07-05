@@ -48,7 +48,6 @@ public class CraftPlayerProfile implements PlayerProfile {
         properties.put(name, new Property(name, property.getValue(), property.getSignature()));
     }
 
-    @Override
     public GameProfile getGameProfile() {
         return profile;
     }
@@ -172,7 +171,6 @@ public class CraftPlayerProfile implements PlayerProfile {
         return this.profile.isComplete();
     }
 
-    @Override
     public boolean complete(boolean textures) {
         MinecraftServer server = MinecraftServer.getServerInst();
 

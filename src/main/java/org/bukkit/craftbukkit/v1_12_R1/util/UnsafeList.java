@@ -45,7 +45,6 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         this(32);
     }
 
-    @Override
     public E get(int index) {
         rangeCheck(index);
 
@@ -56,7 +55,6 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         return (E) data[index];
     }
 
-    @Override
     public E set(int index, E element) {
         rangeCheck(index);
 
@@ -65,14 +63,12 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         return old;
     }
 
-    @Override
     public boolean add(E element) {
         growIfNeeded();
         data[size++] = element;
         return true;
     }
 
-    @Override
     public void add(int index, E element) {
         growIfNeeded();
         System.arraycopy(data, index, data, index + 1, size - index);
@@ -80,7 +76,6 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         size++;
     }
 
-    @Override
     public E remove(int index) {
         rangeCheck(index);
 
@@ -94,7 +89,6 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         return old;
     }
 
-    @Override
     public boolean remove(Object o) {
         int index = indexOf(o);
         if (index >= 0) {
@@ -105,7 +99,6 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         return false;
     }
 
-    @Override
     public int indexOf(Object o) {
         for (int i = 0; i < size; i++) {
             if (o == data[i] || o.equals(data[i])) {
@@ -116,12 +109,10 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         return -1;
     }
 
-    @Override
     public boolean contains(Object o) {
         return indexOf(o) >= 0;
     }
 
-    @Override
     public void clear() {
         // Create new array to reset memory usage to initial capacity
         size = 0;
@@ -145,17 +136,14 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         }
     }
 
-    @Override
     public int size() {
         return size;
     }
 
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    @Override
     public Object clone() throws CloneNotSupportedException {
         UnsafeList<E> copy = (UnsafeList<E>) super.clone();
         copy.data = Arrays.copyOf(data, size);
@@ -168,7 +156,6 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
         return copy;
     }
 
-    @Override
     public Iterator<E> iterator() {
         // Try to find an iterator that isn't in use
         for (Iterator iter : iterPool) {
@@ -248,13 +235,11 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
             valid = true;
         }
 
-        @Override
         public boolean hasNext() {
             valid = index != size;
             return valid;
         }
 
-        @Override
         public E next() {
             if (modCount != expectedModCount) {
                 throw new ConcurrentModificationException();
@@ -273,7 +258,6 @@ public class UnsafeList<E> extends AbstractList<E> implements List<E>, RandomAcc
             return (E) data[lastRet = i];
         }
 
-        @Override
         public void remove() {
             if (lastRet < 0) {
                 throw new IllegalStateException();

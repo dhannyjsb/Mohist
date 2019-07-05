@@ -27,7 +27,6 @@ public final class CraftMapView implements MapView {
         addRenderer(new CraftMapRenderer(this, worldMap));
     }
 
-    @Override
     public short getId() {
         String text = worldMap.mapName;
         if (text.startsWith("map_")) {
@@ -42,22 +41,18 @@ public final class CraftMapView implements MapView {
         }
     }
 
-    @Override
     public boolean isVirtual() {
         return renderers.size() > 0 && !(renderers.get(0) instanceof CraftMapRenderer);
     }
 
-    @Override
     public Scale getScale() {
         return Scale.valueOf(worldMap.scale);
     }
 
-    @Override
     public void setScale(Scale scale) {
         worldMap.scale = scale.getValue();
     }
 
-    @Override
     public World getWorld() {
         int dimension = worldMap.dimension;
         for (World world : Bukkit.getServer().getWorlds()) {
@@ -68,37 +63,30 @@ public final class CraftMapView implements MapView {
         return null;
     }
 
-    @Override
     public void setWorld(World world) {
         worldMap.dimension = (byte) ((CraftWorld) world).getHandle().provider.getDimension();
     }
 
-    @Override
     public int getCenterX() {
         return worldMap.xCenter;
     }
 
-    @Override
     public int getCenterZ() {
         return worldMap.zCenter;
     }
 
-    @Override
     public void setCenterX(int x) {
         worldMap.xCenter = x;
     }
 
-    @Override
     public void setCenterZ(int z) {
         worldMap.zCenter = z;
     }
 
-    @Override
     public List<MapRenderer> getRenderers() {
         return new ArrayList<MapRenderer>(renderers);
     }
 
-    @Override
     public void addRenderer(MapRenderer renderer) {
         if (!renderers.contains(renderer)) {
             renderers.add(renderer);
@@ -107,7 +95,6 @@ public final class CraftMapView implements MapView {
         }
     }
 
-    @Override
     public boolean removeRenderer(MapRenderer renderer) {
         if (renderers.contains(renderer)) {
             renderers.remove(renderer);

@@ -17,12 +17,10 @@ public class ThunderChangeEvent extends WeatherEvent implements Cancellable {
         this.to = to;
     }
 
-    @Override
     public boolean isCancelled() {
         return canceled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         canceled = cancel;
     }

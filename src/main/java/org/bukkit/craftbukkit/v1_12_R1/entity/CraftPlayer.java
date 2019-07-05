@@ -164,12 +164,10 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         perm.recalculatePermissions();
     }
 
-    @Override
     public boolean isOnline() {
         return server.getPlayer(getUniqueId()) != null;
     }
 
-    @Override
     public InetSocketAddress getAddress() {
         if (getHandle().connection == null) {
             return null;
@@ -1109,7 +1107,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return (EntityPlayerMP) entity;
     }
 
-    @Override
     public void setHandle(final EntityPlayer entity) {
         super.setHandle(entity);
     }
@@ -1789,7 +1786,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
     };
 
-    @Override
     public Player.Spigot spigot()
     {
         return spigot;

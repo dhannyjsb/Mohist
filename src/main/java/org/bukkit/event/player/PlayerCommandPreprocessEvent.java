@@ -63,12 +63,10 @@ public class PlayerCommandPreprocessEvent extends PlayerEvent implements Cancell
         this.message = message;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancel;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }

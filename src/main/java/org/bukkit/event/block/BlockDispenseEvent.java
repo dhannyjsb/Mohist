@@ -65,12 +65,10 @@ public class BlockDispenseEvent extends BlockEvent implements Cancellable {
         velocity = vel;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         cancelled = cancel;
     }

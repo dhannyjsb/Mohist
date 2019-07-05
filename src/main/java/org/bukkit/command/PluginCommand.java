@@ -99,7 +99,6 @@ public final class PluginCommand extends Command implements PluginIdentifiableCo
      *
      * @return Plugin that owns this command
      */
-    @Override
     public Plugin getPlugin() {
         return owningPlugin;
     }

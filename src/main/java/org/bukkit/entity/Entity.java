@@ -187,7 +187,6 @@ public interface Entity extends Metadatable, CommandSender, Nameable {
      *
      * @return Server instance running this Entity
      */
-    @Override
     public Server getServer();
 
     /**

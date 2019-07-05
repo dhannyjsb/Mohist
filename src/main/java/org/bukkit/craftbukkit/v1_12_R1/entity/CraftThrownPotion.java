@@ -17,7 +17,6 @@ public abstract class CraftThrownPotion extends CraftProjectile implements Throw
         super(server, entity);
     }
 
-    @Override
     public Collection<PotionEffect> getEffects() {
         ImmutableList.Builder<PotionEffect> builder = ImmutableList.builder();
         for (net.minecraft.potion.PotionEffect effect : PotionUtils.getEffectsFromStack(getHandle().getPotion())) {
@@ -26,7 +25,6 @@ public abstract class CraftThrownPotion extends CraftProjectile implements Throw
         return builder.build();
     }
 
-    @Override
     public ItemStack getItem() {
         return CraftItemStack.asBukkitCopy(getHandle().getPotion());
     }

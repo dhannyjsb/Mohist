@@ -13,7 +13,6 @@ import java.util.Map;
 
 public class CraftCrashReport implements ICrashReportDetail<Object> {
 
-    @Override
     public Object call() throws Exception {
         StringWriter value = new StringWriter();
         try {

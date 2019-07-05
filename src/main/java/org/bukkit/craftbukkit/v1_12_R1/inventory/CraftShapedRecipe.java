@@ -43,7 +43,6 @@ public class CraftShapedRecipe extends ShapedRecipe implements CraftRecipe {
         return ret;
     }
 
-    @Override
     public void addToCraftingManager() {
         String[] shape = this.getShape();
         Map<Character, ItemStack> ingred = this.getIngredientMap();

@@ -33,7 +33,6 @@ public class CraftChunk implements Chunk {
         z = getHandle().z;
     }
 
-    @Override
     public World getWorld() {
         return worldServer.getWorld();
     }
@@ -58,12 +57,10 @@ public class CraftChunk implements Chunk {
         weakChunk.clear();
     }
 
-    @Override
     public int getX() {
         return x;
     }
 
-    @Override
     public int getZ() {
         return z;
     }
@@ -73,12 +70,10 @@ public class CraftChunk implements Chunk {
         return "CraftChunk{" + "x=" + getX() + "z=" + getZ() + '}';
     }
 
-    @Override
     public Block getBlock(int x, int y, int z) {
         return new CraftBlock(this, (getX() << 4) | (x & 0xF), y, (getZ() << 4) | (z & 0xF));
     }
 
-    @Override
     public Entity[] getEntities() {
         int count = 0, index = 0;
         net.minecraft.world.chunk.Chunk chunk = getHandle();
@@ -103,7 +98,6 @@ public class CraftChunk implements Chunk {
         return entities;
     }
 
-    @Override
     public BlockState[] getTileEntities() {
         int index = 0;
         net.minecraft.world.chunk.Chunk chunk = getHandle();
@@ -122,22 +116,18 @@ public class CraftChunk implements Chunk {
         return entities;
     }
 
-    @Override
     public boolean isLoaded() {
         return getWorld().isChunkLoaded(this);
     }
 
-    @Override
     public boolean load() {
         return getWorld().loadChunk(getX(), getZ(), true);
     }
 
-    @Override
     public boolean load(boolean generate) {
         return getWorld().loadChunk(getX(), getZ(), generate);
     }
 
-    @Override
     public boolean unload() {
         return getWorld().unloadChunk(getX(), getZ());
     }
@@ -148,22 +138,18 @@ public class CraftChunk implements Chunk {
         return getHandle().getRandomWithSeed(987234911L).nextInt(10) == 0;
     }
 
-    @Override
     public boolean unload(boolean save) {
         return getWorld().unloadChunk(getX(), getZ(), save);
     }
 
-    @Override
     public boolean unload(boolean save, boolean safe) {
         return getWorld().unloadChunk(getX(), getZ(), save, safe);
     }
 
-    @Override
     public ChunkSnapshot getChunkSnapshot() {
         return getChunkSnapshot(true, false, false);
     }
 
-    @Override
     public ChunkSnapshot getChunkSnapshot(boolean includeMaxBlockY, boolean includeBiome, boolean includeBiomeTempRain) {
         net.minecraft.world.chunk.Chunk chunk = getHandle();
 

@@ -19,12 +19,10 @@ public class StructureGrowDelegate implements BlockChangeDelegate {
         this.world = world.getWorld();
     }
 
-    @Override
     public boolean setRawTypeId(int x, int y, int z, int type) {
         return setRawTypeIdAndData(x, y, z, type, 0);
     }
 
-    @Override
     public boolean setRawTypeIdAndData(int x, int y, int z, int type, int data) {
         BlockState state = world.getBlockAt(x, y, z).getState();
         state.setTypeId(type);
@@ -33,17 +31,14 @@ public class StructureGrowDelegate implements BlockChangeDelegate {
         return true;
     }
 
-    @Override
     public boolean setTypeId(int x, int y, int z, int typeId) {
         return setRawTypeId(x, y, z, typeId);
     }
 
-    @Override
     public boolean setTypeIdAndData(int x, int y, int z, int typeId, int data) {
         return setRawTypeIdAndData(x, y, z, typeId, data);
     }
 
-    @Override
     public int getTypeId(int x, int y, int z) {
         for (BlockState state : blocks) {
             if (state.getX() == x && state.getY() == y && state.getZ() == z) {
@@ -54,7 +49,6 @@ public class StructureGrowDelegate implements BlockChangeDelegate {
         return world.getBlockTypeIdAt(x, y, z);
     }
 
-    @Override
     public int getHeight() {
         return world.getMaxHeight();
     }
@@ -63,7 +57,6 @@ public class StructureGrowDelegate implements BlockChangeDelegate {
         return blocks;
     }
 
-    @Override
     public boolean isEmpty(int x, int y, int z) {
         for (BlockState state : blocks) {
             if (state.getX() == x && state.getY() == y && state.getZ() == z) {

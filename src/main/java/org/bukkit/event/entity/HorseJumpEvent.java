@@ -17,7 +17,6 @@ public class HorseJumpEvent extends EntityEvent implements Cancellable {
         this.power = power;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
@@ -25,7 +24,6 @@ public class HorseJumpEvent extends EntityEvent implements Cancellable {
     /**
      * @deprecated horse jumping was moved client side.
      */
-    @Override
     public void setCancelled(boolean cancel) {
         cancelled = cancel;
     }

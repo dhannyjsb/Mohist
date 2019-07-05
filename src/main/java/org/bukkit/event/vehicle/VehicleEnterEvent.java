@@ -27,12 +27,10 @@ public class VehicleEnterEvent extends VehicleEvent implements Cancellable {
         return entered;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
     }

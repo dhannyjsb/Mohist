@@ -16,13 +16,11 @@ public final class WeakCollection<T> implements Collection<T> {
         collection = new ArrayList<WeakReference<T>>();
     }
 
-    @Override
     public boolean add(T value) {
         Validate.notNull(value, "Cannot add null value");
         return collection.add(new WeakReference<T>(value));
     }
 
-    @Override
     public boolean addAll(Collection<? extends T> collection) {
         Collection<WeakReference<T>> values = this.collection;
         boolean ret = false;
@@ -33,12 +31,10 @@ public final class WeakCollection<T> implements Collection<T> {
         return ret;
     }
 
-    @Override
     public void clear() {
         collection.clear();
     }
 
-    @Override
     public boolean contains(Object object) {
         if (object  == null) {
             return false;
@@ -51,23 +47,19 @@ public final class WeakCollection<T> implements Collection<T> {
         return false;
     }
 
-    @Override
     public boolean containsAll(Collection<?> collection) {
         return toCollection().containsAll(collection);
     }
 
-    @Override
     public boolean isEmpty() {
         return !iterator().hasNext();
     }
 
-    @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
             Iterator<WeakReference<T>> it = collection.iterator();
             Object value = NO_VALUE;
 
-            @Override
             public boolean hasNext() {
                 Object value = this.value;
                 if (value != null && value != NO_VALUE) {
@@ -90,7 +82,6 @@ public final class WeakCollection<T> implements Collection<T> {
                 return false;
             }
 
-            @Override
             public T next() throws NoSuchElementException {
                 if (!hasNext()) {
                     throw new NoSuchElementException("No more elements");
@@ -102,7 +93,6 @@ public final class WeakCollection<T> implements Collection<T> {
                 return value;
             }
 
-            @Override
             public void remove() throws IllegalStateException {
                 if (value != NO_VALUE) {
                     throw new IllegalStateException("No last element");
@@ -114,7 +104,6 @@ public final class WeakCollection<T> implements Collection<T> {
         };
     }
 
-    @Override
     public boolean remove(Object object) {
         if (object == null) {
             return false;
@@ -130,7 +119,6 @@ public final class WeakCollection<T> implements Collection<T> {
         return false;
     }
 
-    @Override
     public boolean removeAll(Collection<?> collection) {
         Iterator<T> it = this.iterator();
         boolean ret = false;
@@ -143,7 +131,6 @@ public final class WeakCollection<T> implements Collection<T> {
         return ret;
     }
 
-    @Override
     public boolean retainAll(Collection<?> collection) {
         Iterator<T> it = this.iterator();
         boolean ret = false;
@@ -156,7 +143,6 @@ public final class WeakCollection<T> implements Collection<T> {
         return ret;
     }
 
-    @Override
     public int size() {
         int s = 0;
         for (T value : this) {
@@ -165,12 +151,10 @@ public final class WeakCollection<T> implements Collection<T> {
         return s;
     }
 
-    @Override
     public Object[] toArray() {
         return this.toArray(new Object[0]);
     }
 
-    @Override
     public <T> T[] toArray(T[] array) {
         return toCollection().toArray(array);
     }

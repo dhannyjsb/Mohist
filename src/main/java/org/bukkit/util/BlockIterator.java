@@ -283,7 +283,6 @@ public class BlockIterator implements Iterator<Block> {
      * Returns true if the iteration has more elements
      */
 
-    @Override
     public boolean hasNext() {
         scan();
         return currentBlock != -1;
@@ -295,7 +294,6 @@ public class BlockIterator implements Iterator<Block> {
      * @return the next Block in the trace
      */
 
-    @Override
     public Block next() {
         scan();
         if (currentBlock <= -1) {
@@ -305,7 +303,6 @@ public class BlockIterator implements Iterator<Block> {
         }
     }
 
-    @Override
     public void remove() {
         throw new UnsupportedOperationException("[BlockIterator] doesn't support block removal");
     }

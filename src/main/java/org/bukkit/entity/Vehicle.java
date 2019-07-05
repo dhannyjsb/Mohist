@@ -12,7 +12,6 @@ public interface Vehicle extends Entity {
      *
      * @return velocity vector
      */
-    @Override
     public Vector getVelocity();
 
     /**
@@ -20,6 +19,5 @@ public interface Vehicle extends Entity {
      *
      * @param vel velocity vector
      */
-    @Override
     public void setVelocity(Vector vel);
 }

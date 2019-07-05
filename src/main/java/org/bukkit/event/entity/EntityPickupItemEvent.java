@@ -43,12 +43,10 @@ public class EntityPickupItemEvent extends EntityEvent implements Cancellable {
         return remaining;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancel;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }

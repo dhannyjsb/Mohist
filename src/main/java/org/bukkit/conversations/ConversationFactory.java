@@ -213,7 +213,6 @@ public class ConversationFactory {
 
     private class NotPlayerMessagePrompt extends MessagePrompt {
 
-        @Override
         public String getPromptText(ConversationContext context) {
             return playerOnlyMessage;
         }

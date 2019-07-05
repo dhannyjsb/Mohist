@@ -16,33 +16,27 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
         super(server, entity);
     }
 
-    @Override
     public void setKnockbackStrength(int knockbackStrength) {
         Validate.isTrue(knockbackStrength >= 0, "Knockback cannot be negative");
         getHandle().setKnockbackStrength(knockbackStrength);
     }
 
-    @Override
     public int getKnockbackStrength() {
         return getHandle().knockbackStrength;
     }
 
-    @Override
     public boolean isCritical() {
         return getHandle().getIsCritical();
     }
 
-    @Override
     public void setCritical(boolean critical) {
         getHandle().setIsCritical(critical);
     }
 
-    @Override
     public ProjectileSource getShooter() {
         return getHandle().projectileSource;
     }
 
-    @Override
     public void setShooter(ProjectileSource shooter) {
         if (shooter instanceof LivingEntity) {
             getHandle().shootingEntity = ((CraftLivingEntity) shooter).getHandle();
@@ -88,7 +82,6 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
         return "CraftArrow";
     }
 
-    @Override
     public EntityType getType() {
         return EntityType.ARROW;
     }
@@ -109,7 +102,6 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
         }
     };
 
-    @Override
     public Arrow.Spigot spigot()
     {
         return spigot;

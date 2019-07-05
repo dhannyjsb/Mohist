@@ -219,7 +219,6 @@ public class Door extends MaterialData implements Directional, Openable {
     /**
      * Result is undefined if <code>isTopHalf()</code> is true.
      */
-    @Override
     public boolean isOpen() {
         return ((getData() & 0x4) == 0x4);
     }
@@ -227,7 +226,6 @@ public class Door extends MaterialData implements Directional, Openable {
     /**
      * Set whether the door is open. Undefined if <code>isTopHalf()</code> is true.
      */
-    @Override
     public void setOpen(boolean isOpen) {
         setData((byte) (isOpen ? (getData() | 0x4) : (getData() & ~0x4)));
     }
@@ -269,7 +267,6 @@ public class Door extends MaterialData implements Directional, Openable {
      *
      * @param face the direction
      */
-    @Override
     public void setFacingDirection(BlockFace face) {
         byte data = (byte) (getData() & 0xC);
         switch (face) {
@@ -296,7 +293,6 @@ public class Door extends MaterialData implements Directional, Openable {
      *
      * @return the direction
      */
-    @Override
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x3);
         switch (data) {

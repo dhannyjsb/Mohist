@@ -36,7 +36,6 @@ public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
      *
      * @return true if this event is cancelled
      */
-    @Override
     public boolean isCancelled() {
         return cancel;
     }
@@ -51,7 +50,6 @@ public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
      *
      * @param cancel true if you wish to cancel this event
      */
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }

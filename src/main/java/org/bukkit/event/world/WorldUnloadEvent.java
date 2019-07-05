@@ -15,12 +15,10 @@ public class WorldUnloadEvent extends WorldEvent implements Cancellable {
         super(world);
     }
 
-    @Override
     public boolean isCancelled() {
         return this.isCancelled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.isCancelled = cancel;
     }

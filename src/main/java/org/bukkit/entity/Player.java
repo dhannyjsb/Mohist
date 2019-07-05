@@ -109,7 +109,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param message Message to be displayed
      */
-    @Override
     public void sendRawMessage(String message);
 
     /**
@@ -867,7 +866,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return Bed Spawn Location if bed exists, otherwise null.
      */
-    @Override
     public Location getBedSpawnLocation();
 
     /**

@@ -12,12 +12,10 @@ public class CraftSlime extends CraftLivingEntity implements Slime {
         super(server, entity);
     }
 
-    @Override
     public int getSize() {
         return getHandle().getSlimeSize();
     }
 
-    @Override
     public void setSize(int size) {
         getHandle().setSlimeSize(size, true);
     }
@@ -46,7 +44,6 @@ public class CraftSlime extends CraftLivingEntity implements Slime {
         return "CraftSlime";
     }
 
-    @Override
     public EntityType getType() {
         return EntityType.SLIME;
     }

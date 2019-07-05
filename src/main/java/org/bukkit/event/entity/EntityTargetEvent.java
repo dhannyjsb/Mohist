@@ -19,12 +19,10 @@ public class EntityTargetEvent extends EntityEvent implements Cancellable {
         this.reason = reason;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancel;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }

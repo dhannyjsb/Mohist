@@ -43,7 +43,6 @@ public class DetectorRail extends ExtendedRails implements PressureSensor {
         super(type, data);
     }
 
-    @Override
     public boolean isPressed() {
         return (getData() & 0x8) == 0x8;
     }

@@ -27,6 +27,5 @@ public interface LeatherArmorMeta extends ItemMeta {
      */
     void setColor(Color color);
 
-    @Override
     LeatherArmorMeta clone();
 }

@@ -20,22 +20,18 @@ public class CraftItem extends CraftEntity implements Item {
         this(server, entity, entity);
     }
 
-    @Override
     public ItemStack getItemStack() {
         return CraftItemStack.asCraftMirror(item.getItem());
     }
 
-    @Override
     public void setItemStack(ItemStack stack) {
         item.setItem(CraftItemStack.asNMSCopy(stack));
     }
 
-    @Override
     public int getPickupDelay() {
         return item.pickupDelay;
     }
 
-    @Override
     public void setPickupDelay(int delay) {
         item.pickupDelay = Math.min(delay, Short.MAX_VALUE);
     }
@@ -45,7 +41,6 @@ public class CraftItem extends CraftEntity implements Item {
         return "CraftItem";
     }
 
-    @Override
     public EntityType getType() {
         return EntityType.DROPPED_ITEM;
     }

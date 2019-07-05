@@ -15,7 +15,6 @@ public class CraftLingeringPotion extends CraftThrownPotion implements Lingering
         super(server, entity);
     }
 
-    @Override
     public void setItem(ItemStack item) {
         // The ItemStack must not be null.
         Validate.notNull(item, "ItemStack cannot be null.");

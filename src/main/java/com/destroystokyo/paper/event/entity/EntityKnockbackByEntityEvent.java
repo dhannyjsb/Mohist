@@ -27,7 +27,6 @@ public class EntityKnockbackByEntityEvent extends EntityEvent implements Cancell
         this.acceleration = acceleration;
     }
 
-    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

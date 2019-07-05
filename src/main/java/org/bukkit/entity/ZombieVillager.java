@@ -8,7 +8,6 @@ public interface ZombieVillager extends Zombie {
     /**
      * Sets the villager profession of this zombie.
      */
-    @Override
     public void setVillagerProfession(Villager.Profession profession);
 
     /**
@@ -16,6 +15,5 @@ public interface ZombieVillager extends Zombie {
      *
      * @return the profession or null
      */
-    @Override
     public Villager.Profession getVillagerProfession();
 }

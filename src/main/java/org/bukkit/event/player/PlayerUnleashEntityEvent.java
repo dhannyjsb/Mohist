@@ -26,12 +26,10 @@ public class PlayerUnleashEntityEvent extends EntityUnleashEvent implements Canc
         return player;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
     }

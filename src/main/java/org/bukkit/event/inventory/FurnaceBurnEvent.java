@@ -69,12 +69,10 @@ public class FurnaceBurnEvent extends BlockEvent implements Cancellable {
         this.burning = burning;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
     }

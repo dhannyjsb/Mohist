@@ -23,32 +23,26 @@ public class CraftFallingBlock extends CraftEntity implements FallingBlock {
         return "CraftFallingBlock";
     }
 
-    @Override
     public EntityType getType() {
         return EntityType.FALLING_BLOCK;
     }
 
-    @Override
     public Material getMaterial() {
         return Material.getMaterial(getBlockId());
     }
 
-    @Override
     public int getBlockId() {
         return CraftMagicNumbers.getId(getHandle().getBlock().getBlock());
     }
 
-    @Override
     public byte getBlockData() {
         return (byte) getHandle().getBlock().getBlock().getMetaFromState(getHandle().getBlock());
     }
 
-    @Override
     public boolean getDropItem() {
         return getHandle().shouldDropItem;
     }
 
-    @Override
     public void setDropItem(boolean drop) {
         getHandle().shouldDropItem = drop;
     }

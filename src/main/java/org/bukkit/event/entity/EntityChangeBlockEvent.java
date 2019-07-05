@@ -41,12 +41,10 @@ public class EntityChangeBlockEvent extends EntityEvent implements Cancellable {
         return block;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancel;
     }
 
-    @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }
