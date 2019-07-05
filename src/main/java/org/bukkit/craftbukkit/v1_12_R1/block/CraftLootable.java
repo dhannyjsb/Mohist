@@ -15,6 +15,10 @@ public abstract class CraftLootable<T extends TileEntityLockableLoot> extends Cr
         super(material, tileEntity);
     }
 
+    public CraftLootable(Block block, T tileEntity) {
+        super(block, tileEntity);
+    }
+
     @Override
     public String getCustomName() {
         T lootable = this.getSnapshot();

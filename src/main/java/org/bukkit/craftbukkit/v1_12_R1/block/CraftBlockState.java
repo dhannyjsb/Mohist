@@ -27,12 +27,17 @@ public class CraftBlockState implements BlockState {
     private final int x;
     private final int y;
     private final int z;
-    private final NBTTagCompound nbt;
+    private NBTTagCompound nbt;
     protected int type;
     protected MaterialData data;
     protected int flag;
+    private TileEntity te;
 
     public CraftBlockState(final Block block) {
+        this(block, ((CraftWorld)block.getWorld()).getHandle().getTileEntity(new BlockPos(block.getX(), block.getY(), block.getZ())));
+    }
+
+    public CraftBlockState(final Block block ,final TileEntity te) {
         this.world = (CraftWorld) block.getWorld();
         this.x = block.getX();
         this.y = block.getY();
@@ -41,19 +46,9 @@ public class CraftBlockState implements BlockState {
         this.chunk = (CraftChunk) block.getChunk();
         this.flag = 3;
         createData(block.getData());
-        // Cauldron start - save TE data
-        TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
-        if (te != null)
-        {
-            nbt = new NBTTagCompound();
-            te.writeToNBT(nbt);
-        }
-        else {
-            nbt = null;
-        }
-        // Cauldron end
+        this.te = te;
     }
-	
+
 	public CraftBlockState(final Block block, int flag) {
         this(block);
         this.flag = flag;
@@ -91,6 +86,18 @@ public class CraftBlockState implements BlockState {
         return new CraftBlockState(world.getWorld().getBlockAt(x, y, z), flag);
     }
 
+    public NBTTagCompound getNBT() {
+        if (te == null) {
+            return null;
+        }
+        if (nbt == null) {
+            nbt = new NBTTagCompound();
+            te.writeToNBT(nbt);
+        }
+        return nbt;
+    }
+
+    @Override
     public World getWorld() {
         requirePlaced();
         return world;
@@ -205,15 +212,15 @@ public class CraftBlockState implements BlockState {
             world.getHandle().notifyNeighborsOfStateChange(pos.offset(CraftBlock.blockFaceToNotch(((Attachable) getData()).getAttachedFace())), newBlock.getBlock(), false);
         }
         // Cauldron start - restore TE data from snapshot
-        if (nbt != null)
+        if (getNBT() != null)
         {
             TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
             if (te != null)
             {
                 NBTTagCompound nbt2 = new NBTTagCompound();
                 te.writeToNBT(nbt2);
-                if (!nbt2.equals(this.nbt)) {
-                    te.readFromNBT(this.nbt);
+                if (!nbt2.equals(this.getNBT())) {
+                    te.readFromNBT(this.getNBT());
                 }
             }
         }
@@ -282,10 +289,7 @@ public class CraftBlockState implements BlockState {
         if (this.data != other.data && (this.data == null || !this.data.equals(other.data))) {
             return false;
         }
-        if (this.nbt != other.nbt && (this.nbt == null || !this.nbt.equals(other.nbt))) {
-            return false;
-        }
-        return true;
+        return this.getNBT() == other.getNBT() || (this.getNBT() != null && this.getNBT().equals(other.getNBT()));
     }
 
     @Override
@@ -297,13 +301,13 @@ public class CraftBlockState implements BlockState {
         hash = 73 * hash + this.z;
         hash = 73 * hash + this.type;
         hash = 73 * hash + (this.data != null ? this.data.hashCode() : 0);
- 		hash = 73 * hash + (this.nbt != null ? this.nbt.hashCode() : 0);
+ 		hash = 73 * hash + (this.getNBT() != null ? this.getNBT().hashCode() : 0);
         return hash;
     }
 
     public TileEntity getTileEntity() {
-        if (nbt != null) {
-            return TileEntity.create(this.world.getHandle(), nbt);
+        if (getNBT() != null) {
+            return TileEntity.create(this.world.getHandle(), getNBT());
         } else {
             return null;
         }

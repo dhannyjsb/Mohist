@@ -48,7 +48,7 @@ public class WatchMohist implements Runnable {
 
     @Override
     public void run() {
-        if (MohistConfig.dumpRemapPluginClass) {
+        if (MohistConfig.printThreadTimeCost) {
             dumpThreadCpuTime();
         }
         long curTime = System.currentTimeMillis();
