@@ -14,6 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import red.mohist.MohistConfig;
+import red.mohist.MohistThreadCost;
 import red.mohist.api.PlayerAPI;
 import red.mohist.api.ServerAPI;
 
@@ -21,12 +22,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class Commandmohist extends Command {
+public class MohistCommand extends Command {
 
-    public Commandmohist(String name) {
+    public MohistCommand(String name) {
         super(name);
         this.description = "Mohist related commands";
-        this.usageMessage = "/mohist [potions|enchants|materials|commands|mods|playermods|entitytypes|biomes]";
+        this.usageMessage = "/mohist [potions|enchants|materials|commands|mods|playermods|entitytypes|biomes|printthreadcost]";
         this.setPermission("bukkit.command.mohist");
     }
 
@@ -95,6 +96,9 @@ public class Commandmohist extends Command {
             case "reload":
                 MohistConfig.reload();
                 sender.sendMessage(ChatColor.GREEN + "Config reload success");
+                break;
+            case "printthreadcost":
+                MohistThreadCost.dumpThreadCpuTime();
                 break;
             default:
                 sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);

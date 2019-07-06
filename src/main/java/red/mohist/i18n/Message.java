@@ -226,12 +226,14 @@ public enum Message {
 
     CraftBukkit_CraftServer_1("craftbukkit.craftserver.1"),
 
-    forge_FMLServerHandler_1("forge.FMLServerHandler.1"),
-    forge_FMLServerHandler_2("forge.FMLServerHandler.2"),
-    forge_FMLServerHandler_3("forge.FMLServerHandler.3"),
-    forge_FMLServerHandler_4("forge.FMLServerHandler.4"),
+    forge_FMLServerHandler_1("forge.fmlserverhandler.1"),
+    forge_FMLServerHandler_2("forge.fmlserverhandler.2"),
+    forge_FMLServerHandler_3("forge.fmlserverhandler.3"),
+    forge_FMLServerHandler_4("forge.fmlserverhandler.4"),
 
-    forge_ServerLanunchWrapper_1("forge.ServerLanunchWrapper.1");
+    forge_ServerLanunchWrapper_1("forge.serverlanunchwrapper.1"),
+
+    Mohist_Dump_1("mohist.dump.1");
 
     public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
     private final String value;

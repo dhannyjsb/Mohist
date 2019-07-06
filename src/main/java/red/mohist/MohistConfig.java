@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import red.mohist.command.defaultcomamnd.Commandmohist;
+import red.mohist.command.defaultcomamnd.MohistCommand;
 import red.mohist.command.defaultcomamnd.VersionCommand;
 import red.mohist.i18n.Message;
 
@@ -55,7 +55,6 @@ public class MohistConfig {
      * 一个tick内,一个实体可以碰撞或被碰撞多少次
      */
     public static int maxEntityCollisionsPerTick = 8;
-    public static boolean dumpThreadCpuTime = false;
     /*========================================================================*/
     public static YamlConfiguration config;
     static int version;
@@ -77,7 +76,7 @@ public class MohistConfig {
         config.options().copyDefaults(true);
 
         commands = new HashMap<String, Command>();
-        commands.put("mohist", new Commandmohist("mohist"));
+        commands.put("mohist", new MohistCommand("mohist"));
         commands.put("version", new VersionCommand("version"));
 
         version = getInt("config-version", 1);
