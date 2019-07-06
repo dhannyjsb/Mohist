@@ -56,16 +56,19 @@ public class CraftSign extends CraftBlockEntityState<TileEntitySign> implements 
 
     @Override
     public String[] getLines() {
+        load();
         return lines;
     }
 
     @Override
     public String getLine(int index) throws IndexOutOfBoundsException {
+        load();
         return lines[index];
     }
 
     @Override
     public void setLine(int index, String line) throws IndexOutOfBoundsException {
+        load();
         lines[index] = line;
     }
 
