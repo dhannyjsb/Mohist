@@ -28,6 +28,7 @@ public class CraftCommandBlock extends CraftBlockEntityState<TileEntityCommandBl
 
     @Override
     public String getCommand() {
+        load();
         return command;
     }
 
@@ -38,6 +39,7 @@ public class CraftCommandBlock extends CraftBlockEntityState<TileEntityCommandBl
 
     @Override
     public String getName() {
+        load();
         return name;
     }
 

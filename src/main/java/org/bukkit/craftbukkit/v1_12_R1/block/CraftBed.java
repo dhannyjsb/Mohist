@@ -29,6 +29,7 @@ public class CraftBed extends CraftBlockEntityState<TileEntityBed> implements Be
 
     @Override
     public DyeColor getColor() {
+        load();
         return color;
     }
 
