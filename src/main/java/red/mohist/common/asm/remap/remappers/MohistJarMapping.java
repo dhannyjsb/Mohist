@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.Remapper;
+import red.mohist.MohistConfig;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,7 +58,9 @@ public class MohistJarMapping extends JarMapping implements ClassRemapperSupplie
             }
             String methodArgumentsDesc = sj.toString();
             if (Objects.equals(methodName, entry.getValue())) {
-                LOGGER.warn("fast mapping detect invalid mapping,ignore it:" + entry.getKey() + " -> " + entry.getValue());
+                if (MohistConfig.printInvalidMapping) {
+                    LOGGER.warn("fast mapping detect invalid mapping,ignore it:" + entry.getKey() + " -> " + entry.getValue());
+                }
                 continue;
             }
             Map<String, String>[] mapping = fastMethodMappings.computeIfAbsent(className, kk -> new HashMap<>())
@@ -72,7 +75,9 @@ public class MohistJarMapping extends JarMapping implements ClassRemapperSupplie
             String className = remapper.map(classInternalName).replace('/', '.');
             String fieldName = key.substring(dot + 1);
             if (Objects.equals(fieldName, entry.getValue())) {
-                LOGGER.warn("fast mapping detect invalid mapping,ignore it:" + entry.getKey() + " -> " + entry.getValue());
+                if (MohistConfig.printInvalidMapping) {
+                    LOGGER.warn("fast mapping detect invalid mapping,ignore it:" + entry.getKey() + " -> " + entry.getValue());
+                }
                 continue;
             }
             fastFieldMappings.computeIfAbsent(className, kk -> HashBiMap.create())
