@@ -16,10 +16,6 @@ public abstract class CraftContainer<T extends TileEntityLockable> extends Craft
         super(material, tileEntity);
     }
 
-    public CraftContainer(final Block block, T tileEntity) {
-        super(block, tileEntity);
-    }
-
     @Override
     public boolean isLocked() {
         return this.getSnapshot().isLocked();

@@ -17,10 +17,6 @@ public class CraftHopper extends CraftLootable<TileEntityHopper> implements Hopp
         super(material, te);
     }
 
-    public CraftHopper(final Block block, final TileEntityHopper te) {
-        super(block, te);
-    }
-
     @Override
     public Inventory getSnapshotInventory() {
         return new CraftInventory(this.getSnapshot());
