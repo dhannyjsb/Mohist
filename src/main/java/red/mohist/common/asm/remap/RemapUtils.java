@@ -1,6 +1,7 @@
 package red.mohist.common.asm.remap;
 
 import net.md_5.specialsource.transformer.MavenShade;
+import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
@@ -40,6 +41,7 @@ public class RemapUtils {
         jarMapping.packages.put("org/bukkit/craftbukkit/libs/joptsimple/", "joptsimple/");
         jarMapping.methods.put("org/bukkit/Bukkit/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
         jarMapping.methods.put("org/bukkit/Server/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
+        jarMapping.methods.put("org/bukkit/craftbukkit/v1_12_R1/CraftServer/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
         jarMapping.setInheritanceMap(new MohistInheritanceMap());
         jarMapping.setFallbackInheritanceProvider(new MohistInheritanceProvider());
 
