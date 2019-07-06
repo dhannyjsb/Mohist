@@ -40,19 +40,19 @@
      }
  
 +    public void readLock() {
-+        rwLock.readLock().lock();
++//        rwLock.readLock().lock();
 +    }
 +
 +    public void readUnlock() {
-+        rwLock.readLock().unlock();
++//        rwLock.readLock().unlock();
 +    }
 +
 +    public void writeLock() {
-+        rwLock.writeLock().lock();
++//        rwLock.writeLock().lock();
 +    }
 +
 +    public void writeUnlock() {
-+        rwLock.writeLock().unlock();
++//        rwLock.writeLock().unlock();
 +    }
 +
      protected void createLookup(Class<?> clazz)

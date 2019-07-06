@@ -12,10 +12,10 @@ import red.mohist.common.asm.remap.remappers.*;
 import sun.reflect.Reflection;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodType;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +86,7 @@ public class RemapUtils {
             }
         }
         if (MohistConfig.dumpRemapPluginClass) {
-            ASMUtils.dump(System.getProperty("user.dir") + File.separator + "dumpRemapPluginClass", bs);
+            ASMUtils.dump(Paths.get(System.getProperty("user.dir"), "dumpRemapPluginClass"), bs);
         }
         return bs;
     }
