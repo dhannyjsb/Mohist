@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
@@ -164,11 +165,11 @@ public class ASMUtils {
         return sj.toString() + toDescriptor(returnType);
     }
 
-    public static void dump(String dir, byte[] bs) throws IOException {
+    public static void dump(Path dir, byte[] bs) throws IOException {
         ClassReader classReader = new ClassReader(bs);
         ClassNode classNode = new ClassNode();
         classReader.accept(classNode, 0);
-        File file = new File(dir, classNode.name + ".class");
+        File file = dir.resolve(classNode.name + ".class").toFile();
         if (!file.exists()) {
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
