@@ -107,7 +107,7 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +519,32 @@
+@@ -531,4 +519,24 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }
@@ -128,14 +128,6 @@
 +        if (state instanceof InventoryHolder)
 +        {
 +            return (InventoryHolder) state;
-+        }
-+        else if (state instanceof CraftBlockEntityState)
-+        {
-+            TileEntity te = ((CraftBlockEntityState) state).getTileEntity();
-+            if (te instanceof IInventory)
-+			{
-+                return (InventoryHolder) new CraftCustomInventory((IInventory) te);
-+            }
 +        }
 +        return null;
 +    }

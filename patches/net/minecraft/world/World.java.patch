@@ -827,6 +827,15 @@
                  tileentity2 = this.getPendingTileEntityAt(pos);
              }
  
+@@ -2415,7 +2747,7 @@
+         {
+             TileEntity tileentity2 = this.addedTileEntityList.get(j2);
+ 
+-            if (!tileentity2.isInvalid() && tileentity2.getPos().equals(pos))
++            if (tileentity2 != null && !tileentity2.isInvalid() && tileentity2.getPos().equals(pos))
+             {
+                 return tileentity2;
+             }
 @@ -2428,7 +2760,7 @@
      {
          pos = pos.toImmutable(); // Forge - prevent mutable BlockPos leaks

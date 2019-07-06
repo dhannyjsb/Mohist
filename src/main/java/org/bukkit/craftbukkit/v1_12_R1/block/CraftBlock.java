@@ -16,6 +16,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraftforge.cauldron.block.CraftCustomContainer;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -293,11 +294,13 @@ public class CraftBlock implements Block {
         // Cauldron start - if null, check for TE that implements IInventory
         if (material == null) {
             TileEntity tileEntity = chunk.getCraftWorld().getTileEntityAt(x, y, z);
-            if (tileEntity != null) {
-                return new CraftBlockEntityState<TileEntity>(this, (Class<TileEntity>) tileEntity.getClass());
-            } else {
+            if (tileEntity == null) {
                 return new CraftBlockState(this);
             }
+            if (tileEntity instanceof IInventory) {
+                return new CraftCustomContainer(this);
+            }
+            return new CraftBlockEntityState<TileEntity>(this, (Class<TileEntity>) tileEntity.getClass());
         }
         switch (material) {
         case SIGN:
@@ -374,13 +377,15 @@ public class CraftBlock implements Block {
         default:
             // Cauldron start
             TileEntity tileEntity = chunk.getCraftWorld().getTileEntityAt(x, y, z);
-            if (tileEntity != null && tileEntity instanceof IInventory) {
-                // block with unhandled TileEntity:
-                return new CraftBlockEntityState<TileEntity>(this, (Class<TileEntity>) tileEntity.getClass());
-            } else {
-                // Block without TileEntity:
+            if (tileEntity == null) {
                 return new CraftBlockState(this);
             }
+            if (tileEntity instanceof IInventory) {
+                // In order to allow plugins to properly grab the container location, we must pass a class that extends CraftBlockState and implements InventoryHolder.
+                // Note: This will be returned when TileEntity.getOwner() is called
+                return new CraftCustomContainer(this);
+            }
+            return new CraftBlockEntityState<TileEntity>(this, (Class<TileEntity>) tileEntity.getClass());
         }
     }
 
