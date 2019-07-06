@@ -44,6 +44,10 @@ public class MohistConfig {
      */
     public static boolean printRemapPluginClass = false;
     /**
+     * 是否打印无效的remap规则
+     */
+    public static boolean printInvalidMapping = false;
+    /**
      * 非玩家实体碰撞其他实体的间隔时间
      */
     public static int entityCollideFrequency = 2;
@@ -96,6 +100,7 @@ public class MohistConfig {
         dumpRemapPluginClass = getBoolean("remap.dumpRemapPluginClass", dumpRemapPluginClass);
         printRemapPluginClass = getBoolean("remap.printRemapPluginClass", printRemapPluginClass);
         printThreadTimeCost = getBoolean("debug.printThreadTimeCost", printThreadTimeCost);
+        printInvalidMapping = getBoolean("debug.printInvalidMapping", printInvalidMapping);
         readConfig(MohistConfig.class, null);
     }
 
