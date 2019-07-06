@@ -9,27 +9,7 @@
      private ConnectionState state;
      private ConnectionType connectionType;
      private final Side side;
-@@ -113,6 +113,11 @@
-     private Map<String,String> modList = Collections.emptyMap();
-     private int overrideLoginDim;
- 
-+    public EntityPlayerMP getPlayer()
-+    {
-+        return player;
-+    }
-+
-     public NetworkDispatcher(NetworkManager manager)
-     {
-         super(false);
-@@ -427,6 +432,7 @@
-             }
-         }
-         String channelName = msg.getChannelName();
-+        player.getBukkitEntity().addChannel(channelName); // Cauldron - register channel for bukkit player
-         if ("FML|HS".equals(channelName) || "REGISTER".equals(channelName) || "UNREGISTER".equals(channelName))
-         {
-             FMLProxyPacket proxy = new FMLProxyPacket(msg);
-@@ -597,7 +603,7 @@
+@@ -597,7 +597,7 @@
              }
              else
              {
