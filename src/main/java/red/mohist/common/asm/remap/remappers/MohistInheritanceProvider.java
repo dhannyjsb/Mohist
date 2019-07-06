@@ -19,10 +19,38 @@ public class MohistInheritanceProvider implements InheritanceProvider {
     }
 
     protected Set<String> fineParents(String className, boolean remap) {
-        if (className.startsWith("org/springframework/")) {
-//            不处理spring的类
-            return null;
+        if (className.startsWith("net/minecraft/")) {
+//            nms 拿不到字节码,需要用反射
+            return fineNMSParents(className, remap);
+        } else {
+            return findNormalParents(className, remap);
         }
+    }
+
+    protected Set<String> fineNMSParents(String className, boolean remap) {
+        if (remap) {
+            className = RemapUtils.map(className);
+        }
+        Set<String> parents = new HashSet<>();
+        try {
+            Class<?> reference = Class.forName(className.replace('/', '.').replace('$', '.'), false, this.getClass().getClassLoader());
+            Class<?> extend = reference.getSuperclass();
+            if (extend != null) {
+                parents.add(RemapUtils.reverseMap(extend.getName().replace('.', '/')));
+            }
+            for (Class<?> inter : reference.getInterfaces()) {
+                if (inter != null) {
+                    parents.add(RemapUtils.reverseMap(inter.getName().replace('.', '/')));
+                }
+            }
+            return parents;
+        } catch (Exception e) {
+            // Empty catch block
+        }
+        return parents;
+    }
+
+    protected Set<String> findNormalParents(String className, boolean remap) {
         ClassNode cn = MohistClassRepo.getInstance().findClass(className);
         if (cn == null) {
             if (!remap) {

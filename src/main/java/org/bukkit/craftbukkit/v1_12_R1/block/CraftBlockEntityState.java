@@ -48,44 +48,16 @@ public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState
 
     // copies the data of the given tile entity to this block state
     protected void load(T tileEntity) {
-        if (tileEntity == null) {
-            return;
-        }
-        if (tileEntity == snapshotTileEntity) {
-            return;
-        }
-        captureSnapshotFromTileEntity(tileEntity);
-    }
-
-    /**
-     * 用指定的TileEntity更新快照数据
-     * 保留快照坐标
-     *
-     * @param tileEntity
-     */
-    protected void captureSnapshotFromTileEntity(T tileEntity) {
-        this.tileEntity = tileEntity;
-        super.captureSnapshotFromTileEntity(tileEntity);
-        BlockPos pos = snapshotTileEntity.getPos();
-        snapshotTileEntity.readFromNBT(getSnapshotNBT());
-        snapshotTileEntity.setPos(pos);
-    }
-
-    /**
-     * 用快照更新指定的TileENtity
-     * @param tileEntity
-     */
-    protected void updateTileEntityBySnapshot(T tileEntity) {
-        BlockPos pos = tileEntity.getPos();
-        tileEntity.readFromNBT(getSnapshotNBT());
-        tileEntity.setPos(pos);
+        super.load(tileEntity);
     }
 
     // applies the TileEntity data of this block state to the given TileEntity
     protected void applyTo(T tileEntity) {
         load();
         if (tileEntity != null && tileEntity != getSnapshot()) {
-            updateTileEntityBySnapshot(tileEntity);
+            BlockPos pos = tileEntity.getPos();
+            tileEntity.readFromNBT(getSnapshotNBT());
+            tileEntity.setPos(pos);
         }
     }
 
@@ -109,35 +81,13 @@ public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState
         return result;
     }
 
-    /**
-     * 从世界中读取快照
-     */
     @Override
-    protected void captureSnapshotFromWorld() {
-        captureSnapshotTileEntityFromWorld();
+    public void setTileEntity(T tileEntity) {
+        this.tileEntity = tileEntity;
     }
 
-    /**
-     * 从world中取tileEntity
-     */
     @Override
-    protected T captureTileEntityFromWorld() {
-        tileEntity = (T) super.captureTileEntityFromWorld();
-        return tileEntity;
+    public void setSnapshotTileEntity(T snapshotTileEntity) {
+        this.snapshotTileEntity = snapshotTileEntity;
     }
-
-    /**
-     * 从world中获取当前位置的快照TileEntity
-     * @return
-     */
-    protected T captureSnapshotTileEntityFromWorld() {
-        NBTTagCompound nbt = captureSnapshotNBTFromWorld();
-        if (nbt == null) {
-            snapshotTileEntity = null;
-            return null;
-        }
-        snapshotTileEntity = (T) TileEntity.create(tileEntity.getWorld(), nbt);
-        return snapshotTileEntity;
-    }
-
 }

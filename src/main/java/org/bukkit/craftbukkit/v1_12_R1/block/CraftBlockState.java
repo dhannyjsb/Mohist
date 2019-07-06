@@ -79,11 +79,15 @@ public class CraftBlockState<T extends TileEntity> implements BlockState {
         if (init) {
             return;
         }
-        captureSnapshotFromWorld();
         init = true;
+        captureSnapshotFromWorld();
     }
 
-    // copies the data of the given tile entity to this block state
+    /**
+     * 回调,在这里面获取自己所需的数据
+     *
+     * @param tileEntity 真实对象
+     */
     protected void load(T tileEntity) {
 
     }
@@ -101,34 +105,42 @@ public class CraftBlockState<T extends TileEntity> implements BlockState {
     }
 
     /**
-     * 从世界中读取快照
-     */
-    protected void captureSnapshotFromWorld() {
-        captureSnapshotNBTFromWorld();
-        init = true;
-    }
-
-    /**
-     * 从世界中读取快照
-     */
-    protected void captureSnapshotFromTileEntity(T tileEntity) {
-        captureSnapshotNBTFromTileEntity(tileEntity);
-        init = true;
-    }
-
-    /**
-     * 从world中取tileEntity
+     * 从World中获取TileEntity对象
      */
     protected T captureTileEntityFromWorld() {
 //        子类需要TileEntity请复写此方法
-        return (T) world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
+        T tileEntity = (T) world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
+        setTileEntity(tileEntity);
+        return tileEntity;
     }
 
     /**
-     * 从world中获取快照
+     * 从世界中读取数据创建快照
      */
-    protected NBTTagCompound captureSnapshotNBTFromWorld() {
-        return captureSnapshotNBTFromTileEntity(captureTileEntityFromWorld());
+    protected void captureSnapshotFromWorld() {
+        captureSnapshotFromTileEntity(captureTileEntityFromWorld());
+    }
+
+    /**
+     * 用给定的TileEntity创建快照
+     */
+    protected void captureSnapshotFromTileEntity(T tileEntity) {
+        captureSnapshotTileEntityFromTileEntity(tileEntity);
+    }
+
+    /**
+     * 从world中获取当前位置的快照TileEntity
+     * @return
+     */
+    protected T captureSnapshotTileEntityFromTileEntity(T tileEntity) {
+        NBTTagCompound nbt = captureSnapshotNBTFromTileEntity(tileEntity);
+        T snapshotTileEntity = null;
+        if (nbt != null) {
+            snapshotTileEntity = (T) TileEntity.create(tileEntity.getWorld(), nbt);
+            setSnapshotTileEntity(snapshotTileEntity);
+        }
+        load(tileEntity);
+        return snapshotTileEntity;
     }
 
     /**
@@ -143,6 +155,14 @@ public class CraftBlockState<T extends TileEntity> implements BlockState {
             snapshotNBT = null;
         }
         return snapshotNBT;
+    }
+
+    protected void setTileEntity(T tileEntity) {
+
+    }
+
+    protected void setSnapshotTileEntity(T tileEntity) {
+
     }
 
     public static CraftBlockState getBlockState(net.minecraft.world.World world, int x, int y, int z) {
