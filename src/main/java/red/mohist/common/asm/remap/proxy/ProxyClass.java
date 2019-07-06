@@ -23,18 +23,18 @@ public class ProxyClass {
     }
 
     public static Method getDeclaredMethod(Class clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
-        return clazz.getDeclaredMethod(RemapUtils.remapMethodName(clazz, name, parameterTypes), parameterTypes);
+        return clazz.getDeclaredMethod(RemapUtils.mapMethodName(clazz, name, parameterTypes), parameterTypes);
     }
 
     public static Method getMethod(Class clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
-        return clazz.getMethod(RemapUtils.remapMethodName(clazz, name, parameterTypes), parameterTypes);
+        return clazz.getMethod(RemapUtils.mapMethodName(clazz, name, parameterTypes), parameterTypes);
     }
 
     public static Field getDeclaredField(Class clazz, String name) throws NoSuchFieldException, SecurityException {
-        return clazz.getDeclaredField(RemapUtils.remapFieldName(clazz, name));
+        return clazz.getDeclaredField(RemapUtils.mapFieldName(clazz, name));
     }
 
     public static Field getField(Class clazz, String name) throws NoSuchFieldException, SecurityException {
-        return clazz.getField(RemapUtils.remapFieldName(clazz, name));
+        return clazz.getField(RemapUtils.mapFieldName(clazz, name));
     }
 }

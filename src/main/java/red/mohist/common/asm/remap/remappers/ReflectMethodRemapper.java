@@ -35,6 +35,8 @@ public class ReflectMethodRemapper extends MethodRemapper {
         registerMethodRemapper("java/lang/Class", "getDeclaredField", Field.class, new Class[]{String.class}, ProxyClass.class);
         registerMethodRemapper("java/lang/Class", "getMethod", Method.class, new Class[]{String.class, Class[].class}, ProxyClass.class);
         registerMethodRemapper("java/lang/Class", "getDeclaredMethod", Method.class, new Class[]{String.class, Class[].class}, ProxyClass.class);
+        registerMethodRemapper("java/lang/reflect/Method", "getName", String.class, new Class[]{}, ProxyMethod.class);
+        registerMethodRemapper("java/lang/reflect/Field", "getName", String.class, new Class[]{}, ProxyField.class);
         registerMethodRemapper("java/lang/invoke/MethodType", "fromMethodDescriptorString", MethodType.class, new Class[]{String.class, ClassLoader.class}, ProxyMethodType.class);
         registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "unreflect", MethodHandle.class, new Class[]{String.class, ClassLoader.class}, ProxyMethodHandles_Lookup.class);
         registerMethodRemapper("java/lang/invoke/MethodHandles$Lookup", "findSpecial", MethodHandle.class, new Class[]{Class.class, String.class, MethodType.class, Class.class}, ProxyMethodHandles_Lookup.class);
@@ -113,7 +115,7 @@ public class ReflectMethodRemapper extends MethodRemapper {
             Type r = Type.getReturnType(desc);
             Type[] args = Type.getArgumentTypes(desc);
             Type[] newArgs = new Type[args.length + 1];
-            if ("red/mohist/common/asm/remap/proxy/ProxyClassLoader".equals(rule.getOwner()) && "loadClass".equals(name)) {
+            if ("red/mohist/common/asm/remap/proxy/ProxyClassLoader".equals(rule.getRemapOwner()) && "loadClass".equals(name)) {
 //                实际可能是子类,这里必须使用顶级类ClassLoader
                 newArgs[0] = Type.getObjectType("java/lang/ClassLoader");
             } else {

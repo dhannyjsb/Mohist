@@ -120,16 +120,24 @@ public class RemapUtils {
         return Type.getMethodType(rt, ts).getDescriptor();
     }
 
-    public static String remapMethodName(Class clazz, String name, MethodType methodType) {
-        return remapMethodName(clazz, name, methodType.parameterArray());
+    public static String mapMethodName(Class clazz, String name, MethodType methodType) {
+        return mapMethodName(clazz, name, methodType.parameterArray());
     }
 
-    public static String remapMethodName(Class type, String name, Class<?>... parameterTypes) {
+    public static String mapMethodName(Class type, String name, Class<?>... parameterTypes) {
         return jarMapping.fastMapMethodName(type, name, parameterTypes);
     }
 
-    public static String remapFieldName(Class type, String fieldName) {
+    public static String inverseMapMethodName(Class type, String name, Class<?>... parameterTypes) {
+        return jarMapping.fastReverseMapMethodName(type, name, parameterTypes);
+    }
+
+    public static String mapFieldName(Class type, String fieldName) {
         return jarMapping.fastMapFieldName(type, fieldName);
+    }
+
+    public static String inverseMapFieldName(Class type, String fieldName) {
+        return jarMapping.fastReverseMapFieldName(type, fieldName);
     }
 
     public static ClassLoader getCallerClassLoder() {

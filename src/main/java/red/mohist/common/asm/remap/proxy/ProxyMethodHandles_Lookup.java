@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 public class ProxyMethodHandles_Lookup {
     public static MethodHandle findVirtual(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
         if (clazz.getName().startsWith("net.minecraft.")) {
-            name = RemapUtils.remapMethodName(clazz, name, type);
+            name = RemapUtils.mapMethodName(clazz, name, type);
         } else if (clazz == Class.class) {
             switch (name) {
                 case "getField":
@@ -36,7 +36,7 @@ public class ProxyMethodHandles_Lookup {
 
     public static MethodHandle findStatic(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
         if (clazz.getName().startsWith("net.minecraft.")) {
-            name = RemapUtils.remapMethodName(clazz, name, type);
+            name = RemapUtils.mapMethodName(clazz, name, type);
         } else if (clazz == Class.class && name.equals("forName")) {
             clazz = ProxyClass.class;
         }
@@ -45,7 +45,7 @@ public class ProxyMethodHandles_Lookup {
 
     public static MethodHandle findSpecial(MethodHandles.Lookup lookup, Class<?> clazz, String name, MethodType type, Class<?> specialCaller) throws NoSuchMethodException, IllegalAccessException {
         if (clazz.getName().startsWith("net.minecraft.")) {
-            name = RemapUtils.remapMethodName(clazz, name, type);
+            name = RemapUtils.mapMethodName(clazz, name, type);
         }
         return lookup.findSpecial(clazz, name, type, specialCaller);
     }
