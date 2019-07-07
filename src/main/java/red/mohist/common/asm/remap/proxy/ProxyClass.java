@@ -7,6 +7,7 @@ import red.mohist.common.asm.remap.RemapUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  *
@@ -49,5 +50,15 @@ public class ProxyClass {
             throw new NullPointerException("call getField, but class is null.name=" + name);
         }
         return clazz.getField(RemapUtils.mapFieldName(clazz, name));
+    }
+
+    public static String getName(Class clazz) {
+        Objects.requireNonNull(clazz);
+        return RemapUtils.inverseMapName(clazz);
+    }
+
+    public static String getSimpleName(Class clazz) {
+        Objects.requireNonNull(clazz);
+        return RemapUtils.inverseMapSimpleName(clazz);
     }
 }
