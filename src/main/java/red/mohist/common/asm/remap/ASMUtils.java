@@ -234,6 +234,14 @@ public class ASMUtils {
         return signature != null && !signature.isEmpty() && illegalSignaturePattern.matcher(signature).matches();
     }
 
+    public static String getInternalName(Type type) {
+        if (type.getSort() <= 8) {
+//            基本类型
+            return type.getDescriptor();
+        }
+        return type.getInternalName();
+    }
+
     private static void print(String prefix, Handle o) {
         System.out.println(prefix + " Handle " + o.getOwner() + " " + o.getName() + " " + o.getDesc());
     }

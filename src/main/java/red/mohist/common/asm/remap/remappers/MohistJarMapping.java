@@ -25,6 +25,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
 
     public final Map<String, ClassMapping> byNMSInternalName = new HashMap<>();
     public final Map<String, ClassMapping> byNMSSrcName = new HashMap<>();
+    public final Map<String, ClassMapping> byNMSName = new HashMap<>();
     public final Map<String, ClassMapping> byMCPName = new HashMap<>();
     public final Map<String, String> classes = new HashMap<>();
     public final Map<String, String> fields = new HashMap<>();
@@ -35,7 +36,6 @@ public class MohistJarMapping implements ClassRemapperSupplier {
 
     public MohistJarMapping() {
     }
-
 
     public void initFastMethodMapping(Remapper remapper) {
         for (ClassMapping classMapping : byNMSSrcName.values()) {
@@ -61,23 +61,55 @@ public class MohistJarMapping implements ClassRemapperSupplier {
     }
 
     public String fastMapFieldName(Class clazz, String name) {
+        if (doNotMapField.contains(clazz.getName())) {
+            return name;
+        }
         String mapped = fastMapFieldName(false, clazz, clazz.getName() + " " + name, name);
-        return mapped == null ? name : mapped;
+        if (mapped == null) {
+            doNotMapField.add(clazz.getName());
+            return name;
+        } else {
+            return mapped;
+        }
     }
 
     public String fastReverseMapFieldName(Class clazz, String name) {
+        if (doNotMapField.contains(clazz.getName())) {
+            return name;
+        }
         String mapped = fastMapFieldName(true, clazz, clazz.getName() + " " + name, name);
-        return mapped == null ? name : mapped;
+        if (mapped == null) {
+            doNotMapField.add(clazz.getName());
+            return name;
+        } else {
+            return mapped;
+        }
     }
 
     public String fastMapMethodName(Class clazz, String name, Class... args) {
+        if (doNotMapMethod.contains(clazz.getName())) {
+            return name;
+        }
         String mapped = fastMapMethodName(false, clazz, clazz.getName() + " " + name + " " + join(args), name, args);
-        return mapped == null ? name : mapped;
+        if (mapped == null) {
+            doNotMapMethod.add(clazz.getName());
+            return name;
+        } else {
+            return mapped;
+        }
     }
 
     public String fastReverseMapMethodName(Class clazz, String name, Class... args) {
+        if (doNotMapMethod.contains(clazz.getName())) {
+            return name;
+        }
         String mapped = fastMapMethodName(true, clazz, clazz.getName() + " " + name + " " + join(args), name, args);
-        return mapped == null ? name : mapped;
+        if (mapped == null) {
+            doNotMapMethod.add(clazz.getName());
+            return name;
+        } else {
+            return mapped;
+        }
     }
 
     private String fastMapFieldName(boolean inverse, Class clazz, String key, String name) {
@@ -90,7 +122,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         }
         mapName = directFastMapFieldName(inverse, clazz, name);
         if (mapName != null) {
-            fastMapping.put(key, mapName);
+            fastMapping.put(key.intern(), mapName.intern());
             return mapName;
         }
         mapName = fastMapMethodName(inverse, clazz.getSuperclass(), key, name);
@@ -126,7 +158,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         }
         mapName = directFastMapMethodName(inverse, clazz, name, args);
         if (mapName != null) {
-            fastMapping.put(key, mapName);
+            fastMapping.put(key.intern(), mapName.intern());
             return mapName;
         }
         mapName = fastMapMethodName(inverse, clazz.getSuperclass(), key, name, args);
@@ -296,6 +328,8 @@ public class MohistJarMapping implements ClassRemapperSupplier {
     }
 
     public ClassMapping registerClassMapping(String nmsSrcName, String mcpSrcName) {
+        nmsSrcName = nmsSrcName.intern();
+        mcpSrcName = mcpSrcName.intern();
         classes.put(nmsSrcName, mcpSrcName);
         ClassMapping mapping = byNMSSrcName.get(nmsSrcName);
         if (mapping == null) {
@@ -303,22 +337,27 @@ public class MohistJarMapping implements ClassRemapperSupplier {
             mapping.setNmsSrcName(nmsSrcName);
             mapping.setMcpSrcName(mcpSrcName);
             byNMSSrcName.put(mapping.getNmsSrcName(), mapping);
-            byNMSInternalName.put(mapping.getNmsInternalName(), mapping);
+            byNMSInternalName.put(mapping.getNmsSrcName(), mapping);
             byMCPName.put(mapping.getMcpName(), mapping);
+            byNMSName.put(mapping.getNmsName(), mapping);
         }
         return mapping;
     }
 
     public void registerFieldMapping(String nmsSrcName, String nmsName, String mcpSrcName, String mcpName) {
+        nmsName = nmsName.intern();
+        mcpName = mcpName.intern();
         fields.put((nmsSrcName + "/" + nmsName).intern(), mcpName);
         ClassMapping mapping = registerClassMapping(nmsSrcName, mcpSrcName);
         mapping.getFieldMapping().put(nmsName, mcpName);
     }
 
     public void registerMethodMapping(String nmsSrcName, String nmsName, String nmsSrcMethodDescriptor, String mcpSrcName, String mcpName, String mcpSrcMethodDescriptor) {
+        nmsName = nmsName.intern();
+        mcpName = mcpName.intern();
+        nmsSrcMethodDescriptor = nmsSrcMethodDescriptor.intern();
         methods.put((nmsSrcName + "/" + nmsName + " " + nmsSrcMethodDescriptor).intern(), mcpName);
         ClassMapping mapping = registerClassMapping(nmsSrcName, mcpSrcName);
-//        String argumentDescriptor = ASMUtils.toArgumentDescriptor(nmsSrcMethodDescriptor).intern();
         mapping.getSrcMethodMapping()
                 .computeIfAbsent(nmsSrcMethodDescriptor, kk -> new HashMap<>())
                 .put(nmsName, mcpName);

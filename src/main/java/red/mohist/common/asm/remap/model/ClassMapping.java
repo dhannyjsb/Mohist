@@ -13,11 +13,9 @@ import java.util.Map;
  */
 public class ClassMapping {
     private String nmsSrcName;
-    private String nmsInternalName;
     private String nmsSimpleName;
     private String nmsName;
     private String mcpSrcName;
-    private String mcpInternalName;
     private String mcpName;
     private String mcpSimpleName;
     private final BiMap<String, String> fieldMapping = HashBiMap.create();
@@ -39,27 +37,28 @@ public class ClassMapping {
     private final Map<String, Map<String, String>> inverseSrcMethodMapping = new HashMap<>();
 
     public void setNmsSrcName(String nmsSrcName) {
+        nmsSrcName = nmsSrcName.intern();
         this.nmsSrcName = nmsSrcName;
-        this.nmsInternalName = nmsSrcName.intern();
-        int dot = this.nmsInternalName.lastIndexOf('$');
+        int dot = this.nmsSrcName.lastIndexOf('$');
         if (dot > 0) {
-            this.nmsSimpleName = this.nmsInternalName.substring(dot + 1).intern();
+            this.nmsSimpleName = this.nmsSrcName.substring(dot + 1).intern();
         } else {
-            this.nmsSimpleName = this.nmsInternalName.substring(this.nmsInternalName.lastIndexOf('/') + 1).intern();
+            this.nmsSimpleName = this.nmsSrcName.substring(this.nmsSrcName.lastIndexOf('/') + 1).intern();
         }
-        this.nmsName = this.nmsInternalName.replace('/', '.').intern();
+        this.nmsName = this.nmsSrcName.replace('/', '.').intern();
     }
 
     public void setMcpSrcName(String mcpSrcName) {
+        mcpSrcName = mcpSrcName.intern();
         this.mcpSrcName = mcpSrcName;
-        this.mcpInternalName = mcpSrcName;
-        int dot = this.mcpInternalName.lastIndexOf('$');
+        this.mcpSrcName = mcpSrcName;
+        int dot = this.mcpSrcName.lastIndexOf('$');
         if (dot > 0) {
-            this.mcpSimpleName = this.mcpInternalName.substring(dot + 1).intern();
+            this.mcpSimpleName = this.mcpSrcName.substring(dot + 1).intern();
         } else {
-            this.mcpSimpleName = this.mcpInternalName.substring(this.mcpInternalName.lastIndexOf('/') + 1).intern();
+            this.mcpSimpleName = this.mcpSrcName.substring(this.mcpSrcName.lastIndexOf('/') + 1).intern();
         }
-        this.mcpName = this.mcpInternalName.replace('/', '.').intern();
+        this.mcpName = this.mcpSrcName.replace('/', '.').intern();
     }
 
     public Map<String, Map<String, String>> getSrcMethodMapping() {
@@ -74,14 +73,6 @@ public class ClassMapping {
         return nmsSrcName;
     }
 
-    public String getMcpSrcName() {
-        return mcpSrcName;
-    }
-
-    public String getNmsInternalName() {
-        return nmsInternalName;
-    }
-
     public String getNmsSimpleName() {
         return nmsSimpleName;
     }
@@ -90,8 +81,8 @@ public class ClassMapping {
         return nmsName;
     }
 
-    public String getMcpInternalName() {
-        return mcpInternalName;
+    public String getMcpSrcName() {
+        return mcpSrcName;
     }
 
     public String getMcpName() {
