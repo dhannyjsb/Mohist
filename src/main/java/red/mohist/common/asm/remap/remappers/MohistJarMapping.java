@@ -66,7 +66,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         }
         String mapped = fastMapFieldName(false, clazz, clazz.getName() + " " + name, name);
         if (mapped == null) {
-            doNotMapField.add(clazz.getName());
+//            doNotMapField.add(clazz.getName());
             return name;
         } else {
             return mapped;
@@ -79,7 +79,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         }
         String mapped = fastMapFieldName(true, clazz, clazz.getName() + " " + name, name);
         if (mapped == null) {
-            doNotMapField.add(clazz.getName());
+//            doNotMapField.add(clazz.getName());
             return name;
         } else {
             return mapped;
@@ -92,7 +92,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         }
         String mapped = fastMapMethodName(false, clazz, clazz.getName() + " " + name + " " + join(args), name, args);
         if (mapped == null) {
-            doNotMapMethod.add(clazz.getName());
+//            doNotMapMethod.add(clazz.getName());
             return name;
         } else {
             return mapped;
@@ -105,7 +105,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         }
         String mapped = fastMapMethodName(true, clazz, clazz.getName() + " " + name + " " + join(args), name, args);
         if (mapped == null) {
-            doNotMapMethod.add(clazz.getName());
+//            doNotMapMethod.add(clazz.getName());
             return name;
         } else {
             return mapped;
