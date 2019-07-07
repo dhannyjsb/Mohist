@@ -85,7 +85,7 @@ public class ASMUtils {
                     } else if (bsmArg instanceof String) {
                         System.out.println(prefix + " String " + bsmArg);
                     } else {
-                        throw new RuntimeException("未知类型:" + bsmArg.getClass().getName());
+                        System.out.println(prefix + " " + bsmArg.getClass().getSimpleName() + " " + bsmArg);
                     }
                 }
             }
@@ -232,6 +232,14 @@ public class ASMUtils {
      */
     public static boolean isValidSingnature(String signature) {
         return signature != null && !signature.isEmpty() && illegalSignaturePattern.matcher(signature).matches();
+    }
+
+    public static String getInternalName(Type type) {
+        if (type.getSort() <= 8) {
+//            基本类型
+            return type.getDescriptor();
+        }
+        return type.getInternalName();
     }
 
     private static void print(String prefix, Handle o) {

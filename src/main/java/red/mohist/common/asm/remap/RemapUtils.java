@@ -55,13 +55,19 @@ public class RemapUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (MohistConfig.multiVersionRemap) {
 //        nms版本兼容
-        remappers.add(new NMSVersionRemapper());
+            remappers.add(new NMSVersionRemapper());
+        }
 //        nms -> mcp
         MohistJarRemapper jarRemapper = new MohistJarRemapper(jarMapping);
-        remappers.add(jarRemapper);
+        if (MohistConfig.nmsRemap) {
+            remappers.add(jarRemapper);
+        }
+        if (MohistConfig.reflectRemap) {
 //        反射代理
-        remappers.add(new ReflectRemapper());
+            remappers.add(new ReflectRemapper());
+        }
 //        初始化fast映射
         jarMapping.initFastMethodMapping(jarRemapper);
     }
@@ -122,9 +128,9 @@ public class RemapUtils {
     public static String remapMethodDesc(String methodDescriptor) {
         Type rt = Type.getReturnType(methodDescriptor);
         Type[] ts = Type.getArgumentTypes(methodDescriptor);
-        rt = Type.getType(ASMUtils.toDescriptorV2(map(rt.getInternalName())));
+        rt = Type.getType(ASMUtils.toDescriptorV2(map(ASMUtils.getInternalName(rt))));
         for (int i = 0; i < ts.length; i++) {
-            ts[i] = Type.getType(ASMUtils.toDescriptorV2(map(ts[i].getInternalName())));
+            ts[i] = Type.getType(ASMUtils.toDescriptorV2(map(ASMUtils.getInternalName(ts[i]))));
         }
         return Type.getMethodType(rt, ts).getDescriptor();
     }
