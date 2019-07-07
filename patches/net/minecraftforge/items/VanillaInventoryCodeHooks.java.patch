@@ -8,11 +8,13 @@
  import net.minecraft.item.ItemStack;
  import net.minecraft.tileentity.IHopper;
  import net.minecraft.tileentity.TileEntity;
-@@ -33,6 +34,10 @@
+@@ -31,8 +32,12 @@
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.World;
++import net.minecraftforge.cauldron.inventory.CraftCustomInventory;
  import org.apache.commons.lang3.tuple.ImmutablePair;
  import org.apache.commons.lang3.tuple.Pair;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomInventory;
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 +import org.bukkit.event.inventory.InventoryMoveItemEvent;
 +import org.bukkit.inventory.Inventory;

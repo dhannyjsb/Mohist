@@ -20,7 +20,7 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.craftbukkit.v1_12_R1.block.CraftBlockEntityState;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftCustomInventory;
++import net.minecraftforge.cauldron.inventory.CraftCustomInventory;
 +import org.bukkit.inventory.InventoryHolder;
  
 +import javax.annotation.Nullable;
