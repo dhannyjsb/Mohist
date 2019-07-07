@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.v1_12_R1.inventory;
+package net.minecraftforge.cauldron.inventory;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -8,6 +8,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.*;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryCustom;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
