@@ -48,6 +48,18 @@ public class MohistConfig {
      */
     public static boolean printInvalidMapping = false;
     /**
+     * 是否启用插件多版本兼容
+     */
+    public static boolean multiVersionRemap = true;
+    /**
+     * 是否启用nmsRemap
+     */
+    public static boolean nmsRemap = true;
+    /**
+     * 是否启用反射remap
+     */
+    public static boolean reflectRemap = true;
+    /**
      * 非玩家实体碰撞其他实体的间隔时间
      */
     public static int entityCollideFrequency = 2;
@@ -100,6 +112,9 @@ public class MohistConfig {
         printRemapPluginClass = getBoolean("remap.printRemapPluginClass", printRemapPluginClass);
         printThreadTimeCost = getBoolean("debug.printThreadTimeCost", printThreadTimeCost);
         printInvalidMapping = getBoolean("debug.printInvalidMapping", printInvalidMapping);
+        multiVersionRemap = getBoolean("remap.multiVersionRemap", multiVersionRemap);
+        reflectRemap = getBoolean("remap.reflectRemap", reflectRemap);
+        nmsRemap = getBoolean("remap.nmsRemap", nmsRemap);
         readConfig(MohistConfig.class, null);
     }
 

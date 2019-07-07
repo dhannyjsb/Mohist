@@ -85,7 +85,7 @@ public class ASMUtils {
                     } else if (bsmArg instanceof String) {
                         System.out.println(prefix + " String " + bsmArg);
                     } else {
-                        throw new RuntimeException("未知类型:" + bsmArg.getClass().getName());
+                        System.out.println(prefix + " " + bsmArg.getClass().getSimpleName() + " " + bsmArg);
                     }
                 }
             }

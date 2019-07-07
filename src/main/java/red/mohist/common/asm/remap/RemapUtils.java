@@ -55,13 +55,19 @@ public class RemapUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (MohistConfig.multiVersionRemap) {
 //        nms版本兼容
-        remappers.add(new NMSVersionRemapper());
+            remappers.add(new NMSVersionRemapper());
+        }
 //        nms -> mcp
         MohistJarRemapper jarRemapper = new MohistJarRemapper(jarMapping);
-        remappers.add(jarRemapper);
+        if (MohistConfig.nmsRemap) {
+            remappers.add(jarRemapper);
+        }
+        if (MohistConfig.reflectRemap) {
 //        反射代理
-        remappers.add(new ReflectRemapper());
+            remappers.add(new ReflectRemapper());
+        }
 //        初始化fast映射
         jarMapping.initFastMethodMapping(jarRemapper);
     }
