@@ -14,7 +14,7 @@
  import net.minecraft.world.World;
  import net.minecraftforge.common.util.FakePlayer;
  import net.minecraftforge.fml.common.FMLCommonHandler;
-@@ -58,6 +62,11 @@
+@@ -58,6 +62,12 @@
  import com.google.gson.JsonArray;
  import com.google.gson.JsonObject;
  import org.apache.commons.lang3.tuple.Pair;
@@ -23,10 +23,11 @@
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
 +import org.bukkit.event.inventory.InventoryType;
++import red.mohist.MohistConfig;
  
  import javax.annotation.Nullable;
  
-@@ -88,6 +97,25 @@
+@@ -88,6 +98,25 @@
              Container remoteGuiContainer = NetworkRegistry.INSTANCE.getRemoteGuiContainer(mc, entityPlayerMP, modGuiId, world, x, y, z);
              if (remoteGuiContainer != null)
              {
@@ -52,3 +53,12 @@
                  entityPlayerMP.getNextWindowId();
                  entityPlayerMP.closeContainer();
                  int windowId = entityPlayerMP.currentWindowId;
+@@ -210,7 +239,7 @@
+     public static void enhanceStatusQuery(JsonObject jsonobject)
+     {
+         JsonObject fmlData = new JsonObject();
+-        fmlData.addProperty("type", "FML");
++        fmlData.addProperty("type", MohistConfig.server_type);
+         JsonArray modList = new JsonArray();
+         for (ModContainer mc : Loader.instance().getActiveModList())
+         {

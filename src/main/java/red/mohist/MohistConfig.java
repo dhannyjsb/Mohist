@@ -31,6 +31,7 @@ public class MohistConfig {
     public static String outdatedClientMessage = Message.getString(Message.outdated_Client);
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
     public static boolean useChunksMapForPendingBlocks = false; //Goodvise code add
+    public static String server_type = "FML";
     /**
      * 开启时,控制台会不停地输入所有线程的耗时
      */
@@ -115,6 +116,7 @@ public class MohistConfig {
         multiVersionRemap = getBoolean("remap.multiVersionRemap", multiVersionRemap);
         reflectRemap = getBoolean("remap.reflectRemap", reflectRemap);
         nmsRemap = getBoolean("remap.nmsRemap", nmsRemap);
+        server_type = getString("server-type", server_type);
         readConfig(MohistConfig.class, null);
     }
 
