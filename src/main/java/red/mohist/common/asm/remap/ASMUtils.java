@@ -82,6 +82,8 @@ public class ASMUtils {
                         print(prefix, (Type) bsmArg);
                     } else if (bsmArg instanceof Handle) {
                         print(prefix, (Handle) bsmArg);
+                    } else if (bsmArg instanceof String) {
+                        System.out.println(prefix + " String " + bsmArg);
                     } else {
                         throw new RuntimeException("未知类型:" + bsmArg.getClass().getName());
                     }
@@ -156,6 +158,9 @@ public class ASMUtils {
         return sj.toString();
     }
 
+    public static String toArgumentDescriptor(String methodDescriptor) {
+        return methodDescriptor.substring(0, methodDescriptor.lastIndexOf(')'));
+    }
 
     public static String toMethodDescriptor(Class returnType, Class... classes) {
         StringJoiner sj = new StringJoiner("", "(", ")");

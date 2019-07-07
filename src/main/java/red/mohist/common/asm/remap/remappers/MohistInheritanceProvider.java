@@ -36,11 +36,11 @@ public class MohistInheritanceProvider implements InheritanceProvider {
             Class<?> reference = Class.forName(className.replace('/', '.').replace('$', '.'), false, this.getClass().getClassLoader());
             Class<?> extend = reference.getSuperclass();
             if (extend != null) {
-                parents.add(RemapUtils.reverseMap(extend.getName().replace('.', '/')));
+                parents.add(RemapUtils.reverseMap(extend));
             }
             for (Class<?> inter : reference.getInterfaces()) {
                 if (inter != null) {
-                    parents.add(RemapUtils.reverseMap(inter.getName().replace('.', '/')));
+                    parents.add(RemapUtils.reverseMap(inter));
                 }
             }
             return parents;

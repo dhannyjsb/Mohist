@@ -1,7 +1,6 @@
 package red.mohist.common.asm.remap;
 
 import net.md_5.specialsource.transformer.MavenShade;
-import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
@@ -9,6 +8,7 @@ import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
+import red.mohist.common.asm.remap.model.ClassMapping;
 import red.mohist.common.asm.remap.remappers.*;
 import sun.reflect.Reflection;
 
@@ -39,9 +39,9 @@ public class RemapUtils {
         jarMapping.packages.put("org/bukkit/craftbukkit/libs/it/unimi/dsi/fastutil/", "it/unimi/dsi/fastutil/");
         jarMapping.packages.put("org/bukkit/craftbukkit/libs/jline/", "jline/");
         jarMapping.packages.put("org/bukkit/craftbukkit/libs/joptsimple/", "joptsimple/");
-        jarMapping.methods.put("org/bukkit/Bukkit/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
-        jarMapping.methods.put("org/bukkit/Server/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
-        jarMapping.methods.put("org/bukkit/craftbukkit/v1_12_R1/CraftServer/getOnlinePlayers ()[Lorg/bukkit/entity/Player;", "_INVALID_getOnlinePlayers");
+        jarMapping.registerMethodMapping("org/bukkit/Bukkit", "getOnlinePlayers", "()[Lorg/bukkit/entity/Player;", "org/bukkit/Bukkit", "_INVALID_getOnlinePlayers", "()[Lorg/bukkit/entity/Player;");
+        jarMapping.registerMethodMapping("org/bukkit/Server", "getOnlinePlayers", "()[Lorg/bukkit/entity/Player;", "org/bukkit/Server", "_INVALID_getOnlinePlayers", "()[Lorg/bukkit/entity/Player;");
+        jarMapping.registerMethodMapping("org/bukkit/craftbukkit/" + Mohist.getNativeVersion() + "/CraftServer", "getOnlinePlayers", "()[Lorg/bukkit/entity/Player;", "org/bukkit/craftbukkit/" + Mohist.getNativeVersion() + "/CraftServer", "_INVALID_getOnlinePlayers", "()[Lorg/bukkit/entity/Player;");
         jarMapping.setInheritanceMap(new MohistInheritanceMap());
         jarMapping.setFallbackInheritanceProvider(new MohistInheritanceProvider());
 
@@ -100,7 +100,13 @@ public class RemapUtils {
     }
 
     public static String reverseMap(String typeName) {
-        return jarMapping.reverseClasses.getOrDefault(typeName, typeName);
+        ClassMapping mapping = jarMapping.byNMSInternalName.get(typeName);
+        return mapping == null ? typeName : mapping.getNmsSrcName();
+    }
+
+    public static String reverseMap(Class clazz) {
+        ClassMapping mapping = jarMapping.byMCPName.get(clazz.getName());
+        return mapping == null ? ASMUtils.toInternalName(clazz) : mapping.getNmsSrcName();
     }
 
     public static String mapPackage(String typeName) {
@@ -145,5 +151,15 @@ public class RemapUtils {
 
     public static ClassLoader getCallerClassLoder() {
         return Reflection.getCallerClass(3).getClassLoader();
+    }
+
+    public static String inverseMapName(Class clazz) {
+        ClassMapping mapping = jarMapping.byMCPName.get(clazz.getName());
+        return mapping == null ? clazz.getName() : mapping.getNmsName();
+    }
+
+    public static String inverseMapSimpleName(Class clazz) {
+        ClassMapping mapping = jarMapping.byMCPName.get(clazz.getName());
+        return mapping == null ? clazz.getSimpleName() : mapping.getNmsSimpleName();
     }
 }
