@@ -1,26 +1,28 @@
 <img src="https://i.loli.net/2019/02/27/5c760f8570e8e.png">
 
-# Mohist Made in China
+## Mohist Made in China
 
 [![](https://ci.codemc.org/buildStatus/icon?job=PFCraft%2FMohist)](https://ci.codemc.org/job/PFCraft/job/Mohist/)
 ![](https://img.shields.io/github/stars/PFCraft/Mohist.svg?label=Stars)
 ![](https://img.shields.io/github/license/PFCraft/Mohist.svg)
 
 Since CraftBukkit has modified a lot of underlying layers, some of the core mods are not available, we are working hard to improve.
-## Mohist-1.12.2 will continue to be maintained..
 
-## Getting Help
+### Getting Help
    [**Discord**](https://discord.gg/HNmmrCV)
    [**Home**](https://www.mohist.red/)
    [**QQ**](https://jq.qq.com/?_wv=1027&k=5q7lcCb)
    [**bStats**](https://bstats.org/plugin/bukkit/Mohist)
 
-## Info
+### Info
 * Java 8u212 JDK or higher
 * Forge-1.12.2 - 14.23.5.2838
 * Paper-1.12.2
 
-## Building
+### Download
+* [**jenkins**](https://ci.codemc.org/job/PFCraft/job/Mohist/)
+
+### Building
 * Checkout project
   * You can use IDE or clone from console:
   `git clone https://github.com/PFCraft/Mohist.git`
@@ -39,23 +41,27 @@ If you are a plugin developer, you can add the following files to your library f
 
 Mohist-xxxxx-universal.jar - is the server we should run it
 
-## Installation
+### Installation
 * Read the wiki in detail [**WIKI**](https://github.com/PFCraft/Mohist/wiki/Install-Mohist)
 
-## Part of the code comes from
-[**Bukkit**](https://hub.spigotmc.org/stash/scm/spigot/bukkit.git)
-[**Paper**](https://github.com/PaperMC/Paper.git)
-[**CraftBukkit**](https://hub.spigotmc.org/stash/scm/spigot/craftbukkit.git)
-[**Spigot**](https://hub.spigotmc.org/stash/scm/spigot/spigot.git)
-[**MinecraftForge**](https://github.com/MinecraftForge/MinecraftForge.git)
-[**Atom**](https://gitlab.com/divinecode/atom/Atom)
-[**Thermos**](https://github.com/CyberdyneCC/Thermos.git)
-[**ReflectionRemapper**](https://github.com/Maxqia/ReflectionRemapper)
+## How to install Mohsit: For those wishing to work on Mohsit itself
 
-## User License
-1. The source code is free to distribute and copy under the premise of complying with the [**GPL-3.0**](https://github.com/PFCraft/Mohist/blob/master/LICENSE).
-2. We are not responsible for any legal disputes arising from your use of Mohist for commercial activities.
-1. 源代码可以在遵守[**GPL-3.0**](https://github.com/PFCraft/Mohist/blob/master/LICENSE)的前提下自由分发和复制。
-2. 对于因使用Mohist进行商业活动而引起的任何法律纠纷，我们概不负责。
+If you wish to actually inspect Mohsit, submit PRs or otherwise work
+ with Mohsit itself, you're in the right place!
+ 
+ [See the guide to setting up a Forge workspace](http://mcforge.readthedocs.io/en/latest/forgedev/).
 
-Welcome everyone to participate in development, unity is power.
+## Pull requests
+
+[See the "Making Changes and Pull Requests" section in the Forge documentation](http://mcforge.readthedocs.io/en/latest/forgedev/#making-changes-and-pull-requests).
+
+
+### Credits
+* [**Bukkit**](https://hub.spigotmc.org/stash/scm/spigot/bukkit.git) - plugin support.
+* [**Paper**](https://github.com/PaperMC/Paper.git) - performance optimizations.
+* [**CraftBukkit**](https://hub.spigotmc.org/stash/scm/spigot/craftbukkit.git) - plugin support.
+* [**Spigot**](https://hub.spigotmc.org/stash/scm/spigot/spigot.git) - plugin support.
+* [**MinecraftForge**](https://github.com/MinecraftForge/MinecraftForge.git) - mod support.
+* [**Atom**](https://gitlab.com/divinecode/atom/Atom) - Partial code source.
+* [**Thermos**](https://github.com/CyberdyneCC/Thermos.git) - Partial code source.
+* [**um_bukkit**](https://github.com/TechCatOther/um_bukkit) - Partial code source.
