@@ -88,7 +88,6 @@ final class PluginClassLoader extends URLClassLoader {
             if (name.startsWith("net.minecraft.server." + Mohist.getNativeVersion())) {
                 String remappedClass = RemapUtils.jarMapping.byNMSName.get(name).getMcpName();
                 return Class.forName(remappedClass);
-//                return ((net.minecraft.launchwrapper.LaunchClassLoader) MinecraftServer.getServerInst().getClass().getClassLoader()).findClass(remappedClass);
             }
 
             if (name.startsWith("org.bukkit.")) {
