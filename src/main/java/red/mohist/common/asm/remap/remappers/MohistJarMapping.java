@@ -45,7 +45,12 @@ public class MohistJarMapping implements ClassRemapperSupplier {
                 Type[] ts = Type.getArgumentTypes(methodDesc);
                 StringJoiner sj = new StringJoiner(",");
                 for (Type t : ts) {
-                    sj.add(t.getClassName());
+                    String part = t.getClassName();
+                    if (part.contains("[]")) {
+                        sj.add(t.getInternalName());
+                    } else {
+                        sj.add(part);
+                    }
                 }
                 String methodArgumentsDesc = sj.toString().intern();
                 map.forEach((k, v) -> {
