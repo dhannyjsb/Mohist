@@ -39,7 +39,17 @@ public final class PluginClassLoader extends URLClassLoader {
     private JavaPlugin pluginInit;
     private IllegalStateException pluginState;
 
-    private boolean nmsRemap = false;
+    static {
+        try {
+//            定义包,方便插件根据包识别核心信息
+            Class.forName("com.destroystokyo.paper.PackageDefine");
+            Class.forName("org.spigotmc.PackageDefine");
+            Class.forName("net.minecraftforge.cauldron.PackageDefine");
+            Class.forName("org.bukkit.craftbukkit.PackageDefine");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException, MalformedURLException {
         super(new URL[]{file.toURI().toURL()}, parent);
