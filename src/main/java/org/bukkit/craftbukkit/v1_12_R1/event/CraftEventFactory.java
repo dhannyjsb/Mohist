@@ -973,7 +973,7 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human) {
-        if (!AsyncCatcher.catchInv()) {
+        if (AsyncCatcher.catchInv()) {
             return;
         }
         InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
