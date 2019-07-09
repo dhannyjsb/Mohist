@@ -24,7 +24,7 @@ public class ClassMapping {
      */
     private final Map<String, Map<String, String>> methodMapping = new HashMap<>();
     /**
-     * args mcpMethodNam nmsMethodName
+     * args mcpMethodName nmsMethodName
      */
     private final Map<String, Map<String, String>> inverseMethodMapping = new HashMap<>();
     /**
@@ -32,7 +32,7 @@ public class ClassMapping {
      */
     private final Map<String, Map<String, String>> srcMethodMapping = new HashMap<>();
     /**
-     * args mcpMethodNam nmsMethodName
+     * args mcpMethodName nmsMethodName
      */
     private final Map<String, Map<String, String>> inverseSrcMethodMapping = new HashMap<>();
 
