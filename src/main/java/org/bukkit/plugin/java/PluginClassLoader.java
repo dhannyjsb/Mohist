@@ -1,6 +1,5 @@
 package org.bukkit.plugin.java;
 
-import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
@@ -27,7 +26,7 @@ import java.util.jar.Manifest;
 /**
  * A ClassLoader for plugins, to allow shared classes across multiple plugins
  */
-final class PluginClassLoader extends URLClassLoader {
+public final class PluginClassLoader extends URLClassLoader {
     final JavaPlugin plugin;
     private final JavaPluginLoader loader;
     private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
@@ -159,7 +158,7 @@ final class PluginClassLoader extends URLClassLoader {
                 if (stream != null) {
 //                  remap
                     byte[] bytecode = IOUtils.toByteArray(stream);
-                    bytecode = RemapUtils.remapFindClass(bytecode);
+                    bytecode = RemapUtils.remapFindClass(description, bytecode);
                     // Define (create) the class using the modified byte code
                     // The top-child class loader is used for this to prevent access violations
                     // Set the codesource to the jar, not within the jar, for compatibility with
@@ -181,5 +180,9 @@ final class PluginClassLoader extends URLClassLoader {
         }
 
         return result;
+    }
+
+    public PluginDescriptionFile getDescription() {
+        return description;
     }
 }

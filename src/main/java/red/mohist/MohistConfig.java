@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -52,6 +50,10 @@ public class MohistConfig {
      * 是否启用插件多版本兼容
      */
     public static boolean multiVersionRemap = true;
+    /**
+     * 启用多版本兼容的插件
+     */
+    public static Set<String> multiVersionRemapPlugins = new HashSet<>();
     /**
      * 是否启用nmsRemap
      */
@@ -114,6 +116,11 @@ public class MohistConfig {
         printThreadTimeCost = getBoolean("debug.printThreadTimeCost", printThreadTimeCost);
         printInvalidMapping = getBoolean("debug.printInvalidMapping", printInvalidMapping);
         multiVersionRemap = getBoolean("remap.multiVersionRemap", multiVersionRemap);
+
+        List<String> list = getList("remap.multiVersionRemapPlugins", new ArrayList<>());
+        if (list != null) {
+            multiVersionRemapPlugins.addAll(list);
+        }
         reflectRemap = getBoolean("remap.reflectRemap", reflectRemap);
         nmsRemap = getBoolean("remap.nmsRemap", nmsRemap);
         server_type = getString("server-type", server_type);

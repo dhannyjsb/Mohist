@@ -1,6 +1,7 @@
 package red.mohist.common.asm.remap;
 
 import net.md_5.specialsource.transformer.MavenShade;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
@@ -72,12 +73,15 @@ public class RemapUtils {
         jarMapping.initFastMethodMapping(jarRemapper);
     }
 
-    public static byte[] remapFindClass(byte[] bs) throws IOException {
+    public static byte[] remapFindClass(PluginDescriptionFile description,byte[] bs) throws IOException {
         if (MohistConfig.printRemapPluginClass) {
             System.out.println("========= before remap ========= ");
             ASMUtils.printClass(bs);
         }
         for (Remapper remapper : remappers) {
+            if (description != null && remapper instanceof NMSVersionRemapper && !MohistConfig.multiVersionRemapPlugins.contains(description.getName())) {
+                continue;
+            }
             ClassReader reader = new ClassReader(bs);
             ClassWriter writer = new ClassWriter(0);
             ClassRemapper classRemapper;
