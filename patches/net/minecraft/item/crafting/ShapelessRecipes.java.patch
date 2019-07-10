@@ -21,7 +21,7 @@
      public ShapelessRecipes(String group, ItemStack output, NonNullList<Ingredient> ingredients)
      {
          this.group = group;
-@@ -136,4 +142,23 @@
+@@ -136,4 +142,22 @@
      {
          return width * height >= this.recipeItems.size();
      }
@@ -32,9 +32,8 @@
 +        CraftShapelessRecipe recipe = new CraftShapelessRecipe(result, this);
 +        for (Ingredient list : this.recipeItems) {
 +            if (list != null) {
-+            	ItemStack[] matchingStacks = list.getMatchingStacks();
-+                ItemStack stack = matchingStacks[0];
-+                recipe.addIngredient(org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getMaterial(stack.getItem()), (matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
++                ItemStack stack = list.matchingStacks[0];
++                recipe.addIngredient(org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getMaterial(stack.getItem()), (list.matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
 +            }
 +        }
 +        return recipe;
