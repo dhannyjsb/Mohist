@@ -20,7 +20,7 @@
      public ShapedRecipes(String group, int width, int height, NonNullList<Ingredient> ingredients, ItemStack result)
      {
          this.group = group;
-@@ -373,6 +379,70 @@
+@@ -373,6 +379,73 @@
          }
      }
  
@@ -74,9 +74,12 @@
 +        }
 +        char c = 'a';
 +        for (Ingredient list : this.recipeItems) {
-+            if (list != null && list.matchingStacks.length > 0) {
-+                    net.minecraft.item.ItemStack stack = list.matchingStacks[0];
-+                    recipe.setIngredient(c, org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getMaterial(stack.getItem()), (list.matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
++            if (list != null) {
++                ItemStack[] matchingStacks = list.getMatchingStacks();
++                if (matchingStacks.length > 0) {
++                    net.minecraft.item.ItemStack stack = matchingStacks[0];
++                    recipe.setIngredient(c, org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getMaterial(stack.getItem()), (matchingStacks.length) > 1 ? 32767 : stack.getMetadata());
++                }
 +            }
 +            c++;
 +        }
