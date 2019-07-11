@@ -244,11 +244,21 @@ public enum Message {
         this.value = value;
     }
 
+    @Deprecated
     public static String getString(Message key) {
         return rb.getString(key.toString());
     }
 
+    public static String getString(String key) {
+        return rb.getString(key);
+    }
+
+    @Deprecated
     public static String getFormatString(Message key, Object[] f) {
+        return new MessageFormat(getString(key)).format(f);
+    }
+
+    public static String getFormatString(String key, Object[] f) {
         return new MessageFormat(getString(key)).format(f);
     }
 
