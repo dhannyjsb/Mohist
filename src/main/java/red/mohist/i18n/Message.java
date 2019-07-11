@@ -1,6 +1,11 @@
 package red.mohist.i18n;
 
+import red.mohist.util.FileUtil;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public enum Message {
@@ -235,7 +240,7 @@ public enum Message {
 
     Mohist_Dump_1("mohist.dump.1");
 
-    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new UTF8Control());
+    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(Message.getlanguage(), Message.getcountry()), new UTF8Control());
     private final String value;
     //public static ResourceBundle rb = Mohist.rb;
 
@@ -269,6 +274,40 @@ public enum Message {
     @Override
     public String toString() {
         return value;
+    }
+
+    public static String getlanguage() {
+        try {
+            File f = new File("mohist.yml");
+            String s = FileUtil.readContent(f, "UTF-8");
+            if(s.contains("lang: ")){
+                String string = s.substring(s.indexOf("lang"));
+                String s1 = string.substring(string.indexOf(":") + 1);
+                String s2 = s1.substring(1, 6);
+                String s3 = s2.substring(0, 2);
+                return s3;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "en";
+    }
+
+    public static String getcountry() {
+        try {
+            File f = new File("mohist.yml");
+            String s = FileUtil.readContent(f, "UTF-8");
+            if(s.contains("lang: ")){
+                String string = s.substring(s.indexOf("lang"));
+                String s1 = string.substring(string.indexOf(":") + 1);
+                String s2 = s1.substring(1, 6);
+                String s4 = s2.substring(3, 5);
+                return s4;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "US";
     }
 
 }

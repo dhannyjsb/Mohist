@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -20,8 +21,7 @@ import java.util.ResourceBundle;
  **/
 public class UTF8Control extends ResourceBundle.Control {
     @Override
-    public ResourceBundle newBundle(String baseName, Locale locale, String format,
-                                    ClassLoader loader, boolean reload)
+    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
             throws IllegalAccessException, InstantiationException, IOException {
         String bundleName = toBundleName(baseName, locale);
         ResourceBundle bundle = null;
@@ -36,8 +36,7 @@ public class UTF8Control extends ResourceBundle.Control {
                 if (ResourceBundle.class.isAssignableFrom(bundleClass)) {
                     bundle = bundleClass.newInstance();
                 } else {
-                    throw new ClassCastException(bundleClass.getName()
-                            + " cannot be cast to ResourceBundle");
+                    throw new ClassCastException(bundleClass.getName() + " cannot be cast to ResourceBundle");
                 }
             } catch (ClassNotFoundException e) {
             }
@@ -74,7 +73,7 @@ public class UTF8Control extends ResourceBundle.Control {
             }
             if (stream != null) {
                 try {
-                    bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
+                    bundle = new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
                 } finally {
                     stream.close();
                 }
