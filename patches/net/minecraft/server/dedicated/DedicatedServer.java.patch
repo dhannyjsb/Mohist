@@ -1,9 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/server/dedicated/DedicatedServer.java
 +++ ../src-work/minecraft/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -1,21 +1,15 @@
+@@ -1,21 +1,16 @@
  package net.minecraft.server.dedicated;
  
 -import com.google.common.collect.Lists;
++import com.destroystokyo.paper.PaperConfig;
 +import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 +import org.bukkit.craftbukkit.v1_12_R1.Main;
 +import org.bukkit.craftbukkit.v1_12_R1.util.TerminalConsoleWriterThread;
@@ -29,7 +30,7 @@
  import net.minecraft.command.ICommandSender;
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.ICrashReportDetail;
-@@ -38,35 +32,47 @@
+@@ -38,35 +33,47 @@
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
@@ -88,7 +89,7 @@
          Thread thread = new Thread("Server Infinisleeper")
          {
              {
-@@ -96,15 +102,22 @@
+@@ -96,15 +103,22 @@
          {
              public void run()
              {
@@ -118,7 +119,7 @@
                      }
                  }
                  catch (IOException ioexception1)
-@@ -113,9 +126,33 @@
+@@ -113,9 +127,33 @@
                  }
              }
          };
@@ -153,7 +154,7 @@
  
          if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
          {
-@@ -125,7 +162,7 @@
+@@ -125,7 +163,7 @@
          net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStart(this);
  
          LOGGER.info("Loading properties");
@@ -162,7 +163,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -144,7 +181,7 @@
+@@ -144,7 +182,7 @@
              {
                  this.setOnlineMode(this.settings.getBooleanProperty("online-mode", true));
                  this.setPreventProxyConnections(this.settings.getBooleanProperty("prevent-proxy-connections", false));
@@ -171,7 +172,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +218,23 @@
+@@ -181,10 +219,27 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -180,6 +181,10 @@
 +            SpigotConfig.init((File) options.valueOf("spigot-settings"));
 +            SpigotConfig.registerCommands();
 +            // Spigot end
++
++            // Paper start
++            PaperConfig.init((File) options.valueOf("paper-settings"));
++            // Paper end
 +
 +            // Mohist start
 +            MohistConfig.init((File) options.valueOf("mohist-settings"));
@@ -196,7 +201,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +246,7 @@
+@@ -196,15 +251,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -213,7 +218,7 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,8 +259,7 @@
+@@ -217,8 +264,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -223,7 +228,7 @@
  
                  if (this.getFolderName() == null)
                  {
-@@ -268,11 +309,14 @@
+@@ -268,11 +314,14 @@
                  if (!net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerAboutToStart(this)) return false;
                  LOGGER.info("Preparing level \"{}\"", (Object)this.getFolderName());
                  this.loadAllWorlds(this.getFolderName(), this.getFolderName(), k, worldtype, s2);
@@ -241,7 +246,7 @@
                  if (this.settings.hasProperty("announce-player-achievements"))
                  {
                      this.worlds[0].getGameRules().setOrCreateGameRule("announceAdvancements", this.settings.getBooleanProperty("announce-player-achievements", true) ? "true" : "false");
-@@ -292,16 +336,28 @@
+@@ -292,16 +341,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -276,7 +281,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +483,19 @@
+@@ -427,11 +488,19 @@
  
      public void executePendingCommands()
      {
@@ -300,7 +305,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -592,8 +656,11 @@
+@@ -592,8 +661,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -314,7 +319,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +751,66 @@
+@@ -684,13 +756,66 @@
  
      public String getPlugins()
      {

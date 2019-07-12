@@ -130,6 +130,14 @@ public class Main {
                         .describedAs("Yml file");
                 // Spigot End
 
+                // Paper Start
+                acceptsAll(asList("paper", "paper-settings"), "File for paper settings")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File("paper.yml"))
+                        .describedAs("Yml file");
+                // Paper end
+
                 // Mohist Start
                 acceptsAll(asList("mohist", "mohist-settings"), "File for mohist settings")
                         .withRequiredArg()

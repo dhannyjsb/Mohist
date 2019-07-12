@@ -141,8 +141,29 @@ public final class CraftServer implements Server {
     private final List<CraftPlayer> playerView;
     private final Spigot spigot = new Spigot() {
 
-        public YamlConfiguration getConfig() {
+        @Deprecated
+        @Override
+        public YamlConfiguration getConfig()
+        {
             return org.spigotmc.SpigotConfig.config;
+        }
+
+        @Override
+        public YamlConfiguration getBukkitConfig()
+        {
+            return configuration;
+        }
+
+        @Override
+        public YamlConfiguration getSpigotConfig()
+        {
+            return org.spigotmc.SpigotConfig.config;
+        }
+
+        @Override
+        public YamlConfiguration getPaperConfig()
+        {
+            return com.destroystokyo.paper.PaperConfig.config;
         }
 
         @Override
@@ -244,7 +265,6 @@ public final class CraftServer implements Server {
         ambientSpawn = configuration.getInt("spawn-limits.ambient");
         console.autosavePeriod = configuration.getInt("ticks-per.autosave");
         warningState = WarningState.value(configuration.getString("settings.deprecated-verbose"));
-        loadIcon(); // Fixed server ping stalling.
         chunkGCPeriod = configuration.getInt("chunk-gc.period-in-ticks");
         chunkGCLoadThresh = configuration.getInt("chunk-gc.load-threshold");
         loadIcon();
