@@ -53,27 +53,30 @@
  
          if (this.receivedFinishDiggingPacket)
          {
-@@ -137,6 +140,19 @@
+@@ -137,13 +140,21 @@
  
      public void onBlockClicked(BlockPos pos, EnumFacing side)
      {
 +        // CraftBukkit start
 +        PlayerInteractEvent playerinteractevent = CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_BLOCK, pos, side, this.player.inventory.getCurrentItem(), EnumHand.MAIN_HAND);
-+        if (playerinteractevent.isCancelled()) {
-+            // Let the client know the block still exists
-+            this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
++        // CraftBukkit end
+         double reachDist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
+-        net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock event = net.minecraftforge.common.ForgeHooks.onLeftClickBlock(player, pos, side, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
++        net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock event = net.minecraftforge.common.ForgeHooks.onBukkitLeftClickBlock(player, pos, side, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1), playerinteractevent);
+         if (event.isCanceled())
+         {
+             // Restore block and te data
+             player.connection.sendPacket(new SPacketBlockChange(world, pos));
+             world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
 +            // Update any tile entity data for this block
 +            TileEntity tileentity = this.world.getTileEntity(pos);
 +            if (tileentity != null) {
 +                this.player.connection.sendPacket(tileentity.getUpdatePacket());
 +            }
-+            return;
-+        }
-+        // CraftBukkit end
-         double reachDist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
-         net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock event = net.minecraftforge.common.ForgeHooks.onLeftClickBlock(player, pos, side, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
-         if (event.isCanceled())
-@@ -185,11 +201,24 @@
+             return;
+         }
+ 
+@@ -185,11 +196,24 @@
              this.initialDamage = this.curblockDamage;
              float f = 1.0F;
  
@@ -100,7 +103,7 @@
                      this.world.extinguishFire((EntityPlayer)null, pos, side);
                  }
                  else
-@@ -200,6 +229,26 @@
+@@ -200,6 +224,26 @@
                  }
                  f = iblockstate.getPlayerRelativeBlockHardness(this.player, this.player.world, pos);
              }
@@ -127,7 +130,7 @@
              if (event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  if (f >= 1.0F)
-@@ -221,6 +270,7 @@
+@@ -221,6 +265,7 @@
                  this.destroyPos = pos;
                  int i = (int)(f * 10.0F);
                  this.world.sendBlockBreakProgress(this.player.getEntityId(), pos, i);
@@ -135,7 +138,7 @@
                  this.durabilityRemainingOnBlock = i;
              }
          }
-@@ -230,6 +280,7 @@
+@@ -230,6 +275,7 @@
      {
          if (pos.equals(this.destroyPos))
          {
@@ -143,7 +146,7 @@
              int i = this.curblockDamage - this.initialDamage;
              IBlockState iblockstate = this.world.getBlockState(pos);
  
-@@ -251,6 +302,15 @@
+@@ -251,6 +297,15 @@
                      this.initialBlockDamage = this.initialDamage;
                  }
              }
@@ -159,7 +162,7 @@
          }
      }
  
-@@ -279,25 +339,25 @@
+@@ -279,25 +334,25 @@
      }
  
      public boolean tryHarvestBlock(BlockPos pos)
@@ -192,7 +195,7 @@
                  ItemStack stack = player.getHeldItemMainhand();
                  if (!stack.isEmpty() && stack.getItem().onBlockStartBreak(stack, pos, player)) return false;
  
-@@ -305,33 +365,33 @@
+@@ -305,33 +360,33 @@
                  boolean flag1 = false;
  
                  if (this.isCreative())
@@ -233,7 +236,7 @@
                  }
                  return flag1;
              }
-@@ -396,9 +456,58 @@
+@@ -396,9 +451,58 @@
          }
      }
  
@@ -293,7 +296,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(pos);
  
-@@ -432,8 +541,8 @@
+@@ -432,8 +536,8 @@
              net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock event = net.minecraftforge.common.ForgeHooks
                      .onRightClickBlock(player, hand, pos, facing, net.minecraftforge.common.ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
              if (event.isCanceled()) return event.getCancellationResult();
@@ -303,7 +306,7 @@
              if (event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
              {
                  result = stack.onItemUseFirst(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-@@ -446,10 +555,10 @@
+@@ -446,10 +550,10 @@
              {
                  IBlockState iblockstate = worldIn.getBlockState(pos);
                  if(event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
@@ -318,7 +321,7 @@
              }
  
              if (stack.isEmpty())
-@@ -460,7 +569,7 @@
+@@ -460,7 +564,7 @@
              {
                  return EnumActionResult.PASS;
              }
@@ -327,7 +330,7 @@
              {
                  if (stack.getItem() instanceof ItemBlock && !player.canUseCommandBlock())
                  {
-@@ -478,10 +587,10 @@
+@@ -478,10 +582,10 @@
                      int i = stack.getCount();
                      if (result != EnumActionResult.SUCCESS && event.getUseItem() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
                              || result == EnumActionResult.SUCCESS && event.getUseItem() == net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW) {
@@ -342,7 +345,7 @@
                      } else return result;
                  }
                  else
-@@ -496,6 +605,8 @@
+@@ -496,6 +600,8 @@
              }
          }
      }
