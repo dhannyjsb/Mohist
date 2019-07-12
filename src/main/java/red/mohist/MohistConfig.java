@@ -28,7 +28,6 @@ public class MohistConfig {
     public static String unknownCommandMessage = Message.getString(Message.Use_Unkonw_Comamnd);
     public static String outdatedClientMessage = Message.getString(Message.outdated_Client);
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
-    public static boolean useChunksMapForPendingBlocks = false; //Goodvise code add
     public static String server_type = "FML";
     public static String lang = "en_US";
     /**
@@ -104,12 +103,10 @@ public class MohistConfig {
             set("messages.Outdate-Server", outdatedServerMessage);
             set("update.version", "Stable");
             set("update.autoget", false);
-            set("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
         }
         unknownCommandMessage = transform(getString("messages.use-unknow-command", unknownCommandMessage));
         outdatedClientMessage = transform(getString("messages.Outdate-Client", outdatedClientMessage));
         outdatedServerMessage = transform(getString("messages.Outdate-Server", outdatedServerMessage));
-        useChunksMapForPendingBlocks = getBoolean("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
         entityCollideFrequency = getInt("perfomance.entityCollideFrequency", entityCollideFrequency);
         maxEntityCollisionsPerTick = getInt("perfomance.maxEntityCollisionsPerTick", maxEntityCollisionsPerTick);
         dumpRemapPluginClass = getBoolean("remap.dumpRemapPluginClass", dumpRemapPluginClass);
@@ -266,6 +263,5 @@ public class MohistConfig {
         unknownCommandMessage = transform(getString("messages.use-unknow-command", unknownCommandMessage));
         outdatedClientMessage = transform(getString("messages.Outdate-Client", outdatedClientMessage));
         outdatedServerMessage = transform(getString("messages.Outdate-Server", outdatedServerMessage));
-        useChunksMapForPendingBlocks = getBoolean("perfomance.usechunksmapforpendingblocks", useChunksMapForPendingBlocks); //Goodvise code add
     }
 }
