@@ -18,7 +18,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**bStats**](https://bstats.org/plugin/bukkit/Mohist)
 
 ### Download
-* [**jenkins**](https://ci.codemc.org/job/PFCraft/job/Mohist/)
+* [**Jenkins**](https://ci.codemc.org/job/PFCraft/job/Mohist/)
 
 ### Building
 * Checkout project
