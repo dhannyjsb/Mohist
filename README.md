@@ -5,6 +5,9 @@
 [![](https://ci.codemc.org/buildStatus/icon?job=PFCraft%2FMohist)](https://ci.codemc.org/job/PFCraft/job/Mohist/)
 ![](https://img.shields.io/github/stars/PFCraft/Mohist.svg?label=Stars)
 ![](https://img.shields.io/github/license/PFCraft/Mohist.svg)
+[![](https://img.shields.io/badge/Forge-1.12.2--14.23.5.2838-brightgreen.svg?colorB=26303d)](http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.12.2.html)
+[![](https://img.shields.io/badge/Paper-1.12.2-brightgreen.svg?colorB=DC3340)](https://papermc.io/downloads#Paper-1.12)
+![](https://img.shields.io/badge/Java-8u212-brightgreen.svg?colorB=469C00)
 
 Since CraftBukkit has modified a lot of underlying layers, some of the core mods are not available, we are working hard to improve.
 
@@ -13,11 +16,6 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**Home**](https://www.mohist.red/)
    [**QQ**](https://jq.qq.com/?_wv=1027&k=5q7lcCb)
    [**bStats**](https://bstats.org/plugin/bukkit/Mohist)
-
-### Info
-* Java 8u212 JDK or higher
-* Forge-1.12.2 - 14.23.5.2838
-* Paper-1.12.2
 
 ### Download
 * [**jenkins**](https://ci.codemc.org/job/PFCraft/job/Mohist/)
