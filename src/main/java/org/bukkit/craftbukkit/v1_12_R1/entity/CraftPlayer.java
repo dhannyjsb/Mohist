@@ -210,6 +210,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             packet.components = components;
             getHandle().connection.sendPacket(packet);
         }
+
+        @Override
+        public int getPing()
+        {
+            return getHandle().ping;
+        }
     };
     private boolean scaledHealth = false;
     private double healthScale = 20;
