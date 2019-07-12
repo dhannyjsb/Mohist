@@ -4,8 +4,6 @@ import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 import org.apache.logging.log4j.Logger;
 import red.mohist.down.DownloadServer;
 
-import java.util.ResourceBundle;
-
 public class Mohist {
 
     private static final String NAME = "Mohist";
@@ -13,7 +11,6 @@ public class Mohist {
     private static final String NATIVE_VERSON = "v1_12_R1";
     private static final String NMS_PREFIX = "net/minecraft/server/";
     public static Logger LOGGER;
-    public static ResourceBundle rb;
 
     public static String getName() {
         return NAME;

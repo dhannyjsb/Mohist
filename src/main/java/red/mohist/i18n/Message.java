@@ -222,11 +222,6 @@ public enum Message {
     forge_loader_56("forge.loader.56"),
     forge_loader_57("forge.loader.57"),
 
-    WatchMohist_1("watchmohist.1"),
-    WatchMohist_2("watchmohist.2"),
-    WatchMohist_3("watchmohist.3"),
-    WatchMohist_4("watchmohist.4"),
-
     Command_Register("command.register"),
 
     CraftBukkit_CraftServer_1("craftbukkit.craftserver.1"),
@@ -240,9 +235,8 @@ public enum Message {
 
     Mohist_Dump_1("mohist.dump.1");
 
-    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(Message.getlanguage(), Message.getcountry()), new UTF8Control());
+    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(getlanguage(1), getlanguage(2)), new UTF8Control());
     private final String value;
-    //public static ResourceBundle rb = Mohist.rb;
 
 
     Message(String value) {
@@ -276,38 +270,28 @@ public enum Message {
         return value;
     }
 
-    public static String getlanguage() {
+    public static String getlanguage(int key) {
         try {
             File f = new File("mohist.yml");
             String s = FileUtil.readContent(f, "UTF-8");
             if(s.contains("lang: ")){
+                // Using regular expressions
                 String string = s.substring(s.indexOf("lang"));
                 String s1 = string.substring(string.indexOf(":") + 1);
                 String s2 = s1.substring(1, 6);
                 String s3 = s2.substring(0, 2);
-                return s3;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "en";
-    }
-
-    public static String getcountry() {
-        try {
-            File f = new File("mohist.yml");
-            String s = FileUtil.readContent(f, "UTF-8");
-            if(s.contains("lang: ")){
-                String string = s.substring(s.indexOf("lang"));
-                String s1 = string.substring(string.indexOf(":") + 1);
-                String s2 = s1.substring(1, 6);
                 String s4 = s2.substring(3, 5);
-                return s4;
+                if (key == 1){
+                    return s3;
+                }
+                if (key == 2){
+                    return s4;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "US";
+        // Returns a value that does not exist to return the system default
+        return "xx";
     }
-
 }
