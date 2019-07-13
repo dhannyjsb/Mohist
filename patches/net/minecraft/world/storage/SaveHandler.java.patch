@@ -151,7 +151,7 @@
      {
          try
          {
-@@ -284,4 +337,105 @@
+@@ -284,4 +337,109 @@
          }
          return null;
      }
@@ -205,7 +205,7 @@
 +    // Mohist start
 +    public void initBukkitData(WorldInfo worldInfo) {
 +        // inject bukkit materials before plugins load
-+        if (!this.initializedBukkit && (worldInfo == null || worldInfo.getDimension() == 0))
++        if (!initializedBukkit && (worldInfo == null || worldInfo.getDimension() == 0))
 +        {
 +            for (Map.Entry<ResourceLocation, Item> entry : ForgeRegistries.ITEMS.getEntries()) {
 +                ResourceLocation key = entry.getKey();
@@ -244,14 +244,18 @@
 +            for (Map.Entry<ResourceLocation, net.minecraft.world.biome.Biome> entry : ForgeRegistries.BIOMES.getEntries()) {
 +                String biomeName = entry.getKey().getResourcePath().toUpperCase(java.util.Locale.ENGLISH);
 +                for (Biome biome : Biome.values()) {
-+                    if (biome.toString().equals(biomeName)) continue b;
++                    if (biome.toString().equals(biomeName)) {
++                        continue b;
++                    }
 +                }
 +                EnumHelper.addBukkitBiome(biomeName);
 +            }
 +            // since we modify bukkit enums, we need to guarantee that plugins are
 +            // loaded after all mods have been loaded by FML to avoid race conditions.
-+            ((CraftServer) Bukkit.getServer()).loadPlugins();
-+            ((CraftServer) Bukkit.getServer()).enablePlugins(PluginLoadOrder.STARTUP);
++            if (Bukkit.getServer() != null) {
++                ((CraftServer) Bukkit.getServer()).loadPlugins();
++                ((CraftServer) Bukkit.getServer()).enablePlugins(PluginLoadOrder.STARTUP);
++            }
 +            initializedBukkit = true;
 +        }
 +    }

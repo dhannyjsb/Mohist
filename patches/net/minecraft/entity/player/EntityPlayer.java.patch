@@ -142,7 +142,7 @@
          this.gameProfile = gameProfileIn;
          this.inventoryContainer = new ContainerPlayer(this.inventory, !worldIn.isRemote, this);
          this.openContainer = this.inventoryContainer;
-+        this.foodStats.player = this;
++        this.foodStats.entityplayer = this;
          BlockPos blockpos = worldIn.getSpawnPoint();
          this.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)(blockpos.getY() + 1), (double)blockpos.getZ() + 0.5D, 0.0F, 0.0F);
          this.unused180 = 180.0F;

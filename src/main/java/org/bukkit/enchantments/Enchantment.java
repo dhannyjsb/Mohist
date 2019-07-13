@@ -178,7 +178,7 @@ public abstract class Enchantment {
      */
     public static void registerEnchantment(Enchantment enchantment) {
         if (byId.containsKey(enchantment.id) || byName.containsKey(enchantment.getName())) {
-            throw new IllegalArgumentException("Cannot set already-set enchantment");
+            return;
         } else if (!isAcceptingRegistrations()) {
             throw new IllegalStateException("No longer accepting new enchantments (can only be done by the server implementation)");
         }
