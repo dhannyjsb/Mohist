@@ -317,15 +317,10 @@ public class JavaPluginLoader implements PluginLoader {
                 loaders.add(pluginLoader);
                 Mohist.LOGGER.error(Message.getFormatString(Message.bukkit_plugin_enablingunreg, pn));
             }
-
             try {
                 jPlugin.setEnabled(true);
             } catch (Throwable ex) {
                 Mohist.LOGGER.error(Message.getFormatString(Message.bukkit_plugin_enablingerror, pn), ex);
-                // Paper start - Disable plugins that fail to load
-                server.getPluginManager().disablePlugin(jPlugin, true); // Paper - close Classloader on disable - She's dead jim
-                return;
-                // Paper end
             }
 
             // Perhaps abort here, rather than continue going, but as it stands,
@@ -334,13 +329,7 @@ public class JavaPluginLoader implements PluginLoader {
         }
     }
 
-    // Paper start - close Classloader on disable
     public void disablePlugin(Plugin plugin) {
-        disablePlugin(plugin, false); // Retain old behavior unless requested
-    }
-
-    public void disablePlugin(Plugin plugin, boolean closeClassloader) {
-        // Paper end - close Class Loader on disable
         Validate.isTrue(plugin instanceof JavaPlugin, "Plugin is not associated with this PluginLoader");
 
         if (plugin.isEnabled()) {
@@ -366,16 +355,6 @@ public class JavaPluginLoader implements PluginLoader {
                 for (String name : names) {
                     removeClass(name);
                 }
-                // Paper start - close Class Loader on disable
-                try {
-                    if (closeClassloader) {
-                        loader.close();
-                    }
-                } catch (IOException e) {
-                    Mohist.LOGGER.warn("Error closing the Plugin Class Loader for " + plugin.getDescription().getFullName());
-                    e.printStackTrace();
-                }
-                // Paper end
             }
         }
     }
