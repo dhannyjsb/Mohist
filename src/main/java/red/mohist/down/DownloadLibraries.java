@@ -13,19 +13,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class DownloadLibraries implements Runnable {
-    public static void deleteDir(File path) {
-        if (path.exists()) {
-            File[] allContents = path.listFiles();
-            if (allContents != null) {
-                File[] array;
-                for (int length = (array = allContents).length, i = 0; i < length; ++i) {
-                    File file = array[i];
-                    deleteDir(file);
-                }
-            }
-            path.delete();
-        }
-    }
 
     @Override
     public void run() {
@@ -68,7 +55,6 @@ public class DownloadLibraries implements Runnable {
                 fos.close();
             }
             System.out.println(Message.getFormatString(Message.UnZip_Ok, new Object[]{fileName}));
-            deleteDir(new File(fileName));
         } catch (IOException e) {
             e.printStackTrace();
         }
