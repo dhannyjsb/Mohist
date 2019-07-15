@@ -9,6 +9,7 @@ import org.objectweb.asm.commons.Remapper;
 import red.mohist.common.asm.remap.ASMUtils;
 import red.mohist.common.asm.remap.model.MethodRedirectRule;
 import red.mohist.common.asm.remap.proxy.*;
+import red.mohist.common.asm.remap.proxy.asm.ProxyClassWriter;
 
 import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
@@ -54,6 +55,7 @@ public class ReflectMethodRemapper extends MethodRemapper {
         registerMethodRemapper("java/net/URLClassLoader", "<init>", void.class, new Class[]{URL[].class}, DelegateURLClassLoder.class);
 //        兼容旧版本的yaml
         registerMethodRemapper("org/bukkit/configuration/file/YamlConfiguration", "loadConfiguration", YamlConfiguration.class, new Class[]{InputStream.class}, ProxyYamlConfiguration.class);
+        registerMethodRemapper("org/objectweb/asm/ClassWriter", "toByteArray", byte[].class, new Class[]{}, ProxyClassWriter.class);
     }
 
     public ReflectMethodRemapper(MethodVisitor mv, Remapper remapper) {
