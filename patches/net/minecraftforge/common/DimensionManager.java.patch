@@ -106,9 +106,9 @@
              worlds.put(id, world);
              weakWorldMap.put(world, world);
 +            // handle all world adds here for Bukkit
-+            if (!FMLCommonHandler.instance().getMinecraftServerInstance().worldServerList.contains(world))
++            if (!MinecraftServer.getServerInst().worldServerList.contains(world))
 +            {
-+                FMLCommonHandler.instance().getMinecraftServerInstance().worldServerList.add(world);
++                MinecraftServer.getServerInst().worldServerList.add(world);
 +            }
              server.worldTickTimes.put(id, new long[100]);
 -            FMLLog.log.info("Loading dimension {} ({}) ({})", id, world.getWorldInfo().getWorldName(), world.getMinecraftServer());
@@ -117,7 +117,7 @@
          }
          else
          {
-+            FMLCommonHandler.instance().getMinecraftServerInstance().worldServerList.remove(getWorld(id)); // Mohist - remove world from our new world arraylist
++            MinecraftServer.getServerInst().worldServerList.remove(getWorld(id)); // Cauldron - remove world from our new world arraylist
              worlds.remove(id);
              server.worldTickTimes.remove(id);
 -            FMLLog.log.info("Unloading dimension {}", id);
@@ -223,7 +223,7 @@
 -                w.flush();
 -                setWorld(id, null, w.getMinecraftServer());
 -            }
-+            FMLCommonHandler.instance().getMinecraftServerInstance().server.unloadWorld(w.getWorld(), true); // Mohist
++            MinecraftServer.getServerInst().server.unloadWorld(w.getWorld(), true); // Cauldron - unload through our new method for simplicity
          }
      }
  

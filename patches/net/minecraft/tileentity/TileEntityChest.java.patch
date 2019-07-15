@@ -73,15 +73,6 @@
      }
  
      public void updateContainingBlockInfo()
-@@ -212,7 +236,7 @@
- 
-     public void update()
-     {
--        this.checkForAdjacentChests();
-+this.checkForAdjacentChests();
-         int i = this.pos.getX();
-         int j = this.pos.getY();
-         int k = this.pos.getZ();
 @@ -325,8 +349,18 @@
                  this.numPlayersUsing = 0;
              }
