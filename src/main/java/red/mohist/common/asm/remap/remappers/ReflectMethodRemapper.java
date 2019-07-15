@@ -55,7 +55,6 @@ public class ReflectMethodRemapper extends MethodRemapper {
         registerMethodRemapper("java/net/URLClassLoader", "<init>", void.class, new Class[]{URL[].class}, DelegateURLClassLoder.class);
 //        兼容旧版本的yaml
         registerMethodRemapper("org/bukkit/configuration/file/YamlConfiguration", "loadConfiguration", YamlConfiguration.class, new Class[]{InputStream.class}, ProxyYamlConfiguration.class);
-        registerMethodRemapper("org/objectweb/asm/ClassWriter", "toByteArray", byte[].class, new Class[]{}, ProxyClassWriter.class);
     }
 
     public ReflectMethodRemapper(MethodVisitor mv, Remapper remapper) {
@@ -117,6 +116,17 @@ public class ReflectMethodRemapper extends MethodRemapper {
     }
 
     private void redirectVirtual(int opcode, String owner, String name, String desc, boolean itf) {
+        if (desc.equals("()[B")) {
+            if (name.equals("toByteArray")) {
+                if (owner.equals("com/comphenix/net/sf/cglib/asm/$ClassWriter")) {
+//            代理ProtocolLib的ClassWriter的toByteArray
+//            TODO 2019/7/15 11:00 PM 很不优雅
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                    super.visitMethodInsn(Opcodes.INVOKESTATIC, ProxyClassWriter.class.getName().replace('.', '/'), "remapClass", "([B)[B", false);
+                    return;
+                }
+            }
+        }
         MethodRedirectRule rule = findRule(opcode, owner, name, desc, itf);
         if (rule != null) {
             opcode = Opcodes.INVOKESTATIC;

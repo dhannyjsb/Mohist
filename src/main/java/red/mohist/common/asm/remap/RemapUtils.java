@@ -73,7 +73,7 @@ public class RemapUtils {
         jarMapping.initFastMethodMapping(jarRemapper);
     }
 
-    public static byte[] remapFindClass(PluginDescriptionFile description,byte[] bs) throws IOException {
+    public static byte[] remapFindClass(PluginDescriptionFile description, String name, byte[] bs) throws IOException {
         if (MohistConfig.printRemapPluginClass) {
             System.out.println("========= before remap ========= ");
             ASMUtils.printClass(bs);
