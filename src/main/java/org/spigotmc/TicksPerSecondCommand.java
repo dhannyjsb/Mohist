@@ -3,6 +3,7 @@ package org.spigotmc;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import red.mohist.i18n.Message;
 
 public class TicksPerSecondCommand extends Command {
 
@@ -10,7 +11,6 @@ public class TicksPerSecondCommand extends Command {
         super(name);
         this.description = "Gets the current ticks per second for the server";
         this.usageMessage = "/tps";
-        this.setPermission("bukkit.command.tps");
     }
 
     public static String format(double tps)  // Paper - Made static
@@ -21,7 +21,8 @@ public class TicksPerSecondCommand extends Command {
 
     @Override
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
-        if (!testPermission(sender)) {
+        if (!sender.isOp()) {
+            sender.sendMessage(Message.getString("command.nopermission"));
             return true;
         }
 

@@ -1,10 +1,8 @@
 package red.mohist.command.defaultcomamnd;
 
-import net.minecraft.command.CommandBase;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
@@ -17,8 +15,10 @@ import red.mohist.MohistConfig;
 import red.mohist.MohistThreadCost;
 import red.mohist.api.PlayerAPI;
 import red.mohist.api.ServerAPI;
+import red.mohist.i18n.Message;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,21 +28,28 @@ public class MohistCommand extends Command {
         super(name);
         this.description = "Mohist related commands";
         this.usageMessage = "/mohist [potions|enchants|materials|commands|mods|playermods|entitytypes|biomes|printthreadcost]";
-        this.setPermission("bukkit.command.mohist");
     }
 
+    private List<String> params = Arrays.asList("potions", "enchants", "materials", "commands", "mods", "playermods", "entitytypes", "biomes", "printthreadcost");
+
     @Override
-    public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location location) throws IllegalArgumentException {
-        if (args.length <= 1) {
-            return CommandBase.getListOfStringsMatchingLastWord(args, "potions", "enchants", "materials", "commands", "mods", "playermods", "entitytypes", "biomes");
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+        List<String> list = new ArrayList<>();
+        if (args.length == 1 && sender.isOp()) {
+            for (String param : params) {
+                if (param.toLowerCase().startsWith(args[0].toLowerCase())) {
+                    list.add(param);
+                }
+            }
         }
 
-        return Collections.emptyList();
+        return list;
     }
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        if (!testPermission(sender)) {
+        if (!sender.isOp()) {
+            sender.sendMessage(Message.getString("command.nopermission"));
             return true;
         }
 

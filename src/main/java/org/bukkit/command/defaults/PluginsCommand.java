@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import red.mohist.i18n.Message;
 import red.mohist.pluginmanager.PluginManagers;
 
 import java.util.*;
@@ -13,13 +14,25 @@ public class PluginsCommand extends BukkitCommand {
         super(name);
         this.description = "Gets a list of plugins running on the server";
         this.usageMessage = "/plugins [load|unload|reload] [name]";
-        this.setPermission("bukkit.command.plugins");
         this.setAliases(Arrays.asList("pl"));
+    }
+
+    private List<String> params = Arrays.asList("load", "unload", "reload");
+
+    private boolean checkparam(String args) {
+        for (String param : params) {
+            if (args.equalsIgnoreCase(param)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
-        if (!testPermission(sender)) {
+        if (!sender.isOp()) {
+            sender.sendMessage(Message.getString("command.nopermission"));
             return true;
         }
 
@@ -48,15 +61,13 @@ public class PluginsCommand extends BukkitCommand {
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         List<String> tabs = new ArrayList<String>();
-        if (args.length > 1) {
-            String action = args[0].toLowerCase();
-            if (action.equals("unload")) {
-                for (Plugin plugin : Bukkit.getServer().getPluginManager().getPlugins()) {
-                    tabs.add(plugin.getName());
-                }
-            } else if (action.equals("reload")) {
-                for (Plugin plugin : Bukkit.getServer().getPluginManager().getPlugins()) {
-                    tabs.add(plugin.getName());
+        if (args.length > 1 && args.length < 3 && sender.isOp()) {
+            if (checkparam(args[0])) {
+                for (Plugin pl : Bukkit.getServer().getPluginManager().getPlugins()) {
+                    String plname = pl.getDescription().getName();
+                    if (plname.toLowerCase().startsWith(args[1].toLowerCase())) {
+                        tabs.add(plname);
+                    }
                 }
             }
         }

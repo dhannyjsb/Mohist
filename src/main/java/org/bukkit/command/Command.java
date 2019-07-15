@@ -11,6 +11,7 @@ import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.StringUtil;
+import red.mohist.i18n.Message;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -219,7 +220,7 @@ public abstract class Command {
         }
 
         if (permissionMessage == null) {
-            target.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error.");
+            target.sendMessage(Message.getString("command.nopermission"));
         } else if (permissionMessage.length() != 0) {
             for (String line : permissionMessage.replace("<permission>", permission).split("\n")) {
                 target.sendMessage(line);

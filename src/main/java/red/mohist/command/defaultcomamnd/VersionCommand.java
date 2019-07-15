@@ -10,6 +10,7 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.StringUtil;
+import red.mohist.i18n.Message;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,13 +22,13 @@ public class VersionCommand extends BukkitCommand {
 
         this.description = "Gets the version of this server including any plugins in use";
         this.usageMessage = "/version [plugin name]";
-        this.setPermission("bukkit.command.version");
         this.setAliases(Arrays.asList("ver"));
     }
 
     @Override
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
-        if (!testPermission(sender)) {
+        if (!sender.isOp()) {
+            sender.sendMessage(Message.getString("command.nopermission"));
             return true;
         }
 
@@ -117,7 +118,7 @@ public class VersionCommand extends BukkitCommand {
         Validate.notNull(args, "Arguments cannot be null");
         Validate.notNull(alias, "Alias cannot be null");
 
-        if (args.length == 1) {
+        if (args.length == 1 && sender.isOp()) {
             List<String> completions = new ArrayList<String>();
             String toComplete = args[0].toLowerCase(java.util.Locale.ENGLISH);
             for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
