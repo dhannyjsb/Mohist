@@ -9,6 +9,7 @@ import org.objectweb.asm.commons.Remapper;
 import red.mohist.common.asm.remap.ASMUtils;
 import red.mohist.common.asm.remap.model.MethodRedirectRule;
 import red.mohist.common.asm.remap.proxy.*;
+import red.mohist.common.asm.remap.proxy.asm.ProxyClassWriter;
 
 import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
@@ -115,6 +116,17 @@ public class ReflectMethodRemapper extends MethodRemapper {
     }
 
     private void redirectVirtual(int opcode, String owner, String name, String desc, boolean itf) {
+        if (desc.equals("()[B")) {
+            if (name.equals("toByteArray")) {
+                if (owner.equals("com/comphenix/net/sf/cglib/asm/$ClassWriter")) {
+//            代理ProtocolLib的ClassWriter的toByteArray
+//            TODO 2019/7/15 11:00 PM 很不优雅
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                    super.visitMethodInsn(Opcodes.INVOKESTATIC, ProxyClassWriter.class.getName().replace('.', '/'), "remapClass", "([B)[B", false);
+                    return;
+                }
+            }
+        }
         MethodRedirectRule rule = findRule(opcode, owner, name, desc, itf);
         if (rule != null) {
             opcode = Opcodes.INVOKESTATIC;
