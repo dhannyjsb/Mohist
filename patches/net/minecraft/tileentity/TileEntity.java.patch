@@ -15,7 +15,7 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.network.play.server.SPacketUpdateTileEntity;
  import net.minecraft.util.Mirror;
-@@ -20,12 +21,17 @@
+@@ -20,12 +21,18 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -31,10 +31,11 @@
      private static final RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >> REGISTRY = new RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >> ();
 -    protected World world;
 +    public World world;
++    private boolean GC = false;
      protected BlockPos pos = BlockPos.ORIGIN;
      protected boolean tileEntityInvalid;
      private int blockMetadata = -1;
-@@ -38,7 +44,7 @@
+@@ -38,7 +45,7 @@
  
      @Nullable
      public static ResourceLocation getKey(Class <? extends TileEntity > clazz)
@@ -43,7 +44,7 @@
          return REGISTRY.getNameForObject(clazz);
      }
  
-@@ -108,7 +114,7 @@
+@@ -108,7 +115,7 @@
          catch (Throwable throwable1)
          {
              LOGGER.error("Failed to create block entity {}", s, throwable1);
@@ -52,7 +53,7 @@
                      s, oclass == null ? null : oclass.getName(), throwable1);
          }
  
-@@ -122,7 +128,7 @@
+@@ -122,7 +129,7 @@
              catch (Throwable throwable)
              {
                  LOGGER.error("Failed to load data for block entity {}", s, throwable);
@@ -61,7 +62,25 @@
                          s, oclass.getName(), throwable);
                  tileentity = null;
              }
-@@ -315,7 +321,7 @@
+@@ -305,6 +312,17 @@
+     {
+     }
+ 
++    // KCauldron start
++    public boolean isGC()
++    {
++        return this.GC; //Returns true if the chunk it is inside of has marked it for unloading
++    }
++
++    public void setGC(boolean state)
++    {
++        this.GC = state; //Should never be touched by a mod. Would make it package-private but not sure if that would still work
++    }
++    // KCauldron end
+     // -- BEGIN FORGE PATCHES --
+     /**
+      * Called when you receive a TileEntityData packet for the location this
+@@ -315,7 +333,7 @@
       * @param net The NetworkManager the packet originated from
       * @param pkt The data packet
       */
@@ -70,7 +89,7 @@
      {
      }
  
-@@ -339,16 +345,7 @@
+@@ -339,16 +357,7 @@
      }
  
      private boolean isVanilla = getClass().getName().startsWith("net.minecraft.");
@@ -88,7 +107,7 @@
      public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
      {
          return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
-@@ -359,17 +356,8 @@
+@@ -359,17 +368,8 @@
          return pass == 0;
      }
  
@@ -107,7 +126,7 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +519,24 @@
+@@ -531,4 +531,24 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }
