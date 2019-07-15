@@ -22,7 +22,7 @@
  import net.minecraft.init.Blocks;
  import net.minecraft.init.SoundEvents;
  import net.minecraft.util.DamageSource;
-@@ -27,7 +24,17 @@
+@@ -27,22 +24,34 @@
  import net.minecraft.util.math.Vec3d;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,11 +40,16 @@
  public class Explosion
  {
      private final boolean causesFire;
-@@ -37,12 +44,14 @@
-     private final double x;
-     private final double y;
-     private final double z;
+     private final boolean damagesTerrain;
+     private final Random random;
+     private final World world;
+-    private final double x;
+-    private final double y;
+-    private final double z;
 -    private final Entity exploder;
++    public final double x;
++    public final double y;
++    public final double z;
 +    public final Entity exploder;
      private final float size;
      private final List<BlockPos> affectedBlockPositions;
