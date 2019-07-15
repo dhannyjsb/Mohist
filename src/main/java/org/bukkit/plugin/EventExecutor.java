@@ -15,9 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
-// Paper start
-// Paper end
-
 /**
  * Interface which defines the class for event call backs to plugins
  */
