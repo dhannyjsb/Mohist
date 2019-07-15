@@ -741,7 +741,7 @@
 +            @Override
 +            public Double apply(Double f)
 +            {
-+                if (!damagesource.isDamageAbsolute() && EntityLivingBase.this.isPotionActive(MobEffects.RESISTANCE) && damagesource != DamageSource.outOfWorld)
++                if (!damagesource.isDamageAbsolute() && EntityLivingBase.this.isPotionActive(MobEffects.RESISTANCE) && damagesource != DamageSource.OUT_OF_WORLD)
 +                {
 +                    int i = (EntityLivingBase.this.getActivePotionEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
 +                    int j = 25 - i;
