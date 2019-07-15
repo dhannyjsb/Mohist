@@ -106,7 +106,7 @@ public class DelegateURLClassLoder extends URLClassLoader {
                 return null;
             }
             byte[] bytecode = IOUtils.toByteArray(stream);
-            bytecode = RemapUtils.remapFindClass(description, bytecode);
+            bytecode = RemapUtils.remapFindClass(description, name, bytecode);
             final JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
             final URL jarURL = jarURLConnection.getJarFileURL();
             final CodeSource codeSource = new CodeSource(jarURL, new CodeSigner[0]);

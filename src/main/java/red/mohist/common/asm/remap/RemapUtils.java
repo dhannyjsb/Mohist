@@ -4,12 +4,18 @@ import net.md_5.specialsource.transformer.MavenShade;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
 import red.mohist.common.asm.remap.model.ClassMapping;
+import red.mohist.common.asm.remap.proxy.asm.ProxyClassWriter;
 import red.mohist.common.asm.remap.remappers.*;
 import sun.reflect.Reflection;
 
@@ -18,10 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodType;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -73,7 +76,7 @@ public class RemapUtils {
         jarMapping.initFastMethodMapping(jarRemapper);
     }
 
-    public static byte[] remapFindClass(PluginDescriptionFile description,byte[] bs) throws IOException {
+    public static byte[] remapFindClass(PluginDescriptionFile description, String name, byte[] bs) throws IOException {
         if (MohistConfig.printRemapPluginClass) {
             System.out.println("========= before remap ========= ");
             ASMUtils.printClass(bs);
@@ -98,10 +101,36 @@ public class RemapUtils {
                 ASMUtils.printClass(bs);
             }
         }
+        if ("com.comphenix.net.sf.cglib.asm.$ClassWriter".equals(name)) {
+//            代理ProtocolLib的ClassWriter的toByteArray
+//            TODO 2019/7/15 11:00 PM 很不优雅
+            bs = remap$ClassWriter(bs);
+        }
         if (MohistConfig.dumpRemapPluginClass) {
             ASMUtils.dump(Paths.get(System.getProperty("user.dir"), "dumpRemapPluginClass"), bs);
         }
         return bs;
+    }
+
+    private static byte[] remap$ClassWriter(byte[] bs) {
+        ClassNode classNode = new ClassNode();
+        new ClassReader(bs).accept(classNode, 0);
+        for (MethodNode method : classNode.methods) {
+            if (method.name.equals("toByteArray") && method.desc.equals("()[B")) {
+                ListIterator<AbstractInsnNode> it = method.instructions.iterator();
+                while (it.hasNext()) {
+                    AbstractInsnNode node = it.next();
+                    if (node.getOpcode() == Opcodes.ARETURN) {
+                        MethodInsnNode add = new MethodInsnNode(Opcodes.INVOKESTATIC, ProxyClassWriter.class.getName().replace('.', '/'), "remapClass", "([B)[B", false);
+//                        TODO 2019/7/15 11:38 PM 下面这条语句运行时不会执行,BOSS出来挨打
+                        method.instructions.insertBefore(node, add);
+                    }
+                }
+            }
+        }
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        classNode.accept(writer);
+        return writer.toByteArray();
     }
 
     public static String map(String typeName) {

@@ -1,6 +1,5 @@
 package red.mohist.common.asm.remap.proxy.asm;
 
-import org.objectweb.asm.ClassWriter;
 import red.mohist.common.asm.remap.RemapUtils;
 
 import java.io.IOException;
@@ -12,10 +11,9 @@ import java.io.IOException;
  */
 public class ProxyClassWriter {
 
-    public static byte[] toByteArray(ClassWriter cw) {
-        byte[] code = cw.toByteArray();
+    public static byte[] remapClass(byte[] code) {
         try {
-            return RemapUtils.remapFindClass(null, code);
+            return RemapUtils.remapFindClass(null, null, code);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
