@@ -901,7 +901,19 @@
          this.profiler.endStartSection("connection");
          this.getNetworkSystem().networkTick();
          this.profiler.endStartSection("players");
-@@ -826,15 +966,20 @@
+@@ -809,9 +949,11 @@
+ 
+     public void startServerThread()
+     {
++        /* CraftBukkit start - prevent abuse
+         net.minecraftforge.fml.common.StartupQuery.reset();
+         this.serverThread = new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, this, "Server thread");
+         this.serverThread.start();
++        // CraftBukkit end */
+     }
+ 
+     public File getFile(String fileName)
+@@ -826,15 +968,20 @@
  
      public WorldServer getWorld(int dimension)
      {
@@ -925,7 +937,7 @@
      public String getMinecraftVersion()
      {
          return "1.12.2";
-@@ -862,7 +1007,8 @@
+@@ -862,7 +1009,8 @@
  
      public String getServerModName()
      {
@@ -935,7 +947,7 @@
      }
  
      public CrashReport addServerInfoToCrashReport(CrashReport report)
-@@ -891,7 +1037,7 @@
+@@ -891,7 +1039,7 @@
  
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos, boolean hasTargetBlock)
      {
@@ -944,7 +956,7 @@
          boolean flag = input.startsWith("/");
  
          if (flag)
-@@ -908,11 +1054,9 @@
+@@ -908,11 +1056,9 @@
              {
                  if (CommandBase.doesStringStartWith(s2, s1))
                  {
@@ -957,7 +969,7 @@
          }
          else
          {
-@@ -925,22 +1069,24 @@
+@@ -925,22 +1071,24 @@
                  {
                      if (flag1 && !hasTargetBlock)
                      {
@@ -987,7 +999,7 @@
      }
  
      public String getName()
-@@ -958,6 +1104,11 @@
+@@ -958,6 +1106,11 @@
          return true;
      }
  
@@ -999,7 +1011,7 @@
      public ICommandManager getCommandManager()
      {
          return this.commandManager;
-@@ -993,13 +1144,11 @@
+@@ -993,13 +1146,11 @@
          this.folderName = name;
      }
  
@@ -1013,7 +1025,7 @@
      public String getWorldName()
      {
          return this.worldName;
-@@ -1012,7 +1161,7 @@
+@@ -1012,7 +1163,7 @@
  
      public void setDifficultyForAllWorlds(EnumDifficulty difficulty)
      {
@@ -1022,7 +1034,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1094,9 +1243,9 @@
+@@ -1094,9 +1245,9 @@
          playerSnooper.addClientStat("avg_tick_ms", Integer.valueOf((int)(MathHelper.average(this.tickTimeArray) * 1.0E-6D)));
          int l = 0;
  
@@ -1034,7 +1046,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -1134,7 +1283,8 @@
+@@ -1134,7 +1285,8 @@
  
      public boolean isServerInOnlineMode()
      {
@@ -1044,7 +1056,7 @@
      }
  
      public void setOnlineMode(boolean online)
-@@ -1228,7 +1378,7 @@
+@@ -1228,7 +1380,7 @@
  
      public void setGameType(GameType gameMode)
      {
@@ -1053,7 +1065,7 @@
          {
              worldserver1.getWorldInfo().setGameType(gameMode);
          }
-@@ -1331,7 +1481,7 @@
+@@ -1331,7 +1483,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -1062,7 +1074,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1357,6 +1507,11 @@
+@@ -1357,6 +1509,11 @@
          return this;
      }
  
@@ -1074,7 +1086,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1521,14 @@
+@@ -1366,15 +1523,14 @@
      {
          Validate.notNull(callable);
  
@@ -1095,7 +1107,7 @@
          }
          else
          {
-@@ -1455,134 +1609,50 @@
+@@ -1455,134 +1611,50 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1248,7 +1260,7 @@
          }
      }
  
-@@ -1595,7 +1665,8 @@
+@@ -1595,7 +1667,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {

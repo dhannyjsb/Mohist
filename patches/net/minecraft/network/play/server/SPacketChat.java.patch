@@ -19,7 +19,7 @@
      public SPacketChat(ITextComponent componentIn)
      {
          this(componentIn, ChatType.SYSTEM);
-@@ -37,7 +44,11 @@
+@@ -37,7 +44,13 @@
  
      public void writePacketData(PacketBuffer buf) throws IOException
      {
@@ -27,6 +27,8 @@
 +        // Spigot start
 +        if (components != null) {
 +            buf.writeString(net.md_5.bungee.chat.ComponentSerializer.toString(components));
++        } else {
++            buf.writeTextComponent(this.chatComponent);
 +        }
 +        // Paper end
          buf.writeByte(this.type.getId());
