@@ -62,8 +62,8 @@ public class SpigotWorldConfig {
     public int currentPrimedTnt = 0;
     public int maxTntTicksPerTick;
     public int hangingTickFrequency;
-    public int tileMaxTickTime;
-    public int entityMaxTickTime;
+    public int tileMaxTickTime = 1000;
+    public int entityMaxTickTime = 1000;
     public double squidSpawnRangeMin;
     private boolean verbose;
 
@@ -274,8 +274,8 @@ public class SpigotWorldConfig {
     }
 
     private void maxTickTimes() {
-        tileMaxTickTime = getInt("max-tick-time.tile", 50);
-        entityMaxTickTime = getInt("max-tick-time.entity", 50);
+        tileMaxTickTime = getInt("max-tick-time.tile", 1000);
+        entityMaxTickTime = getInt("max-tick-time.entity", 1000);
         log(Message.getFormatString(Message.max_tick_time_tile, new Object[]{tileMaxTickTime, entityMaxTickTime}));
     }
 

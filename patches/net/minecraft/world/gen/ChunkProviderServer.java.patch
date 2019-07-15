@@ -90,7 +90,7 @@
          }
      }
  
-@@ -203,12 +212,12 @@
+@@ -203,22 +212,25 @@
          }
          catch (IOException ioexception)
          {
@@ -106,7 +106,23 @@
      }
  
      public boolean saveChunks(boolean all)
-@@ -232,7 +241,7 @@
+     {
+         int i = 0;
+-        List<Chunk> list = Lists.newArrayList(this.id2ChunkMap.values());
++        // Cauldron start - use thread-safe method for iterating loaded chunks
++        Object[] chunks = this.id2ChunkMap.values().toArray();
+ 
+-        for (int j = 0; j < list.size(); ++j)
++        for (int j = 0; j < chunks.length; ++j)
+         {
+-            Chunk chunk = list.get(j);
++            if (chunks[j] == null) { continue; }
++            Chunk chunk = (Chunk)chunks[j];
++            //Cauldron end
+ 
+             if (all)
+             {
+@@ -232,7 +244,7 @@
                  ++i;
  
                  if (i == 24 && !all)
@@ -115,7 +131,7 @@
                      return false;
                  }
              }
-@@ -266,24 +275,52 @@
+@@ -266,24 +278,52 @@
  
                      if (chunk != null && chunk.unloadQueued)
                      {
