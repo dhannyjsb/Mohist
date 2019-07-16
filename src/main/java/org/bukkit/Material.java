@@ -653,27 +653,6 @@ public enum Material {
         return null;
     }
 
-    public static void setMaterialName(int id, String name, boolean flag) {
-        String materialName = normalizeName(name);
-
-        if (byId[id] == null) {
-            addMaterial(id, materialName, flag);
-        } else // replace existing enum
-        {
-          /* TODO: find out how to do this with Forge's EnumHelper (addEnum?) - used for enabling descriptive (vs numeric) Material names
-          Material material = getMaterial(id);
-          BY_NAME.remove(material);
-          Material newMaterial = EnumHelper.replaceEnum(Material.class, material_name, material.ordinal(), new Class[] { Integer.TYPE }, new Object[] { Integer.valueOf(id) });
-          if (newMaterial == null)
-              System.out.println("Error replacing Material " + name + " with id " + id);
-          else {
-              byId[id] = newMaterial;
-              BY_NAME.put(material_name, newMaterial);
-          }
-          */
-        }
-    }
-
     /**
      * Gets the item ID or block ID of this Material
      *
