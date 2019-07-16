@@ -5,6 +5,7 @@ import net.minecraftforge.common.ForgeVersion;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.plugin.Plugin;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VersionCommand extends BukkitCommand {
+public class VersionCommand extends Command {
     public VersionCommand(String name) {
         super(name);
 

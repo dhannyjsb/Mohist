@@ -631,15 +631,20 @@ public enum Material {
         return name.toUpperCase(java.util.Locale.ENGLISH).replaceAll("(:|\\s)", "_").replaceAll("\\W", "");
     }
 
-    public static Material addMaterial(int id, boolean isBlock) {
-        return addMaterial(id, "X" + String.valueOf(id), isBlock);
+    public static Material addMaterial(int id, int limit, boolean isItem, boolean isBlock) {
+        return addMaterial(id, limit, "X" + String.valueOf(id), isItem, isBlock);
     }
 
     @Nullable
-    public static Material addMaterial(int id, String name, boolean isBlock) {
+    public static Material addMaterial(int id, int limit, String name, boolean isItem, boolean isBlock) {
         if (byId[id] == null) {
             String materialName = normalizeName(name);
-            Material material = (Material) EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Boolean.TYPE}, new Object[]{Integer.valueOf(id), isBlock});
+            Material material = null;
+            if (isItem) {
+                material = (Material) EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Integer.TYPE, Boolean.TYPE}, new Object[]{Integer.valueOf(id), Integer.valueOf(limit), isBlock});
+            } else {
+                material = (Material) EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Boolean.TYPE}, new Object[]{Integer.valueOf(id), isBlock});
+            }
             byId[id] = material;
             BY_NAME.put(materialName, material);
             BY_NAME.put("X" + material.id, material);

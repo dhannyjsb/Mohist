@@ -320,16 +320,16 @@
          IBlockState state = world.getBlockState(pos);
          BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
 -        event.setCanceled(preCancelEvent);
-+        //event.setCanceled(preCancelEvent);
++        //event.setCanceled(preCancelEvent); // Cauldron
          MinecraftForge.EVENT_BUS.post(event);
  
          // Handle if the event is canceled
 -        if (event.isCanceled())
-+        if (event.isCanceled() && !(entityPlayer instanceof FakePlayer))
++        if (event.isCanceled() && !(entityPlayer instanceof FakePlayer)) // Cauldron - don't send packets to fakeplayers
          {
              // Let the client know the block still exists
              entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-@@ -866,33 +681,73 @@
+@@ -866,33 +681,75 @@
                      entityPlayer.connection.sendPacket(pkt);
                  }
              }
@@ -359,11 +359,13 @@
          if (!(itemstack.getItem() instanceof ItemBucket)) // if not bucket
          {
              world.captureBlockSnapshots = true;
++            // Cauldron start
 +            if (itemstack.getItem() instanceof ItemDye && itemstack.getMetadata() == 15) {
 +                Block block = world.getBlockState(pos).getBlock();
 +                if (block == Blocks.SAPLING || block instanceof BlockMushroom)
 +                    world.captureTreeGeneration = true;
 +            }
++            // Cauldron end
          }
  
          EnumActionResult ret = itemstack.getItem().onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
@@ -408,7 +410,7 @@
              int newSize = itemstack.getCount();
              NBTTagCompound newNBT = null;
              if (itemstack.getTagCompound() != null)
-@@ -901,10 +756,8 @@
+@@ -901,10 +758,8 @@
              }
              BlockEvent.PlaceEvent placeEvent = null;
              @SuppressWarnings("unchecked")
@@ -420,7 +422,7 @@
              itemstack.setItemDamage(meta);
              itemstack.setCount(size);
              if (nbt != null)
-@@ -912,37 +765,38 @@
+@@ -912,37 +767,39 @@
                  itemstack.setTagCompound(nbt);
              }
              if (blockSnapshots.size() > 1)
@@ -433,6 +435,7 @@
 -                placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshots.get(0), side, hand);
 +			else if (blockSnapshots.size() == 1)
 +			{
++                // Call both Bukkit's BlockPlaceEvent and Forge's
 +				placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshots.get(0), side, hand);
              }
  
@@ -470,7 +473,7 @@
                      int updateFlag = snap.getFlag();
                      IBlockState oldBlock = snap.getReplacedBlock();
                      IBlockState newBlock = world.getBlockState(snap.getPos());
-@@ -953,7 +807,30 @@
+@@ -953,7 +810,30 @@
  
                      world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                  }
@@ -502,7 +505,7 @@
              }
          }
          world.capturedBlockSnapshots.clear();
-@@ -961,6 +838,7 @@
+@@ -961,6 +841,7 @@
          return ret;
      }
  
@@ -510,7 +513,7 @@
      public static boolean onAnvilChange(ContainerRepair container, @Nonnull ItemStack left, @Nonnull ItemStack right, IInventory outputSlot, String name, int baseCost)
      {
          AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
-@@ -1076,7 +954,7 @@
+@@ -1076,7 +957,7 @@
              // Revert variable back to true as it would have been set to false
              if (entity instanceof EntityMinecartContainer)
              {
@@ -519,7 +522,7 @@
              }
          }
          return !event.isCanceled();
-@@ -1349,45 +1227,45 @@
+@@ -1349,45 +1230,45 @@
      private static boolean loadAdvancements(Map<ResourceLocation, Advancement.Builder> map, ModContainer mod)
      {
          return CraftingHelper.findFiles(mod, "assets/" + mod.getModId() + "/advancements", null,
@@ -598,7 +601,7 @@
          );
      }
  
-@@ -1465,7 +1343,6 @@
+@@ -1465,7 +1346,6 @@
  
      public static boolean onFarmlandTrample(World world, BlockPos pos, IBlockState state, float fallDistance, Entity entity)
      {
@@ -606,7 +609,7 @@
          if (entity.canTrample(world, state.getBlock(), pos, fallDistance))
          {
              BlockEvent.FarmlandTrampleEvent event = new BlockEvent.FarmlandTrampleEvent(world, pos, state, fallDistance, entity);
-@@ -1474,7 +1351,6 @@
+@@ -1474,7 +1354,6 @@
          }
          return false;
      }

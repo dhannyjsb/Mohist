@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/SaveHandler.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/SaveHandler.java
-@@ -1,25 +1,40 @@
+@@ -1,25 +1,42 @@
  package net.minecraft.world.storage;
  
 -import java.io.DataInputStream;
@@ -38,7 +38,9 @@
 +import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 +import org.bukkit.plugin.PluginLoadOrder;
 +import org.bukkit.potion.PotionEffectType;
++import red.mohist.Mohist;
 +import red.mohist.api.ServerAPI;
++import red.mohist.i18n.Message;
  
 +import javax.annotation.Nullable;
 +import java.io.*;
@@ -48,7 +50,7 @@
  public class SaveHandler implements ISaveHandler, IPlayerFileData
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -31,6 +46,9 @@
+@@ -31,6 +48,9 @@
      private final TemplateManager structureTemplateManager;
      protected final DataFixer dataFixer;
  
@@ -58,7 +60,7 @@
      public SaveHandler(File p_i46648_1_, String saveDirectoryNameIn, boolean p_i46648_3_, DataFixer dataFixerIn)
      {
          this.dataFixer = dataFixerIn;
-@@ -116,20 +134,30 @@
+@@ -116,20 +136,30 @@
      public WorldInfo loadWorldInfo()
      {
          File file1 = new File(this.worldDirectory, "level.dat");
@@ -94,7 +96,7 @@
      }
  
      public void saveWorldInfoWithPlayer(WorldInfo worldInformation, @Nullable NBTTagCompound tagCompound)
-@@ -208,7 +236,6 @@
+@@ -208,7 +238,6 @@
          try
          {
              File file1 = new File(this.playersDirectory, player.getCachedUniqueIdString() + ".dat");
@@ -102,7 +104,7 @@
              if (file1.exists() && file1.isFile())
              {
                  nbttagcompound = CompressedStreamTools.readCompressed(new FileInputStream(file1));
-@@ -221,6 +248,16 @@
+@@ -221,6 +250,16 @@
  
          if (nbttagcompound != null)
          {
@@ -119,7 +121,7 @@
              player.readFromNBT(this.dataFixer.process(FixTypes.PLAYER, nbttagcompound));
          }
  
-@@ -228,6 +265,22 @@
+@@ -228,6 +267,22 @@
          return nbttagcompound;
      }
  
@@ -142,7 +144,7 @@
      public IPlayerFileData getPlayerNBTManager()
      {
          return this;
-@@ -267,7 +320,7 @@
+@@ -267,7 +322,7 @@
          return this.structureTemplateManager;
      }
  
@@ -151,7 +153,7 @@
      {
          try
          {
-@@ -284,4 +337,109 @@
+@@ -284,4 +339,111 @@
          }
          return null;
      }
@@ -213,9 +215,10 @@
 +                    String materialName = Material.normalizeName(key.toString());
 +                    Item item = entry.getValue();
 +                    // inject item materials into Bukkit for FML
-+                    Material material = Material.addMaterial(Item.getIdFromItem(item), materialName, false);
++                    Material material = Material.addMaterial(Item.getIdFromItem(item), item.getItemStackLimit(), materialName, true, false);
 +                    if (material != null) {
 +                        ServerAPI.injectmaterials.put(material.name(), material.getId());
++                        Mohist.LOGGER.debug(Message.getFormatString("ingected.item", new Object[]{material.name(), material.getId()}));
 +                    }
 +                }
 +            }
@@ -225,9 +228,10 @@
 +                    String materialName = Material.normalizeName(key.toString());
 +                    Block block = entry.getValue();
 +                    // inject block materials into Bukkit for FML
-+                    Material material = Material.addMaterial(Block.getIdFromBlock(block), materialName , true);
++                    Material material = Material.addMaterial(Block.getIdFromBlock(block), 0, materialName, false, true);
 +                    if (material != null) {
 +                        ServerAPI.injectblock.put(material.name(), material.getId());
++                        Mohist.LOGGER.debug(Message.getFormatString("ingected.block", new Object[]{material.name(), material.getId()}));
 +                    }
 +                }
 +            }

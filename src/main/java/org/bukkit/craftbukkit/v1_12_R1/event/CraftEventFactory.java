@@ -126,7 +126,7 @@ public class CraftEventFactory {
     public static BlockMultiPlaceEvent callBlockMultiPlaceEvent(World world, EntityPlayer who, EnumHand hand, List<BlockState> blockStates, int clickedX, int clickedY, int clickedZ) {
         CraftWorld craftWorld = world.getWorld();
         CraftServer craftServer = world.getServer();
-        Player player = (Player) who.getBukkitEntity();
+        Player player = (Player)who.getBukkitEntity();
 
         Block blockClicked = craftWorld.getBlockAt(clickedX, clickedY, clickedZ);
 
@@ -1169,6 +1169,7 @@ public class CraftEventFactory {
         return !event.isCancelled();
     }
 
+    // Cauldron start
     public static BlockBreakEvent callBlockBreakEvent(net.minecraft.world.World world, BlockPos pos, IBlockState iBlockState, net.minecraft.entity.player.EntityPlayerMP player) {
         org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
         org.bukkit.event.block.BlockBreakEvent blockBreakEvent = new org.bukkit.event.block.BlockBreakEvent(bukkitBlock, ((EntityPlayerMP) player).getBukkitEntity());
@@ -1179,7 +1180,6 @@ public class CraftEventFactory {
             if (!isSwordNoBreak) {
                 int exp = 0;
                 if (!(block == null || !player.canHarvestBlock(block.getDefaultState()) || block.canSilkHarvest(world, pos, block.getBlockState().getBaseState(), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand()) > 0)) {
-                    int meta = block.getMetaFromState(block.getBlockState().getBaseState());
                     int bonusLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, player.getHeldItemMainhand());
                     exp = block.getExpDrop(iBlockState, world, pos, bonusLevel);
                 }
