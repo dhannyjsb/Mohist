@@ -4,13 +4,8 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACC_SUPER;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.RETURN;
 
 public class ASMClassTransformer implements IClassTransformer
 {
@@ -34,15 +29,15 @@ public class ASMClassTransformer implements IClassTransformer
         new ClassReader(basicClass).accept(classNode, 0);
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
-        MethodVisitor mv = classWriter.visitMethod(ACC_PUBLIC, "sendPacket", "(Lnet/minecraft/network/Packet;)V", "(Lnet/minecraft/network/Packet<*>;)V", null);
+        MethodVisitor mv = classWriter.visitMethod(Opcodes.ACC_PUBLIC, "sendPacket", "(Lnet/minecraft/network/Packet;)V", "(Lnet/minecraft/network/Packet<*>;)V", null);
         mv.visitCode();
-        mv.visitVarInsn(ALOAD, 0);
-        mv.visitVarInsn(ALOAD, 1);
-        mv.visitMethodInsn(INVOKESPECIAL, "net/minecraft/network/NetHandlerPlayServer", "func_147359_a", "(Lnet/minecraft/network/Packet;)V", true);
-        mv.visitInsn(RETURN);
+        mv.visitVarInsn(Opcodes.ALOAD, 0);
+        mv.visitVarInsn(Opcodes.ALOAD, 1);
+        mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "net/minecraft/network/NetHandlerPlayServer", "func_147359_a", "(Lnet/minecraft/network/Packet;)V", true);
+        mv.visitInsn(Opcodes.RETURN);
         mv.visitEnd();
 
-        classNode.access = ACC_SUPER + ACC_PUBLIC;
+        classNode.access = Opcodes.ACC_SUPER + Opcodes.ACC_PUBLIC;
 
         classNode.accept(classWriter);
         return classWriter.toByteArray();
