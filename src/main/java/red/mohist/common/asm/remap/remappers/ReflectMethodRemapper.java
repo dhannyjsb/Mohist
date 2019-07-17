@@ -83,6 +83,12 @@ public class ReflectMethodRemapper extends MethodRemapper {
 
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+        if ("()V".equals(desc) && "<init>".equals(name) && "javax/script/ScriptEngineManager".equals(owner)) {
+            super.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader", "()Ljava/lang/ClassLoader;", false);
+            desc = "(Ljava/lang/ClassLoader;)V";
+            super.visitMethodInsn(opcode, owner, name, desc, itf);
+            return;
+        }
         if (Opcodes.INVOKEVIRTUAL == opcode) {
             redirectVirtual(opcode, owner, name, desc, itf);
         } else if (Opcodes.INVOKESTATIC == opcode) {
