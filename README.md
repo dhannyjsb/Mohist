@@ -55,7 +55,7 @@ If you wish to actually inspect Mohsit, submit PRs or otherwise work
 
 
 ### Credits
-* [**Bukkit**](https://hub.spigotmc.org/stash/scm/spigot/bukkit.git) - plugin support.
+* [**Bukkit**](https://hub.spigotmc.org/stash/scm/spigot/bukkit) - plugin support.
 * [**Paper**](https://github.com/PaperMC/Paper.git) - performance optimizations.
 * [**CraftBukkit**](https://hub.spigotmc.org/stash/scm/spigot/craftbukkit.git) - plugin support.
 * [**Spigot**](https://hub.spigotmc.org/stash/scm/spigot/spigot.git) - plugin support.
