@@ -41,11 +41,12 @@ public final class PluginClassLoader extends URLClassLoader {
 
     static {
         try {
-//            定义包,方便插件根据包识别核心信息
-            Class.forName("com.destroystokyo.paper.PackageDefine");
-            Class.forName("org.spigotmc.PackageDefine");
-            Class.forName("net.minecraftforge.cauldron.PackageDefine");
+            // 定义包,方便插件根据包识别核心信息
             Class.forName("org.bukkit.craftbukkit.PackageDefine");
+            Class.forName("org.spigotmc.PackageDefine");
+            Class.forName("com.destroystokyo.paper.PackageDefine");
+            Class.forName("net.minecraftforge.cauldron.PackageDefine");
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
