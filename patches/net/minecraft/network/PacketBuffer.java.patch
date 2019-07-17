@@ -1,14 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/network/PacketBuffer.java
 +++ ../src-work/minecraft/net/minecraft/network/PacketBuffer.java
-@@ -30,6 +30,7 @@
+@@ -30,6 +30,8 @@
  import net.minecraft.util.text.ITextComponent;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
++import red.mohist.MohistConfig;
  
  public class PacketBuffer extends ByteBuf
  {
-@@ -287,9 +288,9 @@
+@@ -287,9 +289,9 @@
              {
                  CompressedStreamTools.write(nbt, new ByteBufOutputStream(this));
              }
@@ -20,7 +21,7 @@
              }
          }
  
-@@ -323,7 +324,7 @@
+@@ -323,7 +325,7 @@
  
      public PacketBuffer writeItemStack(ItemStack stack)
      {
@@ -29,7 +30,7 @@
          {
              this.writeShort(-1);
          }
-@@ -359,6 +360,8 @@
+@@ -359,12 +361,18 @@
              int k = this.readShort();
              ItemStack itemstack = new ItemStack(Item.getItemById(i), j, k);
              itemstack.getItem().readNBTShareTag(itemstack, this.readCompoundTag());
@@ -38,3 +39,13 @@
              return itemstack;
          }
      }
+ 
+     public String readString(int maxLength)
+     {
++        if (maxLength == 16)
++        {
++            maxLength = MohistConfig.name_limits;
++        }
+         int i = this.readVarInt();
+ 
+         if (i > maxLength * 4)
