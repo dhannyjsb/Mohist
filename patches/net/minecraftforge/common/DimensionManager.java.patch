@@ -232,7 +232,7 @@
          }
      }
 +
-+    // Mohist start - new method for handling creation of Bukkit dimensions. Currently supports MultiVerse
++    // Cauldron start - new method for handling creation of Bukkit dimensions. Currently supports MultiVerse
 +    public static WorldServer initDimension(WorldCreator creator, WorldSettings worldSettings) {
 +        WorldServer overworld = getWorld(0);
 +        if (overworld == null) {
@@ -287,8 +287,7 @@
 +            worldinfo = new WorldInfo(worldSettings,name);
 +        }
 +
-+        worldinfo.setWorldName(name);
-+        WorldServer world = (WorldServer) new WorldServer(mcServer, saveHandler, worldinfo, dim, mcServer.profiler, env, gen).init();
++        WorldServer world = (WorldServer) new WorldServerMulti(mcServer, saveHandler, dim, overworld, mcServer.profiler, worldinfo, env, gen).init();
 +        world.initialize(worldSettings);
 +
 +        world.provider.setDimension(dim); // Fix for TerrainControl injecting their own WorldProvider
@@ -302,6 +301,7 @@
 +        }
 +
 +        return world;
++
 +    }
 +
 +    public static org.bukkit.World.Environment registerBukkitDimension(int dim, String worldType) {
@@ -335,5 +335,5 @@
 +    {
 +        return bukkitDims.contains(dim);
 +    }
-+    // Mohist end
++    // Cauldron end
  }
