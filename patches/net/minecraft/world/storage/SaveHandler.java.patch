@@ -215,10 +215,10 @@
 +                    String materialName = Material.normalizeName(key.toString());
 +                    Item item = entry.getValue();
 +                    // inject item materials into Bukkit for FML
-+                    Material material = Material.addMaterial(Item.getIdFromItem(item), item.getItemStackLimit(), materialName, true, false);
++                    Material material = Material.addMaterial(Item.getIdFromItem(item), item.getItemStackLimit(), materialName);
 +                    if (material != null) {
 +                        ServerAPI.injectmaterials.put(material.name(), material.getId());
-+                        Mohist.LOGGER.debug(Message.getFormatString("ingected.item", new Object[]{material.name(), material.getId()}));
++                        Mohist.LOGGER.debug("Save: " + Message.getFormatString("ingected.item", new Object[]{material.name(), String.valueOf(material.getId())}));
 +                    }
 +                }
 +            }
@@ -228,10 +228,10 @@
 +                    String materialName = Material.normalizeName(key.toString());
 +                    Block block = entry.getValue();
 +                    // inject block materials into Bukkit for FML
-+                    Material material = Material.addMaterial(Block.getIdFromBlock(block), 0, materialName, false, true);
++                    Material material = Material.addMaterial(Block.getIdFromBlock(block), materialName, true);
 +                    if (material != null) {
 +                        ServerAPI.injectblock.put(material.name(), material.getId());
-+                        Mohist.LOGGER.debug(Message.getFormatString("ingected.block", new Object[]{material.name(), material.getId()}));
++                        Mohist.LOGGER.debug("Save: " + Message.getFormatString("ingected.block", new Object[]{material.name(), String.valueOf(material.getId())}));
 +                    }
 +                }
 +            }
