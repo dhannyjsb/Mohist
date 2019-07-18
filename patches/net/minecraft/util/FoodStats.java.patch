@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/util/FoodStats.java
 +++ ../src-work/minecraft/net/minecraft/util/FoodStats.java
-@@ -1,21 +1,30 @@
+@@ -1,21 +1,37 @@
  package net.minecraft.util;
  
  import net.minecraft.entity.player.EntityPlayer;
@@ -28,15 +28,22 @@
 +    public int foodTimer;
 +    public int prevFoodLevel = 20;
  
-+    public EntityPlayer entityplayer; // CraftBukkit // Mohist private - public  entityplayer - player Fix mcp duplicate naming causes AppleCore to recognize errors
++    private EntityPlayer entityplayer; // CraftBukkit
 +
 +    public FoodStats() {
 +    }
 +
++    // CraftBukkit start - added EntityHuman constructor
++    public FoodStats(EntityPlayer entityplayer) {
++        org.apache.commons.lang.Validate.notNull(entityplayer);
++        this.entityplayer = entityplayer;
++    }
++    // CraftBukkit end
++
      public void addStats(int foodLevelIn, float foodSaturationModifier)
      {
          this.foodLevel = Math.min(foodLevelIn + this.foodLevel, 20);
-@@ -24,7 +33,22 @@
+@@ -24,7 +40,22 @@
  
      public void addStats(ItemFood foodItem, ItemStack stack)
      {
@@ -60,7 +67,7 @@
      }
  
      public void onUpdate(EntityPlayer player)
-@@ -42,7 +66,20 @@
+@@ -42,7 +73,20 @@
              }
              else if (enumdifficulty != EnumDifficulty.PEACEFUL)
              {
@@ -82,7 +89,7 @@
              }
          }
  
-@@ -55,7 +92,7 @@
+@@ -55,7 +99,7 @@
              if (this.foodTimer >= 10)
              {
                  float f = Math.min(this.foodSaturationLevel, 6.0F);
@@ -91,7 +98,7 @@
                  this.addExhaustion(f);
                  this.foodTimer = 0;
              }
-@@ -66,7 +103,7 @@
+@@ -66,7 +110,7 @@
  
              if (this.foodTimer >= 80)
              {
