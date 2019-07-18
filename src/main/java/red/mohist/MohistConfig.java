@@ -31,7 +31,6 @@ public class MohistConfig {
     public static String outdatedServerMessage = Message.getString(Message.outdated_Server);
     public static String server_type = "FML";
     public static String lang = "en_US";
-    public static int name_limits = 16;
     /**
      * 开启时,控制台会不停地输入所有线程的耗时
      */
@@ -126,7 +125,6 @@ public class MohistConfig {
         nmsRemap = getBoolean("remap.nmsRemap", nmsRemap);
         server_type = getString("server-type", server_type);
         lang = getString("lang", lang);
-        name_limits = getInt("name_limits", name_limits);
         readConfig(MohistConfig.class, null);
     }
 
