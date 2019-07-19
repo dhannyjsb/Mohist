@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.v1_12_R1;
 
+import com.destroystokyo.paper.PaperMCConfig;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -163,7 +164,7 @@ public final class CraftServer implements Server {
         @Override
         public YamlConfiguration getPaperConfig()
         {
-            return com.destroystokyo.paper.PaperConfig.config;
+            return PaperMCConfig.config;
         }
 
         @Override

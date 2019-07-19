@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-public class PaperConfig {
+public class PaperMCConfig {
 
     private static File CONFIG_FILE;
     private static final String HEADER = "This is the main configuration file for Paper.\n"
@@ -58,7 +58,7 @@ public class PaperConfig {
 
         version = getInt("config-version", 13);
         set("config-version", 13);
-        readConfig(PaperConfig.class, null);
+        readConfig(PaperMCConfig.class, null);
     }
 
     protected static void logError(String s) {

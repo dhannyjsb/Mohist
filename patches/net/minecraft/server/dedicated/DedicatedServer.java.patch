@@ -4,7 +4,7 @@
  package net.minecraft.server.dedicated;
  
 -import com.google.common.collect.Lists;
-+import com.destroystokyo.paper.PaperConfig;
++import com.destroystokyo.paper.PaperMCConfig;
 +import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 +import org.bukkit.craftbukkit.v1_12_R1.Main;
 +import org.bukkit.craftbukkit.v1_12_R1.util.TerminalConsoleWriterThread;
@@ -183,7 +183,7 @@
 +            // Spigot end
 +
 +            // Paper start
-+            PaperConfig.init((File) options.valueOf("paper-settings"));
++            PaperMCConfig.init((File) options.valueOf("paper-settings"));
 +            // Paper end
 +
 +            // Mohist start
