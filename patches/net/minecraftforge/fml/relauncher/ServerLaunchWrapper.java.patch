@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/relauncher/ServerLaunchWrapper.java
-@@ -19,46 +19,61 @@
+@@ -19,46 +19,65 @@
  
  package net.minecraftforge.fml.relauncher;
  
@@ -15,6 +15,8 @@
  
 +import java.lang.reflect.Method;
 +import java.util.Locale;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
 +import java.util.logging.Logger;
 +
  public class ServerLaunchWrapper {
@@ -71,14 +73,16 @@
 -            e.printStackTrace(System.err);
 -            System.exit(1);
 +            System.out.println(Message.getString(Message.Not_Have_Library));
-+            Thread t = new Thread(new DownloadLibraries(),"Server Libraries Thread");
-+            t.start();
++            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
++            cachedThreadPool.execute(new DownloadServer());
++            cachedThreadPool.execute(new DownloadLibraries());
++            System.out.println(Message.getString("file.ok"));
          }
 +        j = System.nanoTime();
  
          try
          {
-@@ -71,9 +86,8 @@
+@@ -71,9 +90,8 @@
          }
          catch (Exception e)
          {
