@@ -50,7 +50,7 @@ dependencies {
     // 以下库仅仅是为了让开发人员更好地开发
     // 以下庫僅僅是為了讓開發人員更好地開發
     // The following libraries are just for better development by developers
-    // 以下のライブラリは開発者がより良い開発をするためだけです。
+    // 以下のライブラリは開発者がより良い開発をするためだけです
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'commons-io:commons-io:2.5'
     implementation 'com.google.code.gson:gson:2.8.0'

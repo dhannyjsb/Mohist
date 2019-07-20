@@ -299,11 +299,11 @@
 +            final org.bukkit.craftbukkit.v1_12_R1.CraftServer server = NetHandlerLoginServer.this.server.server;
 +
 +            // Paper start
-+            PlayerProfile profile = Bukkit.createProfile(uniqueId, playerName);
++            PlayerProfile profile = CraftPlayerProfile.asBukkitMirror(loginGameProfile);
 +            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId, profile);
 +            server.getPluginManager().callEvent(asyncEvent);
 +            profile = asyncEvent.getPlayerProfile();
-+            profile.complete();
++            profile.complete(true);
 +            loginGameProfile = CraftPlayerProfile.asAuthlibCopy(profile);
 +            playerName = loginGameProfile.getName();
 +            uniqueId = loginGameProfile.getId();
