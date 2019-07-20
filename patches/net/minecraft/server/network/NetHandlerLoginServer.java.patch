@@ -118,7 +118,7 @@
      public void disconnect(ITextComponent reason)
      {
          try
-@@ -94,22 +122,54 @@
+@@ -94,22 +122,52 @@
          }
      }
  
@@ -143,8 +143,6 @@
 +                this.loginGameProfile.getProperties().put( property.getName(), property );
 +            }
 +        }
-+
-+        this.loginGameProfile = new GameProfile( uuid, this.loginGameProfile.getName() );
 +    }
 +    // Spigot end
 +
@@ -177,7 +175,7 @@
  
              if (this.server.getNetworkCompressionThreshold() >= 0 && !this.networkManager.isLocalChannel())
              {
-@@ -127,12 +187,12 @@
+@@ -127,12 +185,12 @@
  
              if (entityplayermp != null)
              {
@@ -193,7 +191,7 @@
              }
          }
      }
-@@ -149,23 +209,36 @@
+@@ -149,23 +207,36 @@
  
      public void processLoginStart(CPacketLoginStart packetIn)
      {
@@ -234,7 +232,7 @@
          PrivateKey privatekey = this.server.getKeyPair().getPrivate();
  
          if (!Arrays.equals(this.verifyToken, packetIn.getVerifyToken(privatekey)))
-@@ -175,7 +248,7 @@
+@@ -175,7 +246,7 @@
          else
          {
              this.secretKey = packetIn.getSecretKey(privatekey);
@@ -243,7 +241,7 @@
              this.networkManager.enableEncryption(this.secretKey);
              (new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + AUTHENTICATOR_THREAD_ID.incrementAndGet())
              {
-@@ -190,14 +263,18 @@
+@@ -190,14 +261,18 @@
  
                          if (NetHandlerLoginServer.this.loginGameProfile != null)
                          {
@@ -265,7 +263,7 @@
                          }
                          else
                          {
-@@ -211,13 +288,19 @@
+@@ -211,13 +286,19 @@
                          {
                              NetHandlerLoginServer.LOGGER.warn("Authentication servers are down but will let them in anyway!");
                              NetHandlerLoginServer.this.loginGameProfile = NetHandlerLoginServer.this.getOfflineProfile(gameprofile);
@@ -286,7 +284,7 @@
                      }
                  }
                  @Nullable
-@@ -230,6 +313,55 @@
+@@ -230,6 +311,55 @@
          }
      }
  
