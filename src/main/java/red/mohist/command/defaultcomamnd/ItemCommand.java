@@ -1,8 +1,12 @@
 package red.mohist.command.defaultcomamnd;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import red.mohist.api.CustomNameAPI;
@@ -41,12 +45,16 @@ public class ItemCommand extends Command {
 
     private void info(CommandSender sender) {
         if (sender instanceof Player) {
-            Player p = (Player)sender;
-            ItemStack itemStack = p.getInventory().getItemInMainHand();
-            int id = itemStack.getTypeId();
-            String type = itemStack.getType().name();
-            String i18nname = CustomNameAPI.getItemName(itemStack);
-            int id1 = ServerAPI.injectmaterials.containsKey(type) ? id : ServerAPI.injectmaterials.get(type);
+            Player player = (Player) sender;
+            ItemStack itemStack = player.getInventory().getItemInMainHand();
+            Item item = CraftItemStack.asNMSCopy(itemStack).getItem();
+            player.sendMessage(ChatColor.GRAY + "Name - " + ChatColor.GREEN + itemStack.getType().toString());
+            player.sendMessage(ChatColor.GRAY + "ID - " + ChatColor.GREEN + Item.getIdFromItem(item) + ":" + itemStack.getDurability());
+            if (item instanceof ItemBlock) {
+                player.sendMessage(ChatColor.GRAY + "Block ID - " + ChatColor.GREEN + Block.getIdFromBlock(Block.getBlockFromItem(item)));
+            }
+        } else {
+            sender.sendMessage(ChatColor.RED + "You must be a player to perform this command.");
         }
     }
 }
