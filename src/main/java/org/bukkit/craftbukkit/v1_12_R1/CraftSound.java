@@ -559,6 +559,22 @@ public enum CraftSound {
     WEATHER_RAIN_ABOVE("weather.rain.above");
     private final String minecraftKey;
 
+    // Paper start - cancellable death event
+    public static CraftSound getBySoundEffect(final SoundEvent effect) {
+        ResourceLocation key = SoundEvent.REGISTRY.getNameForObject(effect);
+        Preconditions.checkArgument(key != null, "Key for sound effect %s not found?", effect.toString());
+
+        return valueOf(key.getResourcePath().replace('.', '_').toUpperCase(java.util.Locale.ENGLISH));
+    }
+
+    public static Sound getSoundByEffect(final SoundEvent effect) {
+        return Sound.valueOf(getBySoundEffect(effect).name());
+    }
+
+    public static SoundEvent getSoundEffect(final Sound sound) {
+        return getSoundEffect(getSound(sound));
+    }
+    // Paper end
     CraftSound(String minecraftKey) {
         this.minecraftKey = minecraftKey;
     }
