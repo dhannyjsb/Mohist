@@ -192,10 +192,7 @@ public class ASMUtils {
         return opcodeMap.get(type);
     }
 
-    public static void printClass(byte[] bs) {
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(bs);
-        classReader.accept(classNode, 0);
+    public static void printClass(ClassNode classNode) {
         System.out.println("============ " + classNode.name + " ============");
         if (classNode.fields != null) {
             for (FieldNode field : classNode.fields) {
@@ -220,6 +217,13 @@ public class ASMUtils {
                 }
             }
         }
+    }
+
+    public static void printClass(byte[] bs) {
+        ClassNode classNode = new ClassNode();
+        ClassReader classReader = new ClassReader(bs);
+        classReader.accept(classNode, 0);
+        printClass(classNode);
     }
 
     /**
