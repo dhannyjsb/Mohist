@@ -1,6 +1,6 @@
 package red.mohist.common.asm.remap.remappers;
 
-import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import red.mohist.common.asm.remap.ASMUtils;
@@ -16,12 +16,12 @@ public class ReflectRemapper extends Remapper implements ClassRemapperSupplier {
     /**
      * 使用自定义的ClassRemapper,进行反射remap
      *
-     * @param cv
+     * @param classWriter
      * @return
      */
     @Override
-    public ClassRemapper getClassRemapper(ClassVisitor cv) {
-        return new MohistClassRemapper(cv, this);
+    public ClassRemapper getClassRemapper(ClassWriter classWriter) {
+        return new MohistClassRemapper(classWriter, this);
     }
 
     @Override
