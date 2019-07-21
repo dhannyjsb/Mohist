@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/world/storage/SaveHandler.java
 +++ ../src-work/minecraft/net/minecraft/world/storage/SaveHandler.java
-@@ -1,25 +1,42 @@
+@@ -1,25 +1,48 @@
  package net.minecraft.world.storage;
  
 -import java.io.DataInputStream;
@@ -20,6 +20,7 @@
 +import net.minecraft.potion.Potion;
  import net.minecraft.server.MinecraftServer;
 +import net.minecraft.util.ResourceLocation;
++import net.minecraft.util.SoundEvent;
  import net.minecraft.util.datafix.DataFixer;
  import net.minecraft.util.datafix.FixTypes;
  import net.minecraft.world.MinecraftException;
@@ -33,14 +34,19 @@
  import org.apache.logging.log4j.Logger;
 +import org.bukkit.Bukkit;
 +import org.bukkit.Material;
++import org.bukkit.Sound;
 +import org.bukkit.block.Biome;
 +import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
++import org.bukkit.craftbukkit.v1_12_R1.CraftSound;
++import org.bukkit.craftbukkit.v1_12_R1.enchantments.CraftEnchantment;
 +import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
++import org.bukkit.craftbukkit.v1_12_R1.potion.CraftPotionEffectType;
 +import org.bukkit.plugin.PluginLoadOrder;
 +import org.bukkit.potion.PotionEffectType;
 +import red.mohist.Mohist;
 +import red.mohist.api.ServerAPI;
 +import red.mohist.i18n.Message;
++import red.mohist.util.DynamicEnumUtils;
  
 +import javax.annotation.Nullable;
 +import java.io.*;
@@ -50,7 +56,7 @@
  public class SaveHandler implements ISaveHandler, IPlayerFileData
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -31,6 +48,9 @@
+@@ -31,6 +54,9 @@
      private final TemplateManager structureTemplateManager;
      protected final DataFixer dataFixer;
  
@@ -60,7 +66,7 @@
      public SaveHandler(File p_i46648_1_, String saveDirectoryNameIn, boolean p_i46648_3_, DataFixer dataFixerIn)
      {
          this.dataFixer = dataFixerIn;
-@@ -116,20 +136,30 @@
+@@ -116,20 +142,30 @@
      public WorldInfo loadWorldInfo()
      {
          File file1 = new File(this.worldDirectory, "level.dat");
@@ -96,7 +102,7 @@
      }
  
      public void saveWorldInfoWithPlayer(WorldInfo worldInformation, @Nullable NBTTagCompound tagCompound)
-@@ -208,7 +238,6 @@
+@@ -208,7 +244,6 @@
          try
          {
              File file1 = new File(this.playersDirectory, player.getCachedUniqueIdString() + ".dat");
@@ -104,7 +110,7 @@
              if (file1.exists() && file1.isFile())
              {
                  nbttagcompound = CompressedStreamTools.readCompressed(new FileInputStream(file1));
-@@ -221,6 +250,16 @@
+@@ -221,6 +256,16 @@
  
          if (nbttagcompound != null)
          {
@@ -121,7 +127,7 @@
              player.readFromNBT(this.dataFixer.process(FixTypes.PLAYER, nbttagcompound));
          }
  
-@@ -228,6 +267,22 @@
+@@ -228,6 +273,22 @@
          return nbttagcompound;
      }
  
@@ -144,7 +150,7 @@
      public IPlayerFileData getPlayerNBTManager()
      {
          return this;
-@@ -267,7 +322,7 @@
+@@ -267,7 +328,7 @@
          return this.structureTemplateManager;
      }
  
@@ -153,7 +159,7 @@
      {
          try
          {
-@@ -284,4 +339,111 @@
+@@ -284,4 +345,134 @@
          }
          return null;
      }
@@ -235,15 +241,19 @@
 +                    }
 +                }
 +            }
-+
-+            for (Object enchantment : Enchantment.REGISTRY) {
-+                org.bukkit.enchantments.Enchantment.registerEnchantment(new org.bukkit.craftbukkit.v1_12_R1.enchantments.CraftEnchantment((Enchantment) enchantment));
++            // Enchantment
++            for (Map.Entry<ResourceLocation, Enchantment> entry : ForgeRegistries.ENCHANTMENTS.getEntries()) {
++                Enchantment enchantment = entry.getValue();
++                org.bukkit.enchantments.Enchantment.registerEnchantment(new CraftEnchantment(enchantment));
 +            }
 +            org.bukkit.enchantments.Enchantment.stopAcceptingRegistrations();
-+            for (Object effect : Potion.REGISTRY) {
-+                PotionEffectType.registerPotionEffectType(new org.bukkit.craftbukkit.v1_12_R1.potion.CraftPotionEffectType((Potion) effect));
++            // Points
++            for (Map.Entry<ResourceLocation, Potion> entry : ForgeRegistries.POTIONS.getEntries()) {
++                Potion effect = entry.getValue();
++                PotionEffectType.registerPotionEffectType(new CraftPotionEffectType(effect));
 +            }
 +            PotionEffectType.stopAcceptingRegistrations();
++            // Biome
 +            b:
 +            for (Map.Entry<ResourceLocation, net.minecraft.world.biome.Biome> entry : ForgeRegistries.BIOMES.getEntries()) {
 +                String biomeName = entry.getKey().getResourcePath().toUpperCase(java.util.Locale.ENGLISH);
@@ -251,8 +261,27 @@
 +                    if (biome.toString().equals(biomeName)) {
 +                        continue b;
 +                    }
++                    EnumHelper.addBukkitBiome(biomeName);
 +                }
-+                EnumHelper.addBukkitBiome(biomeName);
++            }
++            // SoundEvent
++            se:
++            for (Map.Entry<ResourceLocation, SoundEvent> entry : ForgeRegistries.SOUND_EVENTS.getEntries()) {
++                String seName = entry.getKey().getResourcePath().toUpperCase(java.util.Locale.ENGLISH);
++                String seName1 = entry.getKey().getResourcePath().replace('.', '_').toUpperCase(java.util.Locale.ENGLISH);
++
++                for (Sound e : Sound.values()) {
++                    if(e.toString().equals(seName)){
++                        continue se;
++                    }
++                    DynamicEnumUtils.addEnum(Sound.class, seName, new Class[] { }, new Object[] { });
++                }
++                for (CraftSound e : CraftSound.values()) {
++                    if(e.toString().equals(seName1)){
++                        continue se;
++                    }
++                    DynamicEnumUtils.addEnum(CraftSound.class, seName1, new Class[] { String.class }, new Object[] { seName1 });
++                }
 +            }
 +            // since we modify bukkit enums, we need to guarantee that plugins are
 +            // loaded after all mods have been loaded by FML to avoid race conditions.
