@@ -228,7 +228,7 @@
  
                  if (this.getFolderName() == null)
                  {
-@@ -268,11 +314,14 @@
+@@ -268,11 +314,17 @@
                  if (!net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerAboutToStart(this)) return false;
                  LOGGER.info("Preparing level \"{}\"", (Object)this.getFolderName());
                  this.loadAllWorlds(this.getFolderName(), this.getFolderName(), k, worldtype, s2);
@@ -237,8 +237,11 @@
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
 -                LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
 -                this.currentTime = getCurrentTimeMillis();
-+                //Mohist.LOGGER.info("", (Object)s3);
-+                Mohist.LOGGER.info(Message.getFormatString(Message.Server_Start_Done, new Object[]{s3}));
++                if (MohistConfig.support_nocmd) {
++                    Mohist.LOGGER.info("Done ({0})! For help, type \"help\" or \"?\"", (Object)s3);
++                } else {
++                    Mohist.LOGGER.info(Message.getFormatString("server.start.done", new Object[]{s3}));
++                }
  
 +                Bukkit.getPluginManager().callEvent(new BukkitServerStartDoneEvent());//Mohist
 +                Object[] p1 = {this.getServerHostname().isEmpty() ? "0.0.0.0" : this.getServerHostname(), String.valueOf(this.getServerPort())};
@@ -246,7 +249,7 @@
                  if (this.settings.hasProperty("announce-player-achievements"))
                  {
                      this.worlds[0].getGameRules().setOrCreateGameRule("announceAdvancements", this.settings.getBooleanProperty("announce-player-achievements", true) ? "true" : "false");
-@@ -292,16 +341,28 @@
+@@ -292,16 +344,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -281,7 +284,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +488,19 @@
+@@ -427,11 +491,19 @@
  
      public void executePendingCommands()
      {
@@ -305,7 +308,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -592,8 +661,11 @@
+@@ -592,8 +664,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -319,7 +322,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +756,66 @@
+@@ -684,13 +759,66 @@
  
      public String getPlugins()
      {
