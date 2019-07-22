@@ -158,7 +158,7 @@
      {
          try
          {
-@@ -284,4 +344,135 @@
+@@ -284,4 +344,133 @@
          }
          return null;
      }
@@ -241,15 +241,13 @@
 +                }
 +            }
 +            // Enchantment
-+            for (Map.Entry<ResourceLocation, Enchantment> entry : ForgeRegistries.ENCHANTMENTS.getEntries()) {
-+                Enchantment enchantment = entry.getValue();
-+                org.bukkit.enchantments.Enchantment.registerEnchantment(new CraftEnchantment(enchantment));
++            for (Object enchantment : Enchantment.REGISTRY) {
++                org.bukkit.enchantments.Enchantment.registerEnchantment(new CraftEnchantment((Enchantment)enchantment));
 +            }
 +            org.bukkit.enchantments.Enchantment.stopAcceptingRegistrations();
 +            // Points
-+            for (Map.Entry<ResourceLocation, Potion> entry : ForgeRegistries.POTIONS.getEntries()) {
-+                Potion effect = entry.getValue();
-+                PotionEffectType.registerPotionEffectType(new CraftPotionEffectType(effect));
++            for (Object effect : Potion.REGISTRY) {
++                PotionEffectType.registerPotionEffectType(new CraftPotionEffectType((Potion)effect));
 +            }
 +            PotionEffectType.stopAcceptingRegistrations();
 +            // Biome
