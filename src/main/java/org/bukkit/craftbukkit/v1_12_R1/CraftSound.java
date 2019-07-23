@@ -3,8 +3,11 @@ package org.bukkit.craftbukkit.v1_12_R1;
 import com.google.common.base.Preconditions;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.common.util.EnumHelper;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Sound;
+import red.mohist.Mohist;
 
 public enum CraftSound {
 
@@ -563,8 +566,15 @@ public enum CraftSound {
     public static CraftSound getBySoundEffect(final SoundEvent effect) {
         ResourceLocation key = SoundEvent.REGISTRY.getNameForObject(effect);
         Preconditions.checkArgument(key != null, "Key for sound effect %s not found?", effect.toString());
-
-        return valueOf(key.getResourcePath().replace('.', '_').toUpperCase(java.util.Locale.ENGLISH));
+        String cs = key.getResourcePath().replace('.', '_').toUpperCase(java.util.Locale.ENGLISH);
+        String cskey = key.toString().replace(':', '.');
+        if (!EnumUtils.isValidEnum(Sound.class, cs)) {
+            EnumHelper.addEnum(Sound.class, cs, new Class[0], new Object[0]);
+        }
+        if (!EnumUtils.isValidEnum(CraftSound.class, cs)) {
+            EnumHelper.addEnum(CraftSound.class, cs, new Class[] {String.class}, new Object[] {key.toString()});
+        }
+        return valueOf(cs);
     }
 
     public static Sound getSoundByEffect(final SoundEvent effect) {

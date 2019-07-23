@@ -31,7 +31,6 @@ public class ForgeInjectBukkit {
         Enchantment();
         Potion();
         //Biome();
-        //Sound();
     }
 
     public static void ItemtoMaterials(){
@@ -119,19 +118,5 @@ public class ForgeInjectBukkit {
         ID_MAP.put((short)typeId, bukkitType);
 
         return bukkitType;
-    }
-
-    public static void Sound() {
-        Mohist.LOGGER.info("Start reg SoundEvent");
-        b:
-        for (Map.Entry<ResourceLocation, SoundEvent> entry : ForgeRegistries.SOUND_EVENTS.getEntries()) {
-            String seName = entry.getKey().getResourcePath().replace('.', '_').toUpperCase(java.util.Locale.ENGLISH);
-            for (Sound sound : Sound.values()) {
-                if (sound.toString().equals(seName)) {
-                    continue b;
-                }
-                EnumHelper.addEnum(Sound.class, seName, new Class[0], new Object[0]);
-            }
-        }
     }
 }

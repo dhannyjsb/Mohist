@@ -679,6 +679,12 @@ public class CraftWorld implements World {
         return generator;
     }
 
+    public void setGenerator(ChunkGenerator generator) {
+        if (this.generator == null) {
+            this.generator = generator;
+        }
+    }
+
     public List<BlockPopulator> getPopulators() {
         return populators;
     }
