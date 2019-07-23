@@ -162,7 +162,7 @@ build.dependsOn signUniversal
 installer.dependsOn signUniversal
 
 outputJar {
-    classifier = 'universal'
+    classifier = 'server'
 
     manifest.attributes([
             "Implementation-Title": "Mohist",
