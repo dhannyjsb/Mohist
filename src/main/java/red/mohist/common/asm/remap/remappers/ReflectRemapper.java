@@ -1,5 +1,6 @@
 package red.mohist.common.asm.remap.remappers;
 
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
@@ -20,7 +21,7 @@ public class ReflectRemapper extends Remapper implements ClassRemapperSupplier {
      * @return
      */
     @Override
-    public ClassRemapper getClassRemapper(ClassWriter classWriter) {
+    public ClassRemapper getClassRemapper(ClassVisitor classWriter) {
         return new MohistClassRemapper(classWriter, this);
     }
 
