@@ -7,6 +7,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
+import org.objectweb.asm.tree.ClassNode;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
 import red.mohist.common.asm.remap.model.ClassMapping;
@@ -79,35 +80,47 @@ public class RemapUtils {
         jarMapping.initFastMethodMapping(jarRemapper);
     }
 
+    private static final Object remapLock = new Object();
+
     public static byte[] remapFindClass(PluginDescriptionFile description, String name, byte[] bs) throws IOException {
-        if (MohistConfig.printRemapPluginClass) {
-            System.out.println("========= before remap ========= ");
-            ASMUtils.printClass(bs);
-        }
-        for (Remapper remapper : remappers) {
-            if (description != null && remapper instanceof NMSVersionRemapper && !MohistConfig.multiVersionRemapPlugins.contains(description.getName())) {
-                continue;
-            }
-            ClassReader reader = new ClassReader(bs);
-            ClassWriter writer = new ClassWriter(0);
-            ClassRemapper classRemapper;
-            if (remapper instanceof ClassRemapperSupplier) {
-                classRemapper = ((ClassRemapperSupplier) remapper).getClassRemapper(writer);
-            } else {
-                classRemapper = new ClassRemapper(writer, remapper);
-            }
-            reader.accept(classRemapper, 0);
-            writer.visitEnd();
-            bs = writer.toByteArray();
+        synchronized (remapLock) {
             if (MohistConfig.printRemapPluginClass) {
-                System.out.println("========= after " + remapper.getClass().getSimpleName() + " remap ========= ");
+                System.out.println("========= before remap ========= ");
                 ASMUtils.printClass(bs);
             }
+            ClassNode classNode = new ClassNode();
+            new ClassReader(bs).accept(classNode, ClassReader.EXPAND_FRAMES);
+            for (Remapper remapper : remappers) {
+                if (description != null && remapper instanceof NMSVersionRemapper && !MohistConfig.multiVersionRemapPlugins.contains(description.getName())) {
+                    continue;
+                }
+                try {
+                    RemapContext.push(new RemapContext().setClassNode(classNode).setDescription(description));
+                    ClassNode container = new ClassNode();
+                    ClassRemapper classRemapper;
+                    if (remapper instanceof ClassRemapperSupplier) {
+                        classRemapper = ((ClassRemapperSupplier) remapper).getClassRemapper(container);
+                    } else {
+                        classRemapper = new ClassRemapper(container, remapper);
+                    }
+                    classNode.accept(classRemapper);
+                    classNode = container;
+                    if (MohistConfig.printRemapPluginClass) {
+                        System.out.println("========= after " + remapper.getClass().getSimpleName() + " remap ========= ");
+                        ASMUtils.printClass(classNode);
+                    }
+                } finally {
+                    RemapContext.pop();
+                }
+            }
+            ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+            classNode.accept(writer);
+            bs = writer.toByteArray();
+            if (MohistConfig.dumpRemapPluginClass) {
+                ASMUtils.dump(Paths.get(System.getProperty("user.dir"), "dumpRemapPluginClass"), bs);
+            }
+            return bs;
         }
-        if (MohistConfig.dumpRemapPluginClass) {
-            ASMUtils.dump(Paths.get(System.getProperty("user.dir"), "dumpRemapPluginClass"), bs);
-        }
-        return bs;
     }
 
     public static String map(String typeName) {
