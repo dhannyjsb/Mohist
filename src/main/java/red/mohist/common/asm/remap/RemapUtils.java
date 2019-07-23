@@ -10,7 +10,13 @@ import org.objectweb.asm.commons.Remapper;
 import red.mohist.Mohist;
 import red.mohist.MohistConfig;
 import red.mohist.common.asm.remap.model.ClassMapping;
-import red.mohist.common.asm.remap.remappers.*;
+import red.mohist.common.asm.remap.remappers.ClassRemapperSupplier;
+import red.mohist.common.asm.remap.remappers.MohistInheritanceMap;
+import red.mohist.common.asm.remap.remappers.MohistInheritanceProvider;
+import red.mohist.common.asm.remap.remappers.MohistJarMapping;
+import red.mohist.common.asm.remap.remappers.MohistJarRemapper;
+import red.mohist.common.asm.remap.remappers.NMSVersionRemapper;
+import red.mohist.common.asm.remap.remappers.ReflectRemapper;
 import sun.reflect.Reflection;
 
 import java.io.BufferedReader;

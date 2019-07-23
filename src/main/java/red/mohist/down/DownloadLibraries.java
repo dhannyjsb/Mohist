@@ -23,7 +23,6 @@ public class DownloadLibraries implements Runnable {
             url = "https://pfcraft.gitee.io/mohistdown/libraries-1.2.zip";
         }
         new Download(url, fileName);
-        System.out.println(Message.getFormatString(Message.Dw_Ok, new Object[]{fileName}));
         try {
             @SuppressWarnings("resource")
             ZipFile zip = new ZipFile(new File(fileName), Charset.forName("GBK"));

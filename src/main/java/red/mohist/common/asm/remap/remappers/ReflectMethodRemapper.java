@@ -8,7 +8,14 @@ import org.objectweb.asm.commons.MethodRemapper;
 import org.objectweb.asm.commons.Remapper;
 import red.mohist.common.asm.remap.ASMUtils;
 import red.mohist.common.asm.remap.model.MethodRedirectRule;
-import red.mohist.common.asm.remap.proxy.*;
+import red.mohist.common.asm.remap.proxy.DelegateURLClassLoder;
+import red.mohist.common.asm.remap.proxy.ProxyClass;
+import red.mohist.common.asm.remap.proxy.ProxyClassLoader;
+import red.mohist.common.asm.remap.proxy.ProxyField;
+import red.mohist.common.asm.remap.proxy.ProxyMethod;
+import red.mohist.common.asm.remap.proxy.ProxyMethodHandles_Lookup;
+import red.mohist.common.asm.remap.proxy.ProxyMethodType;
+import red.mohist.common.asm.remap.proxy.ProxyYamlConfiguration;
 import red.mohist.common.asm.remap.proxy.asm.ProxyClassWriter;
 
 import java.io.InputStream;

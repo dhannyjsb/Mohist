@@ -9,8 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import red.mohist.api.CustomNameAPI;
-import red.mohist.api.ServerAPI;
 import red.mohist.i18n.Message;
 
 import java.util.Locale;
