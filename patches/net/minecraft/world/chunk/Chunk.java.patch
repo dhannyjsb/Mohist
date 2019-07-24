@@ -306,7 +306,16 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -895,6 +986,7 @@
+@@ -891,10 +982,16 @@
+         i = MathHelper.clamp(i, 0, this.entityLists.length - 1);
+         j = MathHelper.clamp(j, 0, this.entityLists.length - 1);
+ 
++        if(listToFill instanceof ArrayList) // Thermos force ArrayList minimum size for faster entity adding
++        {
++            ((ArrayList)listToFill).ensureCapacity(30);
++        }
++
+         for (int k = i; k <= j; ++k)
          {
              if (!this.entityLists[k].isEmpty())
              {
@@ -314,7 +323,7 @@
                  for (Entity entity : this.entityLists[k])
                  {
                      if (entity.getEntityBoundingBox().intersects(aabb) && entity != entityIn)
-@@ -918,6 +1010,7 @@
+@@ -918,6 +1015,7 @@
                          }
                      }
                  }
@@ -322,7 +331,7 @@
              }
          }
      }
-@@ -931,6 +1024,7 @@
+@@ -931,6 +1029,7 @@
  
          for (int k = i; k <= j; ++k)
          {
@@ -330,7 +339,7 @@
              for (T t : this.entityLists[k].getByClass(entityClass))
              {
                  if (t.getEntityBoundingBox().intersects(aabb) && (filter == null || filter.apply(t)))
-@@ -938,6 +1032,7 @@
+@@ -938,6 +1037,7 @@
                      listToFill.add(t);
                  }
              }
@@ -338,7 +347,7 @@
          }
      }
  
-@@ -950,12 +1045,8 @@
+@@ -950,12 +1050,8 @@
                  return true;
              }
          }
@@ -352,7 +361,7 @@
      }
  
      public Random getRandomWithSeed(long seed)
-@@ -1001,6 +1092,63 @@
+@@ -1001,6 +1097,63 @@
          }
      }
  
@@ -416,7 +425,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1165,26 @@
+@@ -1017,6 +1170,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -443,7 +452,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1243,7 @@
+@@ -1075,7 +1248,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -452,7 +461,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1254,7 @@
+@@ -1086,7 +1259,7 @@
  
      public boolean isPopulated()
      {
@@ -461,7 +470,7 @@
      }
  
      public boolean wasTicked()
-@@ -1418,7 +1586,7 @@
+@@ -1418,7 +1591,7 @@
      {
          return this.loaded;
      }
@@ -470,7 +479,7 @@
      @SideOnly(Side.CLIENT)
      public void markLoaded(boolean loaded)
      {
-@@ -1540,11 +1708,11 @@
+@@ -1540,11 +1713,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.
