@@ -38,8 +38,7 @@
 -    private final Map<String, NBTBase> tagMap = Maps.<String, NBTBase>newHashMap();
 +    private Map<String, NBTBase> tagMap = Maps.newHashMap(); // Paper
  
--    void write(DataOutput output) throws IOException
-+    public void write(DataOutput output) throws IOException
+     void write(DataOutput output) throws IOException
      {
 -        for (String s : this.tagMap.keySet())
 -        {

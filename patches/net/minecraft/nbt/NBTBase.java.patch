@@ -1,14 +1,5 @@
 --- ../src-base/minecraft/net/minecraft/nbt/NBTBase.java
 +++ ../src-work/minecraft/net/minecraft/nbt/NBTBase.java
-@@ -8,7 +8,7 @@
- {
-     public static final String[] NBT_TYPES = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]", "LONG[]"};
- 
--    abstract void write(DataOutput output) throws IOException;
-+    public abstract void write(DataOutput output) throws IOException;
- 
-     abstract void read(DataInput input, int depth, NBTSizeTracker sizeTracker) throws IOException;
- 
 @@ -88,6 +88,52 @@
          }
      }
