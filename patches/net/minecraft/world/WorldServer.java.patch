@@ -808,12 +808,12 @@
      private boolean canSpawnNPCs()
      {
          return this.mcServer.getCanSpawnNPCs();
-@@ -845,9 +1046,62 @@
+@@ -845,9 +1046,64 @@
      protected IChunkProvider createChunkProvider()
      {
          IChunkLoader ichunkloader = this.saveHandler.getChunkLoader(this.provider);
 -        return new ChunkProviderServer(this, ichunkloader, this.provider.createChunkGenerator());
-+        // Mohist - if provider is vanilla, proceed to create a bukkit compatible chunk generator
++        // Cauldron start - if provider is vanilla, proceed to create a bukkit compatible chunk generator
 +        if (this.provider.getClass().toString().length() <= 3 || this.provider.getClass().toString().contains("net.minecraft")) {
 +            // CraftBukkit start
 +            org.bukkit.craftbukkit.v1_12_R1.generator.InternalChunkGenerator gen;
@@ -830,9 +830,11 @@
 +
 +            this.chunkProvider = new ChunkProviderServer(this, ichunkloader, gen);
 +            // CraftBukkit end
-+        } else { // custom provider, load normally for forge compatibility
++        } else {
++            // custom provider, load normally for forge compatibility
 +            this.chunkProvider = new ChunkProviderServer(this, ichunkloader, this.provider.createChunkGenerator());
 +        }
++        // Cauldron end
 +        return chunkProvider;
      }
  
@@ -872,7 +874,7 @@
      public boolean isBlockModifiable(EntityPlayer player, BlockPos pos)
      {
          return super.isBlockModifiable(player, pos);
-@@ -929,6 +1183,23 @@
+@@ -929,6 +1185,23 @@
              int j = this.provider.getAverageGroundLevel();
              int k = 8;
  
@@ -896,7 +898,7 @@
              if (blockpos != null)
              {
                  i = blockpos.getX();
-@@ -941,7 +1212,7 @@
+@@ -941,7 +1214,7 @@
  
              int l = 0;
  
@@ -905,7 +907,7 @@
              {
                  i += random.nextInt(64) - random.nextInt(64);
                  k += random.nextInt(64) - random.nextInt(64);
-@@ -987,33 +1258,25 @@
+@@ -987,33 +1260,25 @@
      }
  
      public void saveAllChunks(boolean all, @Nullable IProgressUpdate progressCallback) throws MinecraftException
@@ -944,7 +946,7 @@
          }
      }
  
-@@ -1039,6 +1302,12 @@
+@@ -1039,6 +1304,12 @@
              }
          }
  
@@ -957,7 +959,7 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1053,11 +1322,16 @@
+@@ -1053,11 +1324,16 @@
          this.perWorldStorage.saveAllData();
      }
  
@@ -976,7 +978,7 @@
      public void loadEntities(Collection<Entity> entityCollection)
      {
          for (Entity entity : Lists.newArrayList(entityCollection))
-@@ -1074,7 +1348,6 @@
+@@ -1074,7 +1350,6 @@
      {
          if (entityIn.isDead)
          {
@@ -984,7 +986,7 @@
              return false;
          }
          else
-@@ -1085,7 +1358,7 @@
+@@ -1085,7 +1360,7 @@
              {
                  Entity entity = this.entitiesByUuid.get(uuid);
  
@@ -993,7 +995,7 @@
                  {
                      this.unloadedEntityList.remove(entity);
                  }
-@@ -1093,7 +1366,6 @@
+@@ -1093,7 +1368,6 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
@@ -1001,15 +1003,17 @@
                          return false;
                      }
  
-@@ -1141,9 +1413,15 @@
+@@ -1141,9 +1415,17 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
-+        LightningStrikeEvent lightning = new LightningStrikeEvent(this.getWorld(), (org.bukkit.entity.LightningStrike) entityIn.getBukkitEntity());
-+        this.getServer().getPluginManager().callEvent(lightning);
++        if (entityIn instanceof net.minecraft.entity.effect.EntityLightningBolt) {
++            LightningStrikeEvent lightning = new LightningStrikeEvent(this.getWorld(), (org.bukkit.entity.LightningStrike) entityIn.getBukkitEntity());
++            this.getServer().getPluginManager().callEvent(lightning);
 +
-+        if (lightning.isCancelled()) {
-+            return false;
++            if (lightning.isCancelled()) {
++                return false;
++            }
 +        }
          if (super.addWeatherEffect(entityIn))
          {
@@ -1018,7 +1022,7 @@
              return true;
          }
          else
-@@ -1164,11 +1442,15 @@
+@@ -1164,11 +1446,15 @@
  
      public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
      {
@@ -1038,7 +1042,7 @@
          if (!isSmoking)
          {
              explosion.clearAffectedBlockPositions();
-@@ -1211,7 +1493,8 @@
+@@ -1211,7 +1497,8 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -1048,7 +1052,7 @@
                  }
              }
  
-@@ -1298,11 +1581,19 @@
+@@ -1298,11 +1585,19 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {

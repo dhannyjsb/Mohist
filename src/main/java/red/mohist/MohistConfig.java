@@ -37,46 +37,17 @@ public class MohistConfig {
     public static String server_type = "FML";
     public static String lang = "en_US";
     public static boolean support_nocmd = false;
-    /**
-     * 开启时,控制台会不停地输入所有线程的耗时
-     */
     public static boolean printThreadTimeCost = false;
-    /**
-     * 是否导出经过remap的插件类
-     */
     public static boolean dumpRemapPluginClass = false;
-    /**
-     * 打印remap插件
-     */
     public static boolean printRemapPluginClass = false;
-    /**
-     * 是否打印无效的remap规则
-     */
     public static boolean printInvalidMapping = false;
-    /**
-     * 是否启用插件多版本兼容
-     */
     public static boolean multiVersionRemap = true;
-    /**
-     * 启用多版本兼容的插件
-     */
     public static Set<String> multiVersionRemapPlugins = new HashSet<>();
-    /**
-     * 是否启用nmsRemap
-     */
     public static boolean nmsRemap = true;
-    /**
-     * 是否启用反射remap
-     */
     public static boolean reflectRemap = true;
-    /**
-     * 非玩家实体碰撞其他实体的间隔时间
-     */
     public static int entityCollideFrequency = 2;
-    /**
-     * 一个tick内,一个实体可以碰撞或被碰撞多少次
-     */
     public static int maxEntityCollisionsPerTick = 8;
+
     /*========================================================================*/
     public static YamlConfiguration config;
     static int version;
@@ -132,6 +103,7 @@ public class MohistConfig {
         server_type = getString("server-type", server_type);
         lang = getString("lang", lang);
         support_nocmd = getBoolean("support_nocmd", support_nocmd);
+
         readConfig(MohistConfig.class, null);
     }
 
