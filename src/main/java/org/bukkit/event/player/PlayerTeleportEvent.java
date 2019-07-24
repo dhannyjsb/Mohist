@@ -84,10 +84,20 @@ public class PlayerTeleportEvent extends PlayerMoveEvent {
          * Mod portal
          */
         MOD,
+        DEATH,
         /**
          * Indicates the teleportation was caused by an event not covered by
          * this enum
          */
         UNKNOWN;
+
+        public boolean isPortal() {
+            switch(this) {
+                case NETHER_PORTAL:
+                case END_PORTAL:
+                    return true;
+            }
+            return false;
+        }
     }
 }
