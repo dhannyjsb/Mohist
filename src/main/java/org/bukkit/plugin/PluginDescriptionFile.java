@@ -18,7 +18,11 @@ import org.yaml.snakeyaml.nodes.Tag;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**

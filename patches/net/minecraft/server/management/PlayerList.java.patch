@@ -712,7 +712,7 @@
 +                }
 +            } else {
 +                exit = this.calculateTarget(enter, exitWorld);
-+                if (cause != cause.MOD) // don't use travel agent for custom dimensions
++                if (cause != PlayerTeleportEvent.TeleportCause.MOD) // don't use travel agent for custom dimensions
 +                {
 +                    useTravelAgent = true;
 +                }
@@ -727,7 +727,7 @@
 +            return;
 +        }
 +
-+        exit = event.useTravelAgent() && cause != cause.MOD ? event.getPortalTravelAgent().findOrCreate(event.getTo()) : event.getTo();
++        exit = event.useTravelAgent() && cause != PlayerTeleportEvent.TeleportCause.MOD ? event.getPortalTravelAgent().findOrCreate(event.getTo()) : event.getTo();
 +        if (exit == null) {
 +            return;
 +        }

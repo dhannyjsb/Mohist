@@ -16,7 +16,13 @@ import org.bukkit.help.IndexHelpTopic;
 import org.bukkit.util.ChatPaginator;
 import red.mohist.i18n.Message;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class HelpCommand extends BukkitCommand {
     public HelpCommand() {

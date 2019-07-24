@@ -7,7 +7,6 @@ import net.minecraftforge.common.util.EnumHelper;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Sound;
-import red.mohist.Mohist;
 
 public enum CraftSound {
 

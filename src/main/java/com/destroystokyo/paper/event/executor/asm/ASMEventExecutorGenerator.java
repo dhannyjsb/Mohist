@@ -8,7 +8,11 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.V1_8;
 
 public class ASMEventExecutorGenerator {
     public static AtomicInteger NEXT_ID = new AtomicInteger(1);

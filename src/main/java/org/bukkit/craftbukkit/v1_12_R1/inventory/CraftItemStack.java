@@ -16,7 +16,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 
-import static org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem.*;
+import static org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem.ENCHANTMENTS;
+import static org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem.ENCHANTMENTS_ID;
+import static org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem.ENCHANTMENTS_LVL;
 
 @DelegateDeserialization(ItemStack.class)
 public final class CraftItemStack extends ItemStack {
