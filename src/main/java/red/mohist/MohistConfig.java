@@ -47,6 +47,7 @@ public class MohistConfig {
     public static boolean reflectRemap = true;
     public static int entityCollideFrequency = 2;
     public static int maxEntityCollisionsPerTick = 8;
+    public static String console_name = "Server";
 
     /*========================================================================*/
     public static YamlConfiguration config;
@@ -103,6 +104,7 @@ public class MohistConfig {
         server_type = getString("server-type", server_type);
         lang = getString("lang", lang);
         support_nocmd = getBoolean("support_nocmd", support_nocmd);
+        console_name = transform(getString("console_name", console_name));
 
         readConfig(MohistConfig.class, null);
     }
