@@ -1061,17 +1061,12 @@ public class CraftWorld implements World {
     }
 
     public void save() {
-        // Spigot start
-        save(true);
-    }
-
-    public void save(boolean forceSave) {
         this.server.checkSaveState();
         try {
             boolean oldSave = world.disableLevelSaving;
 
             world.disableLevelSaving = false;
-            world.saveAllChunks(forceSave, null);
+            world.saveAllChunks(true, null);
 
             world.disableLevelSaving = oldSave;
         } catch (MinecraftException ex) {
