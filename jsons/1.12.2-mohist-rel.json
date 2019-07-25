@@ -133,7 +133,7 @@
       "clientreq":true
     },
     {
-      "name" : "org.yaml:snakeyaml:1.19",
+      "name" : "org.yaml:snakeyaml:1.24",
       "url" : "http://repo.maven.apache.org/maven2",
       "serverreq":true,
       "clientreq":true
@@ -207,6 +207,12 @@
     {
       "name": "org.spongepowered:mixin:0.7.10-SNAPSHOT",
       "url" : "http://repo.spongepowered.org/maven",
+      "clientreq":true,
+      "serverreq":true
+    },
+    {
+      "name": "io.netty:netty-all:4.1.38.Final",
+      "url" : "http://repo.maven.apache.org/maven2",
       "clientreq":true,
       "serverreq":true
     }
