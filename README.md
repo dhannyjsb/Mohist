@@ -7,7 +7,7 @@
 ![](https://img.shields.io/github/license/PFCraft/Mohist.svg)
 [![](https://img.shields.io/badge/Forge-1.12.2--14.23.5.2838-brightgreen.svg?colorB=26303d)](http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.12.2.html)
 [![](https://img.shields.io/badge/Paper-1.12.2-brightgreen.svg?colorB=DC3340)](https://papermc.io/downloads#Paper-1.12)
-![](https://img.shields.io/badge/Java-8u212-brightgreen.svg?colorB=469C00)
+![](https://img.shields.io/badge/Java-8u221-brightgreen.svg?colorB=469C00)
 
 Since CraftBukkit has modified a lot of underlying layers, some of the core mods are not available, we are working hard to improve.
 
