@@ -2,12 +2,17 @@ package red.mohist;
 
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.cauldron.entity.CraftCustomEntity;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.registries.GameData;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -24,14 +29,14 @@ import java.util.Map;
 public class ForgeInjectBukkit {
 
     public static void init(){
-        ItemtoMaterials();
-        BlocktoMaterials();
-        Enchantment();
-        Potion();
-        //Biome();
+        itemtoMaterials();
+        blocktoMaterials();
+        enchantment();
+        potion();
+        entity();
     }
 
-    public static void ItemtoMaterials(){
+    public static void itemtoMaterials(){
         for (Map.Entry<ResourceLocation, Item> entry : ForgeRegistries.ITEMS.getEntries()) {
             ResourceLocation key = entry.getKey();
             if(!key.getResourceDomain().equals("minecraft")) {
@@ -47,7 +52,7 @@ public class ForgeInjectBukkit {
         }
     }
 
-    public static void BlocktoMaterials(){
+    public static void blocktoMaterials(){
         for (Map.Entry<ResourceLocation, Block> entry : ForgeRegistries.BLOCKS.getEntries()) {
             ResourceLocation key = entry.getKey();
             if(!key.getResourceDomain().equals("minecraft")) {
@@ -63,7 +68,7 @@ public class ForgeInjectBukkit {
         }
     }
 
-    public static void Enchantment() {
+    public static void enchantment() {
         // Enchantment
         for (Object enchantment : Enchantment.REGISTRY) {
             org.bukkit.enchantments.Enchantment.registerEnchantment(new CraftEnchantment((Enchantment) enchantment));
@@ -71,7 +76,7 @@ public class ForgeInjectBukkit {
         org.bukkit.enchantments.Enchantment.stopAcceptingRegistrations();
     }
 
-    public static void Potion() {
+    public static void potion() {
         // Points
         for (Object effect : Potion.REGISTRY) {
             PotionEffectType.registerPotionEffectType(new CraftPotionEffectType((Potion) effect));
@@ -79,7 +84,7 @@ public class ForgeInjectBukkit {
         PotionEffectType.stopAcceptingRegistrations();
     }
 
-    public static void Biome() {
+    public static void biome() {
         b:
         for (Map.Entry<ResourceLocation, net.minecraft.world.biome.Biome> entry : ForgeRegistries.BIOMES.getEntries()) {
             String biomeName = entry.getKey().getResourcePath().toUpperCase(java.util.Locale.ENGLISH);
@@ -105,16 +110,18 @@ public class ForgeInjectBukkit {
         return worldType;
     }
 
-    public static EntityType addBukkitEntityType(String name, Class <? extends org.bukkit.entity.Entity> clazz, int typeId, boolean independent) {
-        String entityType = name.replace("-", "_").toUpperCase();
-        EntityType bukkitType = EnumHelper.addEnum(EntityType.class, entityType, new Class[] { String.class, Class.class, Integer.TYPE, Boolean.TYPE }, new Object[] { name, clazz, typeId, independent });
+    public static void entity() {
+        Map<String, EntityType> NAME_MAP =  ObfuscationReflectionHelper.getPrivateValue(EntityType.class, null, "NAME_MAP");
+        Map<Short, EntityType> ID_MAP =  ObfuscationReflectionHelper.getPrivateValue(EntityType.class, null, "ID_MAP");
 
-        Map<String, EntityType> NAME_MAP = ObfuscationReflectionHelper.getPrivateValue(EntityType.class, null, "NAME_MAP");
-        Map<Short, EntityType> ID_MAP = ObfuscationReflectionHelper.getPrivateValue(EntityType.class, null, "ID_MAP");
+        for (Map.Entry<String, Class<? extends Entity>> entity : EntityRegistry.entityClassMap.entrySet()) {
+            String name = entity.getKey();
+            String entityType = name.replace("-", "_").toUpperCase();
+            int typeId = GameData.getEntityRegistry().getID(EntityRegistry.getEntry(entity.getValue()));
+            EntityType bukkitType = EnumHelper.addEnum(EntityType.class, entityType, new Class[] { String.class, Class.class, Integer.TYPE, Boolean.TYPE }, new Object[] { name, CraftCustomEntity.class, typeId, false });
 
-        NAME_MAP.put(name.toLowerCase(), bukkitType);
-        ID_MAP.put((short)typeId, bukkitType);
-
-        return bukkitType;
+            NAME_MAP.put(name.toLowerCase(), bukkitType);
+            ID_MAP.put((short)typeId, bukkitType);
+        }
     }
 }

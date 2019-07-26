@@ -1,6 +1,5 @@
 package net.minecraftforge.cauldron.entity;
 
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
@@ -8,20 +7,19 @@ import org.bukkit.entity.EntityType;
 
 public class CraftCustomEntity extends CraftEntity {
 
-    public Class<? extends Entity> entityClass;
     public String entityName;
 
     public CraftCustomEntity(CraftServer server, net.minecraft.entity.Entity entity) {
         super(server, entity);
-        this.entityClass = entity.getClass();
-        this.entityName = EntityRegistry.getCustomEntityTypeName(entityClass);
-        if (entityName == null)
+        this.entityName = EntityRegistry.entityTypeMap.get(entity.getClass());
+        if (entityName == null) {
             entityName = entity.getName();
+        }
     }
 
     @Override
     public net.minecraft.entity.Entity getHandle() {
-        return (net.minecraft.entity.Entity) entity;
+        return this.entity;
     }
 
     @Override
@@ -37,5 +35,14 @@ public class CraftCustomEntity extends CraftEntity {
         } else {
             return EntityType.UNKNOWN;
         }
+    }
+
+    @Override
+    public String getCustomName() {
+        final String name = this.getHandle().getCustomNameTag();
+        if (name == null || name.length() == 0) {
+            return this.entity.getName();
+        }
+        return name;
     }
 }
