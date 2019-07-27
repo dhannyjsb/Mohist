@@ -5,59 +5,95 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 
-public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState<T> {
+public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState {
 
     private final Class<T> tileEntityClass;
-    private T tileEntity;
-    private T snapshotTileEntity;
+    private final T tileEntity;
+    private final T snapshot;
 
     public CraftBlockEntityState(Block block, Class<T> tileEntityClass) {
         super(block);
+
         this.tileEntityClass = tileEntityClass;
+
+        // get tile entity from block:
+        CraftWorld world = (CraftWorld) this.getWorld();
+        this.tileEntity = tileEntityClass.cast(world.getTileEntityAt(this.getX(), this.getY(), this.getZ()));
+
+        this.snapshot = this.createSnapshot(tileEntity);
+        this.load(snapshot);
     }
 
     public CraftBlockEntityState(Material material, T tileEntity) {
-        super(material, tileEntity);
+        super(material);
+
         this.tileEntityClass = (Class<T>) tileEntity.getClass();
+        this.tileEntity = tileEntity;
+        // copy tile entity data:
+        this.snapshot = this.createSnapshot(tileEntity);
+        this.load(snapshot);
+    }
+
+    private T createSnapshot(T tileEntity) {
+        if (tileEntity == null) {
+            return null;
+        }
+
+        NBTTagCompound nbtTagCompound = tileEntity.writeToNBT(new NBTTagCompound());
+        T snapshot = (T) TileEntity.create(tileEntity.getWorld(), nbtTagCompound);
+
+        return snapshot;
+    }
+
+    // copies the TileEntity-specific data, retains the position
+    private void copyData(T from, T to) {
+        BlockPos pos = to.getPos();
+        NBTTagCompound nbtTagCompound = from.writeToNBT(new NBTTagCompound());
+        to.readFromNBT(nbtTagCompound);
+
+        // reset the original position:
+        to.setPos(pos);
     }
 
     // gets the wrapped TileEntity
     @Override
     public T getTileEntity() { // Paper - protected -> public
-        load();
         return tileEntity;
     }
 
     // gets the cloned TileEntity which is used to store the captured data
     protected T getSnapshot() {
-        load();
-        return snapshotTileEntity;
+        return snapshot;
     }
 
     // gets the current TileEntity from the world at this position
     protected TileEntity getTileEntityFromWorld() {
         requirePlaced();
-        return captureTileEntityFromWorld();
+
+        return ((CraftWorld) this.getWorld()).getTileEntityAt(this.getX(), this.getY(), this.getZ());
     }
 
     // gets the NBT data of the TileEntity represented by this block state
     public NBTTagCompound getSnapshotNBT() {
-        return super.getSnapshotNBT();
+        // update snapshot
+        applyTo(snapshot);
+
+        return snapshot.writeToNBT(new NBTTagCompound());
     }
 
     // copies the data of the given tile entity to this block state
     protected void load(T tileEntity) {
-        super.load(tileEntity);
+        if (tileEntity != null && tileEntity != snapshot) {
+            copyData(tileEntity, snapshot);
+        }
     }
 
     // applies the TileEntity data of this block state to the given TileEntity
     protected void applyTo(T tileEntity) {
-        load();
-        if (tileEntity != null && tileEntity != getSnapshot()) {
-            BlockPos pos = tileEntity.getPos();
-            tileEntity.readFromNBT(getSnapshotNBT());
-            tileEntity.setPos(pos);
+        if (tileEntity != null && tileEntity != snapshot) {
+            copyData(snapshot, tileEntity);
         }
     }
 
@@ -79,15 +115,5 @@ public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState
         }
 
         return result;
-    }
-
-    @Override
-    public void setTileEntity(T tileEntity) {
-        this.tileEntity = tileEntity;
-    }
-
-    @Override
-    public void setSnapshotTileEntity(T snapshotTileEntity) {
-        this.snapshotTileEntity = snapshotTileEntity;
     }
 }

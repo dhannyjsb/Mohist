@@ -44,7 +44,6 @@ public class CraftBanner extends CraftBlockEntityState<TileEntityBanner> impleme
 
     @Override
     public DyeColor getBaseColor() {
-        load();
         return this.base;
     }
 
@@ -55,7 +54,6 @@ public class CraftBanner extends CraftBlockEntityState<TileEntityBanner> impleme
 
     @Override
     public List<Pattern> getPatterns() {
-        load();
         return new ArrayList<Pattern>(patterns);
     }
 
@@ -66,31 +64,26 @@ public class CraftBanner extends CraftBlockEntityState<TileEntityBanner> impleme
 
     @Override
     public void addPattern(Pattern pattern) {
-        load();
         this.patterns.add(pattern);
     }
 
     @Override
     public Pattern getPattern(int i) {
-        load();
         return this.patterns.get(i);
     }
 
     @Override
     public Pattern removePattern(int i) {
-        load();
         return this.patterns.remove(i);
     }
 
     @Override
     public void setPattern(int i, Pattern pattern) {
-        load();
         this.patterns.set(i, pattern);
     }
 
     @Override
     public int numberOfPatterns() {
-        load();
         return patterns.size();
     }
 

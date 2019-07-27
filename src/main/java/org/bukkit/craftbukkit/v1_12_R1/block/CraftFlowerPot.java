@@ -29,7 +29,6 @@ public class CraftFlowerPot extends CraftBlockEntityState<TileEntityFlowerPot> i
 
     @Override
     public MaterialData getContents() {
-        load();
         return contents;
     }
 

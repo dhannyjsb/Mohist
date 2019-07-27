@@ -152,13 +152,11 @@ public class CraftSkull extends CraftBlockEntityState<TileEntitySkull> implement
 
     @Override
     public boolean hasOwner() {
-        load();
         return profile != null;
     }
 
     @Override
     public String getOwner() {
-        load();
         return hasOwner() ? profile.getName() : null;
     }
 
@@ -183,7 +181,6 @@ public class CraftSkull extends CraftBlockEntityState<TileEntitySkull> implement
 
     @Override
     public OfflinePlayer getOwningPlayer() {
-        load();
         if (profile != null) {
             if (profile.getId() != null) {
                 return Bukkit.getOfflinePlayer(profile.getId());
@@ -210,7 +207,6 @@ public class CraftSkull extends CraftBlockEntityState<TileEntitySkull> implement
 
     @Override
     public BlockFace getRotation() {
-        load();
         return getBlockFace(rotation);
     }
 
@@ -221,7 +217,6 @@ public class CraftSkull extends CraftBlockEntityState<TileEntitySkull> implement
 
     @Override
     public SkullType getSkullType() {
-        load();
         return skullType;
     }
 

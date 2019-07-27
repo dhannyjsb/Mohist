@@ -20,43 +20,55 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
-import java.util.Objects;
 
-public class CraftBlockState<T extends TileEntity> implements BlockState {
+public class CraftBlockState implements BlockState {
     private final CraftWorld world;
     private final CraftChunk chunk;
     private final int x;
     private final int y;
     private final int z;
-    private NBTTagCompound snapshotNBT;
+    private final NBTTagCompound nbt;
     protected int type;
     protected MaterialData data;
     protected int flag;
-    private boolean blockSnapshot;
-    private boolean init;
 
-    public CraftBlockState(Block block) {
-        this(block, 3);
-    }
-
-    public CraftBlockState(final Block block, int flag) {
+    public CraftBlockState(final Block block) {
         this.world = (CraftWorld) block.getWorld();
         this.x = block.getX();
         this.y = block.getY();
         this.z = block.getZ();
         this.type = block.getTypeId();
         this.chunk = (CraftChunk) block.getChunk();
-        this.flag = flag;
+        this.flag = 3;
         createData(block.getData());
+        // Cauldron start - save TE data
+        TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
+        if (te != null)
+        {
+            nbt = new NBTTagCompound();
+            te.writeToNBT(nbt);
+        }
+        else {
+            nbt = null;
+        }
+        // Cauldron end
     }
 
-    public CraftBlockState(Material material, TileEntity tileEntity) {
-        this(tileEntity.getWorld().getWorld().getBlockAt(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()));
+    public CraftBlockState(final Block block, int flag) {
+        this(block);
+        this.flag = flag;
+    }
+
+    public CraftBlockState(Material material) {
+        world = null;
         type = material.getId();
+        chunk = null;
+        x = y = z = 0;
+        this.nbt = null;
     }
 
-    public CraftBlockState(BlockSnapshot blocksnapshot) {
-        this.blockSnapshot = true;
+    public CraftBlockState(BlockSnapshot blocksnapshot)
+    {
         this.world = blocksnapshot.getWorld().getWorld();
         this.x = blocksnapshot.getPos().getX();
         this.y = blocksnapshot.getPos().getY();
@@ -64,106 +76,12 @@ public class CraftBlockState<T extends TileEntity> implements BlockState {
         this.type = net.minecraft.block.Block.getIdFromBlock(blocksnapshot.getReplacedBlock().getBlock());
         this.chunk = (CraftChunk) this.world.getBlockAt(this.x, this.y, this.z).getChunk();
         this.flag = 3;
-        this.snapshotNBT = blocksnapshot.getNbt();
+        this.nbt = blocksnapshot.getNbt();
+
         this.createData((byte) blocksnapshot.getMeta());
     }
 
-    /**
-     * 根据当前坐标,刷新快照数据
-     * 可以反复调用,但只会初始化一次
-     */
-    protected void load() {
-        if (isBlockSnapshot()) {
-            return;
-        }
-        if (init) {
-            return;
-        }
-        init = true;
-        captureSnapshotFromWorld();
-    }
 
-    /**
-     * 回调,在这里面获取自己所需的数据
-     *
-     * @param tileEntity 真实对象
-     */
-    protected void load(T tileEntity) {
-
-    }
-
-    /**
-     * 根据当前坐标,刷新快照数据
-     * 可以反复调用,但只会初始化一次
-     */
-    protected void reload() {
-        if (isBlockSnapshot()) {
-            return;
-        }
-        init = false;
-        load();
-    }
-
-    /**
-     * 从World中获取TileEntity对象
-     */
-    protected T captureTileEntityFromWorld() {
-//        子类需要TileEntity请复写此方法
-        T tileEntity = (T) world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
-        setTileEntity(tileEntity);
-        return tileEntity;
-    }
-
-    /**
-     * 从世界中读取数据创建快照
-     */
-    protected void captureSnapshotFromWorld() {
-        captureSnapshotFromTileEntity(captureTileEntityFromWorld());
-    }
-
-    /**
-     * 用给定的TileEntity创建快照
-     */
-    protected void captureSnapshotFromTileEntity(T tileEntity) {
-        captureSnapshotTileEntityFromTileEntity(tileEntity);
-    }
-
-    /**
-     * 从world中获取当前位置的快照TileEntity
-     * @return
-     */
-    protected T captureSnapshotTileEntityFromTileEntity(T tileEntity) {
-        NBTTagCompound nbt = captureSnapshotNBTFromTileEntity(tileEntity);
-        T snapshotTileEntity = null;
-        if (nbt != null) {
-            snapshotTileEntity = (T) TileEntity.create(tileEntity.getWorld(), nbt);
-            setSnapshotTileEntity(snapshotTileEntity);
-        }
-        load(tileEntity);
-        return snapshotTileEntity;
-    }
-
-    /**
-     * 从TileEntity中获取快照
-     */
-    protected NBTTagCompound captureSnapshotNBTFromTileEntity(T tileEntity) {
-        TileEntity te = tileEntity;
-        if (te != null) {
-            snapshotNBT = new NBTTagCompound();
-            te.writeToNBT(snapshotNBT);
-        } else {
-            snapshotNBT = null;
-        }
-        return snapshotNBT;
-    }
-
-    protected void setTileEntity(T tileEntity) {
-
-    }
-
-    protected void setSnapshotTileEntity(T tileEntity) {
-
-    }
 
     public static CraftBlockState getBlockState(net.minecraft.world.World world, int x, int y, int z) {
         return new CraftBlockState(world.getWorld().getBlockAt(x, y, z));
@@ -303,13 +221,15 @@ public class CraftBlockState<T extends TileEntity> implements BlockState {
             world.getHandle().notifyNeighborsOfStateChange(pos.offset(CraftBlock.blockFaceToNotch(((Attachable) getData()).getAttachedFace())), newBlock.getBlock(), false);
         }
         // Cauldron start - restore TE data from snapshot
-        if (getSnapshotNBT() != null) {
+        if (nbt != null)
+        {
             TileEntity te = world.getHandle().getTileEntity(new BlockPos(this.x, this.y, this.z));
-            if (te != null) {
+            if (te != null)
+            {
                 NBTTagCompound nbt2 = new NBTTagCompound();
                 te.writeToNBT(nbt2);
-                if (!nbt2.equals(this.getSnapshotNBT())) {
-                    te.readFromNBT(this.getSnapshotNBT());
+                if (!nbt2.equals(this.nbt)) {
+                    te.readFromNBT(this.nbt);
                 }
             }
         }
@@ -382,7 +302,7 @@ public class CraftBlockState<T extends TileEntity> implements BlockState {
         if (this.data != other.data && (this.data == null || !this.data.equals(other.data))) {
             return false;
         }
-        return Objects.equals(this.getSnapshotNBT(), other.getSnapshotNBT());
+        return this.nbt == other.nbt || (this.nbt != null && this.nbt.equals(other.nbt));
     }
 
     @Override
@@ -394,20 +314,15 @@ public class CraftBlockState<T extends TileEntity> implements BlockState {
         hash = 73 * hash + this.z;
         hash = 73 * hash + this.type;
         hash = 73 * hash + (this.data != null ? this.data.hashCode() : 0);
-        hash = 73 * hash + (this.getSnapshotNBT() != null ? this.getSnapshotNBT().hashCode() : 0);
+        hash = 73 * hash + (this.nbt != null ? this.nbt.hashCode() : 0);
         return hash;
     }
 
     public TileEntity getTileEntity() {
-        if (isBlockSnapshot()) {
-            NBTTagCompound nbt = getSnapshotNBT();
-            if (nbt != null) {
-                return TileEntity.create(this.world.getHandle(), nbt);
-            } else {
-                return null;
-            }
+        if (nbt != null) {
+            return TileEntity.create(this.world.getHandle(), nbt);
         } else {
-            return captureTileEntityFromWorld();
+            return null;
         }
     }
 
@@ -438,27 +353,6 @@ public class CraftBlockState<T extends TileEntity> implements BlockState {
     @Override
     public boolean isPlaced() {
         return world != null;
-    }
-
-    /**
-     * 获取快照nbt
-     * @return
-     */
-    protected NBTTagCompound getSnapshotNBT() {
-        load();
-        return snapshotNBT;
-    }
-
-    /**
-     * 获取快照nbt
-     * @return
-     */
-    protected NBTTagCompound directGetSnapshotNBT() {
-        return snapshotNBT;
-    }
-
-    protected boolean isBlockSnapshot() {
-        return blockSnapshot;
     }
 
     protected void requirePlaced() {
