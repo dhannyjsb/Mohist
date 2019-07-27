@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.cauldron.entity.CraftCustomEntity;
@@ -21,6 +22,7 @@ import org.bukkit.craftbukkit.v1_12_R1.enchantments.CraftEnchantment;
 import org.bukkit.craftbukkit.v1_12_R1.potion.CraftPotionEffectType;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
+import red.mohist.api.ItemAPI;
 import red.mohist.api.ServerAPI;
 import red.mohist.i18n.Message;
 
@@ -46,7 +48,7 @@ public class ForgeInjectBukkit {
                 Material material = Material.addMaterial(Item.getIdFromItem(item), item.getItemStackLimit(), materialName);
                 if (material != null) {
                     ServerAPI.injectmaterials.put(material.name(), material.getId());
-                    Mohist.LOGGER.debug("Save: " + Message.getFormatString("ingected.item", new Object[]{material.name(), String.valueOf(material.getId())}));
+                    Mohist.LOGGER.debug("Save: " + Message.getFormatString("ingected.item", new Object[]{material.name(), String.valueOf(material.getId()), String.valueOf(ItemAPI.getBukkit(material).getDurability())}));
                 }
             }
         }
@@ -59,7 +61,7 @@ public class ForgeInjectBukkit {
                 String materialName = Material.normalizeName(key.toString());
                 Block block = entry.getValue();
                 // inject block materials into Bukkit for FML
-                Material material = Material.addMaterial(Block.getIdFromBlock(block), materialName, true);
+                Material material = Material.addMaterial(Block.getIdFromBlock(block), materialName);
                 if (material != null) {
                     ServerAPI.injectblock.put(material.name(), material.getId());
                     Mohist.LOGGER.debug("Save: " + Message.getFormatString("ingected.block", new Object[]{material.name(), String.valueOf(material.getId())}));

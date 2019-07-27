@@ -556,18 +556,11 @@ public enum Material {
     private final Constructor<? extends MaterialData> ctor;
     private final int maxStack;
     private final short durability;
-    private boolean isForgeBlock = false;
 
     Material(final int id) {
         this(id, 64);
     }
     // Cauldron end
-
-    // Cauldron start - constructor used to set if the Material is a block or not
-    private Material(final int id, boolean flag) {
-        this(id, 64);
-        this.isForgeBlock = flag;
-    }
 
     Material(final int id, final int stack) {
         this(id, stack, MaterialData.class);
@@ -697,11 +690,10 @@ public enum Material {
         return null;
     }
 
-    @Nullable
-    public static Material addMaterial(int id, String name, boolean isBlock) {
+    public static Material addMaterial(int id, String name) {
         if (byId[id] == null) {
             String materialName = normalizeName(name);
-            Material material = EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Boolean.TYPE}, new Object[]{Integer.valueOf(id), isBlock});
+            Material material = EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE}, new Object[]{Integer.valueOf(id)});
             byId[id] = material;
             BY_NAME.put(materialName, material);
             BY_NAME.put("X" + material.id, material);
@@ -782,16 +774,7 @@ public enum Material {
      * @return true if this material is a block
      */
     public boolean isBlock() {
-        return id < 256 || isForgeBlock; // MCPC+
-    }
-
-    /**
-     * Checks if the material is a forge block
-     *
-     * @return true if this material is a forge block
-     */
-    public boolean isForgeBlock() {
-        return isForgeBlock;
+        return id < 256;
     }
 
     /**

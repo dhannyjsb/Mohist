@@ -20,15 +20,7 @@
  import net.minecraft.init.Blocks;
  import net.minecraft.init.Enchantments;
  import net.minecraft.init.Items;
-@@ -81,6 +80,7 @@
-     protected final BlockStateContainer blockState;
-     private IBlockState defaultBlockState;
-     private String unlocalizedName;
-+    public boolean isForgeBlock; // Cauldron
- 
-     public static int getIdFromBlock(Block blockIn)
-     {
-@@ -462,6 +462,10 @@
+@@ -462,6 +461,10 @@
  
      protected static void addCollisionBoxToList(BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable AxisAlignedBB blockBox)
      {
@@ -39,7 +31,7 @@
          if (blockBox != NULL_AABB)
          {
              AxisAlignedBB axisalignedbb = blockBox.offset(pos);
-@@ -573,7 +577,8 @@
+@@ -573,7 +576,8 @@
  
              for (ItemStack drop : drops)
              {
@@ -49,7 +41,7 @@
                  {
                      spawnAsEntity(worldIn, pos, drop);
                  }
-@@ -596,12 +601,27 @@
+@@ -596,12 +600,27 @@
              double d2 = (double)(worldIn.rand.nextFloat() * 0.5F) + 0.25D;
              EntityItem entityitem = new EntityItem(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, stack);
              entityitem.setDefaultPickupDelay();
@@ -78,7 +70,7 @@
          if (!worldIn.isRemote && worldIn.getGameRules().getBoolean("doTileDrops"))
          {
              while (amount > 0)
-@@ -1564,18 +1584,13 @@
+@@ -1564,18 +1583,13 @@
       */
      public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
      {
@@ -100,7 +92,7 @@
          }
      }
  
-@@ -2642,6 +2657,18 @@
+@@ -2642,6 +2656,18 @@
          registerBlock(id, new ResourceLocation(textualID), block_);
      }
  
