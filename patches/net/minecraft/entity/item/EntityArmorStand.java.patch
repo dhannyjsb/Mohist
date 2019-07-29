@@ -44,7 +44,7 @@
  public class EntityArmorStand extends EntityLivingBase
  {
      private static final Rotations DEFAULT_HEAD_ROTATION = new Rotations(0.0F, 0.0F, 0.0F);
-@@ -67,13 +67,15 @@
+@@ -67,12 +67,12 @@
      public long punchCooldown;
      private int disabledSlots;
      private boolean wasMarker;
@@ -61,12 +61,9 @@
 +    public Rotations leftLegRotation;
 +    public Rotations rightLegRotation;
  
-+    private java.util.ArrayList<org.bukkit.inventory.ItemStack> drops = new java.util.ArrayList<>(); // Mohist
-+
      public EntityArmorStand(World worldIn)
      {
-         super(worldIn);
-@@ -95,6 +97,13 @@
+@@ -95,6 +95,13 @@
          this.setPosition(posX, posY, posZ);
      }
  
@@ -80,7 +77,7 @@
      protected final void setSize(float width, float height)
      {
          double d0 = this.posX;
-@@ -457,6 +466,19 @@
+@@ -457,6 +464,19 @@
          {
              if (!itemstack.isEmpty() || (this.disabledSlots & 1 << p_184795_2_.getSlotIndex() + 16) == 0)
              {
@@ -100,7 +97,7 @@
                  if (player.capabilities.isCreativeMode && itemstack.isEmpty() && !p_184795_3_.isEmpty())
                  {
                      ItemStack itemstack2 = p_184795_3_.copy();
-@@ -484,11 +506,14 @@
+@@ -484,11 +504,14 @@
  
      public boolean attackEntityFrom(DamageSource source, float amount)
      {
@@ -116,7 +113,7 @@
                  return false;
              }
              else if (!this.isEntityInvulnerable(source) && !this.canInteract && !this.hasMarker())
-@@ -496,7 +521,7 @@
+@@ -496,7 +519,7 @@
                  if (source.isExplosion())
                  {
                      this.dropContents();
@@ -125,7 +122,7 @@
                      return false;
                  }
                  else if (DamageSource.IN_FIRE.equals(source))
-@@ -541,7 +566,7 @@
+@@ -541,7 +564,7 @@
                          {
                              this.playBrokenSound();
                              this.playParticles();
@@ -134,7 +131,7 @@
                              return false;
                          }
                          else
-@@ -557,7 +582,7 @@
+@@ -557,7 +580,7 @@
                              {
                                  this.dropBlock();
                                  this.playParticles();
@@ -143,7 +140,7 @@
                              }
  
                              return false;
-@@ -623,7 +648,7 @@
+@@ -623,7 +646,7 @@
          if (f <= 0.5F)
          {
              this.dropContents();
@@ -152,7 +149,7 @@
          }
          else
          {
-@@ -633,7 +658,7 @@
+@@ -633,7 +656,7 @@
  
      private void dropBlock()
      {
@@ -161,7 +158,7 @@
          this.dropContents();
      }
  
-@@ -647,7 +672,7 @@
+@@ -647,7 +670,7 @@
  
              if (!itemstack.isEmpty())
              {
@@ -170,7 +167,7 @@
                  this.handItems.set(i, ItemStack.EMPTY);
              }
          }
-@@ -658,7 +683,7 @@
+@@ -658,7 +681,7 @@
  
              if (!itemstack1.isEmpty())
              {
@@ -179,7 +176,7 @@
                  this.armorItems.set(j, ItemStack.EMPTY);
              }
          }
-@@ -791,6 +816,8 @@
+@@ -791,6 +814,8 @@
  
      public void onKillCommand()
      {
@@ -188,7 +185,7 @@
          this.setDead();
      }
  
-@@ -804,7 +831,7 @@
+@@ -804,7 +829,7 @@
          return this.hasMarker() ? EnumPushReaction.IGNORE : super.getPushReaction();
      }
  
@@ -197,7 +194,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 1, small)));
          this.setSize(0.5F, 1.975F);
-@@ -815,7 +842,7 @@
+@@ -815,7 +840,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 1) != 0;
      }
  
@@ -206,7 +203,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 4, showArms)));
      }
-@@ -825,7 +852,7 @@
+@@ -825,7 +850,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 4) != 0;
      }
  
@@ -215,7 +212,7 @@
      {
          this.dataManager.set(STATUS, Byte.valueOf(this.setBit(((Byte)this.dataManager.get(STATUS)).byteValue(), 8, noBasePlate)));
      }
-@@ -835,7 +862,7 @@
+@@ -835,7 +860,7 @@
          return (((Byte)this.dataManager.get(STATUS)).byteValue() & 8) != 0;
      }
  

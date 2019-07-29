@@ -45,7 +45,6 @@ public class TerminalConsoleWriterThread implements Runnable {
     @Override
     public void run() {
         String message;
-//        直接反射取出所需队列,避免毫无意义的死循环
         while (queue == null) {
             QUEUE_LOCK.readLock().lock();
             queue = QUEUES.get("TerminalConsole");

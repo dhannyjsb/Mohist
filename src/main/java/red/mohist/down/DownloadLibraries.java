@@ -24,7 +24,6 @@ public class DownloadLibraries implements Runnable {
         }
         new Download(url, fileName);
         try {
-            @SuppressWarnings("resource")
             ZipFile zip = new ZipFile(new File(fileName), Charset.forName("GBK"));
             File filepath = new File(".");
             if (!(filepath.exists())) {
