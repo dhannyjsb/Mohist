@@ -10,6 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 public class Download {
 
@@ -19,35 +22,26 @@ public class Download {
 
             HttpURLConnection connection = (HttpURLConnection) website.openConnection();
             connection.setRequestMethod("GET");
-
-            long alreadySize = 0;
-            File file = new File(fileName);
             int code = connection.getResponseCode();
             if (code == 200) {
-                System.out.println(Message.getFormatString("file.download.size", new Object[]{getSize(connection.getContentLengthLong())}));
-                long unfinishedSize = connection.getContentLength();
+                long startTime =  System.currentTimeMillis();
 
-                long size = alreadySize + unfinishedSize;
+                System.out.println(Message.getFormatString("file.download.size", new Object[]{fileName, getSize(connection.getContentLengthLong())}));
+                System.out.println(Message.getFormatString("file.download", new Object[]{fileName}));
+                ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+                FileOutputStream fos = new FileOutputStream(fileName);
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                rbc.close();
+                fos.close();
 
-                InputStream in = connection.getInputStream();
-                OutputStream out = new BufferedOutputStream(new FileOutputStream(file, true));
-
-                byte[] buff = new byte[2048];
-                int len;
-                while ((len = in.read(buff)) != -1) {
-                    out.write(buff, 0, len);
-                    alreadySize += len;
-                    Progress cpb = new Progress(50, '#');
-                    cpb.show(fileName, (int) (alreadySize * 1.0 / size * 100));
-                    Thread.sleep(2);
-                }
-                out.close();
-                System.out.println(Message.getFormatString("file.download.ok", new Object[]{ fileName}));
+                long endTime =  System.currentTimeMillis();
+                long usedTime = (endTime-startTime)/1000;
+                System.out.println(Message.getFormatString("file.download.ok", new Object[]{ fileName, (int)usedTime}));
             } else {
                 System.out.println(Message.getFormatString("file.download.nook", new Object[]{url}));
             }
             connection.disconnect();
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

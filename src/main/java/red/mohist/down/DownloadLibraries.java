@@ -1,6 +1,7 @@
 package red.mohist.down;
 
 import red.mohist.i18n.Message;
+import red.mohist.util.FileUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,6 +12,8 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import static it.unimi.dsi.fastutil.io.TextIO.BUFFER_SIZE;
 
 public class DownloadLibraries implements Runnable {
 
@@ -23,38 +26,59 @@ public class DownloadLibraries implements Runnable {
             url = "https://pfcraft.gitee.io/mohistdown/libraries-1.2.zip";
         }
         new Download(url, fileName);
-        try {
-            ZipFile zip = new ZipFile(new File(fileName), Charset.forName("GBK"));
-            File filepath = new File(".");
-            if (!(filepath.exists())) {
-                filepath.mkdirs();
-            }
-            System.out.println(Message.getFormatString(Message.UnZip_Start, new Object[]{fileName}));
-            for (Enumeration<? extends ZipEntry> entries = zip.entries(); entries.hasMoreElements(); ) {
-                ZipEntry entry = entries.nextElement();
-                String zipEntryName = entry.getName();
-                InputStream is = zip.getInputStream(entry);
-                String outPath = ("." + "/" + zipEntryName).replaceAll("\\*", "/");
-                File file1 = new File(outPath.substring(0, outPath.lastIndexOf('/')));
-                if (!(file1.exists())) {
-                    file1.mkdirs();
-                }
-                if (new File(outPath).isDirectory()) {
-                    continue;
-                }
-                FileOutputStream fos = new FileOutputStream(outPath);
-                byte[] b = new byte[1024];
-                int i;
+        File file = new File(fileName);
+        unZip(file);
+    }
 
-                while ((i = is.read(b)) > 0) {
-                    fos.write(b, 0, i);
+
+    public static void unZip(File srcFile) throws RuntimeException {
+        long start = System.currentTimeMillis();
+        if (!srcFile.exists()) {
+            throw new RuntimeException(srcFile.getPath() + "所指文件不存在");
+        }
+
+        ZipFile zipFile = null;
+        try {
+            zipFile = new ZipFile(srcFile);
+            Enumeration<?> entries = zipFile.entries();
+            System.out.println(Message.getFormatString("file.unzip.start", new Object[]{ srcFile}));
+            System.out.println(Message.getFormatString("file.unzip.now", new Object[]{ srcFile, Download.getSize(srcFile.length())}));
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                if (entry.isDirectory()) {
+                    String dirPath = entry.getName();
+                    File dir = new File(dirPath);
+                    dir.mkdirs();
+                } else {
+                    File targetFile = new File(entry.getName());
+                    if(!targetFile.getParentFile().exists()){
+                        targetFile.getParentFile().mkdirs();
+                    }
+                    targetFile.createNewFile();
+                    InputStream is = zipFile.getInputStream(entry);
+                    FileOutputStream fos = new FileOutputStream(targetFile);
+                    int len;
+                    byte[] buf = new byte[BUFFER_SIZE];
+                    while ((len = is.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                    }
+                    fos.close();
+                    is.close();
                 }
-                is.close();
-                fos.close();
             }
-            System.out.println(Message.getFormatString(Message.UnZip_Ok, new Object[]{fileName}));
-        } catch (IOException e) {
-            e.printStackTrace();
+            long end = System.currentTimeMillis();
+            System.out.println(Message.getFormatString("file.unzip.ok", new Object[]{(end - start)}));
+        } catch (Exception e) {
+            throw new RuntimeException("unzip error from ZipUtils", e);
+        } finally {
+            if(zipFile != null){
+                try {
+                    zipFile.close();
+                    FileUtil.deleteFile(srcFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
