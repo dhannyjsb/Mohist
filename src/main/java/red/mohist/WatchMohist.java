@@ -23,7 +23,7 @@ public class WatchMohist implements Runnable {
     }
 
     public static void start() {
-        timer.scheduleAtFixedRate(new WatchMohist(), 48000L, 600L, TimeUnit.MILLISECONDS);
+        timer.scheduleAtFixedRate(new WatchMohist(), 30000L, 600L, TimeUnit.MILLISECONDS);
     }
 
     public static void stop() {
@@ -33,7 +33,7 @@ public class WatchMohist implements Runnable {
     @Override
     public void run() {
         long curTime = System.currentTimeMillis();
-        if (WatchMohist.Time > 0L && curTime - WatchMohist.Time > 2400L && curTime - WatchMohist.WarnTime > 48000L && String.valueOf(curTime - WatchMohist.Time).contains("-")) {
+        if (WatchMohist.Time > 0L && curTime - WatchMohist.Time > 2400L && curTime - WatchMohist.WarnTime > 30000L && String.valueOf(curTime - WatchMohist.Time).contains("-")) {
             WatchMohist.WarnTime = curTime;
             Mohist.LOGGER.warn(Message.getString("watchmohist.1"));
 
