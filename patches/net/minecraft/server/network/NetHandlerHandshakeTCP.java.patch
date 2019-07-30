@@ -125,19 +125,19 @@
 +                    // Spigot Start
 +                    //if (org.spigotmc.SpigotConfig.bungee) { // Paper - comment out, we check above!
 +
-+                        String[] split = packetIn.ip.split("\00");
++                        String[] split = packetIn.ip.split("\00\\|", 2)[0].split("\00"); // ignore any extra data
 +                        if (split.length == 3 || split.length == 4) {
 +                            packetIn.ip = split[0];
 +                            networkManager.socketAddress = new java.net.InetSocketAddress(split[1], ((java.net.InetSocketAddress) networkManager.getRemoteAddress()).getPort());
 +                            networkManager.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString(split[2]);
++                            if (split.length == 4) {
++                                networkManager.spoofedProfile = gson.fromJson(split[3], com.mojang.authlib.properties.Property[].class);
++                            }
 +                        } else {
 +                            ITextComponent itextcomponent1 = new TextComponentTranslation(Message.getString(Message.bungeecord));
 +                            this.networkManager.sendPacket(new SPacketDisconnect(itextcomponent1));
 +                            this.networkManager.closeChannel(itextcomponent1);
 +                            return;
-+                        }
-+                        if (split.length == 4) {
-+                            networkManager.spoofedProfile = gson.fromJson(split[3], com.mojang.authlib.properties.Property[].class);
 +                        }
 +                    }
 +                    // Spigot End
