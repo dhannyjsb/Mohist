@@ -820,7 +820,17 @@
                      }
                  }
              }
-@@ -1973,6 +2308,14 @@
+@@ -1957,6 +2292,9 @@
+ 
+     public void updateEntityWithOptionalForce(Entity entityIn, boolean forceUpdate)
+     {
++        if (entityIn.isDead) {
++            return;
++        }
+         if (!(entityIn instanceof EntityPlayer))
+         {
+             int j2 = MathHelper.floor(entityIn.posX);
+@@ -1973,6 +2311,14 @@
              }
          }
  
@@ -835,7 +845,7 @@
          entityIn.lastTickPosX = entityIn.posX;
          entityIn.lastTickPosY = entityIn.posY;
          entityIn.lastTickPosZ = entityIn.posZ;
-@@ -1991,6 +2334,7 @@
+@@ -1991,6 +2337,7 @@
              {
                  if(!entityIn.updateBlocked)
                  entityIn.onUpdate();
@@ -843,7 +853,7 @@
              }
          }
  
-@@ -2382,25 +2726,25 @@
+@@ -2382,25 +2729,25 @@
      public TileEntity getTileEntity(BlockPos pos)
      {
          if (this.isOutsideBuildHeight(pos))
@@ -875,7 +885,7 @@
                  tileentity2 = this.getPendingTileEntityAt(pos);
              }
  
-@@ -2415,7 +2759,7 @@
+@@ -2415,7 +2762,7 @@
          {
              TileEntity tileentity2 = this.addedTileEntityList.get(j2);
  
@@ -884,7 +894,7 @@
              {
                  return tileentity2;
              }
-@@ -2428,7 +2772,7 @@
+@@ -2428,7 +2775,7 @@
      {
          pos = pos.toImmutable(); // Forge - prevent mutable BlockPos leaks
          if (!this.isOutsideBuildHeight(pos))
@@ -893,7 +903,7 @@
              if (tileEntityIn != null && !tileEntityIn.isInvalid())
              {
                  if (this.processingLoadedTiles)
-@@ -2449,6 +2793,7 @@
+@@ -2449,6 +2796,7 @@
                          }
                      }
  
@@ -901,7 +911,7 @@
                      this.addedTileEntityList.add(tileEntityIn);
                  }
                  else
-@@ -2500,7 +2845,7 @@
+@@ -2500,7 +2848,7 @@
      public boolean isBlockNormalCube(BlockPos pos, boolean _default)
      {
          if (this.isOutsideBuildHeight(pos))
@@ -910,7 +920,7 @@
              return false;
          }
          else
-@@ -2657,6 +3002,11 @@
+@@ -2657,6 +3005,11 @@
                  }
  
                  this.rainingStrength = MathHelper.clamp(this.rainingStrength, 0.0F, 1.0F);
@@ -922,7 +932,7 @@
              }
          }
      }
-@@ -2846,8 +3196,11 @@
+@@ -2846,8 +3199,11 @@
  
      public boolean checkLightFor(EnumSkyBlock lightType, BlockPos pos)
      {
@@ -935,7 +945,7 @@
              return false;
          }
          else
-@@ -3008,7 +3361,7 @@
+@@ -3008,7 +3364,7 @@
  
      public List<Entity> getEntitiesInAABBexcluding(@Nullable Entity entityIn, AxisAlignedBB boundingBox, @Nullable Predicate <? super Entity > predicate)
      {
@@ -944,7 +954,7 @@
          int j2 = MathHelper.floor((boundingBox.minX - MAX_ENTITY_RADIUS) / 16.0D);
          int k2 = MathHelper.floor((boundingBox.maxX + MAX_ENTITY_RADIUS) / 16.0D);
          int l2 = MathHelper.floor((boundingBox.minZ - MAX_ENTITY_RADIUS) / 16.0D);
-@@ -3028,15 +3381,15 @@
+@@ -3028,15 +3384,15 @@
          return list;
      }
  
@@ -966,7 +976,7 @@
              }
          }
  
-@@ -3069,7 +3422,7 @@
+@@ -3069,7 +3425,7 @@
          int k2 = MathHelper.ceil((aabb.maxX + MAX_ENTITY_RADIUS) / 16.0D);
          int l2 = MathHelper.floor((aabb.minZ - MAX_ENTITY_RADIUS) / 16.0D);
          int i3 = MathHelper.ceil((aabb.maxZ + MAX_ENTITY_RADIUS) / 16.0D);
@@ -975,7 +985,7 @@
  
          for (int j3 = j2; j3 < k2; ++j3)
          {
-@@ -3137,7 +3490,16 @@
+@@ -3137,7 +3493,16 @@
  
          for (Entity entity4 : this.loadedEntityList)
          {
@@ -993,7 +1003,7 @@
              {
                  ++j2;
              }
-@@ -3152,6 +3514,9 @@
+@@ -3152,6 +3517,9 @@
          {
              if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.EntityJoinWorldEvent(entity4, this)))
              {
@@ -1003,7 +1013,7 @@
                  loadedEntityList.add(entity4);
                  this.onEntityAdded(entity4);
              }
-@@ -3168,19 +3533,24 @@
+@@ -3168,19 +3536,24 @@
          IBlockState iblockstate1 = this.getBlockState(pos);
          AxisAlignedBB axisalignedbb = skipCollisionCheck ? null : blockIn.getDefaultState().getCollisionBoundingBox(this, pos);
  
@@ -1031,7 +1041,7 @@
      }
  
      public int getSeaLevel()
-@@ -3345,6 +3715,12 @@
+@@ -3345,6 +3718,12 @@
          {
              EntityPlayer entityplayer1 = this.playerEntities.get(j2);
  
@@ -1044,7 +1054,7 @@
              if (p_190525_9_.apply(entityplayer1))
              {
                  double d1 = entityplayer1.getDistanceSq(x, y, z);
-@@ -3367,7 +3743,7 @@
+@@ -3367,7 +3746,7 @@
              EntityPlayer entityplayer = this.playerEntities.get(j2);
  
              if (EntitySelectors.NOT_SPECTATING.apply(entityplayer))
@@ -1053,7 +1063,7 @@
                  double d0 = entityplayer.getDistanceSq(x, y, z);
  
                  if (range < 0.0D || d0 < range * range)
-@@ -3592,6 +3968,16 @@
+@@ -3592,6 +3971,16 @@
      {
      }
  
@@ -1070,7 +1080,7 @@
      public float getThunderStrength(float delta)
      {
          return (this.prevThunderingStrength + (this.thunderingStrength - this.prevThunderingStrength) * delta) * this.getRainStrength(delta);
-@@ -3880,7 +4266,7 @@
+@@ -3880,7 +4269,7 @@
          int j2 = x * 16 + 8 - blockpos1.getX();
          int k2 = z * 16 + 8 - blockpos1.getZ();
          int l2 = 128;
@@ -1079,7 +1089,7 @@
      }
  
      /* ======================================== FORGE START =====================================*/
-@@ -4016,4 +4402,12 @@
+@@ -4016,4 +4405,12 @@
      {
          return null;
      }

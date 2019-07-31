@@ -58,6 +58,15 @@
      protected void createLookup(Class<?> clazz)
      {
          ALL_KNOWN.add(clazz);
+@@ -49,7 +63,7 @@
+ 
+     protected Class<?> initializeClassLookup(Class<?> clazz)
+     {
+-        if (this.baseClass.isAssignableFrom(clazz))
++        if (clazz.isInterface() ||this.baseClass.isAssignableFrom(clazz))
+         {
+             if (!this.knownKeys.contains(clazz))
+             {
 @@ -83,7 +97,9 @@
  
          if (list == null)
