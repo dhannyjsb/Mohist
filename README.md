@@ -1,4 +1,4 @@
-<img src="https://i.loli.net/2019/02/27/5c760f8570e8e.png">
+<img src="https://i.loli.net/2019/08/01/5d41e9aa8096f11574.png">
 
 ## Mohist Made in China
 
