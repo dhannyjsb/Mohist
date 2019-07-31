@@ -99,7 +99,7 @@
                      this.networkManager.setNetHandler(new NetHandlerLoginServer(this.server, this.networkManager));
 +                    // Spigot Start
 +                    if (org.spigotmc.SpigotConfig.bungee) {
-+                        String[] split = packetIn.ip.split("\00\\|", 2)[0].split("\00"); // ignore any extra data
++                        String[] split = packetIn.ip.split("\00");
 +                        if (split.length == 3 || split.length == 4) {
 +                            packetIn.ip = split[0];
 +                            networkManager.socketAddress = new java.net.InetSocketAddress(split[1], ((java.net.InetSocketAddress) networkManager.getRemoteAddress()).getPort());
