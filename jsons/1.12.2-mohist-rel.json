@@ -209,12 +209,6 @@
       "url" : "http://repo.spongepowered.org/maven",
       "clientreq":true,
       "serverreq":true
-    },
-    {
-      "name": "io.netty:netty-all:4.1.38.Final",
-      "url" : "http://repo.maven.apache.org/maven2",
-      "clientreq":true,
-      "serverreq":true
     }
   ]
 },
