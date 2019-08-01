@@ -21,7 +21,7 @@ apply plugin: 'net.minecraftforge.gradle.launch4j'
 apply plugin: 'net.nemerosa.versioning'
 
 group = 'red.mohist'
-version = '1.2-'+versioning {
+version = versioning {
     full {it.abbreviated}
     dirty = { t -> t }
 }.info.full

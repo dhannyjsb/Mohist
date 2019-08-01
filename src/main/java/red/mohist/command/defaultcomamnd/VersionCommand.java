@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.StringUtil;
+import red.mohist.Mohist;
 import red.mohist.i18n.Message;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class VersionCommand extends Command {
         }
 
         if (args.length == 0) {
-            sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Bukkit.class.getPackage().getImplementationVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ", Forge version " + ForgeVersion.getVersion() + ")");
+            sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Mohist.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ", Forge version " + ForgeVersion.getVersion() + ")");
         } else {
             StringBuilder name = new StringBuilder();
 

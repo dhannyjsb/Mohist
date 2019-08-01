@@ -24,7 +24,7 @@ public class Mohist {
     }
 
     public static String getVersion() {
-        return VERSION;
+        return VERSION + "-" + ((Mohist.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown");
     }
 
     public static String getNativeVersion() {
