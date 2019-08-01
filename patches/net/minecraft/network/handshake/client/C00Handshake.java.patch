@@ -11,16 +11,12 @@
      private EnumConnectionState requestedState;
      private boolean hasFMLMarker = false;
  
-@@ -38,11 +38,17 @@
+@@ -38,11 +38,13 @@
      public void readPacketData(PacketBuffer buf) throws IOException
      {
          this.protocolVersion = buf.readVarInt();
 -        this.ip = buf.readString(255);
-+        if (!org.spigotmc.SpigotConfig.bungee) {
-+            this.ip = buf.readString(255);
-+        } else {
-+            this.ip = buf.readString(Short.MAX_VALUE);
-+        }
++        this.ip = buf.readString(Short.MAX_VALUE);
          this.port = buf.readUnsignedShort();
          this.requestedState = EnumConnectionState.getById(buf.readVarInt());
          this.hasFMLMarker = this.ip.contains("\0FML\0");

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import red.mohist.down.DownloadLibraries;
 import red.mohist.down.DownloadServer;
+import red.mohist.down.Update;
 import red.mohist.i18n.Message;
 
 import java.util.concurrent.ExecutorService;
@@ -35,6 +36,7 @@ public class Mohist {
     }
 
     public static void main(String[] args) {
+        Update.hasLatestVersion();
         if (System.getProperty("log4j.configurationFile") == null)
         {
             // Set this early so we don't need to reconfigure later
