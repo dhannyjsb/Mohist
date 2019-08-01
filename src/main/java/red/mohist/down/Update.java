@@ -33,6 +33,7 @@ public class Update {
             } else {
                 System.out.println(Message.getFormatString("update.old", new Object[]{s2,time2,oldver}));
             }
+            is.close();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
