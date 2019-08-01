@@ -191,7 +191,7 @@
              }
          }
      }
-@@ -149,23 +207,36 @@
+@@ -149,23 +207,35 @@
  
      public void processLoginStart(CPacketLoginStart packetIn)
      {
@@ -217,7 +217,6 @@
 +                        new LoginHandler().fireEvents();
 +                    } catch (Exception ex) {
 +                        disconnect(new TextComponentString("Failed to verify username!"));
-+                        server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + loginGameProfile.getName(), ex);
 +                    }
 +                }
 +            }.start();
@@ -232,7 +231,7 @@
          PrivateKey privatekey = this.server.getKeyPair().getPrivate();
  
          if (!Arrays.equals(this.verifyToken, packetIn.getVerifyToken(privatekey)))
-@@ -175,7 +246,7 @@
+@@ -175,7 +245,7 @@
          else
          {
              this.secretKey = packetIn.getSecretKey(privatekey);
@@ -241,7 +240,7 @@
              this.networkManager.enableEncryption(this.secretKey);
              (new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + AUTHENTICATOR_THREAD_ID.incrementAndGet())
              {
-@@ -190,14 +261,18 @@
+@@ -190,14 +260,18 @@
  
                          if (NetHandlerLoginServer.this.loginGameProfile != null)
                          {
@@ -263,7 +262,7 @@
                          }
                          else
                          {
-@@ -211,13 +286,19 @@
+@@ -211,13 +285,16 @@
                          {
                              NetHandlerLoginServer.LOGGER.warn("Authentication servers are down but will let them in anyway!");
                              NetHandlerLoginServer.this.loginGameProfile = NetHandlerLoginServer.this.getOfflineProfile(gameprofile);
@@ -273,18 +272,16 @@
                          else
                          {
                              NetHandlerLoginServer.this.disconnect(new TextComponentTranslation("multiplayer.disconnect.authservers_down", new Object[0]));
-                             NetHandlerLoginServer.LOGGER.error("Couldn't verify username because servers are unavailable");
-+
+-                            NetHandlerLoginServer.LOGGER.error("Couldn't verify username because servers are unavailable");
                          }
 +                        // CraftBukkit start - catch all exceptions
 +                    } catch (Exception exception) {
 +                        disconnect(new TextComponentTranslation("Failed to verify username!"));
-+                        Mohist.LOGGER.warn("Exception verifying " + gameprofile.getName(), exception);
 +                        // CraftBukkit end
                      }
                  }
                  @Nullable
-@@ -230,6 +311,55 @@
+@@ -230,6 +307,55 @@
          }
      }
  

@@ -31,7 +31,7 @@
 -
 +            if (integer == null && (integer = EnumConnectionState.LOGIN.getPacketId(this.direction, p_encode_2_)) != null)
 +            {
-+                LOGGER.warn("current state is {}, but send packet {}", enumconnectionstate, p_encode_2_.getClass().getSimpleName());
++                LOGGER.debug("current state is {}, but send packet {}", enumconnectionstate, p_encode_2_.getClass().getSimpleName());
 +            }
              if (integer == null)
              {

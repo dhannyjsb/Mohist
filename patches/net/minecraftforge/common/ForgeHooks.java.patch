@@ -563,12 +563,12 @@
 +                        }
 +                        catch (JsonParseException jsonparseexception)
 +                        {
-+                            Mohist.LOGGER.error("Parsing error loading built-in advancement " + key, (Throwable)jsonparseexception);
++                            Mohist.LOGGER.debug("Parsing error loading built-in advancement " + key, (Throwable)jsonparseexception);
 +                            return false;
 +                        }
 +                        catch (IOException ioexception)
 +                        {
-+                            Mohist.LOGGER.error("Couldn't read advancement " + key + " from " + file, (Throwable)ioexception);
++                            Mohist.LOGGER.debug("Couldn't read advancement " + key + " from " + file, (Throwable)ioexception);
 +                            return false;
 +                        }
 +                        finally
