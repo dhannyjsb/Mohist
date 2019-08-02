@@ -144,13 +144,9 @@
      public boolean forceSpawn;
      public World world;
      public double prevPosX;
-@@ -136,9 +144,12 @@
-     public boolean noClip;
+@@ -137,8 +145,8 @@
      public float entityCollisionReduction;
      protected Random rand;
-+    /**
-+     * 当前实体存在了多少个tick
-+     */
      public int ticksExisted;
 -    private int fire;
 -    protected boolean inWater;
@@ -159,7 +155,7 @@
      public int hurtResistantTime;
      protected boolean firstUpdate;
      protected boolean isImmuneToFire;
-@@ -172,7 +183,7 @@
+@@ -172,7 +180,7 @@
      protected UUID entityUniqueID;
      protected String cachedUniqueIdString;
      private final CommandResultStats cmdResultStats;
@@ -168,7 +164,7 @@
      private final Set<String> tags;
      private boolean isPositionDirty;
      private final double[] pistonDeltas;
-@@ -182,6 +193,27 @@
+@@ -182,6 +190,26 @@
       */
      public boolean updateBlocked;
  
@@ -189,14 +185,13 @@
 +    public boolean fromMobSpawner;
 +    public void inactiveTick() { }
 +    // Spigot end
-+//    Mohist start
-+//    �??1tick内的碰撞次数
++    // Mohist start
 +    public int collisionCount = 0;
-+//    Mohist end
++    // Mohist end
      public Entity(World worldIn)
      {
          this.entityId = nextEntityID++;
-@@ -205,7 +237,12 @@
+@@ -205,7 +233,12 @@
          if (worldIn != null)
          {
              this.dimension = worldIn.provider.getDimension();
@@ -209,7 +204,7 @@
  
          this.dataManager = new EntityDataManager(this);
          this.dataManager.register(FLAGS, Byte.valueOf((byte)0));
-@@ -215,15 +252,17 @@
+@@ -215,15 +248,17 @@
          this.dataManager.register(SILENT, Boolean.valueOf(false));
          this.dataManager.register(NO_GRAVITY, Boolean.valueOf(false));
          this.entityInit();
@@ -230,7 +225,7 @@
  
      public int getEntityId()
      {
-@@ -301,7 +340,7 @@
+@@ -301,7 +336,7 @@
                      break;
                  }
  
@@ -239,7 +234,7 @@
              }
  
              this.motionX = 0.0D;
-@@ -345,8 +384,35 @@
+@@ -345,8 +380,35 @@
          }
      }
  
@@ -252,7 +247,7 @@
 +        }
 +
 +        if (yaw == Float.POSITIVE_INFINITY || yaw == Float.NEGATIVE_INFINITY) {
-+            if (this instanceof EntityPlayer) {
++            if (this instanceof EntityPlayerMP) {
 +                Mohist.LOGGER.warn(this.getName() + " was caught trying to crash the server with an invalid yaw");
 +                ((CraftPlayer) this.getBukkitEntity()).kickPlayer("Nope");
 +            }
@@ -265,7 +260,7 @@
 +        }
 +
 +        if (pitch == Float.POSITIVE_INFINITY || pitch == Float.NEGATIVE_INFINITY) {
-+            if (this instanceof EntityPlayer) {
++            if (this instanceof EntityPlayerMP) {
 +                Mohist.LOGGER.warn(this.getName() + " was caught trying to crash the server with an invalid pitch");
 +                ((CraftPlayer) this.getBukkitEntity()).kickPlayer("Nope");
 +            }
@@ -276,7 +271,7 @@
          this.rotationYaw = yaw % 360.0F;
          this.rotationPitch = pitch % 360.0F;
      }
-@@ -389,72 +455,40 @@
+@@ -389,72 +451,40 @@
          this.onEntityUpdate();
      }
  
@@ -365,7 +360,7 @@
                      this.portalCounter = 0;
                  }
              }
-@@ -462,7 +496,28 @@
+@@ -462,7 +492,28 @@
              this.decrementTimeUntilPortal();
              this.world.profiler.endSection();
          }
@@ -394,12 +389,12 @@
          this.spawnRunningParticles();
          this.handleWaterMovement();
  
-@@ -530,6 +585,26 @@
+@@ -530,6 +581,26 @@
          if (!this.isImmuneToFire)
          {
              this.attackEntityFrom(DamageSource.LAVA, 4.0F);
 +            // CraftBukkit start - Fallen in lava TODO: this event spams!
-+			if (this instanceof EntityLiving) {
++			if (this instanceof EntityLivingBase) {
 +                if (fire <= 0) {
 +                    // not on fire yet
 +                    // TODO: shouldn't be sending null for the block
@@ -421,7 +416,7 @@
              this.setFire(15);
          }
      }
-@@ -579,6 +654,22 @@
+@@ -579,6 +650,22 @@
          }
          else
          {
@@ -444,7 +439,7 @@
              if (type == MoverType.PISTON)
              {
                  long i = this.world.getTotalWorldTime();
-@@ -912,6 +1003,26 @@
+@@ -912,6 +999,26 @@
                  block.onLanded(this.world, this);
              }
  
@@ -471,7 +466,7 @@
              if (this.canTriggerWalking() && (!this.onGround || !this.isSneaking() || !(this instanceof EntityPlayer)) && !this.isRiding())
              {
                  double d15 = this.posX - d10;
-@@ -958,7 +1069,8 @@
+@@ -958,7 +1065,8 @@
                      this.nextFlap = this.playFlySound(this.distanceWalkedOnStepModified);
                  }
              }
@@ -481,7 +476,7 @@
              try
              {
                  this.doBlockCollisions();
-@@ -970,6 +1082,7 @@
+@@ -970,6 +1078,7 @@
                  this.addEntityCrashInfo(crashreportcategory);
                  throw new ReportedException(crashreport);
              }
@@ -489,7 +484,7 @@
  
              boolean flag1 = this.isWet();
  
-@@ -979,11 +1092,17 @@
+@@ -979,11 +1088,17 @@
  
                  if (!flag1)
                  {
@@ -509,7 +504,7 @@
                      }
                  }
              }
-@@ -1008,7 +1127,7 @@
+@@ -1008,7 +1123,7 @@
          this.posX = (axisalignedbb.minX + axisalignedbb.maxX) / 2.0D;
          this.posY = axisalignedbb.minY;
          this.posZ = (axisalignedbb.minZ + axisalignedbb.maxZ) / 2.0D;
@@ -518,7 +513,7 @@
      }
  
      protected SoundEvent getSwimSound()
-@@ -1041,8 +1160,13 @@
+@@ -1041,8 +1156,13 @@
  
                          try
                          {
@@ -534,7 +529,7 @@
                          }
                          catch (Throwable throwable)
                          {
-@@ -1154,6 +1278,14 @@
+@@ -1154,6 +1274,14 @@
          }
      }
  
@@ -549,7 +544,7 @@
      public final boolean isImmuneToFire()
      {
          return this.isImmuneToFire;
-@@ -1369,6 +1501,11 @@
+@@ -1369,6 +1497,11 @@
  
      public void setWorld(World worldIn)
      {
@@ -561,7 +556,7 @@
          this.world = worldIn;
      }
  
-@@ -1687,6 +1824,16 @@
+@@ -1687,6 +1820,16 @@
          {
              compound.setTag("Pos", this.newDoubleNBTList(this.posX, this.posY, this.posZ));
              compound.setTag("Motion", this.newDoubleNBTList(this.motionX, this.motionY, this.motionZ));
@@ -578,7 +573,7 @@
              compound.setTag("Rotation", this.newFloatNBTList(this.rotationYaw, this.rotationPitch));
              compound.setFloat("FallDistance", this.fallDistance);
              compound.setShort("Fire", (short)this.fire);
-@@ -1696,7 +1843,12 @@
+@@ -1696,7 +1839,13 @@
              compound.setBoolean("Invulnerable", this.invulnerable);
              compound.setInteger("PortalCooldown", this.timeUntilPortal);
              compound.setUniqueId("UUID", this.getUniqueID());
@@ -588,11 +583,12 @@
 +            compound.setLong("WorldUUIDLeast", this.world.getSaveHandler().getUUID().getLeastSignificantBits());
 +            compound.setLong("WorldUUIDMost", this.world.getSaveHandler().getUUID().getMostSignificantBits());
 +            compound.setInteger("Bukkit.updateLevel", CURRENT_LEVEL);
++            compound.setInteger("Spigot.ticksLived", this.ticksExisted);
 +            // CraftBukkit end
              if (this.hasCustomName())
              {
                  compound.setString("CustomName", this.getCustomNameTag());
-@@ -1761,7 +1913,6 @@
+@@ -1761,7 +1910,6 @@
                      compound.setTag("Passengers", nbttaglist1);
                  }
              }
@@ -600,7 +596,7 @@
              return compound;
          }
          catch (Throwable throwable)
-@@ -1784,21 +1935,6 @@
+@@ -1784,21 +1932,6 @@
              this.motionY = nbttaglist2.getDoubleAt(1);
              this.motionZ = nbttaglist2.getDoubleAt(2);
  
@@ -622,17 +618,18 @@
              this.posX = nbttaglist.getDoubleAt(0);
              this.posY = nbttaglist.getDoubleAt(1);
              this.posZ = nbttaglist.getDoubleAt(2);
-@@ -1869,6 +2005,53 @@
+@@ -1869,6 +2002,54 @@
              {
                  this.setPosition(this.posX, this.posY, this.posZ);
              }
 +
-+            if (this instanceof EntityLiving) {
-+                EntityLiving entity = (EntityLiving) this;
-+
++            if (this instanceof EntityLivingBase) {
++                EntityLivingBase entity = (EntityLivingBase) this;
++                this.ticksExisted = compound.getInteger("Spigot.ticksLived");
 +                // Reset the persistence for tamed animals
 +                if (entity instanceof EntityTameable && !isLevelAtLeast(compound, 2) && !compound.getBoolean("PersistenceRequired")) {
-+                    ((EntityLiving) entity).persistenceRequired = !(entity).canDespawn();
++                    EntityLiving entityliving = (EntityLiving) entity;
++                    entityliving.persistenceRequired = !entityliving.canDespawn();
 +                }
 +            }
 +            double limit = getBukkitEntity() instanceof Vehicle ? 100.0D : 10.0D;
@@ -649,7 +646,7 @@
 +            }
 +
 +            // Reset world
-+            if (this instanceof EntityPlayer) {
++            if (this instanceof EntityPlayerMP) {
 +                Server server = Bukkit.getServer();
 +                org.bukkit.World bworld = null;
 +
@@ -676,7 +673,7 @@
          }
          catch (Throwable throwable)
          {
-@@ -1885,7 +2068,7 @@
+@@ -1885,7 +2066,7 @@
      }
  
      @Nullable
@@ -685,7 +682,7 @@
      {
          ResourceLocation resourcelocation = EntityList.getKey(this);
          return resourcelocation == null ? null : resourcelocation.toString();
-@@ -2110,6 +2293,28 @@
+@@ -2110,6 +2291,28 @@
          }
          else
          {
@@ -714,7 +711,7 @@
              if (!this.world.isRemote && passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer))
              {
                  this.riddenByEntities.add(0, passenger);
-@@ -2129,6 +2334,27 @@
+@@ -2129,6 +2332,27 @@
          }
          else
          {
@@ -742,7 +739,7 @@
              this.riddenByEntities.remove(passenger);
              passenger.rideCooldown = 60;
          }
-@@ -2325,12 +2551,12 @@
+@@ -2325,12 +2549,12 @@
          this.setFlag(5, invisible);
      }
  
@@ -757,7 +754,7 @@
      {
          byte b0 = ((Byte)this.dataManager.get(FLAGS)).byteValue();
  
-@@ -2351,17 +2577,52 @@
+@@ -2351,17 +2575,52 @@
  
      public void setAir(int air)
      {
@@ -812,7 +809,7 @@
          }
      }
  
-@@ -2502,7 +2763,7 @@
+@@ -2502,7 +2761,7 @@
  
      public String toString()
      {
@@ -821,7 +818,7 @@
      }
  
      public boolean isEntityInvulnerable(DamageSource source)
-@@ -2540,7 +2801,7 @@
+@@ -2540,7 +2799,7 @@
      public Entity changeDimension(int dimensionIn)
      {
          if (this.world.isRemote || this.isDead) return null;
@@ -830,7 +827,7 @@
      }
  
      @Nullable // Forge: Entities that require custom handling should override this method, not the other
-@@ -2551,53 +2812,67 @@
+@@ -2551,53 +2810,73 @@
              if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
              this.world.profiler.startSection("changeDimension");
              MinecraftServer minecraftserver = this.getServer();
@@ -838,11 +835,6 @@
 -            WorldServer worldserver = minecraftserver.getWorld(i);
 -            WorldServer worldserver1 = minecraftserver.getWorld(dimensionIn);
 -            this.dimension = dimensionIn;
--
--            if (i == 1 && dimensionIn == 1 && teleporter.isVanilla())
--            {
--                worldserver1 = minecraftserver.getWorld(0);
--                this.dimension = 0;
 +            // CraftBukkit start - Move logic into new function "teleportTo(Location,boolean)"
 +            // int i = this.dimension;
 +            // WorldServer worldserver = minecraftserver.getWorld(i);
@@ -855,16 +847,12 @@
 +                        exitWorld = world;
 +                    }
 +                }
-             }
++            }
  
--            this.world.removeEntity(this);
--            this.isDead = false;
--            this.world.profiler.startSection("reposition");
--            BlockPos blockpos;
--
--            if (dimensionIn == 1 && teleporter.isVanilla())
+-            if (i == 1 && dimensionIn == 1 && teleporter.isVanilla())
 -            {
--                blockpos = worldserver1.getSpawnCoordinate();
+-                worldserver1 = minecraftserver.getWorld(0);
+-                this.dimension = 0;
 +            BlockPos blockposition = null; // PAIL: CHECK
 +            Location enter = this.getBukkitEntity().getLocation();
 +            Location exit;
@@ -875,16 +863,37 @@
 +                    exit = minecraftserver.getPlayerList().calculateTarget(enter, minecraftserver.getWorld(dimensionIn));
 +                }
              }
++            else {
++                exit = null;
++            }
++            boolean useTravelAgent = exitWorld != null && !(this.dimension == 1 && exitWorld.dimension == 1); // don't use agent for custom worlds or return from THE_END
+ 
+-            this.world.removeEntity(this);
+-            this.isDead = false;
+-            this.world.profiler.startSection("reposition");
+-            BlockPos blockpos;
++            TravelAgent agent = exit != null ? (TravelAgent) ((CraftWorld) exit.getWorld()).getHandle().getDefaultTeleporter() : org.bukkit.craftbukkit.v1_12_R1.CraftTravelAgent.DEFAULT; // return arbitrary TA to compensate for implementation dependent plugins
++            boolean oldCanCreate = agent.getCanCreatePortal();
++            agent.setCanCreatePortal(false); // General entities cannot create portals
+ 
+-            if (dimensionIn == 1 && teleporter.isVanilla())
+-            {
+-                blockpos = worldserver1.getSpawnCoordinate();
++            EntityPortalEvent event = new EntityPortalEvent(this.getBukkitEntity(), enter, exit, agent);
++            event.useTravelAgent(useTravelAgent);
++            event.getEntity().getServer().getPluginManager().callEvent(event);
++            if (event.isCancelled() || event.getTo() == null || event.getTo().getWorld() == null || !this.isEntityAlive()) {
++                agent.setCanCreatePortal(oldCanCreate);
++                return null;
+             }
 -            else
 -            {
 -                double moveFactor = worldserver.provider.getMovementFactor() / worldserver1.provider.getMovementFactor();
 -                double d0 = MathHelper.clamp(this.posX * moveFactor, worldserver1.getWorldBorder().minX() + 16.0D, worldserver1.getWorldBorder().maxX() - 16.0D);
 -                double d1 = MathHelper.clamp(this.posZ * moveFactor, worldserver1.getWorldBorder().minZ() + 16.0D, worldserver1.getWorldBorder().maxZ() - 16.0D);
 -                double d2 = 8.0D;
-+            else {
-+                exit = null;
-+            }
-+            boolean useTravelAgent = exitWorld != null && !(this.dimension == 1 && exitWorld.dimension == 1); // don't use agent for custom worlds or return from THE_END
++            exit = event.useTravelAgent() ? event.getPortalTravelAgent().findOrCreate(event.getTo()) : event.getTo();
++            agent.setCanCreatePortal(oldCanCreate);
  
 -                if (false && dimensionIn == -1)
 -                {
@@ -896,27 +905,6 @@
 -                    d0 = MathHelper.clamp(d0 * 8.0D, worldserver1.getWorldBorder().minX() + 16.0D, worldserver1.getWorldBorder().maxX() - 16.0D);
 -                    d1 = MathHelper.clamp(d1 * 8.0D, worldserver1.getWorldBorder().minZ() + 16.0D, worldserver1.getWorldBorder().maxZ() - 16.0D);
 -                }
-+            TravelAgent agent = exit != null ? (TravelAgent) ((CraftWorld) exit.getWorld()).getHandle().getDefaultTeleporter() : org.bukkit.craftbukkit.v1_12_R1.CraftTravelAgent.DEFAULT; // return arbitrary TA to compensate for implementation dependent plugins
-+            boolean oldCanCreate = agent.getCanCreatePortal();
-+            agent.setCanCreatePortal(false); // General entities cannot create portals
- 
--                d0 = (double)MathHelper.clamp((int)d0, -29999872, 29999872);
--                d1 = (double)MathHelper.clamp((int)d1, -29999872, 29999872);
--                float f = this.rotationYaw;
--                this.setLocationAndAngles(d0, this.posY, d1, 90.0F, 0.0F);
--                teleporter.placeEntity(worldserver1, this, f);
--                blockpos = new BlockPos(this);
-+            EntityPortalEvent event = new EntityPortalEvent(this.getBukkitEntity(), enter, exit, agent);
-+            event.useTravelAgent(useTravelAgent);
-+            event.getEntity().getServer().getPluginManager().callEvent(event);
-+            if (event.isCancelled() || event.getTo() == null || event.getTo().getWorld() == null || !this.isEntityAlive()) {
-+                agent.setCanCreatePortal(oldCanCreate);
-+                return null;
-             }
-+            exit = event.useTravelAgent() ? event.getPortalTravelAgent().findOrCreate(event.getTo()) : event.getTo();
-+            agent.setCanCreatePortal(oldCanCreate);
- 
--            worldserver.updateEntityWithOptionalForce(this, false);
 +            // Need to make sure the profiler state is reset afterwards (but we still want to time the call)
 +            Entity entity = this.teleportTo(exit, true);
 +            this.world.profiler.endSection();
@@ -924,7 +912,13 @@
 +        }
 +        return null;
 +    }
-+
+ 
+-                d0 = (double)MathHelper.clamp((int)d0, -29999872, 29999872);
+-                d1 = (double)MathHelper.clamp((int)d1, -29999872, 29999872);
+-                float f = this.rotationYaw;
+-                this.setLocationAndAngles(d0, this.posY, d1, 90.0F, 0.0F);
+-                teleporter.placeEntity(worldserver1, this, f);
+-                blockpos = new BlockPos(this);
 +    public Entity teleportTo(Location exit, boolean portal) {
 +        if (true) { // Paper
 +            WorldServer worldserver = ((CraftWorld) getBukkitEntity().getLocation().getWorld()).getHandle();
@@ -932,13 +926,21 @@
 +            int i = worldserver1.dimension;
 +            this.dimension = i;
 +            this.world.removeEntity(this); // Paper - Fully remove entity, can't have dupes in the UUID map
++            // Thermos silently remove the entity so it can be magically transported to another world :D
++            if (!(this instanceof EntityLivingBase) && this.addedToChunk && this.world.isChunkLoaded(this.chunkCoordX, this.chunkCoordZ, true))
++            {
++                this.world.getChunkFromChunkCoords(this.chunkCoordX, this.chunkCoordZ).removeEntity(this);
++                this.world.loadedEntityList.remove(this);
+             }
+-
+-            worldserver.updateEntityWithOptionalForce(this, false);
 +            this.isDead = false;
 +            this.world.profiler.startSection("reposition");
 +            worldserver1.getMinecraftServer().getPlayerList().repositionEntity(this, exit, portal);
              this.world.profiler.endStartSection("reloading");
              Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
  
-@@ -2605,28 +2880,26 @@
+@@ -2605,28 +2884,26 @@
              {
                  entity.copyDataFromOld(this);
  
@@ -976,7 +978,7 @@
              return entity;
          }
          else
-@@ -2755,6 +3028,11 @@
+@@ -2755,6 +3032,11 @@
  
      public void setCustomNameTag(String name)
      {
@@ -988,7 +990,7 @@
          this.dataManager.set(CUSTOM_NAME, name);
      }
  
-@@ -2838,7 +3116,25 @@
+@@ -2838,7 +3120,25 @@
  
      public void setEntityBoundingBox(AxisAlignedBB bb)
      {
@@ -1015,7 +1017,7 @@
      }
  
      public float getEyeHeight()
-@@ -2870,6 +3166,11 @@
+@@ -2870,6 +3170,11 @@
          return true;
      }
  
@@ -1027,7 +1029,7 @@
      public BlockPos getPosition()
      {
          return new BlockPos(this.posX, this.posY + 0.5D, this.posZ);
-@@ -2897,11 +3198,11 @@
+@@ -2897,11 +3202,11 @@
  
      public void setCommandStat(CommandResultStats.Type type, int amount)
      {
@@ -1043,7 +1045,7 @@
  
      @Nullable
      public MinecraftServer getServer()
-@@ -2974,7 +3275,6 @@
+@@ -2974,7 +3279,6 @@
      public void onRemovedFromWorld() {
          this.isAddedToWorld = false;
      }
@@ -1051,7 +1053,7 @@
      /**
       * Returns a NBTTagCompound that can be used to store custom data for this entity.
       * It will be written, and read from disc, so it persists over world saves.
-@@ -3030,7 +3330,7 @@
+@@ -3030,7 +3334,7 @@
          {
              return ((net.minecraft.entity.item.EntityMinecart)this).getCartItem();
          }
@@ -1060,7 +1062,7 @@
          {
              return new ItemStack(((EntityBoat)this).getItemBoat());
          }
-@@ -3109,14 +3409,14 @@
+@@ -3109,14 +3413,14 @@
      }
  
      @Override
@@ -1077,7 +1079,7 @@
      {
          return capabilities == null ? null : capabilities.getCapability(capability, facing);
      }
-@@ -3319,7 +3619,7 @@
+@@ -3319,7 +3623,7 @@
          return SoundCategory.NEUTRAL;
      }
  

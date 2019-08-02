@@ -139,7 +139,7 @@
 +		if (enumactionresult == EnumActionResult.SUCCESS)
          {
 -            playerIn.addStat(StatList.getObjectUseStats(this.item));
-+        	playerIn.addStat(StatList.getObjectUseStats(this.item));  
++        	playerIn.addStat(StatList.getObjectUseStats(this.item), 1);
          }
  
          return enumactionresult;
