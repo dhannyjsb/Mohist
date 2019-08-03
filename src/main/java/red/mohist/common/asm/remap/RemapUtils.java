@@ -9,7 +9,7 @@ import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.ClassNode;
 import red.mohist.Mohist;
-import red.mohist.MohistConfig;
+import red.mohist.configuration.MohistConfig;
 import red.mohist.common.asm.remap.model.ClassMapping;
 import red.mohist.common.asm.remap.remappers.ClassRemapperSupplier;
 import red.mohist.common.asm.remap.remappers.MohistInheritanceMap;
@@ -63,20 +63,16 @@ public class RemapUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (MohistConfig.multiVersionRemap) {
-//        nms版本兼容
+        if (MohistConfig.instance.multiVersionRemap.getValue()) {
             remappers.add(new NMSVersionRemapper());
         }
-//        nms -> mcp
         MohistJarRemapper jarRemapper = new MohistJarRemapper(jarMapping);
-        if (MohistConfig.nmsRemap) {
+        if (MohistConfig.instance.nmsRemap.getValue()) {
             remappers.add(jarRemapper);
         }
-        if (MohistConfig.reflectRemap) {
-//        反射代理
+        if (MohistConfig.instance.reflectRemap.getValue()) {
             remappers.add(new ReflectRemapper());
         }
-//        初始化fast映射
         jarMapping.initFastMethodMapping(jarRemapper);
     }
 
@@ -84,14 +80,14 @@ public class RemapUtils {
 
     public static byte[] remapFindClass(PluginDescriptionFile description, String name, byte[] bs) throws IOException {
         synchronized (remapLock) {
-            if (MohistConfig.printRemapPluginClass) {
+            if (MohistConfig.instance.printRemapPluginClass.getValue()) {
                 System.out.println("========= before remap ========= ");
                 ASMUtils.printClass(bs);
             }
             ClassNode classNode = new ClassNode();
             new ClassReader(bs).accept(classNode, ClassReader.EXPAND_FRAMES);
             for (Remapper remapper : remappers) {
-                if (description != null && remapper instanceof NMSVersionRemapper && !MohistConfig.multiVersionRemapPlugins.contains(description.getName())) {
+                if (description != null && remapper instanceof NMSVersionRemapper && !MohistConfig.instance.multiVersionRemapPlugins.contains(description.getName())) {
                     continue;
                 }
                 try {
@@ -105,7 +101,7 @@ public class RemapUtils {
                     }
                     classNode.accept(classRemapper);
                     classNode = container;
-                    if (MohistConfig.printRemapPluginClass) {
+                    if (MohistConfig.instance.printRemapPluginClass.getValue()) {
                         System.out.println("========= after " + remapper.getClass().getSimpleName() + " remap ========= ");
                         ASMUtils.printClass(classNode);
                     }
@@ -116,7 +112,7 @@ public class RemapUtils {
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             classNode.accept(writer);
             bs = writer.toByteArray();
-            if (MohistConfig.dumpRemapPluginClass) {
+            if (MohistConfig.instance.dumpRemapPluginClass.getValue()) {
                 ASMUtils.dump(Paths.get(System.getProperty("user.dir"), "dumpRemapPluginClass"), bs);
             }
             return bs;

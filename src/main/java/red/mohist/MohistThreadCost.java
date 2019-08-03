@@ -10,7 +10,6 @@ import java.util.List;
 
 public class MohistThreadCost {
     static ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-
     {
         threadMXBean.setThreadCpuTimeEnabled(true);
     }

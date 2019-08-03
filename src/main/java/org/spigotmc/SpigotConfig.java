@@ -14,7 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import red.mohist.Mohist;
-import red.mohist.MohistConfig;
+import red.mohist.configuration.MohistConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,10 +46,6 @@ public class SpigotConfig {
     public static YamlConfiguration config;
     public static boolean logCommands;
     public static int tabComplete;
-    //public static String unknownCommandMessage;
-    public static String outdatedClientMessage = MohistConfig.outdatedClientMessage;
-    /*========================================================================*/
-    public static String outdatedServerMessage = MohistConfig.outdatedServerMessage;
     public static int timeoutTime = 60;
     public static boolean bungee;
     public static boolean lateBind;

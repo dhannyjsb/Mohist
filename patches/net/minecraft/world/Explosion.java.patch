@@ -30,7 +30,7 @@
 +import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 +import org.bukkit.event.block.BlockExplodeEvent;
 +import org.bukkit.event.entity.EntityExplodeEvent;
-+import red.mohist.MohistConfig;
++import red.mohist.configuration.MohistConfig;
  
 +import javax.annotation.Nullable;
 +import java.util.List;
@@ -57,7 +57,7 @@
      private final Map<EntityPlayer, Vec3d> playerKnockbackMap;
      private final Vec3d position;
  
-+    public boolean wasCanceled = MohistConfig.explosion_canceled;
++    public boolean wasCanceled = MohistConfig.instance.explosion_canceled.getValue();
 +
      @SideOnly(Side.CLIENT)
      public Explosion(World worldIn, Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions)

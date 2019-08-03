@@ -97,7 +97,7 @@
 +import org.bukkit.event.entity.EntityResurrectEvent;
 +import org.bukkit.event.entity.EntityTeleportEvent;
 +import org.bukkit.event.player.PlayerItemConsumeEvent;
-+import red.mohist.MohistConfig;
++import red.mohist.configuration.MohistConfig;
  
 +import javax.annotation.Nullable;
 +import java.util.*;
@@ -1081,7 +1081,7 @@
 -    protected void collideWithNearbyEntities()
 -    {
 +    protected void collideWithNearbyEntities() {
-+        if (!(this instanceof EntityPlayerMP) && this.ticksExisted % MohistConfig.entityCollideFrequency == 0) {
++        if (!(this instanceof EntityPlayerMP) && this.ticksExisted % MohistConfig.instance.entityCollideFrequency.getValue() == 0) {
 +            return;
 +        }
          List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(), EntitySelectors.getTeamCollisionPredicate(this));
@@ -1128,7 +1128,7 @@
 -                this.collideWithEntity(entity);
 +        for (int l = 0; l < list.size(); ++l) {
 +            Entity entity = list.get(l);
-+            if (this.collisionCount > MohistConfig.maxEntityCollisionsPerTick) {
++            if (this.collisionCount > MohistConfig.instance.maxEntityCollisionsPerTick.getValue()) {
 +                break;
              }
 +            if (!entity.canBePushed()) {

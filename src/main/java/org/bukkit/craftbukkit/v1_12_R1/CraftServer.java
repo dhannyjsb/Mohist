@@ -142,7 +142,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
 import red.mohist.Mohist;
-import red.mohist.MohistConfig;
+import red.mohist.configuration.MohistConfig;
 import red.mohist.i18n.Message;
 
 import javax.annotation.Nonnull;
@@ -756,9 +756,9 @@ public final class CraftServer implements Server {
         if (craftCommandMap.dispatch(sender, commandLine)) {
             return true;
         }
-        if (StringUtils.isNotEmpty(red.mohist.MohistConfig.unknownCommandMessage)) {
+        if (StringUtils.isNotEmpty(MohistConfig.instance.unknownCommandMessage.getValue())) {
             // Paper start
-            UnknownCommandEvent event = new UnknownCommandEvent(sender, commandLine, MohistConfig.unknownCommandMessage);
+            UnknownCommandEvent event = new UnknownCommandEvent(sender, commandLine, MohistConfig.instance.unknownCommandMessage.getValue());
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (StringUtils.isNotEmpty(event.getMessage())) {
                 sender.sendMessage(event.getMessage());

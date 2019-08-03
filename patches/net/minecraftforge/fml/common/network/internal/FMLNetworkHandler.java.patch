@@ -23,7 +23,7 @@
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
 +import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
 +import org.bukkit.event.inventory.InventoryType;
-+import red.mohist.MohistConfig;
++import red.mohist.configuration.MohistConfig;
  
  import javax.annotation.Nullable;
  
@@ -58,7 +58,7 @@
      {
          JsonObject fmlData = new JsonObject();
 -        fmlData.addProperty("type", "FML");
-+        fmlData.addProperty("type", MohistConfig.server_type);
++        fmlData.addProperty("type", MohistConfig.instance.server_type.getValue());
          JsonArray modList = new JsonArray();
          for (ModContainer mc : Loader.instance().getActiveModList())
          {

@@ -9,7 +9,7 @@
 +import org.bukkit.craftbukkit.v1_12_R1.Main;
 +import org.bukkit.craftbukkit.v1_12_R1.util.TerminalConsoleWriterThread;
 +import red.mohist.Mohist;
-+import red.mohist.MohistConfig;
++import red.mohist.configuration.MohistConfig;
 +import red.mohist.event.server.BukkitServerStartDoneEvent;
 +import red.mohist.i18n.Message;
  import com.mojang.authlib.GameProfileRepository;
@@ -172,7 +172,7 @@
              }
  
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
-@@ -181,10 +219,27 @@
+@@ -181,10 +219,26 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -187,8 +187,7 @@
 +            // Paper end
 +
 +            // Mohist start
-+            MohistConfig.init((File) options.valueOf("mohist-settings"));
-+            MohistConfig.registerCommands();
++            mohistConfig.registerCommands();
 +            // Mohist end
 +
              LOGGER.info("Generating keypair");
@@ -201,7 +200,7 @@
              try
              {
                  this.getNetworkSystem().addLanEndpoint(inetaddress, this.getServerPort());
-@@ -196,15 +251,7 @@
+@@ -196,15 +250,7 @@
                  LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
@@ -218,7 +217,7 @@
              if (this.convertFiles())
              {
                  this.getPlayerProfileCache().save();
-@@ -217,8 +264,7 @@
+@@ -217,8 +263,7 @@
              else
              {
                  net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
@@ -228,7 +227,7 @@
  
                  if (this.getFolderName() == null)
                  {
-@@ -268,11 +314,17 @@
+@@ -268,11 +313,17 @@
                  if (!net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerAboutToStart(this)) return false;
                  LOGGER.info("Preparing level \"{}\"", (Object)this.getFolderName());
                  this.loadAllWorlds(this.getFolderName(), this.getFolderName(), k, worldtype, s2);
@@ -237,7 +236,7 @@
                  String s3 = String.format("%.3fs", (double)i1 / 1.0E9D);
 -                LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", (Object)s3);
 -                this.currentTime = getCurrentTimeMillis();
-+                if (MohistConfig.support_nocmd) {
++                if (MohistConfig.instance.support_nocmd.getValue()) {
 +                    Mohist.LOGGER.info("Done ({0})! For help, type \"help\" or \"?\"", (Object)s3);
 +                } else {
 +                    Mohist.LOGGER.info(Message.getFormatString("server.start.done", new Object[]{s3}));
@@ -249,7 +248,7 @@
                  if (this.settings.hasProperty("announce-player-achievements"))
                  {
                      this.worlds[0].getGameRules().setOrCreateGameRule("announceAdvancements", this.settings.getBooleanProperty("announce-player-achievements", true) ? "true" : "false");
-@@ -292,16 +344,28 @@
+@@ -292,16 +343,28 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -284,7 +283,7 @@
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
                  // <3 you Grum for this, saves us ~30 patch files! --^
                  return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
-@@ -427,11 +491,19 @@
+@@ -427,11 +490,19 @@
  
      public void executePendingCommands()
      {
@@ -308,7 +307,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -592,8 +664,11 @@
+@@ -592,8 +663,11 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -322,7 +321,7 @@
  
      protected boolean convertFiles() throws IOException
      {
-@@ -684,13 +759,66 @@
+@@ -684,13 +758,66 @@
  
      public String getPlugins()
      {

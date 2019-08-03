@@ -11,7 +11,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
-import red.mohist.MohistConfig;
+import red.mohist.configuration.MohistConfig;
 import red.mohist.MohistThreadCost;
 import red.mohist.api.PlayerAPI;
 import red.mohist.api.ServerAPI;
@@ -99,10 +99,6 @@ public class MohistCommand extends Command {
                 } else {
                     sender.sendMessage(ChatColor.RED + "The player [" + args[1] + "] is not online.");
                 }
-                break;
-            case "reload":
-                MohistConfig.reload();
-                sender.sendMessage(ChatColor.GREEN + "Config reload success");
                 break;
             case "printthreadcost":
                 MohistThreadCost.dumpThreadCpuTime();

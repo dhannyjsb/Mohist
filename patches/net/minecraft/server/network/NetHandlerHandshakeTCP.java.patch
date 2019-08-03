@@ -1,13 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/server/network/NetHandlerHandshakeTCP.java
 +++ ../src-work/minecraft/net/minecraft/server/network/NetHandlerHandshakeTCP.java
-@@ -1,5 +1,6 @@
+@@ -1,5 +1,7 @@
  package net.minecraft.server.network;
  
++import red.mohist.configuration.MohistConfig;
 +import red.mohist.i18n.Message;
  import net.minecraft.network.EnumConnectionState;
  import net.minecraft.network.NetworkManager;
  import net.minecraft.network.handshake.INetHandlerHandshakeServer;
-@@ -9,41 +10,114 @@
+@@ -9,41 +11,114 @@
  import net.minecraft.util.text.ITextComponent;
  import net.minecraft.util.text.TextComponentTranslation;
  
@@ -81,7 +82,7 @@
 +                // CraftBukkit end
 +
 +                if (packetIn.getProtocolVersion() > 340) {
-+                    ITextComponent itextcomponent = new TextComponentTranslation(org.spigotmc.SpigotConfig.outdatedServerMessage.replaceAll("'", "''"), new Object[] {"1.12.2"}); // Spigot
++                    ITextComponent itextcomponent = new TextComponentTranslation(MohistConfig.instance.outdatedServerMessage.getValue().replaceAll("'", "''"), new Object[] {"1.12.2"}); // Spigot
                      this.networkManager.sendPacket(new SPacketDisconnect(itextcomponent));
                      this.networkManager.closeChannel(itextcomponent);
 -                }
@@ -89,7 +90,7 @@
 -                {
 -                    ITextComponent itextcomponent1 = new TextComponentTranslation("multiplayer.disconnect.outdated_client", new Object[] {"1.12.2"});
 +                } else if (packetIn.getProtocolVersion() < 340) {
-+                    ITextComponent itextcomponent1 = new TextComponentTranslation(org.spigotmc.SpigotConfig.outdatedClientMessage.replaceAll("'", "''"), new Object[] {"1.12.2"}); // Spigot
++                    ITextComponent itextcomponent1 = new TextComponentTranslation(MohistConfig.instance.outdatedClientMessage.getValue().replaceAll("'", "''"), new Object[] {"1.12.2"}); // Spigot
                      this.networkManager.sendPacket(new SPacketDisconnect(itextcomponent1));
                      this.networkManager.closeChannel(itextcomponent1);
 -                }
@@ -140,7 +141,7 @@
                  }
  
                  break;
-@@ -56,7 +130,6 @@
+@@ -56,7 +131,6 @@
          }
      }
  
