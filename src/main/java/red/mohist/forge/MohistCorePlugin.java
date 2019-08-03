@@ -1,4 +1,4 @@
-package red.mohist;
+package red.mohist.forge;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import red.mohist.common.asm.ASMClassTransformer;
@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion("1.12.2")
-public class CorePlugin implements IFMLLoadingPlugin {
+public class MohistCorePlugin implements IFMLLoadingPlugin {
     @Override
     public String[] getASMTransformerClass() {
         return new String[]{

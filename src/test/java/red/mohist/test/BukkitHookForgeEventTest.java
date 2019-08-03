@@ -11,7 +11,7 @@ import org.bukkit.plugin.PluginLoadOrder;
 import red.mohist.event.BukkitHookForgeEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import red.mohist.event.BukkitStateForgeEvent;
-import red.mohist.event.ForgeHookBukkitEvent;
+import red.mohist.forge.ForgeHookBukkitEvent;
 
 public class BukkitHookForgeEventTest implements Listener {
 
