@@ -48,6 +48,7 @@ public class MohistConfig {
     public static int entityCollideFrequency = 2;
     public static int maxEntityCollisionsPerTick = 8;
     public static String console_name = "Server";
+    public static boolean explosion_canceled = false;
 
     /*========================================================================*/
     public static YamlConfiguration config;
@@ -105,6 +106,7 @@ public class MohistConfig {
         lang = getString("lang", lang);
         support_nocmd = getBoolean("support_nocmd", support_nocmd);
         console_name = transform(getString("console_name", console_name));
+        explosion_canceled = getBoolean("eventCanceled.explosion", explosion_canceled);
 
         readConfig(MohistConfig.class, null);
     }
