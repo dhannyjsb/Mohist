@@ -8,7 +8,26 @@
  import net.minecraftforge.common.ForgeVersion;
  import net.minecraftforge.common.MinecraftForge;
  import net.minecraftforge.common.util.CompoundDataFixer;
-@@ -385,6 +386,10 @@
+@@ -198,7 +199,7 @@
+ 
+     public Side getSide()
+     {
+-        return sidedDelegate.getSide();
++        return Side.SERVER;
+     }
+ 
+     /**
+@@ -208,8 +209,7 @@
+      */
+     public Side getEffectiveSide()
+     {
+-        final ThreadGroup group = Thread.currentThread().getThreadGroup();
+-        return group instanceof SidedThreadGroup ? ((SidedThreadGroup) group).getSide() : Side.CLIENT;
++        return Side.SERVER;
+     }
+     /**
+      * Raise an exception
+@@ -385,6 +385,10 @@
  
      public void handleWorldDataSave(SaveHandler handler, WorldInfo worldInfo, NBTTagCompound tagCompound)
      {
@@ -19,7 +38,7 @@
          for (ModContainer mc : Loader.instance().getModList())
          {
              if (mc instanceof InjectedModContainer)
-@@ -405,7 +410,7 @@
+@@ -405,7 +409,7 @@
          {
              return;
          }
@@ -28,7 +47,7 @@
          {
              return;
          }
-@@ -507,7 +512,7 @@
+@@ -507,7 +511,7 @@
          MinecraftServer server = getMinecraftServerInstance();
          Loader.instance().serverStopped();
          // FORCE the internal server to stop: hello optifine workaround!
@@ -37,7 +56,7 @@
  
          // allow any pending exit to continue, clear exitLatch
          CountDownLatch latch = exitLatch;
-@@ -522,16 +527,7 @@
+@@ -522,16 +526,7 @@
      public String getModName()
      {
          List<String> modNames = Lists.newArrayListWithExpectedSize(3);
