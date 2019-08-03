@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import red.mohist.i18n.Message;
 
 public class DumpCommand extends Command {
-    protected DumpCommand(String name) {
+    public DumpCommand(String name) {
         super(name);
         this.description = "Universal Dump, which will print the information you need locally!";
         this.usageMessage = "/mohist *";
