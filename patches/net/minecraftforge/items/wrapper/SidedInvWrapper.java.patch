@@ -8,7 +8,7 @@
  import net.minecraft.inventory.ISidedInventory;
  import net.minecraft.item.ItemStack;
  import net.minecraft.util.EnumFacing;
-@@ -30,6 +31,9 @@
+@@ -32,6 +33,9 @@
  public class SidedInvWrapper implements IItemHandlerModifiable
  {
      protected final ISidedInventory inv;

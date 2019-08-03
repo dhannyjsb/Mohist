@@ -903,15 +903,15 @@
              if (tileEntityIn != null && !tileEntityIn.isInvalid())
              {
                  if (this.processingLoadedTiles)
-@@ -2449,6 +2796,7 @@
-                         }
+@@ -2451,6 +2798,7 @@
                      }
  
+                     toInvalidate.forEach(TileEntity::invalidate);
 +                    tileEntityIn.setWorld(this); // Spigot - No null worlds
                      this.addedTileEntityList.add(tileEntityIn);
                  }
                  else
-@@ -2500,7 +2848,7 @@
+@@ -2502,7 +2850,7 @@
      public boolean isBlockNormalCube(BlockPos pos, boolean _default)
      {
          if (this.isOutsideBuildHeight(pos))
@@ -920,7 +920,7 @@
              return false;
          }
          else
-@@ -2657,6 +3005,11 @@
+@@ -2659,6 +3007,11 @@
                  }
  
                  this.rainingStrength = MathHelper.clamp(this.rainingStrength, 0.0F, 1.0F);
@@ -932,7 +932,7 @@
              }
          }
      }
-@@ -2846,8 +3199,11 @@
+@@ -2848,8 +3201,11 @@
  
      public boolean checkLightFor(EnumSkyBlock lightType, BlockPos pos)
      {
@@ -945,7 +945,7 @@
              return false;
          }
          else
-@@ -3008,7 +3364,7 @@
+@@ -3010,7 +3366,7 @@
  
      public List<Entity> getEntitiesInAABBexcluding(@Nullable Entity entityIn, AxisAlignedBB boundingBox, @Nullable Predicate <? super Entity > predicate)
      {
@@ -954,7 +954,7 @@
          int j2 = MathHelper.floor((boundingBox.minX - MAX_ENTITY_RADIUS) / 16.0D);
          int k2 = MathHelper.floor((boundingBox.maxX + MAX_ENTITY_RADIUS) / 16.0D);
          int l2 = MathHelper.floor((boundingBox.minZ - MAX_ENTITY_RADIUS) / 16.0D);
-@@ -3028,15 +3384,15 @@
+@@ -3030,15 +3386,15 @@
          return list;
      }
  
@@ -976,7 +976,7 @@
              }
          }
  
-@@ -3069,7 +3425,7 @@
+@@ -3071,7 +3427,7 @@
          int k2 = MathHelper.ceil((aabb.maxX + MAX_ENTITY_RADIUS) / 16.0D);
          int l2 = MathHelper.floor((aabb.minZ - MAX_ENTITY_RADIUS) / 16.0D);
          int i3 = MathHelper.ceil((aabb.maxZ + MAX_ENTITY_RADIUS) / 16.0D);
@@ -985,7 +985,7 @@
  
          for (int j3 = j2; j3 < k2; ++j3)
          {
-@@ -3137,7 +3493,16 @@
+@@ -3139,7 +3495,16 @@
  
          for (Entity entity4 : this.loadedEntityList)
          {
@@ -1003,7 +1003,7 @@
              {
                  ++j2;
              }
-@@ -3152,6 +3517,9 @@
+@@ -3154,6 +3519,9 @@
          {
              if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.EntityJoinWorldEvent(entity4, this)))
              {
@@ -1013,7 +1013,7 @@
                  loadedEntityList.add(entity4);
                  this.onEntityAdded(entity4);
              }
-@@ -3168,19 +3536,24 @@
+@@ -3170,19 +3538,24 @@
          IBlockState iblockstate1 = this.getBlockState(pos);
          AxisAlignedBB axisalignedbb = skipCollisionCheck ? null : blockIn.getDefaultState().getCollisionBoundingBox(this, pos);
  
@@ -1041,7 +1041,7 @@
      }
  
      public int getSeaLevel()
-@@ -3345,6 +3718,12 @@
+@@ -3347,6 +3720,12 @@
          {
              EntityPlayer entityplayer1 = this.playerEntities.get(j2);
  
@@ -1054,7 +1054,7 @@
              if (p_190525_9_.apply(entityplayer1))
              {
                  double d1 = entityplayer1.getDistanceSq(x, y, z);
-@@ -3367,7 +3746,7 @@
+@@ -3369,7 +3748,7 @@
              EntityPlayer entityplayer = this.playerEntities.get(j2);
  
              if (EntitySelectors.NOT_SPECTATING.apply(entityplayer))
@@ -1063,7 +1063,7 @@
                  double d0 = entityplayer.getDistanceSq(x, y, z);
  
                  if (range < 0.0D || d0 < range * range)
-@@ -3592,6 +3971,16 @@
+@@ -3594,6 +3973,16 @@
      {
      }
  
@@ -1080,7 +1080,7 @@
      public float getThunderStrength(float delta)
      {
          return (this.prevThunderingStrength + (this.thunderingStrength - this.prevThunderingStrength) * delta) * this.getRainStrength(delta);
-@@ -3880,7 +4269,7 @@
+@@ -3882,7 +4271,7 @@
          int j2 = x * 16 + 8 - blockpos1.getX();
          int k2 = z * 16 + 8 - blockpos1.getZ();
          int l2 = 128;
@@ -1089,7 +1089,7 @@
      }
  
      /* ======================================== FORGE START =====================================*/
-@@ -4016,4 +4405,12 @@
+@@ -4018,4 +4407,12 @@
      {
          return null;
      }

@@ -286,7 +286,7 @@
          }
          return event.getComponent();
      }
-@@ -817,27 +651,8 @@
+@@ -816,27 +650,8 @@
  
      public static int onBlockBreakEvent(World world, GameType gameType, EntityPlayerMP entityPlayer, BlockPos pos)
      {
@@ -315,7 +315,7 @@
          {
              SPacketBlockChange packet = new SPacketBlockChange(world, pos);
              packet.blockState = Blocks.AIR.getDefaultState();
-@@ -847,11 +662,11 @@
+@@ -846,11 +661,11 @@
          // Post the block break event
          IBlockState state = world.getBlockState(pos);
          BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
@@ -329,7 +329,7 @@
          {
              // Let the client know the block still exists
              entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-@@ -866,33 +681,75 @@
+@@ -865,33 +680,75 @@
                      entityPlayer.connection.sendPacket(pkt);
                  }
              }
@@ -410,7 +410,7 @@
              int newSize = itemstack.getCount();
              NBTTagCompound newNBT = null;
              if (itemstack.getTagCompound() != null)
-@@ -901,10 +758,8 @@
+@@ -900,10 +757,8 @@
              }
              BlockEvent.PlaceEvent placeEvent = null;
              @SuppressWarnings("unchecked")
@@ -422,7 +422,7 @@
              itemstack.setItemDamage(meta);
              itemstack.setCount(size);
              if (nbt != null)
-@@ -912,37 +767,39 @@
+@@ -911,37 +766,39 @@
                  itemstack.setTagCompound(nbt);
              }
              if (blockSnapshots.size() > 1)
@@ -473,7 +473,7 @@
                      int updateFlag = snap.getFlag();
                      IBlockState oldBlock = snap.getReplacedBlock();
                      IBlockState newBlock = world.getBlockState(snap.getPos());
-@@ -953,7 +810,30 @@
+@@ -952,7 +809,30 @@
  
                      world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                  }
@@ -505,7 +505,7 @@
              }
          }
          world.capturedBlockSnapshots.clear();
-@@ -961,6 +841,7 @@
+@@ -960,6 +840,7 @@
          return ret;
      }
  
@@ -513,7 +513,7 @@
      public static boolean onAnvilChange(ContainerRepair container, @Nonnull ItemStack left, @Nonnull ItemStack right, IInventory outputSlot, String name, int baseCost)
      {
          AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
-@@ -1076,7 +957,7 @@
+@@ -1075,7 +956,7 @@
              // Revert variable back to true as it would have been set to false
              if (entity instanceof EntityMinecartContainer)
              {
@@ -522,7 +522,7 @@
              }
          }
          return !event.isCanceled();
-@@ -1349,45 +1230,45 @@
+@@ -1348,45 +1229,45 @@
      private static boolean loadAdvancements(Map<ResourceLocation, Advancement.Builder> map, ModContainer mod)
      {
          return CraftingHelper.findFiles(mod, "assets/" + mod.getModId() + "/advancements", null,
@@ -601,7 +601,7 @@
          );
      }
  
-@@ -1465,7 +1346,6 @@
+@@ -1464,7 +1345,6 @@
  
      public static boolean onFarmlandTrample(World world, BlockPos pos, IBlockState state, float fallDistance, Entity entity)
      {
@@ -609,7 +609,7 @@
          if (entity.canTrample(world, state.getBlock(), pos, fallDistance))
          {
              BlockEvent.FarmlandTrampleEvent event = new BlockEvent.FarmlandTrampleEvent(world, pos, state, fallDistance, entity);
-@@ -1474,7 +1354,6 @@
+@@ -1473,7 +1353,6 @@
          }
          return false;
      }

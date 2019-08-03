@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraftforge/fml/common/Loader.java
 +++ ../src-work/minecraft/net/minecraftforge/fml/common/Loader.java
-@@ -95,6 +95,8 @@
+@@ -97,6 +97,8 @@
  import com.google.gson.JsonElement;
  import com.google.gson.JsonObject;
  import com.google.gson.JsonParser;
@@ -9,7 +9,7 @@
  
  import javax.annotation.Nullable;
  
-@@ -207,8 +209,8 @@
+@@ -209,8 +211,8 @@
          modClassLoader = new ModClassLoader(getClass().getClassLoader());
          if (mccversion !=null && !mccversion.equals(MC_VERSION))
          {
@@ -20,7 +20,7 @@
          }
  
          minecraft = new MinecraftDummyContainer(MC_VERSION);
-@@ -230,7 +232,7 @@
+@@ -232,7 +234,7 @@
       */
      private void sortModList()
      {
@@ -29,7 +29,7 @@
          List<WrongMinecraftVersionException> wrongMinecraftExceptions = new ArrayList<>();
          List<MissingModsException> missingModsExceptions = new ArrayList<>();
          try
-@@ -246,7 +248,7 @@
+@@ -248,7 +250,7 @@
              {
                  if (!mod.acceptableMinecraftVersionRange().containsVersion(minecraft.getProcessedVersion()))
                  {
@@ -38,7 +38,7 @@
                      WrongMinecraftVersionException ret = new WrongMinecraftVersionException(mod, getMCVersionString());
                      FMLLog.log.fatal(ret.getMessage());
                      wrongMinecraftExceptions.add(ret);
-@@ -283,7 +285,7 @@
+@@ -285,7 +287,7 @@
  
              if (wrongMinecraftExceptions.isEmpty() && missingModsExceptions.isEmpty())
              {
@@ -47,7 +47,7 @@
              }
              else if (missingModsExceptions.size()==1 && wrongMinecraftExceptions.isEmpty())
              {
-@@ -303,7 +305,7 @@
+@@ -305,7 +307,7 @@
  
              try
              {
@@ -56,7 +56,7 @@
                  List<ModContainer> sortedMods = sorter.sort();
                  // Reset active list to the sorted list
                  modController.getActiveModList().clear();
-@@ -312,37 +314,37 @@
+@@ -314,37 +316,37 @@
                  mods.removeAll(sortedMods);
                  sortedMods.addAll(mods);
                  mods = sortedMods;
@@ -103,7 +103,7 @@
              }
          }
  
-@@ -365,7 +367,7 @@
+@@ -367,7 +369,7 @@
      private ModDiscoverer identifyMods(List<String> additionalContainers)
      {
          injectedContainers.addAll(additionalContainers);
@@ -112,7 +112,7 @@
          mods.add(minecraft);
          // Add in the MCP mod container
          mods.add(new InjectedModContainer(mcp,new File("minecraft.jar")));
-@@ -378,7 +380,7 @@
+@@ -380,7 +382,7 @@
              }
              catch (Exception e)
              {
@@ -121,7 +121,7 @@
                  throw new LoaderException(e);
              }
              mods.add(new InjectedModContainer(mc,mc.getSource()));
-@@ -387,9 +389,9 @@
+@@ -389,9 +391,9 @@
  
          //if (!FMLForgePlugin.RUNTIME_DEOBF) //Only descover mods in the classpath if we're in the dev env.
          {                                  //TODO: Move this to GradleStart? And add a specific mod canidate for Forge itself.
@@ -133,7 +133,7 @@
          }
  
          List<Artifact> maven_canidates = LibraryManager.flattenLists(minecraftDir);
-@@ -413,11 +415,11 @@
+@@ -415,11 +417,11 @@
              // skip loaded coremods
              if (CoreModManager.getIgnoredMods().contains(mod.getName()))
              {
@@ -147,7 +147,7 @@
                  discoverer.addCandidate(new ModCandidate(mod, mod, ContainerType.JAR));
              }
          }
-@@ -425,7 +427,7 @@
+@@ -427,7 +429,7 @@
          mods.addAll(discoverer.identifyMods());
          identifyDuplicates(mods);
          namedMods = Maps.uniqueIndex(mods, ModContainer::getModId);
@@ -156,7 +156,7 @@
          return discoverer;
      }
  
-@@ -455,7 +457,7 @@
+@@ -457,7 +459,7 @@
          {
              if (e.getCount() > 1)
              {
@@ -165,7 +165,7 @@
                  dupes.putAll(e.getElement(),dupsearch.get(e.getElement()));
              }
          }
-@@ -484,44 +486,43 @@
+@@ -486,44 +488,43 @@
          }
          catch (IOException ioe)
          {
@@ -220,7 +220,7 @@
              throw new LoaderException();
          }
  
-@@ -575,14 +576,14 @@
+@@ -577,14 +578,14 @@
          {
              if (nonMod.isFile())
              {
@@ -237,7 +237,7 @@
                  }
              }
          }
-@@ -592,14 +593,14 @@
+@@ -594,14 +595,14 @@
          modController.transition(LoaderState.CONSTRUCTING, false);
          modController.distributeStateMessage(LoaderState.CONSTRUCTING, modClassLoader, discoverer.getASMTable(), reverseDependencies);
  
@@ -255,7 +255,7 @@
          for (ModContainer mod : getActiveModList())
          {
              if (mod.getSigningCertificate() == null)
-@@ -607,7 +608,7 @@
+@@ -609,7 +610,7 @@
          }
          if (getActiveModList().isEmpty())
          {
@@ -264,7 +264,7 @@
          }
          progressBar.step("Initializing mods Phase 1");
          modController.transition(LoaderState.PREINITIALIZATION, false);
-@@ -617,7 +618,7 @@
+@@ -619,7 +620,7 @@
      {
          if (!modController.isInState(LoaderState.PREINITIALIZATION))
          {
@@ -273,7 +273,7 @@
              return;
          }
          GameData.fireCreateRegistryEvents();
-@@ -636,31 +637,31 @@
+@@ -638,34 +639,34 @@
      private void disableRequestedMods()
      {
          String forcedModList = System.getProperty("fml.modStates", "");
@@ -294,7 +294,10 @@
 +            FMLLog.log.trace(Message.getFormatString(Message.forge_loader_43, new Object[]{forcedModFile.getName()}));
              try
              {
-                 forcedModListProperties.load(new InputStreamReader(new FileInputStream(forcedModFile), StandardCharsets.UTF_8));
+                 try (Reader reader = new InputStreamReader(new FileInputStream(forcedModFile), StandardCharsets.UTF_8))
+                 {
+                     forcedModListProperties.load(reader);
+                 }
 -                FMLLog.log.trace("Loaded states for {} mods from file", forcedModListProperties.size());
 +                FMLLog.log.trace(Message.getFormatString(Message.forge_loader_44, new Object[]{forcedModListProperties.size()}));
              }
@@ -311,7 +314,7 @@
  
          Map<String, Boolean> isEnabled = Maps.transformValues(modStates, Boolean::parseBoolean);
  
-@@ -668,7 +669,7 @@
+@@ -673,7 +674,7 @@
          {
              if (namedMods.containsKey(entry.getKey()))
              {
@@ -320,7 +323,7 @@
                  namedMods.get(entry.getKey()).setEnabledState(entry.getValue());
              }
          }
-@@ -751,7 +752,8 @@
+@@ -756,7 +757,8 @@
          modController.transition(LoaderState.AVAILABLE, false);
          modController.distributeStateMessage(LoaderState.AVAILABLE);
          GameData.freezeData();
@@ -330,7 +333,7 @@
          progressBar.step("Completing Minecraft initialization");
      }
  
-@@ -896,8 +898,10 @@
+@@ -904,8 +906,10 @@
              }
          }
  
@@ -343,7 +346,7 @@
          return true;
      }
  
-@@ -915,17 +919,17 @@
+@@ -923,17 +927,17 @@
          Disableable disableable = mc.canBeDisabled();
          if (disableable == Disableable.NEVER)
          {
@@ -364,7 +367,7 @@
              modController.disableMod(mc);
              List<ModContainer> localmods = Lists.newArrayList(mods);
              localmods.remove(mc);
-@@ -941,7 +945,7 @@
+@@ -955,7 +959,7 @@
          }
          catch (Exception e)
          {
@@ -373,7 +376,7 @@
          }
      }
  
-@@ -959,7 +963,7 @@
+@@ -973,7 +977,7 @@
          File injectedDepFile = new File(getConfigDir(),"injectedDependencies.json");
          if (!injectedDepFile.exists())
          {
@@ -382,7 +385,7 @@
              return;
          }
          JsonParser parser = new JsonParser();
-@@ -981,18 +985,18 @@
+@@ -998,18 +1002,18 @@
                      } else if (type.equals("after")) {
                          injectedAfter.put(modId, VersionParser.parseVersionReference(depObj.get("target").getAsString()));
                      } else {
