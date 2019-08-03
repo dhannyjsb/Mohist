@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import red.mohist.command.defaultcomamnd.DumpCommand;
 import red.mohist.command.defaultcomamnd.ItemCommand;
 import red.mohist.command.defaultcomamnd.MohistCommand;
 import red.mohist.command.defaultcomamnd.VersionCommand;
@@ -74,6 +75,7 @@ public class MohistConfig {
         commands.put("mohist", new MohistCommand("mohist"));
         commands.put("item", new ItemCommand("item"));
         commands.put("version", new VersionCommand("version"));
+        commands.put("Dump", new DumpCommand("version"));
 
         version = getInt("config-version", 1);
         set("config-version", 1);
