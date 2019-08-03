@@ -10,6 +10,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_12_R1.command.ModCustomCommand;
 import org.bukkit.craftbukkit.v1_12_R1.command.VanillaCommandWrapper;
 import org.bukkit.help.GenericCommandHelpTopic;
 import org.bukkit.help.HelpMap;
@@ -201,6 +202,9 @@ public class SimpleHelpMap implements HelpMap {
         }
         if (command instanceof BukkitCommand) {
             return "Bukkit";
+        }
+        if (command instanceof ModCustomCommand) {
+            return "Mohist";
         }
         if (command instanceof PluginIdentifiableCommand) {
             return ((PluginIdentifiableCommand) command).getPlugin().getName();
