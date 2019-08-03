@@ -18,6 +18,7 @@ Since CraftBukkit has modified a lot of underlying layers, some of the core mods
    [**bStats**](https://bstats.org/plugin/bukkit/Mohist)
 
 ### Download
+**Mohist is still in beta and you may encounter issues in using it with your server. You have been warned!**
 * [**Jenkins**](https://ci.codemc.org/job/PFCraft/job/Mohist/)
 
 ### Building
