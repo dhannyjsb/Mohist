@@ -28,12 +28,20 @@ public class PlayerAPI {
         return ((CraftPlayer) player).getHandle();
     }
 
+    public static Player getCBPlayer(EntityPlayerMP player) {
+        return player.getBukkitEntity().getPlayer();
+    }
+
     public static int getModSize(Player player) {
         return mods.get(getNMSPlayer(player)) == null ? 0 : mods.get(getNMSPlayer(player)) - 4;
     }
 
     public static String getModlist(Player player) {
         return modlist.get(getNMSPlayer(player)) == null ? "null" : modlist.get(getNMSPlayer(player));
+    }
+
+    public static Boolean hasMod(Player player, String modid){
+        return getModlist(player).contains(modid);
     }
 
     public static boolean isOp(EntityPlayer ep)

@@ -1,6 +1,9 @@
 package red.mohist.api;
 
 import io.netty.util.internal.ConcurrentSet;
+import net.minecraft.server.MinecraftServer;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,5 +22,13 @@ public class ServerAPI {
 
     public static String getModList() {
         return modlists.toString();
+    }
+
+    public static Boolean hasMod(String modid) {
+        return getModList().contains(modid);
+    }
+
+    public static MinecraftServer getNMSServer(){
+        return MinecraftServer.getServerInst();
     }
 }
