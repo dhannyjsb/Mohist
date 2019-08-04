@@ -248,10 +248,10 @@
 +
 +    // Spigot start
 +    public static boolean fastMatches(ItemStack itemstack, ItemStack itemstack1) {
-+        if (itemstack == null && itemstack1 == null) {
++        if (itemstack.isEmpty() && itemstack1.isEmpty()) {
 +            return true;
 +        }
-+        if (itemstack != null && itemstack1 != null) {
++        if (!itemstack.isEmpty() && !itemstack1.isEmpty()) {
 +            return itemstack.stackSize == itemstack1.stackSize && itemstack.item == itemstack1.item && itemstack.itemDamage == itemstack1.itemDamage;
 +        }
 +        return false;

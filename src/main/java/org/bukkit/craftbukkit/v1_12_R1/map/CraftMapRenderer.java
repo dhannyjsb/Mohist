@@ -9,6 +9,8 @@ import org.bukkit.map.MapCursorCollection;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
+import java.util.UUID;
+
 public class CraftMapRenderer extends MapRenderer {
 
     private final MapData worldMap;
@@ -33,9 +35,9 @@ public class CraftMapRenderer extends MapRenderer {
             cursors.removeCursor(cursors.getCursor(0));
         }
 
-        for (Object key : worldMap.mapDecorations.keySet()) {
+        for (UUID key : worldMap.mapDecorations.keySet()) { // Spigot string -> uuid.
             // If this cursor is for a player check visibility with vanish system
-            Player other = Bukkit.getPlayerExact((String) key);
+            Player other = Bukkit.getPlayer(key);
             if (other != null && !player.canSee(other)) {
                 continue;
             }

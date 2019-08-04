@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/world/chunk/NibbleArray.java
++++ ../src-work/minecraft/net/minecraft/world/chunk/NibbleArray.java
+@@ -37,21 +37,17 @@
+     public int getFromIndex(int index)
+     {
+         int i = this.getNibbleIndex(index);
+-        return this.isLowerNibble(index) ? this.data[i] & 15 : this.data[i] >> 4 & 15;
++        return this.data[i] >> ((index & 1) << 2) & 15; // Spigot
+     }
+ 
+     public void setIndex(int index, int value)
+     {
+         int i = this.getNibbleIndex(index);
+ 
+-        if (this.isLowerNibble(index))
+-        {
+-            this.data[i] = (byte)(this.data[i] & 240 | value & 15);
+-        }
+-        else
+-        {
+-            this.data[i] = (byte)(this.data[i] & 15 | (value & 15) << 4);
+-        }
++        // Spigot start
++        int shift = (i & 1) << 2;
++        this.data[i] = (byte) (this.data[i] & ~(15 << shift) | (value & 15) << shift);
++        // Spigot end
+     }
+ 
+     private boolean isLowerNibble(int index)
