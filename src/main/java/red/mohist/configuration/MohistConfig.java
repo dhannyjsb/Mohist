@@ -22,8 +22,8 @@ public class MohistConfig extends ConfigBase{
     /* ======================================================================== */
 
     public final StringSetting unknownCommandMessage = new StringSetting(this, "messages.use-unknow-command", Message.getString("use.unknow.command"), "Prompt unknown command");
-    public final StringSetting outdatedClientMessage = new StringSetting(this, "messages.Outdate-Client", Message.getString("use.unknow.command"), "Outdate Client");
-    public final StringSetting outdatedServerMessage = new StringSetting(this, "messages.Outdate-Server", Message.getString("use.unknow.command"), "Outdate Server");
+    public final StringSetting outdatedClientMessage = new StringSetting(this, "messages.Outdate-Client", Message.getString("outdate.client"), "Outdate Client");
+    public final StringSetting outdatedServerMessage = new StringSetting(this, "messages.Outdate-Server", Message.getString("outdate.server"), "Outdate Server");
 
     public final BoolSetting printThreadTimeCost = new BoolSetting(this, "debug.printThreadTimeCost", false, "printThreadTimeCost");
     public final BoolSetting dumpRemapPluginClass = new BoolSetting(this, "remap.dumpRemapPluginClass", false, "dumpRemapPluginClass");
