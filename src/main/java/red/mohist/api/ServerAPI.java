@@ -2,8 +2,6 @@ package red.mohist.api;
 
 import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.server.MinecraftServer;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 
 import java.util.Map;
 import java.util.Set;

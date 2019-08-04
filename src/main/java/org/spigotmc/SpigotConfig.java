@@ -14,7 +14,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import red.mohist.Mohist;
-import red.mohist.configuration.MohistConfig;
 
 import java.io.File;
 import java.io.IOException;

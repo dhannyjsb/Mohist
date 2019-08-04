@@ -6,13 +6,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemAPI {
 
-    public static net.minecraft.item.ItemStack  toNMSItem(Material materialcb) {
+    public static net.minecraft.item.ItemStack toNMSItem(Material materialcb) {
         ItemStack itemStackcb = new ItemStack(materialcb);
         return CraftItemStack.asNMSCopy(itemStackcb);
     }
 
     public static ItemStack getBukkit(Material material){
-        ItemStack itemStackcb = new ItemStack(material);
-        return itemStackcb.clone();
+        return CraftItemStack.asBukkitCopy(toNMSItem(material));
     }
 }

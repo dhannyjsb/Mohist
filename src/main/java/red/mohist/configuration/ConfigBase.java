@@ -1,6 +1,5 @@
 package red.mohist.configuration;
 
-import net.minecraft.world.WorldServer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.YamlConfiguration;
