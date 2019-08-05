@@ -78,7 +78,20 @@
      }
  
      public void update()
-@@ -144,7 +177,7 @@
+@@ -119,7 +152,11 @@
+             if (!this.isOnTransferCooldown())
+             {
+                 this.setTransferCooldown(0);
+-                this.updateHopper();
++                // Spigot start
++                if (!this.updateHopper() && this.world.spigotConfig.hopperCheck > 1) {
++                    this.setTransferCooldown(this.world.spigotConfig.hopperCheck);
++                }
++                // Spigot end
+             }
+         }
+     }
+@@ -144,7 +181,7 @@
  
                  if (flag)
                  {
@@ -87,7 +100,7 @@
                      this.markDirty();
                      return true;
                  }
-@@ -213,11 +246,11 @@
+@@ -213,11 +250,11 @@
                      if (!this.getStackInSlot(i).isEmpty())
                      {
                          ItemStack itemstack = this.getStackInSlot(i).copy();
@@ -101,7 +114,7 @@
                              return true;
                          }
  
-@@ -358,14 +391,46 @@
+@@ -358,14 +395,46 @@
          if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction))
          {
              ItemStack itemstack1 = itemstack.copy();
@@ -151,7 +164,7 @@
              inventoryIn.setInventorySlotContents(index, itemstack1);
          }
  
-@@ -382,6 +447,11 @@
+@@ -382,6 +451,11 @@
          }
          else
          {
@@ -163,7 +176,7 @@
              ItemStack itemstack = entity.getItem().copy();
              ItemStack itemstack1 = putStackInInventoryAllSlots(source, destination, itemstack, (EnumFacing)null);
  
-@@ -491,7 +561,7 @@
+@@ -491,7 +565,7 @@
                              }
                          }
  
@@ -172,7 +185,7 @@
                      }
                  }
  
-@@ -525,6 +595,7 @@
+@@ -525,6 +599,7 @@
          int j = MathHelper.floor(y);
          int k = MathHelper.floor(z);
          BlockPos blockpos = new BlockPos(i, j, k);

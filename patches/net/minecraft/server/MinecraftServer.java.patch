@@ -124,7 +124,8 @@
      private final List<ITickable> tickables = Lists.<ITickable>newArrayList();
      public final ICommandManager commandManager;
      public final Profiler profiler = new Profiler();
-     private final NetworkSystem networkSystem;
+-    private final NetworkSystem networkSystem;
++    private NetworkSystem networkSystem;
      private final ServerStatusResponse statusResponse = new ServerStatusResponse();
      private final Random random = new Random();
 -    private final DataFixer dataFixer;
@@ -145,7 +146,7 @@
      private String worldName;
      private boolean isDemo;
      private boolean enableBonusChest;
-@@ -144,26 +139,75 @@
+@@ -144,26 +139,76 @@
      private final GameProfileRepository profileRepo;
      private final PlayerProfileCache profileCache;
      private long nanoTimeSinceStatusRefresh;
@@ -180,6 +181,7 @@
 +
 +    public MinecraftServer(OptionSet options, Proxy proxyIn, DataFixer dataFixerIn, YggdrasilAuthenticationService authServiceIn, MinecraftSessionService sessionServiceIn, GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)
      {
++        io.netty.util.ResourceLeakDetector.setEnabled( false ); // Spigot - disable
 +        SERVER = this;
          this.serverProxy = proxyIn;
          this.authService = authServiceIn;
@@ -187,8 +189,9 @@
          this.profileRepo = profileRepoIn;
          this.profileCache = profileCacheIn;
 -        this.anvilFile = anvilFileIn;
+-        this.networkSystem = new NetworkSystem(this);
 +        // this.anvilFile = anvilFileIn;
-         this.networkSystem = new NetworkSystem(this);
++        //this.networkSystem = new NetworkSystem(this);
          this.commandManager = this.createCommandManager();
 -        this.anvilConverterForAnvilFile = new AnvilSaveConverter(anvilFileIn, dataFixerIn);
 +        // this.anvilConverterForAnvilFile = new AnvilSaveConverter(anvilFileIn, dataFixerIn); // CraftBukkit - moved to DedicatedServer.init
@@ -226,7 +229,7 @@
      public ServerCommandManager createCommandManager()
      {
          return new ServerCommandManager(this);
-@@ -221,95 +265,90 @@
+@@ -221,95 +266,90 @@
  
      public void loadAllWorlds(String saveName, String worldNameIn, long seed, WorldType type, String generatorOptions)
      {
@@ -382,7 +385,7 @@
          this.setDifficultyForAllWorlds(this.getDifficulty());
          this.initialWorldChunkLoad();
      }
-@@ -323,28 +362,37 @@
+@@ -323,28 +363,37 @@
          int i1 = 0;
          this.setUserMessage("menu.generatingTerrain");
          int j1 = 0;
@@ -436,7 +439,7 @@
          this.clearCurrentTask();
      }
  
-@@ -390,17 +438,19 @@
+@@ -390,17 +439,19 @@
      {
          this.currentTask = null;
          this.percentDone = 0;
@@ -458,7 +461,7 @@
                  }
  
                  try
-@@ -415,10 +465,23 @@
+@@ -415,10 +466,23 @@
          }
      }
  
@@ -485,7 +488,7 @@
          if (this.getNetworkSystem() != null)
          {
              this.getNetworkSystem().terminateEndpoints();
-@@ -426,14 +489,15 @@
+@@ -426,14 +490,15 @@
  
          if (this.playerList != null)
          {
@@ -503,7 +506,7 @@
  
              for (WorldServer worldserver : this.worlds)
              {
-@@ -445,7 +509,8 @@
+@@ -445,7 +510,8 @@
  
              this.saveAllWorlds(false);
  
@@ -513,7 +516,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -453,11 +518,12 @@
+@@ -453,11 +519,12 @@
                      worldserver1.flush();
                  }
              }
@@ -527,7 +530,7 @@
              }
          }
  
-@@ -467,6 +533,13 @@
+@@ -467,6 +534,13 @@
          }
  
          CommandBase.setCommandListener(null); // Forge: fix MC-128561
@@ -541,7 +544,7 @@
      }
  
      public boolean isServerRunning()
-@@ -479,74 +552,127 @@
+@@ -479,74 +553,127 @@
          this.serverRunning = false;
      }
  
@@ -699,11 +702,11 @@
          catch (Throwable throwable1)
          {
 -            LOGGER.error("Encountered an unexpected exception", throwable1);
-+            LOGGER.error(Message.getString(Message.crash_report), throwable1);
++            LOGGER.error(Message.getString(Message.crash_report), throwable1 == null ? throwable1 : throwable1.getCause());
              CrashReport crashreport = null;
  
              if (throwable1 instanceof ReportedException)
-@@ -555,36 +681,42 @@
+@@ -555,21 +682,21 @@
              }
              else
              {
@@ -729,10 +732,9 @@
              this.finalTick(crashreport);
          }
          finally
-         {
+@@ -577,14 +704,19 @@
              try
              {
-+                org.spigotmc.WatchdogThread.doStop(); // Spigot
                  this.stopServer();
 +                this.serverStopped = true;
              }
@@ -775,16 +777,18 @@
              }
              finally
              {
-@@ -654,7 +789,7 @@
+@@ -653,8 +788,9 @@
+ 
      public void tick()
      {
++        this.slackActivityAccountant.tickStarted(); // Spigot
          long i = System.nanoTime();
 -        net.minecraftforge.fml.common.FMLCommonHandler.instance().onPreServerTick();
 +        FMLCommonHandler.instance().onPreServerTick();
          ++this.tickCounter;
  
          if (this.startProfiling)
-@@ -683,8 +818,7 @@
+@@ -683,8 +819,7 @@
              this.statusResponse.getPlayers().setPlayers(agameprofile);
              this.statusResponse.invalidateJson();
          }
@@ -794,19 +798,36 @@
          {
              this.profiler.startSection("save");
              this.playerList.saveAllPlayerData();
-@@ -692,6 +826,7 @@
+@@ -692,64 +827,77 @@
              this.profiler.endSection();
          }
  
 +
          this.profiler.startSection("tallying");
-         this.tickTimeArray[this.tickCounter % 100] = System.nanoTime() - i;
+-        this.tickTimeArray[this.tickCounter % 100] = System.nanoTime() - i;
++        // Spigot start
++        long tickNanos;
++        this.tickTimeArray[this.tickCounter % 100] = tickNanos = System.nanoTime() - i;
++        // Spigot end
          this.profiler.endSection();
-@@ -709,47 +844,55 @@
+         this.profiler.startSection("snooper");
+ 
+-        if (!this.usageSnooper.isSnooperRunning() && this.tickCounter > 100)
++        if (isSnooperEnabled() && !this.usageSnooper.isSnooperRunning() && this.tickCounter > 100) // Spigot
+         {
+             this.usageSnooper.startSnooper();
+         }
+ 
+-        if (this.tickCounter % 6000 == 0)
++        if (isSnooperEnabled() && this.tickCounter % 6000 == 0) // Spigot
+         {
+             this.usageSnooper.addMemoryStatsToSnooper();
+         }
  
          this.profiler.endSection();
          this.profiler.endSection();
 -        net.minecraftforge.fml.common.FMLCommonHandler.instance().onPostServerTick();
++        this.slackActivityAccountant.tickEnded(tickNanos); // Spigot
 +        FMLCommonHandler.instance().onPostServerTick();
 +        WatchMohist.update(); // Mohist
      }
@@ -883,7 +904,7 @@
  
                  try
                  {
-@@ -773,19 +916,18 @@
+@@ -773,19 +921,18 @@
                      throw new ReportedException(crashreport1);
                  }
  
@@ -906,7 +927,7 @@
          this.profiler.endStartSection("connection");
          this.getNetworkSystem().networkTick();
          this.profiler.endStartSection("players");
-@@ -809,9 +951,11 @@
+@@ -809,9 +956,11 @@
  
      public void startServerThread()
      {
@@ -918,7 +939,7 @@
      }
  
      public File getFile(String fileName)
-@@ -826,15 +970,20 @@
+@@ -826,15 +975,20 @@
  
      public WorldServer getWorld(int dimension)
      {
@@ -942,7 +963,7 @@
      public String getMinecraftVersion()
      {
          return "1.12.2";
-@@ -862,7 +1011,8 @@
+@@ -862,7 +1016,8 @@
  
      public String getServerModName()
      {
@@ -952,7 +973,7 @@
      }
  
      public CrashReport addServerInfoToCrashReport(CrashReport report)
-@@ -891,7 +1041,7 @@
+@@ -891,7 +1046,7 @@
  
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos, boolean hasTargetBlock)
      {
@@ -961,7 +982,7 @@
          boolean flag = input.startsWith("/");
  
          if (flag)
-@@ -908,11 +1058,9 @@
+@@ -908,11 +1063,9 @@
              {
                  if (CommandBase.doesStringStartWith(s2, s1))
                  {
@@ -974,7 +995,7 @@
          }
          else
          {
-@@ -925,27 +1073,29 @@
+@@ -925,27 +1078,29 @@
                  {
                      if (flag1 && !hasTargetBlock)
                      {
@@ -1010,7 +1031,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -958,6 +1108,11 @@
+@@ -958,6 +1113,11 @@
          return true;
      }
  
@@ -1022,7 +1043,7 @@
      public ICommandManager getCommandManager()
      {
          return this.commandManager;
-@@ -993,13 +1148,11 @@
+@@ -993,13 +1153,11 @@
          this.folderName = name;
      }
  
@@ -1036,7 +1057,7 @@
      public String getWorldName()
      {
          return this.worldName;
-@@ -1012,7 +1165,7 @@
+@@ -1012,7 +1170,7 @@
  
      public void setDifficultyForAllWorlds(EnumDifficulty difficulty)
      {
@@ -1045,7 +1066,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1094,9 +1247,9 @@
+@@ -1094,9 +1252,9 @@
          playerSnooper.addClientStat("avg_tick_ms", Integer.valueOf((int)(MathHelper.average(this.tickTimeArray) * 1.0E-6D)));
          int l = 0;
  
@@ -1057,7 +1078,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -1134,7 +1287,8 @@
+@@ -1134,7 +1292,8 @@
  
      public boolean isServerInOnlineMode()
      {
@@ -1067,7 +1088,7 @@
      }
  
      public void setOnlineMode(boolean online)
-@@ -1228,7 +1382,7 @@
+@@ -1228,17 +1387,23 @@
  
      public void setGameType(GameType gameMode)
      {
@@ -1076,7 +1097,24 @@
          {
              worldserver1.getWorldInfo().setGameType(gameMode);
          }
-@@ -1331,7 +1485,7 @@
+     }
+ 
+-    public NetworkSystem getNetworkSystem()
++    // Spigot Start
++    public NetworkSystem getServerConnection()
+     {
+         return this.networkSystem;
+     }
+ 
++    public NetworkSystem getNetworkSystem()
++    {
++        return this.networkSystem == null ? this.networkSystem = new NetworkSystem(this) : this.networkSystem; // Spigot
++    }
++
+     @SideOnly(Side.CLIENT)
+     public boolean serverIsInRunLoop()
+     {
+@@ -1331,7 +1496,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -1085,7 +1123,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1357,6 +1511,11 @@
+@@ -1357,6 +1522,11 @@
          return this;
      }
  
@@ -1097,7 +1135,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1525,14 @@
+@@ -1366,15 +1536,14 @@
      {
          Validate.notNull(callable);
  
@@ -1118,7 +1156,7 @@
          }
          else
          {
-@@ -1455,134 +1613,50 @@
+@@ -1455,134 +1624,50 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1271,7 +1309,7 @@
          }
      }
  
-@@ -1595,7 +1669,8 @@
+@@ -1595,7 +1680,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {

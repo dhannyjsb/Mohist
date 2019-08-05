@@ -46,6 +46,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.spigotmc.ValidateUtils.limit;
+
 /**
  * Children must include the following:
  *
@@ -154,7 +156,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
             NBTTagCompound display = tag.getCompoundTag(DISPLAY.NBT);
 
             if (display.hasKey(NAME.NBT)) {
-                displayName = display.getString(NAME.NBT);
+                displayName = limit(display.getString(NAME.NBT), 1024); // Spigot
             }
 
             if (display.hasKey(LOCNAME.NBT)) {
@@ -166,7 +168,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
                 lore = new ArrayList<String>(list.tagCount());
 
                 for (int index = 0; index < list.tagCount(); index++) {
-                    String line = list.getStringTagAt(index);
+                    String line = limit(list.getStringTagAt(index), 1024); // Spigot
                     lore.add(line);
                 }
             }

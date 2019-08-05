@@ -50,16 +50,28 @@
      }
  
      public WorldServer getWorldServer()
-@@ -155,7 +155,7 @@
+@@ -155,8 +155,10 @@
  
          if (!this.entriesWithoutChunks.isEmpty())
          {
 -            long l = System.nanoTime() + 50000000L;
-+            long l = System.nanoTime() + 25000000L;
-             int k = 49;
+-            int k = 49;
++            // Spigot start
++            org.spigotmc.SlackActivityAccountant activityAccountant = this.world.getMinecraftServer().slackActivityAccountant;
++            activityAccountant.startActivity(0.5);
++            // Spigot end
              Iterator<PlayerChunkMapEntry> iterator = this.entriesWithoutChunks.iterator();
  
-@@ -183,6 +183,9 @@
+             while (iterator.hasNext())
+@@ -176,15 +178,16 @@
+                             this.pendingSendToPlayers.remove(playerchunkmapentry1);
+                         }
+ 
+-                        --k;
+-
+-                        if (k < 0 || System.nanoTime() > l)
+-                        {
++                        if (activityAccountant.activityTimeIsExhausted()) { // Spigot
                              break;
                          }
                      }
@@ -68,7 +80,10 @@
 +                    iterator.remove();
                  }
              }
++            activityAccountant.endActivity(); // Spigot
          }
+ 
+         if (!this.pendingSendToPlayers.isEmpty())
 @@ -213,7 +216,7 @@
          {
              WorldProvider worldprovider = this.world.provider;

@@ -224,7 +224,20 @@
          if (this.worldPointer.getBlockState(this.position).getBlock() != Blocks.ENCHANTING_TABLE)
          {
              return false;
-@@ -412,4 +506,15 @@
+@@ -388,7 +482,11 @@
+                 }
+                 else if (!itemstack1.isEmpty())
+                 {
+-                    ((Slot)this.inventorySlots.get(0)).putStack(new ItemStack(itemstack1.getItem(), 1, itemstack1.getMetadata()));
++                    // Spigot start
++                    ItemStack clone = itemstack1.copy();
++                    clone.setCount(1);
++                    ((Slot) this.inventorySlots.get(0)).putStack(clone);
++                    // Spigot end
+                     itemstack1.shrink(1);
+                 }
+             }
+@@ -412,4 +510,15 @@
  
          return itemstack;
      }

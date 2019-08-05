@@ -462,7 +462,7 @@
 +            }
 +
 +            // return s1;
-+            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, s1);
++            if (!userlistbansentry.hasBanExpired()) event.disallow(PlayerLoginEvent.Result.KICK_BANNED, s1); // Spigot
 +        }
 +        else if (!this.canJoin(profile))
 +        {

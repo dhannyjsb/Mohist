@@ -546,8 +546,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         // If this entity is riding another entity, we must dismount before teleporting.
         entity.dismountRidingEntity();
 
-        net.minecraft.world.WorldServer newWorld = ((CraftWorld) location.getWorld()).getHandle();
-        if (newWorld != entity.world) {
+        if (!location.getWorld().equals(getWorld())) {
             entity.teleportTo(location, cause.isPortal());
             return true;
         }

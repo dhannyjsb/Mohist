@@ -25,7 +25,20 @@
  public class ItemSkull extends Item
  {
      private static final String[] SKULL_TYPES = new String[] {"skeleton", "wither", "zombie", "char", "creeper", "dragon"};
-@@ -182,19 +184,34 @@
+@@ -72,6 +74,12 @@
+                 }
+                 else
+                 {
++                    // Spigot Start
++                    if ( !Blocks.SKULL.canPlaceBlockAt(worldIn, pos))
++                    {
++                        return EnumActionResult.FAIL;
++                    }
++                    // Spigot End
+                     worldIn.setBlockState(pos, Blocks.SKULL.getDefaultState().withProperty(BlockSkull.FACING, facing), 11);
+                     int i = 0;
+ 
+@@ -182,19 +190,34 @@
          return super.getItemStackDisplayName(stack);
      }
  

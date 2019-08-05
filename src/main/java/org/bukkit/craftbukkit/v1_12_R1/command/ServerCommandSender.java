@@ -12,7 +12,8 @@ import org.bukkit.plugin.Plugin;
 import java.util.Set;
 
 public abstract class ServerCommandSender implements CommandSender {
-    private final PermissibleBase perm = new PermissibleBase(this);
+    private static PermissibleBase blockPermInst;
+    private final PermissibleBase perm;
     // Spigot start
     private final Spigot spigot = new Spigot() {
         @Override
@@ -27,6 +28,14 @@ public abstract class ServerCommandSender implements CommandSender {
     };
 
     public ServerCommandSender() {
+        if (this instanceof CraftBlockCommandSender) {
+            if (blockPermInst == null) {
+                blockPermInst = new PermissibleBase(this);
+            }
+            this.perm = blockPermInst;
+        } else {
+            this.perm = new PermissibleBase(this);
+        }
     }
 
     public boolean isPermissionSet(String name) {
