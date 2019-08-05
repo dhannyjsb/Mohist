@@ -268,7 +268,7 @@
              {
                  this.tileEntityPosQueue.add(pos.toImmutable());
              }
-@@ -854,27 +937,63 @@
+@@ -854,17 +937,18 @@
      {
          this.loaded = true;
          this.world.addTileEntities(this.tileEntities.values());
@@ -290,21 +290,7 @@
          this.loaded = false;
  
          for (TileEntity tileentity : this.tileEntities.values())
-         {
-+            // Spigot Start
-+            if ( tileentity instanceof IInventory)
-+            {
-+                for ( org.bukkit.entity.HumanEntity h : Lists.<org.bukkit.entity.HumanEntity>newArrayList((List<org.bukkit.entity.HumanEntity>) ( (IInventory) tileentity ).getViewers() ) )
-+                {
-+                    if ( h instanceof org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity )
-+                    {
-+                        ( (org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity) h).getHandle().closeScreen();
-+                    }
-+                }
-+            }
-+            // Spigot End
-             this.world.markTileEntityForRemoval(tileentity);
-         }
+@@ -874,7 +958,18 @@
  
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.entityLists)
          {
@@ -314,18 +300,6 @@
 +            classinheritancemultimap.readLock();
 +            List<Entity> entities = new ArrayList<>(classinheritancemultimap.size());
 +            for (Entity entity : classinheritancemultimap) {
-+                // Spigot Start
-+                if ( entity instanceof IInventory )
-+                {
-+                    for ( org.bukkit.entity.HumanEntity h : Lists.<org.bukkit.entity.HumanEntity>newArrayList( (List<org.bukkit.entity.HumanEntity>) ( (IInventory) entity ).getViewers() ) )
-+                    {
-+                        if ( h instanceof org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity )
-+                        {
-+                            ( (org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity) h).getHandle().closeScreen();
-+                        }
-+                    }
-+                }
-+                // Spigot End
 +                if (entity instanceof EntityPlayerMP) {
 +                    continue;
 +                }
@@ -336,7 +310,7 @@
          }
          net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
      }
-@@ -891,10 +1010,16 @@
+@@ -891,10 +986,16 @@
          i = MathHelper.clamp(i, 0, this.entityLists.length - 1);
          j = MathHelper.clamp(j, 0, this.entityLists.length - 1);
  
@@ -353,7 +327,7 @@
                  for (Entity entity : this.entityLists[k])
                  {
                      if (entity.getEntityBoundingBox().intersects(aabb) && entity != entityIn)
-@@ -918,6 +1043,7 @@
+@@ -918,6 +1019,7 @@
                          }
                      }
                  }
@@ -361,7 +335,7 @@
              }
          }
      }
-@@ -931,6 +1057,7 @@
+@@ -931,6 +1033,7 @@
  
          for (int k = i; k <= j; ++k)
          {
@@ -369,7 +343,7 @@
              for (T t : this.entityLists[k].getByClass(entityClass))
              {
                  if (t.getEntityBoundingBox().intersects(aabb) && (filter == null || filter.apply(t)))
-@@ -938,6 +1065,7 @@
+@@ -938,6 +1041,7 @@
                      listToFill.add(t);
                  }
              }
@@ -377,7 +351,7 @@
          }
      }
  
-@@ -950,12 +1078,8 @@
+@@ -950,12 +1054,8 @@
                  return true;
              }
          }
@@ -391,7 +365,7 @@
      }
  
      public Random getRandomWithSeed(long seed)
-@@ -1001,6 +1125,63 @@
+@@ -1001,6 +1101,63 @@
          }
      }
  
@@ -455,7 +429,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1198,26 @@
+@@ -1017,6 +1174,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -482,7 +456,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1276,7 @@
+@@ -1075,7 +1252,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -491,7 +465,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1287,7 @@
+@@ -1086,7 +1263,7 @@
  
      public boolean isPopulated()
      {
@@ -500,7 +474,7 @@
      }
  
      public boolean wasTicked()
-@@ -1540,11 +1741,11 @@
+@@ -1540,11 +1717,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.
