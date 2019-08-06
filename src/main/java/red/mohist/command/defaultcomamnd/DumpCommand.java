@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
+import red.mohist.api.ServerAPI;
 import red.mohist.i18n.Message;
 
 import java.io.File;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class DumpCommand extends Command {
     public DumpCommand(String name) {
@@ -26,7 +28,7 @@ public class DumpCommand extends Command {
         this.usageMessage = "/mohist *";
     }
 
-    private List<String> params = Arrays.asList("potions", "enchants", "commands", "entitytypes", "biomes");
+    private List<String> params = Arrays.asList("potions", "enchants", "cbcmds", "modscmds", "entitytypes", "biomes");
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
@@ -59,8 +61,11 @@ public class DumpCommand extends Command {
             case "enchants":
                 dumpEnchant(sender);
                 break;
-            case "commands":
-                dumpCommands(sender);
+            case "cbcmds":
+                dumpCBCommands(sender);
+                break;
+            case "modscmds":
+                dumpModsCommands(sender);
                 break;
             case "entitytypes":
                 dumpEntityTypes(sender);
@@ -117,13 +122,26 @@ public class DumpCommand extends Command {
         }
     }
 
-    private void dumpCommands(CommandSender sender) {
+    private void dumpCBCommands(CommandSender sender) {
         StringBuilder sb = new StringBuilder();
         for (Command per : MinecraftServer.getServerInst().server.getCommandMap().getCommands()) {
             sb.append(per.getName() + ": " + per.getPermission() + "\n");
         }
         try {
-            FileUtils.writeByteArrayToFile(new File("dump", "commands.mo"), sb.toString().getBytes(StandardCharsets.UTF_8));
+            FileUtils.writeByteArrayToFile(new File("dump", "cbcommands.mo"), sb.toString().getBytes(StandardCharsets.UTF_8));
+            sender.sendMessage("Ok");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void dumpModsCommands(CommandSender sender) {
+        StringBuilder sb = new StringBuilder();
+        for(Map.Entry<String,String> m: ServerAPI.forgecmdper.entrySet()){
+            sb.append(m.getKey() + ": " + m.getValue() + "\n");
+        }
+        try {
+            FileUtils.writeByteArrayToFile(new File("dump", "modscommands.mo"), sb.toString().getBytes(StandardCharsets.UTF_8));
             sender.sendMessage("Ok");
         } catch (IOException ex) {
             ex.printStackTrace();
