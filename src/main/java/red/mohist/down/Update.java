@@ -20,13 +20,17 @@ public class Update {
             URLConnection conn = url.openConnection();
             InputStream is = conn.getInputStream();
 
-            String sha = IOUtil.readContent(is, "UTF-8");
-            String sha1 = sha.substring(sha.indexOf("\"sha\":\""));
-            String s1 = sha1.substring(sha1.indexOf("\"sha\":\"") + 7);
+            String commits = IOUtil.readContent(is, "UTF-8");
+            String sha = "\"sha\":\"";
+            String date = "\"date\":\"";
+
+            String s0 = commits.substring(commits.indexOf(sha));
+            String s1 = s0.substring(s0.indexOf(sha) + 7);
             String s2 = s1.substring(0, 7);
+
             String oldver = Update.class.getPackage().getImplementationVersion();
-            String time = sha.substring(sha.indexOf("\"date\":\""));
-            String time1 = time.substring(time.indexOf("\"date\":\"") + 8);
+            String time = commits.substring(commits.indexOf(date));
+            String time1 = time.substring(time.indexOf(date) + 8);
             String time2 = time1.substring(0, 20);
             if (oldver.contains(s2)) {
                 System.out.println(Message.getFormatString("update.latest", new Object[]{s2,oldver}));

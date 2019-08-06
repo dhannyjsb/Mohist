@@ -68,9 +68,10 @@ public class Mohist {
         {
             System.out.println(Message.getString(Message.Not_Have_Library));
             System.out.println("");
-            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-            cachedThreadPool.execute(new DownloadServer());
-            cachedThreadPool.execute(new DownloadLibraries());
+            ExecutorService ds = Executors.newCachedThreadPool();
+            ExecutorService dl = Executors.newCachedThreadPool();
+            ds.execute(new DownloadServer());
+            dl.execute(new DownloadLibraries());
             System.out.println(Message.getString("file.ok"));
         }
     }
