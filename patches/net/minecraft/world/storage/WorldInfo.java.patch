@@ -81,20 +81,18 @@
          this.raining = isRaining;
      }
  
-@@ -712,6 +739,12 @@
-     public void setDifficulty(EnumDifficulty newDifficulty)
+@@ -713,6 +740,10 @@
      {
          net.minecraftforge.common.ForgeHooks.onDifficultyChange(newDifficulty, this.difficulty);
-+        SPacketServerDifficulty packet = new SPacketServerDifficulty(this.getDifficulty(), this.isDifficultyLocked());
-+        for (EntityPlayer player : world.playerEntities) {
-+            if (player != null) {
-+                ((EntityPlayerMP) player).connection.sendPacket(packet);
-+            }
-+        }
          this.difficulty = newDifficulty;
++        SPacketServerDifficulty packet = new SPacketServerDifficulty(this.getDifficulty(), this.isDifficultyLocked());
++        for (EntityPlayerMP player : (java.util.Queue<EntityPlayerMP>) (java.util.Queue) world.playerEntities) {
++            player.connection.sendPacket(packet);
++        }
      }
  
-@@ -869,4 +902,29 @@
+     public boolean isDifficultyLocked()
+@@ -869,4 +900,29 @@
      {
          return this.versionName;
      }

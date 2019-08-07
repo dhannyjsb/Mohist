@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
 
 /**
@@ -407,7 +408,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return A List of all LivingEntities currently residing in this world
      */
-    public List<LivingEntity> getLivingEntities();
+    public Queue<LivingEntity> getLivingEntities();
 
     /**
      * Get a collection of all entities in this World matching the given
@@ -807,7 +808,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return List containing any or none BlockPopulators
      */
-    public List<BlockPopulator> getPopulators();
+    public Queue<BlockPopulator> getPopulators();
 
     /**
      * Spawn an entity of a specific class at the given {@link Location}

@@ -35,30 +35,7 @@
  
      public ClassInheritanceMultiMap(Class<T> baseClassIn)
      {
-@@ -32,6 +30,22 @@
-         }
-     }
- 
-+    public void readLock() {
-+//        rwLock.readLock().lock();
-+    }
-+
-+    public void readUnlock() {
-+//        rwLock.readLock().unlock();
-+    }
-+
-+    public void writeLock() {
-+//        rwLock.writeLock().lock();
-+    }
-+
-+    public void writeUnlock() {
-+//        rwLock.writeLock().unlock();
-+    }
-+
-     protected void createLookup(Class<?> clazz)
-     {
-         ALL_KNOWN.add(clazz);
-@@ -49,7 +63,7 @@
+@@ -49,7 +47,7 @@
  
      protected Class<?> initializeClassLookup(Class<?> clazz)
      {
@@ -67,7 +44,7 @@
          {
              if (!this.knownKeys.contains(clazz))
              {
-@@ -83,7 +97,9 @@
+@@ -83,7 +81,9 @@
  
          if (list == null)
          {
@@ -78,7 +55,7 @@
          }
          else
          {
-@@ -93,16 +109,15 @@
+@@ -93,16 +93,15 @@
  
      public boolean remove(Object p_remove_1_)
      {
@@ -97,7 +74,7 @@
                  {
                      flag = true;
                  }
-@@ -119,26 +134,22 @@
+@@ -119,26 +118,22 @@
  
      public <S> Iterable<S> getByClass(final Class<S> clazz)
      {

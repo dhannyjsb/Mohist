@@ -466,25 +466,26 @@
              if (this.canTriggerWalking() && (!this.onGround || !this.isSneaking() || !(this instanceof EntityPlayer)) && !this.isRiding())
              {
                  double d15 = this.posX - d10;
-@@ -958,7 +1065,8 @@
-                     this.nextFlap = this.playFlySound(this.distanceWalkedOnStepModified);
+@@ -959,18 +1066,6 @@
                  }
              }
--
-+            // Move to the top of the method
-+            /*
-             try
-             {
-                 this.doBlockCollisions();
-@@ -970,6 +1078,7 @@
-                 this.addEntityCrashInfo(crashreportcategory);
-                 throw new ReportedException(crashreport);
-             }
-+            */
  
+-            try
+-            {
+-                this.doBlockCollisions();
+-            }
+-            catch (Throwable throwable)
+-            {
+-                CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Checking entity block collision");
+-                CrashReportCategory crashreportcategory = crashreport.makeCategory("Entity being checked for collision");
+-                this.addEntityCrashInfo(crashreportcategory);
+-                throw new ReportedException(crashreport);
+-            }
+-
              boolean flag1 = this.isWet();
  
-@@ -979,11 +1088,17 @@
+             if (this.world.isFlammableWithin(this.getEntityBoundingBox().shrink(0.001D)))
+@@ -979,11 +1074,17 @@
  
                  if (!flag1)
                  {
@@ -504,7 +505,7 @@
                      }
                  }
              }
-@@ -1008,7 +1123,7 @@
+@@ -1008,7 +1109,7 @@
          this.posX = (axisalignedbb.minX + axisalignedbb.maxX) / 2.0D;
          this.posY = axisalignedbb.minY;
          this.posZ = (axisalignedbb.minZ + axisalignedbb.maxZ) / 2.0D;
@@ -513,7 +514,7 @@
      }
  
      protected SoundEvent getSwimSound()
-@@ -1041,8 +1156,13 @@
+@@ -1041,8 +1142,13 @@
  
                          try
                          {
@@ -529,7 +530,7 @@
                          }
                          catch (Throwable throwable)
                          {
-@@ -1154,6 +1274,14 @@
+@@ -1154,6 +1260,14 @@
          }
      }
  
@@ -544,7 +545,7 @@
      public final boolean isImmuneToFire()
      {
          return this.isImmuneToFire;
-@@ -1369,6 +1497,11 @@
+@@ -1369,6 +1483,11 @@
  
      public void setWorld(World worldIn)
      {
@@ -556,7 +557,7 @@
          this.world = worldIn;
      }
  
-@@ -1687,6 +1820,16 @@
+@@ -1687,6 +1806,16 @@
          {
              compound.setTag("Pos", this.newDoubleNBTList(this.posX, this.posY, this.posZ));
              compound.setTag("Motion", this.newDoubleNBTList(this.motionX, this.motionY, this.motionZ));
@@ -573,7 +574,7 @@
              compound.setTag("Rotation", this.newFloatNBTList(this.rotationYaw, this.rotationPitch));
              compound.setFloat("FallDistance", this.fallDistance);
              compound.setShort("Fire", (short)this.fire);
-@@ -1696,7 +1839,13 @@
+@@ -1696,7 +1825,13 @@
              compound.setBoolean("Invulnerable", this.invulnerable);
              compound.setInteger("PortalCooldown", this.timeUntilPortal);
              compound.setUniqueId("UUID", this.getUniqueID());
@@ -588,7 +589,7 @@
              if (this.hasCustomName())
              {
                  compound.setString("CustomName", this.getCustomNameTag());
-@@ -1761,7 +1910,6 @@
+@@ -1761,7 +1896,6 @@
                      compound.setTag("Passengers", nbttaglist1);
                  }
              }
@@ -596,7 +597,7 @@
              return compound;
          }
          catch (Throwable throwable)
-@@ -1784,21 +1932,6 @@
+@@ -1784,21 +1918,6 @@
              this.motionY = nbttaglist2.getDoubleAt(1);
              this.motionZ = nbttaglist2.getDoubleAt(2);
  
@@ -618,7 +619,7 @@
              this.posX = nbttaglist.getDoubleAt(0);
              this.posY = nbttaglist.getDoubleAt(1);
              this.posZ = nbttaglist.getDoubleAt(2);
-@@ -1869,6 +2002,54 @@
+@@ -1869,6 +1988,54 @@
              {
                  this.setPosition(this.posX, this.posY, this.posZ);
              }
@@ -673,7 +674,7 @@
          }
          catch (Throwable throwable)
          {
-@@ -1885,7 +2066,7 @@
+@@ -1885,7 +2052,7 @@
      }
  
      @Nullable
@@ -682,7 +683,7 @@
      {
          ResourceLocation resourcelocation = EntityList.getKey(this);
          return resourcelocation == null ? null : resourcelocation.toString();
-@@ -2110,6 +2291,28 @@
+@@ -2110,6 +2277,28 @@
          }
          else
          {
@@ -711,7 +712,7 @@
              if (!this.world.isRemote && passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer))
              {
                  this.riddenByEntities.add(0, passenger);
-@@ -2129,6 +2332,27 @@
+@@ -2129,6 +2318,27 @@
          }
          else
          {
@@ -739,7 +740,7 @@
              this.riddenByEntities.remove(passenger);
              passenger.rideCooldown = 60;
          }
-@@ -2325,12 +2549,12 @@
+@@ -2325,12 +2535,12 @@
          this.setFlag(5, invisible);
      }
  
@@ -754,7 +755,7 @@
      {
          byte b0 = ((Byte)this.dataManager.get(FLAGS)).byteValue();
  
-@@ -2351,17 +2575,52 @@
+@@ -2351,17 +2561,52 @@
  
      public void setAir(int air)
      {
@@ -809,7 +810,7 @@
          }
      }
  
-@@ -2502,7 +2761,7 @@
+@@ -2502,7 +2747,7 @@
  
      public String toString()
      {
@@ -818,7 +819,7 @@
      }
  
      public boolean isEntityInvulnerable(DamageSource source)
-@@ -2540,7 +2799,7 @@
+@@ -2540,7 +2785,7 @@
      public Entity changeDimension(int dimensionIn)
      {
          if (this.world.isRemote || this.isDead) return null;
@@ -827,7 +828,7 @@
      }
  
      @Nullable // Forge: Entities that require custom handling should override this method, not the other
-@@ -2551,53 +2810,73 @@
+@@ -2551,53 +2796,73 @@
              if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
              this.world.profiler.startSection("changeDimension");
              MinecraftServer minecraftserver = this.getServer();
@@ -940,7 +941,7 @@
              this.world.profiler.endStartSection("reloading");
              Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
  
-@@ -2605,28 +2884,26 @@
+@@ -2605,28 +2870,26 @@
              {
                  entity.copyDataFromOld(this);
  
@@ -978,7 +979,7 @@
              return entity;
          }
          else
-@@ -2755,6 +3032,11 @@
+@@ -2755,6 +3018,11 @@
  
      public void setCustomNameTag(String name)
      {
@@ -990,7 +991,7 @@
          this.dataManager.set(CUSTOM_NAME, name);
      }
  
-@@ -2838,7 +3120,25 @@
+@@ -2838,7 +3106,25 @@
  
      public void setEntityBoundingBox(AxisAlignedBB bb)
      {
@@ -1017,7 +1018,7 @@
      }
  
      public float getEyeHeight()
-@@ -2870,6 +3170,11 @@
+@@ -2870,6 +3156,11 @@
          return true;
      }
  
@@ -1029,7 +1030,7 @@
      public BlockPos getPosition()
      {
          return new BlockPos(this.posX, this.posY + 0.5D, this.posZ);
-@@ -2897,11 +3202,11 @@
+@@ -2897,11 +3188,11 @@
  
      public void setCommandStat(CommandResultStats.Type type, int amount)
      {
@@ -1045,7 +1046,7 @@
  
      @Nullable
      public MinecraftServer getServer()
-@@ -2974,7 +3279,6 @@
+@@ -2974,7 +3265,6 @@
      public void onRemovedFromWorld() {
          this.isAddedToWorld = false;
      }
@@ -1053,7 +1054,7 @@
      /**
       * Returns a NBTTagCompound that can be used to store custom data for this entity.
       * It will be written, and read from disc, so it persists over world saves.
-@@ -3030,7 +3334,7 @@
+@@ -3030,7 +3320,7 @@
          {
              return ((net.minecraft.entity.item.EntityMinecart)this).getCartItem();
          }
@@ -1062,7 +1063,7 @@
          {
              return new ItemStack(((EntityBoat)this).getItemBoat());
          }
-@@ -3109,14 +3413,14 @@
+@@ -3109,14 +3399,14 @@
      }
  
      @Override
@@ -1079,7 +1080,7 @@
      {
          return capabilities == null ? null : capabilities.getCapability(capability, facing);
      }
-@@ -3319,7 +3623,7 @@
+@@ -3319,7 +3609,7 @@
          return SoundCategory.NEUTRAL;
      }
  

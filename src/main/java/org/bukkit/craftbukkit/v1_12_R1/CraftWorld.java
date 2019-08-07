@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.v1_12_R1;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Queues;
 import net.minecraft.block.BlockChorusFlower;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockOldLeaf;
@@ -275,6 +276,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -284,7 +286,7 @@ public class CraftWorld implements World {
     private static final Random rand = new Random();
     private final WorldServer world;
     private final CraftServer server = (CraftServer) Bukkit.getServer();
-    private final List<BlockPopulator> populators = new ArrayList<BlockPopulator>();
+    private final Queue<BlockPopulator> populators = Queues.newConcurrentLinkedQueue();//hose
     private final BlockMetadataStore blockMetadata = new BlockMetadataStore(this);
     // Spigot start
     private final Spigot spigot = new Spigot() {
@@ -895,7 +897,7 @@ public class CraftWorld implements World {
         }
     }
 
-    public List<BlockPopulator> getPopulators() {
+    public Queue<BlockPopulator> getPopulators() {
         return populators;
     }
 
@@ -951,8 +953,8 @@ public class CraftWorld implements World {
         return list;
     }
 
-    public List<LivingEntity> getLivingEntities() {
-        List<LivingEntity> list = new ArrayList<LivingEntity>();
+    public Queue<LivingEntity> getLivingEntities() {
+        Queue<LivingEntity> list = Queues.newConcurrentLinkedQueue();//hose
 
         for (Object o : world.loadedEntityList) {
             if (o instanceof net.minecraft.entity.Entity) {

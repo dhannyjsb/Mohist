@@ -1,6 +1,11 @@
 --- ../src-base/minecraft/net/minecraft/entity/effect/EntityLightningBolt.java
 +++ ../src-work/minecraft/net/minecraft/entity/effect/EntityLightningBolt.java
-@@ -4,14 +4,18 @@
+@@ -1,17 +1,23 @@
+ package net.minecraft.entity.effect;
+ 
+ import java.util.List;
++import java.util.Queue;
++
  import net.minecraft.block.material.Material;
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +24,7 @@
  
  public class EntityLightningBolt extends EntityWeatherEffect
  {
-@@ -20,9 +24,13 @@
+@@ -20,9 +26,13 @@
      private int boltLivingTime;
      private final boolean effectOnly;
  
@@ -33,7 +38,7 @@
          this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
          this.lightningState = 2;
          this.boltVertex = this.rand.nextLong();
-@@ -34,7 +42,10 @@
+@@ -34,7 +44,10 @@
          {
              if (worldIn.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos))
              {
@@ -45,7 +50,7 @@
              }
  
              for (int i = 0; i < 4; ++i)
-@@ -43,12 +54,23 @@
+@@ -43,12 +56,23 @@
  
                  if (worldIn.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos1))
                  {
@@ -70,7 +75,7 @@
      public SoundCategory getSoundCategory()
      {
          return SoundCategory.WEATHER;
-@@ -58,9 +80,25 @@
+@@ -58,9 +82,25 @@
      {
          super.onUpdate();
  
@@ -82,7 +87,7 @@
 +            // this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F);
 +            float pitch = 0.8F + this.rand.nextFloat() * 0.2F;
 +            int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16;
-+            for (EntityPlayerMP player : (List<EntityPlayerMP>) (List) this.world.playerEntities) {
++            for (EntityPlayerMP player : (Queue<EntityPlayerMP>) (Queue) this.world.playerEntities) {
 +                double deltaX = this.posX - player.posX;
 +                double deltaZ = this.posZ - player.posZ;
 +                double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;
@@ -98,7 +103,7 @@
              this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
          }
  
-@@ -84,13 +122,15 @@
+@@ -84,13 +124,15 @@
  
                      if (this.world.getGameRules().getBoolean("doFireTick") && this.world.isAreaLoaded(blockpos, 10) && this.world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos))
                      {

@@ -1,15 +1,18 @@
 package org.bukkit.craftbukkit.v1_12_R1.util;
 
+import com.google.common.collect.Sets;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class HashTreeSet<V> implements Set<V> {
 
-    private HashSet<V> hash = new HashSet<V>();
-    private TreeSet<V> tree = new TreeSet<V>();
+    private Set<V> hash = Sets.newConcurrentHashSet();//hose
+    private ConcurrentSkipListSet<V> tree = new ConcurrentSkipListSet();//hose
 
     public HashTreeSet() {
 
@@ -110,8 +113,21 @@ public class HashTreeSet<V> implements Set<V> {
         tree.clear();
     }
 
-    public V first() {
-        return tree.first();
+    public V first() {//hose
+        if (tree.size() > 0) {
+            return tree.first();
+        }
+        return null;
+    }
+
+    public V pollfirst() {//hose
+        if (tree.size() > 0) {
+            V v = tree.first();
+            hash.remove(v);
+            tree.remove(v);
+            return v;
+        }
+        return null;
     }
 
 }

@@ -71,7 +71,7 @@
      }
  
      public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-@@ -350,10 +351,12 @@
+@@ -350,10 +351,11 @@
          compound.setByteArray("Biomes", chunkIn.getBiomeArray());
          chunkIn.setHasEntities(false);
          NBTTagList nbttaglist1 = new NBTTagList();
@@ -82,20 +82,11 @@
          {
 -            for (Entity entity : chunkIn.getEntityLists()[i])
 +            ClassInheritanceMultiMap<Entity> list = arr[i];
-+            list.readLock();
 +            for (Entity entity : list)
              {
                  NBTTagCompound nbttagcompound2 = new NBTTagCompound();
  
-@@ -371,6 +374,7 @@
-                             entity.getClass().getName(), e);
-                 }
-             }
-+            list.readUnlock();
-         }
- 
-         compound.setTag("Entities", nbttaglist1);
-@@ -609,8 +613,11 @@
+@@ -609,8 +611,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {

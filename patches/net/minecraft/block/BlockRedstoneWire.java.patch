@@ -1,6 +1,13 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockRedstoneWire.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockRedstoneWire.java
-@@ -7,6 +7,8 @@
+@@ -2,11 +2,15 @@
+ 
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Sets;
++
++import java.util.Collections;
+ import java.util.EnumSet;
+ import java.util.List;
  import java.util.Random;
  import java.util.Set;
  import javax.annotation.Nullable;
@@ -9,7 +16,7 @@
  import net.minecraft.block.material.Material;
  import net.minecraft.block.properties.IProperty;
  import net.minecraft.block.properties.PropertyEnum;
-@@ -31,22 +33,23 @@
+@@ -31,22 +35,23 @@
  import net.minecraft.world.World;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,7 +36,7 @@
      protected static final AxisAlignedBB[] REDSTONE_WIRE_AABB = new AxisAlignedBB[] {new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 0.8125D, 0.0625D, 0.8125D), new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 0.8125D, 0.0625D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.1875D, 0.8125D, 0.0625D, 0.8125D), new AxisAlignedBB(0.0D, 0.0D, 0.1875D, 0.8125D, 0.0625D, 1.0D), new AxisAlignedBB(0.1875D, 0.0D, 0.0D, 0.8125D, 0.0625D, 0.8125D), new AxisAlignedBB(0.1875D, 0.0D, 0.0D, 0.8125D, 0.0625D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.8125D, 0.0625D, 0.8125D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.8125D, 0.0625D, 1.0D), new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 1.0D, 0.0625D, 0.8125D), new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 1.0D, 0.0625D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.1875D, 1.0D, 0.0625D, 0.8125D), new AxisAlignedBB(0.0D, 0.0D, 0.1875D, 1.0D, 0.0625D, 1.0D), new AxisAlignedBB(0.1875D, 0.0D, 0.0D, 1.0D, 0.0625D, 0.8125D), new AxisAlignedBB(0.1875D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 0.8125D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D)};
      private boolean canProvidePower = true;
 -    private final Set<BlockPos> blocksNeedingUpdate = Sets.<BlockPos>newHashSet();
-+    private final Set<BlockPos> blocksNeedingUpdate = new ConcurrentSet();
++    private final Set<BlockPos> blocksNeedingUpdate = Collections.synchronizedSet(Sets.newHashSet());
  
      public BlockRedstoneWire()
      {
@@ -39,7 +46,7 @@
      }
  
      public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-@@ -57,10 +60,10 @@
+@@ -57,10 +62,10 @@
      private static int getAABBIndex(IBlockState state)
      {
          int i = 0;
@@ -54,7 +61,7 @@
  
          if (flag || flag2 && !flag && !flag1 && !flag3)
          {
-@@ -94,7 +97,7 @@
+@@ -94,7 +99,7 @@
          return state;
      }
  
@@ -63,7 +70,7 @@
      {
          BlockPos blockpos = pos.offset(direction);
          IBlockState iblockstate = worldIn.getBlockState(pos.offset(direction));
-@@ -111,18 +114,18 @@
+@@ -111,18 +116,18 @@
                  {
                      if (iblockstate.isBlockNormalCube())
                      {
@@ -86,7 +93,32 @@
          }
      }
  
-@@ -220,6 +223,12 @@
+@@ -151,15 +156,17 @@
+     private IBlockState updateSurroundingRedstone(World worldIn, BlockPos pos, IBlockState state)
+     {
+         state = this.calculateCurrentChanges(worldIn, pos, pos, state);
+-        List<BlockPos> list = Lists.newArrayList(this.blocksNeedingUpdate);
+-        this.blocksNeedingUpdate.clear();
++        synchronized (this.blocksNeedingUpdate) {
++            List<BlockPos> list = Lists.newArrayList(this.blocksNeedingUpdate);
+ 
+-        for (BlockPos blockpos : list)
+-        {
+-            worldIn.notifyNeighborsOfStateChange(blockpos, this, false);
+-        }
++            this.blocksNeedingUpdate.clear();
+ 
+-        return state;
++            for (BlockPos blockpos : list) {
++                worldIn.notifyNeighborsOfStateChange(blockpos, this, false);
++            }
++
++            return state;
++        }
+     }
+ 
+     private IBlockState calculateCurrentChanges(World worldIn, BlockPos pos1, BlockPos pos2, IBlockState state)
+@@ -220,6 +227,12 @@
              j = k;
          }
  
@@ -99,7 +131,7 @@
          if (i != j)
          {
              state = state.withProperty(POWER, Integer.valueOf(j));
-@@ -319,7 +328,7 @@
+@@ -319,7 +332,7 @@
          }
      }
  

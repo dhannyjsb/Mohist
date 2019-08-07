@@ -1,9 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/entity/EntityTrackerEntry.java
 +++ ../src-work/minecraft/net/minecraft/entity/EntityTrackerEntry.java
-@@ -1,72 +1,36 @@
+@@ -1,72 +1,40 @@
  package net.minecraft.entity;
  
--import com.google.common.collect.Sets;
++import com.google.common.collect.Queues;
+ import com.google.common.collect.Sets;
 -import java.util.Collection;
 -import java.util.Collections;
 -import java.util.List;
@@ -44,8 +45,8 @@
 -import net.minecraft.entity.projectile.EntitySpectralArrow;
 -import net.minecraft.entity.projectile.EntityTippedArrow;
 -import net.minecraft.entity.projectile.EntityWitherSkull;
--import net.minecraft.init.Items;
 +import net.minecraft.entity.projectile.*;
+ import net.minecraft.init.Items;
  import net.minecraft.inventory.EntityEquipmentSlot;
  import net.minecraft.item.ItemMap;
  import net.minecraft.item.ItemStack;
@@ -81,17 +82,18 @@
 +import java.util.Collection;
 +import java.util.Collections;
 +import java.util.List;
++import java.util.Queue;
 +import java.util.Set;
 +
  public class EntityTrackerEntry
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -94,10 +58,11 @@
+@@ -94,10 +62,11 @@
      private boolean ridingEntity;
      private boolean onGround;
      public boolean playerEntitiesUpdated;
 -    public final Set<EntityPlayerMP> trackingPlayers = Sets.<EntityPlayerMP>newHashSet();
-+    public final Set<EntityPlayerMP> trackingPlayers = new ConcurrentSet();
++    public final Set<EntityPlayerMP> trackingPlayers = Sets.newConcurrentHashSet();//hose
  
      public EntityTrackerEntry(Entity entityIn, int rangeIn, int maxRangeIn, int updateFrequencyIn, boolean sendVelocityUpdatesIn)
      {
@@ -99,7 +101,16 @@
          this.trackedEntity = entityIn;
          this.range = rangeIn;
          this.maxRange = maxRangeIn;
-@@ -148,19 +113,19 @@
+@@ -129,7 +98,7 @@
+         return this.trackedEntity.getEntityId();
+     }
+ 
+-    public void updatePlayerList(List<EntityPlayer> players)
++    public void updatePlayerList(Queue<EntityPlayer> players)
+     {
+         this.playerEntitiesUpdated = false;
+ 
+@@ -148,29 +117,26 @@
          if (!list.equals(this.passengers))
          {
              this.passengers = list;
@@ -117,13 +128,27 @@
 +            if (this.updateCounter % 10 == 0 && itemstack.getItem() instanceof ItemMap)// CraftBukkit - Moved this.updateCounter % 10 logic here so item frames do not enter the other blocks
              {
                  MapData mapdata = ((ItemMap) itemstack.getItem()).getMapData(itemstack, this.trackedEntity.world);
- 
+-
 -                for (EntityPlayer entityplayer : players)
-+                for (EntityPlayer entityplayer : trackingPlayers)
-                 {
-                     EntityPlayerMP entityplayermp = (EntityPlayerMP)entityplayer;
+-                {
+-                    EntityPlayerMP entityplayermp = (EntityPlayerMP)entityplayer;
++                this.trackingPlayers.stream().forEach(iterator -> {//hose
++                    EntityPlayer entityplayer = (EntityPlayer) iterator;
++                    EntityPlayerMP entityplayermp = (EntityPlayerMP) entityplayer;
                      mapdata.updateVisiblePlayers(entityplayermp, itemstack);
-@@ -211,7 +176,20 @@
+                     Packet<?> packet = ((ItemMap) itemstack.getItem()).createMapDataPacket(itemstack, this.trackedEntity.world, entityplayermp);
+-
+-                    if (packet != null)
+-                    {
++                    if (packet != null) {
+                         entityplayermp.connection.sendPacket(packet);
+                     }
+-                }
++                });
+             }
+ 
+             this.sendMetadata();
+@@ -211,7 +177,20 @@
                  Packet<?> packet1 = null;
                  boolean flag = j * j + k * k + l * l >= 128L || this.updateCounter % 60 == 0;
                  boolean flag1 = Math.abs(k2 - this.encodedRotationYaw) >= 1 || Math.abs(i - this.encodedRotationPitch) >= 1;
@@ -144,36 +169,40 @@
                  if (this.updateCounter > 0 || this.trackedEntity instanceof EntityArrow)
                  {
                      if (j >= -32768L && j < 32768L && k >= -32768L && k < 32768L && l >= -32768L && l < 32768L && this.ticksSinceLastForcedTeleport <= 400 && !this.ridingEntity && this.onGround == this.trackedEntity.onGround)
-@@ -236,6 +214,11 @@
+@@ -236,6 +215,11 @@
                      {
                          this.onGround = this.trackedEntity.onGround;
                          this.ticksSinceLastForcedTeleport = 0;
 +                        // CraftBukkit start - Refresh list of who can see a player before sending teleport packet
 +                        if (this.trackedEntity instanceof EntityPlayer) {
-+                            this.updatePlayerEntities(new java.util.ArrayList<>(this.trackingPlayers));
++                            this.updatePlayerEntities(Queues.newConcurrentLinkedQueue(this.trackingPlayers));//hose
 +                        }
 +                        // CraftBukkit end
                          this.resetPlayerVisibility();
                          packet1 = new SPacketEntityTeleport(this.trackedEntity);
                      }
-@@ -272,6 +255,7 @@
+@@ -271,20 +255,6 @@
+                 }
  
                  this.sendMetadata();
- 
-+                /* CraftBukkit start - Code moved up
-                 if (flag)
-                 {
-                     this.encodedPosX = i1;
-@@ -284,7 +268,7 @@
-                     this.encodedRotationYaw = k2;
-                     this.encodedRotationPitch = i;
-                 }
 -
-+                // CraftBukkit end */
+-                if (flag)
+-                {
+-                    this.encodedPosX = i1;
+-                    this.encodedPosY = i2;
+-                    this.encodedPosZ = j2;
+-                }
+-
+-                if (flag1)
+-                {
+-                    this.encodedRotationYaw = k2;
+-                    this.encodedRotationPitch = i;
+-                }
+-
                  this.ridingEntity = false;
              }
  
-@@ -303,7 +287,28 @@
+@@ -303,7 +273,28 @@
  
          if (this.trackedEntity.velocityChanged)
          {
@@ -203,7 +232,7 @@
              this.trackedEntity.velocityChanged = false;
          }
      }
-@@ -324,6 +329,11 @@
+@@ -324,6 +315,11 @@
  
              if (!set.isEmpty())
              {
@@ -215,7 +244,7 @@
                  this.sendToTrackingAndSelf(new SPacketEntityProperties(this.trackedEntity.getEntityId(), set));
              }
  
-@@ -376,6 +386,16 @@
+@@ -376,6 +372,16 @@
              {
                  if (!this.trackingPlayers.contains(playerMP) && (this.isPlayerWatchingThisChunk(playerMP) || this.trackedEntity.forceSpawn))
                  {
@@ -227,12 +256,12 @@
 +                        }
 +                    }
 +
-+                    playerMP.entityRemoveQueue.remove(Integer.valueOf(this.trackedEntity.getEntityId()));
++                    playerMP.entityRemoveQueue.remove(this.trackedEntity.getEntityId()); //hose
 +                    // CraftBukkit end
                      this.trackingPlayers.add(playerMP);
                      Packet<?> packet = this.createSpawnPacket();
                      playerMP.connection.sendPacket(packet);
-@@ -392,6 +412,14 @@
+@@ -392,6 +398,14 @@
                          AttributeMap attributemap = (AttributeMap)((EntityLivingBase)this.trackedEntity).getAttributeMap();
                          Collection<IAttributeInstance> collection = attributemap.getWatchedAttributes();
  
@@ -247,7 +276,7 @@
                          if (!collection.isEmpty())
                          {
                              playerMP.connection.sendPacket(new SPacketEntityProperties(this.trackedEntity.getEntityId(), collection));
-@@ -435,6 +463,11 @@
+@@ -435,6 +449,11 @@
                          }
                      }
  
@@ -259,7 +288,7 @@
                      if (this.trackedEntity instanceof EntityLivingBase)
                      {
                          EntityLivingBase entitylivingbase = (EntityLivingBase)this.trackedEntity;
-@@ -457,6 +490,7 @@
+@@ -457,6 +476,7 @@
  
                      this.trackedEntity.addTrackingPlayer(playerMP);
                      playerMP.addEntity(this.trackedEntity);
@@ -267,7 +296,7 @@
                      net.minecraftforge.event.ForgeEventFactory.onStartEntityTracking(trackedEntity, playerMP);
                  }
              }
-@@ -465,6 +499,7 @@
+@@ -465,6 +485,7 @@
                  this.trackingPlayers.remove(playerMP);
                  this.trackedEntity.removeTrackingPlayer(playerMP);
                  playerMP.removeEntity(this.trackedEntity);
@@ -275,7 +304,7 @@
                  net.minecraftforge.event.ForgeEventFactory.onStopEntityTracking(trackedEntity, playerMP);
              }
          }
-@@ -472,6 +507,46 @@
+@@ -472,6 +493,46 @@
  
      public boolean isVisibleTo(EntityPlayerMP playerMP)
      {
@@ -322,8 +351,18 @@
          double d0 = playerMP.posX - (double)this.encodedPosX / 4096.0D;
          double d1 = playerMP.posZ - (double)this.encodedPosZ / 4096.0D;
          int i = Math.min(this.range, this.maxRange);
-@@ -491,11 +566,14 @@
-         }
+@@ -483,19 +544,19 @@
+         return playerMP.getServerWorld().getPlayerChunkMap().isPlayerWatchingChunk(playerMP, this.trackedEntity.chunkCoordX, this.trackedEntity.chunkCoordZ);
+     }
+ 
+-    public void updatePlayerEntities(List<EntityPlayer> players)
++    public void updatePlayerEntities(Queue<EntityPlayer> players)
+     {
+-        for (int i = 0; i < players.size(); ++i)
+-        {
+-            this.updatePlayerEntity((EntityPlayerMP)players.get(i));
+-        }
++        players.stream().forEach(pl -> this.updatePlayerEntity((EntityPlayerMP) pl));
      }
  
 +    @Nullable
@@ -338,7 +377,7 @@
          }
  
          Packet pkt = net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.getEntitySpawningPacket(this.trackedEntity);
-@@ -656,7 +734,8 @@
+@@ -656,7 +717,8 @@
          }
          else
          {
@@ -348,7 +387,7 @@
          }
      }
  
-@@ -667,6 +746,7 @@
+@@ -667,6 +729,7 @@
              this.trackingPlayers.remove(playerMP);
              this.trackedEntity.removeTrackingPlayer(playerMP);
              playerMP.removeEntity(this.trackedEntity);

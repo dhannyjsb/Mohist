@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/client/renderer/RenderGlobal.java
++++ ../src-work/minecraft/net/minecraft/client/renderer/RenderGlobal.java
+@@ -583,7 +583,7 @@
+             this.renderManager.setRenderPosition(d3, d4, d5);
+             this.mc.entityRenderer.enableLightmap();
+             this.world.profiler.endStartSection("global");
+-            List<Entity> list = this.world.getLoadedEntityList();
++            Queue<Entity> list = this.world.getLoadedEntityList();
+             if (pass == 0)
+             {
+             this.countEntitiesTotal = list.size();
