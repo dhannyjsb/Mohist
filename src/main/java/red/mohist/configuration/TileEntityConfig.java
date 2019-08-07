@@ -4,6 +4,7 @@ import net.minecraftforge.cauldron.CauldronHooks;
 import net.minecraftforge.cauldron.TileEntityCache;
 import net.minecraftforge.cauldron.command.TileEntityCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
+import red.mohist.Mohist;
 import red.mohist.api.ServerAPI;
 
 public class TileEntityConfig extends ConfigBase
@@ -69,11 +70,12 @@ public class TileEntityConfig extends ConfigBase
                 teCache.tickNoPlayers = config.getBoolean( "world-settings." + teCache.worldName + "." + teCache.configPath + ".tick-no-players", config.getBoolean( "world-settings.default." + teCache.configPath + ".tick-no-players") );
                 teCache.tickInterval = config.getInt( "world-settings." + teCache.worldName + "." + teCache.configPath + ".tick-interval", config.getInt( "world-settings.default." + teCache.configPath + ".tick-interval") );
             }
+            this.saveWorldConfigs();
             this.save();
         }
         catch (Exception ex)
         {
-            ServerAPI.getNMSServer().logSevere("Could not load " + this.configFile);
+            Mohist.LOGGER.error("Could not load " + this.configFile);
             ex.printStackTrace();
         }
     }

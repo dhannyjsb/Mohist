@@ -1,6 +1,7 @@
 package net.minecraftforge.cauldron;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class CauldronHooks {
 
     public static Map<Class<? extends TileEntity>, TileEntityCache> tileEntityCache = new HashMap<>();
-    public static Map<Class<? extends Entity>, SushchestvoCache> sushchestvoCache = new HashMap<Class<? extends Entity>, SushchestvoCache>();
+    public static Map<Class<? extends Entity>, EntityCache> entityCache = new HashMap<Class<? extends Entity>, EntityCache>();
 
     /*
      * Thermos
@@ -22,19 +23,18 @@ public class CauldronHooks {
      * 1 = true
      * -1 = false, absolute
      */
-    public static byte canSushchestvoTick(Entity entity, World world)
+    public static byte canEntityTick(Entity entity, World world)
     {
-        if (entity == null) { return 0; }
-
+        if (entity == null || world.entityWorldConfig == null) { return 0; }
+        if (!MinecraftServer.entityConfig.skipEntityTicks.getValue()) { return 1; }
         int cX = MathHelper.floor(entity.posX) >> 4, cZ = MathHelper.floor( entity.posZ ) >> 4;
-        int iX = MathHelper.floor( entity.posX ), iZ = MathHelper.floor( entity.posZ );
-        SushchestvoCache seCache = sushchestvoCache.get(entity.getClass());
+        EntityCache seCache = entityCache.get(entity.getClass());
         if (seCache == null)
         {
             String seConfigPath = entity.getClass().getName().replace(".", "-");
             seConfigPath = seConfigPath.replaceAll("[^A-Za-z0-9\\-]", ""); // Fix up odd class names to prevent YAML errors
-            seCache = new SushchestvoCache(entity.getClass(), world.getWorldInfo().getWorldName().toLowerCase(), seConfigPath, false, false, 1);
-            sushchestvoCache.put(entity.getClass(), seCache);
+            seCache = new EntityCache(entity.getClass(), world.getWorldInfo().getWorldName().toLowerCase(), seConfigPath, world.entityWorldConfig.getBoolean(seConfigPath + ".tick-no-players", false), world.entityWorldConfig.getBoolean(seConfigPath + ".never-ever-tick", false), world.entityWorldConfig.getInt(seConfigPath + ".tick-interval", 1));
+            entityCache.put(entity.getClass(), seCache);
         }
 
         if(seCache.neverEverTick)
@@ -105,7 +105,7 @@ public class CauldronHooks {
             if(world.getChunkProvider() instanceof ChunkProviderServer) // Thermos - allow the server to tick tiles that are trying to unload
             {
                 ChunkProviderServer cps = ((ChunkProviderServer)world.getChunkProvider());
-                if(cps.chunksToUnload.contains(tileEntity.getPos().getX() >> 4, tileEntity.getPos().getZ() >> 4))
+                if(cps.droppedChunksSet.contains(Long.valueOf(ChunkPos.asLong(tileEntity.getPos().getX() >> 4, tileEntity.getPos().getZ() >> 4))))
                 {
                     Chunk c = cps.getChunkIfLoaded(tileEntity.getPos().getX() >> 4, tileEntity.getPos().getY() >> 4);
                     if(c != null)
@@ -120,7 +120,6 @@ public class CauldronHooks {
 
             return false;
         }
-
          */
         return true;
     }

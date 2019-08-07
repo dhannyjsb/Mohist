@@ -1,5 +1,7 @@
 package red.mohist.configuration;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldServer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -59,6 +61,26 @@ public abstract class ConfigBase
         {
             ServerAPI.getNMSServer().logSevere("Could not save " + configFile);
             ex.printStackTrace();
+        }
+    }
+
+    public void saveWorldConfigs()
+    {
+        for (int i = 0; i < MinecraftServer.getServerInst().worldServerList.size(); ++i)
+        {
+            WorldServer worldserver = MinecraftServer.getServerInst().worldServerList.get(i);
+
+            if (worldserver != null)
+            {
+                if (worldserver.entityWorldConfig != null)
+                {
+                    worldserver.entityWorldConfig.save();
+                }
+                if (worldserver.tileEntityWorldConfig != null)
+                {
+                    worldserver.tileEntityWorldConfig.save();
+                }
+            }
         }
     }
 

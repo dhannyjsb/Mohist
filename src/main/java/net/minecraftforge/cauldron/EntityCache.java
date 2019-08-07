@@ -2,7 +2,7 @@ package net.minecraftforge.cauldron;
 
 import net.minecraft.entity.Entity;
 
-public class SushchestvoCache {
+public class EntityCache {
 
     public Class<? extends Entity> entityClass;
     public boolean tickNoPlayers = false;
@@ -11,7 +11,7 @@ public class SushchestvoCache {
     public String configPath;
     public String worldName;
 
-    public SushchestvoCache(Class<? extends Entity> entityClass, String worldName, String configPath, boolean tickNoPlayers, boolean neverEverTick, int tickInterval)
+    public EntityCache(Class<? extends Entity> entityClass, String worldName, String configPath, boolean tickNoPlayers, boolean neverEverTick, int tickInterval)
     {
         this.entityClass = entityClass;
         this.worldName = worldName.intern();
