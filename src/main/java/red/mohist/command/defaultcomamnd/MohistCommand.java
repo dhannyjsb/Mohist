@@ -20,7 +20,7 @@ public class MohistCommand extends Command {
     public MohistCommand(String name) {
         super(name);
         this.description = "Mohist related commands";
-        this.usageMessage = "/mohist [mods|playermods|printthreadcost]";
+        this.usageMessage = "/mohist [mods|playermods|printthreadcost|lang]";
     }
 
     private List<String> params = Arrays.asList("mods", "playermods", "printthreadcost");
@@ -71,6 +71,9 @@ public class MohistCommand extends Command {
                 break;
             case "printthreadcost":
                 MohistThreadCost.dumpThreadCpuTime();
+                break;
+            case "lang":
+                sender.sendMessage(ChatColor.GREEN +ServerAPI.getLanguage());
                 break;
             default:
                 sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);

@@ -2,6 +2,7 @@ package red.mohist.api;
 
 import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.server.MinecraftServer;
+import red.mohist.i18n.Message;
 
 import java.util.Map;
 import java.util.Set;
@@ -29,5 +30,9 @@ public class ServerAPI {
 
     public static MinecraftServer getNMSServer(){
         return MinecraftServer.getServerInst();
+    }
+
+    public static String getLanguage(){
+        return Message.rb.getLocale().toString();
     }
 }

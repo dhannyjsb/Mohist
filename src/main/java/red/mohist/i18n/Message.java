@@ -1,10 +1,13 @@
 package red.mohist.i18n;
 
+import com.google.common.collect.ImmutableList;
+import red.mohist.api.ServerAPI;
 import red.mohist.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -235,7 +238,7 @@ public enum Message {
 
     Mohist_Dump_1("mohist.dump.1");
 
-    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(getlanguage(1), getlanguage(2)), new UTF8Control());
+    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(getLanguage(1), getLanguage(2)), new UTF8Control());
     private final String value;
 
 
@@ -270,22 +273,24 @@ public enum Message {
         return value;
     }
 
-    public static String getlanguage(int key) {
+    public static String getLanguage(int key) {
         try {
             File f = new File("mohist.yml");
             String s = FileUtil.readContent(f, "UTF-8");
             if(s.contains("lang: ")){
                 // Using regular expressions
-                String string = s.substring(s.indexOf("lang"));
+                String string = s.substring(s.indexOf("lang: "));
                 String s1 = string.substring(string.indexOf(":") + 1);
                 String s2 = s1.substring(1, 6);
-                String s3 = s2.substring(0, 2);
-                String s4 = s2.substring(3, 5);
+                String language = s2.substring(0, 2);
+                String country = s2.substring(3, 5);
+
+                String locale = s2.substring(0, 5);
                 if (key == 1){
-                    return s3;
+                    return language;
                 }
                 if (key == 2){
-                    return s4;
+                    return country;
                 }
             }
         } catch (IOException e) {
