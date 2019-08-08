@@ -9,24 +9,6 @@
      {
          return allowEmpty || !this.getChunkProvider().provideChunk(x, z).isEmpty();
      }
-@@ -261,7 +261,7 @@
-             this.entitySpawnQueue.add(entityToSpawn);
-         }
- 
--        this.entitiesById.addKey(entityID, entityToSpawn);
-+        this.entitiesById.put(entityID, entityToSpawn);
-     }
- 
-     @Nullable
-@@ -272,7 +272,7 @@
- 
-     public Entity removeEntityFromWorld(int entityID)
-     {
--        Entity entity = this.entitiesById.removeObject(entityID);
-+        Entity entity = this.entitiesById.remove(entityID);
- 
-         if (entity != null)
-         {
 @@ -384,9 +384,8 @@
  
          this.unloadedEntityList.clear();

@@ -1039,42 +1039,7 @@
                          return false;
                      }
  
-@@ -1110,7 +1387,7 @@
-     public void onEntityAdded(Entity entityIn)
-     {
-         super.onEntityAdded(entityIn);
--        this.entitiesById.addKey(entityIn.getEntityId(), entityIn);
-+        this.entitiesById.put(entityIn.getEntityId(), entityIn);
-         this.entitiesByUuid.put(entityIn.getUniqueID(), entityIn);
-         Entity[] aentity = entityIn.getParts();
- 
-@@ -1118,7 +1395,7 @@
-         {
-             for (Entity entity : aentity)
-             {
--                this.entitiesById.addKey(entity.getEntityId(), entity);
-+                this.entitiesById.put(entity.getEntityId(), entity);
-             }
-         }
-     }
-@@ -1126,7 +1403,7 @@
-     public void onEntityRemoved(Entity entityIn)
-     {
-         super.onEntityRemoved(entityIn);
--        this.entitiesById.removeObject(entityIn.getEntityId());
-+        this.entitiesById.remove(entityIn.getEntityId());
-         this.entitiesByUuid.remove(entityIn.getUniqueID());
-         Entity[] aentity = entityIn.getParts();
- 
-@@ -1134,16 +1411,24 @@
-         {
-             for (Entity entity : aentity)
-             {
--                this.entitiesById.removeObject(entity.getEntityId());
-+                this.entitiesById.remove(entity.getEntityId());
-             }
-         }
-     }
+@@ -1141,9 +1418,17 @@
  
      public boolean addWeatherEffect(Entity entityIn)
      {
