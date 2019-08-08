@@ -809,21 +809,16 @@
      public void sendStatusMessage(ITextComponent chatComponent, boolean actionBar)
      {
          this.connection.sendPacket(new SPacketChat(chatComponent, actionBar ? ChatType.GAME_INFO : ChatType.CHAT));
-@@ -1156,8 +1394,11 @@
+@@ -1156,7 +1394,7 @@
          this.lastExperience = -1;
          this.lastHealth = -1.0F;
          this.lastFoodLevel = -1;
 -        this.recipeBook.copyFrom(that.recipeBook);
--        this.entityRemoveQueue.addAll(that.entityRemoveQueue);
 +        // this.recipeBook.copyFrom(that.recipeBook); // CraftBukkit
-+        // this.entityRemoveQueue.addAll(that.entityRemoveQueue);
-+        List<Integer> q2 = Lists.<Integer>newLinkedList();
-+        that.entityRemoveQueue.stream().forEach(eh -> q2.add(eh));//hose
-+        q2.stream().forEach(eh -> this.entityRemoveQueue.add(eh));//hose
+         this.entityRemoveQueue.addAll(that.entityRemoveQueue);
          this.seenCredits = that.seenCredits;
          this.enteredNetherPosition = that.enteredNetherPosition;
-         this.setLeftShoulderEntity(that.getLeftShoulderEntity());
-@@ -1246,6 +1487,15 @@
+@@ -1246,6 +1484,15 @@
  
      public void setGameType(GameType gameType)
      {
@@ -839,7 +834,7 @@
          this.interactionManager.setGameType(gameType);
          this.connection.sendPacket(new SPacketChangeGameState(3, (float)gameType.getID()));
  
-@@ -1280,34 +1530,32 @@
+@@ -1280,34 +1527,32 @@
  
      public boolean canUseCommand(int permLevel, String commandName)
      {
@@ -895,7 +890,7 @@
      }
  
      public String getPlayerIP()
-@@ -1320,6 +1568,14 @@
+@@ -1320,6 +1565,14 @@
  
      public void handleClientSettings(CPacketClientSettings packetIn)
      {
@@ -910,7 +905,7 @@
          this.language = packetIn.getLang();
          this.chatVisibility = packetIn.getChatVisibility();
          this.chatColours = packetIn.isColorsEnabled();
-@@ -1327,7 +1583,7 @@
+@@ -1327,7 +1580,7 @@
          this.getDataManager().set(MAIN_HAND, Byte.valueOf((byte)(packetIn.getMainHand() == EnumHandSide.LEFT ? 0 : 1)));
      }
  
@@ -919,7 +914,7 @@
      {
          return this.chatVisibility;
      }
-@@ -1402,7 +1658,7 @@
+@@ -1402,7 +1655,7 @@
          if (entity != this.spectatingEntity)
          {
              this.connection.sendPacket(new SPacketCamera(this.spectatingEntity));
@@ -928,7 +923,7 @@
          }
      }
  
-@@ -1434,7 +1690,8 @@
+@@ -1434,7 +1687,8 @@
      @Nullable
      public ITextComponent getTabListDisplayName()
      {
@@ -938,7 +933,7 @@
      }
  
      public void swingArm(EnumHand hand)
-@@ -1455,13 +1712,16 @@
+@@ -1455,13 +1709,16 @@
  
      public void setElytraFlying()
      {
@@ -958,7 +953,7 @@
      }
  
      public PlayerAdvancements getAdvancements()
-@@ -1474,4 +1734,144 @@
+@@ -1474,4 +1731,144 @@
      {
          return this.enteredNetherPosition;
      }
