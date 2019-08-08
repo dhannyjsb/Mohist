@@ -5,7 +5,6 @@ import net.minecraftforge.cauldron.TileEntityCache;
 import net.minecraftforge.cauldron.command.TileEntityCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import red.mohist.Mohist;
-import red.mohist.api.ServerAPI;
 
 public class TileEntityConfig extends ConfigBase
 {

@@ -1,13 +1,10 @@
 package red.mohist.i18n;
 
-import com.google.common.collect.ImmutableList;
-import red.mohist.api.ServerAPI;
 import red.mohist.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
