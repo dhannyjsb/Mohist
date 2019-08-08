@@ -99,7 +99,7 @@
          this.trackedEntity = entityIn;
          this.range = rangeIn;
          this.maxRange = maxRangeIn;
-@@ -148,29 +115,26 @@
+@@ -148,34 +115,34 @@
          if (!list.equals(this.passengers))
          {
              this.passengers = list;
@@ -137,7 +137,16 @@
              }
  
              this.sendMetadata();
-@@ -211,7 +175,20 @@
+         }
+-
++        if(trackingPlayers.size() == 0 && !playerEntitiesUpdated)
++        {
++            // No players - no tracking
++        }
+         if (this.updateCounter % this.updateFrequency == 0 || this.trackedEntity.isAirBorne || this.trackedEntity.getDataManager().isDirty())
+         {
+             if (this.trackedEntity.isRiding())
+@@ -211,7 +178,20 @@
                  Packet<?> packet1 = null;
                  boolean flag = j * j + k * k + l * l >= 128L || this.updateCounter % 60 == 0;
                  boolean flag1 = Math.abs(k2 - this.encodedRotationYaw) >= 1 || Math.abs(i - this.encodedRotationPitch) >= 1;
@@ -158,7 +167,7 @@
                  if (this.updateCounter > 0 || this.trackedEntity instanceof EntityArrow)
                  {
                      if (j >= -32768L && j < 32768L && k >= -32768L && k < 32768L && l >= -32768L && l < 32768L && this.ticksSinceLastForcedTeleport <= 400 && !this.ridingEntity && this.onGround == this.trackedEntity.onGround)
-@@ -236,6 +213,11 @@
+@@ -236,6 +216,11 @@
                      {
                          this.onGround = this.trackedEntity.onGround;
                          this.ticksSinceLastForcedTeleport = 0;
@@ -170,7 +179,7 @@
                          this.resetPlayerVisibility();
                          packet1 = new SPacketEntityTeleport(this.trackedEntity);
                      }
-@@ -271,20 +253,6 @@
+@@ -271,20 +256,6 @@
                  }
  
                  this.sendMetadata();
@@ -191,7 +200,7 @@
                  this.ridingEntity = false;
              }
  
-@@ -303,7 +271,28 @@
+@@ -303,7 +274,28 @@
  
          if (this.trackedEntity.velocityChanged)
          {
@@ -221,7 +230,7 @@
              this.trackedEntity.velocityChanged = false;
          }
      }
-@@ -324,6 +313,11 @@
+@@ -324,6 +316,11 @@
  
              if (!set.isEmpty())
              {
@@ -233,7 +242,7 @@
                  this.sendToTrackingAndSelf(new SPacketEntityProperties(this.trackedEntity.getEntityId(), set));
              }
  
-@@ -376,6 +370,16 @@
+@@ -376,6 +373,16 @@
              {
                  if (!this.trackingPlayers.contains(playerMP) && (this.isPlayerWatchingThisChunk(playerMP) || this.trackedEntity.forceSpawn))
                  {
@@ -250,7 +259,7 @@
                      this.trackingPlayers.add(playerMP);
                      Packet<?> packet = this.createSpawnPacket();
                      playerMP.connection.sendPacket(packet);
-@@ -392,6 +396,14 @@
+@@ -392,6 +399,14 @@
                          AttributeMap attributemap = (AttributeMap)((EntityLivingBase)this.trackedEntity).getAttributeMap();
                          Collection<IAttributeInstance> collection = attributemap.getWatchedAttributes();
  
@@ -265,7 +274,7 @@
                          if (!collection.isEmpty())
                          {
                              playerMP.connection.sendPacket(new SPacketEntityProperties(this.trackedEntity.getEntityId(), collection));
-@@ -435,6 +447,11 @@
+@@ -435,6 +450,11 @@
                          }
                      }
  
@@ -277,7 +286,7 @@
                      if (this.trackedEntity instanceof EntityLivingBase)
                      {
                          EntityLivingBase entitylivingbase = (EntityLivingBase)this.trackedEntity;
-@@ -457,6 +474,7 @@
+@@ -457,6 +477,7 @@
  
                      this.trackedEntity.addTrackingPlayer(playerMP);
                      playerMP.addEntity(this.trackedEntity);
@@ -285,7 +294,7 @@
                      net.minecraftforge.event.ForgeEventFactory.onStartEntityTracking(trackedEntity, playerMP);
                  }
              }
-@@ -465,6 +483,7 @@
+@@ -465,6 +486,7 @@
                  this.trackingPlayers.remove(playerMP);
                  this.trackedEntity.removeTrackingPlayer(playerMP);
                  playerMP.removeEntity(this.trackedEntity);
@@ -293,7 +302,7 @@
                  net.minecraftforge.event.ForgeEventFactory.onStopEntityTracking(trackedEntity, playerMP);
              }
          }
-@@ -472,6 +491,46 @@
+@@ -472,6 +494,46 @@
  
      public boolean isVisibleTo(EntityPlayerMP playerMP)
      {
@@ -340,7 +349,7 @@
          double d0 = playerMP.posX - (double)this.encodedPosX / 4096.0D;
          double d1 = playerMP.posZ - (double)this.encodedPosZ / 4096.0D;
          int i = Math.min(this.range, this.maxRange);
-@@ -485,17 +544,17 @@
+@@ -485,17 +547,17 @@
  
      public void updatePlayerEntities(List<EntityPlayer> players)
      {
@@ -363,7 +372,7 @@
          }
  
          Packet pkt = net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.getEntitySpawningPacket(this.trackedEntity);
-@@ -656,7 +715,8 @@
+@@ -656,7 +718,8 @@
          }
          else
          {
@@ -373,7 +382,7 @@
          }
      }
  
-@@ -667,6 +727,7 @@
+@@ -667,6 +730,7 @@
              this.trackingPlayers.remove(playerMP);
              this.trackedEntity.removeTrackingPlayer(playerMP);
              playerMP.removeEntity(this.trackedEntity);

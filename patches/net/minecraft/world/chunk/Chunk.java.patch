@@ -309,7 +309,15 @@
          for (int k = i; k <= j; ++k)
          {
              if (!this.entityLists[k].isEmpty())
-@@ -950,12 +1038,8 @@
+@@ -933,6 +1021,7 @@
+         {
+             for (T t : this.entityLists[k].getByClass(entityClass))
+             {
++                if(!t.isDead)
+                 if (t.getEntityBoundingBox().intersects(aabb) && (filter == null || filter.apply(t)))
+                 {
+                     listToFill.add(t);
+@@ -950,12 +1039,8 @@
                  return true;
              }
          }
@@ -323,7 +331,7 @@
      }
  
      public Random getRandomWithSeed(long seed)
-@@ -1001,6 +1085,63 @@
+@@ -1001,6 +1086,63 @@
          }
      }
  
@@ -387,7 +395,7 @@
      protected void populate(IChunkGenerator generator)
      {
          if (populating != null && net.minecraftforge.common.ForgeModContainer.logCascadingWorldGeneration) logCascadingWorldGeneration();
-@@ -1017,6 +1158,26 @@
+@@ -1017,6 +1159,26 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -414,7 +422,7 @@
              net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }
-@@ -1075,7 +1236,7 @@
+@@ -1075,7 +1237,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -423,7 +431,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1086,7 +1247,7 @@
+@@ -1086,7 +1248,7 @@
  
      public boolean isPopulated()
      {
@@ -432,7 +440,7 @@
      }
  
      public boolean wasTicked()
-@@ -1540,11 +1701,11 @@
+@@ -1540,11 +1702,11 @@
          String format = "{} loaded a new chunk {} in dimension {} ({}) while populating chunk {}, causing cascading worldgen lag.";
  
          if (activeModContainer == null) { // vanilla minecraft has problems too (MC-114332), log it at a quieter level.

@@ -441,6 +441,22 @@
      public int getLightFromNeighbors(BlockPos pos)
      {
          return this.getLight(pos, true);
+@@ -762,13 +990,13 @@
+     {
+         if (x >= -30000000 && z >= -30000000 && x < 30000000 && z < 30000000)
+         {
+-            if (!this.isChunkLoaded(x >> 4, z >> 4, true))
++            Chunk chunk = this.getChunkIfLoaded(x >> 4, z >> 4);
++            if (chunk == null)
+             {
+                 return 0;
+             }
+             else
+             {
+-                Chunk chunk = this.getChunkFromChunkCoords(x >> 4, z >> 4);
+                 return chunk.getLowestHeight();
+             }
+         }
 @@ -793,7 +1021,7 @@
              }
  

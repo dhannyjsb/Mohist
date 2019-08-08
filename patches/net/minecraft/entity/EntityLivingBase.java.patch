@@ -452,7 +452,7 @@
      public void setHealth(float health)
      {
 +        // CraftBukkit start - Handle scaled health
-+        if (this instanceof EntityPlayerMP) {
++        if (this instanceof EntityPlayerMP && ((EntityPlayerMP)this).getGameProfile() != null) {
 +            org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer player = ((EntityPlayerMP) this).getBukkitEntity();
 +            // Squeeze
 +            if (health < 0.0F) {

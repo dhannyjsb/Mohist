@@ -88,7 +88,7 @@
  
          if (entitytrackerentry1 != null)
          {
-@@ -285,35 +296,19 @@
+@@ -285,35 +296,22 @@
  
      public void tick()
      {
@@ -96,6 +96,9 @@
 -
 -        for (EntityTrackerEntry entitytrackerentry : this.entries)
 -        {
++        if(world.playerEntities.size() == 0) {
++            return;
++        }
 +        List<EntityPlayerMP> arraylist = Lists.<EntityPlayerMP>newArrayList();
 +        this.entries.parallelStream().forEach(entitytrackerentry -> {
              entitytrackerentry.updatePlayerList(this.world.playerEntities);
@@ -133,7 +136,7 @@
      }
  
      public void updateVisibility(EntityPlayerMP player)
-@@ -370,12 +365,32 @@
+@@ -370,12 +368,32 @@
          }
      }
  
