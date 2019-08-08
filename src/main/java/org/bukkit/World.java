@@ -408,7 +408,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return A List of all LivingEntities currently residing in this world
      */
-    public Queue<LivingEntity> getLivingEntities();
+    public List<LivingEntity> getLivingEntities();
 
     /**
      * Get a collection of all entities in this World matching the given
@@ -808,7 +808,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *
      * @return List containing any or none BlockPopulators
      */
-    public Queue<BlockPopulator> getPopulators();
+    public List<BlockPopulator> getPopulators();
 
     /**
      * Spawn an entity of a specific class at the given {@link Location}
