@@ -152,7 +152,7 @@
      public double managedPosX;
      public double managedPosZ;
 -    private final List<Integer> entityRemoveQueue = Lists.<Integer>newLinkedList();
-+    public final Queue<Integer> entityRemoveQueue = Queues.newConcurrentLinkedQueue();//hose
++    public final List<Integer> entityRemoveQueue = Lists.<Integer>newLinkedList();
      private final PlayerAdvancements advancements;
      private final StatisticsManagerServer statsFile;
      private float lastHealthScore = Float.MIN_VALUE;
@@ -819,7 +819,7 @@
 -        this.entityRemoveQueue.addAll(that.entityRemoveQueue);
 +        // this.recipeBook.copyFrom(that.recipeBook); // CraftBukkit
 +        // this.entityRemoveQueue.addAll(that.entityRemoveQueue);
-+        Queue<Integer> q2 = Queues.newConcurrentLinkedQueue();//hose
++        List<Integer> q2 = Lists.<Integer>newLinkedList();
 +        that.entityRemoveQueue.stream().forEach(eh -> q2.add(eh));//hose
 +        q2.stream().forEach(eh -> this.entityRemoveQueue.add(eh));//hose
          this.seenCredits = that.seenCredits;
