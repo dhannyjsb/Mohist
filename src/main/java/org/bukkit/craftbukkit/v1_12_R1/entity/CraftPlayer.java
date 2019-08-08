@@ -1152,7 +1152,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         // Remove this player from the hidden player's EntityTrackerEntry
         EntityTracker tracker = ((WorldServer) entity.world).entityTracker;
         EntityPlayerMP other = ((CraftPlayer) player).getHandle();
-        EntityTrackerEntry entry = tracker.trackedEntityHashTable.get(other.getEntityId());
+        EntityTrackerEntry entry = tracker.trackedEntityHashTable.lookup(other.getEntityId());
         if (entry != null) {
             entry.removeTrackedPlayerSymmetric(getHandle());
         }
@@ -1201,7 +1201,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
         getHandle().connection.sendPacket(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, other));
 
-        EntityTrackerEntry entry = tracker.trackedEntityHashTable.get(other.getEntityId());
+        EntityTrackerEntry entry = tracker.trackedEntityHashTable.lookup(other.getEntityId());
         if (entry != null && !entry.trackingPlayers.contains(getHandle())) {
             entry.updatePlayerEntity(getHandle());
         }
