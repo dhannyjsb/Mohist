@@ -247,7 +247,7 @@
 +                        }
 +                    }
 +
-+                    playerMP.entityRemoveQueue.remove(this.trackedEntity.getEntityId()); //hose
++                    playerMP.entityRemoveQueue.remove(Integer.valueOf(this.trackedEntity.getEntityId()));
 +                    // CraftBukkit end
                      this.trackingPlayers.add(playerMP);
                      Packet<?> packet = this.createSpawnPacket();
