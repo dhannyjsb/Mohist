@@ -101,15 +101,6 @@
          this.trackedEntity = entityIn;
          this.range = rangeIn;
          this.maxRange = maxRangeIn;
-@@ -129,7 +98,7 @@
-         return this.trackedEntity.getEntityId();
-     }
- 
--    public void updatePlayerList(List<EntityPlayer> players)
-+    public void updatePlayerList(Queue<EntityPlayer> players)
-     {
-         this.playerEntitiesUpdated = false;
- 
 @@ -148,29 +117,26 @@
          if (!list.equals(this.passengers))
          {
@@ -175,7 +166,7 @@
                          this.ticksSinceLastForcedTeleport = 0;
 +                        // CraftBukkit start - Refresh list of who can see a player before sending teleport packet
 +                        if (this.trackedEntity instanceof EntityPlayer) {
-+                            this.updatePlayerEntities(Queues.newConcurrentLinkedQueue(this.trackingPlayers));//hose
++                            this.updatePlayerEntities(new java.util.ArrayList<>(this.trackingPlayers));
 +                        }
 +                        // CraftBukkit end
                          this.resetPlayerVisibility();
@@ -351,12 +342,9 @@
          double d0 = playerMP.posX - (double)this.encodedPosX / 4096.0D;
          double d1 = playerMP.posZ - (double)this.encodedPosZ / 4096.0D;
          int i = Math.min(this.range, this.maxRange);
-@@ -483,19 +544,19 @@
-         return playerMP.getServerWorld().getPlayerChunkMap().isPlayerWatchingChunk(playerMP, this.trackedEntity.chunkCoordX, this.trackedEntity.chunkCoordZ);
-     }
+@@ -485,17 +546,17 @@
  
--    public void updatePlayerEntities(List<EntityPlayer> players)
-+    public void updatePlayerEntities(Queue<EntityPlayer> players)
+     public void updatePlayerEntities(List<EntityPlayer> players)
      {
 -        for (int i = 0; i < players.size(); ++i)
 -        {

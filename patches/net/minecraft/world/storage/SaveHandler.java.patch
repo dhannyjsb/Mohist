@@ -157,7 +157,7 @@
      {
          try
          {
-@@ -284,4 +343,67 @@
+@@ -284,4 +343,75 @@
          }
          return null;
      }
@@ -216,10 +216,18 @@
 +            ForgeInjectBukkit.init();
 +            // since we modify bukkit enums, we need to guarantee that plugins are
 +            // loaded after all mods have been loaded by FML to avoid race conditions.
-+            if (Bukkit.getServer() != null) {
-+                ((CraftServer) Bukkit.getServer()).loadPlugins();
-+                ((CraftServer) Bukkit.getServer()).enablePlugins(PluginLoadOrder.STARTUP);
-+            }
++            Thread pluginThread = new Thread("Plugin Handler")
++            {
++                @Override
++                public void run(){
++                    if (Bukkit.getServer() != null) {
++                        ((CraftServer) Bukkit.getServer()).loadPlugins();
++                        ((CraftServer) Bukkit.getServer()).enablePlugins(PluginLoadOrder.STARTUP);
++                    }
++                }
++            };
++            pluginThread.setDaemon(true);
++            pluginThread.start();
 +            initializedBukkit = true;
 +        }
 +    }

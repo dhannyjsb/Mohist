@@ -8,15 +8,6 @@
  import javax.annotation.Nullable;
  import net.minecraft.entity.EntityLiving;
  import net.minecraft.entity.IEntityLivingData;
-@@ -92,7 +93,7 @@
- 
-     private boolean trySetupSiege()
-     {
--        List<EntityPlayer> list = this.world.playerEntities;
-+        Queue<EntityPlayer> list = this.world.playerEntities;
-         Iterator iterator = list.iterator();
- 
-         while (true)
 @@ -182,7 +183,7 @@
              }
  
