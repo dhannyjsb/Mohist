@@ -32,17 +32,7 @@
      }
  
      public static long getPositionLong(double value)
-@@ -77,6 +81,9 @@
- 
-     public void track(Entity entityIn)
-     {
-+        if (this.trackedEntityHashTable.containsItem(entityIn.getEntityId())){
-+            return;
-+        }
-         if (net.minecraftforge.fml.common.registry.EntityRegistry.instance().tryTrackingEntity(this, entityIn)) return;
- 
-         if (entityIn instanceof EntityPlayerMP)
-@@ -198,7 +205,7 @@
+@@ -198,7 +202,7 @@
          }
          else if (entityIn instanceof EntityAreaEffectCloud)
          {
@@ -51,7 +41,7 @@
          }
          else if (entityIn instanceof EntityEnderCrystal)
          {
-@@ -217,11 +224,12 @@
+@@ -217,11 +221,12 @@
  
      public void track(Entity entityIn, int trackingRange, final int updateFrequency, boolean sendVelocityUpdates)
      {
@@ -65,12 +55,3 @@
              }
  
              EntityTrackerEntry entitytrackerentry = new EntityTrackerEntry(entityIn, trackingRange, this.maxTrackingDistanceThreshold, updateFrequency, sendVelocityUpdates);
-@@ -274,7 +282,7 @@
-             }
-         }
- 
--        EntityTrackerEntry entitytrackerentry1 = this.trackedEntityHashTable.removeObject(entityIn.getEntityId());
-+        EntityTrackerEntry entitytrackerentry1 = this.trackedEntityHashTable.removeObject(entityIn.getEntityId()); //hose
- 
-         if (entitytrackerentry1 != null)
-         {
