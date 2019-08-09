@@ -1,11 +1,12 @@
 package red.mohist.util;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class ToolKit{
 
-    public static final Charset UTF_8=Charset.forName("UTF-8");
+    public static final Charset UTF_8= StandardCharsets.UTF_8;
 
     protected static final String systemLineSeparator=System.getProperty("line.separator","\r\n");
 

@@ -584,9 +584,7 @@ public enum Material {
         // try to cache the constructor for this material
         try {
             this.ctor = data.getConstructor(int.class, byte.class);
-        } catch (NoSuchMethodException ex) {
-            throw new AssertionError(ex);
-        } catch (SecurityException ex) {
+        } catch (NoSuchMethodException | SecurityException ex) {
             throw new AssertionError(ex);
         }
     }
@@ -680,7 +678,7 @@ public enum Material {
     public static Material addMaterial(int id, int limit, String name) {
         if (byId[id] == null) {
             String materialName = normalizeName(name);
-            Material material = EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Integer.TYPE}, new Object[]{Integer.valueOf(id), Integer.valueOf(limit)});
+            Material material = EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE, Integer.TYPE}, new Object[]{id, limit});
             byId[id] = material;
             BY_NAME.put(materialName, material);
             BY_NAME.put("X" + material.id, material);
@@ -692,7 +690,7 @@ public enum Material {
     public static Material addMaterial(int id, String name) {
         if (byId[id] == null) {
             String materialName = normalizeName(name);
-            Material material = EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE}, new Object[]{Integer.valueOf(id)});
+            Material material = EnumHelper.addEnum(Material.class, materialName, new Class[]{Integer.TYPE}, new Object[]{id});
             byId[id] = material;
             BY_NAME.put(materialName, material);
             BY_NAME.put("X" + material.id, material);

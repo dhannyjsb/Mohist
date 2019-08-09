@@ -92,11 +92,8 @@ public final class VanillaCommandWrapper extends BukkitCommand {
                     String s2 = as[i];
 
                     icommandlistener.setCommandStat(CommandResultStats.Type.AFFECTED_ENTITIES, list.size());
-                    Iterator<Entity> iterator = list.iterator();
 
-                    while (iterator.hasNext()) {
-                        Entity entity = iterator.next();
-
+                    for (Entity entity : list) {
                         CommandSender oldSender = lastSender;
                         lastSender = bSender;
                         try {

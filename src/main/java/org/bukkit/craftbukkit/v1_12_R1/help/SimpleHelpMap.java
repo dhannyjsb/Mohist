@@ -229,7 +229,7 @@ public class SimpleHelpMap implements HelpMap {
         topicFactoryMap.put(commandClass, factory);
     }
 
-    private class IsCommandTopicPredicate implements Predicate<HelpTopic> {
+    private static class IsCommandTopicPredicate implements Predicate<HelpTopic> {
 
         public boolean apply(HelpTopic topic) {
             return topic.getName().charAt(0) == '/';

@@ -59,9 +59,7 @@ public class MohistJarRemapper extends CustomRemapper {
         }
 
         if (packageMap != null) {
-            Iterator<String> iter = packageMap.keySet().iterator();
-            while (iter.hasNext()) {
-                String oldPackage = iter.next();
+            for (String oldPackage : packageMap.keySet()) {
                 if (matchClassPackage(oldPackage, className)) {
                     String newPackage = packageMap.get(oldPackage);
 

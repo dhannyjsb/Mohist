@@ -41,8 +41,8 @@ public class StringUtil{
             return true;
 
         char[] tContent=pStr.toCharArray();
-        for(int i=0;i<tContent.length;i++){
-            if(!Character.isWhitespace(tContent[i]))
+        for (char c : tContent) {
+            if (!Character.isWhitespace(c))
                 return false;
         }
         return true;

@@ -14,7 +14,7 @@ public class DownloadServer implements Runnable {
         }
         String fileName = "minecraft_server.1.12.2.jar";
         File Jar = new File(fileName);
-        if (!Jar.exists() && !Jar.isDirectory() && !Jar.isFile() && Jar.length() != new Long(30222121)) {
+        if (!Jar.exists() && !Jar.isDirectory() && !Jar.isFile() && Jar.length() != 30222121L) {
             new Download(url, fileName);
         }
     }

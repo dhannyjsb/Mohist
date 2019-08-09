@@ -56,15 +56,12 @@ public interface EventExecutor {
             try {
                 EventExecutor asmExecutor = executorClass.newInstance();
                 // Define a wrapper to conform to bukkit stupidity (passing in events that don't match and wrapper exception)
-                return new EventExecutor() {
-                    @Override
-                    public void execute(Listener listener, Event event) throws EventException {
-                        if (!eventClass.isInstance(event)) return;
-                        try {
-                            asmExecutor.execute(listener, event);
-                        } catch (Exception e) {
-                            throw new EventException(e);
-                        }
+                return (listener, event) -> {
+                    if (!eventClass.isInstance(event)) return;
+                    try {
+                        asmExecutor.execute(listener, event);
+                    } catch (Exception e) {
+                        throw new EventException(e);
                     }
                 };
             } catch (InstantiationException | IllegalAccessException e) {

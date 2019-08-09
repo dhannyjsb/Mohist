@@ -62,7 +62,7 @@ public class MohistCommand extends Command {
                     sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
                     return false;
                 }
-                Player player = Bukkit.getPlayer(args[1].toString());
+                Player player = Bukkit.getPlayer(args[1]);
                 if (player != null) {
                     sender.sendMessage(ChatColor.GREEN + "" + PlayerAPI.getModSize(player) + " " + PlayerAPI.getModlist(player));
                 } else {

@@ -97,9 +97,7 @@ public class PreLookupProfileEvent extends Event {
     @Deprecated
     public void setProperties(Multimap<String, Property> properties) {
         this.properties = new HashSet<>();
-        properties.values().forEach(property -> {
-            this.properties.add(new ProfileProperty(property.getName(), property.getValue(), property.getSignature()));
-        });
+        properties.values().forEach(property -> this.properties.add(new ProfileProperty(property.getName(), property.getValue(), property.getSignature())));
     }
 
     /**
@@ -109,9 +107,7 @@ public class PreLookupProfileEvent extends Event {
      */
     @Deprecated
     public void addProperties(Multimap<String, Property> properties) {
-        properties.values().forEach(property -> {
-            this.properties.add(new ProfileProperty(property.getName(), property.getValue(), property.getSignature()));
-        });
+        properties.values().forEach(property -> this.properties.add(new ProfileProperty(property.getName(), property.getValue(), property.getSignature())));
     }
 
     /**

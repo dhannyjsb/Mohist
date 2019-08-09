@@ -66,7 +66,7 @@ public class PluginsCommand extends BukkitCommand {
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         List<String> tabs = new ArrayList<String>();
-        if (args.length > 1 && args.length < 3 && sender.isOp()) {
+        if (args.length == 2 && sender.isOp()) {
             if (checkparam(args[0])) {
                 for (Plugin pl : Bukkit.getServer().getPluginManager().getPlugins()) {
                     String plname = pl.getDescription().getName();

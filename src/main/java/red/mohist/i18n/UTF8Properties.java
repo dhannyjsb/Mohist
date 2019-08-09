@@ -18,9 +18,7 @@ public class UTF8Properties extends Properties {
 
     public UTF8Properties(Properties properties) {
         super(properties);
-        Iterator<Object> iterator = properties.keySet().iterator();
-        while (iterator.hasNext()) {
-            Object key = iterator.next();
+        for (Object key : properties.keySet()) {
             this.commentMap.put((String) key, null);
         }
     }
@@ -59,9 +57,7 @@ public class UTF8Properties extends Properties {
             UTF8Properties.writeComments(bufferedWriter, comments);
         }
         synchronized (this) {
-            Iterator<String> iterator = this.commentMap.keySet().iterator();
-            while (iterator.hasNext()) {
-                String key = iterator.next();
+            for (String key : this.commentMap.keySet()) {
                 String value = this.getProperty(key);
                 String comment = this.commentMap.get(key);
                 key = saveConvert(key, true, false);
@@ -83,7 +79,7 @@ public class UTF8Properties extends Properties {
         if (bufLen < 0) {
             bufLen = Integer.MAX_VALUE;
         }
-        StringBuffer outBuffer = new StringBuffer(bufLen);
+        StringBuilder outBuffer = new StringBuilder(bufLen);
         for (int x = 0; x < len; x++) {
             char aChar = theString.charAt(x);
             if ((aChar > 61) && (aChar < 127)) {

@@ -98,7 +98,7 @@ public class ForgeInjectBukkit {
     }
 
     public static World.Environment addBukkitEnvironment(int id, String name) {
-        return (World.Environment)EnumHelper.addEnum(World.Environment.class,name,new Class[]{Integer.TYPE}, new Object[]{Integer.valueOf(id)});
+        return (World.Environment)EnumHelper.addEnum(World.Environment.class,name,new Class[]{Integer.TYPE}, new Object[]{id});
     }
 
     public static WorldType addBukkitWorldType(String name)

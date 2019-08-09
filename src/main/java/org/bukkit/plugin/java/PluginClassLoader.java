@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSigner;
@@ -52,7 +51,7 @@ public final class PluginClassLoader extends URLClassLoader {
         }
     }
 
-    PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException, MalformedURLException {
+    PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws IOException, InvalidPluginException {
         super(new URL[]{file.toURI().toURL()}, parent);
         Validate.notNull(loader, "Loader cannot be null");
         this.loader = loader;

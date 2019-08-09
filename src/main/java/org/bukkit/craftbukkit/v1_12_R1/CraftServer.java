@@ -259,12 +259,7 @@ public final class CraftServer implements Server {
     public CraftServer(MinecraftServer console, PlayerList playerList) {
         this.console = console;
         this.playerList = (DedicatedPlayerList) playerList;
-        this.playerView = Collections.unmodifiableList(Lists.transform(playerList.getPlayers(), new Function<EntityPlayerMP, CraftPlayer>() {
-            @Override
-            public CraftPlayer apply(EntityPlayerMP player) {
-                return player.getBukkitEntity();
-            }
-        }));
+        this.playerView = Collections.unmodifiableList(Lists.transform(playerList.getPlayers(), player -> player.getBukkitEntity()));
         this.serverVersion = CraftServer.class.getPackage().getImplementationVersion();
         online.value = console.getPropertyManager().getBooleanProperty("online-mode", true);
         Bukkit.setServer(this);
@@ -1000,7 +995,7 @@ public final class CraftServer implements Server {
         if (world == null && name.toUpperCase().startsWith("DIM")) {
             int dimension;
             try {
-                dimension = Integer.valueOf(name.substring(3));
+                dimension = Integer.parseInt(name.substring(3));
                 WorldServer worldserver = console.getWorld(dimension);
                 if (worldserver != null) {
                     world = worldserver.getWorld();
@@ -1728,12 +1723,8 @@ public final class CraftServer implements Server {
 
     @Override
     public Iterator<org.bukkit.advancement.Advancement> advancementIterator() {
-        return Iterators.unmodifiableIterator(Iterators.transform(console.getAdvancementManager().getAdvancements().iterator(), new Function<Advancement, org.bukkit.advancement.Advancement>() { // PAIL: rename
-            @Override
-            public org.bukkit.advancement.Advancement apply(Advancement advancement) {
-                return advancement.bukkit;
-            }
-        }));
+        // PAIL: rename
+        return Iterators.unmodifiableIterator(Iterators.transform(console.getAdvancementManager().getAdvancements().iterator(), advancement -> advancement.bukkit));
     }
 
     @Deprecated
@@ -1773,7 +1764,7 @@ public final class CraftServer implements Server {
         return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
     }
 
-    private final class BooleanWrapper {
+    private static final class BooleanWrapper {
         private boolean value = true;
     }
     // Paper end

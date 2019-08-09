@@ -70,7 +70,7 @@ public class WorldConfig
     private <T> List getList(String path, T def)
     {
         baseConfig.config.addDefault( "world-settings.default." + path, def );
-        return (List<T>) baseConfig.config.getList( "world-settings." + worldName + "." + path, baseConfig.config.getList( "world-settings.default." + path ) );
+        return baseConfig.config.getList( "world-settings." + worldName + "." + path, baseConfig.config.getList( "world-settings.default." + path ) );
     }
 
     private String getString(String path, String def)

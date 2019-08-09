@@ -57,7 +57,7 @@ public class CauldronHooks {
         if(world.getChunkProvider() instanceof ChunkProviderServer) // Thermos - allow the server to tick entities that are in chunks trying to unload
         {
             ChunkProviderServer cps = ((ChunkProviderServer)world.getChunkProvider());
-            if(cps.droppedChunksSet.contains(Long.valueOf(ChunkPos.asLong(cX, cZ))))
+            if(cps.droppedChunksSet.contains(ChunkPos.asLong(cX, cZ)))
             {
                 Chunk c = cps.getChunkIfLoaded(cX, cZ);
                 if(c != null)

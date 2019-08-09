@@ -139,10 +139,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
             return mapName;
         }
         mapName = fastMapMethodName(inverse, clazz.getSuperclass(), key, name);
-        if (mapName != null) {
-            return mapName;
-        }
-        return null;
+        return mapName;
     }
 
     private String directFastMapFieldName(boolean inverse, Class clazz, String name) {
@@ -154,9 +151,9 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         if (mapping == null) {
             return null;
         }
-        Map<String, String> map = mapping.getFieldMapping();
+        BiMap<String, String> map = mapping.getFieldMapping();
         if (inverse) {
-            map = ((BiMap<String, String>) map).inverse();
+            map = map.inverse();
         }
         return map.get(name);
     }
@@ -433,86 +430,97 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         String[] tokens = line.split(" ");
         String kind = tokens[0];
 
-        if (kind.equals("CL:")) {
-            String oldClassName = inputTransformer.transformClassName(tokens[1]);
-            String newClassName = outputTransformer.transformClassName(tokens[2]);
+        switch (kind) {
+            case "CL:": {
+                String oldClassName = inputTransformer.transformClassName(tokens[1]);
+                String newClassName = outputTransformer.transformClassName(tokens[2]);
 
 
-            if (byNMSSrcName.containsKey(oldClassName) && !newClassName.equals(byNMSSrcName.get(oldClassName).getNmsSrcName())) {
-                throw new IllegalArgumentException("Duplicate class mapping: " + oldClassName + " -> " + newClassName
-                        + " but already mapped to " + byNMSSrcName.get(oldClassName) + " in line=" + line);
+                if (byNMSSrcName.containsKey(oldClassName) && !newClassName.equals(byNMSSrcName.get(oldClassName).getNmsSrcName())) {
+                    throw new IllegalArgumentException("Duplicate class mapping: " + oldClassName + " -> " + newClassName
+                            + " but already mapped to " + byNMSSrcName.get(oldClassName) + " in line=" + line);
+                }
+
+                if (oldClassName.endsWith("/*") && newClassName.endsWith("/*")) {
+                    // extension for remapping class name prefixes
+                    oldClassName = oldClassName.substring(0, oldClassName.length() - 1);
+                    newClassName = newClassName.substring(0, newClassName.length() - 1);
+
+                    packages.put(oldClassName, newClassName);
+                } else {
+                    registerClassMapping(oldClassName, newClassName);
+                    currentClass = tokens[1];
+                }
+                break;
             }
+            case "PK:":
+                String oldPackageName = inputTransformer.transformClassName(tokens[1]);
+                String newPackageName = outputTransformer.transformClassName(tokens[2]);
 
-            if (oldClassName.endsWith("/*") && newClassName.endsWith("/*")) {
-                // extension for remapping class name prefixes
-                oldClassName = oldClassName.substring(0, oldClassName.length() - 1);
-                newClassName = newClassName.substring(0, newClassName.length() - 1);
+                // package names always either 1) suffixed with '/', or 2) equal to '.' to signify default package
+                if (!newPackageName.equals(".") && !newPackageName.endsWith("/")) {
+                    newPackageName += "/";
+                }
 
-                packages.put(oldClassName, newClassName);
-            } else {
-                registerClassMapping(oldClassName, newClassName);
-                currentClass = tokens[1];
+                if (!oldPackageName.equals(".") && !oldPackageName.endsWith("/")) {
+                    oldPackageName += "/";
+                }
+
+                if (packages.containsKey(oldPackageName) && !newPackageName.equals(packages.get(oldPackageName))) {
+                    throw new IllegalArgumentException("Duplicate package mapping: " + oldPackageName + " ->" + newPackageName
+                            + " but already mapped to " + packages.get(oldPackageName) + " in line=" + line);
+                }
+
+                packages.put(oldPackageName, newPackageName);
+                break;
+            case "FD:": {
+                String oldFull = tokens[1];
+                String newFull = tokens[2];
+
+                // Split the qualified field names into their classes and actual names
+                int splitOld = oldFull.lastIndexOf('/');
+                int splitNew = newFull.lastIndexOf('/');
+                if (splitOld == -1 || splitNew == -1) {
+                    throw new IllegalArgumentException("Field name is invalid, not fully-qualified: " + oldFull
+                            + " -> " + newFull + " in line=" + line);
+                }
+
+                String oldClassName = inputTransformer.transformClassName(oldFull.substring(0, splitOld));
+                String oldFieldName = inputTransformer.transformFieldName(oldFull.substring(0, splitOld), oldFull.substring(splitOld + 1));
+                String newClassName = outputTransformer.transformClassName(newFull.substring(0, splitNew)); // TODO: verify with existing class map? (only used for reverse)
+
+                String newFieldName = outputTransformer.transformFieldName(oldFull.substring(0, splitOld), newFull.substring(splitNew + 1));
+
+                registerFieldMapping(oldClassName, oldFieldName, newClassName, newFieldName);
+                break;
             }
-        } else if (kind.equals("PK:")) {
-            String oldPackageName = inputTransformer.transformClassName(tokens[1]);
-            String newPackageName = outputTransformer.transformClassName(tokens[2]);
+            case "MD:": {
+                String oldFull = tokens[1];
+                String newFull = tokens[3];
 
-            // package names always either 1) suffixed with '/', or 2) equal to '.' to signify default package
-            if (!newPackageName.equals(".") && !newPackageName.endsWith("/")) {
-                newPackageName += "/";
+                // Split the qualified field names into their classes and actual names TODO: refactor with below
+                int splitOld = oldFull.lastIndexOf('/');
+                int splitNew = newFull.lastIndexOf('/');
+                if (splitOld == -1 || splitNew == -1) {
+                    throw new IllegalArgumentException("Field name is invalid, not fully-qualified: " + oldFull
+                            + " -> " + newFull + " in line=" + line);
+                }
+
+                String oldClassName = inputTransformer.transformClassName(oldFull.substring(0, splitOld));
+                String oldMethodName = inputTransformer.transformMethodName(oldFull.substring(0, splitOld), oldFull.substring(splitOld + 1), tokens[2]);
+                String oldMethodDescriptor = inputTransformer.transformMethodDescriptor(tokens[2]);
+                String newClassName = outputTransformer.transformClassName(newFull.substring(0, splitNew)); // TODO: verify with existing class map? (only used for reverse)
+
+                String newMethodName = outputTransformer.transformMethodName(oldFull.substring(0, splitOld), newFull.substring(splitNew + 1), tokens[2]);
+                String newMethodDescriptor = outputTransformer.transformMethodDescriptor(tokens[4]); // TODO: verify with existing class map? (only used for reverse)
+
+                // TODO: support isClassIgnored() on reversed method descriptors
+
+                registerMethodMapping(oldClassName, oldMethodName, oldMethodDescriptor, newClassName, newMethodName, newMethodDescriptor);
+                break;
             }
-
-            if (!oldPackageName.equals(".") && !oldPackageName.endsWith("/")) {
-                oldPackageName += "/";
-            }
-
-            if (packages.containsKey(oldPackageName) && !newPackageName.equals(packages.get(oldPackageName))) {
-                throw new IllegalArgumentException("Duplicate package mapping: " + oldPackageName + " ->" + newPackageName
-                        + " but already mapped to " + packages.get(oldPackageName) + " in line=" + line);
-            }
-
-            packages.put(oldPackageName, newPackageName);
-        } else if (kind.equals("FD:")) {
-            String oldFull = tokens[1];
-            String newFull = tokens[2];
-
-            // Split the qualified field names into their classes and actual names
-            int splitOld = oldFull.lastIndexOf('/');
-            int splitNew = newFull.lastIndexOf('/');
-            if (splitOld == -1 || splitNew == -1) {
-                throw new IllegalArgumentException("Field name is invalid, not fully-qualified: " + oldFull
-                        + " -> " + newFull + " in line=" + line);
-            }
-
-            String oldClassName = inputTransformer.transformClassName(oldFull.substring(0, splitOld));
-            String oldFieldName = inputTransformer.transformFieldName(oldFull.substring(0, splitOld), oldFull.substring(splitOld + 1));
-            String newClassName = outputTransformer.transformClassName(newFull.substring(0, splitNew)); // TODO: verify with existing class map? (only used for reverse)
-            String newFieldName = outputTransformer.transformFieldName(oldFull.substring(0, splitOld), newFull.substring(splitNew + 1));
-
-            registerFieldMapping(oldClassName, oldFieldName, newClassName, newFieldName);
-        } else if (kind.equals("MD:")) {
-            String oldFull = tokens[1];
-            String newFull = tokens[3];
-
-            // Split the qualified field names into their classes and actual names TODO: refactor with below
-            int splitOld = oldFull.lastIndexOf('/');
-            int splitNew = newFull.lastIndexOf('/');
-            if (splitOld == -1 || splitNew == -1) {
-                throw new IllegalArgumentException("Field name is invalid, not fully-qualified: " + oldFull
-                        + " -> " + newFull + " in line=" + line);
-            }
-
-            String oldClassName = inputTransformer.transformClassName(oldFull.substring(0, splitOld));
-            String oldMethodName = inputTransformer.transformMethodName(oldFull.substring(0, splitOld), oldFull.substring(splitOld + 1), tokens[2]);
-            String oldMethodDescriptor = inputTransformer.transformMethodDescriptor(tokens[2]);
-            String newClassName = outputTransformer.transformClassName(newFull.substring(0, splitNew)); // TODO: verify with existing class map? (only used for reverse)
-            String newMethodName = outputTransformer.transformMethodName(oldFull.substring(0, splitOld), newFull.substring(splitNew + 1), tokens[2]);
-            String newMethodDescriptor = outputTransformer.transformMethodDescriptor(tokens[4]); // TODO: verify with existing class map? (only used for reverse)
-            // TODO: support isClassIgnored() on reversed method descriptors
-
-            registerMethodMapping(oldClassName, oldMethodName, oldMethodDescriptor, newClassName, newMethodName, newMethodDescriptor);
-        } else {
-            throw new IllegalArgumentException("Unable to parse srg file, unrecognized mapping type in line=" + line);
+            default:
+                throw new IllegalArgumentException("Unable to parse srg file, unrecognized mapping type in line=" + line);
         }
     }
 

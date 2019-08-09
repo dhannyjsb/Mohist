@@ -14,6 +14,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("ALL")
 public class TerminalConsoleWriterThread implements Runnable {
     private static final byte[] RESET_LINE = String.valueOf('\r').getBytes();
     private static final Map<String, BlockingQueue<String>> QUEUES;

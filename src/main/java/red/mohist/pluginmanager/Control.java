@@ -202,8 +202,8 @@ public class Control {
         System.gc();
 
         if (reloaddependents) {
-            for (int i = 0; i < reload.size(); i++) {
-                enablePlugin(loadPlugin(getFile((JavaPlugin) reload.get(i))));
+            for (Plugin value : reload) {
+                enablePlugin(loadPlugin(getFile((JavaPlugin) value)));
             }
         }
 

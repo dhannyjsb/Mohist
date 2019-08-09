@@ -48,9 +48,7 @@ public class YamlConfiguration extends FileConfiguration {
         try {
             config.load(file);
         } catch (FileNotFoundException ex) {
-        } catch (IOException ex) {
-            Mohist.LOGGER.error("Cannot load " + file, ex);
-        } catch (InvalidConfigurationException ex) {
+        } catch (IOException | InvalidConfigurationException ex) {
             Mohist.LOGGER.error("Cannot load " + file, ex);
         }
 
@@ -75,9 +73,7 @@ public class YamlConfiguration extends FileConfiguration {
 
         try {
             config.load(reader);
-        } catch (IOException ex) {
-            Mohist.LOGGER.error("Cannot load configuration from stream", ex);
-        } catch (InvalidConfigurationException ex) {
+        } catch (IOException | InvalidConfigurationException ex) {
             Mohist.LOGGER.error("Cannot load configuration from stream", ex);
         }
 
