@@ -801,7 +801,7 @@
          {
              this.profiler.startSection("save");
              this.playerList.saveAllPlayerData();
-@@ -692,28 +830,35 @@
+@@ -692,64 +830,77 @@
              this.profiler.endSection();
          }
  
@@ -840,9 +840,20 @@
 +        this.server.getScheduler().mainThreadHeartbeat(this.tickCounter); // CraftBukkit
          this.profiler.startSection("jobs");
  
-         synchronized (this.futureTaskQueue)
-@@ -725,29 +870,35 @@
-         }
+-        synchronized (this.futureTaskQueue)
+-        {
+-            while (!this.futureTaskQueue.isEmpty())
+-            {
+-                Util.runTask(this.futureTaskQueue.poll(), LOGGER);
+-            }
+-        }
++        // Spigot start
++        FutureTask<?> entry;
++        int count = this.futureTaskQueue.size();
++        while (count-- > 0 && (entry = this.futureTaskQueue.poll()) != null) {
++            Util.runTask(entry, MinecraftServer.LOGGER);
++         }
++        // Spigot end
  
          this.profiler.endStartSection("levels");
 +        // CraftBukkit start
@@ -891,9 +902,19 @@
 -                }
 -
                  this.profiler.startSection("tick");
-                 net.minecraftforge.fml.common.FMLCommonHandler.instance().onPreWorldTick(worldserver);
+-                net.minecraftforge.fml.common.FMLCommonHandler.instance().onPreWorldTick(worldserver);
++                FMLCommonHandler.instance().onPreWorldTick(worldserver);
  
-@@ -779,13 +930,12 @@
+                 try
+                 {
+@@ -773,19 +924,18 @@
+                     throw new ReportedException(crashreport1);
+                 }
+ 
+-                net.minecraftforge.fml.common.FMLCommonHandler.instance().onPostWorldTick(worldserver);
++                FMLCommonHandler.instance().onPostWorldTick(worldserver);
+                 this.profiler.endSection();
+                 this.profiler.startSection("tracker");
                  worldserver.getEntityTracker().tick();
                  this.profiler.endSection();
                  this.profiler.endSection();
