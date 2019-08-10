@@ -45,6 +45,7 @@ public class MohistConfig extends ConfigBase{
 
     // Bukkit Event Canceled
     public final BoolSetting explosion_canceled = new BoolSetting(this, "eventCanceled.explosion", false, "BlockExplosionEvent isCanceled");
+    public final BoolSetting check_update = new BoolSetting(this, "check_update", true, "Check Update");
 
 
     /* ======================================================================== */

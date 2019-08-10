@@ -36,7 +36,9 @@ public class Mohist {
     }
 
     public static void main(String[] args) {
-        Update.hasLatestVersion();
+        if (Update.isCheckVersion()) {
+            Update.hasLatestVersion();
+        }
         if (System.getProperty("log4j.configurationFile") == null)
         {
             // Set this early so we don't need to reconfigure later

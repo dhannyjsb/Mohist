@@ -1,8 +1,10 @@
 package red.mohist.down;
 
 import red.mohist.i18n.Message;
+import red.mohist.util.FileUtil;
 import red.mohist.util.IOUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -41,5 +43,24 @@ public class Update {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isCheckVersion() {
+        try {
+            File f = new File("mohist.yml");
+            String s = FileUtil.readContent(f, "UTF-8");
+            if(s.contains("check_update: ")){
+                String string = s.substring(s.indexOf("check_update: "));
+                String s1 = string.substring(string.indexOf(":") + 1);
+                String s2 = s1.substring(1, 5);
+                String locale = s2.substring(0, 4);
+                if (locale.equals("true")){
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
