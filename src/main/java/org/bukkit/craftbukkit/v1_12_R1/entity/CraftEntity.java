@@ -450,8 +450,8 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         // Cauldron - used for custom entities that extend Entity directly
         else if (entity instanceof net.minecraft.entity.IProjectile) {
                 return new CustomProjectileEntity(server, entity);
-        }else if (entity != null) {
-            return new CraftCustomEntity(server, entity);
+        }else if (entity instanceof net.minecraft.entity.Entity) {
+            return new CraftCustomEntity(server, (net.minecraft.entity.Entity) entity);
         }
         return null;
         //throw new AssertionError("Unknown entity " + (entity == null ? " is null" : entity.getClass() + ": " + entity));

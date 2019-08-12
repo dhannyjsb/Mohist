@@ -36,7 +36,7 @@
      }
  
      private void doModEntityRegistration(ResourceLocation registryName, Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
-@@ -385,4 +393,26 @@
+@@ -385,4 +393,33 @@
          this.entityClassRegistrations.put(entity, registration);
          this.entityRegistrations.put(registration.container, registration);
      }
@@ -62,4 +62,11 @@
 +        entityTypeMap.put(entityClass, entityName);
 +        entityClassMap.put(entityName, entityClass);
 +    }
++
++    // used by CraftCustomEntity
++    public static String getCustomEntityTypeName(Class <? extends Entity > entityClass)
++    {
++        return entityTypeMap.get(entityClass);
++    }
++    // Cauldron end
  }

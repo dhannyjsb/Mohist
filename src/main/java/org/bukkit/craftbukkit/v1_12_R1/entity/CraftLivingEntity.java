@@ -78,6 +78,7 @@ import java.util.Set;
 
 public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public String entityName;
+    public Class<? extends net.minecraft.entity.EntityLivingBase> entityClass;
     private CraftEntityEquipment equipment;
 
     public CraftLivingEntity(final CraftServer server, final EntityLivingBase entity) {
@@ -86,7 +87,8 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (entity instanceof EntityLiving || entity instanceof EntityArmorStand) {
             equipment = new CraftEntityEquipment(this);
         }
-        this.entityName = EntityRegistry.entityTypeMap.get(entity.getClass());
+        this.entityClass = entity.getClass();
+        this.entityName = EntityRegistry.getCustomEntityTypeName(entityClass);
         if (entityName == null) {
             entityName = entity.getName();
         }
