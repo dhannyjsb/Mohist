@@ -1,6 +1,6 @@
 /*
  * Minecraft Forge
- * Copyright (c) 2018.
+ * Copyright (c) 2016.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package red.mohist.util;
+package red.mohist.console;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.text.TextFormatting;
@@ -27,10 +27,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-public final class ConsoleFormatter implements Function<String, String> {
+public final class ConsoleFormatter implements Function<String, String>
+{
+
+    public ConsoleFormatter()
+    {
+    }
 
     private static final String RESET = Ansi.ansi().reset().toString();
-    private static final ImmutableMap<Pattern, String> REPLACEMENTS = ImmutableMap.<Pattern, String>builder()
+
+    private static final ImmutableMap<Pattern, String> REPLACEMENTS = ImmutableMap.<Pattern, String> builder()
             .put(compile(TextFormatting.BLACK), Ansi.ansi().reset().fg(Ansi.Color.BLACK).boldOff().toString())
             .put(compile(TextFormatting.DARK_BLUE), Ansi.ansi().reset().fg(Ansi.Color.BLUE).boldOff().toString())
             .put(compile(TextFormatting.DARK_GREEN), Ansi.ansi().reset().fg(Ansi.Color.GREEN).boldOff().toString())
@@ -55,19 +61,18 @@ public final class ConsoleFormatter implements Function<String, String> {
             .put(compile(TextFormatting.RESET), RESET)
             .build();
 
-    public ConsoleFormatter() {
-    }
-
-    private static Pattern compile(TextFormatting formatting) {
+    private static Pattern compile(TextFormatting formatting)
+    {
         return Pattern.compile(formatting.toString(), Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
     }
 
     @Override
-    public String apply(String text) {
-        for (Map.Entry<Pattern, String> entry : REPLACEMENTS.entrySet()) {
+    public String apply(String text)
+    {
+        for (Map.Entry<Pattern, String> entry : REPLACEMENTS.entrySet())
+        {
             text = entry.getKey().matcher(text).replaceAll(entry.getValue());
         }
-
         return text + RESET;
     }
 
