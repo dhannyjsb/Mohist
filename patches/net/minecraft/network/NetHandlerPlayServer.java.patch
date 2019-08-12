@@ -1385,7 +1385,7 @@
              {
                  NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>create();
  
-@@ -1159,10 +1887,302 @@
+@@ -1159,10 +1887,304 @@
              }
              else
              {
@@ -1398,19 +1398,21 @@
 +                    return;
 +                }
 +                InventoryView inventory = this.player.openContainer.getBukkitView();
++
++                // Cauldron start - some containers such as NEI's Creative Container does not have a view at this point so we need to create one
++                if(inventory == null)
+                 {
++                    inventory = new CraftInventoryView(this.player.getBukkitEntity(), MinecraftServer.getServerInst().server.createInventory(this.player.getBukkitEntity(), InventoryType.CHEST), this.player.openContainer);
++                    this.player.openContainer.setBukkitView(inventory);
++                }
++                // Cauldron end
 +                InventoryType.SlotType type = CraftInventoryView.getSlotType(inventory, packetIn.getSlotId());
 +                InventoryClickEvent event;
 +                ClickType click = ClickType.UNKNOWN;
 +                InventoryAction action = InventoryAction.UNKNOWN;
 +
 +                ItemStack itemstack = ItemStack.EMPTY;
-+                // Cauldron start - some containers such as NEI's Creative Container does not have a view at this point so we need to create one
-+                if(inventory == null)
-                 {
-+                    inventory = new CraftInventoryView(this.player.getBukkitEntity(), MinecraftServer.getServerInst().server.createInventory(this.player.getBukkitEntity(), InventoryType.CHEST), this.player.openContainer);
-+                    this.player.openContainer.bukkitView = inventory;
-+                }
-+                // Cauldron end
++
 +                switch (packetIn.getClickType()) {
 +                    case PICKUP:
 +                        if (packetIn.getUsedButton() == 0) {
@@ -1690,7 +1692,7 @@
                      this.player.connection.sendPacket(new SPacketConfirmTransaction(packetIn.getWindowId(), packetIn.getActionNumber(), true));
                      this.player.isChangingQuantityOnly = true;
                      this.player.openContainer.detectAndSendChanges();
-@@ -1178,8 +2198,8 @@
+@@ -1178,8 +2200,8 @@
  
                      for (int j = 0; j < this.player.openContainer.inventorySlots.size(); ++j)
                      {
@@ -1701,7 +1703,7 @@
                          nonnulllist1.add(itemstack1);
                      }
  
-@@ -1203,6 +2223,7 @@
+@@ -1203,6 +2225,7 @@
      public void processEnchantItem(CPacketEnchantItem packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1709,7 +1711,7 @@
          this.player.markPlayerActive();
  
          if (this.player.openContainer.windowId == packetIn.getWindowId() && this.player.openContainer.getCanCraft(this.player) && !this.player.isSpectator())
-@@ -1242,8 +2263,47 @@
+@@ -1242,8 +2265,47 @@
              }
  
              boolean flag1 = packetIn.getSlotId() >= 1 && packetIn.getSlotId() <= 45;
@@ -1758,7 +1760,7 @@
              if (flag1 && flag2)
              {
                  if (itemstack.isEmpty())
-@@ -1273,6 +2333,7 @@
+@@ -1273,6 +2335,7 @@
      public void processConfirmTransaction(CPacketConfirmTransaction packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1766,7 +1768,7 @@
          Short oshort = this.pendingTransactions.lookup(this.player.openContainer.windowId);
  
          if (oshort != null && packetIn.getUid() == oshort.shortValue() && this.player.openContainer.windowId == packetIn.getWindowId() && !this.player.openContainer.getCanCraft(this.player) && !this.player.isSpectator())
-@@ -1284,6 +2345,7 @@
+@@ -1284,6 +2347,7 @@
      public void processUpdateSign(CPacketUpdateSign packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1774,7 +1776,7 @@
          this.player.markPlayerActive();
          WorldServer worldserver = this.serverController.getWorld(this.player.dimension);
          BlockPos blockpos = packetIn.getPosition();
-@@ -1300,19 +2362,35 @@
+@@ -1300,19 +2364,35 @@
  
              TileEntitySign tileentitysign = (TileEntitySign)tileentity;
  
@@ -1812,7 +1814,7 @@
              tileentitysign.markDirty();
              worldserver.notifyBlockUpdate(blockpos, iblockstate, iblockstate, 3);
          }
-@@ -1320,6 +2398,7 @@
+@@ -1320,6 +2400,7 @@
  
      public void processKeepAlive(CPacketKeepAlive packetIn)
      {
@@ -1820,7 +1822,7 @@
          if (this.field_194403_g && packetIn.getKey() == this.field_194404_h)
          {
              int i = (int)(this.currentTimeMillis() - this.field_194402_f);
-@@ -1328,7 +2407,11 @@
+@@ -1328,7 +2409,11 @@
          }
          else if (!this.player.getName().equals(this.serverController.getServerOwner()))
          {
@@ -1833,7 +1835,7 @@
          }
      }
  
-@@ -1340,12 +2423,25 @@
+@@ -1340,12 +2425,25 @@
      public void processPlayerAbilities(CPacketPlayerAbilities packetIn)
      {
          PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
@@ -1861,7 +1863,7 @@
          List<String> list = Lists.<String>newArrayList();
  
          for (String s : this.serverController.getTabCompletions(this.player, packetIn.getMessage(), packetIn.getTargetBlock(), packetIn.hasTargetBlock()))
-@@ -1369,6 +2465,11 @@
+@@ -1369,6 +2467,11 @@
  
          if ("MC|BEdit".equals(s))
          {
@@ -1873,7 +1875,7 @@
              PacketBuffer packetbuffer = packetIn.getBufferData();
  
              try
-@@ -1395,15 +2496,22 @@
+@@ -1395,15 +2498,22 @@
                  if (itemstack.getItem() == Items.WRITABLE_BOOK && itemstack.getItem() == itemstack1.getItem())
                  {
                      itemstack1.setTagInfo("pages", itemstack.getTagCompound().getTagList("pages", 8));
@@ -1896,7 +1898,7 @@
              PacketBuffer packetbuffer1 = packetIn.getBufferData();
  
              try
-@@ -1443,12 +2551,14 @@
+@@ -1443,12 +2553,14 @@
                      }
  
                      itemstack2.setTagInfo("pages", nbttaglist);
@@ -1912,7 +1914,7 @@
              }
          }
          else if ("MC|TrSel".equals(s))
-@@ -1466,6 +2576,7 @@
+@@ -1466,6 +2578,7 @@
              catch (Exception exception5)
              {
                  LOGGER.error("Couldn't select trade", (Throwable)exception5);
@@ -1920,7 +1922,7 @@
              }
          }
          else if ("MC|AdvCmd".equals(s))
-@@ -1528,6 +2639,7 @@
+@@ -1528,6 +2641,7 @@
              catch (Exception exception4)
              {
                  LOGGER.error("Couldn't set command block", (Throwable)exception4);
@@ -1928,7 +1930,7 @@
              }
          }
          else if ("MC|AutoCmd".equals(s))
-@@ -1606,6 +2718,7 @@
+@@ -1606,6 +2720,7 @@
              catch (Exception exception3)
              {
                  LOGGER.error("Couldn't set command block", (Throwable)exception3);
@@ -1936,7 +1938,7 @@
              }
          }
          else if ("MC|Beacon".equals(s))
-@@ -1632,6 +2745,7 @@
+@@ -1632,6 +2747,7 @@
                  catch (Exception exception2)
                  {
                      LOGGER.error("Couldn't set beacon", (Throwable)exception2);
@@ -1944,7 +1946,7 @@
                  }
              }
          }
-@@ -1743,6 +2857,7 @@
+@@ -1743,6 +2859,7 @@
              catch (Exception exception1)
              {
                  LOGGER.error("Couldn't set structure block", (Throwable)exception1);
@@ -1952,7 +1954,7 @@
              }
          }
          else if ("MC|PickItem".equals(s))
-@@ -1760,7 +2875,43 @@
+@@ -1760,7 +2877,43 @@
              catch (Exception exception)
              {
                  LOGGER.error("Couldn't pick item", (Throwable)exception);

@@ -46,11 +46,11 @@
 +                    if (tileEntity instanceof IInventory)
 +                    {
 +                        CraftInventory inventory = new CraftInventory((IInventory)tileEntity);
-+                        remoteGuiContainer.bukkitView = new CraftInventoryView(entityPlayer.getBukkitEntity(), inventory, remoteGuiContainer);
++                        remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), inventory, remoteGuiContainer));
 +                    }
 +                    else
 +                    {
-+                        remoteGuiContainer.bukkitView = new CraftInventoryView(entityPlayer.getBukkitEntity(), Bukkit.createInventory(entityPlayer.getBukkitEntity(), InventoryType.CHEST), remoteGuiContainer);
++                        remoteGuiContainer.setBukkitView(new CraftInventoryView(entityPlayer.getBukkitEntity(), Bukkit.createInventory(entityPlayer.getBukkitEntity(), InventoryType.CHEST), remoteGuiContainer));
 +                    }
 +                }
 +                remoteGuiContainer = CraftEventFactory.callInventoryOpenEvent((EntityPlayerMP) entityPlayer, remoteGuiContainer, false);
