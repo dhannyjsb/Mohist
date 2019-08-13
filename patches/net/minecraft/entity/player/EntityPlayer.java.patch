@@ -102,7 +102,7 @@
  @SuppressWarnings("incomplete-switch")
  public abstract class EntityPlayer extends EntityLivingBase
  {
-@@ -109,10 +86,10 @@
+@@ -109,10 +86,11 @@
      protected static final DataParameter<NBTTagCompound> LEFT_SHOULDER_ENTITY = EntityDataManager.<NBTTagCompound>createKey(EntityPlayer.class, DataSerializers.COMPOUND_TAG);
      protected static final DataParameter<NBTTagCompound> RIGHT_SHOULDER_ENTITY = EntityDataManager.<NBTTagCompound>createKey(EntityPlayer.class, DataSerializers.COMPOUND_TAG);
      public InventoryPlayer inventory = new InventoryPlayer(this);
@@ -111,11 +111,12 @@
      public Container inventoryContainer;
      public Container openContainer;
 -    protected FoodStats foodStats = new FoodStats();
-+    protected FoodStats foodStats = new FoodStats(this); // Mohist Restore CraftBukkit modifications, compatible with AppleCore and other mods that modify FoodStats
++    protected FoodStats foodStats_vanilla = new FoodStats(); // Mohist - add the original amount, which doesn't actually work, but is compatible with apple cores
++    protected FoodStats foodStats = new FoodStats(this); // CraftBukkit - add "this" to constructor
      protected int flyToggleTimer;
      public float prevCameraYaw;
      public float cameraYaw;
-@@ -123,9 +100,9 @@
+@@ -123,9 +101,9 @@
      public double chasingPosX;
      public double chasingPosY;
      public double chasingPosZ;
@@ -127,7 +128,7 @@
      public float renderOffsetX;
      @SideOnly(Side.CLIENT)
      public float renderOffsetY;
-@@ -147,6 +124,10 @@
+@@ -147,6 +125,10 @@
      @Nullable
      public EntityFishHook fishEntity;
  
@@ -138,7 +139,7 @@
      protected CooldownTracker createCooldownTracker()
      {
          return new CooldownTracker();
-@@ -162,6 +143,9 @@
+@@ -162,6 +144,9 @@
          BlockPos blockpos = worldIn.getSpawnPoint();
          this.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)(blockpos.getY() + 1), (double)blockpos.getZ() + 0.5D, 0.0F, 0.0F);
          this.unused180 = 180.0F;
@@ -148,7 +149,7 @@
      }
  
      protected void applyEntityAttributes()
-@@ -408,7 +392,7 @@
+@@ -408,7 +393,7 @@
          return SoundCategory.PLAYERS;
      }
  
@@ -157,7 +158,7 @@
      {
          return 20;
      }
-@@ -499,7 +483,8 @@
+@@ -499,7 +484,8 @@
          {
              if (this.getHealth() < this.getMaxHealth() && this.ticksExisted % 20 == 0)
              {
@@ -167,7 +168,7 @@
              }
  
              if (this.foodStats.needFood() && this.ticksExisted % 10 == 0)
-@@ -527,7 +512,7 @@
+@@ -527,7 +513,7 @@
  
          this.setAIMoveSpeed((float)iattributeinstance.getAttributeValue());
          float f = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
@@ -176,7 +177,7 @@
  
          if (f > 0.1F)
          {
-@@ -691,6 +676,7 @@
+@@ -691,6 +677,7 @@
      @Nullable
      public EntityItem dropItem(boolean dropAll)
      {
@@ -184,7 +185,7 @@
          ItemStack stack = inventory.getCurrentItem();
  
          if (stack.isEmpty())
-@@ -750,6 +736,30 @@
+@@ -750,6 +737,30 @@
                  entityitem.motionZ += Math.sin((double)f3) * (double)f2;
              }
  
@@ -215,7 +216,7 @@
              ItemStack itemstack = this.dropItemAndGetStack(entityitem);
  
              if (traceItem)
-@@ -893,6 +903,11 @@
+@@ -893,6 +904,11 @@
              this.wakeUpPlayer(true, true, false);
          }
  
@@ -227,7 +228,7 @@
          if (compound.hasKey("SpawnX", 99) && compound.hasKey("SpawnY", 99) && compound.hasKey("SpawnZ", 99))
          {
              this.spawnPos = new BlockPos(compound.getInteger("SpawnX"), compound.getInteger("SpawnY"), compound.getInteger("SpawnZ"));
-@@ -987,6 +1002,7 @@
+@@ -987,6 +1003,7 @@
          {
              compound.setTag("ShoulderEntityRight", this.getRightShoulderEntity());
          }
@@ -235,7 +236,7 @@
      }
  
      public boolean attackEntityFrom(DamageSource source, float amount)
-@@ -1015,13 +1031,13 @@
+@@ -1015,13 +1032,13 @@
                      this.wakeUpPlayer(true, true, false);
                  }
  
@@ -251,7 +252,7 @@
                      }
  
                      if (this.world.getDifficulty() == EnumDifficulty.EASY)
-@@ -1035,7 +1051,14 @@
+@@ -1035,7 +1052,14 @@
                      }
                  }
  
@@ -267,7 +268,7 @@
              }
          }
      }
-@@ -1052,17 +1075,29 @@
+@@ -1052,17 +1076,29 @@
  
      public boolean canAttackPlayer(EntityPlayer other)
      {
@@ -306,7 +307,7 @@
      }
  
      protected void damageArmor(float damage)
-@@ -1113,10 +1148,12 @@
+@@ -1113,10 +1149,12 @@
          return (float)i / (float)this.inventory.armorInventory.size();
      }
  
@@ -323,7 +324,7 @@
              damageAmount = net.minecraftforge.common.ForgeHooks.onLivingHurt(this, damageSrc, damageAmount);
              if (damageAmount <= 0) return;
              damageAmount = net.minecraftforge.common.ISpecialArmor.ArmorProperties.applyArmor(this, inventory.armorInventory, damageSrc, damageAmount);
-@@ -1140,8 +1177,15 @@
+@@ -1140,8 +1178,15 @@
                  }
              }
          }
@@ -339,7 +340,7 @@
      public void openEditSign(TileEntitySign signTile)
      {
      }
-@@ -1317,8 +1361,17 @@
+@@ -1317,8 +1362,17 @@
  
                          if (j > 0 && !targetEntity.isBurning())
                          {
@@ -359,7 +360,7 @@
                          }
                      }
  
-@@ -1342,7 +1395,7 @@
+@@ -1342,7 +1396,7 @@
  
                              this.motionX *= 0.6D;
                              this.motionZ *= 0.6D;
@@ -368,7 +369,7 @@
                          }
  
                          if (flag3)
-@@ -1353,8 +1406,10 @@
+@@ -1353,8 +1407,10 @@
                              {
                                  if (entitylivingbase != this && entitylivingbase != targetEntity && !this.isOnSameTeam(entitylivingbase) && this.getDistanceSq(entitylivingbase) < 9.0D)
                                  {
@@ -381,7 +382,7 @@
                                  }
                              }
  
-@@ -1364,11 +1419,28 @@
+@@ -1364,11 +1420,28 @@
  
                          if (targetEntity instanceof EntityPlayerMP && targetEntity.velocityChanged)
                          {
@@ -415,7 +416,7 @@
                          }
  
                          if (flag2)
-@@ -1434,7 +1506,15 @@
+@@ -1434,7 +1507,15 @@
  
                              if (j > 0)
                              {
@@ -432,7 +433,7 @@
                              }
  
                              if (this.world instanceof WorldServer && f5 > 2.0F)
-@@ -1454,6 +1534,11 @@
+@@ -1454,6 +1535,11 @@
                          {
                              targetEntity.extinguish();
                          }
@@ -444,7 +445,7 @@
                      }
                  }
              }
-@@ -1527,6 +1612,10 @@
+@@ -1527,6 +1613,10 @@
          return this.gameProfile;
      }
  
@@ -455,7 +456,7 @@
      public EntityPlayer.SleepResult trySleep(BlockPos bedLocation)
      {
          EntityPlayer.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(this, bedLocation);
-@@ -1572,6 +1661,20 @@
+@@ -1572,6 +1662,20 @@
              this.dismountRidingEntity();
          }
  
@@ -476,7 +477,7 @@
          this.spawnShoulderEntities();
          this.setSize(0.2F, 0.2F);
  
-@@ -1651,6 +1754,23 @@
+@@ -1651,6 +1755,23 @@
              this.world.updateAllPlayersSleepingFlag();
          }
  
@@ -500,7 +501,7 @@
          this.sleepTimer = immediately ? 0 : 100;
  
          if (setSpawn)
-@@ -1757,11 +1877,13 @@
+@@ -1757,11 +1878,13 @@
          {
              this.spawnPos = pos;
              this.spawnForced = forced;
@@ -514,7 +515,7 @@
          }
      }
  
-@@ -1820,7 +1942,10 @@
+@@ -1820,7 +1943,10 @@
              this.motionY = d3 * 0.6D;
              this.jumpMovementFactor = f;
              this.fallDistance = 0.0F;
@@ -526,7 +527,7 @@
          }
          else
          {
-@@ -2225,10 +2350,12 @@
+@@ -2225,10 +2351,12 @@
  
      protected void spawnShoulderEntities()
      {
@@ -543,7 +544,7 @@
      }
  
      private void spawnShoulderEntity(@Nullable NBTTagCompound p_192026_1_)
-@@ -2247,6 +2374,23 @@
+@@ -2247,6 +2375,23 @@
          }
      }
  
@@ -567,7 +568,7 @@
      @SideOnly(Side.CLIENT)
      public boolean isInvisibleToPlayer(EntityPlayer player)
      {
-@@ -2481,7 +2625,7 @@
+@@ -2481,7 +2626,7 @@
          return (NBTTagCompound)this.dataManager.get(LEFT_SHOULDER_ENTITY);
      }
  
@@ -576,7 +577,7 @@
      {
          this.dataManager.set(LEFT_SHOULDER_ENTITY, tag);
      }
-@@ -2491,7 +2635,7 @@
+@@ -2491,7 +2636,7 @@
          return (NBTTagCompound)this.dataManager.get(RIGHT_SHOULDER_ENTITY);
      }
  
@@ -585,7 +586,7 @@
      {
          this.dataManager.set(RIGHT_SHOULDER_ENTITY, tag);
      }
-@@ -2531,7 +2675,7 @@
+@@ -2531,7 +2676,7 @@
  
      public boolean canUseCommandBlock()
      {
@@ -594,7 +595,7 @@
      }
  
      /**
-@@ -2671,7 +2815,7 @@
+@@ -2671,7 +2816,7 @@
      @SuppressWarnings("unchecked")
      @Override
      @Nullable
@@ -603,7 +604,7 @@
      {
          if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
          {
-@@ -2763,4 +2907,9 @@
+@@ -2763,4 +2908,9 @@
          OTHER_PROBLEM,
          NOT_SAFE;
      }
