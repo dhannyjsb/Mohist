@@ -111,7 +111,7 @@
      public Container inventoryContainer;
      public Container openContainer;
 -    protected FoodStats foodStats = new FoodStats();
-+    protected FoodStats foodStats_vanilla = new FoodStats(); // Mohist - add the original amount, which doesn't actually work, but is compatible with apple cores
++    protected FoodStats applecores_vanilla = new FoodStats(); // Mohist - add the original amount, which doesn't actually work, but is compatible with apple cores
 +    protected FoodStats foodStats = new FoodStats(this); // CraftBukkit - add "this" to constructor
      protected int flyToggleTimer;
      public float prevCameraYaw;
