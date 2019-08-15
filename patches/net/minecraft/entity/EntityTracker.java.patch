@@ -14,13 +14,11 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.crash.ICrashReportDetail;
-@@ -52,14 +56,14 @@
- {
+@@ -53,13 +57,13 @@
      private static final Logger LOGGER = LogManager.getLogger();
      private final WorldServer world;
--    private final Set<EntityTrackerEntry> entries = Sets.<EntityTrackerEntry>newHashSet();
+     private final Set<EntityTrackerEntry> entries = Sets.<EntityTrackerEntry>newHashSet();
 -    private final IntHashMap<EntityTrackerEntry> trackedEntityHashTable = new IntHashMap<EntityTrackerEntry>();
-+    private final Set<EntityTrackerEntry> entries = Sets.newConcurrentHashSet();//hose
 +    public final IntHashMap<EntityTrackerEntry> trackedEntityHashTable = new IntHashMap<EntityTrackerEntry>();
      private int maxTrackingDistanceThreshold;
  

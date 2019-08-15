@@ -86,12 +86,7 @@
  public class EntityTrackerEntry
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -94,10 +60,11 @@
-     private boolean ridingEntity;
-     private boolean onGround;
-     public boolean playerEntitiesUpdated;
--    public final Set<EntityPlayerMP> trackingPlayers = Sets.<EntityPlayerMP>newHashSet();
-+    public final Set<EntityPlayerMP> trackingPlayers = Sets.newConcurrentHashSet();//hose
+@@ -98,6 +64,7 @@
  
      public EntityTrackerEntry(Entity entityIn, int rangeIn, int maxRangeIn, int updateFrequencyIn, boolean sendVelocityUpdatesIn)
      {
