@@ -1044,7 +1044,7 @@
                  }
              }
  
-@@ -1298,12 +1586,19 @@
+@@ -1298,11 +1586,19 @@
  
      public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
      {
@@ -1057,17 +1057,14 @@
 +        // CraftBukkit end
          SPacketParticles spacketparticles = new SPacketParticles(particleType, longDistance, (float)xCoord, (float)yCoord, (float)zCoord, (float)xOffset, (float)yOffset, (float)zOffset, (float)particleSpeed, numberOfParticles, particleArguments);
  
--        for (int i = 0; i < this.playerEntities.size(); ++i)
-+        for (EntityPlayer entityplayermp : this.playerEntities)
+         for (int i = 0; i < this.playerEntities.size(); ++i)
          {
--            EntityPlayerMP entityplayermp = (EntityPlayerMP)this.playerEntities.get(i);
--            this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
-+            if (sender != null && !((EntityPlayerMP)entityplayermp).getBukkitEntity().canSee(sender.getBukkitEntity())) continue;
-+            this.sendPacketWithinDistance((EntityPlayerMP)entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
+             EntityPlayerMP entityplayermp = (EntityPlayerMP)this.playerEntities.get(i);
++            if (sender != null && !entityplayermp.getBukkitEntity().canSee(sender.getBukkitEntity())) continue;
+             this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
- 
-@@ -1362,9 +1657,60 @@
+@@ -1362,9 +1658,60 @@
      }
  
      static class ServerBlockEventList extends ArrayList<BlockEventData>
