@@ -9,23 +9,3 @@
      {
          return allowEmpty || !this.getChunkProvider().provideChunk(x, z).isEmpty();
      }
-@@ -384,9 +384,8 @@
- 
-         this.unloadedEntityList.clear();
- 
--        for (int j1 = 0; j1 < this.loadedEntityList.size(); ++j1)
-+        for (Entity entity1 : this.loadedEntityList)
-         {
--            Entity entity1 = this.loadedEntityList.get(j1);
-             Entity entity2 = entity1.getRidingEntity();
- 
-             if (entity2 != null)
-@@ -409,7 +408,7 @@
-                     this.getChunkFromChunkCoords(k1, l).removeEntity(entity1);
-                 }
- 
--                this.loadedEntityList.remove(j1--);
-+                this.loadedEntityList.remove(entity1);
-                 this.onEntityRemoved(entity1);
-             }
-         }
