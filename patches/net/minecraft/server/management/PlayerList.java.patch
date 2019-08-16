@@ -931,7 +931,7 @@
              this.playerPingIndex = 0;
          }
      }
-@@ -746,6 +1206,22 @@
+@@ -746,6 +1206,24 @@
          }
      }
  
@@ -947,14 +947,16 @@
 +    }
 +
 +    public void sendAll(Packet packet, World world) {
-+        world.playerEntities.stream().forEach(pl -> ((EntityPlayerMP) pl).connection.sendPacket(packet));
++        for (int i = 0; i < world.playerEntities.size(); ++i) {
++            ((EntityPlayerMP) world.playerEntities.get(i)).connection.sendPacket(packet);
++        }
 +    }
 +    // CraftBukkit end
 +
      public void sendPacketToAllPlayersInDimension(Packet<?> packetIn, int dimension)
      {
          for (int i = 0; i < this.playerEntityList.size(); ++i)
-@@ -861,12 +1337,20 @@
+@@ -861,12 +1339,20 @@
          int i = this.mcServer.getOpPermissionLevel();
          this.ops.addEntry(new UserListOpsEntry(profile, this.mcServer.getOpPermissionLevel(), this.ops.bypassesPlayerLimit(profile)));
          this.sendPlayerPermissionLevel(this.getPlayerByUUID(profile.getId()), i);
@@ -975,7 +977,7 @@
      }
  
      private void sendPlayerPermissionLevel(EntityPlayerMP player, int permLevel)
-@@ -905,24 +1389,36 @@
+@@ -905,24 +1391,36 @@
      @Nullable
      public EntityPlayerMP getPlayerByUsername(String username)
      {
@@ -1025,7 +1027,7 @@
              {
                  double d0 = x - entityplayermp.posX;
                  double d1 = y - entityplayermp.posY;
-@@ -938,12 +1434,24 @@
+@@ -938,12 +1436,24 @@
  
      public void saveAllPlayerData()
      {
@@ -1054,7 +1056,7 @@
      public void addWhitelistedPlayer(GameProfile profile)
      {
          this.whiteListedPlayers.addEntry(new UserListWhitelistEntry(profile));
-@@ -988,16 +1496,21 @@
+@@ -988,16 +1498,21 @@
  
          if (worldIn.isRaining())
          {
@@ -1080,7 +1082,7 @@
          playerIn.connection.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
      }
  
-@@ -1079,17 +1592,26 @@
+@@ -1079,17 +1594,26 @@
  
      public void removeAllPlayers()
      {
@@ -1111,7 +1113,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -1097,10 +1619,19 @@
+@@ -1097,10 +1621,19 @@
          this.sendMessage(component, true);
      }
  
@@ -1133,7 +1135,7 @@
  
          if (statisticsmanagerserver == null)
          {
-@@ -1119,7 +1650,7 @@
+@@ -1119,7 +1652,7 @@
  
              statisticsmanagerserver = new StatisticsManagerServer(this.mcServer, file2);
              statisticsmanagerserver.readStatFile();
@@ -1142,7 +1144,7 @@
          }
  
          return statisticsmanagerserver;
-@@ -1128,14 +1659,14 @@
+@@ -1128,14 +1661,14 @@
      public PlayerAdvancements getPlayerAdvancements(EntityPlayerMP p_192054_1_)
      {
          UUID uuid = p_192054_1_.getUniqueID();
@@ -1159,7 +1161,7 @@
          }
  
          playeradvancements.setPlayer(p_192054_1_);
-@@ -1148,7 +1679,7 @@
+@@ -1148,7 +1681,7 @@
  
          if (this.mcServer.worlds != null)
          {
@@ -1168,7 +1170,7 @@
              {
                  if (worldserver != null)
                  {
-@@ -1176,9 +1707,10 @@
+@@ -1176,9 +1709,10 @@
  
      public void reloadResources()
      {
