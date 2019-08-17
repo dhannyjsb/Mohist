@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" packages="com.mojang.util,red.mohist.console.log4j">
     <Appenders>
-        <Console name="WINDOWS_COMPAT" target="SYSTEM_OUT"></Console>
+        <Console name="WINDOWS_COMPAT" target="SYSTEM_OUT"/>
         <Queue name="TerminalConsole">
             <PatternLayout pattern="[%d{HH:mm:ss} %level]: %msg%n" />
         </Queue>

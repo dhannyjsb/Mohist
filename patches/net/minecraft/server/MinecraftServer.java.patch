@@ -1164,26 +1164,24 @@
          }
          else
          {
-@@ -1455,134 +1632,50 @@
+@@ -1455,134 +1632,41 @@
      }
  
      @SideOnly(Side.SERVER)
 -    public static void main(String[] p_main_0_)
 +    public static void main(String[] args)
      {
+-        //Forge: Copied from DedicatedServer.init as to run as early as possible, Old code left in place intentionally.
+-        //Done in good faith with permission: https://github.com/MinecraftForge/MinecraftForge/issues/3659#issuecomment-390467028
+-        ServerEula eula = new ServerEula(new File("eula.txt"));
+-        if (!eula.hasAcceptedEULA())
+-        {
+-            LOGGER.info("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.");
+-            eula.createEULAFile();
 +        OptionSet options = Main.main(args);
 +        if (options == null)
-+            return;
-         //Forge: Copied from DedicatedServer.init as to run as early as possible, Old code left in place intentionally.
-         //Done in good faith with permission: https://github.com/MinecraftForge/MinecraftForge/issues/3659#issuecomment-390467028
-         ServerEula eula = new ServerEula(new File("eula.txt"));
-         if (!eula.hasAcceptedEULA())
-         {
--            LOGGER.info("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.");
-+            LOGGER.info(Message.getString(Message.EULA));
-             eula.createEULAFile();
              return;
-         }
+-        }
 -
          Bootstrap.register();
 -
@@ -1317,7 +1315,7 @@
          }
      }
  
-@@ -1595,7 +1688,8 @@
+@@ -1595,7 +1679,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {

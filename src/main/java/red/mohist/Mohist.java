@@ -1,5 +1,6 @@
 package red.mohist;
 
+import net.minecraft.server.ServerEula;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import red.mohist.down.DownloadLibraries;
@@ -7,6 +8,7 @@ import red.mohist.down.DownloadServer;
 import red.mohist.down.Update;
 import red.mohist.i18n.Message;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,13 +39,20 @@ public class Mohist {
     }
 
     public static void main(String[] args) {
-        if (Update.isCheckVersion()) {
-            Update.hasLatestVersion();
-        }
         if (System.getProperty("log4j.configurationFile") == null)
         {
             // Set this early so we don't need to reconfigure later
             System.setProperty("log4j.configurationFile", "log4j2_mohist.xml");
+        }
+        ServerEula eula = new ServerEula(new File("eula.txt"));
+        if (!eula.hasAcceptedEULA())
+        {
+            System.out.println(Message.getString("eula"));
+            eula.createEULAFile();
+            return;
+        }
+        if (Update.isCheckVersion()) {
+            Update.hasLatestVersion();
         }
         Class<?> launchwrapper = null;
         try
