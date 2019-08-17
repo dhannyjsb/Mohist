@@ -5,6 +5,7 @@ import net.minecraft.world.WorldServer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.YamlConfiguration;
+import red.mohist.Metrics;
 import red.mohist.api.ServerAPI;
 
 import java.io.File;
