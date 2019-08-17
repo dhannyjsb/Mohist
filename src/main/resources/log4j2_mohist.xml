@@ -23,7 +23,7 @@
                 <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL"/>
             </filters>
             <AppenderRef ref="TerminalConsole" level="INFO" />
-            <AppenderRef ref="File" level="DEBUG"/>
+            <AppenderRef ref="File" level="ALL"/>
         </Root>
     </Loggers>
 </Configuration>

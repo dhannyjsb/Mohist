@@ -1,6 +1,5 @@
 package red.mohist;
 
-import net.minecraftforge.fml.relauncher.ServerLaunchWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import red.mohist.down.DownloadLibraries;
@@ -8,6 +7,7 @@ import red.mohist.down.DownloadServer;
 import red.mohist.down.Update;
 import red.mohist.i18n.Message;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,6 +18,7 @@ public class Mohist {
     private static final String NATIVE_VERSON = "v1_12_R1";
     private static final String NMS_PREFIX = "net/minecraft/server/";
     public static Logger LOGGER;
+    public static long j;
 
     public static String getName() {
         return NAME;
@@ -62,9 +63,9 @@ public class Mohist {
             System.out.println("                        " + Message.getString(Message.forge_ServerLanunchWrapper_1));
             System.out.println("");
             Mohist.LOGGER = LogManager.getLogger("Mohist");
+            j = System.nanoTime();
             Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
             Mohist.LOGGER.info(Message.getString(Message.Load_libraries));
-            new ServerLaunchWrapper().run(args);
         }
         catch (Exception e)
         {
@@ -75,6 +76,21 @@ public class Mohist {
             ds.execute(new DownloadServer());
             dl.execute(new DownloadLibraries());
             System.out.println(Message.getString("file.ok"));
+        }
+
+        try
+        {
+            Method main = launchwrapper.getMethod("main", String[].class);
+            String[] allArgs = new String[args.length + 2];
+            allArgs[0] = "--tweakClass";
+            allArgs[1] = "net.minecraftforge.fml.common.launcher.FMLServerTweaker";
+            System.arraycopy(args, 0, allArgs, 2, args.length);
+            main.invoke(null,(Object)allArgs);
+        }
+        catch (Exception e)
+        {
+            System.out.println(Message.rb.getString(Message.Mohist_Start_Error.toString()));
+            e.printStackTrace(System.err);
         }
     }
 }
