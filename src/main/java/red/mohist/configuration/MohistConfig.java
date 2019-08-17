@@ -42,10 +42,15 @@ public class MohistConfig extends ConfigBase{
     public final StringSetting lang = new StringSetting(this, "lang", "en_US", "Mohist internationalization language setting, will return the default system language when your settings are invalid");
     public final StringSetting console_name = new StringSetting(this, "console_name", "Server", "Front of the console, for example /say");
     public final BoolSetting support_nocmd = new BoolSetting(this, "support_nocmd", false, "Some server tools do not recognize I18N");
+    public final BoolSetting watchmohist = new BoolSetting(this, "watch_mohist", true, "mohist watch");
 
     // Bukkit Event Canceled
     public final BoolSetting explosion_canceled = new BoolSetting(this, "eventCanceled.explosion", false, "BlockExplosionEvent isCanceled");
     public final BoolSetting check_update = new BoolSetting(this, "check_update", true, "Check Update");
+
+    public final BoolSetting asyn_aimove = new BoolSetting(this, "asyn.aimove", false, "Ai-Move");
+    public final BoolSetting asyn_spawnerCreature = new BoolSetting(this, "asyn.spawnerCreature", false, "spawnerCreature");
+    public final BoolSetting asyn_checkLight = new BoolSetting(this, "asyn.checkLight", false, "checkLight");
 
 
     /* ======================================================================== */

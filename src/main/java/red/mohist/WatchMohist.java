@@ -18,22 +18,10 @@ public class WatchMohist implements Runnable {
     private static long Time = 0L;
     private static long WarnTime = 0L;
 
-    public static void update() {
-        WatchMohist.Time = System.currentTimeMillis();
-    }
-
-    public static void start() {
-        timer.scheduleAtFixedRate(new WatchMohist(), 30000L, 600L, TimeUnit.MILLISECONDS);
-    }
-
-    public static void stop() {
-        timer.shutdown();
-    }
-
     @Override
     public void run() {
         long curTime = System.currentTimeMillis();
-        if (WatchMohist.Time > 0L && curTime - WatchMohist.Time > 2400L && curTime - WatchMohist.WarnTime > 30000L && String.valueOf(curTime - WatchMohist.Time).contains("-")) {
+        if (WatchMohist.Time > 0L && curTime - WatchMohist.Time > 2000L && curTime - WatchMohist.WarnTime > 30000L && String.valueOf(curTime - WatchMohist.Time).contains("-")) {
             WatchMohist.WarnTime = curTime;
             Mohist.LOGGER.warn(Message.getString("watchmohist.1"));
 
@@ -50,5 +38,17 @@ public class WatchMohist implements Runnable {
             }
             Mohist.LOGGER.warn(Message.getString("watchmohist.1"));
         }
+    }
+
+    public static void start() {
+        timer.scheduleAtFixedRate(new WatchMohist(), 30000L, 500L, TimeUnit.MILLISECONDS);
+    }
+
+    public static void update() {
+        WatchMohist.Time = System.currentTimeMillis();
+    }
+
+    public static void stop() {
+        timer.shutdown();
     }
 }
