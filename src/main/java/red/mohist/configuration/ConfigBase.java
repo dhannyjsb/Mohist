@@ -49,6 +49,7 @@ public abstract class ConfigBase
         {
             ServerAPI.getNMSServer().server.getCommandMap().register(entry.getKey(), this.commandName, entry.getValue());
         }
+        new Metrics();
     }
 
     public void save()
