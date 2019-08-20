@@ -1,6 +1,5 @@
 package red.mohist.util;
 
-import org.apache.commons.io.IOUtils;
 import red.mohist.i18n.Message;
 import red.mohist.i18n.UTF8Properties;
 
@@ -38,7 +37,17 @@ public class ServerEula
         }
         finally
         {
-            IOUtils.closeQuietly((InputStream)fileinputstream);
+            if (fileinputstream != null)
+            {
+                try
+                {
+                    fileinputstream.close();
+                }
+                catch (IOException var11)
+                {
+                    ;
+                }
+            }
         }
 
         return flag;
@@ -66,7 +75,17 @@ public class ServerEula
         }
         finally
         {
-            IOUtils.closeQuietly((OutputStream)fileoutputstream);
+            if (fileoutputstream != null)
+            {
+                try
+                {
+                    fileoutputstream.close();
+                }
+                catch (IOException var11)
+                {
+                    ;
+                }
+            }
         }
     }
 }
