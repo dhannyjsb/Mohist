@@ -87,7 +87,14 @@ public class Mohist {
 
         try
         {
-            Method main = launchwrapper.getMethod("main", String[].class);
+            Method main = null;
+            try{
+                main = launchwrapper.getMethod("main",String[].class);
+            }
+            catch(NullPointerException e)
+            {
+                return;
+            }
             String[] allArgs = new String[args.length + 2];
             allArgs[0] = "--tweakClass";
             allArgs[1] = "net.minecraftforge.fml.common.launcher.FMLServerTweaker";

@@ -3,7 +3,9 @@ package org.bukkit.craftbukkit.v1_12_R1;
 import jline.UnsupportedTerminal;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.apache.logging.log4j.LogManager;
 import org.fusesource.jansi.AnsiConsole;
+import red.mohist.Mohist;
 import red.mohist.i18n.Message;
 
 import java.io.File;
@@ -20,6 +22,7 @@ public class Main {
 
     public static OptionSet main(String[] args) {
         // Todo: Installation script
+        Mohist.LOGGER = LogManager.getLogger("Mohist");
         OptionParser parser = new OptionParser() {
             {
                 acceptsAll(asList("?", "help"), "Show the help");

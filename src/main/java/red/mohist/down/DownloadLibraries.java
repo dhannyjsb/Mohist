@@ -20,8 +20,7 @@ public class DownloadLibraries implements Runnable {
     public void run() {
         String url = "https://github.com/PFCraft/Mohist/releases/download/libraries-1.2/libraries-1.2.zip";
         String fileName = "libraries.zip";
-        Locale locale = Locale.getDefault();
-        if (locale.getCountry().equals("CN")) {
+        if (Message.getLanguage(2).equals("CN")) {
             url = "https://pfcraft.gitee.io/mohistdown/libraries-1.2.zip";
         }
         new Download(url, fileName);
