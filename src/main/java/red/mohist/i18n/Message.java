@@ -1,5 +1,6 @@
 package red.mohist.i18n;
 
+import red.mohist.api.ServerAPI;
 import red.mohist.util.FileUtil;
 
 import java.io.File;
@@ -235,7 +236,7 @@ public enum Message {
 
     Mohist_Dump_1("mohist.dump.1");
 
-    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(getLanguage(1), getLanguage(2)), new UTF8Control());
+    public static ResourceBundle rb = ResourceBundle.getBundle("assets.mohist.lang.message", new Locale(ServerAPI.lang.get("l"), ServerAPI.lang.get("c")), new UTF8Control());
     private final String value;
 
 

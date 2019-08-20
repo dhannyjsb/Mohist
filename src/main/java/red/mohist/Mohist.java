@@ -2,6 +2,7 @@ package red.mohist;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import red.mohist.api.ServerAPI;
 import red.mohist.down.DownloadLibraries;
 import red.mohist.down.DownloadServer;
 import red.mohist.down.Update;
@@ -43,6 +44,9 @@ public class Mohist {
             // Set this early so we don't need to reconfigure later
             System.setProperty("log4j.configurationFile", "log4j2_mohist.xml");
         }
+        ServerAPI.lang.put("l", Message.getLanguage(1));
+        ServerAPI.lang.put("c", Message.getLanguage(2));
+
         ServerEula eula = new ServerEula(new File("eula.txt"));
         if (!eula.hasAcceptedEULA())
         {
