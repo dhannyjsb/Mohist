@@ -19,7 +19,7 @@ public class Mohist {
     private static final String VERSION = "1.3";
     private static final String NATIVE_VERSON = "v1_12_R1";
     private static final String NMS_PREFIX = "net/minecraft/server/";
-    public static Logger LOGGER = LogManager.getLogger("Mohist");
+    public static Logger LOGGER;
 
     public static String getName() {
         return NAME;
@@ -70,6 +70,7 @@ public class Mohist {
             System.out.println("");
             System.out.println("                        " + Message.getString(Message.forge_ServerLanunchWrapper_1));
             System.out.println("");
+            LOGGER = LogManager.getLogger("Mohist");
             Mohist.LOGGER.info(Message.getString(Message.Mohist_Start));
             Mohist.LOGGER.info(Message.getString(Message.Load_libraries));
         }
