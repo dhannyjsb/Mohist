@@ -55,8 +55,7 @@ public class Metrics {
 
     public Metrics() {
         // Get the config file
-        File bStatsFolder = new File(new File((File) MinecraftServer.getServerInst().options.valueOf("plugins"), "bStats"), "config.yml");
-        File configFile = new File(bStatsFolder, "config.yml");
+        File configFile = new File("plugins/bStats", "config.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         // Check if the config file exists
