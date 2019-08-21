@@ -15,7 +15,6 @@ public class ServerAPI {
     public static Map<String, Integer> injectmaterials = new ConcurrentHashMap();
     public static Map<String, Integer> injectblock = new ConcurrentHashMap();
     public static Map<String, String> forgecmdper = new ConcurrentHashMap();
-    public static Map<String, String> lang = new ConcurrentHashMap();
 
     public static int getModSize() {
         return mods.get("mods") == null ? 0 : mods.get("mods") - 4;
