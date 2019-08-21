@@ -126,13 +126,12 @@
      @SideOnly(Side.CLIENT)
      public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
      {
-@@ -531,4 +531,24 @@
+@@ -531,4 +531,29 @@
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
      }
 +
 +    // CraftBukkit start - add method
-+    // Paper start
 +	@Nullable
 +    public InventoryHolder getOwner() {
 +        if (world == null) return null;
@@ -147,6 +146,12 @@
 +        if (state instanceof InventoryHolder)
 +        {
 +            return (InventoryHolder) state;
++        }
++        if (state instanceof CraftBlockEntityState) {
++            TileEntity te = ((CraftBlockEntityState)state).getTileEntity();
++            if (te instanceof IInventory) {
++                return new CraftCustomInventory((IInventory)te);
++            }
 +        }
 +        return null;
 +    }
