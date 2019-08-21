@@ -1,21 +1,17 @@
 package net.minecraftforge.cauldron.entity;
 
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
 
-import java.util.UUID;
-
 public class CraftCustomEntity extends CraftEntity {
 
     public String entityName;
-    public Class<? extends Entity> entityClass;
 
     public CraftCustomEntity(CraftServer server, net.minecraft.entity.Entity entity) {
         super(server, entity);
-        this.entityName = EntityRegistry.getCustomEntityTypeName(entityClass);
+        this.entityName = EntityRegistry.getCustomEntityTypeName(entity.getClass());
         if (entityName == null) {
             entityName = entity.getName();
         }

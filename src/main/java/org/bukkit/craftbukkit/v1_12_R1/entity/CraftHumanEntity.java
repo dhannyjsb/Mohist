@@ -381,7 +381,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (((EntityPlayerMP) getHandle()).connection == null) {
             return;
         }
-        if (getHandle().openContainer != getHandle().openContainer) {
+        if (getHandle().openContainer != getHandle().inventoryContainer) {
             // fire INVENTORY_CLOSE if one already open
             ((EntityPlayerMP) getHandle()).connection.processCloseWindow(new CPacketCloseWindow(getHandle().openContainer.windowId));
         }
