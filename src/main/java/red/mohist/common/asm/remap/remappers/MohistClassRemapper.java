@@ -36,8 +36,7 @@ public class MohistClassRemapper extends ClassRemapper {
      */
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-        int modifyAccess = toPublic(access);
-        return super.visitMethod(modifyAccess, name, desc, signature, exceptions);
+        return super.visitMethod(access, name, desc, signature, exceptions);
     }
 
     /**
@@ -52,11 +51,10 @@ public class MohistClassRemapper extends ClassRemapper {
      */
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        int modifyAccess = toPublic(access);
         if ("java/net/URLClassLoader".equals(superName)) {
             superName = DelegateURLClassLoder.desc;
         }
-        super.visit(version, modifyAccess, name, signature, superName, interfaces);
+        super.visit(version, access, name, signature, superName, interfaces);
     }
 
     /**
@@ -71,8 +69,7 @@ public class MohistClassRemapper extends ClassRemapper {
      */
     @Override
     public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-        int modifyAccess = toPublic(access);
-        return super.visitField(modifyAccess, name, desc, signature, value);
+        return super.visitField(access, name, desc, signature, value);
     }
 
     /**
@@ -84,12 +81,5 @@ public class MohistClassRemapper extends ClassRemapper {
     @Override
     protected MethodVisitor createMethodRemapper(MethodVisitor mv) {
         return new ReflectMethodRemapper(mv, remapper);
-    }
-
-    private int toPublic(int access) {
-        access |= Opcodes.ACC_PUBLIC;
-        access &= ~Opcodes.ACC_PROTECTED;
-        access &= ~Opcodes.ACC_PRIVATE;
-        return access;
     }
 }
