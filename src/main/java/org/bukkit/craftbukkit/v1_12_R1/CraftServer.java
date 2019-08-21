@@ -260,7 +260,7 @@ public final class CraftServer implements Server {
         this.console = console;
         this.playerList = (DedicatedPlayerList) playerList;
         this.playerView = Collections.unmodifiableList(Lists.transform(playerList.getPlayers(), player -> player.getBukkitEntity()));
-        this.serverVersion = CraftServer.class.getPackage().getImplementationVersion();
+        this.serverVersion = Mohist.getVersion();
         online.value = console.getPropertyManager().getBooleanProperty("online-mode", true);
         Bukkit.setServer(this);
         // Register all the Enchantments and PotionTypes now so we can stop new registration immediately after

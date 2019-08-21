@@ -34,7 +34,7 @@ public class VersionCommand extends Command {
         }
 
         if (args.length == 0) {
-            sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Mohist.getVersion() + " " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ", Forge version " + ForgeVersion.getVersion() + ")");
+            sender.sendMessage("This server is running " + Bukkit.getName() + " version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ", Forge version " + ForgeVersion.getVersion() + ")");
         } else {
             StringBuilder name = new StringBuilder();
 
