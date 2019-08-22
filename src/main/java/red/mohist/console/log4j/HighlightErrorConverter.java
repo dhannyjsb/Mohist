@@ -30,6 +30,7 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.core.pattern.*;
 import org.apache.logging.log4j.util.PerformanceSensitive;
+import red.mohist.configuration.MohistConfig;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,9 +40,9 @@ import java.util.List;
 @PerformanceSensitive("allocation")
 public class HighlightErrorConverter extends LogEventPatternConverter
 {
-    private static final String ANSI_RESET = "\u001B[39;0m";
-    private static final String ANSI_ERROR = "\u001B[31;1m";
-    private static final String ANSI_WARN = "\u001B[33;1m";
+    private static final String ANSI_RESET = "\u001B" + MohistConfig.instance.ANSI_RESET.getValue();
+    private static final String ANSI_ERROR = "\u001B" + MohistConfig.instance.ANSI_ERROR.getValue();
+    private static final String ANSI_WARN = "\u001B" + MohistConfig.instance.ANSI_WARN.getValue();
 
     private final List<PatternFormatter> formatters;
 

@@ -52,6 +52,10 @@ public class MohistConfig extends ConfigBase{
     public final BoolSetting asyn_spawnerCreature = new BoolSetting(this, "asyn.spawnerCreature", false, "spawnerCreature");
     public final BoolSetting asyn_checkLight = new BoolSetting(this, "asyn.checkLight", false, "checkLight");
 
+    public final StringSetting ANSI_RESET = new StringSetting(this, "consolecolor.reset", "[39;0m", "consolecolor.reset");
+    public final StringSetting ANSI_ERROR = new StringSetting(this, "consolecolor.error", "[31;1m", "consolecolor.error");
+    public final StringSetting ANSI_WARN = new StringSetting(this, "consolecolor.warn", "[33;1m", "consolecolor.warn");
+
 
     /* ======================================================================== */
 
