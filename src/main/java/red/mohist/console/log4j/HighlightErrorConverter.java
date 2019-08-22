@@ -31,8 +31,11 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.core.pattern.*;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import red.mohist.configuration.MohistConfig;
+import red.mohist.util.FileUtil;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Plugin(name = "highlightError", category = PatternConverter.CATEGORY)
@@ -40,9 +43,9 @@ import java.util.List;
 @PerformanceSensitive("allocation")
 public class HighlightErrorConverter extends LogEventPatternConverter
 {
-    private static final String ANSI_RESET = "\u001B" + MohistConfig.instance.ANSI_RESET.getValue();
-    private static final String ANSI_ERROR = "\u001B" + MohistConfig.instance.ANSI_ERROR.getValue();
-    private static final String ANSI_WARN = "\u001B" + MohistConfig.instance.ANSI_WARN.getValue();
+    private static final String ANSI_RESET = "\u001B" + getreset();
+    private static final String ANSI_ERROR = "\u001B" + geterror();
+    private static final String ANSI_WARN = "\u001B" + getwarn();
 
     private final List<PatternFormatter> formatters;
 
@@ -143,4 +146,51 @@ public class HighlightErrorConverter extends LogEventPatternConverter
         return new HighlightErrorConverter(formatters);
     }
 
+    public static String getreset() {
+        try {
+            File f = new File("mohist.yml");
+            String s = FileUtil.readContent(f, "UTF-8");
+            if(s.contains("reset: ")){
+                String string = s.substring(s.indexOf("reset: "));
+                String s1 = string.substring(string.indexOf(":") + 1).substring(1, 7);
+                return s1.substring(0, 6);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "[39;0m";
+    }
+
+    public static String geterror() {
+        try {
+            File f = new File("mohist.yml");
+            String s = FileUtil.readContent(f, "UTF-8");
+            if(s.contains("error: ")){
+                String string = s.substring(s.indexOf("error: "));
+                String s1 = string.substring(string.indexOf(":") + 1).substring(1, 7);
+                return s1.substring(0, 6);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "[31;1m";
+    }
+
+    public static String getwarn() {
+        try {
+            File f = new File("mohist.yml");
+            String s = FileUtil.readContent(f, "UTF-8");
+            if(s.contains("warn: ")){
+                String string = s.substring(s.indexOf("warn: "));
+                String s1 = string.substring(string.indexOf(":") + 1).substring(1, 7);
+                return s1.substring(0, 6);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "[33;1m";
+    }
 }
