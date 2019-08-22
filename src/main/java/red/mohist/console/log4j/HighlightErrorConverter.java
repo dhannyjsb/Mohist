@@ -152,9 +152,8 @@ public class HighlightErrorConverter extends LogEventPatternConverter
             String s = FileUtil.readContent(f, "UTF-8");
             if(s.contains("reset: ")){
                 String string = s.substring(s.indexOf("reset: "));
-                String s1 = string.substring(string.indexOf(":") + 1).substring(1, 7);
+                String s1 = string.substring(string.indexOf(":") + 1).substring(2, 8);
                 return s1.substring(0, 6);
-
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -168,9 +167,8 @@ public class HighlightErrorConverter extends LogEventPatternConverter
             String s = FileUtil.readContent(f, "UTF-8");
             if(s.contains("error: ")){
                 String string = s.substring(s.indexOf("error: "));
-                String s1 = string.substring(string.indexOf(":") + 1).substring(1, 7);
+                String s1 = string.substring(string.indexOf(":") + 1).substring(2, 8);
                 return s1.substring(0, 6);
-
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -184,9 +182,8 @@ public class HighlightErrorConverter extends LogEventPatternConverter
             String s = FileUtil.readContent(f, "UTF-8");
             if(s.contains("warn: ")){
                 String string = s.substring(s.indexOf("warn: "));
-                String s1 = string.substring(string.indexOf(":") + 1).substring(1, 7);
+                String s1 = string.substring(string.indexOf(":") + 1).substring(2, 8);
                 return s1.substring(0, 6);
-
             }
         } catch (IOException e) {
             e.printStackTrace();

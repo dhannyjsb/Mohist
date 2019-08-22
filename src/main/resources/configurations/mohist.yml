@@ -58,6 +58,6 @@ check_update: false
 lang: xx_XX
 config-version: 1
 consolecolor:
-  reset: [39;0m
-  error: [31;1m
-  warn: [33;1m
+  warn: '[33;1m'
+  reset: '[39;0m'
+  error: '[31;1m'
