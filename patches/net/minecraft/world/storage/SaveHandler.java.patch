@@ -42,43 +42,15 @@
      public SaveHandler(File p_i46648_1_, String saveDirectoryNameIn, boolean p_i46648_3_, DataFixer dataFixerIn)
      {
          this.dataFixer = dataFixerIn;
-@@ -116,20 +122,30 @@
+@@ -116,7 +122,6 @@
      public WorldInfo loadWorldInfo()
      {
          File file1 = new File(this.worldDirectory, "level.dat");
 -
-+        WorldInfo worldInfo = null;
          if (file1.exists())
          {
--            WorldInfo worldinfo = SaveFormatOld.loadAndFix(file1, this.dataFixer, this);
-+            worldInfo = SaveFormatOld.loadAndFix(file1, this.dataFixer, this);
- 
--            if (worldinfo != null)
-+            if (worldInfo != null)
-             {
--                return worldinfo;
-+                return worldInfo;
-             }
-         }
- 
-         net.minecraftforge.fml.common.FMLCommonHandler.instance().confirmBackupLevelDatUse(this);
-         file1 = new File(this.worldDirectory, "level.dat_old");
--        return file1.exists() ? SaveFormatOld.loadAndFix(file1, this.dataFixer, this) : null;
-+        if (file1.exists())
-+        {
-+            worldInfo = SaveFormatOld.loadAndFix(file1, this.dataFixer, this);
-+
-+            if (worldInfo != null)
-+            {
-+                return worldInfo;
-+            }
-+        }
-+        this.initBukkitData(worldInfo); // Cauldron
-+        return null;
-     }
- 
-     public void saveWorldInfoWithPlayer(WorldInfo worldInformation, @Nullable NBTTagCompound tagCompound)
-@@ -208,11 +224,28 @@
+             WorldInfo worldinfo = SaveFormatOld.loadAndFix(file1, this.dataFixer, this);
+@@ -208,11 +213,28 @@
          try
          {
              File file1 = new File(this.playersDirectory, player.getCachedUniqueIdString() + ".dat");
@@ -108,7 +80,7 @@
          }
          catch (Exception var4)
          {
-@@ -221,6 +254,16 @@
+@@ -221,6 +243,16 @@
  
          if (nbttagcompound != null)
          {
@@ -125,7 +97,7 @@
              player.readFromNBT(this.dataFixer.process(FixTypes.PLAYER, nbttagcompound));
          }
  
-@@ -228,6 +271,22 @@
+@@ -228,6 +260,22 @@
          return nbttagcompound;
      }
  
@@ -148,7 +120,7 @@
      public IPlayerFileData getPlayerNBTManager()
      {
          return this;
-@@ -267,7 +326,7 @@
+@@ -267,7 +315,7 @@
          return this.structureTemplateManager;
      }
  
@@ -157,7 +129,7 @@
      {
          try
          {
-@@ -284,4 +343,65 @@
+@@ -284,4 +332,63 @@
          }
          return null;
      }
@@ -209,15 +181,13 @@
 +    // CraftBukkit end
 +
 +    // Mohist start
-+    public void initBukkitData(WorldInfo worldInfo) {
++    public static void initBukkitData(WorldInfo worldInfo) {
 +        // inject bukkit materials before plugins load
-+        if (!initializedBukkit && (worldInfo == null || worldInfo.getDimension() == 0))
++        if (!initializedBukkit)
 +        {
 +            ForgeInjectBukkit.init();
-+            if (Bukkit.getServer() != null) {
-+                ((CraftServer) Bukkit.getServer()).loadPlugins();
-+                ((CraftServer) Bukkit.getServer()).enablePlugins(PluginLoadOrder.STARTUP);
-+            }
++            ((CraftServer) Bukkit.getServer()).loadPlugins();
++            ((CraftServer) Bukkit.getServer()).enablePlugins(PluginLoadOrder.STARTUP);
 +            initializedBukkit = true;
 +        }
 +    }

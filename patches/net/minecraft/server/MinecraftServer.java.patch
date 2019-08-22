@@ -1,9 +1,10 @@
 --- ../src-base/minecraft/net/minecraft/server/MinecraftServer.java
 +++ ../src-work/minecraft/net/minecraft/server/MinecraftServer.java
-@@ -1,7 +1,15 @@
+@@ -1,7 +1,16 @@
  package net.minecraft.server;
  
 +import jline.console.ConsoleReader;
++import net.minecraft.world.storage.SaveHandler;
 +import net.minecraftforge.fml.common.FMLCommonHandler;
 +import red.mohist.configuration.EntityConfig;
 +import red.mohist.configuration.MohistConfig;
@@ -17,7 +18,7 @@
  import com.google.common.util.concurrent.Futures;
  import com.google.common.util.concurrent.ListenableFuture;
  import com.google.common.util.concurrent.ListenableFutureTask;
-@@ -13,29 +21,7 @@
+@@ -13,29 +22,7 @@
  import io.netty.buffer.ByteBufOutputStream;
  import io.netty.buffer.Unpooled;
  import io.netty.handler.codec.base64.Base64;
@@ -48,7 +49,7 @@
  import net.minecraft.advancements.AdvancementManager;
  import net.minecraft.advancements.FunctionManager;
  import net.minecraft.command.CommandBase;
-@@ -55,53 +41,64 @@
+@@ -55,53 +42,64 @@
  import net.minecraft.profiler.Profiler;
  import net.minecraft.profiler.Snooper;
  import net.minecraft.server.dedicated.DedicatedServer;
@@ -134,7 +135,7 @@
      @SideOnly(Side.SERVER)
      private String hostname;
      private int serverPort = -1;
-@@ -124,11 +121,10 @@
+@@ -124,11 +122,10 @@
      private int maxPlayerIdleMinutes;
      public final long[] tickTimeArray = new long[100];
      //public long[][] timeOfLastDimensionTick;
@@ -147,7 +148,7 @@
      private String worldName;
      private boolean isDemo;
      private boolean enableBonusChest;
-@@ -144,26 +140,78 @@
+@@ -144,26 +141,78 @@
      private final GameProfileRepository profileRepo;
      private final PlayerProfileCache profileCache;
      private long nanoTimeSinceStatusRefresh;
@@ -232,7 +233,7 @@
      public ServerCommandManager createCommandManager()
      {
          return new ServerCommandManager(this);
-@@ -221,95 +269,90 @@
+@@ -221,97 +270,100 @@
  
      public void loadAllWorlds(String saveName, String worldNameIn, long seed, WorldType type, String generatorOptions)
      {
@@ -326,6 +327,7 @@
 +            if (dim == 0) {
 +                ISaveHandler idatamanager = new AnvilSaveHandler(server.getWorldContainer(), worldNameIn, true, this.dataFixer);
 +                WorldInfo worlddata = idatamanager.loadWorldInfo();
++                SaveHandler.initBukkitData(worlddata);
 +                if (worlddata == null) {
 +                    worlddata = new WorldInfo(worldsettings, worldNameIn);
                  }
@@ -387,8 +389,17 @@
 +        this.playerList.setPlayerManager(this.worlds);
          this.setDifficultyForAllWorlds(this.getDifficulty());
          this.initialWorldChunkLoad();
++        for (WorldServer worlds : this.worldServerList) {
++            this.server.getPluginManager().callEvent(new org.bukkit.event.world.WorldLoadEvent(worlds.getWorld()));
++        }
++        this.server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.POSTWORLD);
++        if (mohistConfig.watchmohist.getValue()){
++            WatchMohist.start(); // Mohist
++        }
      }
-@@ -323,28 +366,37 @@
+ 
+     public void initialWorldChunkLoad()
+@@ -323,25 +375,30 @@
          int i1 = 0;
          this.setUserMessage("menu.generatingTerrain");
          int j1 = 0;
@@ -435,22 +446,7 @@
              }
          }
  
-+        for (WorldServer world : this.worldServerList) {
-+            this.server.getPluginManager().callEvent(new org.bukkit.event.world.WorldLoadEvent(world.getWorld()));
-+        }
-+
-         this.clearCurrentTask();
-     }
- 
-@@ -390,17 +442,21 @@
-     {
-         this.currentTask = null;
-         this.percentDone = 0;
-+        this.server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.POSTWORLD);
-+        if (mohistConfig.watchmohist.getValue()){
-+            WatchMohist.start(); // Mohist
-+        }
-     }
+@@ -394,13 +451,13 @@
  
      public void saveAllWorlds(boolean isSilent)
      {
@@ -466,7 +462,7 @@
                  }
  
                  try
-@@ -415,10 +471,25 @@
+@@ -415,10 +472,25 @@
          }
      }
  
@@ -495,7 +491,7 @@
          if (this.getNetworkSystem() != null)
          {
              this.getNetworkSystem().terminateEndpoints();
-@@ -426,14 +497,15 @@
+@@ -426,14 +498,15 @@
  
          if (this.playerList != null)
          {
@@ -513,7 +509,7 @@
  
              for (WorldServer worldserver : this.worlds)
              {
-@@ -445,7 +517,8 @@
+@@ -445,7 +518,8 @@
  
              this.saveAllWorlds(false);
  
@@ -523,7 +519,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -453,11 +526,12 @@
+@@ -453,11 +527,12 @@
                      worldserver1.flush();
                  }
              }
@@ -537,7 +533,7 @@
              }
          }
  
-@@ -467,6 +541,13 @@
+@@ -467,6 +542,13 @@
          }
  
          CommandBase.setCommandListener(null); // Forge: fix MC-128561
@@ -551,7 +547,7 @@
      }
  
      public boolean isServerRunning()
-@@ -479,74 +560,127 @@
+@@ -479,74 +561,127 @@
          this.serverRunning = false;
      }
  
@@ -713,7 +709,7 @@
              CrashReport crashreport = null;
  
              if (throwable1 instanceof ReportedException)
-@@ -555,21 +689,21 @@
+@@ -555,21 +690,21 @@
              }
              else
              {
@@ -739,7 +735,7 @@
              this.finalTick(crashreport);
          }
          finally
-@@ -577,14 +711,19 @@
+@@ -577,14 +712,19 @@
              try
              {
                  this.stopServer();
@@ -761,7 +757,7 @@
                  this.serverStopped = true;
                  this.systemExitNow();
              }
-@@ -607,8 +746,11 @@
+@@ -607,8 +747,11 @@
              try
              {
                  BufferedImage bufferedimage = ImageIO.read(file1);
@@ -775,7 +771,7 @@
                  ImageIO.write(bufferedimage, "PNG", new ByteBufOutputStream(bytebuf));
                  ByteBuf bytebuf1 = Base64.encode(bytebuf);
                  response.setFavicon("data:image/png;base64," + bytebuf1.toString(StandardCharsets.UTF_8));
-@@ -616,7 +758,7 @@
+@@ -616,7 +759,7 @@
              }
              catch (Exception exception)
              {
@@ -784,7 +780,7 @@
              }
              finally
              {
-@@ -653,8 +795,9 @@
+@@ -653,8 +796,9 @@
  
      public void tick()
      {
@@ -795,7 +791,7 @@
          ++this.tickCounter;
  
          if (this.startProfiling)
-@@ -683,8 +826,7 @@
+@@ -683,8 +827,7 @@
              this.statusResponse.getPlayers().setPlayers(agameprofile);
              this.statusResponse.invalidateJson();
          }
@@ -805,7 +801,7 @@
          {
              this.profiler.startSection("save");
              this.playerList.saveAllPlayerData();
-@@ -692,64 +834,79 @@
+@@ -692,64 +835,79 @@
              this.profiler.endSection();
          }
  
@@ -913,7 +909,7 @@
  
                  try
                  {
-@@ -773,19 +930,18 @@
+@@ -773,19 +931,18 @@
                      throw new ReportedException(crashreport1);
                  }
  
@@ -936,7 +932,7 @@
          this.profiler.endStartSection("connection");
          this.getNetworkSystem().networkTick();
          this.profiler.endStartSection("players");
-@@ -809,9 +965,11 @@
+@@ -809,9 +966,11 @@
  
      public void startServerThread()
      {
@@ -948,7 +944,7 @@
      }
  
      public File getFile(String fileName)
-@@ -826,15 +984,20 @@
+@@ -826,15 +985,20 @@
  
      public WorldServer getWorld(int dimension)
      {
@@ -972,7 +968,7 @@
      public String getMinecraftVersion()
      {
          return "1.12.2";
-@@ -862,7 +1025,7 @@
+@@ -862,7 +1026,7 @@
  
      public String getServerModName()
      {
@@ -981,7 +977,7 @@
      }
  
      public CrashReport addServerInfoToCrashReport(CrashReport report)
-@@ -891,7 +1054,7 @@
+@@ -891,7 +1055,7 @@
  
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos, boolean hasTargetBlock)
      {
@@ -990,7 +986,7 @@
          boolean flag = input.startsWith("/");
  
          if (flag)
-@@ -908,11 +1071,9 @@
+@@ -908,11 +1072,9 @@
              {
                  if (CommandBase.doesStringStartWith(s2, s1))
                  {
@@ -1003,7 +999,7 @@
          }
          else
          {
-@@ -925,27 +1086,29 @@
+@@ -925,27 +1087,29 @@
                  {
                      if (flag1 && !hasTargetBlock)
                      {
@@ -1039,7 +1035,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -958,6 +1121,11 @@
+@@ -958,6 +1122,11 @@
          return true;
      }
  
@@ -1051,7 +1047,7 @@
      public ICommandManager getCommandManager()
      {
          return this.commandManager;
-@@ -993,13 +1161,11 @@
+@@ -993,13 +1162,11 @@
          this.folderName = name;
      }
  
@@ -1065,7 +1061,7 @@
      public String getWorldName()
      {
          return this.worldName;
-@@ -1012,7 +1178,7 @@
+@@ -1012,7 +1179,7 @@
  
      public void setDifficultyForAllWorlds(EnumDifficulty difficulty)
      {
@@ -1074,7 +1070,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1094,9 +1260,9 @@
+@@ -1094,9 +1261,9 @@
          playerSnooper.addClientStat("avg_tick_ms", Integer.valueOf((int)(MathHelper.average(this.tickTimeArray) * 1.0E-6D)));
          int l = 0;
  
@@ -1086,7 +1082,7 @@
              {
                  if (worldserver1 != null)
                  {
-@@ -1134,7 +1300,8 @@
+@@ -1134,7 +1301,8 @@
  
      public boolean isServerInOnlineMode()
      {
@@ -1096,7 +1092,7 @@
      }
  
      public void setOnlineMode(boolean online)
-@@ -1228,17 +1395,23 @@
+@@ -1228,17 +1396,23 @@
  
      public void setGameType(GameType gameMode)
      {
@@ -1122,7 +1118,7 @@
      @SideOnly(Side.CLIENT)
      public boolean serverIsInRunLoop()
      {
-@@ -1331,7 +1504,7 @@
+@@ -1331,7 +1505,7 @@
      @Nullable
      public Entity getEntityFromUuid(UUID uuid)
      {
@@ -1131,7 +1127,7 @@
          {
              if (worldserver1 != null)
              {
-@@ -1357,6 +1530,11 @@
+@@ -1357,6 +1531,11 @@
          return this;
      }
  
@@ -1143,7 +1139,7 @@
      public int getMaxWorldSize()
      {
          return 29999984;
-@@ -1366,15 +1544,14 @@
+@@ -1366,15 +1545,14 @@
      {
          Validate.notNull(callable);
  
@@ -1164,7 +1160,7 @@
          }
          else
          {
-@@ -1455,134 +1632,41 @@
+@@ -1455,134 +1633,41 @@
      }
  
      @SideOnly(Side.SERVER)
@@ -1315,7 +1311,7 @@
          }
      }
  
-@@ -1595,7 +1679,8 @@
+@@ -1595,7 +1680,8 @@
      @SideOnly(Side.SERVER)
      public boolean isDebuggingEnabled()
      {
