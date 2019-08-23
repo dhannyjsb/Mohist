@@ -30,7 +30,6 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.core.pattern.*;
 import org.apache.logging.log4j.util.PerformanceSensitive;
-import red.mohist.configuration.MohistConfig;
 import red.mohist.util.FileUtil;
 
 import javax.annotation.Nullable;
@@ -38,12 +37,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-@Plugin(name = "highlightError", category = PatternConverter.CATEGORY)
-@ConverterKeys({ "highlightError" })
+@Plugin(name = "highlightMsg", category = PatternConverter.CATEGORY)
+@ConverterKeys({ "highlightMsg" })
 @PerformanceSensitive("allocation")
-public class HighlightErrorConverter extends LogEventPatternConverter
+public class HighlightMsgConverter extends LogEventPatternConverter
 {
-    private static final String ANSI_RESET = "\u001B" + getreset();
+    private static final String ANSI_RESET = "\u001B[39;0m";
     private static final String ANSI_ERROR = "\u001B" + geterror();
     private static final String ANSI_WARN = "\u001B" + getwarn();
 
@@ -54,9 +53,9 @@ public class HighlightErrorConverter extends LogEventPatternConverter
      *
      * @param formatters The pattern formatters to generate the text to highlight
      */
-    protected HighlightErrorConverter(List<PatternFormatter> formatters)
+    protected HighlightMsgConverter(List<PatternFormatter> formatters)
     {
-        super("highlightError", null);
+        super("highlightMsg", null);
         this.formatters = formatters;
     }
 
@@ -120,7 +119,7 @@ public class HighlightErrorConverter extends LogEventPatternConverter
     }
 
     /**
-     * Gets a new instance of the {@link HighlightErrorConverter} with the
+     * Gets a new instance of the {@link HighlightLevelConverter} with the
      * specified options.
      *
      * @param config The current configuration
@@ -128,7 +127,7 @@ public class HighlightErrorConverter extends LogEventPatternConverter
      * @return The new instance
      */
     @Nullable
-    public static HighlightErrorConverter newInstance(Configuration config, String[] options)
+    public static HighlightLevelConverter newInstance(Configuration config, String[] options)
     {
         if (options.length != 1)
         {
@@ -143,30 +142,15 @@ public class HighlightErrorConverter extends LogEventPatternConverter
 
         PatternParser parser = PatternLayout.createPatternParser(config);
         List<PatternFormatter> formatters = parser.parse(options[0]);
-        return new HighlightErrorConverter(formatters);
-    }
-
-    public static String getreset() {
-        try {
-            File f = new File("mohist.yml");
-            String s = FileUtil.readContent(f, "UTF-8");
-            if(s.contains("reset: ")){
-                String string = s.substring(s.indexOf("reset: "));
-                String s1 = string.substring(string.indexOf(":") + 1).substring(2, 8);
-                return s1.substring(0, 6);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "[39;0m";
+        return new HighlightLevelConverter(formatters);
     }
 
     public static String geterror() {
         try {
             File f = new File("mohist.yml");
             String s = FileUtil.readContent(f, "UTF-8");
-            if(s.contains("error: ")){
-                String string = s.substring(s.indexOf("error: "));
+            if(s.contains("error-msg: ")){
+                String string = s.substring(s.indexOf("error-msg: "));
                 String s1 = string.substring(string.indexOf(":") + 1).substring(2, 8);
                 return s1.substring(0, 6);
             }
@@ -180,8 +164,8 @@ public class HighlightErrorConverter extends LogEventPatternConverter
         try {
             File f = new File("mohist.yml");
             String s = FileUtil.readContent(f, "UTF-8");
-            if(s.contains("warn: ")){
-                String string = s.substring(s.indexOf("warn: "));
+            if(s.contains("warn-msg: ")){
+                String string = s.substring(s.indexOf("warn-msg: "));
                 String s1 = string.substring(string.indexOf(":") + 1).substring(2, 8);
                 return s1.substring(0, 6);
             }
