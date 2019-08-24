@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.StringUtil;
-import red.mohist.Mohist;
 import red.mohist.i18n.Message;
 
 import java.util.ArrayList;

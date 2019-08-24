@@ -3,7 +3,6 @@ package red.mohist.common.asm.remap.remappers;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import red.mohist.common.asm.remap.proxy.DelegateURLClassLoder;

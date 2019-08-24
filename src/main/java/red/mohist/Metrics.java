@@ -1,6 +1,5 @@
 package red.mohist;
 
-import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.json.simple.JSONArray;

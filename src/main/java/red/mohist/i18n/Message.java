@@ -1,6 +1,5 @@
 package red.mohist.i18n;
 
-import red.mohist.api.ServerAPI;
 import red.mohist.util.FileUtil;
 
 import java.io.File;
